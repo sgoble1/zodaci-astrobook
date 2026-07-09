@@ -1,11 +1,9 @@
 import { ZODIAC, PLACEMENTS, HOUSES } from '@/content/april';
-
-/**
- * The Compendium page cross-tabulates every reference used in the report:
- * zodiac fundamentals, planetary placements, dignities, and house rulership.
- * A future expansion will add sabian symbols, fixed stars and past-life notation
- * from the Master Compendium PDF; the structure is ready for them.
- */
+import {
+  SABIAN_SYMBOLS, FIXED_STARS, ASTEROIDS, SPECIAL_ASPECTS,
+  ARABIC_PARTS, PROFECTION_35, PRENATAL_ECLIPSE,
+} from '@/content/compendium';
+import { useState } from 'react';
 export default function Compendium() {
   return (
     <div className="space-y-12">
