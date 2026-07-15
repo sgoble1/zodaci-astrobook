@@ -82,7 +82,10 @@ function SidebarInner() {
         </div>
       </div>
 
+      <div className="pt-1"><CommandPaletteTrigger /></div>
+
       <nav className="flex flex-col gap-0.5 text-sm">
+
         {nav.map(n => (
           <NavLink
             key={n.to} to={n.to} end={n.to === '/'}
