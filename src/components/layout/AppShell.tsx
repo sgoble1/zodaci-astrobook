@@ -2,6 +2,7 @@ import { NavLink, Outlet, useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { Menu, X } from 'lucide-react';
 import { BIRTH } from '@/content/april';
+import { CommandPaletteTrigger } from '@/components/common/CommandPalette';
 
 const nav = [
   { to: '/', label: 'Home' },
@@ -14,6 +15,8 @@ const nav = [
   { to: '/purpose', label: 'Purpose & Numerology' },
   { to: '/feng-shui', label: 'Feng Shui' },
   { to: '/compendium', label: 'Compendium' },
+  { to: '/star-map', label: 'Fixed-Star Sky Map' },
+  { to: '/profection', label: 'Profection · Age 35' },
   { to: '/art-direction', label: 'Art Direction' },
 ];
 
@@ -79,7 +82,10 @@ function SidebarInner() {
         </div>
       </div>
 
+      <div className="pt-1"><CommandPaletteTrigger /></div>
+
       <nav className="flex flex-col gap-0.5 text-sm">
+
         {nav.map(n => (
           <NavLink
             key={n.to} to={n.to} end={n.to === '/'}

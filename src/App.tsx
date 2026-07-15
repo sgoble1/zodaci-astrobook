@@ -1,5 +1,12 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { useMemo, type ReactNode } from 'react';
 import { AppShell } from './components/layout/AppShell';
+import { DetailDrawerProvider, type DrawerPayload } from './components/common/DetailDrawer';
+import { CommandPalette } from './components/common/CommandPalette';
+import {
+  SABIAN_SYMBOLS, FIXED_STARS, ASTEROIDS, SPECIAL_ASPECTS, ARABIC_PARTS,
+  PROFECTION_35, PRENATAL_ECLIPSE, PROFECTION_BEATS,
+} from './content/compendium';
 import Home from './pages/Home';
 import BirthChart from './pages/BirthChart';
 import Planets from './pages/Planets';
@@ -13,29 +20,111 @@ import Purpose from './pages/Purpose';
 import FengShui from './pages/FengShui';
 import Compendium from './pages/Compendium';
 import ArtDirection from './pages/ArtDirection';
+import StarMap from './pages/StarMap';
+import Profection from './pages/Profection';
 import NotFound from './pages/NotFound';
+
+/** Build a single registry of every drawer-openable Compendium item. Used so
+ * deep links (#sabian-sun) and the ⌘K palette can hydrate the drawer on any
+ * page that renders <DetailDrawerProvider>. */
+function useDrawerRegistry(): Record<string, DrawerPayload> {
+  return useMemo(() => {
+    const reg: Record<string, DrawerPayload> = {};
+    const p = (payload: DrawerPayload) => { reg[payload.id] = payload; };
+
+    SABIAN_SYMBOLS.forEach(s => p({
+      id: s.id, eyebrow: `Sabian Symbol · ${s.degree}`, title: `"${s.symbol}"`,
+      subtitle: s.point,
+      body: (<>
+        <p>{s.interpretation}</p>
+        {s.notes && <><div className="font-smallcaps text-[10px] text-gold mt-4 mb-1">Notes</div><p className="italic text-foreground/75">{s.notes}</p></>}
+      </>),
+      source: s.source,
+    }));
+    FIXED_STARS.forEach(s => p({
+      id: s.id, eyebrow: `Fixed Star · orb ${s.orb}`, title: s.name,
+      subtitle: `${s.degree} · conj. ${s.conjunct}`,
+      body: (<>
+        <div className="font-smallcaps text-[10px] text-gold mb-1">Meaning</div>
+        <p className="italic">{s.meaning}</p>
+        <div className="font-smallcaps text-[10px] text-gold mt-4 mb-1">Natal activation</div>
+        <p>{s.activation}</p>
+      </>),
+      source: s.source,
+    }));
+    ASTEROIDS.forEach(a => p({
+      id: a.id, eyebrow: `Asteroid Goddess · ${a.placement}`,
+      title: `${a.glyph}  ${a.name}`, subtitle: a.archetype,
+      body: <p>{a.expression}</p>, source: a.source,
+    }));
+    SPECIAL_ASPECTS.forEach(a => p({
+      id: a.id, eyebrow: `Special Aspect · orb ${a.orb}`, title: a.name,
+      subtitle: a.planets, body: <p>{a.significance}</p>, source: a.source,
+    }));
+    ARABIC_PARTS.forEach(part => p({
+      id: part.id, eyebrow: `Arabic Part · ${part.position}`, title: part.name,
+      body: <p>{part.meaning}</p>, source: part.source,
+    }));
+    p({
+      id: PROFECTION_35.id, eyebrow: `Profection · Age ${PROFECTION_35.age}`,
+      title: '12th House Profection Year', subtitle: PROFECTION_35.window,
+      body: (<>
+        <p>{PROFECTION_35.interpretation}</p>
+        <div className="font-smallcaps text-[10px] text-gold mt-4 mb-1">Alchemical theme</div>
+        <p className="italic">{PROFECTION_35.alchemicalTheme}</p>
+      </>),
+      source: PROFECTION_35.source,
+    });
+    p({
+      id: PRENATAL_ECLIPSE.id, eyebrow: `Prenatal Eclipse · ${PRENATAL_ECLIPSE.date}`,
+      title: PRENATAL_ECLIPSE.position,
+      body: <p>{PRENATAL_ECLIPSE.interpretation}</p>,
+      source: PRENATAL_ECLIPSE.source,
+    });
+    PROFECTION_BEATS.forEach(b => p({
+      id: b.id, eyebrow: `Profection Beat · ${b.window}`, title: b.label,
+      subtitle: b.focus, body: <p>{b.detail}</p>, source: PROFECTION_35.source,
+    }));
+
+    return reg;
+  }, []);
+}
+
+function Providers({ children }: { children: ReactNode }) {
+  const registry = useDrawerRegistry();
+  return (
+    <DetailDrawerProvider registry={registry}>
+      <CommandPalette />
+      {children}
+    </DetailDrawerProvider>
+  );
+}
 
 export default function App() {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route element={<AppShell />}>
-          <Route path="/" element={<Home />} />
-          <Route path="/birth-chart" element={<BirthChart />} />
-          <Route path="/planets" element={<Planets />} />
-          <Route path="/planets/:key" element={<PlanetDetail />} />
-          <Route path="/houses" element={<Houses />} />
-          <Route path="/houses/:num" element={<HouseDetail />} />
-          <Route path="/aspects" element={<AspectsPage />} />
-          <Route path="/timeline" element={<TimelinePage />} />
-          <Route path="/retrogrades" element={<Retrogrades />} />
-          <Route path="/purpose" element={<Purpose />} />
-          <Route path="/feng-shui" element={<FengShui />} />
-          <Route path="/compendium" element={<Compendium />} />
-          <Route path="/art-direction" element={<ArtDirection />} />
-          <Route path="*" element={<NotFound />} />
-        </Route>
-      </Routes>
+      <Providers>
+        <Routes>
+          <Route element={<AppShell />}>
+            <Route path="/" element={<Home />} />
+            <Route path="/birth-chart" element={<BirthChart />} />
+            <Route path="/planets" element={<Planets />} />
+            <Route path="/planets/:key" element={<PlanetDetail />} />
+            <Route path="/houses" element={<Houses />} />
+            <Route path="/houses/:num" element={<HouseDetail />} />
+            <Route path="/aspects" element={<AspectsPage />} />
+            <Route path="/timeline" element={<TimelinePage />} />
+            <Route path="/retrogrades" element={<Retrogrades />} />
+            <Route path="/purpose" element={<Purpose />} />
+            <Route path="/feng-shui" element={<FengShui />} />
+            <Route path="/compendium" element={<Compendium />} />
+            <Route path="/star-map" element={<StarMap />} />
+            <Route path="/profection" element={<Profection />} />
+            <Route path="/art-direction" element={<ArtDirection />} />
+            <Route path="*" element={<NotFound />} />
+          </Route>
+        </Routes>
+      </Providers>
     </BrowserRouter>
   );
 }
