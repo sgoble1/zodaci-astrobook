@@ -2,8 +2,12 @@ import { ZODIAC, PLACEMENTS, HOUSES } from '@/content/april';
 import {
   SABIAN_SYMBOLS, FIXED_STARS, ASTEROIDS, SPECIAL_ASPECTS,
   ARABIC_PARTS, PROFECTION_35, PRENATAL_ECLIPSE,
+  type SearchDoc,
 } from '@/content/compendium';
-import { useState } from 'react';
+import { useDetailDrawer, type DrawerPayload } from '@/components/common/DetailDrawer';
+import { SourceRefPanel } from '@/components/common/SourceRefPanel';
+import { Link } from 'react-router-dom';
+
 export default function Compendium() {
   return (
     <div className="space-y-12">
@@ -12,7 +16,7 @@ export default function Compendium() {
         <h1 className="font-display mt-2">The Master Compendium.</h1>
         <div className="gold-rule my-5 max-w-xs" />
         <p className="max-w-2xl text-lg text-foreground/85 leading-relaxed">
-          Reference tables from the compendium and supplementary volumes: the zodiac fundamentals, every placement with its dignity, and the rulership map of the houses. Sortable, scannable, all cross-linked to the interpretive pages.
+          Every reference table, symbol, star, goddess, aspect and lot from the compendium. Click any card to open its full entry with the exact PDF page it was transcribed from. Press <kbd className="text-[10px] border border-border rounded px-1.5 py-0.5">⌘K</kbd> to search everything at once.
         </p>
       </header>
 
@@ -102,45 +106,88 @@ export default function Compendium() {
   );
 }
 
+/* -------------------------------------------------------------------------- */
+/* Sections                                                                    */
+/* -------------------------------------------------------------------------- */
+
 function SabianSection() {
-  const [open, setOpen] = useState<string | null>(SABIAN_SYMBOLS[0].point);
+  const drawer = useDetailDrawer();
   return (
     <section>
       <div className="font-smallcaps text-[11px] text-gold">II · Sabian Symbols</div>
       <h2 className="font-display mt-1 mb-4">An illuminated wheel · one image per degree.</h2>
       <div className="grid md:grid-cols-2 gap-3">
-        {SABIAN_SYMBOLS.map(s => {
-          const active = open === s.point;
-          return (
-            <button key={s.point} onClick={() => setOpen(active ? null : s.point)}
-              className={`text-left p-4 border rounded bg-card/70 transition-colors ${active ? 'border-gold shadow-[var(--shadow-gold)]' : 'border-border hover:border-gold/60'}`}>
-              <div className="flex justify-between items-baseline gap-2">
-                <div className="font-display text-lg">{s.point}</div>
-                <div className="font-smallcaps text-[10px] text-muted-foreground">{s.degree}</div>
-              </div>
-              <div className="italic text-foreground/85 mt-1">"{s.symbol}"</div>
-              {active && (
+        {SABIAN_SYMBOLS.map(s => (
+          <button key={s.id}
+            onClick={() => drawer.open({
+              id: s.id,
+              eyebrow: `Sabian Symbol · ${s.degree}`,
+              title: `"${s.symbol}"`,
+              subtitle: s.point,
+              body: (
                 <>
-                  <div className="gold-rule my-3" />
-                  <p className="text-sm text-foreground/85 leading-relaxed">{s.interpretation}</p>
+                  <p>{s.interpretation}</p>
+                  {s.notes && (
+                    <>
+                      <div className="font-smallcaps text-[10px] text-gold mt-4 mb-1">Interpretation notes</div>
+                      <p className="italic text-foreground/75">{s.notes}</p>
+                    </>
+                  )}
                 </>
-              )}
-            </button>
-          );
-        })}
+              ),
+              source: s.source,
+            })}
+            className="text-left p-4 border rounded bg-card/70 border-border hover:border-gold/60 transition-colors">
+            <div className="flex justify-between items-baseline gap-2">
+              <div className="font-display text-lg">{s.point}</div>
+              <div className="font-smallcaps text-[10px] text-muted-foreground">{s.degree}</div>
+            </div>
+            <div className="italic text-foreground/85 mt-1">"{s.symbol}"</div>
+            <div className="font-smallcaps text-[10px] text-gold mt-2">Read →</div>
+          </button>
+        ))}
       </div>
     </section>
   );
 }
 
 function FixedStarsSection() {
+  const drawer = useDetailDrawer();
   return (
     <section>
-      <div className="font-smallcaps text-[11px] text-gold">III · Fixed Stars</div>
-      <h2 className="font-display mt-1 mb-4">Ancient beacons touching the natal chart.</h2>
-      <div className="space-y-4">
+      <div className="flex items-baseline justify-between gap-4 flex-wrap">
+        <div>
+          <div className="font-smallcaps text-[11px] text-gold">III · Fixed Stars</div>
+          <h2 className="font-display mt-1">Ancient beacons touching the natal chart.</h2>
+        </div>
+        <Link to="/star-map" className="font-smallcaps text-[10px] text-gold border-b border-gold/50 hover:border-gold">
+          Open the interactive sky map →
+        </Link>
+      </div>
+      <div className="space-y-4 mt-4">
         {FIXED_STARS.map(s => (
-          <div key={s.name} className="p-5 border border-border rounded bg-card/60">
+          <button key={s.id}
+            onClick={() => drawer.open({
+              id: s.id,
+              eyebrow: `Fixed Star · orb ${s.orb}`,
+              title: s.name,
+              subtitle: `${s.degree} · conj. ${s.conjunct}`,
+              body: (
+                <>
+                  <div className="font-smallcaps text-[10px] text-gold mb-1">Meaning</div>
+                  <p className="italic">{s.meaning}</p>
+                  <div className="font-smallcaps text-[10px] text-gold mt-4 mb-1">Natal activation</div>
+                  <p>{s.activation}</p>
+                  <div className="mt-4">
+                    <Link to={`/star-map#${s.id}`} className="font-smallcaps text-[10px] text-gold border-b border-gold/50">
+                      See on the sky map →
+                    </Link>
+                  </div>
+                </>
+              ),
+              source: s.source,
+            })}
+            className="w-full text-left p-5 border border-border rounded bg-card/60 hover:border-gold/60 transition-colors">
             <div className="flex flex-wrap justify-between gap-2 items-baseline">
               <div className="font-display text-xl text-gold">{s.name}</div>
               <div className="font-smallcaps text-[10px] text-muted-foreground">
@@ -148,9 +195,8 @@ function FixedStarsSection() {
               </div>
             </div>
             <div className="gold-rule my-3 w-16" />
-            <div className="text-sm text-foreground/75 italic mb-2">{s.meaning}</div>
-            <p className="text-sm text-foreground/90 leading-relaxed">{s.activation}</p>
-          </div>
+            <div className="text-sm text-foreground/75 italic">{s.meaning}</div>
+          </button>
         ))}
       </div>
     </section>
@@ -158,13 +204,23 @@ function FixedStarsSection() {
 }
 
 function AsteroidsSection() {
+  const drawer = useDetailDrawer();
   return (
     <section>
       <div className="font-smallcaps text-[11px] text-gold">IV · Asteroid Goddesses</div>
       <h2 className="font-display mt-1 mb-4">Juno · Vesta · Ceres · Pallas Athena.</h2>
       <div className="grid md:grid-cols-2 gap-4">
         {ASTEROIDS.map(a => (
-          <div key={a.name} className="p-5 border border-border rounded bg-card/60">
+          <button key={a.id}
+            onClick={() => drawer.open({
+              id: a.id,
+              eyebrow: `Asteroid Goddess · ${a.placement}`,
+              title: `${a.glyph}  ${a.name}`,
+              subtitle: a.archetype,
+              body: <p>{a.expression}</p>,
+              source: a.source,
+            })}
+            className="text-left p-5 border border-border rounded bg-card/60 hover:border-gold/60 transition-colors">
             <div className="flex items-baseline gap-3">
               <div className="text-gold text-2xl font-display">{a.glyph}</div>
               <div>
@@ -173,9 +229,8 @@ function AsteroidsSection() {
               </div>
             </div>
             <div className="gold-rule my-3" />
-            <div className="text-xs italic text-foreground/70 mb-2">{a.archetype}</div>
-            <p className="text-sm text-foreground/90 leading-relaxed">{a.expression}</p>
-          </div>
+            <div className="text-xs italic text-foreground/70">{a.archetype}</div>
+          </button>
         ))}
       </div>
     </section>
@@ -183,19 +238,28 @@ function AsteroidsSection() {
 }
 
 function SpecialAspectsSection() {
+  const drawer = useDetailDrawer();
   return (
     <section>
       <div className="font-smallcaps text-[11px] text-gold">V · Special & Minor Aspects</div>
       <h2 className="font-display mt-1 mb-4">The rarest angles in April's chart.</h2>
       <div className="space-y-3">
         {SPECIAL_ASPECTS.map(a => (
-          <div key={a.name} className="p-4 border border-border rounded bg-card/60">
+          <button key={a.id}
+            onClick={() => drawer.open({
+              id: a.id,
+              eyebrow: `Special Aspect · orb ${a.orb}`,
+              title: a.name,
+              subtitle: a.planets,
+              body: <p>{a.significance}</p>,
+              source: a.source,
+            })}
+            className="w-full text-left p-4 border border-border rounded bg-card/60 hover:border-gold/60 transition-colors">
             <div className="flex flex-wrap justify-between gap-2 items-baseline">
               <div className="font-display text-base">{a.name}</div>
               <div className="font-smallcaps text-[10px] text-muted-foreground">{a.planets} · orb {a.orb}</div>
             </div>
-            <p className="mt-2 text-sm text-foreground/85 leading-relaxed">{a.significance}</p>
-          </div>
+          </button>
         ))}
       </div>
     </section>
@@ -203,18 +267,27 @@ function SpecialAspectsSection() {
 }
 
 function ArabicPartsSection() {
+  const drawer = useDetailDrawer();
   return (
     <section>
       <div className="font-smallcaps text-[11px] text-gold">VI · Arabic Parts (Lots)</div>
       <h2 className="font-display mt-1 mb-4">Fortune, Spirit, Marriage.</h2>
       <div className="grid md:grid-cols-3 gap-4">
         {ARABIC_PARTS.map(p => (
-          <div key={p.name} className="p-5 border border-border rounded bg-card/60">
+          <button key={p.id}
+            onClick={() => drawer.open({
+              id: p.id,
+              eyebrow: `Arabic Part · ${p.position}`,
+              title: p.name,
+              body: <p>{p.meaning}</p>,
+              source: p.source,
+            })}
+            className="text-left p-5 border border-border rounded bg-card/60 hover:border-gold/60 transition-colors">
             <div className="font-display text-lg text-gold">{p.name}</div>
             <div className="font-smallcaps text-[10px] text-muted-foreground mt-1">{p.position}</div>
             <div className="gold-rule my-3" />
-            <p className="text-sm text-foreground/85 leading-relaxed">{p.meaning}</p>
-          </div>
+            <div className="font-smallcaps text-[10px] text-gold">Read →</div>
+          </button>
         ))}
       </div>
     </section>
@@ -224,9 +297,16 @@ function ArabicPartsSection() {
 function ProfectionSection() {
   return (
     <section>
-      <div className="font-smallcaps text-[11px] text-gold">VII · Annual Profection · Age {PROFECTION_35.age}</div>
-      <h2 className="font-display mt-1 mb-4">The Twelfth-House year · {PROFECTION_35.window}.</h2>
-      <div className="grid md:grid-cols-2 gap-4">
+      <div className="flex items-baseline justify-between gap-4 flex-wrap">
+        <div>
+          <div className="font-smallcaps text-[11px] text-gold">VII · Annual Profection · Age {PROFECTION_35.age}</div>
+          <h2 className="font-display mt-1">The Twelfth-House year · {PROFECTION_35.window}.</h2>
+        </div>
+        <Link to="/profection" className="font-smallcaps text-[10px] text-gold border-b border-gold/50 hover:border-gold">
+          Open the interactive profection module →
+        </Link>
+      </div>
+      <div className="grid md:grid-cols-2 gap-4 mt-4">
         <div className="p-5 border border-gold/40 rounded bg-card">
           <table className="w-full text-sm">
             <tbody className="divide-y divide-border/70">
@@ -239,6 +319,7 @@ function ProfectionSection() {
           <div className="gold-rule my-4" />
           <div className="font-smallcaps text-[10px] text-gold mb-1">Alchemical theme</div>
           <p className="italic text-foreground/85 text-sm">{PROFECTION_35.alchemicalTheme}</p>
+          <SourceRefPanel source={PROFECTION_35.source} />
         </div>
         <div className="p-5 border border-border rounded bg-card/60">
           <p className="text-sm text-foreground/90 leading-relaxed">{PROFECTION_35.interpretation}</p>
@@ -250,7 +331,11 @@ function ProfectionSection() {
         <div className="font-display text-lg mt-1">{PRENATAL_ECLIPSE.position}</div>
         <div className="gold-rule my-3 w-16" />
         <p className="text-sm text-foreground/85 leading-relaxed">{PRENATAL_ECLIPSE.interpretation}</p>
+        <SourceRefPanel source={PRENATAL_ECLIPSE.source} />
       </div>
     </section>
   );
 }
+
+// Type re-export to keep tree-shaking friendly imports elsewhere.
+export type { SearchDoc };
