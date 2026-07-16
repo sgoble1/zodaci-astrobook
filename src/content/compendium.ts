@@ -293,3 +293,41 @@ export const SEARCH_INDEX: SearchDoc[] = [
     route: '/profection', drawer: '#prenatal-eclipse', source: PRENATAL_ECLIPSE.source,
   },
 ];
+
+// -----------------------------------------------------------------------------
+// Extended search entries — numerology numbers, outer-planet transits, Ba Zi
+// pillars. Kept in this file so the ⌘K palette stays a single index.
+// -----------------------------------------------------------------------------
+import { CORE_NUMBERS, PINNACLES, CHALLENGES, NUMEROLOGY_SOURCE } from './numerology';
+import { TRANSITS, TRANSITS_SOURCE } from './transits';
+import { PILLARS, CHINESE_SOURCE } from './chinese';
+
+SEARCH_INDEX.push(
+  ...CORE_NUMBERS.map(n => ({
+    id: n.id, kind: 'number' as const, title: `${n.label} · ${n.value || '—'}`,
+    subtitle: n.headline,
+    body: `${n.meaning} ${n.chartLink} ${n.formula}`,
+    route: '/numerology', drawer: `#${n.id}`, source: NUMEROLOGY_SOURCE,
+  })),
+  ...PINNACLES.map(p => ({
+    id: p.id, kind: 'number' as const, title: `${p.label} · ${p.value}`,
+    subtitle: p.ageRange, body: `${p.meaning} ${p.formula}`,
+    route: '/numerology', drawer: `#${p.id}`, source: NUMEROLOGY_SOURCE,
+  })),
+  ...CHALLENGES.map(c => ({
+    id: c.id, kind: 'number' as const, title: `${c.label} · ${c.value}`,
+    subtitle: c.ageRange, body: `${c.meaning} ${c.formula}`,
+    route: '/numerology', drawer: `#${c.id}`, source: NUMEROLOGY_SOURCE,
+  })),
+  ...TRANSITS.map(t => ({
+    id: t.id, kind: 'transit' as const, title: t.title,
+    subtitle: `${t.window} · ${t.transiting} ${t.aspect} ${t.natalPoint}`,
+    body: t.body, route: '/transits', source: TRANSITS_SOURCE,
+  })),
+  ...PILLARS.map(p => ({
+    id: p.id, kind: 'pillar' as const, title: `${p.romanized} · ${p.stem}${p.branch}`,
+    subtitle: p.label, body: `${p.element} ${p.animal} ${p.meaning}`,
+    route: '/chinese', source: CHINESE_SOURCE,
+  })),
+);
+
