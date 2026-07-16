@@ -17,6 +17,9 @@ const nav = [
   { to: '/compendium', label: 'Compendium' },
   { to: '/star-map', label: 'Fixed-Star Sky Map' },
   { to: '/profection', label: 'Profection · Age 35' },
+  { to: '/numerology', label: 'Numerology · Pinnacles' },
+  { to: '/transits', label: 'Transits · 2026–2040' },
+  { to: '/chinese', label: 'Chinese · Ba Zi' },
   { to: '/art-direction', label: 'Art Direction' },
 ];
 

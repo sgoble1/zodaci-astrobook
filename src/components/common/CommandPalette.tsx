@@ -14,6 +14,9 @@ const KIND_LABEL: Record<SearchDoc['kind'], string> = {
   part: 'Arabic Part',
   profection: 'Profection',
   eclipse: 'Prenatal Eclipse',
+  number: 'Numerology',
+  transit: 'Transit',
+  pillar: 'Ba Zi Pillar',
 };
 
 export function CommandPalette() {
