@@ -240,7 +240,7 @@ export const PROFECTION_BEATS: ProfectionBeat[] = [
 
 export interface SearchDoc {
   id: string;
-  kind: 'sabian' | 'star' | 'asteroid' | 'aspect' | 'part' | 'profection' | 'eclipse';
+  kind: 'sabian' | 'star' | 'asteroid' | 'aspect' | 'part' | 'profection' | 'eclipse' | 'number' | 'transit' | 'pillar';
   title: string;
   subtitle: string;
   body: string;
