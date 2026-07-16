@@ -22,6 +22,9 @@ import Compendium from './pages/Compendium';
 import ArtDirection from './pages/ArtDirection';
 import StarMap from './pages/StarMap';
 import Profection from './pages/Profection';
+import Numerology from './pages/Numerology';
+import Transits from './pages/Transits';
+import Chinese from './pages/Chinese';
 import NotFound from './pages/NotFound';
 
 /** Build a single registry of every drawer-openable Compendium item. Used so
@@ -120,6 +123,9 @@ export default function App() {
             <Route path="/compendium" element={<Compendium />} />
             <Route path="/star-map" element={<StarMap />} />
             <Route path="/profection" element={<Profection />} />
+            <Route path="/numerology" element={<Numerology />} />
+            <Route path="/transits" element={<Transits />} />
+            <Route path="/chinese" element={<Chinese />} />
             <Route path="/art-direction" element={<ArtDirection />} />
             <Route path="*" element={<NotFound />} />
           </Route>
