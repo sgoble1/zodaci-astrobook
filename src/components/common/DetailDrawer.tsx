@@ -2,6 +2,9 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState, t
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet';
 import { SourceRefPanel } from './SourceRefPanel';
+import { SourcesList } from './Cite';
+import { CopyLinkButton } from './CopyLinkButton';
+import { ReasoningPanel, type Reasoning } from './ReasoningPanel';
 import type { SourceRef } from '@/content/compendium';
 
 export interface DrawerPayload {
@@ -11,6 +14,9 @@ export interface DrawerPayload {
   subtitle?: string;
   body: ReactNode;
   source?: SourceRef;
+  sources?: SourceRef[];
+  reasoning?: Reasoning;
+  route?: string;              // route this item lives on (for share-link)
 }
 
 interface Ctx {
@@ -25,11 +31,6 @@ export function useDetailDrawer() {
   return ctx;
 }
 
-/**
- * Global drawer that renders any Compendium item in a full detail view with the
- * PDF source reference always visible. Also syncs the current item to the URL
- * hash so entries are linkable / shareable / restorable from the ⌘K palette.
- */
 export function DetailDrawerProvider({
   children, registry,
 }: { children: ReactNode; registry: Record<string, DrawerPayload> }) {
@@ -47,7 +48,6 @@ export function DetailDrawerProvider({
     if (location.hash) navigate(location.pathname, { replace: true });
   }, [location.hash, location.pathname, navigate]);
 
-  // Open drawer when the URL hash matches a registered item (deep link + ⌘K).
   useEffect(() => {
     const hash = location.hash.replace('#', '');
     if (hash && registry[hash]) setPayload(registry[hash]);
@@ -55,6 +55,9 @@ export function DetailDrawerProvider({
   }, [location.hash, registry]);
 
   const value = useMemo(() => ({ open, close }), [open, close]);
+  const allSources: SourceRef[] = payload
+    ? [...(payload.sources ?? []), ...(payload.source && !(payload.sources ?? []).includes(payload.source) ? [payload.source] : [])]
+    : [];
 
   return (
     <DrawerCtx.Provider value={value}>
@@ -71,12 +74,18 @@ export function DetailDrawerProvider({
                 {payload.subtitle && (
                   <SheetDescription className="text-foreground/70">{payload.subtitle}</SheetDescription>
                 )}
+                <div className="pt-1">
+                  <CopyLinkButton hash={payload.id} path={payload.route} label="Copy deep link" />
+                </div>
               </SheetHeader>
               <div className="gold-rule my-4 w-16" />
               <div className="prose prose-sm max-w-none text-foreground/90 leading-relaxed">
                 {payload.body}
               </div>
-              {payload.source && <SourceRefPanel source={payload.source} />}
+              {payload.reasoning && <ReasoningPanel reasoning={payload.reasoning} />}
+              {allSources.length > 1
+                ? <SourcesList sources={allSources} />
+                : payload.source && <SourceRefPanel source={payload.source} />}
             </>
           )}
         </SheetContent>
