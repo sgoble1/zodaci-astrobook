@@ -25,7 +25,10 @@ import Profection from './pages/Profection';
 import Numerology from './pages/Numerology';
 import Transits from './pages/Transits';
 import Chinese from './pages/Chinese';
+import Volume2 from './pages/Volume2';
+import DataQuality from './pages/DataQuality';
 import NotFound from './pages/NotFound';
+
 
 /** Build a single registry of every drawer-openable Compendium item. Used so
  * deep links (#sabian-sun) and the ⌘K palette can hydrate the drawer on any
@@ -127,7 +130,10 @@ export default function App() {
             <Route path="/transits" element={<Transits />} />
             <Route path="/chinese" element={<Chinese />} />
             <Route path="/art-direction" element={<ArtDirection />} />
+            <Route path="/volume-2" element={<Volume2 />} />
+            <Route path="/data-quality" element={<DataQuality />} />
             <Route path="*" element={<NotFound />} />
+
           </Route>
         </Routes>
       </Providers>

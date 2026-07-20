@@ -1,8 +1,12 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import { TRANSITS, TRANSITS_SOURCE, type TransitEvent } from '@/content/transits';
 import { SourceRefPanel } from '@/components/common/SourceRefPanel';
+import { CopyLinkButton } from '@/components/common/CopyLinkButton';
+import { ReasoningPanel } from '@/components/common/ReasoningPanel';
+import { ConfidenceBadge } from '@/components/common/ConfidenceBadge';
 
-const YEARS = Array.from({ length: 15 }, (_, i) => 2026 + i); // 2026–2040
+const YEARS = Array.from({ length: 15 }, (_, i) => 2026 + i);
 
 const INTENSITY_COLOR: Record<TransitEvent['intensity'], string> = {
   'era-defining': 'bg-gold',
@@ -10,8 +14,19 @@ const INTENSITY_COLOR: Record<TransitEvent['intensity'], string> = {
   notable: 'bg-muted-foreground',
 };
 
+
 export default function Transits() {
+  const location = useLocation();
   const [active, setActive] = useState<TransitEvent | null>(TRANSITS[0]);
+
+  useEffect(() => {
+    const hash = location.hash.replace('#', '');
+    if (!hash) return;
+    const t = TRANSITS.find(x => x.id === hash);
+    if (t) setActive(t);
+  }, [location.hash]);
+
+
 
   const barLeft = (t: TransitEvent) => ((t.startYear - 2026) / 14) * 100;
   const barWidth = (t: TransitEvent) => Math.max(2, ((t.endYear - t.startYear + 1) / 14) * 100);
@@ -68,21 +83,33 @@ export default function Transits() {
       </section>
 
       {active && (
-        <section className="grid md:grid-cols-[1fr,auto] gap-6 items-start p-6 border border-border rounded bg-card/70">
+        <section id={active.id} className="grid md:grid-cols-[1fr,auto] gap-6 items-start p-6 border border-border rounded bg-card/70">
           <div>
-            <div className="font-smallcaps text-[11px] text-gold">{active.window}</div>
+            <div className="flex items-center gap-3 flex-wrap">
+              <div className="font-smallcaps text-[11px] text-gold">{active.window}</div>
+              <ConfidenceBadge level={active.reasoning.confidence} note={active.reasoning.caveats?.[0]} compact />
+              <CopyLinkButton hash={active.id} label="Share this transit" />
+            </div>
             <h2 className="font-display text-2xl mt-1">{active.title}</h2>
             <div className="text-sm text-muted-foreground mt-1">
               {active.transiting} <span className="italic">{active.aspect}</span> {active.natalPoint}
             </div>
             <div className="gold-rule my-4 w-16" />
             <p className="leading-relaxed text-foreground/90">{active.body}</p>
+            <ReasoningPanel reasoning={active.reasoning} />
+            <div className="mt-4 text-[11px] text-muted-foreground">
+              <span className="font-smallcaps text-[10px] text-gold">Cited in · </span>
+              {active.sources.map((s, i) => (
+                <span key={i}>{i > 0 && ' · '}<span className="italic">{s.doc}</span> {s.section}{s.page && ` ${s.page}`}</span>
+              ))}
+            </div>
           </div>
           <div className={`shrink-0 self-start px-3 py-1.5 rounded-full text-[10px] font-smallcaps ${INTENSITY_COLOR[active.intensity]} text-background`}>
             {active.intensity}
           </div>
         </section>
       )}
+
 
       <section>
         <h2 className="font-display mb-4">All transits, in order</h2>

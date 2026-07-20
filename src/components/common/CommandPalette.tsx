@@ -17,6 +17,8 @@ const KIND_LABEL: Record<SearchDoc['kind'], string> = {
   number: 'Numerology',
   transit: 'Transit',
   pillar: 'Ba Zi Pillar',
+  vol2: 'Volume II',
+
 };
 
 export function CommandPalette() {

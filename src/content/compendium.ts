@@ -240,7 +240,7 @@ export const PROFECTION_BEATS: ProfectionBeat[] = [
 
 export interface SearchDoc {
   id: string;
-  kind: 'sabian' | 'star' | 'asteroid' | 'aspect' | 'part' | 'profection' | 'eclipse' | 'number' | 'transit' | 'pillar';
+  kind: 'sabian' | 'star' | 'asteroid' | 'aspect' | 'part' | 'profection' | 'eclipse' | 'number' | 'transit' | 'pillar' | 'vol2';
   title: string;
   subtitle: string;
   body: string;
@@ -302,6 +302,8 @@ import { CORE_NUMBERS, PINNACLES, CHALLENGES, NUMEROLOGY_SOURCE } from './numero
 import { TRANSITS, TRANSITS_SOURCE } from './transits';
 import { PILLARS, CHINESE_SOURCE } from './chinese';
 
+import { VOL2_ENTRIES, VOL2_SOURCE } from './volume2';
+
 SEARCH_INDEX.push(
   ...CORE_NUMBERS.map(n => ({
     id: n.id, kind: 'number' as const, title: `${n.label} · ${n.value || '—'}`,
@@ -322,12 +324,18 @@ SEARCH_INDEX.push(
   ...TRANSITS.map(t => ({
     id: t.id, kind: 'transit' as const, title: t.title,
     subtitle: `${t.window} · ${t.transiting} ${t.aspect} ${t.natalPoint}`,
-    body: t.body, route: '/transits', source: TRANSITS_SOURCE,
+    body: t.body, route: '/transits', drawer: `#${t.id}`, source: TRANSITS_SOURCE,
   })),
   ...PILLARS.map(p => ({
     id: p.id, kind: 'pillar' as const, title: `${p.romanized} · ${p.stem}${p.branch}`,
     subtitle: p.label, body: `${p.element} ${p.animal} ${p.meaning}`,
     route: '/chinese', source: CHINESE_SOURCE,
   })),
+  ...VOL2_ENTRIES.map(v => ({
+    id: v.id, kind: 'vol2' as const, title: v.title,
+    subtitle: `${v.section} · ${v.eyebrow}`,
+    body: v.body, route: '/volume-2', drawer: `#${v.id}`, source: v.source,
+  })),
 );
+
 
