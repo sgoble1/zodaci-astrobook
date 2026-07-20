@@ -83,21 +83,33 @@ export default function Transits() {
       </section>
 
       {active && (
-        <section className="grid md:grid-cols-[1fr,auto] gap-6 items-start p-6 border border-border rounded bg-card/70">
+        <section id={active.id} className="grid md:grid-cols-[1fr,auto] gap-6 items-start p-6 border border-border rounded bg-card/70">
           <div>
-            <div className="font-smallcaps text-[11px] text-gold">{active.window}</div>
+            <div className="flex items-center gap-3 flex-wrap">
+              <div className="font-smallcaps text-[11px] text-gold">{active.window}</div>
+              <ConfidenceBadge level={active.reasoning.confidence} note={active.reasoning.caveats?.[0]} compact />
+              <CopyLinkButton hash={active.id} label="Share this transit" />
+            </div>
             <h2 className="font-display text-2xl mt-1">{active.title}</h2>
             <div className="text-sm text-muted-foreground mt-1">
               {active.transiting} <span className="italic">{active.aspect}</span> {active.natalPoint}
             </div>
             <div className="gold-rule my-4 w-16" />
             <p className="leading-relaxed text-foreground/90">{active.body}</p>
+            <ReasoningPanel reasoning={active.reasoning} />
+            <div className="mt-4 text-[11px] text-muted-foreground">
+              <span className="font-smallcaps text-[10px] text-gold">Cited in · </span>
+              {active.sources.map((s, i) => (
+                <span key={i}>{i > 0 && ' · '}<span className="italic">{s.doc}</span> {s.section}{s.page && ` ${s.page}`}</span>
+              ))}
+            </div>
           </div>
           <div className={`shrink-0 self-start px-3 py-1.5 rounded-full text-[10px] font-smallcaps ${INTENSITY_COLOR[active.intensity]} text-background`}>
             {active.intensity}
           </div>
         </section>
       )}
+
 
       <section>
         <h2 className="font-display mb-4">All transits, in order</h2>
