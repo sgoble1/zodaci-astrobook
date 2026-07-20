@@ -1,8 +1,12 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import { TRANSITS, TRANSITS_SOURCE, type TransitEvent } from '@/content/transits';
 import { SourceRefPanel } from '@/components/common/SourceRefPanel';
+import { CopyLinkButton } from '@/components/common/CopyLinkButton';
+import { ReasoningPanel } from '@/components/common/ReasoningPanel';
+import { ConfidenceBadge } from '@/components/common/ConfidenceBadge';
 
-const YEARS = Array.from({ length: 15 }, (_, i) => 2026 + i); // 2026–2040
+const YEARS = Array.from({ length: 15 }, (_, i) => 2026 + i);
 
 const INTENSITY_COLOR: Record<TransitEvent['intensity'], string> = {
   'era-defining': 'bg-gold',
@@ -10,8 +14,19 @@ const INTENSITY_COLOR: Record<TransitEvent['intensity'], string> = {
   notable: 'bg-muted-foreground',
 };
 
+
 export default function Transits() {
+  const location = useLocation();
   const [active, setActive] = useState<TransitEvent | null>(TRANSITS[0]);
+
+  useEffect(() => {
+    const hash = location.hash.replace('#', '');
+    if (!hash) return;
+    const t = TRANSITS.find(x => x.id === hash);
+    if (t) setActive(t);
+  }, [location.hash]);
+
+
 
   const barLeft = (t: TransitEvent) => ((t.startYear - 2026) / 14) * 100;
   const barWidth = (t: TransitEvent) => Math.max(2, ((t.endYear - t.startYear + 1) / 14) * 100);
