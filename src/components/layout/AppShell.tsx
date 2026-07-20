@@ -20,6 +20,9 @@ const nav = [
   { to: '/numerology', label: 'Numerology · Pinnacles' },
   { to: '/transits', label: 'Transits · 2026–2040' },
   { to: '/chinese', label: 'Chinese · Ba Zi' },
+  { to: '/volume-2', label: 'Volume II · Supplement' },
+  { to: '/data-quality', label: 'Data Quality' },
+
   { to: '/art-direction', label: 'Art Direction' },
 ];
 
