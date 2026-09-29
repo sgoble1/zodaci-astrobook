@@ -9,6 +9,7 @@ import { TOPICS } from '@/content/topics';
 import { KUA_DIRECTIONS, ROOMS, CRYSTALS, TWELVE_WEEKS, STAR_INFO, DIR_NAME } from '@/content/fengshui';
 
 const FS_DOCS = [
+  { id: 'guide-fsp', kind: 'guide', title: 'Feng Shui Guide · Page by Page', subtitle: 'Pages 114–125 + Flying Stars wheel', body: 'feng shui page flying stars wheel year', route: '/guides/feng-shui-pages' },
   { id: 'guide-tl', kind: 'guide', title: 'Timeline & Retrograde Guide', subtitle: 'All 16 sections', body: 'life phases mercury venus jupiter saturn retrograde eclipse strategies', route: '/guides/timeline-retrogrades' },
   { id: 'guide-fs', kind: 'guide', title: 'Birth Chart & Feng Shui Guide', subtitle: 'All 20 sections', body: 'feng shui big three planets houses patterns lessons shadow affirmations', route: '/guides/birth-chart-feng-shui' },
   ...TOPICS.map(t => ({ id: 'topic-' + t.slug, kind: 'topic', title: t.label, subtitle: 'Theme · all sources', body: t.intro + ' ' + t.query, route: `/topics/${t.slug}` })),
