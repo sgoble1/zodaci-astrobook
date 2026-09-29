@@ -5,7 +5,7 @@ import { loadIndex, type MbEntry } from './Masterbook';
 
 export const GUIDES = [
   { slug: 'timeline-retrogrades', prefix: 'c-a4bea1f0-', title: 'Timeline & Retrograde Guide', blurb: 'Life phases 1990–2060, Mercury, Venus, Jupiter and Saturn guides, eclipses, daily-to-annual strategies and appendices.' },
-  { slug: 'feng-shui-pages', prefix: 'c-ff306540-p', title: 'Feng Shui Guide · Page by Page', blurb: 'Pages 114–125 of the Birth Chart & Feng Shui guide — the full home implementation guide and affirmations — each as its own section.' },
+  { slug: 'feng-shui-pages', prefix: 'c-ff306540-p', title: 'Feng Shui Guide · Page by Page', blurb: 'Pages 114–180 of the Birth Chart & Feng Shui guide — the home implementation guide, affirmations and the Final Synthesis — each as its own section.' },
   { slug: 'birth-chart-feng-shui', prefix: 'c-ff306540-', title: 'Birth Chart & Feng Shui Guide', blurb: 'Big Three, planets, aspects, houses, purpose, patterns, lessons, love, career, health, shadow work and the full Feng Shui home plan.' },
 ];
 
