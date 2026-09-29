@@ -38,6 +38,7 @@ import Podcasts from './pages/Podcasts';
 import Sources from './pages/Sources';
 import SourceReader from './pages/SourceReader';
 import Ask from './pages/Ask';
+import Topic, { TopicsIndex } from './pages/Topic';
 import FlyingStars from './pages/FlyingStars';
 import Bagua from './pages/Bagua';
 import PdfViewer from './pages/PdfViewer';
@@ -162,6 +163,8 @@ export default function App() {
             <Route path="/sources" element={<Sources />} />
             <Route path="/sources/read/:id" element={<SourceReader />} />
             <Route path="/ask" element={<Ask />} />
+            <Route path="/topics" element={<TopicsIndex />} />
+            <Route path="/topics/:slug" element={<Topic />} />
             <Route path="*" element={<NotFound />} />
 
           </Route>
