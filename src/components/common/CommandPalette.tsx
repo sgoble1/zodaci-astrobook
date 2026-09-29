@@ -5,9 +5,11 @@ import {
   CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList,
 } from '@/components/ui/command';
 import { SEARCH_INDEX, type SearchDoc } from '@/content/compendium';
+import { TOPICS } from '@/content/topics';
 import { KUA_DIRECTIONS, ROOMS, CRYSTALS, TWELVE_WEEKS, STAR_INFO, DIR_NAME } from '@/content/fengshui';
 
 const FS_DOCS = [
+  ...TOPICS.map(t => ({ id: 'topic-' + t.slug, kind: 'topic', title: t.label, subtitle: 'Theme · all sources', body: t.intro + ' ' + t.query, route: `/topics/${t.slug}` })),
   { id: 'fs-bagua', kind: 'fengshui', title: 'Bagua & Home Guide', subtitle: 'Kua 1 directions, rooms, crystals, 12 weeks', body: 'bagua kua feng shui home', route: '/feng-shui/bagua' },
   { id: 'fs-stars', kind: 'fengshui', title: 'Flying Stars', subtitle: 'Annual & Period 9 star charts 2024–2043', body: 'xuan kong flying star annual period nine', route: '/feng-shui/flying-stars' },
   ...KUA_DIRECTIONS.map(k => ({ id: 'fs-dir-' + k.dir, kind: 'fengshui', title: `${k.name} · ${DIR_NAME[k.dir]}`, subtitle: k.meaning, body: k.activation, route: `/feng-shui/bagua?sector=${k.dir}` })),

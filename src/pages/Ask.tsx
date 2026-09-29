@@ -29,6 +29,7 @@ export default function Ask() {
   const pool = corpus && doc !== 'all' ? corpus.filter(p => p.doc === doc) : corpus;
 
   useEffect(() => { loadCorpus().then(setCorpus); }, []);
+  useEffect(() => { const pq = params.get('q'); if (pq) setQ(pq); }, [params]);
 
   const ask = async (question: string) => {
     if (!pool || !question.trim() || busy) return;
