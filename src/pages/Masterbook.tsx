@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Input } from '@/components/ui/input';
 
-export type MbEntry = { id: string; label: string; title: string; part: string; words: number; sections: string[]; excerpt: string };
+export type MbEntry = { id: string; label: string; title: string; part: string; words: number; sections: string[]; excerpt: string; doc?: string; page?: number };
 
 let cache: Promise<MbEntry[]> | null = null;
 export const loadIndex = () => (cache ??= fetch('/masterbook/index.json').then(r => r.json()));

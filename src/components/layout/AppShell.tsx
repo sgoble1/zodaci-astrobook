@@ -90,7 +90,7 @@ function SidebarInner() {
             <div className="font-smallcaps text-[10px] text-gold px-3 mb-1">{g.title}</div>
             {g.items.map(n => (
               <NavLink
-                key={n.to} to={n.to} end={n.to === '/'}
+                key={n.to} to={n.to} end={n.to === '/' || n.to === '/masterbook'}
                 className={({ isActive }) =>
                   `px-3 py-1.5 rounded border border-transparent transition-colors ${
                     isActive ? 'bg-accent/15 border-accent/30 text-foreground' : 'text-muted-foreground hover:text-foreground hover:bg-muted/60'
