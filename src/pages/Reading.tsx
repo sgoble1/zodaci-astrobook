@@ -59,6 +59,7 @@ function ComputedReading({ input }: { input: NonNullable<ReturnType<typeof fromP
         <p className="text-muted-foreground mt-2 max-w-2xl">This chart isn’t covered by the source documents, so everything here is calculated, and the meanings are short in-app keyword notes rather than quotes. <Link className="underline" to={`/chart-calculator?${toParams(input)}`}>Open in the calculator</Link> · <Link className="underline" to="/reading">April’s full sourced reading</Link></p>
         <div className="mt-2 flex flex-wrap gap-2">{r.flags.map((f, i) => <ConfidenceBadge key={i} level={f.level} note={`${f.topic}: ${f.note}`} />)}</div>
       </header>
+      <ChartWheel r={r} />
       <Section id="core" n="I" title="The core triad" level={worst} note="Sun, Moon and Rising. Moon and Rising depend on the birth time.">
         {['sun', 'moon'].map(k => <p key={k}><b>{b(k).name} in {b(k).sign}</b> ({BODY_KEYWORDS[k]}): {SIGN_KEYWORDS[b(k).sign]}.{b(k).house && ` Placed in house ${b(k).house}.`} <ConfidenceBadge compact level={b(k).confidence} note={b(k).note} /></p>)}
         {r.asc != null ? <p><b>Rising {fmtLon(r.asc).sign}</b>: {SIGN_KEYWORDS[fmtLon(r.asc).sign]}. Midheaven {fmtLon(r.mc!).text}.</p> : <p className="text-oxblood text-sm">Without a birth time, the Rising sign and houses are left out.</p>}
@@ -72,6 +73,11 @@ function ComputedReading({ input }: { input: NonNullable<ReturnType<typeof fromP
       <Section id="bazi" n="IV" title="Four Pillars" level={input.time ? 'derived' : 'ambiguous'} note="Hour pillar requires birth time.">
         <p>{r.bazi.map(p => `${p.label}: ${p.stem}${p.branch} ${p.romanized} (${p.polarity} ${p.stemElement} ${p.animal})`).join(' · ')}</p>
         <p className="text-sm">Element count: {Object.entries(r.elements).map(([e, n]) => `${e} ${n}`).join(', ')}. {Object.entries(r.elements).filter(([, n]) => n === 0).map(([e]) => e).join(', ') || 'No element'} missing.</p>
+      </Section>
+      <Section id="compendium" n="V" title="Compendium entries this chart touches" level="approximate" note="Fixed-star degrees come from the Compendium; contacts use a 1.5° orb against the calculated positions.">
+        {stars.length === 0 ? <p className="text-sm text-muted-foreground">None of the Compendium’s fixed stars fall within 1.5° of this chart’s planets or angles.</p>
+          : <ul className="grid sm:grid-cols-2 gap-3">{stars.map((s, i) => <li key={i} className="parchment p-3 text-sm"><Link to={`/compendium#${s.star.id}`} className="font-display text-lg hover:underline">★ {s.star.name}</Link> <span className="text-xs text-muted-foreground">{s.star.degree} · conjunct {s.point} ({s.orb.toFixed(1)}°)</span><p className="mt-1">{s.star.meaning}<Cite source={s.star.source} /></p></li>)}</ul>}
+        <ReasoningPanel reasoning={{ inputs: [{ label: 'Positions', value: 'Calculated planets, Ascendant and Midheaven' }, { label: 'Star list', value: `${FIXED_STARS.length} stars from the Compendium` }], steps: [{ label: 'Parse', detail: 'Each star’s zodiac degree is converted to ecliptic longitude.' }, { label: 'Compare', detail: 'A contact is listed when the star is within 1.5° of a chart point.' }], output: `${stars.length} contact(s) found.`, confidence: 'approximate', caveats: ['The Compendium’s interpretations were written for April; for other charts they describe the star in general.'] }} />
       </Section>
     </div>
   );

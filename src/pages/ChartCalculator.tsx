@@ -11,6 +11,8 @@ import { CopyLinkButton } from '@/components/common/CopyLinkButton';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import type { SourceRef } from '@/content/compendium';
+import { ChartWheel } from '@/components/chart/ChartWheel';
+import { aprilSourcesFor } from '@/content/birthChartBook';
 
 const APRIL: ChartInput = { date: '1990-09-06', time: '15:38', lat: 42.8689, lon: -76.9856, tz: 'America/New_York', placeLabel: 'Geneva, New York, United States', placeSource: 'geocoded' };
 const BC_SRC: SourceRef = { doc: 'Complete Birth Chart Analysis & Feng Shui Guide', section: 'Planetary positions', page: 'pp. 1–10' };
@@ -86,6 +88,11 @@ export default function ChartCalculator() {
             <p className="text-sm">{input.placeLabel || 'Manual coordinates'} · {input.lat.toFixed(4)}, {input.lon.toFixed(4)} · {input.tz} · UTC{result.utcOffsetMin >= 0 ? '+' : '−'}{Math.abs(result.utcOffsetMin / 60)} → {result.utc.toISOString().replace('T', ' ').slice(0, 16)} UT</p>
             {result.flags.length === 0 ? <div className="flex items-center gap-2 text-sm"><ConfidenceBadge level="confirmed" />All inputs present. Nothing ambiguous was found.</div>
               : <ul className="space-y-1.5">{result.flags.map((f, i) => <li key={i} className="flex items-start gap-2 text-sm"><ConfidenceBadge level={f.level} compact note={f.note} /><span><b>{f.topic}:</b> {f.note}</span></li>)}</ul>}
+          </section>
+
+          <section>
+            <h2 className="text-2xl mb-3">The natal wheel</h2>
+            <ChartWheel key={sp.toString()} r={result} sourcesFor={isApril ? aprilSourcesFor : undefined} />
           </section>
 
           <section>
