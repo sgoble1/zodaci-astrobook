@@ -8,9 +8,23 @@ export type Topic = {
   /** Hand-picked in-app pages that cover this topic. */
   pages?: { to: string; label: string }[];
   questions: string[];
+  /** Key facts quoted or summarised from the sources, each with where it comes from. */
+  facts?: { text: string; cite: string; to: string }[];
 };
 
 export const TOPICS: Topic[] = [
+  { slug: 'aries-funnel', label: 'The Aries Funnel · Bucket Handle', intro: 'April\'s chart is a Bucket: nearly every planet sits on one side, and the lone Moon in Aries in the 3rd house is the handle. Everything in the chart pours out through that Moon — her voice, feelings and communication.',
+    chapters: /bucket|handle|funnel|aries moon|moon: aries|chart pattern/i, query: 'bucket handle funnel aries moon third house channel energy released chart pattern',
+    pages: [{ to: '/masterbook/bcb-05', label: 'Birth Chart Book · Your Moon: Aries 6°37′ H3' }, { to: '/masterbook/c-ff306540-03', label: 'Guide · 4E The Bucket Pattern' }, { to: '/masterbook/ch-38', label: 'Saturn Transit Guide: The Bucket Handle' }, { to: '/masterbook/x-extended-chapter-aries-moon-h3-the-complete-analysis', label: 'Extended Chapter · Aries Moon H3' }, { to: '/planets/moon', label: 'Planets · Moon' }],
+    facts: [
+      { text: 'Moon in Aries 6°37′ in the 3rd house — "Handle — all chart energy funnels here".', cite: 'Timeline & Retrograde Guide · chart table', to: '/masterbook/c-a4bea1f0-00' },
+      { text: '"The Bucket pattern with the Aries Moon H3 as handle is, without question, the most practically important structural feature of April\'s natal chart." The handle is "the exhaust valve, the creative output mechanism".', cite: 'Birth Chart & Feng Shui Guide · 4E', to: '/masterbook/c-ff306540-03' },
+      { text: '"Every impulse, every ambition, every talent, every wound in your entire chart funnels through that Moon in Aries in your third house."', cite: 'Timeline & Retrograde Guide · Opening', to: '/masterbook/c-a4bea1f0-00' },
+      { text: 'Full Moon birth: the Aries Moon sits opposite the Virgo Sun, so the handle faces the whole cluster of the chart.', cite: 'Birth Chart page', to: '/birth-chart' },
+      { text: 'Saturn in Aries (2025–2028) is "the Saturn transit of the bucket handle… This is not a blocking transit. This is Saturn strengthening the handle. What you communicate now carries lasting weight."', cite: 'Masterbook · Saturn Transit Guide', to: '/masterbook/ch-38' },
+      { text: 'Saturn in Gemini then crosses the 3rd house, the Moon\'s house: the writing, teaching and speaking "receives the structure that will allow it to last".', cite: 'Masterbook · Saturn Transit Guide', to: '/masterbook/ch-38' },
+    ],
+    questions: ['What does the Aries Moon bucket handle mean for how I express myself?', 'How do the Saturn in Aries and Gemini transits affect my bucket handle?', 'How do I use the handle well instead of burning out?'] },
   { slug: 'past-lives', label: 'Past Lives & Karma', intro: 'What the chart says about karmic history, the South Node inheritance, and soul contracts carried into this life.',
     chapters: /past li|karm|south node|nodal|soul contract|reincarn/i, query: 'past lives karma karmic south node previous incarnation soul contract',
     pages: [{ to: '/masterbook/bcb-20', label: 'Birth Chart Book · Ch. 18 Past Lives & Karmic Signatures' }, { to: '/volume-2', label: 'Volume II' }],
