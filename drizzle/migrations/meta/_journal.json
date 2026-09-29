@@ -22,6 +22,13 @@
       "when": 1790705395830,
       "tag": "0002_admin_roles",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1790705751116,
+      "tag": "0003_document_overrides",
+      "breakpoints": true
     }
   ]
 }
