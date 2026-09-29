@@ -14,6 +14,33 @@ export type Database = {
   }
   public: {
     Tables: {
+      document_overrides: {
+        Row: {
+          doc_key: string
+          hidden: boolean
+          note: string | null
+          sort_order: number | null
+          title: string | null
+          updated_at: string
+        }
+        Insert: {
+          doc_key: string
+          hidden?: boolean
+          note?: string | null
+          sort_order?: number | null
+          title?: string | null
+          updated_at?: string
+        }
+        Update: {
+          doc_key?: string
+          hidden?: boolean
+          note?: string | null
+          sort_order?: number | null
+          title?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       library_items: {
         Row: {
           category: string | null
