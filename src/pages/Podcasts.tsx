@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { ListPlus, ListX, SkipForward } from 'lucide-react';
 import { Headphones, Trash2, Download, Upload } from 'lucide-react';
-import { useLibrary, useSession, type LibraryItem } from '@/hooks/useLibrary';
+import { useLibrary, useSession, useIsAdmin, type LibraryItem } from '@/hooks/useLibrary';
 import { AuthGate } from '@/components/common/AuthGate';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -12,6 +12,7 @@ import { toast } from 'sonner';
 export default function Podcasts() {
   const lib = useLibrary('podcast');
   const session = useSession();
+  const isAdmin = useIsAdmin(session);
   const [current, setCurrent] = useState<LibraryItem | null>(null);
   const [q, setQ] = useState('');
   const [speed, setSpeed] = useState<number>(() => +(localStorage.getItem('pod:speed') ?? 1));

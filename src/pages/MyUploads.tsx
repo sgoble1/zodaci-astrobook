@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FileUp, Trash2 } from 'lucide-react';
-import { useLibrary, useSession } from '@/hooks/useLibrary';
+import { useLibrary, useSession, useIsAdmin } from '@/hooks/useLibrary';
 import { AuthGate } from '@/components/common/AuthGate';
 import { extractSections } from '@/lib/extract';
 import { fmtSize } from '@/content/sources';
@@ -11,6 +11,7 @@ import { toast } from 'sonner';
 
 export default function MyUploads() {
   const session = useSession();
+  const isAdmin = useIsAdmin(session);
   const { items, loading, upload, remove } = useLibrary('masterbook');
   const [file, setFile] = useState<File | null>(null);
   const [title, setTitle] = useState('');
