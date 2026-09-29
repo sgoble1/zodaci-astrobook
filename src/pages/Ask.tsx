@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Sparkles, Square } from 'lucide-react';
 import { loadCorpus, rank, type Passage } from '@/lib/corpus';
+import ReactMarkdown from 'react-markdown';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 
@@ -45,10 +46,14 @@ export default function Ask() {
   };
 
   const cited = new Set([...answer.matchAll(/\[(\d+)\]/g)].map(m => +m[1]));
-  const renderAnswer = (t: string) => t.split(/(\[\d+\])/g).map((part, i) => {
-    const m = part.match(/^\[(\d+)\]$/);
-    return m ? <a key={i} href={`#cite-${m[1]}`} className="text-gold align-super text-[0.7em] font-semibold px-0.5 hover:underline">[{m[1]}]</a> : <span key={i}>{part}</span>;
-  });
+  const renderAnswer = (t: string) => (
+    <div className="mb-prose">
+      <ReactMarkdown components={{ a: ({ href, children }) => <a href={href} className="text-gold align-super text-[0.7em] font-semibold px-0.5 no-underline hover:underline">{children}</a> }}>
+        {t.replace(/\[(\d+)\]/g, '[[$1]](#cite-$1)')}
+      </ReactMarkdown>
+    </div>
+  );
+
 
   return (
     <div className="space-y-8">
@@ -78,7 +83,7 @@ export default function Ask() {
             <p className="font-display text-xl">{asked}</p>
           </div>
           {err && <p className="text-destructive text-sm">{err}</p>}
-          {(answer || busy) && <div className="parchment p-5 whitespace-pre-wrap leading-relaxed">{answer ? renderAnswer(answer) : <span className="text-muted-foreground italic">Reading the passages…</span>}</div>}
+          {(answer || busy) && <div className="parchment p-5 leading-relaxed">{answer ? renderAnswer(answer) : <span className="text-muted-foreground italic">Reading the passages…</span>}</div>}
           {hits.length > 0 && (
             <div>
               <h2 className="text-2xl mb-3">Cited passages</h2>
