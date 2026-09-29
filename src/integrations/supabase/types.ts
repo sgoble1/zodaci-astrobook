@@ -25,6 +25,7 @@ export type Database = {
           kind: string
           mime_type: string | null
           owner_id: string
+          sections: Json | null
           size_bytes: number | null
           title: string
         }
@@ -38,6 +39,7 @@ export type Database = {
           kind?: string
           mime_type?: string | null
           owner_id?: string
+          sections?: Json | null
           size_bytes?: number | null
           title: string
         }
@@ -51,6 +53,7 @@ export type Database = {
           kind?: string
           mime_type?: string | null
           owner_id?: string
+          sections?: Json | null
           size_bytes?: number | null
           title?: string
         }
