@@ -39,8 +39,8 @@ export default function PdfViewer() {
     let cancelled = false;
     (async () => {
       try {
-        const pdfjs = await import('pdfjs-dist');
-        const worker = await import('pdfjs-dist/build/pdf.worker.min.mjs?url');
+        const pdfjs = await import('pdfjs-dist/legacy/build/pdf.mjs');
+        const worker = await import('pdfjs-dist/legacy/build/pdf.worker.min.mjs?url');
         pdfjs.GlobalWorkerOptions.workerSrc = worker.default;
         const d = await pdfjs.getDocument({ url: meta.url }).promise;
         if (!cancelled) setDoc(d);
