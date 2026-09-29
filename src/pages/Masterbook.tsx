@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Input } from '@/components/ui/input';
+import { useLibrary } from '@/hooks/useLibrary';
 
 export type MbEntry = { id: string; label: string; title: string; part: string; words: number; sections: string[]; excerpt: string; doc?: string; page?: number };
 
@@ -35,6 +36,7 @@ export default function Masterbook() {
       .forEach(e => { const keys = view === 'parts' ? [e.part] : (catsFor(e).length ? catsFor(e) : ['Other']); keys.forEach(k => m.set(k, [...(m.get(k) ?? []), e])); });
     return view === 'parts' ? [...m.entries()] : [...m.entries()].sort((a, b) => { const o = (k: string) => { const i = CATEGORIES.findIndex(c => c[0] === k); return i < 0 ? 99 : i; }; return o(a[0]) - o(b[0]); });
   }, [entries, q, cat, view]);
+  const uploads = useLibrary('masterbook');
   const total = entries.reduce((a, e) => a + e.words, 0);
 
   return (
@@ -43,6 +45,7 @@ export default function Masterbook() {
         <div className="font-smallcaps text-xs text-gold">The Masterbook · complete text</div>
         <h1 className="text-4xl sm:text-5xl mt-2">April’s Astrological Masterbook</h1>
         <p className="text-muted-foreground mt-3 max-w-2xl">Every chapter, appendix, extended analysis and illustration plate from the Masterbook, reproduced in full — {entries.length} sections, about {Math.round(total / 1000)}k words. Pick any entry to read it.</p>
+        <div className="flex flex-wrap gap-4 text-sm mt-3"><Link to="/masterbook/index" className="underline">Document index — every source & section</Link><Link to="/masterbook/upload" className="underline">Upload your own PDFs & spreadsheets</Link></div>
         <Input placeholder="Search chapter titles and section headings…" value={q} onChange={e => setQ(e.target.value)} className="max-w-md mt-4" />
         <div className="flex flex-wrap items-center gap-2 mt-4 text-xs">
           <span className="font-smallcaps text-[10px] text-gold mr-1">Arrange by</span>
@@ -69,6 +72,24 @@ export default function Masterbook() {
           </div>
         </section>
       ))}
+      {uploads.items.length > 0 && !cat && (
+        <section>
+          <h2 className="text-2xl mb-1">Your Uploaded Documents <span className="text-sm text-muted-foreground font-sans">· {uploads.items.length}</span></h2>
+          <div className="gold-rule mb-4" />
+          <div className="grid sm:grid-cols-2 gap-3">
+            {uploads.items.filter(u => (u.title + (u.category ?? '')).toLowerCase().includes(q.toLowerCase())).map(u => {
+              const secs = (u.sections as { title: string }[] | null) ?? [];
+              return (
+                <div key={u.id} className="parchment p-4">
+                  <div className="font-smallcaps text-[10px] text-gold">{u.category} · {secs.length} sections</div>
+                  <Link to={`/masterbook/u/${u.id}`} className="font-display text-lg leading-snug mt-1 block hover:underline">{u.title}</Link>
+                  <div className="flex flex-wrap gap-x-3 gap-y-1 mt-2 text-xs">{secs.slice(0, 6).map((s, i) => <Link key={i} to={`/masterbook/u/${u.id}#s${i}`} className="text-muted-foreground hover:text-foreground underline">{s.title.slice(0, 40)}</Link>)}{secs.length > 6 && <span className="text-muted-foreground">+{secs.length - 6} more</span>}</div>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+      )}
     </div>
   );
 }
