@@ -11,6 +11,8 @@ import { ReasoningPanel } from '@/components/common/ReasoningPanel';
 import { Cite } from '@/components/common/Cite';
 import { CopyLinkButton } from '@/components/common/CopyLinkButton';
 import type { ConfidenceLevel } from '@/content/confidence';
+import { ChartWheel, starContacts } from '@/components/chart/ChartWheel';
+import { BCB_CHAPTER, aprilSourcesFor } from '@/content/birthChartBook';
 
 const SRC_BC: SourceRef = { doc: 'Complete Birth Chart Analysis & Feng Shui Guide', section: 'Planetary placements', page: 'Sections 2–12' };
 const SRC_ASP: SourceRef = { doc: 'Complete Birth Chart Analysis & Feng Shui Guide', section: 'Major aspects' };
@@ -36,6 +38,7 @@ function PlacementBlock({ k }: { k: PlanetKey }) {
     <article className="parchment p-4">
       <div className="flex flex-wrap items-baseline gap-2"><Link to={`/planets/${p.key}`} className="font-display text-xl hover:underline">{p.glyph} {p.name} in {p.sign}</Link><span className="text-xs text-muted-foreground">{p.degree}°{String(p.minute).padStart(2, '0')}′ · House {p.house} · {p.motion} · {p.dignity}</span></div>
       <p className="italic mt-1">{p.headline}</p>
+      {BCB_CHAPTER[p.key] && <Link to={`/masterbook/${BCB_CHAPTER[p.key].id}`} className="text-xs underline text-gold">Read the full chapter — Birth Chart Book {BCB_CHAPTER[p.key].label}</Link>}
       <p className="text-sm mt-2">{p.interpretation}<Cite source={SRC_BC} /></p>
       {(sab || stars.length > 0) && (
         <div className="flex flex-wrap gap-2 mt-3 text-xs">
@@ -50,6 +53,7 @@ function PlacementBlock({ k }: { k: PlanetKey }) {
 function ComputedReading({ input }: { input: NonNullable<ReturnType<typeof fromParams>> }) {
   const r = useMemo(() => computeChart(input), [input]);
   const b = (k: string) => r.bodies.find(x => x.key === k)!;
+  const stars = useMemo(() => starContacts(r), [r]);
   const worst: ConfidenceLevel = r.flags.some(f => f.level === 'ambiguous') ? 'ambiguous' : r.flags.length ? 'approximate' : 'derived';
   return (
     <div className="space-y-10">
@@ -102,6 +106,8 @@ export default function Reading() {
         <nav className="flex flex-wrap gap-2 mt-4">{toc.map(([id, t], i) => <a key={id} href={`#${id}`} className="text-xs border border-border rounded px-2 py-1 hover:bg-muted">{['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX'][i]}. {t}</a>)}</nav>
         <p className="text-xs mt-3"><Link to="/chart-calculator" className="underline">Calculate a different chart</Link> and choose “Turn into a reading”.</p>
       </header>
+
+      <section><h2 className="text-2xl mb-3">The natal wheel</h2><p className="text-sm text-muted-foreground mb-3">Calculated from the 3:38 PM birth data; tap any element for its details, confidence and the matching Birth Chart Book chapter.</p><ChartWheel r={check} sourcesFor={aprilSourcesFor} /></section>
 
       <Section id="core" n="I" title="The Full Moon core" level="confirmed" note="Sun and Moon agree with the calculator to within 1′.">
         <p className="max-w-3xl">{ASPECTS.find(a => a.a === 'sun' && a.b === 'moon')?.interpretation}<Cite source={SRC_ASP} /></p>
