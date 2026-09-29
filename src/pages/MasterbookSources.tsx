@@ -81,6 +81,7 @@ export default function MasterbookSources() {
                   <div className="flex flex-wrap gap-4 text-xs mb-3">
                     {d.open && <a href={d.open} target="_blank" rel="noreferrer" className="underline flex items-center gap-1"><ExternalLink className="w-3 h-3" />Open original</a>}
                     {d.read && <Link to={d.read} className="underline">Read in the app</Link>}
+                    {d.key.startsWith('lib:') && d.kind === 'PDF' && <Link to={`/masterbook/pdf/${d.key.slice(4)}`} className="underline">View pages in the app</Link>}
                     <Link to={d.ask} className="underline">Ask about this document</Link>
                   </div>
                   <ol className="divide-y divide-border/60 text-sm">

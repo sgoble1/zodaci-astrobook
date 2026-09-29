@@ -37,6 +37,11 @@ import Podcasts from './pages/Podcasts';
 import Sources from './pages/Sources';
 import SourceReader from './pages/SourceReader';
 import Ask from './pages/Ask';
+import FlyingStars from './pages/FlyingStars';
+import Bagua from './pages/Bagua';
+import PdfViewer from './pages/PdfViewer';
+import ChartCalculator from './pages/ChartCalculator';
+import Reading from './pages/Reading';
 
 
 /** Build a single registry of every drawer-openable Compendium item. Used so
@@ -145,6 +150,11 @@ export default function App() {
             <Route path="/masterbook/index" element={<MasterbookSources />} />
             <Route path="/masterbook/upload" element={<MyUploads />} />
             <Route path="/masterbook/u/:id" element={<UploadedDoc />} />
+            <Route path="/masterbook/pdf/:id" element={<PdfViewer />} />
+            <Route path="/feng-shui/flying-stars" element={<FlyingStars />} />
+            <Route path="/feng-shui/bagua" element={<Bagua />} />
+            <Route path="/chart-calculator" element={<ChartCalculator />} />
+            <Route path="/reading" element={<Reading />} />
             <Route path="/masterbook/:id" element={<MasterbookChapter />} />
             <Route path="/podcasts" element={<Podcasts />} />
             <Route path="/sources" element={<Sources />} />

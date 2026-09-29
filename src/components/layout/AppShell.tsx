@@ -5,16 +5,16 @@ import { BIRTH } from '@/content/april';
 import { CommandPaletteTrigger } from '@/components/common/CommandPalette';
 
 const groups: { title: string; items: { to: string; label: string }[] }[] = [
-  { title: 'Begin', items: [{ to: '/', label: 'Home' }, { to: '/masterbook', label: 'The Masterbook · Full Text' }, { to: '/masterbook/index', label: 'Document Index' }, { to: '/masterbook/upload', label: 'Upload to the Masterbook' }, { to: '/ask', label: 'Ask the Sources' }] },
+  { title: 'Begin', items: [{ to: '/', label: 'Home' }, { to: '/masterbook', label: 'The Masterbook · Full Text' }, { to: '/masterbook/index', label: 'Document Index' }, { to: '/masterbook/upload', label: 'Upload to the Masterbook' }, { to: '/ask', label: 'Ask the Sources' }, { to: '/reading', label: 'The Complete Reading' }] },
   { title: 'The Natal Chart', items: [
-    { to: '/birth-chart', label: 'Birth Chart' }, { to: '/planets', label: 'Planets' }, { to: '/houses', label: 'Houses' },
+    { to: '/birth-chart', label: 'Birth Chart' }, { to: '/chart-calculator', label: 'Chart Calculator' }, { to: '/planets', label: 'Planets' }, { to: '/houses', label: 'Houses' },
     { to: '/aspects', label: 'Aspects' }, { to: '/star-map', label: 'Fixed-Star Sky Map' }, { to: '/compendium', label: 'Compendium' }] },
   { title: 'Timing & Cycles', items: [
     { to: '/timeline', label: 'Timeline · 1990–2060' }, { to: '/transits', label: 'Transits · 2026–2040' },
     { to: '/profection', label: 'Profection · Age 35' }, { to: '/retrogrades', label: 'Retrogrades' }] },
   { title: 'Other Systems', items: [
     { to: '/numerology', label: 'Numerology · Pinnacles' }, { to: '/purpose', label: 'Purpose & Numerology' },
-    { to: '/chinese', label: 'Chinese · Ba Zi' }, { to: '/feng-shui', label: 'Feng Shui' }, { to: '/volume-2', label: 'Volume II · Supplement' }] },
+    { to: '/chinese', label: 'Chinese · Ba Zi' }, { to: '/feng-shui', label: 'Feng Shui' }, { to: '/feng-shui/bagua', label: 'Feng Shui · Bagua & Home' }, { to: '/feng-shui/flying-stars', label: 'Feng Shui · Flying Stars' }, { to: '/volume-2', label: 'Volume II · Supplement' }] },
   { title: 'Library', items: [
     { to: '/podcasts', label: 'Podcasts' }, { to: '/sources', label: 'Source Files' },
     { to: '/data-quality', label: 'Data Quality' }, { to: '/art-direction', label: 'Art Direction' }] },
