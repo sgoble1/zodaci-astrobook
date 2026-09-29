@@ -5,13 +5,29 @@ import {
   CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList,
 } from '@/components/ui/command';
 import { SEARCH_INDEX, type SearchDoc } from '@/content/compendium';
+import { KUA_DIRECTIONS, ROOMS, CRYSTALS, TWELVE_WEEKS, STAR_INFO, DIR_NAME } from '@/content/fengshui';
 
-type Doc = Omit<SearchDoc, 'kind'> & { kind: SearchDoc['kind'] | 'masterbook' | 'companion' | 'upload' };
+const FS_DOCS = [
+  { id: 'fs-bagua', kind: 'fengshui', title: 'Bagua & Home Guide', subtitle: 'Kua 1 directions, rooms, crystals, 12 weeks', body: 'bagua kua feng shui home', route: '/feng-shui/bagua' },
+  { id: 'fs-stars', kind: 'fengshui', title: 'Flying Stars', subtitle: 'Annual & Period 9 star charts 2024–2043', body: 'xuan kong flying star annual period nine', route: '/feng-shui/flying-stars' },
+  ...KUA_DIRECTIONS.map(k => ({ id: 'fs-dir-' + k.dir, kind: 'fengshui', title: `${k.name} · ${DIR_NAME[k.dir]}`, subtitle: k.meaning, body: k.activation, route: `/feng-shui/bagua?sector=${k.dir}` })),
+  ...ROOMS.map(r => ({ id: 'fs-' + r.id, kind: 'fengshui', title: r.name, subtitle: 'Room-by-room · 18C', body: r.text, route: '/feng-shui/bagua', drawer: '#' + r.id })),
+  ...CRYSTALS.map(c => ({ id: 'fs-' + c.id, kind: 'fengshui', title: c.name, subtitle: 'Crystal · ' + c.basis, body: c.purpose + ' ' + c.placement, route: '/feng-shui/bagua', drawer: '#' + c.id })),
+  ...TWELVE_WEEKS.map((w, i) => ({ id: 'fs-week-' + i, kind: 'fengshui', title: `${w.weeks}: ${w.focus}`, subtitle: '12-week implementation', body: w.actions, route: '/feng-shui/bagua', drawer: `#week-${i + 1}` })),
+  ...Object.values(STAR_INFO).map(s => ({ id: 'fs-star-' + s.n, kind: 'fengshui', title: `Star ${s.n} · ${s.name}`, subtitle: `Flying star · ${s.element} · ${s.nature}`, body: s.theme, route: '/feng-shui/flying-stars' })),
+  { id: 'tool-calc', kind: 'tool', title: 'Birth Chart Calculator', subtitle: 'Compute positions, aspects & Ba Zi from date, time, place', body: 'calculate natal chart ephemeris bazi', route: '/chart-calculator' },
+  { id: 'tool-reading', kind: 'tool', title: 'The Complete Reading', subtitle: 'Natal + aspects + Ba Zi + Compendium', body: 'reading synthesis', route: '/reading' },
+  { id: 'tool-pdf', kind: 'tool', title: 'Feng Shui Guide PDF (in-app viewer)', subtitle: 'Section 18, page 114', body: 'pdf viewer', route: '/masterbook/pdf/d-ff306540?page=114' },
+] as unknown as Doc[];
+
+type Doc = Omit<SearchDoc, 'kind'> & { kind: SearchDoc['kind'] | 'masterbook' | 'companion' | 'upload' | 'fengshui' | 'tool' };
 
 const KIND_LABEL: Record<Doc['kind'], string> = {
   masterbook: 'Masterbook',
   companion: 'Timeline · Retrogrades · Feng Shui',
   upload: 'Your Uploads',
+  fengshui: 'Feng Shui',
+  tool: 'Tools',
   sabian: 'Sabian Symbol',
   star: 'Fixed Star',
   asteroid: 'Asteroid Goddess',
@@ -61,7 +77,7 @@ export function CommandPalette() {
       setExtra(docs);
     })();
   }, [open, extra.length]);
-  const all = useMemo(() => [...(SEARCH_INDEX as Doc[]), ...extra], [extra]);
+  const all = useMemo(() => [...(SEARCH_INDEX as Doc[]), ...FS_DOCS, ...extra], [extra]);
 
   const fuse = useMemo(() => new Fuse(all, {
     keys: [
