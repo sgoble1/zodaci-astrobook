@@ -12,6 +12,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import ReactMarkdown from 'react-markdown';
 
 type Tab = 'upload' | 'sections' | 'index';
 
@@ -109,7 +110,14 @@ function SectionEditor({ item, onDone }: { item: LibraryItem; onDone: () => void
             <div className="flex gap-2 items-center"><span className="text-xs text-muted-foreground w-6">{i + 1}.</span><Input value={s.title} onChange={e => set(i, { title: e.target.value })} />
               <Button size="sm" variant="ghost" onClick={() => move(i, -1)}>↑</Button><Button size="sm" variant="ghost" onClick={() => move(i, 1)}>↓</Button>
               <Button size="sm" variant="ghost" className="text-destructive" onClick={() => setSecs(x => x.filter((_, j) => j !== i))}><Trash2 className="w-4 h-4" /></Button></div>
-            <Textarea rows={5} value={s.text} onChange={e => set(i, { text: e.target.value })} />
+            <div className="grid md:grid-cols-2 gap-3">
+              <Textarea rows={8} value={s.text} onChange={e => set(i, { text: e.target.value })} />
+              <div className="border border-border rounded p-3 max-h-64 overflow-y-auto bg-card">
+                <div className="font-smallcaps text-[10px] text-gold mb-1">Live preview</div>
+                <h3 className="text-base font-semibold mb-1">{s.title}</h3>
+                <div className="mb-prose text-sm"><ReactMarkdown>{s.text || '_Empty section_'}</ReactMarkdown></div>
+              </div>
+            </div>
           </li>
         ))}
       </ol>
