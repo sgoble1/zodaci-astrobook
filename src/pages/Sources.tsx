@@ -1,4 +1,7 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { BookOpen } from 'lucide-react';
+import { loadLibraryIndex } from '@/lib/corpus';
 import { Download, Eye, Trash2, FileText, X } from 'lucide-react';
 import { BUILT_IN_SOURCES, fmtSize } from '@/content/sources';
 import { useLibrary, useSession } from '@/hooks/useLibrary';
@@ -13,6 +16,8 @@ export default function Sources() {
   const session = useSession();
   const [view, setView] = useState<Viewable | null>(null);
   const [q, setQ] = useState('');
+  const [readIds, setReadIds] = useState<Record<string, string>>({});
+  useEffect(() => { loadLibraryIndex().then(ix => setReadIds(Object.fromEntries(ix.map(d => [d.fileName, d.id])))); }, []);
   const match = (s: string) => s.toLowerCase().includes(q.toLowerCase());
   const abs = (u: string) => new URL(u, window.location.origin).href;
 
@@ -32,13 +37,14 @@ export default function Sources() {
     </div>
   );
 
-  const Row = ({ title, sub, url, ext, onDelete }: { title: string; sub: string; url?: string; ext: string; onDelete?: () => void }) => (
+  const Row = ({ title, sub, url, ext, onDelete, read }: { title: string; sub: string; url?: string; ext: string; onDelete?: () => void; read?: string }) => (
     <li className="parchment p-4 flex items-center gap-4">
       <div className="w-10 h-12 shrink-0 border border-border grid place-items-center text-[10px] font-smallcaps text-gold"><FileText className="w-4 h-4" />{ext}</div>
       <div className="flex-1 min-w-0">
         <button className="font-display text-lg text-left hover:underline" onClick={() => url && setView({ title, url, ext })}>{title}</button>
         <div className="text-xs text-muted-foreground">{sub}</div>
       </div>
+      {read && <Link to={`/sources/read/${read}`} className="p-2 rounded hover:bg-muted flex items-center gap-1 text-xs" aria-label="Read text"><BookOpen className="w-4 h-4" /><span className="hidden sm:inline">Read</span></Link>}
       {url && <button onClick={() => setView({ title, url, ext })} className="p-2 rounded hover:bg-muted" aria-label="View"><Eye className="w-4 h-4" /></button>}
       {url && <a href={url} download className="p-2 rounded hover:bg-muted" aria-label="Download"><Download className="w-4 h-4" /></a>}
       {onDelete && <button onClick={onDelete} className="p-2 rounded hover:bg-muted" aria-label="Delete"><Trash2 className="w-4 h-4" /></button>}
@@ -56,10 +62,11 @@ export default function Sources() {
       </header>
 
       <section>
+        <p className="text-sm text-muted-foreground mb-3">The Masterbook is readable chapter by chapter in <Link to="/masterbook" className="underline">The Masterbook</Link>. Every other document has a “Read” view with its full text, page by page. Have a question? <Link to="/ask" className="underline">Ask the Sources</Link>.</p>
         <h2 className="text-2xl mb-3">Original documents ({BUILT_IN_SOURCES.length})</h2>
         <ul className="grid gap-3">
           {BUILT_IN_SOURCES.filter(s => match(s.title + s.fileName)).map(s => (
-            <Row key={s.id} title={s.title} ext={s.ext} url={s.url} sub={`${s.fileName} · ${fmtSize(s.size)} · Used in: ${s.usedIn}`} />
+            <Row key={s.id} read={/Masterbook/.test(s.fileName) ? undefined : readIds[s.fileName]} title={s.title} ext={s.ext} url={s.url} sub={`${s.fileName} · ${fmtSize(s.size)} · Used in: ${s.usedIn}`} />
           ))}
         </ul>
       </section>
