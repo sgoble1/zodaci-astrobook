@@ -4,26 +4,20 @@ import { Menu, X } from 'lucide-react';
 import { BIRTH } from '@/content/april';
 import { CommandPaletteTrigger } from '@/components/common/CommandPalette';
 
-const nav = [
-  { to: '/', label: 'Home' },
-  { to: '/birth-chart', label: 'Birth Chart' },
-  { to: '/planets', label: 'Planets' },
-  { to: '/houses', label: 'Houses' },
-  { to: '/aspects', label: 'Aspects' },
-  { to: '/timeline', label: 'Timeline · 1990–2060' },
-  { to: '/retrogrades', label: 'Retrogrades' },
-  { to: '/purpose', label: 'Purpose & Numerology' },
-  { to: '/feng-shui', label: 'Feng Shui' },
-  { to: '/compendium', label: 'Compendium' },
-  { to: '/star-map', label: 'Fixed-Star Sky Map' },
-  { to: '/profection', label: 'Profection · Age 35' },
-  { to: '/numerology', label: 'Numerology · Pinnacles' },
-  { to: '/transits', label: 'Transits · 2026–2040' },
-  { to: '/chinese', label: 'Chinese · Ba Zi' },
-  { to: '/volume-2', label: 'Volume II · Supplement' },
-  { to: '/data-quality', label: 'Data Quality' },
-
-  { to: '/art-direction', label: 'Art Direction' },
+const groups: { title: string; items: { to: string; label: string }[] }[] = [
+  { title: 'Begin', items: [{ to: '/', label: 'Home' }, { to: '/masterbook', label: 'The Masterbook · Full Text' }] },
+  { title: 'The Natal Chart', items: [
+    { to: '/birth-chart', label: 'Birth Chart' }, { to: '/planets', label: 'Planets' }, { to: '/houses', label: 'Houses' },
+    { to: '/aspects', label: 'Aspects' }, { to: '/star-map', label: 'Fixed-Star Sky Map' }, { to: '/compendium', label: 'Compendium' }] },
+  { title: 'Timing & Cycles', items: [
+    { to: '/timeline', label: 'Timeline · 1990–2060' }, { to: '/transits', label: 'Transits · 2026–2040' },
+    { to: '/profection', label: 'Profection · Age 35' }, { to: '/retrogrades', label: 'Retrogrades' }] },
+  { title: 'Other Systems', items: [
+    { to: '/numerology', label: 'Numerology · Pinnacles' }, { to: '/purpose', label: 'Purpose & Numerology' },
+    { to: '/chinese', label: 'Chinese · Ba Zi' }, { to: '/feng-shui', label: 'Feng Shui' }, { to: '/volume-2', label: 'Volume II · Supplement' }] },
+  { title: 'Library', items: [
+    { to: '/podcasts', label: 'Podcasts' }, { to: '/sources', label: 'Source Files' },
+    { to: '/data-quality', label: 'Data Quality' }, { to: '/art-direction', label: 'Art Direction' }] },
 ];
 
 export function AppShell() {
@@ -90,21 +84,21 @@ function SidebarInner() {
 
       <div className="pt-1"><CommandPaletteTrigger /></div>
 
-      <nav className="flex flex-col gap-0.5 text-sm">
-
-        {nav.map(n => (
-          <NavLink
-            key={n.to} to={n.to} end={n.to === '/'}
-            className={({ isActive }) =>
-              `px-3 py-2 rounded border border-transparent transition-colors ${
-                isActive
-                  ? 'bg-accent/15 border-accent/30 text-foreground'
-                  : 'text-muted-foreground hover:text-foreground hover:bg-muted/60'
-              }`
-            }
-          >
-            {n.label}
-          </NavLink>
+      <nav className="flex flex-col gap-4 text-sm">
+        {groups.map(g => (
+          <div key={g.title} className="flex flex-col gap-0.5">
+            <div className="font-smallcaps text-[10px] text-gold px-3 mb-1">{g.title}</div>
+            {g.items.map(n => (
+              <NavLink
+                key={n.to} to={n.to} end={n.to === '/'}
+                className={({ isActive }) =>
+                  `px-3 py-1.5 rounded border border-transparent transition-colors ${
+                    isActive ? 'bg-accent/15 border-accent/30 text-foreground' : 'text-muted-foreground hover:text-foreground hover:bg-muted/60'
+                  }`
+                }
+              >{n.label}</NavLink>
+            ))}
+          </div>
         ))}
       </nav>
 
