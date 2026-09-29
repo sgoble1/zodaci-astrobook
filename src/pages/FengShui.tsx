@@ -21,6 +21,10 @@ export default function FengShui() {
         <p className="max-w-2xl text-lg text-foreground/85 leading-relaxed">
           Every gua of her home, calibrated to a Water Kua in the East Group. Click any of the nine areas to open the full guidance.
         </p>
+        <div className="flex flex-wrap gap-4 text-sm mt-4">
+          <Link to="/feng-shui/bagua" className="underline">Full Bagua & home guide: rooms, crystals, 12 weeks →</Link>
+          <Link to="/feng-shui/flying-stars" className="underline">Flying Stars by year →</Link>
+        </div>
       </header>
 
       <div className="p-6 border border-gold/40 rounded bg-card">
