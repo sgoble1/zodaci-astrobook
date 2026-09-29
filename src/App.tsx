@@ -32,6 +32,8 @@ import Masterbook from './pages/Masterbook';
 import MasterbookChapter from './pages/MasterbookChapter';
 import Podcasts from './pages/Podcasts';
 import Sources from './pages/Sources';
+import SourceReader from './pages/SourceReader';
+import Ask from './pages/Ask';
 
 
 /** Build a single registry of every drawer-openable Compendium item. Used so
@@ -140,6 +142,8 @@ export default function App() {
             <Route path="/masterbook/:id" element={<MasterbookChapter />} />
             <Route path="/podcasts" element={<Podcasts />} />
             <Route path="/sources" element={<Sources />} />
+            <Route path="/sources/read/:id" element={<SourceReader />} />
+            <Route path="/ask" element={<Ask />} />
             <Route path="*" element={<NotFound />} />
 
           </Route>
