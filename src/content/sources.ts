@@ -3,6 +3,8 @@ const mods = import.meta.glob('../assets/sources/*.asset.json', { eager: true, i
 export type BuiltInSource = { id: string; title: string; fileName: string; url: string; size: number; type: string; ext: string; usedIn: string };
 
 const used: [RegExp, string, string][] = [
+  [/Official_Astrological_Birth_Chart_Book/, 'The Official Astrological Birth Chart Book (Word)', 'Masterbook · Birth Chart Book (40 chapters), Reading, Wheel'],
+  [/Base_Book_Astrology_Birthchart_Book_Design/, 'The Celestial Blueprint — Designed Birth Chart Book (PDF, 836 pp.)', 'PDF viewer, Ask the Sources'],
   [/Masterbook/, 'April’s Astrological Masterbook', 'Masterbook reader (all chapters, verbatim)'],
   [/Master_Astrological_Compendium/, 'The Complete Master Astrological Compendium', 'Compendium, Star Map, Profection'],
   [/Volume_2.*\.docx/, 'Volume II — Supplementary Guide (Word)', 'Volume II'],

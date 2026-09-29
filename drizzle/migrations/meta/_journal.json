@@ -15,6 +15,13 @@
       "when": 1790700662710,
       "tag": "0001_library_sections",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1790705395830,
+      "tag": "0002_admin_roles",
+      "breakpoints": true
     }
   ]
 }

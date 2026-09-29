@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FileUp, Trash2 } from 'lucide-react';
-import { useLibrary, useSession } from '@/hooks/useLibrary';
+import { useLibrary, useSession, useIsAdmin } from '@/hooks/useLibrary';
 import { AuthGate } from '@/components/common/AuthGate';
 import { extractSections } from '@/lib/extract';
 import { fmtSize } from '@/content/sources';
@@ -11,6 +11,7 @@ import { toast } from 'sonner';
 
 export default function MyUploads() {
   const session = useSession();
+  const isAdmin = useIsAdmin(session);
   const { items, loading, upload, remove } = useLibrary('masterbook');
   const [file, setFile] = useState<File | null>(null);
   const [title, setTitle] = useState('');
@@ -65,7 +66,7 @@ export default function MyUploads() {
                     <Link to={`/masterbook/u/${it.id}`} className="underline">Read</Link>
                     {it.url && <a href={it.url} target="_blank" rel="noreferrer" className="underline">Open original</a>}
                     <Link to={`/ask?doc=up:${it.id}`} className="underline">Ask about it</Link>
-                    {session?.user.id === it.owner_id && <button onClick={() => remove(it)} className="ml-auto text-destructive flex items-center gap-1"><Trash2 className="w-3 h-3" />Remove</button>}
+                    {(isAdmin || session?.user.id === it.owner_id) && <button onClick={() => remove(it)} className="ml-auto text-destructive flex items-center gap-1"><Trash2 className="w-3 h-3" />Remove</button>}
                   </div>
                 </div>
               );

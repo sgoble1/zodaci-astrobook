@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { BAGUA, KUA_INFO, type BaguaArea } from '@/content/april';
 import baguaImg from '@/assets/bagua-map.jpg';
 

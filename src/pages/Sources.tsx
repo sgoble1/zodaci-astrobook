@@ -4,7 +4,7 @@ import { BookOpen } from 'lucide-react';
 import { loadLibraryIndex } from '@/lib/corpus';
 import { Download, Eye, Trash2, FileText, X } from 'lucide-react';
 import { BUILT_IN_SOURCES, fmtSize } from '@/content/sources';
-import { useLibrary, useSession } from '@/hooks/useLibrary';
+import { useLibrary, useSession, useIsAdmin } from '@/hooks/useLibrary';
 import { AuthGate } from '@/components/common/AuthGate';
 import { UploadForm } from './Podcasts';
 import { Input } from '@/components/ui/input';
@@ -14,6 +14,7 @@ type Viewable = { title: string; url: string; ext: string };
 export default function Sources() {
   const lib = useLibrary('source');
   const session = useSession();
+  const isAdmin = useIsAdmin(session);
   const [view, setView] = useState<Viewable | null>(null);
   const [q, setQ] = useState('');
   const [readIds, setReadIds] = useState<Record<string, string>>({});
@@ -78,7 +79,7 @@ export default function Sources() {
             {lib.items.filter(i => match(i.title + i.file_name + (i.category ?? ''))).map(i => (
               <Row key={i.id} title={i.title} ext={i.file_name.split('.').pop()!.toLowerCase()} url={i.url}
                 sub={`${i.category ? i.category + ' · ' : ''}${i.file_name} · ${fmtSize(i.size_bytes)} · ${new Date(i.created_at).toLocaleDateString()}${i.description ? ' · ' + i.description : ''}`}
-                onDelete={session?.user.id === i.owner_id ? () => { if (confirm('Delete this file?')) lib.remove(i); } : undefined} />
+                onDelete={(isAdmin || session?.user.id === i.owner_id) ? () => { if (confirm('Delete this file?')) lib.remove(i); } : undefined} />
             ))}
           </ul>}
       </section>

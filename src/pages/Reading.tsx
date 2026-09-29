@@ -11,6 +11,8 @@ import { ReasoningPanel } from '@/components/common/ReasoningPanel';
 import { Cite } from '@/components/common/Cite';
 import { CopyLinkButton } from '@/components/common/CopyLinkButton';
 import type { ConfidenceLevel } from '@/content/confidence';
+import { ChartWheel, starContacts } from '@/components/chart/ChartWheel';
+import { BCB_CHAPTER, aprilSourcesFor } from '@/content/birthChartBook';
 
 const SRC_BC: SourceRef = { doc: 'Complete Birth Chart Analysis & Feng Shui Guide', section: 'Planetary placements', page: 'Sections 2–12' };
 const SRC_ASP: SourceRef = { doc: 'Complete Birth Chart Analysis & Feng Shui Guide', section: 'Major aspects' };
@@ -36,6 +38,7 @@ function PlacementBlock({ k }: { k: PlanetKey }) {
     <article className="parchment p-4">
       <div className="flex flex-wrap items-baseline gap-2"><Link to={`/planets/${p.key}`} className="font-display text-xl hover:underline">{p.glyph} {p.name} in {p.sign}</Link><span className="text-xs text-muted-foreground">{p.degree}°{String(p.minute).padStart(2, '0')}′ · House {p.house} · {p.motion} · {p.dignity}</span></div>
       <p className="italic mt-1">{p.headline}</p>
+      {BCB_CHAPTER[p.key] && <Link to={`/masterbook/${BCB_CHAPTER[p.key].id}`} className="text-xs underline text-gold">Read the full chapter — Birth Chart Book {BCB_CHAPTER[p.key].label}</Link>}
       <p className="text-sm mt-2">{p.interpretation}<Cite source={SRC_BC} /></p>
       {(sab || stars.length > 0) && (
         <div className="flex flex-wrap gap-2 mt-3 text-xs">
@@ -50,6 +53,7 @@ function PlacementBlock({ k }: { k: PlanetKey }) {
 function ComputedReading({ input }: { input: NonNullable<ReturnType<typeof fromParams>> }) {
   const r = useMemo(() => computeChart(input), [input]);
   const b = (k: string) => r.bodies.find(x => x.key === k)!;
+  const stars = useMemo(() => starContacts(r), [r]);
   const worst: ConfidenceLevel = r.flags.some(f => f.level === 'ambiguous') ? 'ambiguous' : r.flags.length ? 'approximate' : 'derived';
   return (
     <div className="space-y-10">
@@ -59,6 +63,7 @@ function ComputedReading({ input }: { input: NonNullable<ReturnType<typeof fromP
         <p className="text-muted-foreground mt-2 max-w-2xl">This chart isn’t covered by the source documents, so everything here is calculated, and the meanings are short in-app keyword notes rather than quotes. <Link className="underline" to={`/chart-calculator?${toParams(input)}`}>Open in the calculator</Link> · <Link className="underline" to="/reading">April’s full sourced reading</Link></p>
         <div className="mt-2 flex flex-wrap gap-2">{r.flags.map((f, i) => <ConfidenceBadge key={i} level={f.level} note={`${f.topic}: ${f.note}`} />)}</div>
       </header>
+      <ChartWheel r={r} />
       <Section id="core" n="I" title="The core triad" level={worst} note="Sun, Moon and Rising. Moon and Rising depend on the birth time.">
         {['sun', 'moon'].map(k => <p key={k}><b>{b(k).name} in {b(k).sign}</b> ({BODY_KEYWORDS[k]}): {SIGN_KEYWORDS[b(k).sign]}.{b(k).house && ` Placed in house ${b(k).house}.`} <ConfidenceBadge compact level={b(k).confidence} note={b(k).note} /></p>)}
         {r.asc != null ? <p><b>Rising {fmtLon(r.asc).sign}</b>: {SIGN_KEYWORDS[fmtLon(r.asc).sign]}. Midheaven {fmtLon(r.mc!).text}.</p> : <p className="text-oxblood text-sm">Without a birth time, the Rising sign and houses are left out.</p>}
@@ -72,6 +77,11 @@ function ComputedReading({ input }: { input: NonNullable<ReturnType<typeof fromP
       <Section id="bazi" n="IV" title="Four Pillars" level={input.time ? 'derived' : 'ambiguous'} note="Hour pillar requires birth time.">
         <p>{r.bazi.map(p => `${p.label}: ${p.stem}${p.branch} ${p.romanized} (${p.polarity} ${p.stemElement} ${p.animal})`).join(' · ')}</p>
         <p className="text-sm">Element count: {Object.entries(r.elements).map(([e, n]) => `${e} ${n}`).join(', ')}. {Object.entries(r.elements).filter(([, n]) => n === 0).map(([e]) => e).join(', ') || 'No element'} missing.</p>
+      </Section>
+      <Section id="compendium" n="V" title="Compendium entries this chart touches" level="approximate" note="Fixed-star degrees come from the Compendium; contacts use a 1.5° orb against the calculated positions.">
+        {stars.length === 0 ? <p className="text-sm text-muted-foreground">None of the Compendium’s fixed stars fall within 1.5° of this chart’s planets or angles.</p>
+          : <ul className="grid sm:grid-cols-2 gap-3">{stars.map((s, i) => <li key={i} className="parchment p-3 text-sm"><Link to={`/compendium#${s.star.id}`} className="font-display text-lg hover:underline">★ {s.star.name}</Link> <span className="text-xs text-muted-foreground">{s.star.degree} · conjunct {s.point} ({s.orb.toFixed(1)}°)</span><p className="mt-1">{s.star.meaning}<Cite source={s.star.source} /></p></li>)}</ul>}
+        <ReasoningPanel reasoning={{ inputs: [{ label: 'Positions', value: 'Calculated planets, Ascendant and Midheaven' }, { label: 'Star list', value: `${FIXED_STARS.length} stars from the Compendium` }], steps: [{ label: 'Parse', detail: 'Each star’s zodiac degree is converted to ecliptic longitude.' }, { label: 'Compare', detail: 'A contact is listed when the star is within 1.5° of a chart point.' }], output: `${stars.length} contact(s) found.`, confidence: 'approximate', caveats: ['The Compendium’s interpretations were written for April; for other charts they describe the star in general.'] }} />
       </Section>
     </div>
   );
@@ -96,6 +106,8 @@ export default function Reading() {
         <nav className="flex flex-wrap gap-2 mt-4">{toc.map(([id, t], i) => <a key={id} href={`#${id}`} className="text-xs border border-border rounded px-2 py-1 hover:bg-muted">{['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX'][i]}. {t}</a>)}</nav>
         <p className="text-xs mt-3"><Link to="/chart-calculator" className="underline">Calculate a different chart</Link> and choose “Turn into a reading”.</p>
       </header>
+
+      <section><h2 className="text-2xl mb-3">The natal wheel</h2><p className="text-sm text-muted-foreground mb-3">Calculated from the 3:38 PM birth data; tap any element for its details, confidence and the matching Birth Chart Book chapter.</p><ChartWheel r={check} sourcesFor={aprilSourcesFor} /></section>
 
       <Section id="core" n="I" title="The Full Moon core" level="confirmed" note="Sun and Moon agree with the calculator to within 1′.">
         <p className="max-w-3xl">{ASPECTS.find(a => a.a === 'sun' && a.b === 'moon')?.interpretation}<Cite source={SRC_ASP} /></p>

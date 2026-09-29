@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { ListPlus, ListX, SkipForward } from 'lucide-react';
 import { Headphones, Trash2, Download, Upload } from 'lucide-react';
-import { useLibrary, useSession, type LibraryItem } from '@/hooks/useLibrary';
+import { useLibrary, useSession, useIsAdmin, type LibraryItem } from '@/hooks/useLibrary';
 import { AuthGate } from '@/components/common/AuthGate';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -12,6 +12,7 @@ import { toast } from 'sonner';
 export default function Podcasts() {
   const lib = useLibrary('podcast');
   const session = useSession();
+  const isAdmin = useIsAdmin(session);
   const [current, setCurrent] = useState<LibraryItem | null>(null);
   const [q, setQ] = useState('');
   const [speed, setSpeed] = useState<number>(() => +(localStorage.getItem('pod:speed') ?? 1));
@@ -94,7 +95,7 @@ export default function Podcasts() {
                     {queue.includes(ep.id) ? <ListX className="w-4 h-4" /> : <ListPlus className="w-4 h-4" />}
                   </button>
                   {ep.url && <a href={ep.url} download={ep.file_name} className="p-2 rounded hover:bg-muted" aria-label="Download"><Download className="w-4 h-4" /></a>}
-                  {session?.user.id === ep.owner_id && (
+                  {(isAdmin || session?.user.id === ep.owner_id) && (
                     <button className="p-2 rounded hover:bg-muted" aria-label="Delete" onClick={async () => { if (confirm('Delete this episode?')) { await lib.remove(ep); if (current?.id === ep.id) setCurrent(null); } }}>
                       <Trash2 className="w-4 h-4" />
                     </button>
