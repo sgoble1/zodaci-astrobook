@@ -11,6 +11,7 @@ import { ReasoningPanel } from '@/components/common/ReasoningPanel';
 import { Cite } from '@/components/common/Cite';
 import { CopyLinkButton } from '@/components/common/CopyLinkButton';
 import type { ConfidenceLevel } from '@/content/confidence';
+import { FlyingStarWheel } from '@/components/fengshui/FlyingStarWheel';
 import { ChartWheel, starContacts } from '@/components/chart/ChartWheel';
 import { BCB_CHAPTER, aprilSourcesFor } from '@/content/birthChartBook';
 
@@ -83,6 +84,9 @@ function ComputedReading({ input }: { input: NonNullable<ReturnType<typeof fromP
           : <ul className="grid sm:grid-cols-2 gap-3">{stars.map((s, i) => <li key={i} className="parchment p-3 text-sm"><Link to={`/compendium#${s.star.id}`} className="font-display text-lg hover:underline">★ {s.star.name}</Link> <span className="text-xs text-muted-foreground">{s.star.degree} · conjunct {s.point} ({s.orb.toFixed(1)}°)</span><p className="mt-1">{s.star.meaning}<Cite source={s.star.source} /></p></li>)}</ul>}
         <ReasoningPanel reasoning={{ inputs: [{ label: 'Positions', value: 'Calculated planets, Ascendant and Midheaven' }, { label: 'Star list', value: `${FIXED_STARS.length} stars from the Compendium` }], steps: [{ label: 'Parse', detail: 'Each star’s zodiac degree is converted to ecliptic longitude.' }, { label: 'Compare', detail: 'A contact is listed when the star is within 1.5° of a chart point.' }], output: `${stars.length} contact(s) found.`, confidence: 'approximate', caveats: ['The Compendium’s interpretations were written for April; for other charts they describe the star in general.'] }} />
       </Section>
+      <Section id="fengshui" n="VI" title="Feng Shui · Flying Stars this year" level="derived" note="Annual stars are calculated; Kua notes are April's, from the Feng Shui guide.">
+        <FlyingStarWheel />
+      </Section>
     </div>
   );
 }
@@ -95,7 +99,7 @@ export default function Reading() {
   if (!isApril && input) return <ComputedReading input={input} />;
 
   const dayMismatch = check.bazi.find(p => p.label === 'Day')?.romanized !== PILLARS.find(p => p.label.startsWith('Day'))?.romanized;
-  const toc = [['core', 'The Full Moon core'], ['angles', 'Rising & the angles'], ['inner', 'Mind, love & drive'], ['outer', 'The Capricorn stellium & outer planets'], ['aspects', 'The aspect web'], ['compendium', 'Compendium layer'], ['bazi', 'Chinese Four Pillars'], ['synthesis', 'Synthesis across systems'], ['check', 'Calculation cross-check']];
+  const toc = [['core', 'The Full Moon core'], ['angles', 'Rising & the angles'], ['inner', 'Mind, love & drive'], ['outer', 'The Capricorn stellium & outer planets'], ['aspects', 'The aspect web'], ['compendium', 'Compendium layer'], ['bazi', 'Chinese Four Pillars'], ['fengshui', 'Feng Shui · Flying Stars'], ['synthesis', 'Synthesis across systems'], ['check', 'Calculation cross-check']];
 
   return (
     <div className="space-y-14">
@@ -155,6 +159,9 @@ export default function Reading() {
         <p className="max-w-3xl"><b>{LIFE_LESSON.headline}.</b> {LIFE_LESSON.body}<Cite source={CHINESE_SOURCE} /></p>
       </Section>
 
+      <Section id="fengshui" n="VII½" title="Feng Shui · Flying Stars this year" level="derived" note="Annual stars are calculated; April's Kua 1 directions are quoted from the Feng Shui guide.">
+        <FlyingStarWheel />
+      </Section>
       <Section id="synthesis" n="VIII" title="Synthesis across systems" level="derived" note="An interpretive synthesis linking cited statements. The links are the app's inference.">
         {[
           { t: 'Depth before display', body: 'Sun, Venus and Mercury Rx in the 8th house, Pluto in domicile in the 10th, and Life Path 7 all point to truth found at depth and then brought into public work.', steps: [{ label: 'Western', detail: 'H8 stellium (Sun, Mercury, Venus) plus Pluto H10.' }, { label: 'Numerology', detail: 'Life Path 7: the seeker and specialist.' }, { label: 'Compendium', detail: `Sun Sabian “${sabFor('Sun')?.symbol}”: the ancestral, H8 inheritance theme.` }] },
