@@ -6,9 +6,10 @@ import { loadLibraryIndex } from '@/lib/corpus';
 import { BUILT_IN_SOURCES, fmtSize } from '@/content/sources';
 import { useLibrary } from '@/hooks/useLibrary';
 import { Input } from '@/components/ui/input';
+import { useDocOverrides } from '@/hooks/useDocOverrides';
 
 type Sec = { title: string; to?: string; pdf?: string; meta?: string };
-type Doc = { key: string; title: string; kind: string; size?: string; open?: string; read?: string; ask: string; sections: Sec[] };
+type Doc = { key: string; note?: string; title: string; kind: string; size?: string; open?: string; read?: string; ask: string; sections: Sec[] };
 
 export default function MasterbookSources() {
   const [mb, setMb] = useState<MbEntry[]>([]);
@@ -17,6 +18,7 @@ export default function MasterbookSources() {
   const [expanded, setExpanded] = useState<string | null>(null);
   const [q, setQ] = useState('');
   const uploads = useLibrary('masterbook');
+  const ov = useDocOverrides().map;
   useEffect(() => { loadIndex().then(setMb); loadLibraryIndex().then(setLib); }, []);
 
   useEffect(() => {
@@ -50,14 +52,15 @@ export default function MasterbookSources() {
     return out;
   }, [mb, lib, units, uploads.items]);
 
-  const shown = docs.filter(d => !q || (d.title + d.sections.map(s => s.title).join(' ')).toLowerCase().includes(q.toLowerCase()));
+  const arranged = docs.filter(d => !ov[d.key]?.hidden).map(d => ({ ...d, title: ov[d.key]?.title || d.title, note: ov[d.key]?.note ?? undefined })).map((d, i) => ({ d, o: ov[d.key]?.sort_order ?? 1000 + i })).sort((a, b) => a.o - b.o).map(x => x.d);
+  const shown = arranged.filter(d => !q || (d.title + d.sections.map(s => s.title).join(' ')).toLowerCase().includes(q.toLowerCase()));
 
   return (
     <div className="space-y-8">
       <header>
         <div className="font-smallcaps text-xs text-gold">The Masterbook · document index</div>
         <h1 className="text-4xl sm:text-5xl mt-2">Every Source Document</h1>
-        <p className="text-muted-foreground mt-3 max-w-2xl">All {docs.length} documents behind this site, each with its sections. Open the original PDF straight to a section, read it here, or ask a question about just that document.</p>
+        <p className="text-muted-foreground mt-3 max-w-2xl">All {arranged.length} documents behind this site, each with its sections. Open the original PDF straight to a section, read it here, or ask a question about just that document.</p>
         <div className="flex flex-wrap gap-3 mt-4 items-center">
           <Input placeholder="Filter documents and sections…" value={q} onChange={e => setQ(e.target.value)} className="max-w-md" />
           <Link to="/masterbook/upload" className="text-sm underline">Upload your own →</Link>
@@ -73,6 +76,7 @@ export default function MasterbookSources() {
                 <div>
                   <div className="font-smallcaps text-[10px] text-gold">{d.kind} {d.size && `· ${d.size}`} · {d.sections.length} sections</div>
                   <div className="font-display text-lg leading-snug">{d.title}</div>
+                  {d.note && <div className="text-xs text-muted-foreground mt-0.5">{d.note}</div>}
                 </div>
                 <ChevronDown className={`w-4 h-4 shrink-0 transition ${isOpen ? 'rotate-180' : ''}`} />
               </button>
