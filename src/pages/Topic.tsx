@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { TOPICS } from '@/content/topics';
+import ReactMarkdown from 'react-markdown';
 import { loadCorpus, rank, type Passage } from '@/lib/corpus';
 
 type Entry = { id: string; label: string; title: string };
@@ -29,12 +30,29 @@ export default function Topic() {
   const [index, setIndex] = useState<Entry[]>([]);
   const [passages, setPassages] = useState<Passage[] | null>(null);
   const [n, setN] = useState(12);
+  const [sum, setSum] = useState(''); const [busy, setBusy] = useState(false); const [err, setErr] = useState<string | null>(null);
 
   useEffect(() => { fetch('/masterbook/index.json').then(r => r.json()).then(setIndex).catch(() => setIndex([])); }, []);
-  useEffect(() => { setPassages(null); setN(12); loadCorpus().then(setPassages).catch(() => setPassages([])); }, [slug]);
+  useEffect(() => { setPassages(null); setN(12); setSum(''); setErr(null); loadCorpus().then(setPassages).catch(() => setPassages([])); }, [slug]);
 
   const chapters = useMemo(() => topic ? index.filter(e => topic.chapters.test(e.title)) : [], [index, topic]);
   const hits = useMemo(() => topic && passages ? rank(passages, topic.query, 40) : [], [passages, topic]);
+
+  const summarize = async () => {
+    if (!topic || busy || !hits.length) return;
+    setBusy(true); setSum(''); setErr(null);
+    const top = hits.slice(0, 14);
+    try {
+      const res = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ask-sources`, {
+        method: 'POST', headers: { 'Content-Type': 'application/json', apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY, Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}` },
+        body: JSON.stringify({ question: `Write a clear, well-organised overview of "${topic.label}" for April, with short headed sections: key placements, recurring patterns, challenges, and practical guidance. Use only the passages.`, passages: top.map((p, i) => ({ n: i + 1, source: p.source, loc: p.loc, text: p.text })) }),
+      });
+      if (!res.ok || !res.body) { const j = await res.json().catch(() => ({})); throw new Error(j.error ?? 'Something went wrong.'); }
+      const r = res.body.getReader(); const d = new TextDecoder();
+      while (true) { const { done, value } = await r.read(); if (done) break; setSum(a => a + d.decode(value, { stream: true })); }
+    } catch (e) { setErr((e as Error).message); }
+    setBusy(false);
+  };
 
   if (!topic) return <div className="p-12">Topic not found. <Link className="underline" to="/topics">All topics</Link></div>;
 
@@ -64,6 +82,16 @@ export default function Topic() {
         )}
       </section>
 
+      <section className="border border-border rounded-lg p-5 bg-card">
+        <div className="flex items-center justify-between gap-3 mb-2">
+          <h2 className="font-display text-2xl">Theme summary</h2>
+          <button onClick={summarize} disabled={busy || !passages} className="px-3 py-1.5 rounded bg-primary text-primary-foreground text-sm disabled:opacity-50">{busy ? 'Writing…' : sum ? 'Rewrite' : 'Summarise from the sources'}</button>
+        </div>
+        {!sum && !err && <p className="text-sm text-muted-foreground">A cited overview written only from the passages below. Numbers like [3] match passage 3.</p>}
+        {err && <p className="text-sm text-destructive">{err}</p>}
+        {sum && <div className="mb-prose text-sm"><ReactMarkdown>{sum}</ReactMarkdown></div>}
+      </section>
+
       <section>
         <h2 className="font-display text-2xl mb-3">Ask about {topic.label.toLowerCase()}</h2>
         <div className="flex flex-wrap gap-2">
@@ -75,8 +103,9 @@ export default function Topic() {
         <h2 className="font-display text-2xl mb-3">What the sources say</h2>
         {!passages ? <p className="text-sm text-muted-foreground">Gathering passages from every document…</p> : (
           <div className="space-y-4">
-            {hits.slice(0, n).map(p => (
+            {hits.slice(0, n).map((p, i) => (
               <article key={p.key} className="border-l-2 border-primary pl-4">
+                <p className="text-xs font-semibold text-primary">[{i + 1}]</p>
                 <p className="text-sm leading-relaxed">{p.text}</p>
                 <Link to={p.href} className="text-xs text-muted-foreground hover:text-primary">{p.source} — {p.loc} →</Link>
               </article>
