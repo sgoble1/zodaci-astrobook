@@ -5,7 +5,7 @@ import { BIRTH } from '@/content/april';
 import { CommandPaletteTrigger } from '@/components/common/CommandPalette';
 
 const groups: { title: string; items: { to: string; label: string }[] }[] = [
-  { title: 'Begin', items: [{ to: '/', label: 'Home' }, { to: '/masterbook', label: 'The Masterbook · Full Text' }, { to: '/ask', label: 'Ask the Sources' }] },
+  { title: 'Begin', items: [{ to: '/', label: 'Home' }, { to: '/masterbook', label: 'The Masterbook · Full Text' }, { to: '/masterbook/index', label: 'Document Index' }, { to: '/masterbook/upload', label: 'Upload to the Masterbook' }, { to: '/ask', label: 'Ask the Sources' }] },
   { title: 'The Natal Chart', items: [
     { to: '/birth-chart', label: 'Birth Chart' }, { to: '/planets', label: 'Planets' }, { to: '/houses', label: 'Houses' },
     { to: '/aspects', label: 'Aspects' }, { to: '/star-map', label: 'Fixed-Star Sky Map' }, { to: '/compendium', label: 'Compendium' }] },
@@ -90,7 +90,7 @@ function SidebarInner() {
             <div className="font-smallcaps text-[10px] text-gold px-3 mb-1">{g.title}</div>
             {g.items.map(n => (
               <NavLink
-                key={n.to} to={n.to} end={n.to === '/'}
+                key={n.to} to={n.to} end={n.to === '/' || n.to === '/masterbook'}
                 className={({ isActive }) =>
                   `px-3 py-1.5 rounded border border-transparent transition-colors ${
                     isActive ? 'bg-accent/15 border-accent/30 text-foreground' : 'text-muted-foreground hover:text-foreground hover:bg-muted/60'

@@ -6,7 +6,12 @@ import {
 } from '@/components/ui/command';
 import { SEARCH_INDEX, type SearchDoc } from '@/content/compendium';
 
-const KIND_LABEL: Record<SearchDoc['kind'], string> = {
+type Doc = Omit<SearchDoc, 'kind'> & { kind: SearchDoc['kind'] | 'masterbook' | 'companion' | 'upload' };
+
+const KIND_LABEL: Record<Doc['kind'], string> = {
+  masterbook: 'Masterbook',
+  companion: 'Timeline · Retrogrades · Feng Shui',
+  upload: 'Your Uploads',
   sabian: 'Sabian Symbol',
   star: 'Fixed Star',
   asteroid: 'Asteroid Goddess',
@@ -38,7 +43,27 @@ export function CommandPalette() {
     return () => window.removeEventListener('keydown', onKey);
   }, []);
 
-  const fuse = useMemo(() => new Fuse(SEARCH_INDEX, {
+  const [extra, setExtra] = useState<Doc[]>([]);
+  useEffect(() => {
+    if (!open || extra.length) return;
+    (async () => {
+      const mb = await fetch('/masterbook/index.json').then(r => r.json()) as { id: string; label: string; title: string; part: string; sections: string[]; excerpt: string }[];
+      const docs: Doc[] = mb.map(e => ({
+        id: 'mb-' + e.id, kind: e.id.startsWith('c-') ? 'companion' : 'masterbook', title: e.title,
+        subtitle: `${e.part} · ${e.label}`, body: e.sections.join(' · ') + ' ' + e.excerpt, route: `/masterbook/${e.id}`,
+      } as Doc));
+      const { supabase } = await import('@/integrations/supabase/client');
+      const { data } = await supabase.from('library_items').select('id,title,category,sections').eq('kind', 'masterbook');
+      (data ?? []).forEach(u => {
+        docs.push({ id: 'up-' + u.id, kind: 'upload', title: u.title, subtitle: u.category ?? 'Uploaded document', body: '', route: `/masterbook/u/${u.id}` } as Doc);
+        ((u.sections as { title: string }[] | null) ?? []).forEach((sec, i) => docs.push({ id: `up-${u.id}-${i}`, kind: 'upload', title: sec.title, subtitle: u.title, body: '', route: `/masterbook/u/${u.id}#s${i}` } as Doc));
+      });
+      setExtra(docs);
+    })();
+  }, [open, extra.length]);
+  const all = useMemo(() => [...(SEARCH_INDEX as Doc[]), ...extra], [extra]);
+
+  const fuse = useMemo(() => new Fuse(all, {
     keys: [
       { name: 'title', weight: 0.5 },
       { name: 'subtitle', weight: 0.2 },
@@ -47,7 +72,7 @@ export function CommandPalette() {
     threshold: 0.35,
     ignoreLocation: true,
     minMatchCharLength: 2,
-  }), []);
+  }), [all]);
 
   const results = useMemo(() => {
     if (!query.trim()) return SEARCH_INDEX.slice(0, 12);
@@ -55,12 +80,12 @@ export function CommandPalette() {
   }, [query, fuse]);
 
   const grouped = useMemo(() => {
-    const g: Record<string, SearchDoc[]> = {};
+    const g: Record<string, Doc[]> = {};
     results.forEach(r => { (g[KIND_LABEL[r.kind]] ||= []).push(r); });
     return g;
   }, [results]);
 
-  const select = (doc: SearchDoc) => {
+  const select = (doc: Doc) => {
     setOpen(false);
     setQuery('');
     navigate(doc.route + (doc.drawer ?? ''));
@@ -71,7 +96,7 @@ export function CommandPalette() {
       <CommandInput
         value={query}
         onValueChange={setQuery}
-        placeholder="Search Sabian symbols, fixed stars, asteroids, aspects, lots…"
+        placeholder="Search the Masterbook, companion guides, uploads, symbols, stars…"
       />
       <CommandList className="max-h-[70vh]">
         <CommandEmpty>No entries match.</CommandEmpty>

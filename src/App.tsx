@@ -1,3 +1,6 @@
+import MasterbookSources from './pages/MasterbookSources';
+import MyUploads from './pages/MyUploads';
+import UploadedDoc from './pages/UploadedDoc';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { useMemo, type ReactNode } from 'react';
 import { AppShell } from './components/layout/AppShell';
@@ -139,6 +142,9 @@ export default function App() {
             <Route path="/volume-2" element={<Volume2 />} />
             <Route path="/data-quality" element={<DataQuality />} />
             <Route path="/masterbook" element={<Masterbook />} />
+            <Route path="/masterbook/index" element={<MasterbookSources />} />
+            <Route path="/masterbook/upload" element={<MyUploads />} />
+            <Route path="/masterbook/u/:id" element={<UploadedDoc />} />
             <Route path="/masterbook/:id" element={<MasterbookChapter />} />
             <Route path="/podcasts" element={<Podcasts />} />
             <Route path="/sources" element={<Sources />} />

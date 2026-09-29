@@ -6,6 +6,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { loadIndex, type MbEntry } from './Masterbook';
 import { CopyLinkButton } from '@/components/common/CopyLinkButton';
 import { BUILT_IN_SOURCES } from '@/content/sources';
+import { loadLibraryIndex } from '@/lib/corpus';
 
 const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 60);
 
@@ -21,7 +22,10 @@ export default function MasterbookChapter() {
 
   const i = entries.findIndex(e => e.id === id);
   const e = entries[i]; const prev = entries[i - 1]; const next = entries[i + 1];
-  const src = BUILT_IN_SOURCES.find(s => /Masterbook/.test(s.fileName));
+  const [libFile, setLibFile] = useState<string | null>(null);
+  useEffect(() => { if (e?.doc) loadLibraryIndex().then(l => setLibFile(l.find(d => d.id === e.doc)?.fileName ?? null)); }, [e?.doc]);
+  const src = e?.doc ? BUILT_IN_SOURCES.find(s => s.fileName === libFile) : BUILT_IN_SOURCES.find(s => /Masterbook/.test(s.fileName));
+  const body = useMemo(() => (text ?? '').replace(/<!-- page (\d+) -->/g, (_m, n) => `\n\n###### Page ${n}\n\n`), [text]);
   const toc = useMemo(() => (text ?? '').split('\n').filter(l => l.startsWith('### ')).map(l => l.slice(4)), [text]);
 
   if (text === '') return <p>Section not found. <Link className="underline" to="/masterbook">Back to the Masterbook</Link></p>;
@@ -42,11 +46,12 @@ export default function MasterbookChapter() {
           <div className="mb-prose">
             <ReactMarkdown remarkPlugins={[remarkGfm]} components={{
               h3: ({ children }) => { const t = String(children); return <h3 id={slug(t)} className="scroll-mt-24">{children}</h3>; },
-            }}>{text}</ReactMarkdown>
+                          h6: ({ children }) => { const n = String(children).replace(/\D/g, ''); return <h6 id={`p${n}`} className="scroll-mt-24 font-smallcaps text-[10px] text-gold border-t border-border pt-3 mt-8 flex justify-between"><span>{children}</span>{src && <a href={`${src.url}#page=${n}`} target="_blank" rel="noreferrer" className="underline">Open PDF at this page</a>}</h6>; },
+            }}>{body}</ReactMarkdown>
           </div>
         )}
         {src && <div className="parchment p-4 mt-10 text-xs text-muted-foreground">
-          <span className="font-smallcaps text-gold">Source</span> · {src.title}{e ? ` — ${e.label}: ${e.title}` : ''} · transcribed verbatim. <Link to="/sources" className="underline">View or download the original</Link>
+          <span className="font-smallcaps text-gold">Source</span> · {src.title}{e ? ` — ${e.label}: ${e.title}` : ''} · transcribed verbatim. {e?.doc && src ? <a href={`${src.url}#page=${e.page ?? 1}`} target="_blank" rel="noreferrer" className="underline">Open the original PDF</a> : <Link to="/sources" className="underline">View or download the original</Link>} · <Link to={`/ask${e?.doc ? `?doc=${e.doc}` : '?doc=masterbook'}`} className="underline">Ask about this document</Link>
         </div>}
         <nav className="flex justify-between gap-4 mt-8">
           {prev ? <Link to={`/masterbook/${prev.id}`} className="parchment p-3 flex items-center gap-2 text-sm max-w-[48%]"><ChevronLeft className="w-4 h-4 shrink-0" /><span className="truncate">{prev.title}</span></Link> : <span />}
