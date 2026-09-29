@@ -7,6 +7,7 @@ import { loadIndex, type MbEntry } from './Masterbook';
 import { CopyLinkButton } from '@/components/common/CopyLinkButton';
 import { BUILT_IN_SOURCES } from '@/content/sources';
 import { loadLibraryIndex } from '@/lib/corpus';
+import { SummarisePanel, toPassages } from '@/components/common/SummarisePanel';
 
 const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 60);
 
@@ -42,6 +43,7 @@ export default function MasterbookChapter() {
           </div>
         </>}
         <div className="gold-rule my-6" />
+        {text && e && <SummarisePanel key={id} title={e.title} passages={toPassages(text, src?.title ?? 'Masterbook', `${e.label} · ${e.title}`)} />}
         {text === null ? <p className="text-muted-foreground">Opening the page…</p> : (
           <div className="mb-prose">
             <ReactMarkdown remarkPlugins={[remarkGfm]} components={{
