@@ -33,7 +33,7 @@ export default function Masterbook() {
     const m = new Map<string, MbEntry[]>();
     entries.filter(e => (!cat || catsFor(e).includes(cat)) && (e.title + e.label + e.sections.join(' ') + e.excerpt).toLowerCase().includes(q.toLowerCase()))
       .forEach(e => { const keys = view === 'parts' ? [e.part] : (catsFor(e).length ? catsFor(e) : ['Other']); keys.forEach(k => m.set(k, [...(m.get(k) ?? []), e])); });
-    return view === 'parts' ? [...m.entries()] : [...m.entries()].sort((a, b) => CATEGORIES.findIndex(c => c[0] === a[0]) - CATEGORIES.findIndex(c => c[0] === b[0]));
+    return view === 'parts' ? [...m.entries()] : [...m.entries()].sort((a, b) => { const o = (k: string) => { const i = CATEGORIES.findIndex(c => c[0] === k); return i < 0 ? 99 : i; }; return o(a[0]) - o(b[0]); });
   }, [entries, q, cat, view]);
   const total = entries.reduce((a, e) => a + e.words, 0);
 
