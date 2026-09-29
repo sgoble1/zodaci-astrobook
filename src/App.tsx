@@ -28,6 +28,10 @@ import Chinese from './pages/Chinese';
 import Volume2 from './pages/Volume2';
 import DataQuality from './pages/DataQuality';
 import NotFound from './pages/NotFound';
+import Masterbook from './pages/Masterbook';
+import MasterbookChapter from './pages/MasterbookChapter';
+import Podcasts from './pages/Podcasts';
+import Sources from './pages/Sources';
 
 
 /** Build a single registry of every drawer-openable Compendium item. Used so
@@ -132,6 +136,10 @@ export default function App() {
             <Route path="/art-direction" element={<ArtDirection />} />
             <Route path="/volume-2" element={<Volume2 />} />
             <Route path="/data-quality" element={<DataQuality />} />
+            <Route path="/masterbook" element={<Masterbook />} />
+            <Route path="/masterbook/:id" element={<MasterbookChapter />} />
+            <Route path="/podcasts" element={<Podcasts />} />
+            <Route path="/sources" element={<Sources />} />
             <Route path="*" element={<NotFound />} />
 
           </Route>
