@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FileUp, Trash2 } from 'lucide-react';
 import { useLibrary, useSession } from '@/hooks/useLibrary';
-import { AuthGate } from '@/components/library/AuthGate';
+import { AuthGate } from '@/components/common/AuthGate';
 import { extractSections } from '@/lib/extract';
 import { fmtSize } from '@/content/sources';
 import { Button } from '@/components/ui/button';
@@ -38,7 +38,7 @@ export default function MyUploads() {
         <p className="text-muted-foreground mt-3 max-w-2xl">Add your own PDFs and spreadsheets. Each is split into clickable sections (by heading or page for PDFs, by sheet for spreadsheets), shown in the Masterbook, searchable with ⌘K and answerable in Ask the Sources.</p>
       </header>
 
-      <AuthGate>
+      <AuthGate what="add documents to the Masterbook">{() => (
         <div className="parchment deckle p-5 space-y-3 max-w-2xl">
           <Input type="file" accept=".pdf,.xlsx,.xls,.csv,.ods,.tsv,.txt,.md" onChange={e => { const f = e.target.files?.[0] ?? null; setFile(f); if (f && !title) setTitle(f.name.replace(/\.[^.]+$/, '')); }} />
           <div className="grid sm:grid-cols-2 gap-3">
@@ -48,7 +48,7 @@ export default function MyUploads() {
           <Button onClick={submit} disabled={!file || !!busy}><FileUp className="w-4 h-4 mr-2" />{busy ?? 'Add to the Masterbook'}</Button>
           <p className="text-xs text-muted-foreground">PDF, Excel (.xlsx/.xls), CSV, ODS and plain text. Scanned PDFs without selectable text will have empty sections.</p>
         </div>
-      </AuthGate>
+      )}</AuthGate>
 
       <section>
         <h2 className="text-2xl mb-1">Uploaded documents <span className="text-sm text-muted-foreground font-sans">· {items.length}</span></h2>
