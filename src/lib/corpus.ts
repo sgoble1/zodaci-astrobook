@@ -1,6 +1,6 @@
 import { BUILT_IN_SOURCES } from '@/content/sources';
 
-export type Passage = { key: string; source: string; loc: string; text: string; href: string };
+export type Passage = { key: string; doc: string; source: string; loc: string; text: string; href: string };
 type LibIdx = { id: string; fileName: string; units: number; words: number }[];
 
 let corpus: Promise<Passage[]> | null = null;
@@ -23,13 +23,13 @@ export function loadCorpus(): Promise<Passage[]> {
   return (corpus ??= (async () => {
     const passages: Passage[] = [];
     const mb = await fetch('/masterbook/index.json').then(r => r.json()) as { id: string; label: string; title: string }[];
-    await Promise.all(mb.map(async (e) => {
+    await Promise.all(mb.filter(e => !e.id.startsWith('c-')).map(async (e) => {
       const md = await fetch(`/masterbook/${e.id}.md`).then(r => r.text());
       let section = e.title;
       md.split(/\n(?=### )/).forEach((blk) => {
         const m = blk.match(/^### (.+)/); if (m) section = m[1];
         chunk(blk.replace(/[*>#\\]/g, '')).forEach((t, i) => passages.push({
-          key: `mb:${e.id}:${section}:${i}`, source: 'Masterbook', loc: `${e.label} · ${e.title}${section !== e.title ? ' › ' + section : ''}`,
+          key: `mb:${e.id}:${section}:${i}`, doc: 'masterbook', source: 'Masterbook', loc: `${e.label} · ${e.title}${section !== e.title ? ' › ' + section : ''}`,
           text: t, href: `/masterbook/${e.id}`,
         }));
       });
@@ -38,9 +38,16 @@ export function loadCorpus(): Promise<Passage[]> {
     await Promise.all(lib.map(async (d) => {
       const units = await fetch(`/library/${d.id}.json`).then(r => r.json()) as { loc: string; text: string }[];
       units.forEach((u, ui) => chunk(u.text).forEach((t, i) => passages.push({
-        key: `lib:${d.id}:${ui}:${i}`, source: titleFor(d.fileName), loc: u.loc, text: t, href: `/sources/read/${d.id}#u${ui}`,
+        key: `lib:${d.id}:${ui}:${i}`, doc: d.id, source: titleFor(d.fileName), loc: u.loc, text: t, href: `/sources/read/${d.id}#u${ui}`,
       })));
     }));
+    try {
+      const { supabase } = await import('@/integrations/supabase/client');
+      const { data } = await supabase.from('library_items').select('id,title,sections').eq('kind', 'masterbook');
+      (data ?? []).forEach(u => ((u.sections as { title: string; text: string }[] | null) ?? []).forEach((sec, si) => chunk(sec.text).forEach((t, i) => passages.push({
+        key: `up:${u.id}:${si}:${i}`, doc: 'up:' + u.id, source: u.title, loc: sec.title, text: t, href: `/masterbook/u/${u.id}#s${si}`,
+      }))));
+    } catch { /* uploads optional */ }
     return passages;
   })());
 }

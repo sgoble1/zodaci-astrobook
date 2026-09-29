@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { Sparkles, Square } from 'lucide-react';
 import { loadCorpus, rank, type Passage } from '@/lib/corpus';
 import ReactMarkdown from 'react-markdown';
@@ -23,13 +23,17 @@ export default function Ask() {
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
   const abort = useRef<AbortController | null>(null);
+  const [params, setParams] = useSearchParams();
+  const doc = params.get('doc') ?? 'all';
+  const docs = corpus ? [...new Map(corpus.map(p => [p.doc, p.source])).entries()] : [];
+  const pool = corpus && doc !== 'all' ? corpus.filter(p => p.doc === doc) : corpus;
 
   useEffect(() => { loadCorpus().then(setCorpus); }, []);
 
   const ask = async (question: string) => {
-    if (!corpus || !question.trim() || busy) return;
+    if (!pool || !question.trim() || busy) return;
     setAsked(question); setAnswer(''); setErr(null);
-    const top = rank(corpus, question, 12); setHits(top);
+    const top = rank(pool, question, 12); setHits(top);
     if (!top.length) { setErr('No passages in the sources matched that question. Try different words.'); return; }
     setBusy(true); abort.current = new AbortController();
     try {
@@ -69,7 +73,11 @@ export default function Ask() {
         <div className="flex flex-wrap items-center gap-3">
           {busy ? <Button type="button" variant="outline" onClick={() => abort.current?.abort()}><Square className="w-4 h-4 mr-2" />Stop</Button>
             : <Button type="submit" disabled={!corpus || !q.trim()}><Sparkles className="w-4 h-4 mr-2" />{corpus ? 'Ask' : 'Loading sources…'}</Button>}
-          {corpus && <span className="text-xs text-muted-foreground">Searching {corpus.length.toLocaleString()} passages across all documents</span>}
+          {corpus && <select aria-label="Document to ask about" value={doc} onChange={e => { const v = e.target.value; setParams(v === 'all' ? {} : { doc: v }); }} className="text-sm border border-border rounded px-2 py-1.5 bg-background max-w-xs">
+            <option value="all">All documents</option>
+            {docs.map(([id, name]) => <option key={id} value={id}>{name}{id.startsWith('up:') ? ' (your upload)' : ''}</option>)}
+          </select>}
+          {pool && <span className="text-xs text-muted-foreground">Searching {pool.length.toLocaleString()} passages{doc === 'all' ? ' across all documents' : ' in this document'}</span>}
         </div>
         <div className="flex flex-wrap gap-2 pt-1">
           {SUGGESTIONS.map(s => <button type="button" key={s} onClick={() => { setQ(s); ask(s); }} className="text-xs border border-border rounded-full px-3 py-1 hover:bg-muted">{s}</button>)}

@@ -5,7 +5,7 @@ import { supabase } from '@/integrations/supabase/client';
 export type LibraryItem = {
   id: string; kind: string; title: string; description: string | null; category: string | null;
   file_path: string; file_name: string; mime_type: string | null; size_bytes: number | null;
-  owner_id: string; created_at: string; url?: string;
+  owner_id: string; created_at: string; url?: string; sections?: unknown;
 };
 
 export function useSession() {
@@ -18,7 +18,7 @@ export function useSession() {
   return session;
 }
 
-export function useLibrary(kind: 'podcast' | 'source') {
+export function useLibrary(kind: 'podcast' | 'source' | 'masterbook') {
   const [items, setItems] = useState<LibraryItem[]>([]);
   const [loading, setLoading] = useState(true);
   const reload = useCallback(async () => {
@@ -33,13 +33,13 @@ export function useLibrary(kind: 'podcast' | 'source') {
   }, [kind]);
   useEffect(() => { reload(); }, [reload]);
 
-  const upload = async (file: File, meta: { title: string; description?: string; category?: string }, userId: string) => {
+  const upload = async (file: File, meta: { title: string; description?: string; category?: string; sections?: { title: string; text: string }[] }, userId: string) => {
     const path = `${userId}/${kind}/${Date.now()}-${file.name.replace(/[^\w.\-]+/g, '_')}`;
     const up = await supabase.storage.from('library').upload(path, file, { contentType: file.type });
     if (up.error) throw up.error;
     const ins = await supabase.from('library_items').insert({
       kind, title: meta.title || file.name, description: meta.description || null, category: meta.category || null,
-      file_path: path, file_name: file.name, mime_type: file.type, size_bytes: file.size,
+      file_path: path, file_name: file.name, mime_type: file.type, size_bytes: file.size, sections: meta.sections ?? null,
     });
     if (ins.error) throw ins.error;
     await reload();
