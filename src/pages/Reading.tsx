@@ -10,7 +10,6 @@ import { ConfidenceBadge } from '@/components/common/ConfidenceBadge';
 import { ReasoningPanel } from '@/components/common/ReasoningPanel';
 import { Cite } from '@/components/common/Cite';
 import { CopyLinkButton } from '@/components/common/CopyLinkButton';
-import { useDetailDrawer } from '@/components/common/DetailDrawer';
 import type { ConfidenceLevel } from '@/content/confidence';
 
 const SRC_BC: SourceRef = { doc: 'Complete Birth Chart Analysis & Feng Shui Guide', section: 'Planetary placements', page: 'Sections 2–12' };
@@ -32,7 +31,7 @@ function Section({ id, n, title, level, note, children }: { id: string; n: strin
 }
 
 function PlacementBlock({ k }: { k: PlanetKey }) {
-  const p = P(k); const sab = sabFor(p.name); const stars = starsFor(p.name); const { open } = useDetailDrawer();
+  const p = P(k); const sab = sabFor(p.name); const stars = starsFor(p.name); const open = (id: string) => { window.location.hash = id; };
   return (
     <article className="parchment p-4">
       <div className="flex flex-wrap items-baseline gap-2"><Link to={`/planets/${p.key}`} className="font-display text-xl hover:underline">{p.glyph} {p.name} in {p.sign}</Link><span className="text-xs text-muted-foreground">{p.degree}°{String(p.minute).padStart(2, '0')}′ · House {p.house} · {p.motion} · {p.dignity}</span></div>

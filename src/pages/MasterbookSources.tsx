@@ -38,14 +38,14 @@ export default function MasterbookSources() {
       const isPdf = src?.ext === 'pdf';
       const companion = mb.filter(e => e.doc === d.id);
       const secs: Sec[] = companion.length
-        ? companion.map(e => ({ title: e.title, meta: e.label, to: `/masterbook/${e.id}`, pdf: isPdf && src ? `${src.url}#page=${e.page}` : undefined }))
-        : (units[d.id] ?? []).map((u, i) => ({ title: u.text.split('\n').find(l => l.trim())?.slice(0, 90) ?? u.loc, meta: u.loc, to: `/sources/read/${d.id}#u${i}`, pdf: isPdf && src ? `${src.url}#page=${i + 1}` : undefined }));
+        ? companion.map(e => ({ title: e.title, meta: e.label, to: `/masterbook/${e.id}`, pdf: isPdf && src ? `/masterbook/pdf/${d.id}?page=${e.page}` : undefined }))
+        : (units[d.id] ?? []).map((u, i) => ({ title: u.text.split('\n').find(l => l.trim())?.slice(0, 90) ?? u.loc, meta: u.loc, to: `/sources/read/${d.id}#u${i}`, pdf: isPdf && src ? `/masterbook/pdf/${d.id}?page=${i + 1}` : undefined }));
       out.push({ key: 'lib:' + d.id, title: src?.title ?? d.fileName, kind: (src?.ext ?? '').toUpperCase(), size: fmtSize(src?.size), open: src?.url, read: `/sources/read/${d.id}`, ask: `/ask?doc=${d.id}`, sections: secs.length ? secs : [{ title: `${d.units} pages/slides — expand to list` }] });
     });
     uploads.items.forEach(u => {
       const secs = ((u.sections as { title: string; page?: number }[] | null) ?? []);
       out.push({ key: 'up:' + u.id, title: u.title, kind: `Upload · ${u.file_name.split('.').pop()?.toUpperCase()}`, size: fmtSize(u.size_bytes), open: u.url, read: `/masterbook/u/${u.id}`, ask: `/ask?doc=up:${u.id}`,
-        sections: secs.map((s, i) => ({ title: s.title, to: `/masterbook/u/${u.id}#s${i}`, pdf: u.url && s.page ? `${u.url}#page=${s.page}` : undefined })) });
+        sections: secs.map((s, i) => ({ title: s.title, to: `/masterbook/u/${u.id}#s${i}`, pdf: u.url && s.page && /pdf$/i.test(u.file_name) ? `/masterbook/pdf/upload?src=${encodeURIComponent(u.url)}&title=${encodeURIComponent(u.title)}&page=${s.page}` : undefined })) });
     });
     return out;
   }, [mb, lib, units, uploads.items]);
@@ -90,7 +90,7 @@ export default function MasterbookSources() {
                           {s.to ? <Link to={s.to} className="hover:underline">{s.title}</Link> : <span className="text-muted-foreground">{s.title}</span>}
                           {s.meta && <span className="text-[11px] text-muted-foreground"> · {s.meta}</span>}
                         </div>
-                        {s.pdf && <a href={s.pdf} target="_blank" rel="noreferrer" className="text-xs underline shrink-0">PDF</a>}
+                        {s.pdf && <Link to={s.pdf} className="text-xs underline shrink-0">View page</Link>}
                       </li>
                     ))}
                   </ol>

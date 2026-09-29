@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { Search, Loader2 } from 'lucide-react';
 import { computeChart, fmtLon, SIGN_KEYWORDS, BODY_KEYWORDS, type ChartInput } from '@/lib/astro';
-import { PLACEMENTS, ANGLES } from '@/content/april';
+import { PLACEMENTS } from '@/content/april';
 import { PILLARS } from '@/content/chinese';
 import { ConfidenceBadge } from '@/components/common/ConfidenceBadge';
 import { ReasoningPanel } from '@/components/common/ReasoningPanel';
@@ -93,7 +93,7 @@ export default function ChartCalculator() {
             <div className="overflow-x-auto"><table className="w-full text-sm">
               <thead><tr className="text-left font-smallcaps text-[10px] text-muted-foreground border-b border-border"><th className="py-1.5">Point</th><th>Position</th><th>House</th><th>Meaning (in-app gloss)</th>{isApril && <th>Source PDF</th>}<th>Confidence</th></tr></thead>
               <tbody>
-                {result.asc != null && [['Ascendant', result.asc, ANGLES ? `${(ANGLES as Record<string, string>).asc ?? ''}` : ''], ['Midheaven', result.mc!, '']].map(([n, l]) => (
+                {result.asc != null && [['Ascendant', result.asc], ['Midheaven', result.mc!]].map(([n, l]) => (
                   <tr key={n as string} className="border-b border-border/50"><td className="py-1.5 font-medium">{n as string}</td><td className="font-mono">{fmtLon(l as number).text}</td><td>{n === 'Ascendant' ? 1 : 10}</td><td className="text-xs">{SIGN_KEYWORDS[fmtLon(l as number).sign]}</td>{isApril && <td className="text-xs">{n === 'Ascendant' ? 'Sagittarius 29°28′' : 'Libra 24°59′'}<Cite source={BC_SRC} /></td>}<td><ConfidenceBadge compact level={input.placeSource === 'manual' ? 'approximate' : 'derived'} note="Angles move ~1° every 4 minutes; accuracy depends on the birth time." /></td></tr>
                 ))}
                 {result.bodies.map(b => {

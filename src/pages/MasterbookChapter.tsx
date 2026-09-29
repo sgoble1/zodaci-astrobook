@@ -46,12 +46,12 @@ export default function MasterbookChapter() {
           <div className="mb-prose">
             <ReactMarkdown remarkPlugins={[remarkGfm]} components={{
               h3: ({ children }) => { const t = String(children); return <h3 id={slug(t)} className="scroll-mt-24">{children}</h3>; },
-                          h6: ({ children }) => { const n = String(children).replace(/\D/g, ''); return <h6 id={`p${n}`} className="scroll-mt-24 font-smallcaps text-[10px] text-gold border-t border-border pt-3 mt-8 flex justify-between"><span>{children}</span>{src && <a href={`${src.url}#page=${n}`} target="_blank" rel="noreferrer" className="underline">Open PDF at this page</a>}</h6>; },
+                          h6: ({ children }) => { const n = String(children).replace(/\D/g, ''); return <h6 id={`p${n}`} className="scroll-mt-24 font-smallcaps text-[10px] text-gold border-t border-border pt-3 mt-8 flex justify-between"><span>{children}</span>{src && <Link to={`/masterbook/pdf/${encodeURIComponent(src.id)}?page=${n}`} className="underline">View this page in the app</Link>}</h6>; },
             }}>{body}</ReactMarkdown>
           </div>
         )}
         {src && <div className="parchment p-4 mt-10 text-xs text-muted-foreground">
-          <span className="font-smallcaps text-gold">Source</span> · {src.title}{e ? ` — ${e.label}: ${e.title}` : ''} · transcribed verbatim. {e?.doc && src ? <a href={`${src.url}#page=${e.page ?? 1}`} target="_blank" rel="noreferrer" className="underline">Open the original PDF</a> : <Link to="/sources" className="underline">View or download the original</Link>} · <Link to={`/ask${e?.doc ? `?doc=${e.doc}` : '?doc=masterbook'}`} className="underline">Ask about this document</Link>
+          <span className="font-smallcaps text-gold">Source</span> · {src.title}{e ? ` — ${e.label}: ${e.title}` : ''} · transcribed verbatim. {e?.doc && src ? <Link to={`/masterbook/pdf/${encodeURIComponent(src.id)}?page=${e.page ?? 1}`} className="underline">Open the PDF in the app</Link> : <Link to="/sources" className="underline">View or download the original</Link>} · <Link to={`/ask${e?.doc ? `?doc=${e.doc}` : '?doc=masterbook'}`} className="underline">Ask about this document</Link>
         </div>}
         <nav className="flex justify-between gap-4 mt-8">
           {prev ? <Link to={`/masterbook/${prev.id}`} className="parchment p-3 flex items-center gap-2 text-sm max-w-[48%]"><ChevronLeft className="w-4 h-4 shrink-0" /><span className="truncate">{prev.title}</span></Link> : <span />}
