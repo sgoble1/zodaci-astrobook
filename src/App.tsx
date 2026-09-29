@@ -1,5 +1,6 @@
 import MasterbookSources from './pages/MasterbookSources';
 import MyUploads from './pages/MyUploads';
+import Admin from './pages/Admin';
 import UploadedDoc from './pages/UploadedDoc';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { useMemo, type ReactNode } from 'react';
@@ -149,6 +150,7 @@ export default function App() {
             <Route path="/masterbook" element={<Masterbook />} />
             <Route path="/masterbook/index" element={<MasterbookSources />} />
             <Route path="/masterbook/upload" element={<MyUploads />} />
+            <Route path="/admin" element={<Admin />} />
             <Route path="/masterbook/u/:id" element={<UploadedDoc />} />
             <Route path="/masterbook/pdf/:id" element={<PdfViewer />} />
             <Route path="/feng-shui/flying-stars" element={<FlyingStars />} />

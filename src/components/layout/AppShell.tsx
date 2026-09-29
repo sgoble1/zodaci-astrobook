@@ -5,7 +5,7 @@ import { BIRTH } from '@/content/april';
 import { CommandPaletteTrigger } from '@/components/common/CommandPalette';
 
 const groups: { title: string; items: { to: string; label: string }[] }[] = [
-  { title: 'Begin', items: [{ to: '/', label: 'Home' }, { to: '/masterbook', label: 'The Masterbook · Full Text' }, { to: '/masterbook/index', label: 'Document Index' }, { to: '/masterbook/upload', label: 'Upload to the Masterbook' }, { to: '/ask', label: 'Ask the Sources' }, { to: '/reading', label: 'The Complete Reading' }] },
+  { title: 'Begin', items: [{ to: '/', label: 'Home' }, { to: '/masterbook', label: 'The Masterbook · Full Text' }, { to: '/masterbook/index', label: 'Document Index' }, { to: '/masterbook/upload', label: 'Upload to the Masterbook' },{ to: '/admin', label: 'Admin Dashboard' }, { to: '/ask', label: 'Ask the Sources' }, { to: '/reading', label: 'The Complete Reading' }] },
   { title: 'The Natal Chart', items: [
     { to: '/birth-chart', label: 'Birth Chart' }, { to: '/chart-calculator', label: 'Chart Calculator' }, { to: '/planets', label: 'Planets' }, { to: '/houses', label: 'Houses' },
     { to: '/aspects', label: 'Aspects' }, { to: '/star-map', label: 'Fixed-Star Sky Map' }, { to: '/compendium', label: 'Compendium' }] },
