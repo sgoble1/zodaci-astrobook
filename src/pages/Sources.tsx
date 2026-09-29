@@ -78,7 +78,7 @@ export default function Sources() {
             {lib.items.filter(i => match(i.title + i.file_name + (i.category ?? ''))).map(i => (
               <Row key={i.id} title={i.title} ext={i.file_name.split('.').pop()!.toLowerCase()} url={i.url}
                 sub={`${i.category ? i.category + ' · ' : ''}${i.file_name} · ${fmtSize(i.size_bytes)} · ${new Date(i.created_at).toLocaleDateString()}${i.description ? ' · ' + i.description : ''}`}
-                onDelete={session?.user.id === i.owner_id ? () => { if (confirm('Delete this file?')) lib.remove(i); } : undefined} />
+                onDelete={(isAdmin || session?.user.id === i.owner_id) ? () => { if (confirm('Delete this file?')) lib.remove(i); } : undefined} />
             ))}
           </ul>}
       </section>

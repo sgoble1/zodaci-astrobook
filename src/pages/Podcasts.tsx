@@ -94,7 +94,7 @@ export default function Podcasts() {
                     {queue.includes(ep.id) ? <ListX className="w-4 h-4" /> : <ListPlus className="w-4 h-4" />}
                   </button>
                   {ep.url && <a href={ep.url} download={ep.file_name} className="p-2 rounded hover:bg-muted" aria-label="Download"><Download className="w-4 h-4" /></a>}
-                  {session?.user.id === ep.owner_id && (
+                  {(isAdmin || session?.user.id === ep.owner_id) && (
                     <button className="p-2 rounded hover:bg-muted" aria-label="Delete" onClick={async () => { if (confirm('Delete this episode?')) { await lib.remove(ep); if (current?.id === ep.id) setCurrent(null); } }}>
                       <Trash2 className="w-4 h-4" />
                     </button>

@@ -18,6 +18,16 @@ export function useSession() {
   return session;
 }
 
+/** True when the signed-in user holds the admin role (the designated owner email claims it on first verified sign-in). */
+export function useIsAdmin(session: Session | null) {
+  const [admin, setAdmin] = useState(false);
+  useEffect(() => {
+    if (!session) { setAdmin(false); return; }
+    supabase.rpc('claim_admin').then(({ data }) => setAdmin(!!data));
+  }, [session?.user.id]); // eslint-disable-line react-hooks/exhaustive-deps
+  return admin;
+}
+
 export function useLibrary(kind: 'podcast' | 'source' | 'masterbook') {
   const [items, setItems] = useState<LibraryItem[]>([]);
   const [loading, setLoading] = useState(true);

@@ -65,7 +65,7 @@ export default function MyUploads() {
                     <Link to={`/masterbook/u/${it.id}`} className="underline">Read</Link>
                     {it.url && <a href={it.url} target="_blank" rel="noreferrer" className="underline">Open original</a>}
                     <Link to={`/ask?doc=up:${it.id}`} className="underline">Ask about it</Link>
-                    {session?.user.id === it.owner_id && <button onClick={() => remove(it)} className="ml-auto text-destructive flex items-center gap-1"><Trash2 className="w-3 h-3" />Remove</button>}
+                    {(isAdmin || session?.user.id === it.owner_id) && <button onClick={() => remove(it)} className="ml-auto text-destructive flex items-center gap-1"><Trash2 className="w-3 h-3" />Remove</button>}
                   </div>
                 </div>
               );
