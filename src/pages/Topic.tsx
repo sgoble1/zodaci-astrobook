@@ -64,6 +64,15 @@ export default function Topic() {
         <p className="text-muted-foreground">{topic.intro}</p>
       </header>
 
+      {topic.facts && (
+        <section>
+          <h2 className="font-display text-2xl mb-3">Key facts from the sources</h2>
+          <ul className="space-y-3">
+            {topic.facts.map(f => <li key={f.text} className="border-l-2 border-primary pl-4"><p className="text-sm">{f.text}</p><Link to={f.to} className="text-xs text-muted-foreground hover:text-primary">{f.cite} →</Link></li>)}
+          </ul>
+        </section>
+      )}
+
       {topic.pages && (
         <section>
           <h2 className="font-display text-2xl mb-3">Start here</h2>
