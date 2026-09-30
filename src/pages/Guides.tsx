@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { FlyingStarWheel } from '@/components/fengshui/FlyingStarWheel';
+import { BaguaWheel } from '@/components/fengshui/BaguaWheel';
 import { loadIndex, type MbEntry } from './Masterbook';
 
 export const GUIDES = [
@@ -20,6 +21,7 @@ export default function Guide() {
       <div className="font-smallcaps text-xs text-gold">Source guide · {secs.length} sections</div>
       <h1 className="text-3xl sm:text-4xl">{g.title}</h1>
       <p className="text-muted-foreground max-w-2xl">{g.blurb} Each section opens as a full page with the complete text, links to the PDF page, and a “Summarise from the sources” button.</p>
+      {g.slug !== 'timeline-retrogrades' && <section className="space-y-3"><h2 className="text-2xl">Bagua wheel · April’s eight directions</h2><BaguaWheel /></section>}
       {g.slug === 'feng-shui-pages' && <section className="space-y-3"><h2 className="text-2xl">Flying Stars wheel</h2><FlyingStarWheel /></section>}
       <ol className="grid sm:grid-cols-2 gap-3">
         {secs.map(e => (
