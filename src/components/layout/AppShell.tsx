@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { Menu, X } from 'lucide-react';
 import { BIRTH } from '@/content/april';
 import { TOPICS } from '@/content/topics';
+import { useRelationships } from '@/hooks/useRelationships';
 import { CommandPaletteTrigger } from '@/components/common/CommandPalette';
 
 const groups: { title: string; items: { to: string; label: string }[] }[] = [
@@ -68,6 +69,8 @@ export function AppShell() {
 }
 
 function SidebarInner() {
+  const { items: rels } = useRelationships();
+  const allGroups = [...groups.slice(0, 1), { title: 'Relationships', items: [{ to: '/relationships', label: 'All Relationships' }, ...rels.map(r => ({ to: `/relationships/${r.id}`, label: `↳ ${r.name}${r.relation ? ` · ${r.relation}` : ''}` }))] }, ...groups.slice(1)];
   return (
     <div className="p-6 flex flex-col gap-6 h-full overflow-y-auto">
       <div>
@@ -87,12 +90,12 @@ function SidebarInner() {
       <div className="pt-1"><CommandPaletteTrigger /></div>
 
       <nav className="flex flex-col gap-4 text-sm">
-        {groups.map(g => (
+        {allGroups.map(g => (
           <div key={g.title} className="flex flex-col gap-0.5">
             <div className="font-smallcaps text-[10px] text-gold px-3 mb-1">{g.title}</div>
             {g.items.map(n => (
               <NavLink
-                key={n.to} to={n.to} end={n.to === '/' || n.to === '/masterbook'}
+                key={n.to} to={n.to} end={n.to === '/' || n.to === '/masterbook' || n.to === '/relationships'}
                 className={({ isActive }) =>
                   `px-3 py-1.5 rounded border border-transparent transition-colors ${
                     isActive ? 'bg-accent/15 border-accent/30 text-foreground' : 'text-muted-foreground hover:text-foreground hover:bg-muted/60'
