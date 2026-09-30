@@ -17,6 +17,7 @@ export default function PdfViewer() {
   const [showText, setShowText] = useState(false);
   const [text, setText] = useState<string[] | null>(null);
   const [jump, setJump] = useState('');
+  const [textOnly, setTextOnly] = useState(false);
   const canvas = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -44,7 +45,7 @@ export default function PdfViewer() {
         pdfjs.GlobalWorkerOptions.workerSrc = worker.default;
         const d = await pdfjs.getDocument({ url: meta.url }).promise;
         if (!cancelled) setDoc(d);
-      } catch (e) { setErr('Could not load the PDF: ' + (e as Error).message); }
+      } catch { if (!cancelled) setTextOnly(true); }
     })();
     if (meta.libId) fetch(`/library/${meta.libId}.json`).then(r => r.json()).then((u: { text: string }[]) => setText(u.map(x => x.text))).catch(() => {});
     return () => { cancelled = true; };
@@ -64,7 +65,8 @@ export default function PdfViewer() {
     return () => task?.cancel();
   }, [doc, page, scale]);
 
-  const go = (n: number) => { if (!doc) return; const v = Math.min(Math.max(1, n), doc.numPages); const s = new URLSearchParams(sp); s.set('page', String(v)); setSp(s, { replace: true }); };
+  const total = doc?.numPages ?? (textOnly ? text?.length : undefined);
+  const go = (n: number) => { if (!total) return; const v = Math.min(Math.max(1, n), total); const s = new URLSearchParams(sp); s.set('page', String(v)); setSp(s, { replace: true }); };
   useEffect(() => {
     const k = (e: KeyboardEvent) => { if ((e.target as HTMLElement).tagName === 'INPUT') return; if (e.key === 'ArrowRight') go(page + 1); if (e.key === 'ArrowLeft') go(page - 1); };
     window.addEventListener('keydown', k); return () => window.removeEventListener('keydown', k);
@@ -82,8 +84,8 @@ export default function PdfViewer() {
         <>
           <div className="sticky top-14 z-10 flex flex-wrap items-center gap-2 bg-background/90 backdrop-blur border border-border rounded p-2">
             <button onClick={() => go(page - 1)} disabled={page <= 1} className="p-1.5 rounded hover:bg-muted disabled:opacity-40" aria-label="Previous page"><ChevronLeft className="w-4 h-4" /></button>
-            <span className="text-sm">Page <b>{page}</b> of {doc?.numPages ?? '…'}</span>
-            <button onClick={() => go(page + 1)} disabled={!!doc && page >= doc.numPages} className="p-1.5 rounded hover:bg-muted disabled:opacity-40" aria-label="Next page"><ChevronRight className="w-4 h-4" /></button>
+            <span className="text-sm">Page <b>{page}</b> of {total ?? '…'}</span>
+            <button onClick={() => go(page + 1)} disabled={!!total && page >= total} className="p-1.5 rounded hover:bg-muted disabled:opacity-40" aria-label="Next page"><ChevronRight className="w-4 h-4" /></button>
             <form onSubmit={e => { e.preventDefault(); go(+jump); setJump(''); }} className="flex items-center gap-1"><input value={jump} onChange={e => setJump(e.target.value.replace(/\D/g, ''))} placeholder="Go to" className="w-16 text-sm border border-border rounded px-2 py-1 bg-background" aria-label="Go to page" /></form>
             <span className="mx-2 h-5 w-px bg-border" />
             <button onClick={() => setScale(s => Math.max(0.6, s - 0.2))} className="p-1.5 rounded hover:bg-muted" aria-label="Zoom out"><ZoomOut className="w-4 h-4" /></button>
@@ -91,13 +93,22 @@ export default function PdfViewer() {
             <button onClick={() => setScale(s => Math.min(3, s + 0.2))} className="p-1.5 rounded hover:bg-muted" aria-label="Zoom in"><ZoomIn className="w-4 h-4" /></button>
             {text && <button onClick={() => setShowText(v => !v)} className={`ml-auto text-xs border rounded px-2 py-1 flex items-center gap-1 ${showText ? 'bg-muted' : ''}`}><FileText className="w-3 h-3" />Page text</button>}
           </div>
+          {textOnly ? (
+            <div className="parchment p-5 space-y-2">
+              <div className="font-smallcaps text-xs text-gold">Text view · page {page}</div>
+              {text ? <div className="text-sm whitespace-pre-wrap leading-relaxed">{text[page - 1]?.trim() || 'This page has no selectable text (it may be an image).'}</div>
+                : <p className="text-sm text-muted-foreground">The page images couldn’t be loaded here{meta?.libId ? ', and the text is still loading…' : ' and there is no extracted text for this file. Use Download to open it.'}</p>}
+              <p className="text-[11px] text-muted-foreground">The original page image couldn’t be drawn in this browser, so the page’s extracted text is shown instead.</p>
+            </div>
+          ) : (
           <div className={`grid gap-4 ${showText ? 'lg:grid-cols-[auto_1fr]' : ''}`}>
             <div className="overflow-auto border border-border rounded bg-muted/30 p-2 flex justify-center">
-              {!doc && <p className="p-10 text-muted-foreground text-sm">Loading document…</p>}
+              {!doc && !textOnly && <p className="p-10 text-muted-foreground text-sm">Loading document…</p>}
               <canvas ref={canvas} className="shadow-lg bg-background max-w-none" />
             </div>
             {showText && text && <div className="parchment p-4 text-sm whitespace-pre-wrap max-h-[80vh] overflow-auto">{text[page - 1] ?? 'No extracted text for this page.'}</div>}
           </div>
+          )}
           <p className="text-[11px] text-muted-foreground">Tip: use the ← and → keys to turn pages. The link in your address bar opens this exact page.</p>
         </>
       )}
