@@ -1,3 +1,4 @@
+import { SourceChapters } from '@/components/common/SourceChapters';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ASPECTS, PLACEMENTS, type Aspect } from '@/content/april';
@@ -88,6 +89,7 @@ export default function Aspects() {
           )}
         </div>
       </div>
+      <SourceChapters match={/aspect|conjunct|square|trine|opposition|sextile|quincunx|stellium|midpoint|harmonic|antiscia|bucket/i} />
     </div>
   );
 }

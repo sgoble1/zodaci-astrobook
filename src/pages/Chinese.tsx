@@ -1,3 +1,4 @@
+import { SourceChapters } from '@/components/common/SourceChapters';
 import { PILLARS, ELEMENT_BALANCE, LIFE_LESSON, LUCK_PILLARS, CHINESE_SOURCE } from '@/content/chinese';
 import { SourceRefPanel } from '@/components/common/SourceRefPanel';
 
@@ -79,6 +80,7 @@ export default function Chinese() {
       </section>
 
       <SourceRefPanel source={CHINESE_SOURCE} />
+      <SourceChapters match={/chinese|ba ?zi|four pillars|metal horse|day master|zodiac animal/i} />
     </article>
   );
 }

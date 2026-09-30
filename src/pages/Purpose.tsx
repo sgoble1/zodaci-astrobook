@@ -1,3 +1,4 @@
+import { SourceChapters } from '@/components/common/SourceChapters';
 import { NUMEROLOGY, BIRTH } from '@/content/april';
 
 export default function Purpose() {
@@ -49,6 +50,7 @@ function BigNumber({ label, value, accent = false }: { label: string; value: str
     <div className={`p-6 border rounded text-center ${accent ? 'border-gold/60 bg-gold/5' : 'border-border bg-card/60'}`}>
       <div className="font-smallcaps text-[10px] text-muted-foreground">{label}</div>
       <div className="font-display text-7xl text-gold leading-none mt-2">{value}</div>
+      <SourceChapters match={/purpose|mission|north node|south node|past li|karm|gene keys|human design|vocation|calling/i} />
     </div>
   );
 }

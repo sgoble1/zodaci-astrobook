@@ -1,3 +1,4 @@
+import { SourceChapters } from '@/components/common/SourceChapters';
 import { useState } from 'react';
 import { PHASES, type LifePhase } from '@/content/april';
 
@@ -85,6 +86,7 @@ export default function Timeline() {
           ))}
         </div>
       </section>
+      <SourceChapters match={/timeline|life phase|decade|age \d|\b(19|20)\d\d\b|return|progress|solar arc|solar return/i} />
     </div>
   );
 }

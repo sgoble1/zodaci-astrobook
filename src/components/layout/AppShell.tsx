@@ -23,7 +23,7 @@ const groups: { title: string; items: { to: string; label: string }[] }[] = [
     { to: '/chinese', label: 'Chinese · Ba Zi' }, { to: '/feng-shui', label: 'Feng Shui' }, { to: '/feng-shui/bagua', label: 'Feng Shui · Bagua & Home' }, { to: '/feng-shui/flying-stars', label: 'Feng Shui · Flying Stars' }, { to: '/volume-2', label: 'Volume II · Supplement' }] },
   { title: 'Library', items: [
     { to: '/podcasts', label: 'Podcasts' }, { to: '/sources', label: 'Source Files' },
-    { to: '/data-quality', label: 'Data Quality' }, { to: '/art-direction', label: 'Art Direction' }] },
+    { to: '/data-quality', label: 'Data Quality' }] },
 ];
 
 export function AppShell() {

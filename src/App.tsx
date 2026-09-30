@@ -23,7 +23,6 @@ import Retrogrades from './pages/Retrogrades';
 import Purpose from './pages/Purpose';
 import FengShui from './pages/FengShui';
 import Compendium from './pages/Compendium';
-import ArtDirection from './pages/ArtDirection';
 import StarMap from './pages/StarMap';
 import Profection from './pages/Profection';
 import Numerology from './pages/Numerology';
@@ -153,7 +152,6 @@ export default function App() {
             <Route path="/numerology" element={<Numerology />} />
             <Route path="/transits" element={<Transits />} />
             <Route path="/chinese" element={<Chinese />} />
-            <Route path="/art-direction" element={<ArtDirection />} />
             <Route path="/volume-2" element={<Volume2 />} />
             <Route path="/data-quality" element={<DataQuality />} />
             <Route path="/masterbook" element={<Masterbook />} />

@@ -1,3 +1,4 @@
+import { SourceChapters } from '@/components/common/SourceChapters';
 import { Link, useParams } from 'react-router-dom';
 import { PLACEMENTS, ASPECTS } from '@/content/april';
 
@@ -59,6 +60,7 @@ export default function PlanetDetail() {
         <Link to={`/houses/${p.house}`} className="ink-link font-smallcaps text-xs">Read House {p.house} →</Link>
         <Link to="/aspects" className="ink-link font-smallcaps text-xs">All aspects →</Link>
       </div>
+      <SourceChapters match={new RegExp(`\\b${key === 'northnode' ? 'north node' : key === 'southnode' ? 'south node' : key}\\b`, 'i')} title="Everything the sources say" />
     </article>
   );
 }

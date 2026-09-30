@@ -1,3 +1,4 @@
+import { SourceChapters } from '@/components/common/SourceChapters';
 import { useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { STAR_INFO, flyStars, annualCenter, periodOf, GRID_SOUTH_UP, GRID_NORTH_UP, DIR_NAME, KUA_DIRECTIONS, FS_DOC_ID, type Dir } from '@/content/fengshui';
@@ -119,6 +120,7 @@ export default function FlyingStars() {
           ))}
         </div>
       </section>
+      <SourceChapters match={/flying star|feng shui|period \d|annual star/i} />
     </div>
   );
 }

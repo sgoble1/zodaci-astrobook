@@ -1,3 +1,4 @@
+import { SourceChapters } from '@/components/common/SourceChapters';
 import { Link } from 'react-router-dom';
 import { HOUSES } from '@/content/april';
 
@@ -31,6 +32,7 @@ export default function Houses() {
           </Link>
         ))}
       </div>
+      <SourceChapters match={/house|dispositor|rulership|angles?\b|arabic parts|part of fortune|vertex/i} />
     </div>
   );
 }

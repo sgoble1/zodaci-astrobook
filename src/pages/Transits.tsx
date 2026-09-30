@@ -1,3 +1,4 @@
+import { SourceChapters } from '@/components/common/SourceChapters';
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { TRANSITS, TRANSITS_SOURCE, type TransitEvent } from '@/content/transits';
@@ -131,6 +132,7 @@ export default function Transits() {
       </section>
 
       <SourceRefPanel source={TRANSITS_SOURCE} />
+      <SourceChapters match={/transit|eclipse|jupiter return|saturn return|convergence/i} />
     </article>
   );
 }
