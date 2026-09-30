@@ -1,3 +1,4 @@
+import { SourceChapters } from '@/components/common/SourceChapters';
 import { Link } from 'react-router-dom';
 import { CORE_NUMBERS, PINNACLES, CHALLENGES, PERSONAL_YEARS, NUMEROLOGY_SOURCE } from '@/content/numerology';
 import { SourceRefPanel } from '@/components/common/SourceRefPanel';
@@ -105,6 +106,7 @@ export default function Numerology() {
         <Link to="/transits" className="ink-link">Outer-planet transits →</Link>
         <Link to="/chinese" className="ink-link">Chinese astrology · Ba Zi →</Link>
       </nav>
+      <SourceChapters match={/numerolog|life path|personal year|master number/i} />
     </article>
   );
 }

@@ -1,3 +1,4 @@
+import { SourceChapters } from '@/components/common/SourceChapters';
 import { useEffect, useMemo, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { FIXED_STARS, type FixedStar } from '@/content/compendium';
@@ -110,6 +111,7 @@ export default function StarMap() {
           </button>
         ))}
       </div>
+      <SourceChapters match={/fixed star|sabian|spica|galactic|asteroid|decan/i} />
     </div>
   );
 }

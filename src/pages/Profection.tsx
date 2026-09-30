@@ -1,3 +1,4 @@
+import { SourceChapters } from '@/components/common/SourceChapters';
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { PROFECTION_35, PRENATAL_ECLIPSE, PROFECTION_BEATS, type ProfectionBeat } from '@/content/compendium';
@@ -126,6 +127,7 @@ export default function Profection() {
           ))}
         </div>
       </section>
+      <SourceChapters match={/profection|solar return|progress|solar arc/i} />
     </div>
   );
 }

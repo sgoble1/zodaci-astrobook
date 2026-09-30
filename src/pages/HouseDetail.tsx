@@ -1,3 +1,4 @@
+import { SourceChapters } from '@/components/common/SourceChapters';
 import { Link, useParams } from 'react-router-dom';
 import { HOUSES, PLACEMENTS } from '@/content/april';
 
@@ -54,6 +55,7 @@ export default function HouseDetail() {
         <Link to={`/houses/${prev!.number}`} className="ink-link">← H{prev!.number} · {prev!.name}</Link>
         <Link to={`/houses/${next!.number}`} className="ink-link">H{next!.number} · {next!.name} →</Link>
       </nav>
+      <SourceChapters match={new RegExp(`\\b(house ${num}|h${num})\\b|house-by-house|${['','1st','2nd','3rd','4th','5th','6th','7th','8th','9th','10th','11th','12th'][Number(num)] || 'zz'} house`, 'i')} title="Everything the sources say" />
     </article>
   );
 }

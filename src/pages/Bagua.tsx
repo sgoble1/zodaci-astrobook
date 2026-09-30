@@ -1,3 +1,4 @@
+import { SourceChapters } from '@/components/common/SourceChapters';
 import { Link, useSearchParams } from 'react-router-dom';
 import { BAGUA } from '@/content/april';
 import { KUA_DIRECTIONS, KUA_FOUNDATION, ELEMENT_PROFILE, ROOMS, CRYSTALS, TWELVE_WEEKS, GRID_SOUTH_UP, DIR_NAME, FS_DOC_ID, STAR_INFO, flyStars, annualCenter, type Dir } from '@/content/fengshui';
@@ -127,6 +128,7 @@ export default function Bagua() {
           ))}
         </ol>
       </section>
+      <SourceChapters match={/bagua|feng shui|kua|sacred space|crystal/i} />
     </div>
   );
 }

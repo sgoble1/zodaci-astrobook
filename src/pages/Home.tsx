@@ -13,7 +13,6 @@ const modules = [
   { to: '/purpose', title: 'Purpose & Numerology', desc: 'Life Path 7, Personal Year 7 (2026), Kua 1 Water, Metal Horse — the numerical harmonics of the chart.' },
   { to: '/feng-shui', title: 'Feng Shui · Kua 1', desc: 'Interactive bagua overlay tuned to a Water Kua in the East group.' },
   { to: '/compendium', title: 'The Master Compendium', desc: 'Reference tables, dignities, karmic axis and past-life notation, tarot and fixed stars.' },
-  { to: '/art-direction', title: 'Art Direction', desc: 'The illuminated manuscript style guide that governs every illustration in this compendium.' },
 ];
 
 export default function Home() {

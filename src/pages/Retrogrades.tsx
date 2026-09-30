@@ -1,3 +1,4 @@
+import { SourceChapters } from '@/components/common/SourceChapters';
 import { Link } from 'react-router-dom';
 import { RETROGRADES_AT_BIRTH, PLACEMENTS } from '@/content/april';
 import journalImg from '@/assets/journaling-desk.jpg';
@@ -37,6 +38,7 @@ export default function Retrogrades() {
           );
         })}
       </div>
+      <SourceChapters match={/retrograde|\brx\b|stationing|shadow period/i} />
     </div>
   );
 }
