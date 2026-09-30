@@ -14,16 +14,16 @@ import type { SourceRef } from '@/content/compendium';
 import { ChartWheel } from '@/components/chart/ChartWheel';
 import { aprilSourcesFor } from '@/content/birthChartBook';
 
-const APRIL: ChartInput = { date: '1990-09-06', time: '15:38', lat: 42.8689, lon: -76.9856, tz: 'America/New_York', placeLabel: 'Geneva, New York, United States', placeSource: 'geocoded' };
+export const APRIL: ChartInput = { date: '1990-09-06', time: '15:38', lat: 42.8689, lon: -76.9856, tz: 'America/New_York', placeLabel: 'Geneva, New York, United States', placeSource: 'geocoded', sex: 'female' };
 const BC_SRC: SourceRef = { doc: 'Complete Birth Chart Analysis & Feng Shui Guide', section: 'Planetary positions', page: 'pp. 1–10' };
 const CALC_SRC: SourceRef = { doc: 'Calculated in the app', section: 'astronomy-engine ephemeris · Porphyry houses' };
 type Geo = { name: string; admin1?: string; country?: string; latitude: number; longitude: number; timezone: string };
 
 export const fromParams = (sp: URLSearchParams): ChartInput | null => {
   const date = sp.get('d'); if (!date) return null;
-  return { date, time: sp.get('t') || null, lat: +(sp.get('lat') ?? 0), lon: +(sp.get('lon') ?? 0), tz: sp.get('tz') ?? 'UTC', placeLabel: sp.get('place') ?? '', placeSource: (sp.get('src') as ChartInput['placeSource']) ?? 'manual' };
+  return { date, time: sp.get('t') || null, lat: +(sp.get('lat') ?? 0), lon: +(sp.get('lon') ?? 0), tz: sp.get('tz') ?? 'UTC', placeLabel: sp.get('place') ?? '', placeSource: (sp.get('src') as ChartInput['placeSource']) ?? 'manual', sex: (sp.get('sx') as ChartInput['sex']) || 'unspecified' };
 };
-export const toParams = (i: ChartInput) => new URLSearchParams({ d: i.date, t: i.time ?? '', lat: String(i.lat), lon: String(i.lon), tz: i.tz, place: i.placeLabel, src: i.placeSource }).toString();
+export const toParams = (i: ChartInput) => new URLSearchParams({ d: i.date, t: i.time ?? '', lat: String(i.lat), lon: String(i.lon), tz: i.tz, place: i.placeLabel, src: i.placeSource, sx: i.sex ?? 'unspecified' }).toString();
 
 export default function ChartCalculator() {
   const [sp, setSp] = useSearchParams();
@@ -48,7 +48,7 @@ export default function ChartCalculator() {
   const choose = (g: Geo) => { const label = [g.name, g.admin1, g.country].filter(Boolean).join(', '); setForm(f => ({ ...f, lat: g.latitude, lon: g.longitude, tz: g.timezone, placeLabel: label, placeSource: 'geocoded' })); setQ(label); setGeo([]); };
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
-    const next: ChartInput = { date: form.date, time: form.unknown || !form.time ? null : form.time, lat: +form.lat, lon: +form.lon, tz: form.tz, placeLabel: form.placeLabel || q, placeSource: form.placeSource };
+    const next: ChartInput = { date: form.date, time: form.unknown || !form.time ? null : form.time, lat: +form.lat, lon: +form.lon, tz: form.tz, placeLabel: form.placeLabel || q, placeSource: form.placeSource, sex: form.sex };
     setSp(toParams(next));
   };
 
@@ -66,6 +66,7 @@ export default function ChartCalculator() {
           <div className="flex gap-3 items-center"><Input type="time" value={form.time} disabled={form.unknown} onChange={e => setForm(f => ({ ...f, time: e.target.value }))} />
             <label className="text-xs flex items-center gap-1 whitespace-nowrap"><input type="checkbox" checked={form.unknown} onChange={e => setForm(f => ({ ...f, unknown: e.target.checked }))} />Time unknown</label></div>
         </div>
+        <label className="text-sm">Sex (for the Feng Shui Kua number)<select className="w-full border rounded h-10 px-2 bg-background" value={form.sex ?? 'unspecified'} onChange={e => setForm(f => ({ ...f, sex: e.target.value as ChartInput['sex'] }))}><option value="unspecified">Not given</option><option value="female">Female</option><option value="male">Male</option></select></label>
         <div className="md:col-span-2 text-sm">Place
           <div className="flex gap-2"><Input value={q} onChange={e => setQ(e.target.value)} onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); search(); } }} placeholder="City, e.g. Geneva New York" />
             <Button type="button" variant="outline" onClick={search} disabled={busy}>{busy ? <Loader2 className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />}Find</Button></div>
