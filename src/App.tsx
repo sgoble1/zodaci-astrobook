@@ -5,6 +5,7 @@ import UploadedDoc from './pages/UploadedDoc';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { useMemo, type ReactNode } from 'react';
 import { AppShell } from './components/layout/AppShell';
+import { SitePasswordGate } from './components/common/SitePasswordGate';
 import { DetailDrawerProvider, type DrawerPayload } from './components/common/DetailDrawer';
 import { CommandPalette } from './components/common/CommandPalette';
 import {
@@ -131,6 +132,7 @@ function Providers({ children }: { children: ReactNode }) {
 
 export default function App() {
   return (
+    <SitePasswordGate>
     <BrowserRouter>
       <Providers>
         <Routes>
@@ -185,5 +187,6 @@ export default function App() {
         </Routes>
       </Providers>
     </BrowserRouter>
+    </SitePasswordGate>
   );
 }
