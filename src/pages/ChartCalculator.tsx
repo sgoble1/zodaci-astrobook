@@ -14,7 +14,7 @@ import type { SourceRef } from '@/content/compendium';
 import { ChartWheel } from '@/components/chart/ChartWheel';
 import { aprilSourcesFor } from '@/content/birthChartBook';
 
-const APRIL: ChartInput = { date: '1990-09-06', time: '15:38', lat: 42.8689, lon: -76.9856, tz: 'America/New_York', placeLabel: 'Geneva, New York, United States', placeSource: 'geocoded' };
+const APRIL: ChartInput = { date: '1990-09-06', time: '15:38', lat: 42.8689, lon: -76.9856, tz: 'America/New_York', placeLabel: 'Geneva, New York, United States', placeSource: 'geocoded', sex: 'female' };
 const BC_SRC: SourceRef = { doc: 'Complete Birth Chart Analysis & Feng Shui Guide', section: 'Planetary positions', page: 'pp. 1–10' };
 const CALC_SRC: SourceRef = { doc: 'Calculated in the app', section: 'astronomy-engine ephemeris · Porphyry houses' };
 type Geo = { name: string; admin1?: string; country?: string; latitude: number; longitude: number; timezone: string };
@@ -48,7 +48,7 @@ export default function ChartCalculator() {
   const choose = (g: Geo) => { const label = [g.name, g.admin1, g.country].filter(Boolean).join(', '); setForm(f => ({ ...f, lat: g.latitude, lon: g.longitude, tz: g.timezone, placeLabel: label, placeSource: 'geocoded' })); setQ(label); setGeo([]); };
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
-    const next: ChartInput = { date: form.date, time: form.unknown || !form.time ? null : form.time, lat: +form.lat, lon: +form.lon, tz: form.tz, placeLabel: form.placeLabel || q, placeSource: form.placeSource };
+    const next: ChartInput = { date: form.date, time: form.unknown || !form.time ? null : form.time, lat: +form.lat, lon: +form.lon, tz: form.tz, placeLabel: form.placeLabel || q, placeSource: form.placeSource, sex: form.sex };
     setSp(toParams(next));
   };
 
