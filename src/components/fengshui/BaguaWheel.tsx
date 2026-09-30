@@ -45,11 +45,11 @@ export function BaguaWheel() {
         <div className="font-smallcaps text-xs text-gold">{DIR_NAME[sel]}</div>
         {kua ? <>
           <h3 className="font-display text-2xl">{kua.name} — {kua.meaning}</h3>
-          <ConfidenceBadge level={kua.standardNote ? 'ambiguous' : 'high'} note={kua.standardNote ?? 'Quoted from the 18A direction table.'} />
+          <ConfidenceBadge level={kua.standardNote ? 'ambiguous' : 'confirmed'} note={kua.standardNote ?? 'Quoted from the 18A direction table.'} />
           <p className="text-sm">{kua.activation}</p>
         </> : <>
           <h3 className="font-display text-2xl">Center · Kua 1 (Water)</h3>
-          <p className="text-sm">{typeof KUA_FOUNDATION === 'object' ? Object.values(KUA_FOUNDATION).filter(v => typeof v === 'string').slice(0, 2).join(' ') : ''}</p>
+          <p className="text-sm">{KUA_FOUNDATION.text}</p>
         </>}
         {rooms.length > 0 && <div className="text-sm"><b>Rooms:</b> {rooms.map(r => r.name).join(', ')}</div>}
         {crystals.length > 0 && <div className="text-sm"><b>Crystals:</b> {crystals.map(c => c.name).join(', ')}</div>}
