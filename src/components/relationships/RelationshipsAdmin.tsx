@@ -12,7 +12,7 @@ export function RelationshipsAdmin({ userId }: { userId: string }) {
   if (loading) return <p className="text-sm text-muted-foreground">Loading…</p>;
   return (
     <div className="space-y-4">
-      <p className="text-sm text-muted-foreground">Relationships saved to your account. Documents you upload here become Masterbook uploads; edit their sections in the “Edit sections” tab.</p>
+      <p className="text-sm text-muted-foreground">Relationships saved to your account. Upload PDFs, spreadsheets or text for each person, then edit every section right here with a live preview.</p>
       {edit === 'new' ? <PersonForm initial={EMPTY} submitLabel="Add relationship" onSave={async p => { await saveRelationship(p); setEdit(null); }} /> : <Button onClick={() => setEdit('new')}>Add relationship</Button>}
       {items.map(r => (
         <div key={r.id} className="parchment p-4 space-y-3">

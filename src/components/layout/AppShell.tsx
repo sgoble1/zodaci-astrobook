@@ -1,4 +1,7 @@
 import { NavLink, Outlet, useLocation } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import ParticleField from '@/components/fx/ParticleField';
+import ScrollProgress from '@/components/fx/ScrollProgress';
 import { useEffect, useState } from 'react';
 import { Menu, X } from 'lucide-react';
 import { BIRTH } from '@/content/april';
@@ -30,9 +33,13 @@ export function AppShell() {
   useEffect(() => { setOpen(false); window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior }); }, [location.pathname]);
 
   return (
-    <div className="min-h-screen flex bg-background text-foreground">
+    <div className="min-h-screen flex text-foreground relative">
+      <ScrollProgress />
+      <ParticleField />
+      <div aria-hidden className="pointer-events-none fixed -top-40 -left-40 w-[520px] h-[520px] rounded-full bg-primary/20 blur-3xl float-orb z-0" />
+      <div aria-hidden className="pointer-events-none fixed -bottom-40 -right-40 w-[520px] h-[520px] rounded-full bg-accent/15 blur-3xl float-orb z-0" style={{ animationDelay: '-9s' }} />
       {/* Sidebar (desktop) */}
-      <aside className="hidden lg:flex w-72 shrink-0 flex-col border-r border-border bg-card/60 backdrop-blur-sm sticky top-0 h-screen">
+      <aside className="hidden lg:flex w-72 shrink-0 flex-col border-r border-border/60 bg-card/40 backdrop-blur-xl sticky top-0 h-screen z-10">
         <SidebarInner />
       </aside>
 
@@ -50,9 +57,11 @@ export function AppShell() {
       )}
 
       {/* Main */}
-      <main className="flex-1 min-w-0 lg:pt-0 pt-[57px]">
+      <main className="flex-1 min-w-0 lg:pt-0 pt-[57px] relative z-10">
         <div className="mx-auto max-w-5xl px-5 sm:px-8 py-10 lg:py-14">
-          <Outlet />
+          <motion.div key={location.pathname} initial={{ opacity: 0, y: 24, filter: 'blur(6px)' }} animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }} transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}>
+            <Outlet />
+          </motion.div>
         </div>
         <footer className="border-t border-border mt-16">
           <div className="mx-auto max-w-5xl px-5 sm:px-8 py-10 text-sm text-muted-foreground">

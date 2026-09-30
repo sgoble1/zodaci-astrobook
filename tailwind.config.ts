@@ -12,8 +12,8 @@ export default {
     },
     extend: {
       fontFamily: {
-        display: ['Cormorant Garamond', 'Times New Roman', 'serif'],
-        smallcaps: ['Cormorant SC', 'Cormorant Garamond', 'serif'],
+        display: ['Space Grotesk', 'sans-serif'],
+        smallcaps: ['Space Grotesk', 'sans-serif'],
         sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
       },
       colors: {
