@@ -39,7 +39,7 @@ export default function RelationshipDetail() {
   const rel = items.find(r => r.id === id);
   return (
     <AuthGate what="view relationships">
-      {() => loading ? <p>Loading…</p> : !rel ? <p>Relationship not found. <Link to="/relationships" className="underline">All relationships</Link></p> : <Detail rel={rel} key={rel.id + rel.updated_at} />}
+      {() => loading ? <p>Loading…</p> : !rel ? <p>Relationship not found. <Link to="/relationships" className="underline">All relationships</Link></p> : <Detail rel={rel} key={rel.id} />}
     </AuthGate>
   );
 }

@@ -86,6 +86,57 @@ export type Database = {
         }
         Relationships: []
       }
+      relationships: {
+        Row: {
+          birth_date: string
+          birth_time: string | null
+          created_at: string
+          id: string
+          lat: number
+          lon: number
+          name: string
+          notes: string
+          owner_id: string
+          place_label: string
+          relation: string
+          sex: string
+          tz: string
+          updated_at: string
+        }
+        Insert: {
+          birth_date: string
+          birth_time?: string | null
+          created_at?: string
+          id?: string
+          lat: number
+          lon: number
+          name: string
+          notes?: string
+          owner_id: string
+          place_label?: string
+          relation?: string
+          sex?: string
+          tz: string
+          updated_at?: string
+        }
+        Update: {
+          birth_date?: string
+          birth_time?: string | null
+          created_at?: string
+          id?: string
+          lat?: number
+          lon?: number
+          name?: string
+          notes?: string
+          owner_id?: string
+          place_label?: string
+          relation?: string
+          sex?: string
+          tz?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           id: string
