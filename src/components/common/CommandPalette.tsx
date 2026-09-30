@@ -21,6 +21,8 @@ const FS_DOCS = [
   ...TWELVE_WEEKS.map((w, i) => ({ id: 'fs-week-' + i, kind: 'fengshui', title: `${w.weeks}: ${w.focus}`, subtitle: '12-week implementation', body: w.actions, route: '/feng-shui/bagua', drawer: `#week-${i + 1}` })),
   ...Object.values(STAR_INFO).map(s => ({ id: 'fs-star-' + s.n, kind: 'fengshui', title: `Star ${s.n} · ${s.name}`, subtitle: `Flying star · ${s.element} · ${s.nature}`, body: s.theme, route: '/feng-shui/flying-stars' })),
   { id: 'tool-calc', kind: 'tool', title: 'Birth Chart Calculator', subtitle: 'Compute positions, aspects & Ba Zi from date, time, place', body: 'calculate natal chart ephemeris bazi', route: '/chart-calculator' },
+  { id: 'tool-elements', kind: 'tool', title: 'Chart Elements & Meanings', subtitle: 'Every position with sources', body: 'planets meanings citations', route: '/chart-elements' },
+  { id: 'tool-bagua-wheel', kind: 'tool', title: 'Masterbook · Bagua Wheel', subtitle: 'Eight directions, Kua 1', body: 'feng shui bagua directions', route: '/masterbook/bagua-wheel' },
   { id: 'tool-reading', kind: 'tool', title: 'The Complete Reading', subtitle: 'Natal + aspects + Ba Zi + Compendium', body: 'reading synthesis', route: '/reading' },
   { id: 'tool-pdf', kind: 'tool', title: 'Feng Shui Guide PDF (in-app viewer)', subtitle: 'Section 18, page 114', body: 'pdf viewer', route: '/masterbook/pdf/d-ff306540?page=114' },
 ] as unknown as Doc[];

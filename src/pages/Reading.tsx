@@ -11,6 +11,7 @@ import { ReasoningPanel } from '@/components/common/ReasoningPanel';
 import { Cite } from '@/components/common/Cite';
 import { CopyLinkButton } from '@/components/common/CopyLinkButton';
 import type { ConfidenceLevel } from '@/content/confidence';
+import { BaguaWheel } from '@/components/fengshui/BaguaWheel';
 import { FlyingStarWheel } from '@/components/fengshui/FlyingStarWheel';
 import { ChartWheel, starContacts } from '@/components/chart/ChartWheel';
 import { BCB_CHAPTER, aprilSourcesFor } from '@/content/birthChartBook';
@@ -83,6 +84,9 @@ function ComputedReading({ input }: { input: NonNullable<ReturnType<typeof fromP
         {stars.length === 0 ? <p className="text-sm text-muted-foreground">None of the Compendium’s fixed stars fall within 1.5° of this chart’s planets or angles.</p>
           : <ul className="grid sm:grid-cols-2 gap-3">{stars.map((s, i) => <li key={i} className="parchment p-3 text-sm"><Link to={`/compendium#${s.star.id}`} className="font-display text-lg hover:underline">★ {s.star.name}</Link> <span className="text-xs text-muted-foreground">{s.star.degree} · conjunct {s.point} ({s.orb.toFixed(1)}°)</span><p className="mt-1">{s.star.meaning}<Cite source={s.star.source} /></p></li>)}</ul>}
         <ReasoningPanel reasoning={{ inputs: [{ label: 'Positions', value: 'Calculated planets, Ascendant and Midheaven' }, { label: 'Star list', value: `${FIXED_STARS.length} stars from the Compendium` }], steps: [{ label: 'Parse', detail: 'Each star’s zodiac degree is converted to ecliptic longitude.' }, { label: 'Compare', detail: 'A contact is listed when the star is within 1.5° of a chart point.' }], output: `${stars.length} contact(s) found.`, confidence: 'approximate', caveats: ['The Compendium’s interpretations were written for April; for other charts they describe the star in general.'] }} />
+      </Section>
+      <Section id="bagua" n="VI·B" title="Feng Shui · Bagua directions" level="derived" note="Wheel shows April's Kua 1 directions from the Feng Shui guide; Kua for another chart also needs birth year and gender, so treat this as a reference.">
+        <BaguaWheel /><p className="text-xs mt-2"><Link to="/masterbook/bagua-wheel" className="underline">Open the Bagua wheel in the Masterbook</Link></p>
       </Section>
       <Section id="fengshui" n="VI" title="Feng Shui · Flying Stars this year" level="derived" note="Annual stars are calculated; Kua notes are April's, from the Feng Shui guide.">
         <FlyingStarWheel />
@@ -159,6 +163,13 @@ export default function Reading() {
         <p className="max-w-3xl"><b>{LIFE_LESSON.headline}.</b> {LIFE_LESSON.body}<Cite source={CHINESE_SOURCE} /></p>
       </Section>
 
+      <Section id="bagua" n="VII¼" title="Feng Shui · Bagua directions" level="derived" note="Wheel shows April's Kua 1 directions from the Feng Shui guide; Kua for another chart also needs birth year and gender, so treat this as a reference.">
+        <BaguaWheel /><p className="text-xs mt-2"><Link to="/masterbook/bagua-wheel" className="underline">Open the Bagua wheel in the Masterbook</Link></p>
+      </Section>
+      <Section id="elements" n="VII¾" title="Every chart element, with sources" level="high" note="Each position's meaning with its Birth Chart Book chapter.">
+        <ul className="grid sm:grid-cols-2 gap-2 text-sm">{PLACEMENTS.map(p => <li key={p.key} className="parchment p-3"><Link to={`/chart-elements#el-${p.key}`} className="font-display text-lg hover:underline">{p.glyph} {p.name} in {p.sign} · H{p.house}</Link><p>{p.headline}</p>{BCB_CHAPTER[p.key] && <Link to={`/masterbook/${BCB_CHAPTER[p.key].id}`} className="text-xs underline">Source: {BCB_CHAPTER[p.key].label}</Link>}</li>)}</ul>
+        <p className="text-xs mt-2"><Link to="/chart-elements" className="underline">Open the full Chart Elements page</Link></p>
+      </Section>
       <Section id="fengshui" n="VII½" title="Feng Shui · Flying Stars this year" level="derived" note="Annual stars are calculated; April's Kua 1 directions are quoted from the Feng Shui guide.">
         <FlyingStarWheel />
       </Section>
