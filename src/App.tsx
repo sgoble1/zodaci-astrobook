@@ -46,6 +46,9 @@ import PdfViewer from './pages/PdfViewer';
 import ChartCalculator from './pages/ChartCalculator';
 import ChartElements from './pages/ChartElements';
 import BaguaWheelPage from './pages/BaguaWheelPage';
+import BaguaReading from './pages/BaguaReading';
+import Relationships from './pages/Relationships';
+import RelationshipDetail from './pages/RelationshipDetail';
 import Reading from './pages/Reading';
 
 
@@ -161,6 +164,9 @@ export default function App() {
             <Route path="/feng-shui/bagua" element={<Bagua />} />
             <Route path="/chart-calculator" element={<ChartCalculator />} />
             <Route path="/reading" element={<Reading />} />
+            <Route path="/bagua-reading" element={<BaguaReading />} />
+            <Route path="/relationships" element={<Relationships />} />
+            <Route path="/relationships/:id" element={<RelationshipDetail />} />
             <Route path="/chart-elements" element={<ChartElements />} />
             <Route path="/masterbook/bagua-wheel" element={<BaguaWheelPage />} />
             <Route path="/masterbook/:id" element={<MasterbookChapter />} />

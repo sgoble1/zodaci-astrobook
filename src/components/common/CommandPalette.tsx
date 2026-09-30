@@ -23,6 +23,8 @@ const FS_DOCS = [
   { id: 'tool-calc', kind: 'tool', title: 'Birth Chart Calculator', subtitle: 'Compute positions, aspects & Ba Zi from date, time, place', body: 'calculate natal chart ephemeris bazi', route: '/chart-calculator' },
   { id: 'tool-elements', kind: 'tool', title: 'Chart Elements & Meanings', subtitle: 'Every position with sources', body: 'planets meanings citations', route: '/chart-elements' },
   { id: 'tool-bagua-wheel', kind: 'tool', title: 'Masterbook · Bagua Wheel', subtitle: 'Eight directions, Kua 1', body: 'feng shui bagua directions', route: '/masterbook/bagua-wheel' },
+  { id: 'tool-bagua-reading', kind: 'tool', title: 'The Bagua Reading', subtitle: 'Chart + Ba Zi + Kua directions', body: 'feng shui kua reading', route: '/bagua-reading' },
+  { id: 'tool-relationships', kind: 'tool', title: 'Relationships', subtitle: 'Synastry, composite, Chinese match', body: 'relationship compatibility synastry partner', route: '/relationships' },
   { id: 'tool-reading', kind: 'tool', title: 'The Complete Reading', subtitle: 'Natal + aspects + Ba Zi + Compendium', body: 'reading synthesis', route: '/reading' },
   { id: 'tool-pdf', kind: 'tool', title: 'Feng Shui Guide PDF (in-app viewer)', subtitle: 'Section 18, page 114', body: 'pdf viewer', route: '/masterbook/pdf/d-ff306540?page=114' },
 ] as unknown as Doc[];

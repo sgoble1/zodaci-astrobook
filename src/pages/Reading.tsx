@@ -11,6 +11,8 @@ import { ReasoningPanel } from '@/components/common/ReasoningPanel';
 import { Cite } from '@/components/common/Cite';
 import { CopyLinkButton } from '@/components/common/CopyLinkButton';
 import type { ConfidenceLevel } from '@/content/confidence';
+import { KuaWheel } from '@/components/fengshui/KuaWheel';
+import { kuaNumber } from '@/lib/kua';
 import { BaguaWheel } from '@/components/fengshui/BaguaWheel';
 import { FlyingStarWheel } from '@/components/fengshui/FlyingStarWheel';
 import { ChartWheel, starContacts } from '@/components/chart/ChartWheel';
@@ -85,8 +87,13 @@ function ComputedReading({ input }: { input: NonNullable<ReturnType<typeof fromP
           : <ul className="grid sm:grid-cols-2 gap-3">{stars.map((s, i) => <li key={i} className="parchment p-3 text-sm"><Link to={`/compendium#${s.star.id}`} className="font-display text-lg hover:underline">★ {s.star.name}</Link> <span className="text-xs text-muted-foreground">{s.star.degree} · conjunct {s.point} ({s.orb.toFixed(1)}°)</span><p className="mt-1">{s.star.meaning}<Cite source={s.star.source} /></p></li>)}</ul>}
         <ReasoningPanel reasoning={{ inputs: [{ label: 'Positions', value: 'Calculated planets, Ascendant and Midheaven' }, { label: 'Star list', value: `${FIXED_STARS.length} stars from the Compendium` }], steps: [{ label: 'Parse', detail: 'Each star’s zodiac degree is converted to ecliptic longitude.' }, { label: 'Compare', detail: 'A contact is listed when the star is within 1.5° of a chart point.' }], output: `${stars.length} contact(s) found.`, confidence: 'approximate', caveats: ['The Compendium’s interpretations were written for April; for other charts they describe the star in general.'] }} />
       </Section>
-      <Section id="bagua" n="VI·B" title="Feng Shui · Bagua directions" level="derived" note="Wheel shows April's Kua 1 directions from the Feng Shui guide; Kua for another chart also needs birth year and gender, so treat this as a reference.">
-        <BaguaWheel /><p className="text-xs mt-2"><Link to="/masterbook/bagua-wheel" className="underline">Open the Bagua wheel in the Masterbook</Link></p>
+      <Section id="elements" n="VI·A" title="Every position and its meaning" level={worst} note="In-app keyword meanings; chapter links point to the Birth Chart Book's general chapter for that planet.">
+        <ul className="grid sm:grid-cols-2 gap-2 text-sm">{r.bodies.map(x => <li key={x.key} className="parchment p-3"><b>{x.glyph} {x.name} {x.deg}°{String(x.min).padStart(2, '0')}′ {x.sign}</b>{x.house ? ` · house ${x.house}` : ''} <ConfidenceBadge compact level={x.confidence} note={x.note} /><p>{BODY_KEYWORDS[x.key] ?? ''}: {SIGN_KEYWORDS[x.sign]}.</p>{BCB_CHAPTER[x.key] && <Link to={`/masterbook/${BCB_CHAPTER[x.key].id}`} className="text-xs underline">Source theme: Birth Chart Book {BCB_CHAPTER[x.key].label} (written for April)</Link>}</li>)}</ul>
+        <p className="text-xs"><Link to="/chart-elements" className="underline">April’s sourced Chart Elements page</Link></p>
+      </Section>
+      <Section id="bagua" n="VI·B" title="Feng Shui · Bagua directions" level="derived" note="Kua number from birth year and sex (standard Eight Mansions formula).">
+        {(() => { const k = kuaNumber(input.date, input.sex ?? 'unspecified'); return k ? <><KuaWheel kua={k.kua} /><ReasoningPanel reasoning={{ inputs: [{ label: 'Birth date', value: input.date }, { label: 'Sex', value: String(input.sex) }], steps: k.steps.map((s, i) => ({ label: `Step ${i + 1}`, detail: s })), output: `Kua ${k.kua}`, confidence: 'derived', caveats: [] }} /></> : <p className="text-sm">Choose a sex in the <Link className="underline" to={`/chart-calculator?${toParams(input)}`}>calculator</Link> to add this chart’s Kua directions.</p>; })()}
+        <p className="text-xs mt-2"><Link to={`/bagua-reading?${toParams(input)}`} className="underline">Open the Bagua Reading for this chart</Link></p>
       </Section>
       <Section id="fengshui" n="VI" title="Feng Shui · Flying Stars this year" level="derived" note="Annual stars are calculated; Kua notes are April's, from the Feng Shui guide.">
         <FlyingStarWheel />
@@ -164,7 +171,7 @@ export default function Reading() {
       </Section>
 
       <Section id="bagua" n="VII¼" title="Feng Shui · Bagua directions" level="derived" note="Wheel shows April's Kua 1 directions from the Feng Shui guide; Kua for another chart also needs birth year and gender, so treat this as a reference.">
-        <BaguaWheel /><p className="text-xs mt-2"><Link to="/masterbook/bagua-wheel" className="underline">Open the Bagua wheel in the Masterbook</Link></p>
+        <BaguaWheel /><p className="text-xs mt-2"><Link to="/masterbook/bagua-wheel" className="underline">Open the Bagua wheel in the Masterbook</Link> · <Link to="/bagua-reading" className="underline">The Bagua Reading</Link></p>
       </Section>
       <Section id="elements" n="VII¾" title="Every chart element, with sources" level="confirmed" note="Each position's meaning with its Birth Chart Book chapter.">
         <ul className="grid sm:grid-cols-2 gap-2 text-sm">{PLACEMENTS.map(p => <li key={p.key} className="parchment p-3"><Link to={`/chart-elements#el-${p.key}`} className="font-display text-lg hover:underline">{p.glyph} {p.name} in {p.sign} · H{p.house}</Link><p>{p.headline}</p>{BCB_CHAPTER[p.key] && <Link to={`/masterbook/${BCB_CHAPTER[p.key].id}`} className="text-xs underline">Source: {BCB_CHAPTER[p.key].label}</Link>}</li>)}</ul>
