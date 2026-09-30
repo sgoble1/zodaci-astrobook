@@ -14,7 +14,7 @@ export default function ChartElements() {
       </header>
       <section className="parchment p-4 text-sm" id="el-angles">
         <h2 className="text-2xl">Angles</h2>
-        <pre className="whitespace-pre-wrap font-sans">{JSON.stringify(ANGLES, null, 0).replace(/[{}"]/g, '').replace(/,/g, ' · ')}</pre>
+        {Object.entries(ANGLES).map(([k, a]) => <p key={k}><b className="capitalize">{k}</b>: {a.degree}°{String(a.minute).padStart(2, '0')}′ {a.sign} {a.signGlyph} — {a.note}</p>)}
         <p className="mt-1 text-xs">Source: <Link to={`/masterbook/${BCB_CHAPTER.asc.id}`} className="underline">Birth Chart Book — {BCB_CHAPTER.asc.label}</Link></p>
       </section>
       <ul className="grid md:grid-cols-2 gap-4">
@@ -24,7 +24,7 @@ export default function ChartElements() {
             <li key={p.key} id={`el-${p.key}`} className="parchment p-4 space-y-2">
               <div className="flex items-center gap-2 flex-wrap">
                 <h2 className="text-2xl">{p.glyph} {p.name} in {p.sign} {p.signGlyph}</h2>
-                <ConfidenceBadge level="high" />
+                <ConfidenceBadge level="confirmed" />
               </div>
               <div className="text-xs text-muted-foreground">{p.degree}°{String(p.minute).padStart(2, '0')}′ · House {p.house} · {p.motion} · {p.dignity}</div>
               <p className="font-display text-lg">{p.headline}</p>

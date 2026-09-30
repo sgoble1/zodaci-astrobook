@@ -166,7 +166,7 @@ export default function Reading() {
       <Section id="bagua" n="VII¼" title="Feng Shui · Bagua directions" level="derived" note="Wheel shows April's Kua 1 directions from the Feng Shui guide; Kua for another chart also needs birth year and gender, so treat this as a reference.">
         <BaguaWheel /><p className="text-xs mt-2"><Link to="/masterbook/bagua-wheel" className="underline">Open the Bagua wheel in the Masterbook</Link></p>
       </Section>
-      <Section id="elements" n="VII¾" title="Every chart element, with sources" level="high" note="Each position's meaning with its Birth Chart Book chapter.">
+      <Section id="elements" n="VII¾" title="Every chart element, with sources" level="confirmed" note="Each position's meaning with its Birth Chart Book chapter.">
         <ul className="grid sm:grid-cols-2 gap-2 text-sm">{PLACEMENTS.map(p => <li key={p.key} className="parchment p-3"><Link to={`/chart-elements#el-${p.key}`} className="font-display text-lg hover:underline">{p.glyph} {p.name} in {p.sign} · H{p.house}</Link><p>{p.headline}</p>{BCB_CHAPTER[p.key] && <Link to={`/masterbook/${BCB_CHAPTER[p.key].id}`} className="text-xs underline">Source: {BCB_CHAPTER[p.key].label}</Link>}</li>)}</ul>
         <p className="text-xs mt-2"><Link to="/chart-elements" className="underline">Open the full Chart Elements page</Link></p>
       </Section>
