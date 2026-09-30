@@ -19,6 +19,8 @@ export function RelationshipsAdmin({ userId }: { userId: string }) {
           <div className="flex flex-wrap gap-3 items-center">
             <div className="flex-1"><div className="font-display text-xl">{r.name}</div><div className="text-xs text-muted-foreground">{r.relation} · {r.birth_date} {r.birth_time ?? '(no time)'} · {r.place_label} · {r.sex}</div></div>
             <Link to={`/relationships/${r.id}`} className="text-xs underline">Open</Link>
+            <Link to={`/relationships/${r.id}/reading`} className="text-xs underline">Reading</Link>
+            <Link to={`/relationships/${r.id}/timeline`} className="text-xs underline">Timeline</Link>
             <Button size="sm" variant="outline" onClick={() => setEdit(edit === r.id ? null : r.id)}>{edit === r.id ? 'Close' : 'Edit'}</Button>
             <Button size="sm" variant="ghost" className="text-destructive" onClick={() => confirm(`Delete ${r.name}?`) && deleteRelationship(r.id)}>Delete</Button>
           </div>

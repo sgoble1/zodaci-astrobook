@@ -1,3 +1,4 @@
+import { SourceChapters } from '@/components/common/SourceChapters';
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { TOPICS } from '@/content/topics';
@@ -123,6 +124,7 @@ export default function Topic() {
           </div>
         )}
       </section>
+      <SourceChapters match={topic.chapters} title={`${topic.label} — the full source chapters`} />
     </div>
   );
 }
