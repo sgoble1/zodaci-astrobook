@@ -101,7 +101,7 @@ function porphyry(asc: number, mc: number) {
   const q1 = norm(ic - asc) / 3, q2 = norm(dsc - ic) / 3;
   return [asc, asc + q1, asc + 2 * q1, ic, ic + q2, ic + 2 * q2, dsc, dsc + q1, dsc + 2 * q1, mc, mc + q2, mc + 2 * q2].map(norm);
 }
-const houseOf = (lon: number, cusps: number[]) => {
+export const houseOf = (lon: number, cusps: number[]) => {
   for (let i = 0; i < 12; i++) { const a = cusps[i], b = cusps[(i + 1) % 12]; if (norm(lon - a) < norm(b - a)) return i + 1; }
   return 12;
 };
