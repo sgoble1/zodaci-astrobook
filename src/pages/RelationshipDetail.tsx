@@ -10,6 +10,8 @@ import { ConfidenceBadge } from '@/components/common/ConfidenceBadge';
 import { ReasoningPanel } from '@/components/common/ReasoningPanel';
 import { CopyLinkButton } from '@/components/common/CopyLinkButton';
 import { Button } from '@/components/ui/button';
+import { RelDocs } from '@/components/relationships/RelDocs';
+import { useSession } from '@/hooks/useLibrary';
 import { PersonForm } from '@/components/relationships/PersonForm';
 import type { ConfidenceLevel } from '@/content/confidence';
 import { kuaNumber, groupOf, KUA_TABLE, KUA_ELEMENT } from '@/lib/kua';
@@ -30,7 +32,7 @@ function Sec({ id, n, title, level, note, children }: { id: string; n: string; t
   );
 }
 
-const toInput = (r: Relationship): ChartInput => ({ date: r.birth_date, time: r.birth_time, lat: r.lat, lon: r.lon, tz: r.tz, placeLabel: r.place_label, placeSource: 'geocoded', sex: r.sex });
+export const toInput = (r: Relationship): ChartInput => ({ date: r.birth_date, time: r.birth_time, lat: r.lat, lon: r.lon, tz: r.tz, placeLabel: r.place_label, placeSource: 'geocoded', sex: r.sex });
 const pillar = (c: ChartResult, l: string) => c.bazi.find(p => p.label.startsWith(l));
 
 export default function RelationshipDetail() {
@@ -82,6 +84,9 @@ function Detail({ rel }: { rel: Relationship }) {
         <div className="flex flex-wrap gap-2">{B.flags.map((f, i) => <ConfidenceBadge key={i} level={f.level} note={`${f.topic}: ${f.note}`} />)}</div>
         <nav className="flex flex-wrap gap-3 text-xs pt-2">{[['chart', 'Their chart'], ['elements', 'Positions'], ['bazi', 'Ba Zi'], ['kua', 'Feng Shui'], ['overview', 'Overview'], ['synastry', 'Contacts'], ['overlays', 'House overlays'], ['composite', 'Composite'], ['chinese', 'Chinese match'], ['numbers', 'Numerology'], ['notes', 'Notes']].map(([h, l]) => <a key={h} href={`#${h}`} className="underline">{l}</a>)}</nav>
         <div className="flex gap-2 pt-2"><Button size="sm" variant="outline" onClick={() => setEditing(true)}>Edit details</Button>
+          <Button size="sm" asChild><Link to={`/relationships/${rel.id}/reading`}>Relationship reading</Link></Button>
+          <Button size="sm" variant="outline" asChild><Link to={`/relationships/${rel.id}/timeline`}>Timeline</Link></Button>
+          <Button size="sm" variant="outline" asChild><Link to="/guides/relationships">Relationship sources</Link></Button>
           <Button size="sm" variant="outline" asChild><Link to={`/reading?${toParams(toInput(rel))}`}>{N}’s full reading</Link></Button>
           <Button size="sm" variant="ghost" onClick={async () => { if (confirm(`Delete ${N}?`)) { await deleteRelationship(rel.id); nav('/relationships'); } }}>Delete</Button></div>
       </header>
@@ -156,10 +161,19 @@ function Detail({ rel }: { rel: Relationship }) {
         {stars.length > 0 && <><h3 className="text-lg">Fixed stars on {N}’s chart</h3><ul className="text-sm">{stars.map((s, i) => <li key={i}>★ {s.star.name} conjunct {s.point} ({s.orb.toFixed(1)}°): {s.star.meaning}</li>)}</ul></>}
       </Sec>
 
+      <Sec id="docs" n="X½" title={`Documents for ${N}`} level="confirmed" note="Your uploaded files; each becomes a Masterbook document with sections.">
+        <DocsBlock rel={rel} />
+      </Sec>
+
       <Sec id="notes" n="XI" title="Notes" level="confirmed" note="Your own notes, saved to your account.">
         <textarea className="w-full min-h-40 border rounded p-3 bg-background" maxLength={20000} value={notes} onChange={e => { setNotes(e.target.value); setSaved(''); }} />
         <div className="flex items-center gap-3"><Button onClick={saveNotes}>Save notes</Button><span className="text-sm text-muted-foreground">{saved}</span></div>
       </Sec>
     </div>
   );
+}
+
+function DocsBlock({ rel }: { rel: Relationship }) {
+  const session = useSession();
+  return session ? <RelDocs rel={rel} userId={session.user.id} /> : null;
 }

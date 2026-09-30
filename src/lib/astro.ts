@@ -71,7 +71,7 @@ const BODIES: [string, string, string, Astronomy.Body][] = [
   ['neptune', 'Neptune', '♆', Astronomy.Body.Neptune], ['pluto', 'Pluto', '♇', Astronomy.Body.Pluto],
 ];
 
-function eclLon(body: Astronomy.Body, d: Date) {
+export function eclLon(body: Astronomy.Body, d: Date) {
   const t = Astronomy.MakeTime(d);
   if (body === Astronomy.Body.Sun) return Astronomy.SunPosition(t).elon;
   if (body === Astronomy.Body.Moon) return Astronomy.EclipticGeoMoon(t).lon;
