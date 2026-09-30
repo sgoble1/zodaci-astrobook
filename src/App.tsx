@@ -44,6 +44,8 @@ import FlyingStars from './pages/FlyingStars';
 import Bagua from './pages/Bagua';
 import PdfViewer from './pages/PdfViewer';
 import ChartCalculator from './pages/ChartCalculator';
+import ChartElements from './pages/ChartElements';
+import BaguaWheelPage from './pages/BaguaWheelPage';
 import Reading from './pages/Reading';
 
 
@@ -159,6 +161,8 @@ export default function App() {
             <Route path="/feng-shui/bagua" element={<Bagua />} />
             <Route path="/chart-calculator" element={<ChartCalculator />} />
             <Route path="/reading" element={<Reading />} />
+            <Route path="/chart-elements" element={<ChartElements />} />
+            <Route path="/masterbook/bagua-wheel" element={<BaguaWheelPage />} />
             <Route path="/masterbook/:id" element={<MasterbookChapter />} />
             <Route path="/podcasts" element={<Podcasts />} />
             <Route path="/sources" element={<Sources />} />
