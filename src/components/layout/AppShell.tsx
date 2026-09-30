@@ -70,7 +70,7 @@ export function AppShell() {
 
 function SidebarInner() {
   const { items: rels } = useRelationships();
-  const allGroups = [...groups.slice(0, 1), { title: 'Relationships', items: [{ to: '/relationships', label: 'All Relationships' }, ...rels.map(r => ({ to: `/relationships/${r.id}`, label: `↳ ${r.name}${r.relation ? ` · ${r.relation}` : ''}` }))] }, ...groups.slice(1)];
+  const allGroups = [...groups.slice(0, 1), { title: 'Relationships', items: [{ to: '/relationships', label: 'All Relationships' }, { to: '/guides/relationships', label: 'Relationships in the Sources' }, ...rels.map(r => ({ to: `/relationships/${r.id}`, label: `↳ ${r.name}${r.relation ? ` · ${r.relation}` : ''}` }))] }, ...groups.slice(1)];
   return (
     <div className="p-6 flex flex-col gap-6 h-full overflow-y-auto">
       <div>

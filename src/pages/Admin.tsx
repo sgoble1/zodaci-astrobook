@@ -1,3 +1,4 @@
+import { RelationshipsAdmin } from '@/components/relationships/RelationshipsAdmin';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FileUp, Trash2, Save, Plus, Eye, EyeOff, ShieldCheck } from 'lucide-react';
@@ -14,7 +15,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import ReactMarkdown from 'react-markdown';
 
-type Tab = 'upload' | 'sections' | 'index';
+type Tab = 'upload' | 'sections' | 'index' | 'relationships';
 
 export default function Admin() {
   const session = useSession();
@@ -31,10 +32,11 @@ export default function Admin() {
         <div className="parchment p-5 max-w-xl text-sm">This dashboard is for the site admin only. If you are the admin, sign in with your admin email and make sure it’s confirmed, then reload this page.</div>
       ) : (
         <div className="space-y-6">
-          <nav className="flex gap-2 text-sm">{([['upload', 'Upload documents'], ['sections', 'Edit sections'], ['index', 'Document Index']] as const).map(([k, l]) => <button key={k} onClick={() => setTab(k)} className={`px-3 py-1.5 rounded-full border ${tab === k ? 'border-accent bg-accent/15' : 'border-border hover:bg-muted'}`}>{l}</button>)}</nav>
+          <nav className="flex gap-2 text-sm">{([['upload', 'Upload documents'], ['sections', 'Edit sections'], ['index', 'Document Index'], ['relationships', 'Relationships']] as const).map(([k, l]) => <button key={k} onClick={() => setTab(k)} className={`px-3 py-1.5 rounded-full border ${tab === k ? 'border-accent bg-accent/15' : 'border-border hover:bg-muted'}`}>{l}</button>)}</nav>
           {tab === 'upload' && <UploadPanel userId={session!.user.id} />}
           {tab === 'sections' && <SectionsPanel />}
           {tab === 'index' && <IndexPanel />}
+          {tab === 'relationships' && <RelationshipsAdmin userId={session!.user.id} />}
         </div>
       )}</AuthGate>
     </div>

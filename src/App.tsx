@@ -47,6 +47,8 @@ import ChartCalculator from './pages/ChartCalculator';
 import ChartElements from './pages/ChartElements';
 import BaguaWheelPage from './pages/BaguaWheelPage';
 import BaguaReading from './pages/BaguaReading';
+import RelationshipReading from './pages/RelationshipReading';
+import RelationshipTimeline from './pages/RelationshipTimeline';
 import Relationships from './pages/Relationships';
 import RelationshipDetail from './pages/RelationshipDetail';
 import Reading from './pages/Reading';
@@ -166,6 +168,8 @@ export default function App() {
             <Route path="/reading" element={<Reading />} />
             <Route path="/bagua-reading" element={<BaguaReading />} />
             <Route path="/relationships" element={<Relationships />} />
+            <Route path="/relationships/:id/reading" element={<RelationshipReading />} />
+            <Route path="/relationships/:id/timeline" element={<RelationshipTimeline />} />
             <Route path="/relationships/:id" element={<RelationshipDetail />} />
             <Route path="/chart-elements" element={<ChartElements />} />
             <Route path="/masterbook/bagua-wheel" element={<BaguaWheelPage />} />
