@@ -15,6 +15,7 @@ export interface ChartInput {
   tz: string;            // IANA time zone
   placeLabel: string;
   placeSource: 'geocoded' | 'manual';
+  sex?: 'male' | 'female' | 'unspecified';
 }
 
 export interface Flag { level: ConfidenceLevel; topic: string; note: string; }
