@@ -14,6 +14,33 @@ export type Database = {
   }
   public: {
     Tables: {
+      bookmarks: {
+        Row: {
+          created_at: string
+          id: string
+          note: string
+          owner_id: string
+          path: string
+          title: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          note?: string
+          owner_id?: string
+          path: string
+          title: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          note?: string
+          owner_id?: string
+          path?: string
+          title?: string
+        }
+        Relationships: []
+      }
       document_overrides: {
         Row: {
           doc_key: string

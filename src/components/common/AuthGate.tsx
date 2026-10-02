@@ -3,6 +3,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useSession } from '@/hooks/useLibrary';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { lovable } from '@/integrations/lovable/index';
 
 /** Shows children (upload/manage tools) only when signed in; otherwise a small sign-in card. */
 export function AuthGate({ children, what }: { children: (userId: string) => ReactNode; what: string }) {
@@ -34,9 +35,14 @@ export function AuthGate({ children, what }: { children: (userId: string) => Rea
   return (
     <form onSubmit={submit} className="parchment deckle p-5 space-y-3 max-w-md">
       <div className="font-smallcaps text-[10px] text-gold">Keeper’s access</div>
-      <p className="text-sm text-muted-foreground">Sign in to {what}. Visitors can still browse and listen.</p>
+      <p className="text-sm text-muted-foreground">Sign in to {what}. Create a free account with email or Google to save bookmarks and your own relationships.</p>
       <Input type="email" required placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} />
       <Input type="password" required minLength={6} placeholder="Password" value={pw} onChange={e => setPw(e.target.value)} />
+      <Button type="button" variant="outline" className="w-full" onClick={async () => {
+        const r = await lovable.auth.signInWithOAuth('google', { redirect_uri: window.location.origin });
+        if (r.error) setMsg(r.error.message || 'Google sign-in failed');
+      }}>Continue with Google</Button>
+      <div className="text-center text-[10px] text-muted-foreground">or with email</div>
       {msg && <p className="text-xs text-destructive">{msg}</p>}
       <div className="flex items-center gap-3">
         <Button type="submit" disabled={busy}>{mode === 'in' ? 'Sign in' : 'Create account'}</Button>
