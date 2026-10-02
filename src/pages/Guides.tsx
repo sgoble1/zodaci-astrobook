@@ -3,6 +3,7 @@ import { Link, useParams } from 'react-router-dom';
 import { FlyingStarWheel } from '@/components/fengshui/FlyingStarWheel';
 import { BaguaWheel } from '@/components/fengshui/BaguaWheel';
 import { loadIndex, type MbEntry } from './Masterbook';
+import { RelSourceSection } from '@/components/relationships/RelSourceSection';
 
 export const GUIDES: { slug: string; prefix: string; title: string; blurb: string; match?: RegExp }[] = [
   { slug: 'relationships', prefix: '', match: /love|relationship|partner|venus|7th|seventh|marriage|synastry|romance|compatib/i, title: 'Relationships in the Sources', blurb: 'Every section across April’s documents about love, Venus, the 7th house, compatibility and relationship patterns.' },
@@ -24,14 +25,18 @@ export default function Guide() {
       <p className="text-muted-foreground max-w-2xl">{g.blurb} Each section opens as a full page with the complete text, links to the PDF page, and a “Summarise from the sources” button.</p>
       {!['timeline-retrogrades', 'relationships'].includes(g.slug) && <section className="space-y-3"><h2 className="text-2xl">Bagua wheel · April’s eight directions</h2><BaguaWheel /></section>}
       {g.slug === 'feng-shui-pages' && <section className="space-y-3"><h2 className="text-2xl">Flying Stars wheel</h2><FlyingStarWheel /></section>}
-      <ol className="grid sm:grid-cols-2 gap-3">
+      {g.slug === 'relationships' ? <>
+        <nav className="parchment p-4 text-xs flex flex-wrap gap-x-4 gap-y-1"><span className="font-smallcaps text-gold">Jump to</span>{secs.map(e => <a key={e.id} href={`#${e.id}`} className="underline">{e.title}</a>)}</nav>
+        <div className="space-y-4">{secs.map(e => <RelSourceSection key={e.id} e={e} />)}</div>
+        <p className="text-xs text-muted-foreground">See also <Link to="/relationships" className="underline">your relationships</Link> and the <Link to="/masterbook" className="underline">full Masterbook</Link>.</p>
+      </> : <ol className="grid sm:grid-cols-2 gap-3">
         {secs.map(e => (
           <li key={e.id}><Link to={`/masterbook/${e.id}`} className="parchment block p-4 hover:border-primary h-full">
             <div className="font-smallcaps text-[10px] text-gold">{e.label}</div>
             <div className="text-sm mt-1">{e.title}</div>
           </Link></li>
         ))}
-      </ol>
+      </ol>}
     </div>
   );
 }
