@@ -7,7 +7,7 @@ export type DocOverride = { doc_key: string; title: string | null; note: string 
 export function useDocOverrides() {
   const [map, setMap] = useState<Record<string, DocOverride>>({});
   const reload = useCallback(async () => {
-    const { data } = await supabase.from('document_overrides').select('doc_key,title,note,hidden,sort_order');
+    const { data } = await supabase.rpc('get_document_overrides');
     setMap(Object.fromEntries((data ?? []).map(d => [d.doc_key, d as DocOverride])));
   }, []);
   useEffect(() => { reload(); }, [reload]);

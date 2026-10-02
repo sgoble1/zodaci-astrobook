@@ -188,6 +188,16 @@ export type Database = {
     }
     Functions: {
       claim_admin: { Args: never; Returns: boolean }
+      get_document_overrides: {
+        Args: never
+        Returns: {
+          doc_key: string
+          hidden: boolean
+          note: string
+          sort_order: number
+          title: string
+        }[]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
