@@ -10,7 +10,7 @@ import { useRelationships } from '@/hooks/useRelationships';
 import { CommandPaletteTrigger } from '@/components/common/CommandPalette';
 
 const groups: { title: string; items: { to: string; label: string }[] }[] = [
-  { title: 'Begin', items: [{ to: '/', label: 'Home' }, { to: '/masterbook', label: 'The Masterbook · Full Text' }, { to: '/masterbook/index', label: 'Document Index' }, { to: '/guides/timeline-retrogrades', label: 'Guide · Timeline & Retrogrades' }, { to: '/guides/birth-chart-feng-shui', label: 'Guide · Birth Chart & Feng Shui' }, { to: '/guides/feng-shui-pages', label: 'Guide · Feng Shui Page by Page + Flying Stars Wheel' }, { to: '/masterbook/upload', label: 'Upload to the Masterbook' },{ to: '/admin', label: 'Admin Dashboard' }, { to: '/ask', label: 'Ask the Sources' }, { to: '/reading', label: 'The Complete Reading' }, { to: '/chart-elements', label: 'Chart Elements & Meanings' }, { to: '/bagua-reading', label: 'The Bagua Reading' }, { to: '/masterbook/bagua-wheel', label: 'Masterbook · Bagua Wheel' }] },
+  { title: 'Begin', items: [{ to: '/', label: 'Home' }, { to: '/dashboard', label: 'My Dashboard & Bookmarks' }, { to: '/masterbook', label: 'The Masterbook · Full Text' }, { to: '/masterbook/index', label: 'Document Index' }, { to: '/guides/timeline-retrogrades', label: 'Guide · Timeline & Retrogrades' }, { to: '/guides/birth-chart-feng-shui', label: 'Guide · Birth Chart & Feng Shui' }, { to: '/guides/feng-shui-pages', label: 'Guide · Feng Shui Page by Page + Flying Stars Wheel' }, { to: '/masterbook/upload', label: 'Upload to the Masterbook' },{ to: '/admin', label: 'Admin Dashboard' }, { to: '/ask', label: 'Ask the Sources' }, { to: '/reading', label: 'The Complete Reading' }, { to: '/chart-elements', label: 'Chart Elements & Meanings' }, { to: '/bagua-reading', label: 'The Bagua Reading' }, { to: '/masterbook/bagua-wheel', label: 'Masterbook · Bagua Wheel' }] },
   { title: 'Themes & Topics', items: [{ to: '/topics', label: 'All Themes' }, ...TOPICS.map(t => ({ to: `/topics/${t.slug}`, label: t.label }))] },
   { title: 'The Natal Chart', items: [
     { to: '/birth-chart', label: 'Birth Chart' }, { to: '/chart-calculator', label: 'Chart Calculator' }, { to: '/planets', label: 'Planets' }, { to: '/houses', label: 'Houses' },
@@ -96,7 +96,7 @@ function SidebarInner() {
         </div>
       </div>
 
-      <div className="pt-1"><CommandPaletteTrigger /></div>
+      <div className="pt-1 space-y-2"><CommandPaletteTrigger /><BookmarkButton /></div>
 
       <nav className="flex flex-col gap-4 text-sm">
         {allGroups.map(g => (
