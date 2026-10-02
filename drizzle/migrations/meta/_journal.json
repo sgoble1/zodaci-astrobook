@@ -36,6 +36,13 @@
       "when": 1790730370155,
       "tag": "0004_create_relationships",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1790903869080,
+      "tag": "0005_bookmarks_and_lock_library",
+      "breakpoints": true
     }
   ]
 }
