@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button';
 
 export default function CustomPageView() {
   const { id } = useParams();
-  const { user } = useSession();
+  const user = useSession()?.user;
   const navigate = useNavigate();
   const [page, setPage] = useState<CustomPage | null | undefined>(undefined);
   useEffect(() => { setPage(undefined); supabase.from('custom_pages').select('*').eq('id', id!).maybeSingle().then(({ data }) => setPage((data as CustomPage) ?? null)); }, [id]);

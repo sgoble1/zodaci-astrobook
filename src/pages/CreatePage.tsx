@@ -33,7 +33,7 @@ function Compiling() {
 }
 
 export default function CreatePage() {
-  const { user } = useSession();
+  const user = useSession()?.user;
   const navigate = useNavigate();
   const [title, setTitle] = useState('');
   const [brief, setBrief] = useState('');
