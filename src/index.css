@@ -237,6 +237,13 @@ h1 { background-image: linear-gradient(135deg, hsl(var(--foreground)) 30%, hsl(2
   background: hsl(var(--created) / 0.18);
 }
 
+.nav-topics-section {
+  border: 1px solid hsl(var(--starlight) / 0.18);
+  border-radius: var(--radius);
+  background: hsl(var(--starlight) / 0.07);
+  padding: 0.25rem;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .nav-create-glow { animation: none; }
 }
