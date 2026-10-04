@@ -205,3 +205,10 @@ h1 { background-image: linear-gradient(135deg, hsl(var(--foreground)) 30%, hsl(2
 @layer base {
   :focus-visible { outline: 2px solid hsl(var(--ring)); outline-offset: 2px; }
 }
+
+/* Newly created menu item: animated glow that shows where a page landed */
+@keyframes nav-new-glow {
+  0%, 100% { box-shadow: 0 0 0 0 hsl(var(--created) / 0); background-color: hsl(var(--created) / 0.2); }
+  50% { box-shadow: 0 0 22px 4px hsl(var(--created) / 0.55); background-color: hsl(var(--created) / 0.45); }
+}
+.nav-new-glow { animation: nav-new-glow 1.6s ease-in-out 5; border-color: hsl(var(--created) / 0.8) !important; position: relative; }

@@ -6,7 +6,7 @@ import UploadedDoc from './pages/UploadedDoc';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { useMemo, type ReactNode } from 'react';
 import { AppShell } from './components/layout/AppShell';
-import { PublicLibrary, PublicReader } from './pages/PublicLibrary';
+import { PublicLibrary, PublicReader, PublicDocument } from './pages/PublicLibrary';
 import { MasterbookContents, MasterbookContentsEntry } from './pages/MasterbookContents';
 import CreatePage from './pages/CreatePage';
 import CustomPageView from './pages/CustomPageView';
@@ -59,6 +59,8 @@ import Relationships from './pages/Relationships';
 import RelationshipDetail from './pages/RelationshipDetail';
 import Reading from './pages/Reading';
 import SharedSpace from './pages/SharedSpace';
+import { WorkbookHome, WorkbookModulePage, WorkbookCheckIn, WorkbookReframe, WorkbookJournal } from './pages/Workbook';
+import Companion from './pages/Companion';
 
 
 /** Build a single registry of every drawer-openable Compendium item. Used so
@@ -146,6 +148,7 @@ export default function App() {
           <Route path="/contents" element={<MasterbookContents />} />
           <Route path="/contents/:id" element={<MasterbookContentsEntry />} />
           <Route path="/read" element={<PublicLibrary />} />
+          <Route path="/read/document/:slug" element={<PublicDocument />} />
           <Route path="/read/:id" element={<PublicReader />} />
           <Route element={<AppShell />}>
             <Route path="/" element={<Home />} />
@@ -199,6 +202,13 @@ export default function App() {
             <Route path="/shared/wonderings" element={<SharedSpace section="wonderings" />} />
             <Route path="/shared/reading" element={<SharedSpace section="reading" />} />
             <Route path="/create" element={<CreatePage />} />
+            <Route path="/workbook" element={<WorkbookHome />} />
+            <Route path="/workbook/module/:slug" element={<WorkbookModulePage />} />
+            <Route path="/workbook/check-in" element={<WorkbookCheckIn />} />
+            <Route path="/workbook/reframe" element={<WorkbookReframe />} />
+            <Route path="/workbook/journal" element={<WorkbookJournal />} />
+            <Route path="/workbook/companion" element={<Companion />} />
+            <Route path="/workbook/companion/:sessionId" element={<Companion />} />
             <Route path="/p/:id" element={<CustomPageView />} />
             <Route path="/shared/notes" element={<SharedSpace section="notes" />} />
             <Route path="/shared/later" element={<SharedSpace section="later" />} />

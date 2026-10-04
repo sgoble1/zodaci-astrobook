@@ -3,7 +3,7 @@ import { NavLink, Outlet, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import ParticleField from '@/components/fx/ParticleField';
 import ScrollProgress from '@/components/fx/ScrollProgress';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ChevronDown, Menu, X } from 'lucide-react';
 import { BIRTH } from '@/content/april';
 import { TOPICS } from '@/content/topics';
@@ -12,16 +12,19 @@ import { CommandPaletteTrigger } from '@/components/common/CommandPalette';
 import { BookmarkButton } from '@/components/common/BookmarkButton';
 import { PlayerProvider } from '@/components/podcast/PlayerContext';
 import { AccountButton } from '@/components/common/AccountButton';
-import { useCustomPages } from '@/hooks/useCustomPages';
+import { useCustomPages, NEW_PAGE_HIGHLIGHT_KEY } from '@/hooks/useCustomPages';
+import { WORKBOOK_MODULES } from '@/content/workbook';
+import { useSharedBadges } from '@/hooks/useSharedBadges';
 
 const GROUP_COLORS = ['--primary', '--oxblood', '--accent', '--candle', '--gold-bright', '--starlight', '--gold', '--glow-violet'];
 
-type NavItem = { to: string; label: string; created?: boolean };
+type NavItem = { to: string; label: string; created?: boolean; badge?: number };
 type NavSubmenu = { label: string; items: NavItem[] };
 type NavGroup = { title: string; items: NavItem[]; submenus?: NavSubmenu[] };
 
 const groups: NavGroup[] = [
-  { title: 'Begin', items: [{ to: '/', label: 'Home' }, { to: '/dashboard', label: 'My Dashboard & Bookmarks' }, { to: '/ask', label: 'Ask the Sources' }, { to: '/chat', label: 'SmarChat' }, { to: '/create', label: '+ Create a Topic & Page' }, { to: '/reading', label: 'The Complete Reading' }, { to: '/chart-elements', label: 'Chart Elements & Meanings' }] },
+  { title: 'Begin', items: [{ to: '/', label: 'Home' }, { to: '/dashboard', label: 'My Dashboard & Bookmarks' }, { to: '/ask', label: 'Ask the Sources' }, { to: '/chat', label: 'SmarChat' }, { to: '/reading', label: 'The Complete Reading' }, { to: '/chart-elements', label: 'Chart Elements & Meanings' }, { to: '/create', label: '+ Create a Topic & Page' }] },
+  { title: "April's Workbook", items: [{ to: '/workbook', label: 'Workbook Overview' }, { to: '/workbook/companion', label: 'The Oracle Within · Therapy Chat' }, { to: '/workbook/check-in', label: 'Daily Check-in' }, { to: '/workbook/reframe', label: 'Thought Reframe' }, { to: '/workbook/journal', label: 'Journal & Patterns' }, ...WORKBOOK_MODULES.map(m => ({ to: `/workbook/module/${m.slug}`, label: `↳ ${m.title}` }))] },
   { title: 'Sources & Documents', items: [{ to: '/masterbook', label: 'The Masterbook · Full Text' }, { to: '/masterbook/index', label: 'Document Index' }, { to: '/contents', label: 'Masterbook Contents (open)' }, { to: '/read', label: 'Sources Reading Room' }, { to: '/sources', label: 'Source Files' }, { to: '/masterbook/upload', label: 'Upload to the Masterbook' }, { to: '/admin', label: 'My Workspace · Upload & Edit' }] },
   { title: 'Themes & Topics', items: [{ to: '/topics', label: 'All Themes' }, ...TOPICS.map(t => ({ to: `/topics/${t.slug}`, label: t.label }))] },
   { title: 'The Natal Chart', items: [
@@ -45,6 +48,12 @@ export function AppShell() {
   const [open, setOpen] = useState(false);
 
   useEffect(() => { setOpen(false); window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior }); }, [location.pathname]);
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setOpen(false); };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [open]);
 
   return (
     <PlayerProvider>
@@ -62,12 +71,12 @@ export function AppShell() {
       {/* Mobile top bar */}
       <div className="lg:hidden fixed top-0 inset-x-0 z-40 flex items-center justify-between px-4 py-3 border-b border-border bg-background/90 backdrop-blur">
         <div className="font-display text-lg">April · Astrological Compendium</div>
-        <div className="flex items-center gap-2"><AccountButton compact /><button onClick={() => setOpen(v => !v)} aria-label="Toggle navigation" aria-expanded={open} className="p-2 rounded hover:bg-muted">
+        <div className="flex items-center gap-2"><AccountButton compact /><button onClick={() => setOpen(v => !v)} aria-label={open ? 'Close menu' : 'Open menu'} aria-expanded={open} aria-controls="mobile-menu" className="p-2 rounded hover:bg-muted min-h-11 min-w-11 flex items-center justify-center">
           {open ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
         </button></div>
       </div>
       {open && (
-        <div className="lg:hidden fixed inset-0 top-[57px] z-30 bg-background overflow-y-auto">
+        <div id="mobile-menu" className="lg:hidden fixed inset-0 top-[57px] z-30 bg-background overflow-y-auto">
           <SidebarInner />
         </div>
       )}
@@ -98,7 +107,24 @@ function SidebarInner() {
   const location = useLocation();
   const { items: rels } = useRelationships();
   const custom = useCustomPages();
-  const baseGroups: NavGroup[] = [...groups.slice(0, 1), { title: 'Our Shared Space', items: [{ to: '/shared', label: 'Shared Dashboard' }, { to: '/shared/conversations', label: 'Conversations' }, { to: '/shared/posts', label: 'Posts' }, { to: '/shared/wonderings', label: 'Wonderings' }, { to: '/shared/reading', label: 'Reading Together' }, { to: '/shared/notes', label: 'Notes' }, { to: '/shared/later', label: 'Talk Later' }, { to: '/shared/accounts', label: 'Shared Accounts' }] }, { title: 'Relationships', items: [{ to: '/relationships', label: 'All Relationships' }, { to: '/guides/relationships', label: 'Relationships in the Sources' }, ...rels.map(r => ({ to: `/relationships/${r.id}`, label: `↳ ${r.name}${r.relation ? ` · ${r.relation}` : ''}` }))] }, ...groups.slice(1)];
+  const badges = useSharedBadges();
+  const navRef = useRef<HTMLElement>(null);
+  const [glowId, setGlowId] = useState<string | null>(null);
+  // After a page is created: scroll its new menu item into view and make it glow.
+  useEffect(() => {
+    const id = sessionStorage.getItem(NEW_PAGE_HIGHLIGHT_KEY);
+    if (!id || !custom.some(c => c.id === id)) return;
+    const raf = requestAnimationFrame(() => {
+      const el = navRef.current?.querySelector<HTMLElement>(`[data-nav-to="/p/${id}"]`);
+      if (!el || !el.offsetParent) return;
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      setGlowId(id);
+      sessionStorage.removeItem(NEW_PAGE_HIGHLIGHT_KEY);
+      window.setTimeout(() => setGlowId(null), 8500);
+    });
+    return () => cancelAnimationFrame(raf);
+  }, [custom]);
+  const baseGroups: NavGroup[] = [...groups.slice(0, 2), { title: 'Our Shared Space', items: [{ to: '/shared', label: 'Shared Dashboard' }, { to: '/shared/conversations', label: 'Conversations', badge: badges.chat }, { to: '/shared/posts', label: 'Posts' }, { to: '/shared/wonderings', label: 'Wonderings', badge: badges.wonderings }, { to: '/shared/reading', label: 'Reading Together' }, { to: '/shared/notes', label: 'Notes' }, { to: '/shared/later', label: 'Talk Later' }, { to: '/shared/accounts', label: 'Shared Accounts' }] }, { title: 'Relationships', items: [{ to: '/relationships', label: 'All Relationships' }, { to: '/guides/relationships', label: 'Relationships in the Sources' }, ...rels.map(r => ({ to: `/relationships/${r.id}`, label: `↳ ${r.name}${r.relation ? ` · ${r.relation}` : ''}` }))] }, ...groups.slice(2)];
   const allGroups = baseGroups.map(g => ({ ...g, items: [...g.items, ...custom.filter(c => c.menu_group === g.title).map(c => ({ to: `/p/${c.id}`, label: c.status === 'generating' ? `${c.title} · writing…` : c.title, created: true }))] }));
   return (
     <div className="p-6 flex flex-col gap-6 h-full overflow-y-auto">
@@ -118,19 +144,19 @@ function SidebarInner() {
 
       <div className="pt-1 space-y-2"><CommandPaletteTrigger /><BookmarkButton /></div>
 
-      <nav className="flex flex-col gap-4 text-sm">
+      <nav ref={navRef} aria-label="Site menu" className="flex flex-col gap-4 text-sm">
         {allGroups.map((g, gi) => (
           <div key={g.title} className="flex flex-col gap-0.5">
             <div className="font-smallcaps text-[10px] px-3 py-1 mb-1 rounded border-l-2 font-semibold tracking-wider" style={{ color: `hsl(var(${GROUP_COLORS[gi % GROUP_COLORS.length]}))`, borderColor: `hsl(var(${GROUP_COLORS[gi % GROUP_COLORS.length]}))`, background: `hsl(var(${GROUP_COLORS[gi % GROUP_COLORS.length]}) / 0.1)` }}>{g.title}</div>
             {g.items.map(n => (
               <NavLink
-                key={n.to} to={n.to} end={n.to === '/' || n.to === '/masterbook' || n.to === '/relationships'}
+                key={n.to} to={n.to} data-nav-to={n.to} end={n.to === '/' || n.to === '/masterbook' || n.to === '/relationships' || n.to === '/workbook' || n.to === '/shared'}
                 className={({ isActive }) =>
-                  `px-3 py-1.5 rounded border border-transparent transition-colors ${
+                  `flex items-center justify-between gap-2 px-3 py-1.5 rounded border border-transparent transition-colors ${
                     isActive ? 'bg-accent/15 border-accent/30 text-foreground' : 'text-muted-foreground hover:text-foreground hover:bg-muted/60'
-                  }${n.created ? ' bg-created/20 text-foreground' : ''}`
+                  }${n.created ? ' bg-created/20 text-foreground' : ''}${glowId && n.to === `/p/${glowId}` ? ' nav-new-glow' : ''}`
                 }
-              >{n.label}</NavLink>
+              ><span>{n.label}{n.created ? <span className="sr-only"> (created page)</span> : null}{glowId && n.to === `/p/${glowId}` ? <span className="sr-only"> — just added</span> : null}</span>{n.badge ? <span className="min-w-5 rounded-full bg-primary px-1.5 text-center text-[10px] text-primary-foreground" aria-label={`${n.badge} new`}>{n.badge}</span> : null}</NavLink>
             ))}
             {g.submenus?.map(submenu => {
               const containsActiveRoute = submenu.items.some(item => location.pathname === item.to || location.pathname.startsWith(`${item.to}/`));
@@ -167,4 +193,4 @@ function SidebarInner() {
 }
 
 // Menu sections a created page can be placed in.
-export const MENU_SECTIONS = ['Begin', 'Our Shared Space', 'Relationships', ...groups.slice(1).map(g => g.title)];
+export const MENU_SECTIONS = [groups[0].title, groups[1].title, 'Our Shared Space', 'Relationships', ...groups.slice(2).map(g => g.title)];

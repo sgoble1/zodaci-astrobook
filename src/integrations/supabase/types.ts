@@ -111,6 +111,7 @@ export type Database = {
           id: string
           menu_group: string
           owner_id: string
+          passages: Json | null
           status: string
           title: string
           updated_at: string
@@ -122,6 +123,7 @@ export type Database = {
           id?: string
           menu_group?: string
           owner_id: string
+          passages?: Json | null
           status?: string
           title: string
           updated_at?: string
@@ -133,6 +135,7 @@ export type Database = {
           id?: string
           menu_group?: string
           owner_id?: string
+          passages?: Json | null
           status?: string
           title?: string
           updated_at?: string
@@ -758,6 +761,68 @@ export type Database = {
         }
         Relationships: []
       }
+      therapy_messages: {
+        Row: {
+          created_at: string
+          id: string
+          owner_id: string
+          parts: Json
+          role: string
+          session_id: string
+          ui_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          owner_id?: string
+          parts?: Json
+          role: string
+          session_id: string
+          ui_id?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          owner_id?: string
+          parts?: Json
+          role?: string
+          session_id?: string
+          ui_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "therapy_messages_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "therapy_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      therapy_sessions: {
+        Row: {
+          created_at: string
+          id: string
+          owner_id: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          owner_id?: string
+          title?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          owner_id?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           id: string
@@ -773,6 +838,48 @@ export type Database = {
           id?: string
           role?: Database["public"]["Enums"]["app_role"]
           user_id?: string
+        }
+        Relationships: []
+      }
+      workbook_entries: {
+        Row: {
+          answer: string
+          created_at: string
+          data: Json
+          feedback: string
+          id: string
+          kind: string
+          module: string
+          owner_id: string
+          prompt_key: string
+          question: string
+          updated_at: string
+        }
+        Insert: {
+          answer?: string
+          created_at?: string
+          data?: Json
+          feedback?: string
+          id?: string
+          kind?: string
+          module?: string
+          owner_id?: string
+          prompt_key?: string
+          question?: string
+          updated_at?: string
+        }
+        Update: {
+          answer?: string
+          created_at?: string
+          data?: Json
+          feedback?: string
+          id?: string
+          kind?: string
+          module?: string
+          owner_id?: string
+          prompt_key?: string
+          question?: string
+          updated_at?: string
         }
         Relationships: []
       }
