@@ -20,10 +20,11 @@ type AccountRef = { id: string; service_name: string; url: string; username: str
 type Directory = Record<string, string>;
 
 const ALLOWED = new Set(['shanealecompte@gmail.com', 'babybluepuppet@gmail.com']);
-const db = (name: string) => supabase.from(name as never) as any; // generated table names are runtime-safe; helper keeps CRUD concise.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const db = (name: string): any => supabase.from(name as never); // generated table names are runtime-safe; helper keeps CRUD concise.
 const person = (directory: Directory, id: string) => directory[id] ?? 'Shared member';
 const stamp = (value: string) => new Intl.DateTimeFormat(undefined, { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }).format(new Date(value));
-const safeName = (name: string) => name.replace(/[^\w.\-]+/g, '_');
+const safeName = (name: string) => name.replace(/[^\w.-]+/g, '_');
 
 async function uploadAttachments(files: File[], parent: { message_id?: string; post_id?: string }, userId: string) {
   for (const file of files) {
