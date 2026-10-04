@@ -9,7 +9,7 @@ type DiscoveryItem = {
   to: string;
   category: string;
   sources: { label: string; to: string }[];
-  next: { label: string; to: string };
+  next?: { label: string; to: string };
 };
 
 const categories = [
@@ -93,6 +93,7 @@ export default function ExploreDiscover() {
               <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{item.description}</p>
               <Link to={item.to} className="group mt-5 inline-flex items-center gap-2 font-smallcaps text-[10px] text-gold">Open this page <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" aria-hidden="true" /></Link>
               <div className="mt-4 border-t border-border/60 pt-3"><div className="font-smallcaps text-[10px] text-muted-foreground">Read the source text</div><ul className="mt-2 space-y-1">{item.sources.map(source => <li key={source.to}><Link className="text-sm underline decoration-border underline-offset-4 hover:text-gold" to={source.to}>{source.label}</Link></li>)}</ul></div>
+              <div className="mt-4 border-t border-border/60 pt-3"><div className="font-smallcaps text-[10px] text-muted-foreground">Continue this trail</div><ul className="mt-2 space-y-1">{item.next && <li><Link className="text-sm underline decoration-border underline-offset-4 hover:text-gold" to={item.next.to}>{item.next.label}</Link></li>}{items.filter(other => other.category === item.category && other.to !== item.to).slice(0, item.next ? 1 : 2).map(other => <li key={other.to}><Link className="text-sm underline decoration-border underline-offset-4 hover:text-gold" to={other.to}>{other.title}</Link></li>)}</ul></div>
             </article>
           ))}
         </div>
