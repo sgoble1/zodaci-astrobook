@@ -23,7 +23,7 @@ export function loadCorpus(): Promise<Passage[]> {
   return (corpus ??= (async () => {
     const passages: Passage[] = [];
     const mb = await fetch('/masterbook/index.json').then(r => r.json()) as { id: string; label: string; title: string }[];
-    await Promise.all(mb.filter(e => !e.id.startsWith('c-')).map(async (e) => {
+    await Promise.all(mb.filter(e => !/^(c|v2|cmp)-/.test(e.id)).map(async (e) => {
       const md = await fetch(`/masterbook/${e.id}.md`).then(r => r.text());
       let section = e.title;
       md.split(/\n(?=### )/).forEach((blk) => {
