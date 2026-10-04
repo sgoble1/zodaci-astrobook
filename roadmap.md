@@ -22,22 +22,26 @@
 - [x] Second Shane email as admin + Shane identity; Create a Topic & Page tool.
 
 ## Current batch
-- [ ] Reading Together notes searchable in Ask the Sources / SmarChat.
-- [ ] Keyboard + screen-reader fixes: Wonderings, Reading Room, private chat, Ask, shared space forms.
-- [ ] Masterbook Contents chapters show full text after the password (unlock in place).
-- [ ] Full-document page in the Reading Room (whole document text).
-- [ ] Workbook menu section: hub, guided modules with AI feedback, daily check-in, thought reframe, journal & patterns.
-- [ ] Therapy companion chat (separate sessions, private per account, chart-aware).
-- [ ] Move "Create a Topic & Page" to bottom of Begin.
-- [ ] Create-a-page: AI or write-it-myself, save button, edit later.
-- [ ] Page writer cites real passages and shows them on the page.
-- [ ] After create: menu refreshes, scrolls to new item, glowing animated highlight.
-- [ ] Second Shane email allowed in shared-space screens; unread badges in menu.
+- [x] Reading Together notes searchable in Ask the Sources / SmarChat.
+- [x] Keyboard + screen-reader fixes: Wonderings, Reading Room, private chat, Ask, shared space forms.
+- [x] Masterbook Contents chapters show full text after the password (unlock in place).
+- [x] Full-document page in the Reading Room (whole document text).
+- [x] Workbook menu section: hub, guided modules with AI feedback, daily check-in, thought reframe, journal & patterns.
+- [x] Therapy companion chat (separate sessions, private per account, chart-aware).
+- [x] Move "Create a Topic & Page" to bottom of Begin.
+- [x] Create-a-page: AI or write-it-myself, save button, edit later.
+- [x] Page writer cites real passages and shows them on the page.
+- [x] After create: menu refreshes, scrolls to new item, glowing animated highlight.
+- [x] Second Shane email allowed in shared-space screens; unread badges in menu.
 - [x] Tell April her Oracle sessions and workbook are private (not shared with Shane).
 - [x] Fix Family & Home topic: April-only content (remove Shane's info); audit build for non-April info.
-- [ ] Shared dashboard: Recommendations (movies, music, etc.).
+- [x] Shared dashboard: Recommendations (movies, music, etc.).
 - [x] Shared Media Library: upload images/videos/screenshots, native viewer, likes/reactions, chat about each file.
 - [x] "Chat about this" + bookmark actions on content that post into shared chat.
 - [x] Real working podcast generator (AI script + speech) that lists and plays in Podcasts.
 - [x] Replace illustration descriptions with generated images.
 - [x] Global first-view animations for charts and graphics.
+- [x] Highlight Create a Topic & Page with an always-visible amber glow.
+- [x] Add an Other Systems dashboard and seven cross-cultural interpretation pages.
+- [x] Add April's calculated natal chart, houses, aspects, and printable report.
+- [x] Save generated podcasts with cover art for both approved shared-space members.
