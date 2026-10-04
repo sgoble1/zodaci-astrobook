@@ -1,3 +1,4 @@
+import { UpdatesFeed } from '@/components/common/UpdatesFeed';
 import { Link } from 'react-router-dom';
 import { AuthGate } from '@/components/common/AuthGate';
 import { useBookmarks } from '@/hooks/useBookmarks';
@@ -58,6 +59,7 @@ export default function Dashboard() {
       <h1 className="font-display text-4xl">My Dashboard</h1>
       <p className="text-muted-foreground">Your bookmarks, notes and relationships — private to your account.</p>
       <AuthGate what="see your dashboard">{() => <Inner />}</AuthGate>
+      <UpdatesFeed limit={4} />
     </div>
   );
 }

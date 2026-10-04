@@ -1,0 +1,34 @@
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { UPDATES, type UpdateKind } from '@/content/updates';
+
+const KIND_COLOR: Record<UpdateKind, string> = { Feature: '--primary', Content: '--accent', Change: '--candle', Fix: '--oxblood' };
+
+export function UpdatesFeed({ limit = 6 }: { limit?: number }) {
+  const [all, setAll] = useState(false);
+  const shown = all ? UPDATES : UPDATES.slice(0, limit);
+  return (
+    <section className="space-y-3">
+      <div className="flex items-baseline justify-between">
+        <h2 className="font-display text-2xl">Recent updates</h2>
+        {UPDATES.length > limit && <button onClick={() => setAll(a => !a)} className="text-xs underline">{all ? 'Show fewer' : `Show all ${UPDATES.length}`}</button>}
+      </div>
+      <ol className="parchment divide-y divide-border/60">
+        {shown.map((u, i) => {
+          const c = `hsl(var(${KIND_COLOR[u.kind]}))`;
+          const inner = (
+            <div className="flex gap-3 p-4">
+              <div className="w-20 shrink-0 text-[11px] text-muted-foreground pt-0.5">{new Date(u.date + 'T12:00').toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}</div>
+              <div className="min-w-0">
+                <span className="text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full mr-2" style={{ color: c, background: `hsl(var(${KIND_COLOR[u.kind]}) / 0.12)` }}>{u.kind}</span>
+                <span className="font-medium">{u.title}</span>
+                <p className="text-sm text-muted-foreground mt-1">{u.body}</p>
+              </div>
+            </div>
+          );
+          return <li key={i}>{u.to ? <Link to={u.to} className="block hover:bg-muted/40 transition-colors">{inner}</Link> : inner}</li>;
+        })}
+      </ol>
+    </section>
+  );
+}
