@@ -13,6 +13,7 @@ import CustomPageView from './pages/CustomPageView';
 import { SitePasswordGate } from './components/common/SitePasswordGate';
 import { DetailDrawerProvider, type DrawerPayload } from './components/common/DetailDrawer';
 import { CommandPalette } from './components/common/CommandPalette';
+import { ActivityTracker } from './components/common/ActivityTracker';
 import {
   SABIAN_SYMBOLS, FIXED_STARS, ASTEROIDS, SPECIAL_ASPECTS, ARABIC_PARTS,
   PROFECTION_35, PRENATAL_ECLIPSE, PROFECTION_BEATS,
@@ -150,6 +151,7 @@ export default function App() {
     <BrowserRouter>
     <SitePasswordGate>
       <Providers>
+        <ActivityTracker />
         <Routes>
           <Route path="/contents" element={<MasterbookContents />} />
           <Route path="/contents/:id" element={<MasterbookContentsEntry />} />
