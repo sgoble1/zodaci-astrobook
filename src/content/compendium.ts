@@ -24,8 +24,8 @@ const SRC_MASTER = 'Master Astrological Compendium';
 
 export const SABIAN_SYMBOLS: SabianEntry[] = [
   { id: 'sabian-sun', point: 'Sun ☉', degree: 'Virgo 14°', symbol: 'A Family Tree',
-    interpretation: "You are not just yourself — you are the culminating expression of every ancestor who came before. The family tree is your H8: inheritance, hidden legacy, ancestral karma. Your purpose is partly to alchemize what your lineage could not complete. The roots that entangle are also the roots that feed.",
-    notes: "Rounded up from Virgo 13°33′. The tree image reinforces the 8th-house inheritance theme running through the entire chart.",
+    interpretation: "The symbol is a family tree, but the chart cannot supply facts about April’s relatives or ancestry. Used only as a personal metaphor, its branching structure can represent the many experiences and values she examines through an eighth-house Virgo Sun before deciding what belongs in her own life.",
+    notes: "Rounded up from Virgo 13°33′. The tree is treated as chart symbolism, not a claim about family history.",
     source: { doc: SRC_MASTER, section: 'II · Sabian Symbols — The Luminaries', page: 'p. 41' } },
   { id: 'sabian-moon', point: 'Moon ☽', degree: 'Aries 7°', symbol: 'A Woman Veiled',
     interpretation: "She knows what she knows. The veil is not ignorance — it is discretion. Your emotional intelligence is vast, but you have learned, through necessity, when to reveal it and when to hold it close. The veil is also protection: the Aries Moon wants to charge forward, but something wiser in you knows to wait for the right moment of disclosure. When you speak from your emotional truth, the veil drops — and what is revealed is extraordinary.",
@@ -45,7 +45,7 @@ export const SABIAN_SYMBOLS: SabianEntry[] = [
     interpretation: "Your chart ruler is not sheltered. Jupiter in Leo H7 conjunct the South Node means you have always known how to be magnificent in difficult conditions. The soul's inheritance is resilience. You don't just survive the storm — you look extraordinary doing it.",
     source: { doc: SRC_MASTER, section: 'II · Sabian Symbols — Social Planets', page: 'p. 46' } },
   { id: 'sabian-saturn', point: 'Saturn ♄ Rx', degree: 'Capricorn 19°', symbol: 'A Five-Year-Old Child Carrying a Bag',
-    interpretation: "There is no more precise image in your entire chart. The weight — structural, ancestral, karmic — arrived before you had the musculature for it. Saturn Rx in H1 means you have spent your life becoming strong enough to carry what was handed to you at birth. By now, at 35, you are strong enough. The bag is still there, but your arms no longer tremble.",
+    interpretation: "This image can describe taking responsibility seriously and developing self-command over time. Saturn retrograde in Capricorn in the first house may fit a private, demanding standard for competence; it does not reveal who placed responsibilities on April or prove a family history.",
     source: { doc: SRC_MASTER, section: 'II · Sabian Symbols — Social Planets', page: 'p. 46' } },
   { id: 'sabian-neptune', point: 'Neptune ♆ Rx', degree: 'Capricorn 12°', symbol: 'An Ancient Cathedral',
     interpretation: "You contain centuries of accumulated spiritual longing in your physical body. The ancient cathedral is Neptune Rx in H1 — not a building outside you, but an interior architecture of almost unbearable beauty. The vaulted ceiling of your inner life is higher than most people ever look.",
@@ -86,7 +86,7 @@ export const FIXED_STARS: FixedStar[] = [
     source: { doc: SRC_MASTER, section: 'III · Fixed Stars — Royal Contacts', page: 'p. 52' } },
   { id: 'star-zubenelgenubi', name: 'Zubenelgenubi', degree: 'Scorpio 15°05′', conjunct: 'Pluto 15°28′ H10', orb: "0°23′",
     meaning: "Once the southern claw of Scorpio, now the northern scale of Libra. Star of karmic debts, injustice acknowledged, scales that must be balanced.",
-    activation: "Your public life carries the frequency of justice. You are here, in part, to address what was unjust — in your lineage, in your communities, in the structures you encounter. What is hidden will surface through your career. What was silent will speak through your voice.",
+    activation: "As a symbolic prompt, this contact can focus April’s public work on fairness, accountability and repairing systems she can actually observe. It does not establish inherited injustice or facts about her lineage.",
     x: 74, y: 46, magnitude: 3,
     source: { doc: SRC_MASTER, section: 'III · Fixed Stars — Karmic Stars', page: 'p. 53' } },
   { id: 'star-gc', name: 'Galactic Center', degree: 'Sagittarius 27°00′', conjunct: 'Ascendant 29°28′', orb: "2°28′",

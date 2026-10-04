@@ -25,7 +25,7 @@ export interface Pillar {
 export const PILLARS: Pillar[] = [
   {
     id: 'pillar-year',
-    label: 'Year Pillar · the ancestors, early life, outer identity',
+    label: 'Year Pillar · broad social setting and outer identity',
     stem: '庚', branch: '午', romanized: 'Geng Wu',
     element: 'Yang Metal sitting on Fire',
     animal: 'Horse 🐎',

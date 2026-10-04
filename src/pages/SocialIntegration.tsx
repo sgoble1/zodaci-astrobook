@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { useChat } from '@ai-sdk/react';
 import { DefaultChatTransport, type UIMessage } from 'ai';
-import { Plus, Trash2, Users } from 'lucide-react';
+import { BookOpen, Brain, MessageSquareText, Plus, ShieldCheck, Trash2, Users } from 'lucide-react';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import { AuthGate } from '@/components/common/AuthGate';
@@ -34,6 +34,17 @@ export default function SocialIntegration() {
         <p role="note" className="max-w-2xl rounded border border-accent/40 bg-accent/10 px-3 py-2 text-sm"><strong>Private to your account.</strong> These conversations are not shared with Shane, April, or anyone using another account.</p>
       </div>
     </header>
+    <section aria-labelledby="social-method" className="space-y-5 border-y border-border py-6">
+      <div className="max-w-3xl"><div className="font-smallcaps text-xs text-gold">How this tool was built</div><h2 id="social-method" className="mt-2 text-2xl">An AstroBook method, grounded in established communication skills</h2><p className="mt-2 text-sm leading-relaxed text-muted-foreground">Social Integration is not an ancient astrological school or a licensed therapy method. AstroBook combines an outsider’s-eye view of a situation with perspective-taking, fact-versus-assumption checks, cognitive reframing, assertive communication, boundaries, and April’s verified chart. Its communication sequence resembles parts of Marshall Rosenberg’s Nonviolent Communication, but AstroBook is its own coaching framework.</p></div>
+      <div className="grid gap-4 md:grid-cols-3">
+        {[
+          { icon: Brain, title: 'See the pattern', body: 'Separate what was observed from the story about why it happened. Then consider more than one possible explanation.' },
+          { icon: MessageSquareText, title: 'Translate it into words', body: 'Name feelings, needs and likely misunderstandings, then offer direct scripts April could actually say.' },
+          { icon: ShieldCheck, title: 'Choose a safe next step', body: 'Set a boundary, make a request, pause, repair or leave. The counselor does not diagnose people or teach manipulation.' },
+        ].map(item => { const Icon = item.icon; return <article key={item.title} className="border border-border bg-card/50 p-4"><Icon className="h-5 w-5 text-accent" aria-hidden="true"/><h3 className="mt-3 text-lg">{item.title}</h3><p className="mt-1 text-sm leading-relaxed text-muted-foreground">{item.body}</p></article>; })}
+      </div>
+      <div className="flex items-start gap-3 text-sm text-muted-foreground"><BookOpen className="mt-0.5 h-5 w-5 shrink-0 text-gold" aria-hidden="true"/><p><strong className="text-foreground">What it remembers:</strong> every saved message in the open private conversation is used as context. It learns the thread’s details as the conversation develops; it does not secretly train on April or share that history with other chats. Background: <a className="underline" href="https://www.cnvc.org/learn-nvc/what-is-nvc" target="_blank" rel="noreferrer">Center for Nonviolent Communication<span className="sr-only"> (opens in a new tab)</span></a>.</p></div>
+    </section>
     <AuthGate what="use your private Social Counselor">{() => <SocialInner />}</AuthGate>
     <p className="max-w-2xl text-xs text-muted-foreground">This is reflective guidance, not medical care or a diagnosis. Astrology is used as a possible lens, not a proven fact.</p>
   </div>;
@@ -111,7 +122,9 @@ function SocialSessionChat({ sessionId, initial }: { sessionId: string; initial:
   useEffect(() => { if (status === 'ready' || status === 'error') box.current?.querySelector('textarea')?.focus(); }, [status]);
   const send = async (text: string) => {
     const value = text.trim(); if (!value || busy) return;
-    passages.current = await passagesFor(value, 6); setCited(passages.current);
+    const previous = [...messages].reverse().find(message => message.role === 'user');
+    const previousText = previous?.parts.map(part => part.type === 'text' ? part.text : '').join(' ') ?? '';
+    passages.current = await passagesFor(`${value} ${previousText}`, 8); setCited(passages.current);
     try { await sendMessage({ text: value }); setDraft(''); }
     catch (error) { toast.error(friendlyChatError(error instanceof Error ? error : new Error('The Social Counselor could not respond.'))); }
     if (params.has('q')) { const next = new URLSearchParams(params); next.delete('q'); setParams(next, { replace: true }); }

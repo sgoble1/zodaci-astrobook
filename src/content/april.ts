@@ -149,10 +149,10 @@ export const PLACEMENTS: Placement[] = [
   {
     key: 'chiron', name: 'Chiron', glyph: '⚷', sign: 'Cancer', signGlyph: '♋',
     degree: 24, minute: 30, house: 7, motion: 'Direct', dignity: '—',
-    notes: 'The ancestral healing path, strengthened through relationship',
+    notes: 'A sensitivity around care, strengthened through trusted relationship',
     headline: 'Chiron in Cancer · Seventh House · 24°30′',
     interpretation:
-      "Chiron in Cancer in the seventh house describes an ancestral healing path: her depth was vast from the beginning and required a more expansive emotional container than she consistently received. Cancer is the sign of the mother; Chiron marks the place where experience becomes medicine. Placed in the house of relationship, this capacity strengthens through trusted bonds that can honor her needs, feelings, directness and depth. The healing is already well underway.",
+      "Chiron in Cancer in the seventh house is traditionally read as sensitivity around care, safety and belonging within close relationships. This is chart symbolism, not evidence about April’s childhood or relatives. As a reflective prompt, it asks what kinds of trusted bonds make it easier for her needs, feelings, directness and depth to be respected.",
   },
   {
     key: 'northNode', name: 'North Node', glyph: '☊', sign: 'Aquarius', signGlyph: '♒',
@@ -238,9 +238,9 @@ export const HOUSES: HouseInfo[] = [
   {
     number: 4, name: 'Home & Roots', cusp: 'Pisces', ruler: 'Neptune (in Capricorn H1)',
     planets: [],
-    summary: 'Home as dreamed, mourned and rebuilt',
+    summary: 'Home as retreat, imagination and emotional reset',
     interpretation:
-      "The fourth house of home, ancestry and the inner sanctum. Ruled by Neptune in the first, her home is both mystical retreat and the site of the mother-wound that shaped her — a place she is now consciously reclaiming as her own.",
+      "The fourth house describes home, roots and private restoration. With Pisces on its cusp and Neptune in Capricorn in the first house as ruler, April may want a home that feels imaginative and peaceful while still having dependable structure. This describes chart symbolism only; it does not establish facts about her family history.",
   },
   {
     number: 5, name: 'Creativity & Romance', cusp: 'Aries', ruler: 'Mars (in Gemini H5)',
@@ -294,9 +294,9 @@ export const HOUSES: HouseInfo[] = [
   {
     number: 12, name: 'The Hidden & The Sacred', cusp: 'Sagittarius', ruler: 'Jupiter (in Leo H7)',
     planets: [],
-    summary: 'The sanctuary and the ancestral inheritance',
+    summary: 'Private restoration, dreams and sanctuary',
     interpretation:
-      'Twelfth house of the hidden, the ancestral, the dreams and the sanctuary. Ruled by chart-ruler Jupiter in the seventh, hers is a private life restored through the presence of trusted others.',
+      'The twelfth house describes retreat, dreams, solitude and what happens outside ordinary awareness. Ruled by chart-ruler Jupiter in the seventh, April may restore herself through a balance of private sanctuary and trusted one-to-one support.',
   },
 ];
 

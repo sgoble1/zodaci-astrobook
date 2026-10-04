@@ -160,7 +160,7 @@ export const TRANSITS: TransitEvent[] = [
     transiting: 'Pluto', aspect: 'conjunct', natalPoint: 'Saturn Rx · Capricorn 18°55′ H1',
     title: 'Pluto conjunct natal Saturn — the child sets the bag down',
     intensity: 'era-defining',
-    body: "The inherited weight — the 'five-year-old carrying a bag' — is finally metabolized. Structural, ancestral, financial material released.",
+    body: "The symbolic weight of the 'five-year-old carrying a bag' is reconsidered: obligations, self-imposed standards and financial structures may be rebuilt or released. The chart does not identify a family source for that weight.",
     reasoning: {
       inputs: [
         { label: 'Transiting', value: 'Pluto in Aquarius' },

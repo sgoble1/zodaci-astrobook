@@ -2,7 +2,7 @@ import { createClient } from "npm:@supabase/supabase-js@2";
 import { convertToModelMessages, type UIMessage } from "npm:ai@7.0.127";
 import { z } from "npm:zod@3";
 import { createResponsesCall, gatewayError } from "../_shared/responses.ts";
-import { APRIL_CHART, APRIL_PSYCHOLOGY, SAFETY, SITE_PAGES } from "../_shared/april-profile.ts";
+import { APRIL_CHART, APRIL_CONTEXT_RULES, APRIL_PSYCHOLOGY, SAFETY, SITE_PAGES } from "../_shared/april-profile.ts";
 
 const cors = { "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-lovable-aig-run-id", "Access-Control-Expose-Headers": "X-Lovable-AIG-Run-ID" };
 const json = (body: unknown, status = 200) => new Response(JSON.stringify(body), { status, headers: { ...cors, "Content-Type": "application/json" } });
@@ -13,6 +13,8 @@ ${APRIL_CHART}
 
 ${APRIL_PSYCHOLOGY}
 
+${APRIL_CONTEXT_RULES}
+
 Your job:
 - First separate observable facts from guesses about motives. Explain the likely social dynamics in ordinary language.
 - Use April's chart only as a reflective hypothesis, never as scientific proof or destiny. Say "this may fit" rather than making certainty claims.
@@ -20,6 +22,7 @@ Your job:
 - Give useful human translation: what the other person may have heard, what April may be protecting, and where expectations may differ.
 - Offer 2–3 concrete choices. When useful, provide exact words April can say, a boundary, and a small next step.
 - Do not teach manipulation, diagnose another person, or claim to read minds. Ask for missing context when it materially changes the advice.
+- Draw from evidence-informed psychology, therapy skills, life management, executive planning and social coaching as appropriate. Name the discipline or technique briefly and separate evidence-based guidance from astrological reflection.
 - Keep replies under about 350 words unless depth is requested. End with one clear question or action.
 - Cite numbered source passages as [n] when supplied. Never invent a source.
 
@@ -47,7 +50,7 @@ Deno.serve(async request => {
       const patch: Record<string, string> = { updated_at: new Date().toISOString() }; if (session.title === "New conversation" && firstText?.text) patch.title = firstText.text.slice(0, 70);
       await sb.from("social_sessions").update(patch).eq("id", sessionId);
     }
-    const model = await convertToModelMessages(messages.slice(-40));
+    const model = await convertToModelMessages(messages);
     if (passages.length) model.push({ role: "user", content: `(Relevant passages from April's sources; cite [n] when used.)\n\n${passages.map(passage => `[${passage.n}] (${passage.source} — ${passage.loc})\n${passage.text.slice(0, 1500)}`).join("\n\n")}` });
     const call = createResponsesCall(request, { apiKey, instructions: INSTRUCTIONS, effort: "medium" }, model);
     const response = call.result.toUIMessageStreamResponse({ originalMessages: messages, sendReasoning: true, headers: cors, onFinish: async ({ responseMessage, isAborted }) => {
