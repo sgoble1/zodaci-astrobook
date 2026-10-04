@@ -91,4 +91,4 @@
 
 ## Chat session resilience
 - [x] Refresh private counselor credentials before requests and handle expired sessions without blanking the page.
-- [ ] Verify expired-session and successful-message behavior in the live Social Counselor.
+- [x] Verify expired-session handling and authenticated Social Counselor loading without screen crashes.
