@@ -1,9 +1,11 @@
 # Roadmap
 
-- [x] Add a prominent header sign-in/account control.
-- [x] Build a private shared space restricted to Shane and April.
-- [x] Add main and topic conversations with instant messaging.
-- [x] Add posts, shared notes, future discussion items, and safe account references.
-- [x] Add private image and file uploads and sharing.
-- [x] Verify access controls, account flow, saved notes, and messaging with the available approved account.
-- [ ] Verify live two-way delivery and file sharing between both accounts — blocked until April signs in for a two-account test.
+- [ ] Map all Volume II content to its relevant pages with full text and citations.
+- [ ] Protect the Sources Reading Room and connect entries to real Masterbook chapters.
+- [ ] Change Shane and new relationship defaults from Partner to Friend.
+- [ ] Reframe relationship cautions constructively without hiding calculated facts.
+- [ ] Add reciprocal April/Shane contact access.
+- [ ] Build the shared overview for messages, posts, notes, files, and future topics.
+- [ ] Add the private human chat feed to Home and My Dashboard.
+- [ ] Modernize and verify private chat behavior and attachments.
+- [ ] Verify access, source links, relationship updates, and build quality.
