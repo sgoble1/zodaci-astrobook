@@ -3,6 +3,7 @@ import { NavLink, Outlet, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import ParticleField from '@/components/fx/ParticleField';
 import ScrollProgress from '@/components/fx/ScrollProgress';
+import { FirstViewReveal } from '@/components/fx/FirstViewReveal';
 import { useEffect, useRef, useState } from 'react';
 import { ChevronDown, Menu, X } from 'lucide-react';
 import { BIRTH } from '@/content/april';
@@ -59,7 +60,7 @@ export function AppShell() {
     <PlayerProvider>
     <div className="min-h-screen flex text-foreground relative">
       <a href="#main-content" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded focus:bg-primary focus:px-4 focus:py-2 focus:text-primary-foreground">Skip to content</a>
-      <ScrollProgress />
+      <ScrollProgress /><FirstViewReveal />
       <ParticleField />
       <div aria-hidden className="pointer-events-none fixed -top-40 -left-40 w-[520px] h-[520px] rounded-full bg-primary/20 blur-3xl float-orb z-0" />
       <div aria-hidden className="pointer-events-none fixed -bottom-40 -right-40 w-[520px] h-[520px] rounded-full bg-accent/15 blur-3xl float-orb z-0" style={{ animationDelay: '-9s' }} />
@@ -124,8 +125,8 @@ function SidebarInner() {
     });
     return () => cancelAnimationFrame(raf);
   }, [custom]);
-  const baseGroups: NavGroup[] = [...groups.slice(0, 2), { title: 'Our Shared Space', items: [{ to: '/shared', label: 'Shared Dashboard' }, { to: '/shared/conversations', label: 'Conversations', badge: badges.chat }, { to: '/shared/posts', label: 'Posts' }, { to: '/shared/wonderings', label: 'Wonderings', badge: badges.wonderings }, { to: '/shared/reading', label: 'Reading Together' }, { to: '/shared/notes', label: 'Notes' }, { to: '/shared/later', label: 'Talk Later' }, { to: '/shared/accounts', label: 'Shared Accounts' }] }, { title: 'Relationships', items: [{ to: '/relationships', label: 'All Relationships' }, { to: '/guides/relationships', label: 'Relationships in the Sources' }, ...rels.map(r => ({ to: `/relationships/${r.id}`, label: `↳ ${r.name}${r.relation ? ` · ${r.relation}` : ''}` }))] }, ...groups.slice(2)];
-  const allGroups = baseGroups.map(g => ({ ...g, items: [...g.items, ...custom.filter(c => c.menu_group === g.title).map(c => ({ to: `/p/${c.id}`, label: c.status === 'generating' ? `${c.title} · writing…` : c.title, created: true }))] }));
+  const baseGroups: NavGroup[] = [...groups.slice(0, 2), { title: 'Our Shared Space', items: [{ to: '/shared', label: 'Shared Dashboard' }, { to: '/shared/conversations', label: 'Conversations', badge: badges.chat }, { to: '/shared/posts', label: 'Posts' }, { to: '/shared/wonderings', label: 'Wonderings', badge: badges.wonderings }, { to: '/shared/reading', label: 'Reading Together' }, { to: '/shared/media', label: 'Media Library' }, { to: '/shared/recommendations', label: 'Recommendations' }, { to: '/shared/notes', label: 'Notes' }, { to: '/shared/later', label: 'Talk Later' }, { to: '/shared/accounts', label: 'Shared Accounts' }] }, { title: 'Relationships', items: [{ to: '/relationships', label: 'All Relationships' }, { to: '/guides/relationships', label: 'Relationships in the Sources' }, ...rels.map(r => ({ to: `/relationships/${r.id}`, label: `↳ ${r.name}${r.relation ? ` · ${r.relation}` : ''}` }))] }, ...groups.slice(2)];
+  const allGroups = baseGroups.map(g => ({ ...g, items: [...g.items, ...custom.filter(c => c.menu_group === g.title).map(c => ({ to: `/p/${c.id}`, label: c.status === 'generating' ? `${c.title} · writing…` : c.title, created: true } as NavItem))] }));
   return (
     <div className="p-6 flex flex-col gap-6 h-full overflow-y-auto">
       <div>

@@ -1,3 +1,4 @@
+import { PodcastMaker } from '@/components/podcast/PodcastMaker';
 import { useEffect, useRef, useState } from 'react';
 import { ListPlus, ListX, SkipForward } from 'lucide-react';
 import { Headphones, Trash2, Download, Upload } from 'lucide-react';
@@ -95,7 +96,8 @@ export default function Podcasts() {
       </section>
 
       <section>
-        <h2 className="text-2xl mb-3">Add an episode</h2>
+        <AuthGate what="create podcast episodes">{() => <div className="mb-6"><PodcastMaker onCreated={lib.reload} /></div>}</AuthGate>
+        <h2 className="text-2xl mb-3">Upload an episode</h2>
         <AuthGate what="upload podcast episodes">{(uid) => <UploadForm accept="audio/*" onUpload={(f, m) => lib.upload(f, m, uid)} />}</AuthGate>
       </section>
     </div>

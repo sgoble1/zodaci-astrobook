@@ -1,3 +1,4 @@
+import { withPlates } from '@/content/plates';
 import { BookmarkButton } from '@/components/common/BookmarkButton';
 import { loadProtectedJson, loadProtectedText } from '@/lib/protectedContent';
 import { useEffect, useState } from 'react';
@@ -11,7 +12,7 @@ let indexCache: Promise<Entry[]> | null = null;
 const loadIndex = () => (indexCache ??= loadProtectedJson<Entry[]>('masterbook', 'index.json'));
 const textCache = new Map<string, Promise<string>>();
 const loadText = (id: string) => {
-  if (!textCache.has(id)) textCache.set(id, loadProtectedText('masterbook', `${id}.md`).catch(() => ''));
+  if (!textCache.has(id)) textCache.set(id, loadProtectedText('masterbook', `${id}.md`).then(withPlates).catch(() => ''));
   return textCache.get(id) ?? Promise.resolve('');
 };
 

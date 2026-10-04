@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { TOPICS } from '@/content/topics';
 import ReactMarkdown from 'react-markdown';
-import { loadCorpus, rank, type Passage } from '@/lib/corpus';
+import { loadCorpus, rank, aprilOnly, SHANE_RE, type Passage } from '@/lib/corpus';
 import { loadProtectedJson } from '@/lib/protectedContent';
 import { Button } from '@/components/ui/button';
 
@@ -36,9 +36,9 @@ export default function Topic() {
   const [sum, setSum] = useState(''); const [busy, setBusy] = useState(false); const [err, setErr] = useState<string | null>(null);
 
   useEffect(() => { loadProtectedJson<Entry[]>('masterbook', 'index.json').then(setIndex).catch(() => setIndex([])); }, []);
-  useEffect(() => { setPassages(null); setN(12); setSum(''); setErr(null); loadCorpus().then(setPassages).catch(() => setPassages([])); }, [slug]);
+  useEffect(() => { setPassages(null); setN(12); setSum(''); setErr(null); loadCorpus().then(ps => setPassages(aprilOnly(ps))).catch(() => setPassages([])); }, [slug]);
 
-  const chapters = useMemo(() => topic ? index.filter(e => topic.chapters.test(e.title) || topic.sourceIds?.includes(e.id)) : [], [index, topic]);
+  const chapters = useMemo(() => topic ? index.filter(e => !SHANE_RE.test(e.title) && !/relationship/i.test(e.title)).filter(e => topic.chapters.test(e.title) || topic.sourceIds?.includes(e.id)) : [], [index, topic]);
   const hits = useMemo(() => topic && passages ? rank(passages, topic.query, 40) : [], [passages, topic]);
 
   const summarize = async () => {
@@ -48,7 +48,7 @@ export default function Topic() {
     try {
       const res = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ask-sources`, {
         method: 'POST', headers: { 'Content-Type': 'application/json', apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY, Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}` },
-        body: JSON.stringify({ question: `Write a clear, well-organised overview of "${topic.label}" for April, with short headed sections: key placements, recurring patterns, challenges, and practical guidance. Use only the passages.`, passages: top.map((p, i) => ({ n: i + 1, source: p.source, loc: p.loc, text: p.text })) }),
+        body: JSON.stringify({ question: `Write a clear, well-organised overview of "${topic.label}" for April only (never describe anyone else's chart, family or home), with short headed sections: key placements, recurring patterns, challenges, and practical guidance. Use only the passages.`, passages: top.map((p, i) => ({ n: i + 1, source: p.source, loc: p.loc, text: p.text })) }),
       });
       if (!res.ok || !res.body) { const j = await res.json().catch(() => ({})); throw new Error(j.error ?? 'Something went wrong.'); }
       const r = res.body.getReader(); const d = new TextDecoder();
@@ -126,7 +126,7 @@ export default function Topic() {
           </div>
         )}
       </section>
-      <SourceChapters match={topic.chapters} ids={topic.sourceIds} title={`${topic.label} — the full source chapters`} />
+      <SourceChapters exclude={/Shane|Goble|LeCompte|relationship|synastry/i} match={topic.chapters} ids={topic.sourceIds} title={`${topic.label} — the full source chapters`} />
     </div>
   );
 }

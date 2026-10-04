@@ -33,6 +33,7 @@ function Shell({ eyebrow, title, intro, children }: { eyebrow: string; title: st
         <div className="font-smallcaps text-xs text-gold">{eyebrow}</div>
         <h1 className="text-4xl sm:text-5xl">{title}</h1>
         <p className="max-w-2xl text-muted-foreground">{intro}</p>
+        <p role="note" className="max-w-2xl text-sm text-accent">🔒 Private to your account — your answers, check-ins and journal are never shared with Shane or anyone else.</p>
       </header>
       <WorkbookNav />
       <AuthGate what="use your private workbook">{children}</AuthGate>

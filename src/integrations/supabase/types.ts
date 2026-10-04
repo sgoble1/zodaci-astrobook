@@ -515,6 +515,93 @@ export type Database = {
         }
         Relationships: []
       }
+      shared_item_comments: {
+        Row: {
+          author_id: string
+          body: string
+          created_at: string
+          id: string
+          item_id: string
+          item_type: string
+        }
+        Insert: {
+          author_id?: string
+          body: string
+          created_at?: string
+          id?: string
+          item_id: string
+          item_type: string
+        }
+        Update: {
+          author_id?: string
+          body?: string
+          created_at?: string
+          id?: string
+          item_id?: string
+          item_type?: string
+        }
+        Relationships: []
+      }
+      shared_item_reactions: {
+        Row: {
+          created_at: string
+          emoji: string
+          id: string
+          item_id: string
+          item_type: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          emoji: string
+          id?: string
+          item_id: string
+          item_type: string
+          user_id?: string
+        }
+        Update: {
+          created_at?: string
+          emoji?: string
+          id?: string
+          item_id?: string
+          item_type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      shared_media: {
+        Row: {
+          caption: string
+          created_at: string
+          file_name: string
+          file_path: string
+          id: string
+          mime_type: string | null
+          size_bytes: number | null
+          uploaded_by: string
+        }
+        Insert: {
+          caption?: string
+          created_at?: string
+          file_name: string
+          file_path: string
+          id?: string
+          mime_type?: string | null
+          size_bytes?: number | null
+          uploaded_by?: string
+        }
+        Update: {
+          caption?: string
+          created_at?: string
+          file_name?: string
+          file_path?: string
+          id?: string
+          mime_type?: string | null
+          size_bytes?: number | null
+          uploaded_by?: string
+        }
+        Relationships: []
+      }
       shared_message_reactions: {
         Row: {
           created_at: string
@@ -646,6 +733,36 @@ export type Database = {
           id?: string
           title?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      shared_recommendations: {
+        Row: {
+          author_id: string
+          category: string
+          created_at: string
+          id: string
+          link: string
+          note: string
+          title: string
+        }
+        Insert: {
+          author_id?: string
+          category?: string
+          created_at?: string
+          id?: string
+          link?: string
+          note?: string
+          title: string
+        }
+        Update: {
+          author_id?: string
+          category?: string
+          created_at?: string
+          id?: string
+          link?: string
+          note?: string
+          title?: string
         }
         Relationships: []
       }

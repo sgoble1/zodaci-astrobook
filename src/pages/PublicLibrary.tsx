@@ -1,9 +1,12 @@
+import { withPlates } from '@/content/plates';
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { loadIndex, type MbEntry } from './Masterbook';
 import { loadProtectedText } from '@/lib/protectedContent';
+
+export const slugify = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 
 /** Password-protected reading room backed by the extracted Masterbook files. */
 function Frame({ children }: { children: React.ReactNode }) {
@@ -39,7 +42,7 @@ export function PublicLibrary() {
       </nav>
       {groups.map(([part, list]) => (
         <section key={part} id={encodeURIComponent(part)} className="mb-10">
-          <h2 className="font-display text-2xl mb-3">{part} <span className="text-sm text-muted-foreground">({list.length})</span></h2>
+          <h2 className="font-display text-2xl mb-3">{part} <span className="text-sm text-muted-foreground">({list.length})</span> <Link to={`/read/document/${slugify(part)}`} className="ml-2 text-sm underline">Read the whole document →</Link></h2>
           <ol className="parchment divide-y divide-border/60">
             {list.map(e => (
               <li key={e.id} className="p-4">
@@ -60,7 +63,7 @@ export function PublicReader() {
   const [entries, setEntries] = useState<MbEntry[]>([]);
   const [text, setText] = useState<string | null>(null);
   useEffect(() => { loadIndex().then(setEntries); }, []);
-  useEffect(() => { setText(null); window.scrollTo(0, 0); loadProtectedText('masterbook', `${id}.md`).then(setText).catch(() => setText('')); }, [id]);
+  useEffect(() => { setText(null); window.scrollTo(0, 0); loadProtectedText('masterbook', `${id}.md`).then(t => setText(withPlates(t))).catch(() => setText('')); }, [id]);
   const i = entries.findIndex(e => e.id === id);
   const e = entries[i], prev = entries[i - 1], next = entries[i + 1];
   const body = (text ?? '').replace(/<!-- page (\d+) -->/g, (_m, n) => `\n\n###### Page ${n}\n\n`);
@@ -74,6 +77,35 @@ export function PublicReader() {
           {prev ? <Link to={`/read/${prev.id}`} className="underline">← {prev.title}</Link> : <span />}
           {next ? <Link to={`/read/${next.id}`} className="underline">{next.title} →</Link> : <span />}
         </div>
+      </>}
+    </Frame>
+  );
+}
+
+/** One whole Masterbook document (every chapter of a part) on a single page; text loads through the password. */
+export function PublicDocument() {
+  const { slug = '' } = useParams();
+  const [entries, setEntries] = useState<MbEntry[]>([]);
+  const [texts, setTexts] = useState<string[] | null>(null);
+  useEffect(() => { loadIndex().then(setEntries); }, []);
+  const list = useMemo(() => entries.filter(e => slugify(e.part) === slug), [entries, slug]);
+  useEffect(() => {
+    if (!list.length) return; setTexts(null);
+    Promise.all(list.map(e => loadProtectedText('masterbook', `${e.id}.md`).then(withPlates).catch(() => ''))).then(setTexts);
+  }, [list]);
+  const part = list[0]?.part;
+  return (
+    <Frame>
+      <Link to="/read" className="text-xs text-muted-foreground hover:text-foreground">← All sources</Link>
+      {entries.length > 0 && !list.length ? <p className="mt-6">Document not found.</p> : <>
+        <h1 className="font-display text-4xl mt-4 mb-2">{part ?? 'Loading…'}</h1>
+        <p className="text-muted-foreground mb-6">{list.length} chapters · the complete text</p>
+        <nav aria-label="Chapters" className="flex flex-wrap gap-2 mb-8 text-xs">{list.map(e => <a key={e.id} href={`#ch-${e.id}`} className="px-3 py-1 rounded-full border border-border hover:bg-muted">{e.title}</a>)}</nav>
+        {!texts ? <p role="status">Loading the full document…</p> : list.map((e, i) => (
+          <article key={e.id} id={`ch-${e.id}`} className="prose prose-invert max-w-none mb-12 scroll-mt-6">
+            <ReactMarkdown remarkPlugins={[remarkGfm]}>{(texts[i] || '_This chapter could not be loaded._').replace(/<!-- page (\d+) -->/g, (_m, n) => `\n\n###### Page ${n}\n\n`)}</ReactMarkdown>
+          </article>
+        ))}
       </>}
     </Frame>
   );

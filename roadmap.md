@@ -33,3 +33,11 @@
 - [ ] Page writer cites real passages and shows them on the page.
 - [ ] After create: menu refreshes, scrolls to new item, glowing animated highlight.
 - [ ] Second Shane email allowed in shared-space screens; unread badges in menu.
+- [x] Tell April her Oracle sessions and workbook are private (not shared with Shane).
+- [x] Fix Family & Home topic: April-only content (remove Shane's info); audit build for non-April info.
+- [ ] Shared dashboard: Recommendations (movies, music, etc.).
+- [x] Shared Media Library: upload images/videos/screenshots, native viewer, likes/reactions, chat about each file.
+- [x] "Chat about this" + bookmark actions on content that post into shared chat.
+- [x] Real working podcast generator (AI script + speech) that lists and plays in Podcasts.
+- [x] Replace illustration descriptions with generated images.
+- [x] Global first-view animations for charts and graphics.

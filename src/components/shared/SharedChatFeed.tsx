@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
 
 type FeedMessage = { id: string; body: string; sender_id: string; created_at: string };
-const ALLOWED = new Set(['shanealecompte@gmail.com', 'babybluepuppet@gmail.com']);
+const ALLOWED = new Set(['shanealecompte@gmail.com', 'shanegoble@gmail.com', 'babybluepuppet@gmail.com']);
 const names: Record<string, string> = {
   'shanealecompte@gmail.com': 'Shane',
   'babybluepuppet@gmail.com': 'April',

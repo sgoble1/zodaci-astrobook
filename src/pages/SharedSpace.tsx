@@ -12,6 +12,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Conversation as ChatConversation, ConversationContent, ConversationEmptyState, ConversationScrollButton } from '@/components/ai-elements/conversation';
 import { Message as ChatMessage, MessageActions, MessageAction, MessageContent } from '@/components/ai-elements/message';
 import { SharedReading } from '@/components/shared/SharedReading';
+import { MediaLibrary, Recommendations } from '@/components/shared/SharedExtras';
+import { Image as ImageIcon, Clapperboard } from 'lucide-react';
 import { BookOpen } from 'lucide-react';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
@@ -29,7 +31,7 @@ type WonderingComment = { id: string; wondering_id: string; author_id: string; b
 type WonderingReaction = { id: string; wondering_id: string; user_id: string; emoji: string };
 type Directory = Record<string, string>;
 
-const ALLOWED = new Set(['shanealecompte@gmail.com', 'babybluepuppet@gmail.com']);
+const ALLOWED = new Set(['shanealecompte@gmail.com', 'shanegoble@gmail.com', 'babybluepuppet@gmail.com']);
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const db = (name: string): any => supabase.from(name as never); // generated table names are runtime-safe; helper keeps CRUD concise.
 const person = (directory: Directory, id: string) => directory[id] ?? 'Shared member';
@@ -63,13 +65,13 @@ function useDirectory() {
 function SharedNav({ value }: { value: string }) {
   const links = [
     ['overview', '/shared', 'Dashboard', Users], ['chat', '/shared/conversations', 'Conversations', MessageCircle], ['posts', '/shared/posts', 'Posts', FileText], ['notes', '/shared/notes', 'Notes', StickyNote],
-    ['wonderings', '/shared/wonderings', 'Wonderings', Heart], ['reading', '/shared/reading', 'Reading Together', BookOpen], ['later', '/shared/later', 'Talk Later', Archive], ['accounts', '/shared/accounts', 'Accounts', Link2],
+    ['wonderings', '/shared/wonderings', 'Wonderings', Heart], ['reading', '/shared/reading', 'Reading Together', BookOpen], ['media', '/shared/media', 'Media Library', ImageIcon], ['recs', '/shared/recommendations', 'Recommendations', Clapperboard], ['later', '/shared/later', 'Talk Later', Archive], ['accounts', '/shared/accounts', 'Accounts', Link2],
   ] as const;
   return <nav className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap" aria-label="Shared space sections">{links.map(([id, to, label, Icon]) => <Button key={id} asChild variant={value === id ? 'default' : 'outline'} size="sm"><Link to={to}><Icon className="h-4 w-4" />{label}</Link></Button>)}</nav>;
 }
 
-export default function SharedSpace({ section = 'chat' }: { section?: 'overview' | 'chat' | 'posts' | 'wonderings' | 'reading' | 'notes' | 'later' | 'accounts' }) {
-  return <div className="space-y-6"><header className="space-y-2"><div className="font-smallcaps text-xs text-gold">Private · April & Shane</div><h1 className="text-4xl sm:text-5xl">Our Shared Space</h1><p className="max-w-2xl text-muted-foreground">Messages, posts, notes, files, things to revisit, and useful account references in one private place.</p></header><SharedNav value={section} /><SharedSpaceGate>{userId => section === 'overview' ? <SharedOverview /> : section === 'chat' ? <Conversations userId={userId} /> : section === 'posts' ? <Posts userId={userId} /> : section === 'wonderings' ? <Wonderings userId={userId} /> : section === 'reading' ? <SharedReading userId={userId} /> : section === 'notes' ? <Notes userId={userId} /> : section === 'later' ? <TalkLater userId={userId} /> : <Accounts userId={userId} />}</SharedSpaceGate></div>;
+export default function SharedSpace({ section = 'chat' }: { section?: 'overview' | 'media' | 'recs' | 'chat' | 'posts' | 'wonderings' | 'reading' | 'notes' | 'later' | 'accounts' }) {
+  return <div className="space-y-6"><header className="space-y-2"><div className="font-smallcaps text-xs text-gold">Private · April & Shane</div><h1 className="text-4xl sm:text-5xl">Our Shared Space</h1><p className="max-w-2xl text-muted-foreground">Messages, posts, notes, files, things to revisit, and useful account references in one private place.</p></header><SharedNav value={section} /><SharedSpaceGate>{userId => section === 'overview' ? <div className="space-y-5"><SharedOverview /><Recommendations userId={userId} compact /></div> : section === 'media' ? <MediaLibrary userId={userId} /> : section === 'recs' ? <Recommendations userId={userId} /> : section === 'chat' ? <Conversations userId={userId} /> : section === 'posts' ? <Posts userId={userId} /> : section === 'wonderings' ? <Wonderings userId={userId} /> : section === 'reading' ? <SharedReading userId={userId} /> : section === 'notes' ? <Notes userId={userId} /> : section === 'later' ? <TalkLater userId={userId} /> : <Accounts userId={userId} />}</SharedSpaceGate></div>;
 }
 
 function SharedOverview() {
