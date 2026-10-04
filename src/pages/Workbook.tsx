@@ -210,6 +210,18 @@ function ModuleInner({ userId, m, next }: { userId: string; m: WorkbookModule; n
   const latest = (key: string) => entries.find(e => e.kind === 'prompt' && e.prompt_key === key);
   return (
     <div className="space-y-6">
+      <section className="parchment p-5" aria-labelledby="workbook-steps">
+        <h2 id="workbook-steps" className="text-2xl">How to use this chapter</h2>
+        <ol className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+          {[
+            ['1', 'Understand', m.plainMeaning],
+            ['2', 'Recognize', m.dailyLife],
+            ['3', 'Notice', 'Think of one recent, specific moment when this pattern appeared.'],
+            ['4', 'Write', 'Answer one question honestly. A few sentences are enough.'],
+            ['5', 'Choose', 'Use the guidance to pick one small action you can try next.'],
+          ].map(([number, title, body]) => <li key={number} className="border-l border-gold/60 pl-3"><div className="text-xs text-gold">Step {number}</div><h3 className="font-medium">{title}</h3><p className="mt-1 text-xs text-muted-foreground">{body}</p></li>)}
+        </ol>
+      </section>
       <ol className="space-y-4">{m.questions.map((q, i) => <QuestionCard key={q.key} userId={userId} module={m} question={q} existing={latest(q.key)} index={i} />)}</ol>
       <section className="parchment p-5" aria-labelledby="explore-h">
         <h2 id="explore-h" className="text-xl">Explore this further</h2>

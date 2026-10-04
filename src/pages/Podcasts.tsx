@@ -1,6 +1,6 @@
 import { PodcastMaker } from '@/components/podcast/PodcastMaker';
 import { useEffect, useRef, useState } from 'react';
-import { ListPlus, ListX, SkipForward } from 'lucide-react';
+import { ListPlus, ListX, SkipForward, BookOpen } from 'lucide-react';
 import { Headphones, Lock, Trash2, Download, Upload, Users } from 'lucide-react';
 import { useLibrary, useSession, useIsAdmin, type LibraryItem } from '@/hooks/useLibrary';
 import { AuthGate } from '@/components/common/AuthGate';
@@ -18,10 +18,15 @@ export default function Podcasts() {
   const { current, queue, setQueue, speed, setSpeed, positions, play, playNext, stop, setCatalog } = usePlayer();
   const setCurrent = (v: null) => { if (v === null) stop(); };
   const [q, setQ] = useState('');
+  const [library, setLibrary] = useState<'shared' | 'private'>('shared');
+  const [sort, setSort] = useState<'newest' | 'oldest' | 'title' | 'series'>('newest');
   useEffect(() => { setCatalog(lib.items); }, [lib.items, setCatalog]);
   const byId = (id: string) => lib.items.find(i => i.id === id);
   const fmt = (t: number) => `${Math.floor(t / 60)}:${String(Math.floor(t % 60)).padStart(2, '0')}`;
-  const shown = lib.items.filter(i => (i.title + ' ' + (i.description ?? '') + ' ' + (i.category ?? '')).toLowerCase().includes(q.toLowerCase()));
+  const shown = lib.items
+    .filter(i => library === 'shared' ? i.shared_with_space : !i.shared_with_space && i.owner_id === session?.user.id)
+    .filter(i => (i.title + ' ' + (i.description ?? '') + ' ' + (i.category ?? '')).toLowerCase().includes(q.toLowerCase()))
+    .sort((a, b) => sort === 'title' ? a.title.localeCompare(b.title) : sort === 'series' ? (a.category ?? '').localeCompare(b.category ?? '') || a.title.localeCompare(b.title) : sort === 'oldest' ? +new Date(a.created_at) - +new Date(b.created_at) : +new Date(b.created_at) - +new Date(a.created_at));
 
   return (
     <div className="space-y-10">
@@ -64,9 +69,17 @@ export default function Podcasts() {
       )}
 
       <section className="space-y-3">
-        <Input aria-label="Search podcast episodes" placeholder="Search episodes…" value={q} onChange={e => setQ(e.target.value)} className="max-w-sm" />
+        <div className="flex flex-wrap items-center gap-2" role="group" aria-label="Choose a podcast library">
+          <Button variant={library === 'shared' ? 'default' : 'outline'} aria-pressed={library === 'shared'} onClick={() => setLibrary('shared')}><Users />Shared Library</Button>
+          <Button variant={library === 'private' ? 'default' : 'outline'} aria-pressed={library === 'private'} onClick={() => setLibrary('private')}><Lock />My Private Library</Button>
+        </div>
+        <p className="text-sm text-muted-foreground">{library === 'shared' ? 'Episodes both April and Shane can open and play.' : 'Episodes only you can open. Share one whenever you are ready.'}</p>
+        <div className="flex flex-wrap gap-3">
+          <Input aria-label="Search podcast episodes" placeholder="Search episodes…" value={q} onChange={e => setQ(e.target.value)} className="max-w-sm" />
+          <label className="flex items-center gap-2 text-sm"><span>Sort by</span><select value={sort} onChange={e => setSort(e.target.value as typeof sort)} className="h-10 rounded-md border border-input bg-background px-3"><option value="newest">Newest first</option><option value="oldest">Oldest first</option><option value="title">Title A–Z</option><option value="series">Series / topic</option></select></label>
+        </div>
         {lib.loading ? <p className="text-sm text-muted-foreground">Loading…</p> :
-          shown.length === 0 ? <p className="text-sm text-muted-foreground italic">No episodes yet{session ? ' — upload the first one below.' : '.'}</p> :
+          shown.length === 0 ? <p className="text-sm text-muted-foreground italic">No {library} episodes match this search{session ? ' — create or upload one below.' : '.'}</p> :
           <ul className="grid gap-3">
             {shown.map(ep => (
               <li key={ep.id} className={`parchment p-4 flex gap-4 items-start ${current?.id === ep.id ? 'ring-1 ring-accent' : ''}`}>
@@ -78,6 +91,7 @@ export default function Podcasts() {
                   <div className="text-xs text-muted-foreground">{ep.category && <>{ep.category} · </>}{new Date(ep.created_at).toLocaleDateString()} · {fmtSize(ep.size_bytes)}{positions[ep.id] > 5 && <> · <span className="text-gold">resume at {fmt(positions[ep.id])}</span></>}</div>
                   <div className="mt-1 inline-flex items-center gap-1 text-xs text-muted-foreground">{ep.shared_with_space ? <><Users className="h-3.5 w-3.5"/>Shared with April &amp; Shane</> : <><Lock className="h-3.5 w-3.5"/>Private to you</>}</div>
                   {ep.description && <p className="text-sm mt-1">{ep.description}</p>}
+                  {Array.isArray(ep.sections) && ep.sections.length > 0 && <EpisodeSources episode={ep} />}
                 </div>
                 <div className="flex shrink-0 flex-wrap justify-end gap-1">
                   <button className="p-2 rounded hover:bg-muted" aria-label={queue.includes(ep.id) ? 'Remove from queue' : 'Add to queue'}
@@ -101,6 +115,14 @@ export default function Podcasts() {
       </section>
     </div>
   );
+}
+
+function EpisodeSources({ episode }: { episode: LibraryItem }) {
+  const sections = (episode.sections as { title?: string; text?: string; loc?: string; href?: string; n?: number }[]) ?? [];
+  const transcript = sections.find(s => s.title === 'Episode transcript');
+  const sources = sections.filter(s => typeof s.n === 'number');
+  if (!transcript && sources.length === 0) return null;
+  return <details className="mt-3 text-sm"><summary className="inline-flex cursor-pointer items-center gap-1 font-medium text-gold"><BookOpen className="h-4 w-4" />Transcript &amp; sources</summary>{transcript?.text && <p className="mt-3 whitespace-pre-wrap leading-relaxed">{transcript.text}</p>}{sources.length > 0 && <div className="mt-4"><h4 className="font-medium">Masterbook passages used</h4><ol className="mt-2 space-y-2">{sources.map((source, index) => <li key={`${source.n}-${index}`} id={`episode-${episode.id}-source-${source.n}`} className="border-l border-gold/50 pl-3"><div className="text-xs text-muted-foreground">[{source.n}] {source.title}{source.loc ? ` · ${source.loc}` : ''}</div><p className="mt-1 line-clamp-3">{source.text}</p>{source.href?.startsWith('/') && <Link to={source.href} className="mt-1 inline-block text-xs underline">Open protected source</Link>}</li>)}</ol></div>}</details>;
 }
 
 export function UploadForm({ accept, onUpload, categoryLabel = 'Series / topic' }: { accept?: string; categoryLabel?: string; onUpload: (f: File, m: { title: string; description: string; category: string; shared_with_space: boolean }) => Promise<void> }) {
