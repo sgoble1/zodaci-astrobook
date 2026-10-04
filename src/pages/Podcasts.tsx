@@ -8,24 +8,17 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { fmtSize } from '@/content/sources';
 import { toast } from 'sonner';
+import { usePlayer } from '@/components/podcast/PlayerContext';
 
 export default function Podcasts() {
   const lib = useLibrary('podcast');
   const session = useSession();
   const isAdmin = useIsAdmin(session);
-  const [current, setCurrent] = useState<LibraryItem | null>(null);
+  const { current, queue, setQueue, speed, setSpeed, positions, play, playNext, stop, setCatalog } = usePlayer();
+  const setCurrent = (v: null) => { if (v === null) stop(); };
   const [q, setQ] = useState('');
-  const [speed, setSpeed] = useState<number>(() => +(localStorage.getItem('pod:speed') ?? 1));
-  const [queue, setQueue] = useState<string[]>(() => JSON.parse(localStorage.getItem('pod:queue') ?? '[]'));
-  const [positions, setPositions] = useState<Record<string, number>>(() => JSON.parse(localStorage.getItem('pod:pos') ?? '{}'));
-  const audio = useRef<HTMLAudioElement>(null);
-  const lastSave = useRef(0);
-  useEffect(() => { localStorage.setItem('pod:queue', JSON.stringify(queue)); }, [queue]);
-  useEffect(() => { localStorage.setItem('pod:speed', String(speed)); if (audio.current) audio.current.playbackRate = speed; }, [speed]);
-  const savePos = (id: string, t: number) => setPositions(p => { const n = { ...p, [id]: t }; localStorage.setItem('pod:pos', JSON.stringify(n)); return n; });
+  useEffect(() => { setCatalog(lib.items); }, [lib.items, setCatalog]);
   const byId = (id: string) => lib.items.find(i => i.id === id);
-  const play = (ep: LibraryItem) => { setCurrent(ep); setQueue(qu => qu.filter(x => x !== ep.id)); };
-  const playNext = () => { const next = queue.map(byId).find(Boolean); if (next) play(next); };
   const fmt = (t: number) => `${Math.floor(t / 60)}:${String(Math.floor(t % 60)).padStart(2, '0')}`;
   const shown = lib.items.filter(i => (i.title + ' ' + (i.description ?? '') + ' ' + (i.category ?? '')).toLowerCase().includes(q.toLowerCase()));
 
@@ -34,18 +27,13 @@ export default function Podcasts() {
       <header>
         <div className="font-smallcaps text-xs text-gold">The Listening Room</div>
         <h1 className="text-4xl sm:text-5xl mt-2">Podcasts & Audio Readings</h1>
-        <p className="text-muted-foreground mt-3 max-w-2xl">Audio episodes about April’s chart. Press any episode to listen; download to keep a copy.</p>
+        <p className="text-muted-foreground mt-3 max-w-2xl">Audio episodes about April’s chart. Press any episode to listen; it keeps playing in the mini player while you browse other pages.</p>
       </header>
 
       {current?.url && (
-        <div className="parchment deckle p-5 sticky top-16 lg:top-4 z-20">
-          <div className="font-smallcaps text-[10px] text-gold">Now playing</div>
+        <div className="parchment deckle p-5">
+          <div className="font-smallcaps text-[10px] text-gold">Now playing · controls in the mini player</div>
           <div className="font-display text-xl mt-1">{current.title}</div>
-          <audio key={current.id} ref={audio} src={current.url} controls autoPlay className="w-full mt-3"
-            onLoadedMetadata={e => { const el = e.currentTarget; el.playbackRate = speed; const p = positions[current.id]; if (p && p < el.duration - 5) el.currentTime = p; }}
-            onTimeUpdate={e => { const t = e.currentTarget.currentTime; if (Math.abs(t - lastSave.current) > 5) { lastSave.current = t; savePos(current.id, t); } }}
-            onPause={e => savePos(current.id, e.currentTarget.currentTime)}
-            onEnded={() => { savePos(current.id, 0); playNext(); }} />
           <div className="flex flex-wrap items-center gap-2 mt-3 text-xs">
             <span className="font-smallcaps text-[10px] text-gold mr-1">Speed</span>
             {[0.75, 1, 1.25, 1.5, 1.75, 2].map(r => (
