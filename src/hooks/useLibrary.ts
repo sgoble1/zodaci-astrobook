@@ -46,7 +46,7 @@ export function useLibrary(kind: 'podcast' | 'source' | 'masterbook') {
   useEffect(() => { reload(); }, [reload]);
 
   const upload = async (file: File, meta: { title: string; description?: string; category?: string; shared_with_space?: boolean; sections?: { title: string; text: string }[] }, userId: string) => {
-    const path = `${userId}/${kind}/${Date.now()}-${file.name.replace(/[^\w.\-]+/g, '_')}`;
+    const path = `${userId}/${kind}/${Date.now()}-${file.name.replace(/[^\w.-]+/g, '_')}`;
     const up = await supabase.storage.from('library').upload(path, file, { contentType: file.type });
     if (up.error) throw up.error;
     const ins = await supabase.from('library_items').insert({

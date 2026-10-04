@@ -79,7 +79,7 @@ export default function Podcasts() {
                   <div className="mt-1 inline-flex items-center gap-1 text-xs text-muted-foreground">{ep.shared_with_space ? <><Users className="h-3.5 w-3.5"/>Shared with April &amp; Shane</> : <><Lock className="h-3.5 w-3.5"/>Private to you</>}</div>
                   {ep.description && <p className="text-sm mt-1">{ep.description}</p>}
                 </div>
-                <div className="flex gap-1">
+                <div className="flex shrink-0 flex-wrap justify-end gap-1">
                   <button className="p-2 rounded hover:bg-muted" aria-label={queue.includes(ep.id) ? 'Remove from queue' : 'Add to queue'}
                     onClick={() => setQueue(qu => qu.includes(ep.id) ? qu.filter(x => x !== ep.id) : [...qu, ep.id])}>
                     {queue.includes(ep.id) ? <ListX className="w-4 h-4" /> : <ListPlus className="w-4 h-4" />}
