@@ -27,13 +27,13 @@ export const OTHER_SYSTEMS: OtherSystem[] = [
   },
   {
     slug: 'mayan-tzolkin', name: 'Maya · Tzolk’in', tradition: 'Mesoamerica', icon: CircleDot,
-    result: 'Birth-day cycle: 7 Imix',
-    calculation: 'Using the proleptic Gregorian date and the widely used GMT 584283 correlation, the 260-day ritual cycle resolves to tone 7 with the Imix day sign.',
+    result: 'Birth-day cycle: 13 Etz’nab’',
+    calculation: 'Using the proleptic Gregorian date and the widely used GMT 584283 correlation, the 260-day ritual cycle resolves to tone 13 with the Etz’nab’ day sign.',
     themes: ['beginnings', 'instinct', 'nurture'],
     interpretation: [
-      'Imix is associated with origin, nourishment, and the untamed intelligence present before a plan is formed.',
-      'Tone seven is often read as a balancing or reflective point: experience is gathered, viewed, and given orientation.',
-      'The overlap with April’s chart is the tension between instinctive beginnings and the Virgo need to refine what begins.'
+      'Etz’nab’ is associated with flint, clarity, reflection, and the capacity to cut through confusion.',
+      'Tone thirteen is often read as completion and transition: insight becomes a threshold into the next cycle.',
+      'The overlap with April’s chart is discernment—the Virgo impulse to separate what is useful and true from what is not.'
     ], caution: 'Calendar correlations and modern interpretations vary; this is a cultural calendar lens, not a personality diagnosis.'
   },
   {
@@ -50,7 +50,7 @@ export const OTHER_SYSTEMS: OtherSystem[] = [
   {
     slug: 'nine-star-ki', name: 'Japanese Nine Star Ki', tradition: 'Japan', icon: Sparkles,
     result: '1 Water star',
-    calculation: 'For a 1990 birth after the early-February solar-year boundary: 10 − (1+9+9+0 reduced to 1) = 9 in one school; sex-based adaptation yields 1 Water for April. The app preserves the source-led Kua 1 convention.',
+    calculation: 'For a 1990 birth after the early-February solar-year boundary, the annual-star method subtracts the reduced year sum from 11 and reduces again: 11 − 1 = 10 → 1 Water.',
     themes: ['flow', 'listening', 'quiet influence'],
     interpretation: [
       'One Water often works through observation and timing rather than force, giving April a quieter complement to her Aries Moon.',

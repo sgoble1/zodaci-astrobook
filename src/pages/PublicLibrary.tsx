@@ -36,8 +36,8 @@ export function PublicLibrary() {
     <Frame>
       <h1 className="font-display text-4xl mb-2">Every source, chapter and section</h1>
       <p className="text-muted-foreground mb-6">Browse and read all {entries.length} extracted chapters from the real Masterbook documents. The site password protects this room and every chapter.</p>
-      <input value={q} onChange={e => setQ(e.target.value)} placeholder="Find a chapter or section…" className="w-full rounded-md border border-input bg-background px-3 py-2 mb-8" />
-      <nav className="flex flex-wrap gap-2 mb-8 text-xs">
+      <input aria-label="Find a chapter or section" value={q} onChange={e => setQ(e.target.value)} placeholder="Find a chapter or section…" className="w-full rounded-md border border-input bg-background px-3 py-2 mb-8" />
+      <nav className="flex flex-wrap gap-2 mb-8 text-xs" aria-label="Reading room sections">
         {groups.map(([part]) => <a key={part} href={`#${encodeURIComponent(part)}`} className="px-3 py-1 rounded-full border border-border hover:bg-muted">{part}</a>)}
       </nav>
       {groups.map(([part, list]) => (
@@ -72,10 +72,10 @@ export function PublicReader() {
       <Link to="/read" className="text-xs text-muted-foreground hover:text-foreground">← All sources</Link>
       {text === '' ? <p className="mt-6">Chapter not found.</p> : <>
         {e && <div className="text-xs text-muted-foreground mt-4">{e.part} · {e.label}</div>}
-        <article className="prose prose-invert max-w-none mt-4"><ReactMarkdown remarkPlugins={[remarkGfm]}>{text === null ? 'Loading…' : body}</ReactMarkdown></article>
+        <article className="prose prose-invert max-w-none mt-4">{text === null ? <p role="status">Loading chapter…</p> : <ReactMarkdown remarkPlugins={[remarkGfm]}>{body}</ReactMarkdown>}</article>
         <div className="flex justify-between mt-10 text-sm">
-          {prev ? <Link to={`/read/${prev.id}`} className="underline">← {prev.title}</Link> : <span />}
-          {next ? <Link to={`/read/${next.id}`} className="underline">{next.title} →</Link> : <span />}
+          {prev ? <Link to={`/read/${prev.id}`} aria-label={`Previous chapter: ${prev.title}`} className="underline">← {prev.title}</Link> : <span />}
+          {next ? <Link to={`/read/${next.id}`} aria-label={`Next chapter: ${next.title}`} className="underline">{next.title} →</Link> : <span />}
         </div>
       </>}
     </Frame>

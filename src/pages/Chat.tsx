@@ -116,7 +116,8 @@ function ChatInner() {
         </ul>
       </aside>
 
-      <section className="parchment p-4 sm:p-5 flex flex-col min-h-[60vh]">
+      <section className="parchment p-4 sm:p-5 flex flex-col min-h-[60vh]" aria-label="SmarChat conversation">
+        <div className="sr-only" aria-live="polite">{busy ? 'SmarChat is composing a response.' : `${msgs.length} messages in this conversation.`}</div>
         <div className="flex-1 space-y-5">
           {msgs.length === 0 && (
             <div className="text-center text-muted-foreground py-16">
@@ -139,7 +140,7 @@ function ChatInner() {
                   <ol className="mt-2 space-y-2">
                     {m.passages.filter(p => m.content.includes(`[${p.n}]`)).map(p => (
                       <li key={p.n} id={`c-${m.id}-${p.n}`} className="border-l-2 border-accent pl-3">
-                        <span className="text-gold font-semibold">[{p.n}]</span> <span className="font-smallcaps">{p.source}</span> · {p.loc} · <Link to={p.href} className="underline">open</Link>
+                        <span className="text-gold font-semibold">[{p.n}]</span> <span className="font-smallcaps">{p.source}</span> · {p.loc} · <Link to={p.href} aria-label={`Open cited passage ${p.n} from ${p.source}, ${p.loc}`} className="underline">open passage</Link>
                         <p className="mt-1 line-clamp-3 text-muted-foreground">{p.text}</p>
                       </li>
                     ))}
@@ -151,8 +152,9 @@ function ChatInner() {
           <div ref={endRef} />
         </div>
         <form onSubmit={e => { e.preventDefault(); send(); }} className="mt-4 flex gap-2 items-end">
-          <Textarea rows={2} value={q} onChange={e => setQ(e.target.value)} placeholder={corpus ? 'Ask a question or follow up…' : 'Loading sources…'}
+          <Textarea rows={2} aria-label="Ask SmarChat" aria-describedby="smarchat-keyboard-hint" value={q} onChange={e => setQ(e.target.value)} placeholder={corpus ? 'Ask a question or follow up…' : 'Loading sources…'}
             onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); } }} className="flex-1" />
+          <span id="smarchat-keyboard-hint" className="sr-only">Press Enter to send. Press Shift and Enter for a new line.</span>
           {busy ? <Button type="button" size="icon" variant="outline" aria-label="Stop" onClick={() => abort.current?.abort()}><Square className="w-4 h-4" /></Button>
             : <Button type="submit" size="icon" aria-label="Send" disabled={!q.trim() || !corpus}><Send className="w-4 h-4" /></Button>}
         </form>
