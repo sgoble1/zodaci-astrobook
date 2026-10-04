@@ -78,6 +78,12 @@ export function eclLon(body: Astronomy.Body, d: Date) {
   return Astronomy.Ecliptic(Astronomy.GeoVector(body, t, true)).elon;
 }
 
+/** Mean Black Moon Lilith = mean lunar apogee (Meeus ch. 47 mean perigee + 180°). */
+function meanLilith(d: Date) {
+  const T = (d.getTime() / 86400000 + 2440587.5 - 2451545) / 36525;
+  return norm(83.3532465 + 4069.0137287 * T - 0.01032 * T * T + 180);
+}
+
 /** Mean lunar node (Meeus 47.7). */
 function meanNode(d: Date) {
   const T = (d.getTime() / 86400000 + 2440587.5 - 2451545) / 36525;
@@ -92,8 +98,11 @@ function angles(d: Date, lat: number, lon: number) {
   const eps = (23.4392911 - 0.0130042 * T) * rad;
   const r = ramc * rad, phi = lat * rad;
   const mc = norm(Math.atan2(Math.sin(r), Math.cos(r) * Math.cos(eps)) / rad);
-  const asc = norm(Math.atan2(Math.cos(r), -(Math.sin(r) * Math.cos(eps) + Math.tan(phi) * Math.sin(eps))) / rad);
-  return { asc, mc };
+  const ascAt = (rr: number, ff: number) => norm(Math.atan2(Math.cos(rr), -(Math.sin(rr) * Math.cos(eps) + Math.tan(ff) * Math.sin(eps))) / rad);
+  const asc = ascAt(r, phi);
+  // Vertex: the western ecliptic–prime-vertical intersection (ascendant of the co-latitude, RAMC + 180°).
+  const vertex = ascAt(r + Math.PI, Math.PI / 2 - phi);
+  return { asc, mc, vertex };
 }
 
 function porphyry(asc: number, mc: number) {
@@ -167,8 +176,8 @@ export function computeChart(input: ChartInput): ChartResult {
   if (yr < 1900 || yr > 2100) flags.push({ level: 'approximate', topic: 'Ephemeris range', note: 'Outside 1900–2100 the ephemeris precision and historical time-zone data degrade.' });
   if (yr < 1970) flags.push({ level: 'approximate', topic: 'Historical time zone', note: 'Pre-1970 daylight-saving rules were irregular in many places; confirm the offset below.' });
 
-  let asc: number | null = null, mc: number | null = null, cusps: number[] | null = null;
-  if (timeKnown) { ({ asc, mc } = angles(utc, input.lat, input.lon)); cusps = porphyry(asc, mc); }
+  let asc: number | null = null, mc: number | null = null, cusps: number[] | null = null, vertex: number | null = null;
+  if (timeKnown) { ({ asc, mc, vertex } = angles(utc, input.lat, input.lon)); cusps = porphyry(asc, mc); }
 
   const bodies: BodyPos[] = BODIES.map(([key, name, glyph, b]) => {
     const lon = eclLon(b, utc);
@@ -186,8 +195,19 @@ export function computeChart(input: ChartInput): ChartResult {
     const f = fmtLon(lon as number);
     bodies.push({ key: key as string, name: name as string, glyph: glyph as string, lon: lon as number, sign: f.sign, signGlyph: f.signGlyph, deg: f.deg, min: f.min, house: cusps ? houseOf(lon as number, cusps) : null, retro: true, confidence: 'derived', note: 'Mean node; the true node can differ by up to ~1.5°.' });
   });
+  const point = (key: string, name: string, glyph: string, lon: number, note: string) => {
+    const f = fmtLon(lon);
+    bodies.push({ key, name, glyph, lon, sign: f.sign, signGlyph: f.signGlyph, deg: f.deg, min: f.min, house: cusps ? houseOf(lon, cusps) : null, retro: false, confidence: 'derived', note });
+  };
+  point('lilith', 'Black Moon Lilith (mean)', '⚸', meanLilith(utc), 'Mean lunar apogee; the “true”/oscillating Lilith can differ by several degrees.');
+  if (asc != null && vertex != null) {
+    const sunLon = bodies[0].lon, moonLon = bodies[1].lon;
+    const dayChart = norm(sunLon - asc) > 180; // Sun above the horizon (houses 7–12)
+    point('fortune', 'Part of Fortune', '⊕', norm(dayChart ? asc + moonLon - sunLon : asc + sunLon - moonLon), dayChart ? 'Day chart: Ascendant + Moon − Sun.' : 'Night chart: Ascendant + Sun − Moon.');
+    point('vertex', 'Vertex', 'Vx', vertex, 'Western intersection of the ecliptic and prime vertical.');
+  }
 
-  const pts = [...bodies.filter(b => b.key !== 'southNode').map(b => ({ name: b.name, lon: b.lon, key: b.key })),
+  const pts = [...bodies.filter(b => !['southNode', 'lilith', 'fortune', 'vertex'].includes(b.key)).map(b => ({ name: b.name, lon: b.lon, key: b.key })),
     ...(asc != null ? [{ name: 'Ascendant', lon: asc, key: 'asc' }, { name: 'Midheaven', lon: mc!, key: 'mc' }] : [])];
   const aspects: AspectHit[] = [];
   for (let i = 0; i < pts.length; i++) for (let j = i + 1; j < pts.length; j++) {
