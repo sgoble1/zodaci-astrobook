@@ -396,6 +396,38 @@ export type Database = {
         }
         Relationships: []
       }
+      shared_message_reactions: {
+        Row: {
+          created_at: string
+          emoji: string
+          id: string
+          message_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          emoji: string
+          id?: string
+          message_id: string
+          user_id?: string
+        }
+        Update: {
+          created_at?: string
+          emoji?: string
+          id?: string
+          message_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "shared_message_reactions_message_id_fkey"
+            columns: ["message_id"]
+            isOneToOne: false
+            referencedRelation: "shared_messages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       shared_messages: {
         Row: {
           body: string
@@ -403,6 +435,7 @@ export type Database = {
           created_at: string
           edited_at: string | null
           id: string
+          reply_to_id: string | null
           sender_id: string
         }
         Insert: {
@@ -411,6 +444,7 @@ export type Database = {
           created_at?: string
           edited_at?: string | null
           id?: string
+          reply_to_id?: string | null
           sender_id?: string
         }
         Update: {
@@ -419,6 +453,7 @@ export type Database = {
           created_at?: string
           edited_at?: string | null
           id?: string
+          reply_to_id?: string | null
           sender_id?: string
         }
         Relationships: [
@@ -427,6 +462,13 @@ export type Database = {
             columns: ["conversation_id"]
             isOneToOne: false
             referencedRelation: "shared_conversations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "shared_messages_reply_to_id_fkey"
+            columns: ["reply_to_id"]
+            isOneToOne: false
+            referencedRelation: "shared_messages"
             referencedColumns: ["id"]
           },
         ]
