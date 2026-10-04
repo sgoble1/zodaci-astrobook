@@ -4,6 +4,7 @@ import { BIRTH, PHASES, PLACEMENTS } from '@/content/april';
 import { UpdatesFeed } from '@/components/common/UpdatesFeed';
 import heroImg from '@/assets/hero-threshold.jpg';
 import { SharedChatFeed } from '@/components/shared/SharedChatFeed';
+import { Button } from '@/components/ui/button';
 
 const modules = [
   { to: '/birth-chart', title: 'The Birth Chart', desc: "The full snapshot — recorded birth data, sourced placements, independent calculations, chart shape, elemental balance and chart rulers." },
@@ -23,7 +24,7 @@ export default function Home() {
       {/* Hero */}
       <section className="grid lg:grid-cols-[1.05fr,0.95fr] gap-10 items-center gentle-fade">
         <div>
-          <div className="font-smallcaps text-[11px] text-gold mb-4">A Premium Personal Astrology Report · Rendered Live</div>
+          <div className="font-smallcaps text-[11px] text-gold mb-4">AstroBook · A Personal Chart Library</div>
           <h1 className="font-display leading-[0.95]">
             April.
             <br />
@@ -34,8 +35,8 @@ export default function Home() {
             An interactive companion to the twenty-section birth chart report, the 1990–2060 timeline, the retrograde navigation guide and the feng shui implementation manual. Every planet, house, aspect, life phase and gua is explorable. Every panel is drawn directly from the uploaded source documents.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
-            <Link to="/explore" className="px-5 py-2.5 bg-primary text-primary-foreground rounded font-smallcaps text-xs">Explore</Link>
-            <Link to="/timeline" className="px-5 py-2.5 border border-border rounded font-smallcaps text-xs hover:border-gold">Current Window · The Great Opening</Link>
+            <Button asChild><Link to="/explore" className="font-smallcaps text-xs">Explore</Link></Button>
+            <Button asChild variant="outline" className="h-auto min-h-10 whitespace-normal"><Link to="/timeline" className="font-smallcaps text-xs">Current Window · The Great Opening</Link></Button>
           </div>
           <dl className="mt-10 grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs">
             {[

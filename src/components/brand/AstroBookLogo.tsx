@@ -9,6 +9,7 @@ export function AstroBookLogo({ compact = false, className }: { compact?: boolea
         alt=""
         width={1024}
         height={1024}
+        loading="lazy"
         className={cn('shrink-0 object-contain', compact ? 'h-9 w-9' : 'h-12 w-12')}
       />
       <span className={cn('font-display font-semibold leading-none text-foreground', compact ? 'text-lg' : 'text-2xl')}>AstroBook</span>
