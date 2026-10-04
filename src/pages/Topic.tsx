@@ -36,7 +36,7 @@ export default function Topic() {
   useEffect(() => { fetch('/masterbook/index.json').then(r => r.json()).then(setIndex).catch(() => setIndex([])); }, []);
   useEffect(() => { setPassages(null); setN(12); setSum(''); setErr(null); loadCorpus().then(setPassages).catch(() => setPassages([])); }, [slug]);
 
-  const chapters = useMemo(() => topic ? index.filter(e => topic.chapters.test(e.title)) : [], [index, topic]);
+  const chapters = useMemo(() => topic ? index.filter(e => topic.chapters.test(e.title) || topic.sourceIds?.includes(e.id)) : [], [index, topic]);
   const hits = useMemo(() => topic && passages ? rank(passages, topic.query, 40) : [], [passages, topic]);
 
   const summarize = async () => {
@@ -124,7 +124,7 @@ export default function Topic() {
           </div>
         )}
       </section>
-      <SourceChapters match={topic.chapters} title={`${topic.label} — the full source chapters`} />
+      <SourceChapters match={topic.chapters} ids={topic.sourceIds} title={`${topic.label} — the full source chapters`} />
     </div>
   );
 }

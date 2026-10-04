@@ -44,7 +44,7 @@ function ReadingBody({ rel }: { rel: Relationship }) {
   const top = ia[0]; const harm = ia.filter(x => x.tone !== 'tension').slice(0, 3), tens = ia.filter(x => x.tone === 'tension').slice(0, 3);
   const in7 = ov.filter(o => [5, 7, 8].includes(o.house));
   const cSun = comp[0], cMoon = comp.find(c => c.key === 'moon')!, cVen = comp.find(c => c.key === 'venus')!;
-  const overall = sc.harmony + sc.fusion >= sc.tension ? 'more flowing than frictional' : 'charged with productive friction';
+  const overall = sc.harmony + sc.fusion >= sc.tension ? 'more flowing than effortful' : 'energised by productive differences';
   const shared = kB ? Object.values(KUA_TABLE[APRIL_KUA]).slice(0, 4).filter(d => Object.values(KUA_TABLE[kB.kua]).slice(0, 4).includes(d)) : [];
 
   return (
@@ -59,7 +59,7 @@ function ReadingBody({ rel }: { rel: Relationship }) {
       <div className="grid md:grid-cols-2 gap-6"><div><h3 className="font-display text-xl mb-2">April</h3><ChartWheel r={A} /></div><div><h3 className="font-display text-xl mb-2">{N}</h3><ChartWheel r={B} /></div></div>
 
       <Part n="I" title="The shape of the bond" level={lvl} note="Weighted from all planet-to-planet contacts.">
-        <p>Across {ia.length} contacts the connection reads as <b>{overall}</b> (harmony {sc.harmony}, fusion {sc.fusion}, tension {sc.tension}). {top && <>The single strongest link is <b>April’s {top.aName} {top.type.toLowerCase()} {N}’s {top.bName}</b> ({top.orb.toFixed(1)}°). {top.text}</>}</p>
+        <p>Across {ia.length} contacts the connection reads as <b>{overall}</b> (harmony {sc.harmony}, fusion {sc.fusion}, growth energy {sc.tension}). {top && <>The single strongest link is <b>April’s {top.aName} {top.type.toLowerCase()} {N}’s {top.bName}</b> ({top.orb.toFixed(1)}°). {top.text}</>}</p>
         <p>April is a {b(A, 'sun').sign} Sun with an {b(A, 'moon').sign} Moon and {fmtLon(A.asc!).sign} Rising; {N} is a {b(B, 'sun').sign} Sun with a {b(B, 'moon').sign} Moon{!timed && ' (uncertain without a birth time)'}{B.asc != null ? ` and ${fmtLon(B.asc).sign} Rising` : ''}. {signPair(b(A, 'sun').sign, b(B, 'sun').sign)}</p>
         <ReasoningPanel reasoning={{ inputs: [{ label: 'April', value: '1990-09-06 15:38 Geneva NY' }, { label: N, value: `${rel.birth_date} ${rel.birth_time ?? '(no time)'} ${rel.place_label}` }], steps: [{ label: 'Contacts', detail: 'Every planet/angle pair checked for conjunction, opposition, trine, square, sextile.' }, { label: 'Weighting', detail: 'Personal planets and angles count more; tighter orbs count more.' }], output: overall, confidence: lvl, caveats: ['Interpretive summary, not quoted from the source PDFs.'] }} />
       </Part>
@@ -67,7 +67,7 @@ function ReadingBody({ rel }: { rel: Relationship }) {
       <Part n="II" title="Love, attraction and emotional safety" level={lvl} note="Venus–Mars, Moon contacts and house overlays.">
         <p><b>Attraction:</b> April’s Venus in {b(A, 'venus').sign} with {N}’s Mars in {b(B, 'mars').sign} — {signPair(b(A, 'venus').sign, b(B, 'mars').sign)} {N}’s Venus in {b(B, 'venus').sign} with April’s Mars in {b(A, 'mars').sign} — {signPair(b(B, 'venus').sign, b(A, 'mars').sign)}</p>
         <p><b>Feeling at home:</b> Moons in {b(A, 'moon').sign} and {b(B, 'moon').sign} ({elementOf(b(A, 'moon').sign)} and {elementOf(b(B, 'moon').sign)}).</p>
-        {in7.length > 0 && <p><b>In April’s romance, partnership and intimacy houses:</b> {in7.map(o => `${N}’s ${o.body.name} in her ${o.house}th`).join(', ')}. These are the parts of {N} April experiences as partner-like.</p>}
+        {in7.length > 0 && <p><b>In April’s creativity, close-bond and shared-depth houses:</b> {in7.map(o => `${N}’s ${o.body.name} in her ${o.house}th`).join(', ')}. These are the parts of {N} April may experience as especially personally significant.</p>}
       </Part>
 
       <Part n="III" title="Gifts and growing edges" level={lvl} note="Strongest harmonious and challenging contacts.">

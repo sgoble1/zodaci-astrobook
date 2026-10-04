@@ -19,7 +19,7 @@ const DEFS = [
 const KEY_WEIGHT: Record<string, number> = { sun: 3, moon: 3, venus: 3, mars: 3, asc: 3, mercury: 2, jupiter: 2, saturn: 2, northNode: 2, mc: 1, uranus: 1, neptune: 1, pluto: 1 };
 const THEME: Record<string, string> = {
   sun: 'identity and vitality', moon: 'emotional needs and safety', mercury: 'talking and thinking', venus: 'affection, taste and values',
-  mars: 'desire, drive and conflict style', jupiter: 'growth, generosity and faith', saturn: 'commitment, limits and responsibility',
+  mars: 'desire, drive and response style', jupiter: 'growth, generosity and faith', saturn: 'commitment, boundaries and responsibility',
   uranus: 'surprise and freedom', neptune: 'idealism, romance and confusion', pluto: 'power, intensity and transformation',
   northNode: 'shared destiny and growth direction', asc: 'first impression and physical presence', mc: 'public life and goals',
 };
@@ -41,11 +41,11 @@ function describe(a: Pt, b: Pt, d: typeof DEFS[number], aLabel: string, bLabel: 
     'moon-sun': 'A classic bond marker: one person’s core self meets the other’s emotional needs.',
     'mars-venus': 'Classic attraction signature: desire meets affection.',
     'moon-moon': 'Emotional rhythms compared directly: how easily you feel at home together.',
-    'saturn-sun': 'A commitment signature: can feel stabilising or restrictive.', 'moon-saturn': 'Loyalty and duty around feelings; can feel cool until trust is built.',
+    'saturn-sun': 'A commitment signature: stabilising when structure leaves room for both people.', 'moon-saturn': 'Loyalty and duty around feelings; warmth grows through patience and trust.',
     'northNode-sun': 'Often read as a fated or purposeful meeting.', 'moon-northNode': 'Often read as a fated emotional connection.',
     'asc-sun': 'Strong recognition — one person “sees” the other immediately.', 'pluto-venus': 'Magnetic, intense attraction with power themes.',
   };
-  const tone = d.tone === 'harmony' ? 'flows easily between' : d.tone === 'tension' ? 'creates friction and growth between' : 'fuses';
+  const tone = d.tone === 'harmony' ? 'flows easily between' : d.tone === 'tension' ? 'creates a productive growth edge between' : 'fuses';
   return `${aLabel}’s ${a.name} ${d.type.toLowerCase()} ${bLabel}’s ${b.name}: ${tone} ${ta} and ${tb}. ${special[pair] ?? ''}`.trim();
 }
 
@@ -100,8 +100,8 @@ export function animalRelation(a: string, b: string) {
   if (x === y) return { label: 'Same sign', good: true, text: 'Shared temperament; easy recognition, but the same blind spots.' };
   if ((x + y) % 12 === 1) return { label: 'Six Harmony (secret friend)', good: true, text: 'One of the six most harmonious pairings: quiet, natural alliance.' };
   if (x % 4 === y % 4) return { label: 'Trine (San He)', good: true, text: 'Same triangle of affinity: shared outlook and easy teamwork.' };
-  if (Math.abs(x - y) === 6) return { label: 'Clash (Liu Chong)', good: false, text: 'Opposite branches: strong attraction and friction; needs conscious respect for differences.' };
-  if ((x + y) % 12 === 7) return { label: 'Harm (Liu Hai)', good: false, text: 'A “harm” pairing: small misunderstandings can accumulate; communication matters.' };
+  if (Math.abs(x - y) === 6) return { label: 'Dynamic polarity (Liu Chong)', good: false, text: 'Opposite branches create energy and contrast; conscious respect helps turn differences into complementary strengths.' };
+  if ((x + y) % 12 === 7) return { label: 'Sensitivity pairing (Liu Hai)', good: false, text: 'Small misunderstandings can accumulate, making early clarification and kind communication especially valuable.' };
   return { label: 'Neutral', good: null, text: 'No special classical relationship: compatibility rests on the rest of the charts.' };
 }
 const GEN: Record<string, string> = { Wood: 'Fire', Fire: 'Earth', Earth: 'Metal', Metal: 'Water', Water: 'Wood' };
@@ -110,8 +110,8 @@ export function dayMasterRelation(a: string, b: string, aLabel: string, bLabel: 
   if (a === b) return `Both Day Masters are ${a}: peers and companions (比劫) — understanding, sometimes competitive.`;
   if (GEN[a] === b) return `${aLabel}’s ${a} nourishes ${bLabel}’s ${b} (generating cycle): ${aLabel} tends to support and feed ${bLabel}.`;
   if (GEN[b] === a) return `${bLabel}’s ${b} nourishes ${aLabel}’s ${a} (generating cycle): ${bLabel} tends to support and feed ${aLabel}.`;
-  if (CTRL[a] === b) return `${aLabel}’s ${a} controls ${bLabel}’s ${b} (controlling cycle): ${aLabel} shapes or restrains ${bLabel}; can read as attraction or pressure.`;
-  return `${bLabel}’s ${b} controls ${aLabel}’s ${a} (controlling cycle): ${bLabel} shapes or restrains ${aLabel}; can read as attraction or pressure.`;
+  if (CTRL[a] === b) return `${aLabel}’s ${a} guides ${bLabel}’s ${b} in the controlling cycle: ${aLabel} can bring focus and shape, with room needed for ${bLabel}’s autonomy.`;
+  return `${bLabel}’s ${b} guides ${aLabel}’s ${a} in the controlling cycle: ${bLabel} can bring focus and shape, with room needed for ${aLabel}’s autonomy.`;
 }
 
 // ---- Numerology ----

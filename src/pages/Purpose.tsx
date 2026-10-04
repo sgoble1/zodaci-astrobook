@@ -41,6 +41,7 @@ export default function Purpose() {
           A Personal Year that matches the Life Path is rare; when it does the year's frequency amplifies to its maximum possible expression. For a seven this means an interior year of research, spiritual deepening, solitude as strength, and the accumulation of wisdom that no outward search could ever produce. Layered atop the four simultaneous astrological activations of 2026, the timing is not coincidental. It is the schedule she was born to keep.
         </p>
       </section>
+      <SourceChapters match={/purpose|mission|north node|south node|past li|karm|gene keys|human design|vocation|calling/i} ids={['v2-01', 'v2-10', 'v2-19']} title="Purpose and mission — complete source chapters" />
     </div>
   );
 }
@@ -50,7 +51,6 @@ function BigNumber({ label, value, accent = false }: { label: string; value: str
     <div className={`p-6 border rounded text-center ${accent ? 'border-gold/60 bg-gold/5' : 'border-border bg-card/60'}`}>
       <div className="font-smallcaps text-[10px] text-muted-foreground">{label}</div>
       <div className="font-display text-7xl text-gold leading-none mt-2">{value}</div>
-      <SourceChapters match={/purpose|mission|north node|south node|past li|karm|gene keys|human design|vocation|calling/i} />
     </div>
   );
 }

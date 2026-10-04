@@ -3,6 +3,7 @@ import { VOL2_SECTIONS, VOL2_SOURCE, type Vol2Entry } from '@/content/volume2';
 import { SourceRefPanel } from '@/components/common/SourceRefPanel';
 import { CopyLinkButton } from '@/components/common/CopyLinkButton';
 import { useDetailDrawer } from '@/components/common/DetailDrawer';
+import { SourceChapters } from '@/components/common/SourceChapters';
 
 export default function Volume2() {
   const drawer = useDetailDrawer();
@@ -67,6 +68,7 @@ export default function Volume2() {
       })}
 
       <SourceRefPanel source={VOL2_SOURCE} />
+      <SourceChapters ids={Array.from({ length: 19 }, (_, index) => `v2-${String(index + 1).padStart(2, '0')}`)} title="Volume II — complete extracted text" />
     </article>
   );
 }

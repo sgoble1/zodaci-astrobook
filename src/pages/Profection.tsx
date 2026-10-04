@@ -127,7 +127,7 @@ export default function Profection() {
           ))}
         </div>
       </section>
-      <SourceChapters match={/profection|solar return|progress|solar arc/i} />
+      <SourceChapters match={/profection|solar return|progress|solar arc/i} ids={['v2-04', 'v2-05', 'v2-06', 'v2-18']} title="Profections, progressions, returns and the year ahead" />
     </div>
   );
 }

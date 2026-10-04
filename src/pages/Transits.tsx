@@ -132,7 +132,7 @@ export default function Transits() {
       </section>
 
       <SourceRefPanel source={TRANSITS_SOURCE} />
-      <SourceChapters match={/transit|eclipse|jupiter return|saturn return|convergence/i} />
+      <SourceChapters match={/transit|eclipse|jupiter return|saturn return|convergence/i} ids={['v2-05', 'v2-06', 'v2-18']} title="Transits and forecasts — complete source chapters" />
     </article>
   );
 }
