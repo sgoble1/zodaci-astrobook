@@ -20,3 +20,16 @@
 - [x] Public Masterbook index page (chapters/sections, no password).
 - [x] Shared reading space: upload + annotate documents together.
 - [x] Second Shane email as admin + Shane identity; Create a Topic & Page tool.
+
+## Current batch
+- [ ] Reading Together notes searchable in Ask the Sources / SmarChat.
+- [ ] Keyboard + screen-reader fixes: Wonderings, Reading Room, private chat, Ask, shared space forms.
+- [ ] Masterbook Contents chapters show full text after the password (unlock in place).
+- [ ] Full-document page in the Reading Room (whole document text).
+- [ ] Workbook menu section: hub, guided modules with AI feedback, daily check-in, thought reframe, journal & patterns.
+- [ ] Therapy companion chat (separate sessions, private per account, chart-aware).
+- [ ] Move "Create a Topic & Page" to bottom of Begin.
+- [ ] Create-a-page: AI or write-it-myself, save button, edit later.
+- [ ] Page writer cites real passages and shows them on the page.
+- [ ] After create: menu refreshes, scrolls to new item, glowing animated highlight.
+- [ ] Second Shane email allowed in shared-space screens; unread badges in menu.
