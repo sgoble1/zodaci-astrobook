@@ -1,6 +1,6 @@
 
 - Masterbook and extracted-source text is bundled only with the protected-content function and fetched through short-lived password unlock tokens; never restore public static copies.
-- Podcasts and added source files use one library_items table + private "library" storage bucket with signed URLs; public read, owner-only write (workspace blocks public buckets).
+- Podcasts and added source files use one library_items table + private "library" storage bucket with signed URLs; generated and uploaded podcasts are shared only with approved shared-space members and may include private cover art.
 - Ask the Sources: client-side BM25 retrieval over the protected content loader, with top passages sent to the ask-sources function for a streamed cited answer.
 - Podcast queue, speed and resume positions are stored per device in localStorage.
 
