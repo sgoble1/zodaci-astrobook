@@ -64,3 +64,5 @@
 - [ ] Add a plain-language summary of all timing and retrograde sections while preserving the full source list.
 - [ ] Add a transparent misty light-grey highlight to the full Timing & Cycles menu group.
 - [ ] Verify the updated menu and overview on desktop and mobile.
+- [ ] Add an Explore & Discover page with interactive categories linking to related content.
+- [ ] Add Explore & Discover to the menu and verify its links on desktop and mobile.
