@@ -106,3 +106,5 @@
 - [ ] Add deeper April-specific interpretations without removing calculations or plain-language explanations.
 - [ ] Add readable reference links and clearly distinguish history, modern practice, and symbolic reflection.
 - [ ] Verify the expanded pages on mobile and desktop, including links and build quality.
+- [ ] Remove all specific ancestry and family-history claims from April-focused content; keep Family & Home birth-chart-specific.
+- [ ] Strengthen the private chats with complete stored conversation context and broad, accurate April-chart expertise across astrology, psychology, therapy, life management, and social coaching.
