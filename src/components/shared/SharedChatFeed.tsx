@@ -46,7 +46,7 @@ export function SharedChatFeed() {
   const send = async () => {
     if (!body.trim() || !conversationId) return;
     const value = body.trim(); setBody('');
-    const { error } = await supabase.from('shared_messages').insert({ conversation_id: conversationId, body: value });
+    const { error } = await supabase.from('shared_messages').insert({ conversation_id: conversationId, body: value, sender_id: session.user.id });
     if (error) setBody(value);
   };
   return (
