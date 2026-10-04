@@ -581,6 +581,7 @@ export type Database = {
           created_at: string
           file_name: string
           file_path: string
+          folder_id: string | null
           id: string
           mime_type: string | null
           size_bytes: number | null
@@ -591,6 +592,7 @@ export type Database = {
           created_at?: string
           file_name: string
           file_path: string
+          folder_id?: string | null
           id?: string
           mime_type?: string | null
           size_bytes?: number | null
@@ -601,10 +603,40 @@ export type Database = {
           created_at?: string
           file_name?: string
           file_path?: string
+          folder_id?: string | null
           id?: string
           mime_type?: string | null
           size_bytes?: number | null
           uploaded_by?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "shared_media_folder_id_fkey"
+            columns: ["folder_id"]
+            isOneToOne: false
+            referencedRelation: "shared_media_folders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      shared_media_folders: {
+        Row: {
+          created_at: string
+          created_by: string
+          id: string
+          name: string
+        }
+        Insert: {
+          created_at?: string
+          created_by: string
+          id?: string
+          name: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          id?: string
+          name?: string
         }
         Relationships: []
       }
