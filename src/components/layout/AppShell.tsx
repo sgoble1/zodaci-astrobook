@@ -16,6 +16,7 @@ import { useCustomPages, NEW_PAGE_HIGHLIGHT_KEY } from '@/hooks/useCustomPages';
 import { useSharedBadges } from '@/hooks/useSharedBadges';
 import { Button } from '@/components/ui/button';
 import { NAV_GROUPS, RELATIONSHIPS_GROUP, SHARED_GROUP, type NavGroup, type NavItem } from '@/content/navigation';
+import { AstroBookLogo } from '@/components/brand/AstroBookLogo';
 
 const GROUP_COLORS = ['--primary', '--oxblood', '--accent', '--candle', '--gold-bright', '--starlight', '--gold', '--glow-violet'];
 
@@ -24,8 +25,15 @@ export function AppShell() {
   const [open, setOpen] = useState(false);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const mobileMenuRef = useRef<HTMLDivElement>(null);
+  const openedRef = useRef(false);
 
   useEffect(() => { setOpen(false); window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior }); }, [location.pathname]);
+  useEffect(() => {
+    document.body.style.overflow = open ? 'hidden' : '';
+    if (!open && openedRef.current) menuButtonRef.current?.focus();
+    openedRef.current = open;
+    return () => { document.body.style.overflow = ''; };
+  }, [open]);
   useEffect(() => {
     if (!open) return;
     const panel = mobileMenuRef.current;
@@ -57,21 +65,21 @@ export function AppShell() {
       </aside>
 
       {/* Mobile top bar */}
-      <div className="lg:hidden fixed top-0 inset-x-0 z-40 flex items-center justify-between px-4 py-3 border-b border-border bg-background/90 backdrop-blur">
-        <div className="font-display text-lg">April · Astrological Compendium</div>
+      <div className="lg:hidden fixed top-0 inset-x-0 z-50 flex min-h-[64px] items-center justify-between gap-2 border-b border-border bg-background/95 px-3 py-2 backdrop-blur-xl pt-[max(0.5rem,env(safe-area-inset-top))]">
+        <NavLink to="/" className="min-w-0 rounded focus-visible:outline-none"><AstroBookLogo compact /></NavLink>
         <div className="flex items-center gap-2"><AccountButton compact /><Button ref={menuButtonRef} type="button" size="icon" variant="ghost" onClick={() => setOpen(v => !v)} aria-label={open ? 'Close menu' : 'Open menu'} aria-expanded={open} aria-controls="mobile-menu" className="min-h-11 min-w-11">
           {open ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
         </Button></div>
       </div>
       {open && (
-        <div ref={mobileMenuRef} id="mobile-menu" role="dialog" aria-modal="true" aria-label="Site menu" className="lg:hidden fixed inset-0 top-[57px] z-30 bg-background overflow-y-auto">
-          <SidebarInner />
+        <div ref={mobileMenuRef} id="mobile-menu" role="dialog" aria-modal="true" aria-label="AstroBook menu" className="lg:hidden fixed inset-x-0 bottom-0 top-[64px] z-40 overflow-y-auto overscroll-contain bg-background pb-[env(safe-area-inset-bottom)]">
+          <SidebarInner mobile onNavigate={() => setOpen(false)} />
         </div>
       )}
 
       {/* Main */}
-      <main id="main-content" tabIndex={-1} className="flex-1 min-w-0 lg:pt-0 pt-[57px] relative z-10 outline-none">
-        <div className="mx-auto max-w-5xl px-5 sm:px-8 py-10 lg:py-14">
+      <main id="main-content" tabIndex={-1} className="flex-1 min-w-0 lg:pt-0 pt-[64px] relative z-10 outline-none">
+        <div className="mx-auto max-w-5xl px-4 sm:px-8 py-8 sm:py-10 lg:py-14">
           <motion.div key={location.pathname} initial={{ opacity: 0, y: 24, filter: 'blur(6px)' }} animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }} transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}>
             <PageErrorBoundary key={location.pathname}><Outlet /></PageErrorBoundary>
           </motion.div>
@@ -91,7 +99,7 @@ export function AppShell() {
   );
 }
 
-function SidebarInner() {
+function SidebarInner({ mobile = false, onNavigate }: { mobile?: boolean; onNavigate?: () => void }) {
   const location = useLocation();
   const { items: rels } = useRelationships();
   const custom = useCustomPages();
@@ -117,9 +125,9 @@ function SidebarInner() {
   const baseGroups: NavGroup[] = [...NAV_GROUPS.slice(0, 2), shared, relationships, ...NAV_GROUPS.slice(2)];
   const allGroups = baseGroups.map(g => ({ ...g, items: [...g.items, ...custom.filter(c => c.menu_group === g.title).map(c => ({ to: `/p/${c.id}`, label: c.status === 'generating' ? `${c.title} · writing…` : c.title, created: true } as NavItem))] }));
   return (
-    <div className="p-6 flex flex-col gap-6 h-full overflow-y-auto">
+    <div className={`flex min-h-full flex-col gap-6 overflow-x-hidden ${mobile ? 'px-4 pb-8 pt-4' : 'h-full overflow-y-auto p-6'}`}>
       <div>
-        <div className="flex items-center justify-between gap-2"><div className="font-smallcaps text-[10px] text-gold">Companion Document</div><AccountButton /></div>
+        <div className="flex items-center justify-between gap-2"><AstroBookLogo />{!mobile && <AccountButton />}</div>
         <div className="font-display text-2xl leading-tight mt-1">April</div>
         <div className="text-xs text-muted-foreground mt-1">
           {BIRTH.date} · {BIRTH.time}<br />{BIRTH.place}
@@ -140,9 +148,9 @@ function SidebarInner() {
             <div className={`font-smallcaps text-[10px] px-3 py-1 mb-1 rounded border-l-2 font-semibold tracking-wider ${g.title === "April's Workbook" ? 'nav-workbook-title' : ''}`} style={g.title === "April's Workbook" ? undefined : { color: `hsl(var(${GROUP_COLORS[gi % GROUP_COLORS.length]}))`, borderColor: `hsl(var(${GROUP_COLORS[gi % GROUP_COLORS.length]}))`, background: `hsl(var(${GROUP_COLORS[gi % GROUP_COLORS.length]}) / 0.1)` }}>{g.title}</div>
             {g.items.map(n => (
               <NavLink
-                key={n.to} to={n.to} data-nav-to={n.to} end={n.to === '/' || n.to === '/masterbook' || n.to === '/relationships' || n.to === '/workbook' || n.to === '/shared'}
+                key={n.to} to={n.to} onClick={onNavigate} data-nav-to={n.to} end={n.to === '/' || n.to === '/masterbook' || n.to === '/relationships' || n.to === '/workbook' || n.to === '/shared'}
                 className={({ isActive }) =>
-                  `flex items-center justify-between gap-2 px-3 py-1.5 rounded border border-transparent transition-colors ${
+                  `flex min-h-11 items-center justify-between gap-2 rounded border border-transparent px-3 py-2 transition-colors ${
                     isActive ? 'bg-accent/15 border-accent/30 text-foreground' : 'text-muted-foreground hover:text-foreground hover:bg-muted/60'
                   }${n.created ? ' bg-created/20 text-foreground' : ''}${n.to === '/create' ? ' nav-create-glow' : ''}${glowId && n.to === `/p/${glowId}` ? ' nav-new-glow' : ''}`
                 }
@@ -159,9 +167,9 @@ function SidebarInner() {
                   <div className="ml-3 flex flex-col gap-0.5 border-l border-border/70 pl-2">
                     {submenu.items.map(n => (
                       <NavLink
-                        key={n.to} to={n.to} end={n.to === '/feng-shui'}
+                        key={n.to} to={n.to} onClick={onNavigate} end={n.to === '/feng-shui'}
                         className={({ isActive }) =>
-                          `rounded border border-transparent px-3 py-1.5 text-xs transition-colors ${
+                          `flex min-h-11 items-center rounded border border-transparent px-3 py-2 text-xs transition-colors ${
                             isActive ? 'bg-accent/15 border-accent/30 text-foreground' : 'text-muted-foreground hover:text-foreground hover:bg-muted/60'
                           }`
                         }

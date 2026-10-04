@@ -19,10 +19,12 @@ const fmt = (v: string) => new Intl.DateTimeFormat(undefined, { month: 'short', 
 function WorkbookNav() {
   const links: [string, string][] = [['/workbook', 'Overview'], ['/workbook/social-integration', 'Social Integration'], ['/workbook/check-in', 'Daily Check-in'], ['/workbook/reframe', 'Thought Reframe'], ['/workbook/journal', 'Journal & Patterns'], ['/workbook/companion', 'The Oracle Within']];
   return (
-    <nav aria-label="Workbook sections" className="flex flex-wrap gap-2">
-      {links.map(([to, label]) => (
-        <NavLink key={to} to={to} end={to === '/workbook'} className={({ isActive }) => `min-h-10 rounded-full border px-4 py-2 text-sm transition-colors ${isActive ? 'border-primary bg-primary text-primary-foreground' : 'border-border hover:bg-muted'}`}>{label}</NavLink>
-      ))}
+    <nav aria-label="Workbook sections" className="-mx-4 overflow-x-auto px-4 pb-2 sm:mx-0 sm:px-0">
+      <div className="flex w-max gap-2 sm:w-auto sm:flex-wrap">
+        {links.map(([to, label]) => (
+          <NavLink key={to} to={to} end={to === '/workbook'} className={({ isActive }) => `flex min-h-11 items-center whitespace-nowrap rounded-full border px-4 py-2 text-sm transition-colors ${isActive ? 'border-primary bg-primary text-primary-foreground' : 'border-border hover:bg-muted'}`}>{label}</NavLink>
+        ))}
+      </div>
     </nav>
   );
 }
@@ -32,7 +34,7 @@ function Shell({ eyebrow, title, intro, children }: { eyebrow: string; title: st
     <div className="space-y-6">
       <header className="space-y-2">
         <div className="font-smallcaps text-xs text-gold">{eyebrow}</div>
-        <h1 className="text-4xl sm:text-5xl">{title}</h1>
+        <h1 className="break-words text-4xl sm:text-5xl">{title}</h1>
         <p className="max-w-2xl text-muted-foreground">{intro}</p>
         <p role="note" className="max-w-2xl text-sm text-accent">🔒 Private to your account — your answers, check-ins and journal are never shared with Shane or anyone else.</p>
       </header>
@@ -102,9 +104,9 @@ function QuestionCard({ userId, module, question, existing, index }: { userId: s
           <label htmlFor={id} className="block text-lg leading-snug">{question.q}</label>
           <p className="text-xs text-muted-foreground"><span className="text-gold">Why for you:</span> {question.why} <span className="ml-1 rounded bg-muted px-1.5 py-0.5">{question.lens}</span></p>
           <Textarea id={id} rows={5} value={answer} onChange={e => setAnswer(e.target.value)} placeholder="Write freely — there are no wrong answers. Only you can see this." />
-          <div className="flex flex-wrap items-center gap-2">
-            <Button variant="outline" onClick={() => run(false)} disabled={!answer.trim() || !!busy}>{busy === 'save' ? <Loader2 className="animate-spin" /> : null}Save answer</Button>
-            <Button onClick={() => run(true)} disabled={!answer.trim() || !!busy}>{busy === 'feedback' ? <Loader2 className="animate-spin" /> : <Feather />}{busy === 'feedback' ? 'Reading your chart…' : 'Save & get guidance'}</Button>
+          <div className="flex flex-col items-stretch gap-2 sm:flex-row sm:flex-wrap sm:items-center">
+            <Button className="h-auto min-h-11 whitespace-normal" variant="outline" onClick={() => run(false)} disabled={!answer.trim() || !!busy}>{busy === 'save' ? <Loader2 className="animate-spin" /> : null}Save answer</Button>
+            <Button className="h-auto min-h-11 whitespace-normal" onClick={() => run(true)} disabled={!answer.trim() || !!busy}>{busy === 'feedback' ? <Loader2 className="animate-spin" /> : <Feather />}{busy === 'feedback' ? 'Reading your chart…' : 'Save & get guidance'}</Button>
             {existing && <span className="text-xs text-muted-foreground">Last saved {fmt(existing.updated_at)}</span>}
           </div>
           <div aria-live="polite">{existing && <Feedback entry={existing} prefix={`c-${question.key}`} />}</div>
