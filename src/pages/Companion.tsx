@@ -129,7 +129,7 @@ function SessionChat({ sessionId, initial }: { sessionId: string; initial: UIMes
       };
     },
   }), [sessionId]);
-  const { messages, sendMessage, status, stop } = useChat({
+  const { messages, sendMessage, status, stop, error: chatError } = useChat({
     id: sessionId, messages: initial, transport,
     onError: (e) => {
       const msg = friendlyChatError(e);
@@ -184,7 +184,8 @@ function SessionChat({ sessionId, initial }: { sessionId: string; initial: UIMes
           <ol className="mt-2 space-y-1">{cited.map(p => <li key={p.n}><span className="text-gold">[{p.n}]</span> {p.source} · {p.loc} — <Link className="underline" to={p.href}>open</Link></li>)}</ol>
         </details>
       )}
-      <div className="border-t border-border p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
+    <div className="border-t border-border p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
+      {chatError && <p role="alert" className="mb-2 text-sm text-destructive">{friendlyChatError(chatError)}</p>}
         <PromptInput onSubmit={({ text }) => send(text)}>
           <PromptInputTextarea aria-label="Message The Oracle Within" placeholder="Tell me what's on your mind…" value={draft} onChange={event => setDraft(event.target.value)} />
           <PromptInputFooter className="justify-end">

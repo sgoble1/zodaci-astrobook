@@ -105,7 +105,7 @@ function SocialSessionChat({ sessionId, initial }: { sessionId: string; initial:
       return { headers, body: { sessionId, messages, passages: passages.current.map(({ href: _href, ...passage }) => passage) } };
     },
   }), [sessionId]);
-  const { messages, sendMessage, status, stop } = useChat({ id: sessionId, messages: initial, transport, onError: error => toast.error(friendlyChatError(error) || 'The Social Counselor could not respond.'), onFinish: () => window.dispatchEvent(new Event(SESSIONS_CHANGED)) });
+  const { messages, sendMessage, status, stop, error: chatError } = useChat({ id: sessionId, messages: initial, transport, onError: error => toast.error(friendlyChatError(error) || 'The Social Counselor could not respond.'), onFinish: () => window.dispatchEvent(new Event(SESSIONS_CHANGED)) });
   const busy = status === 'submitted' || status === 'streaming';
   useEffect(() => { box.current?.querySelector('textarea')?.focus(); }, []);
   useEffect(() => { if (status === 'ready' || status === 'error') box.current?.querySelector('textarea')?.focus(); }, [status]);
@@ -125,6 +125,6 @@ function SocialSessionChat({ sessionId, initial }: { sessionId: string; initial:
       </ConversationContent><ConversationScrollButton aria-label="Scroll to newest message" />
     </Conversation>
     {cited.length > 0 && <details className="border-t border-border px-4 py-2 text-xs"><summary className="cursor-pointer text-muted-foreground">Sources considered in this reply ({cited.length})</summary><ol className="mt-2 space-y-1">{cited.map(passage => <li key={passage.n}><span className="text-gold">[{passage.n}]</span> {passage.source} · {passage.loc} — <Link className="underline" to={passage.href}>open</Link></li>)}</ol></details>}
-    <div className="border-t border-border p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]"><PromptInput onSubmit={({ text }) => send(text)}><PromptInputTextarea aria-label="Message the Social Counselor" placeholder="Describe the social situation…" value={draft} onChange={event => setDraft(event.target.value)} /><PromptInputFooter className="justify-end"><PromptInputSubmit status={status} onStop={stop} /></PromptInputFooter></PromptInput></div>
+    <div className="border-t border-border p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">{chatError && <p role="alert" className="mb-2 text-sm text-destructive">{friendlyChatError(chatError)}</p>}<PromptInput onSubmit={({ text }) => send(text)}><PromptInputTextarea aria-label="Message the Social Counselor" placeholder="Describe the social situation…" value={draft} onChange={event => setDraft(event.target.value)} /><PromptInputFooter className="justify-end"><PromptInputSubmit status={status} onStop={stop} /></PromptInputFooter></PromptInput></div>
   </section>;
 }
