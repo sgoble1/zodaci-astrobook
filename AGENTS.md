@@ -1,3 +1,6 @@
+# Navigation discovery
+- Keep Explore & Discover as a curated link hub over existing pages rather than duplicating interpretation content, so updates remain consistent.
+
 
 - Masterbook and extracted-source text is bundled only with the protected-content function and fetched through short-lived password unlock tokens; never restore public static copies.
 - Podcasts and added source files use one library_items table + private "library" storage bucket with signed URLs; podcast owners choose private or approved shared-space visibility and may change it later.

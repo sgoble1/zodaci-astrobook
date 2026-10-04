@@ -25,7 +25,7 @@ type NavSubmenu = { label: string; items: NavItem[] };
 type NavGroup = { title: string; items: NavItem[]; submenus?: NavSubmenu[] };
 
 const groups: NavGroup[] = [
-  { title: 'Begin', items: [{ to: '/', label: 'Home' }, { to: '/dashboard', label: 'My Dashboard & Bookmarks' }, { to: '/ask', label: 'Ask the Sources' }, { to: '/chat', label: 'SmarChat' }, { to: '/reading', label: 'The Complete Reading' }, { to: '/chart-elements', label: 'Chart Elements & Meanings' }, { to: '/create', label: '+ Create a Topic & Page' }] },
+  { title: 'Begin', items: [{ to: '/', label: 'Home' }, { to: '/explore', label: 'Explore & Discover' }, { to: '/dashboard', label: 'My Dashboard & Bookmarks' }, { to: '/ask', label: 'Ask the Sources' }, { to: '/chat', label: 'SmarChat' }, { to: '/reading', label: 'The Complete Reading' }, { to: '/chart-elements', label: 'Chart Elements & Meanings' }, { to: '/create', label: '+ Create a Topic & Page' }] },
   { title: "April's Workbook", items: [{ to: '/workbook', label: 'Workbook Overview' }, { to: '/workbook/companion', label: 'The Oracle Within · Therapy Chat' }, { to: '/workbook/check-in', label: 'Daily Check-in' }, { to: '/workbook/reframe', label: 'Thought Reframe' }, { to: '/workbook/journal', label: 'Journal & Patterns' }, ...WORKBOOK_MODULES.map(m => ({ to: `/workbook/module/${m.slug}`, label: `↳ ${m.title}` }))] },
   { title: 'Sources & Documents', items: [{ to: '/masterbook', label: 'The Masterbook · Full Text' }, { to: '/masterbook/index', label: 'Document Index' }, { to: '/contents', label: 'Masterbook Contents (open)' }, { to: '/read', label: 'Sources Reading Room' }, { to: '/sources', label: 'Source Files' }, { to: '/masterbook/upload', label: 'Upload to the Masterbook' }, { to: '/admin', label: 'My Workspace · Upload & Edit' }] },
   { title: 'Themes & Topics', items: [{ to: '/topics', label: 'All Themes' }, ...TOPICS.map(t => ({ to: `/topics/${t.slug}`, label: t.label }))] },
@@ -33,8 +33,9 @@ const groups: NavGroup[] = [
     { to: '/birth-chart', label: 'Birth Chart' }, { to: '/chart-calculator', label: 'Chart Calculator' }, { to: '/planets', label: 'Planets' }, { to: '/houses', label: 'Houses' },
     { to: '/aspects', label: 'Aspects' }, { to: '/star-map', label: 'Fixed-Star Sky Map' }, { to: '/compendium', label: 'Compendium' }] },
   { title: 'Timing & Cycles', items: [
+    { to: '/guides/timeline-retrogrades', label: 'Timeline Overview' },
     { to: '/timeline', label: 'Timeline · 1990–2060' }, { to: '/transits', label: 'Transits · 2026–2040' },
-    { to: '/profection', label: 'Profection · Age 35' }, { to: '/retrogrades', label: 'Retrogrades' }, { to: '/guides/timeline-retrogrades', label: 'Guide · Timeline & Retrogrades' }] },
+    { to: '/profection', label: 'Profection · Age 35' }, { to: '/retrogrades', label: 'Retrogrades' }] },
   { title: 'Other Systems', items: [
     { to: '/other-systems', label: 'Other Systems · Dashboard' },
     { to: '/numerology', label: 'Numerology · Pinnacles' }, { to: '/purpose', label: 'Purpose & Numerology' },
@@ -165,7 +166,7 @@ function SidebarInner() {
 
       <nav ref={navRef} aria-label="Site menu" className="flex flex-col gap-4 text-sm">
         {allGroups.map((g, gi) => (
-          <div key={g.title} className={`flex flex-col gap-0.5 ${g.title === "April's Workbook" ? 'nav-workbook-section' : ''}${g.title === 'Themes & Topics' ? ' nav-topics-section' : ''}`}>
+          <div key={g.title} className={`flex flex-col gap-0.5 ${g.title === "April's Workbook" ? 'nav-workbook-section' : ''}${g.title === 'Themes & Topics' ? ' nav-topics-section' : ''}${g.title === 'Timing & Cycles' ? ' nav-timing-section' : ''}`}>
             <div className={`font-smallcaps text-[10px] px-3 py-1 mb-1 rounded border-l-2 font-semibold tracking-wider ${g.title === "April's Workbook" ? 'nav-workbook-title' : ''}`} style={g.title === "April's Workbook" ? undefined : { color: `hsl(var(${GROUP_COLORS[gi % GROUP_COLORS.length]}))`, borderColor: `hsl(var(${GROUP_COLORS[gi % GROUP_COLORS.length]}))`, background: `hsl(var(${GROUP_COLORS[gi % GROUP_COLORS.length]}) / 0.1)` }}>{g.title}</div>
             {g.items.map(n => (
               <NavLink
