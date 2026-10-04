@@ -33,7 +33,7 @@ export default function MasterbookSources() {
     const mbSrc = BUILT_IN_SOURCES.find(s => /Masterbook/.test(s.fileName));
     out.push({
       key: 'masterbook', title: mbSrc?.title ?? 'Masterbook', kind: 'DOCX', size: fmtSize(mbSrc?.size), open: mbSrc?.url, read: '/masterbook', ask: '/ask?doc=masterbook',
-      sections: mb.filter(e => !e.id.startsWith('c-')).map(e => ({ title: e.title, meta: `${e.part} · ${e.label}`, to: `/masterbook/${e.id}` })),
+      sections: mb.filter(e => !/^(c|v2|cmp)-/.test(e.id)).map(e => ({ title: e.title, meta: `${e.part} · ${e.label}`, to: `/masterbook/${e.id}` })),
     });
     lib.forEach(d => {
       const src = BUILT_IN_SOURCES.find(s => s.fileName === d.fileName);

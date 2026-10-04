@@ -74,7 +74,7 @@ export function CommandPalette() {
     (async () => {
       const mb = await fetch('/masterbook/index.json').then(r => r.json()) as { id: string; label: string; title: string; part: string; sections: string[]; excerpt: string }[];
       const docs: Doc[] = mb.map(e => ({
-        id: 'mb-' + e.id, kind: e.id.startsWith('c-') ? 'companion' : 'masterbook', title: e.title,
+        id: 'mb-' + e.id, kind: /^(c|v2|cmp)-/.test(e.id) ? 'companion' : 'masterbook', title: e.title,
         subtitle: `${e.part} · ${e.label}`, body: e.sections.join(' · ') + ' ' + e.excerpt, route: `/masterbook/${e.id}`,
       } as Doc));
       const { supabase } = await import('@/integrations/supabase/client');
