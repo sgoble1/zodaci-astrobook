@@ -63,6 +63,10 @@
 - [x] Rename and move Timeline Overview to the top of Timing & Cycles.
 - [x] Add a plain-language summary of all timing and retrograde sections while preserving the full source list.
 - [x] Add a transparent misty light-grey highlight to the full Timing & Cycles menu group.
-- [ ] Verify the updated menu and overview on desktop and mobile.
+- [x] Verify the updated menu and overview on desktop and mobile.
 - [x] Add an Explore & Discover page with interactive categories linking to related content.
-- [ ] Add Explore & Discover to the menu and verify its links on desktop and mobile.
+- [x] Add Explore & Discover to the menu and verify its links on desktop and mobile.
+
+## Privacy and naming
+- [x] Block search-engine crawling and indexing for this private April site.
+- [x] Correct SmarChat to SmartChat throughout the interface.

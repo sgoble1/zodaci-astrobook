@@ -18,10 +18,10 @@ export default function Chat() {
     <div className="space-y-6">
       <header>
         <div className="font-smallcaps text-xs text-gold">The Oracle Desk · Conversations</div>
-        <h1 className="text-4xl sm:text-5xl mt-2">SmarChat</h1>
+        <h1 className="text-4xl sm:text-5xl mt-2">SmartChat</h1>
         <p className="text-muted-foreground mt-3 max-w-2xl">Talk with the sources over several turns. Every answer cites the passages it used, and your conversations are saved to your account.</p>
       </header>
-      <AuthGate what="use SmarChat and keep your history">{() => <ChatInner />}</AuthGate>
+      <AuthGate what="use SmartChat and keep your history">{() => <ChatInner />}</AuthGate>
     </div>
   );
 }
@@ -118,8 +118,8 @@ function ChatInner() {
         </ul>
       </aside>
 
-      <section className="parchment p-4 sm:p-5 flex flex-col min-h-[60vh]" aria-label="SmarChat conversation">
-        <div className="sr-only" aria-live="polite">{busy ? 'SmarChat is composing a response.' : `${msgs.length} messages in this conversation.`}</div>
+      <section className="parchment p-4 sm:p-5 flex flex-col min-h-[60vh]" aria-label="SmartChat conversation">
+        <div className="sr-only" aria-live="polite">{busy ? 'SmartChat is composing a response.' : `${msgs.length} messages in this conversation.`}</div>
         <div className="flex-1 space-y-5">
           {msgs.length === 0 && (
             <div className="text-center text-muted-foreground py-16">
@@ -154,9 +154,9 @@ function ChatInner() {
           <div ref={endRef} />
         </div>
         <form onSubmit={e => { e.preventDefault(); send(); }} className="mt-4 flex gap-2 items-end">
-          <Textarea rows={2} aria-label="Ask SmarChat" aria-describedby="smarchat-keyboard-hint" value={q} onChange={e => setQ(e.target.value)} placeholder={corpus ? 'Ask a question or follow up…' : 'Loading sources…'}
+          <Textarea rows={2} aria-label="Ask SmartChat" aria-describedby="smartchat-keyboard-hint" value={q} onChange={e => setQ(e.target.value)} placeholder={corpus ? 'Ask a question or follow up…' : 'Loading sources…'}
             onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); } }} className="flex-1" />
-          <span id="smarchat-keyboard-hint" className="sr-only">Press Enter to send. Press Shift and Enter for a new line.</span>
+          <span id="smartchat-keyboard-hint" className="sr-only">Press Enter to send. Press Shift and Enter for a new line.</span>
           {busy ? <Button type="button" size="icon" variant="outline" aria-label="Stop" onClick={() => abort.current?.abort()}><Square className="w-4 h-4" /></Button>
             : <Button type="submit" size="icon" aria-label="Send" disabled={!q.trim() || !corpus}><Send className="w-4 h-4" /></Button>}
         </form>
