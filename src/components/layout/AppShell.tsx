@@ -1,3 +1,4 @@
+import { PageErrorBoundary } from '@/components/common/PageErrorBoundary';
 import { NavLink, Outlet, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import ParticleField from '@/components/fx/ParticleField';
@@ -20,7 +21,7 @@ type NavGroup = { title: string; items: NavItem[]; submenus?: NavSubmenu[] };
 
 const groups: NavGroup[] = [
   { title: 'Begin', items: [{ to: '/', label: 'Home' }, { to: '/dashboard', label: 'My Dashboard & Bookmarks' }, { to: '/ask', label: 'Ask the Sources' }, { to: '/chat', label: 'SmarChat' }, { to: '/reading', label: 'The Complete Reading' }, { to: '/chart-elements', label: 'Chart Elements & Meanings' }] },
-  { title: 'Sources & Documents', items: [{ to: '/masterbook', label: 'The Masterbook · Full Text' }, { to: '/masterbook/index', label: 'Document Index' }, { to: '/read', label: 'Sources Reading Room' }, { to: '/sources', label: 'Source Files' }, { to: '/masterbook/upload', label: 'Upload to the Masterbook' }, { to: '/admin', label: 'My Workspace · Upload & Edit' }] },
+  { title: 'Sources & Documents', items: [{ to: '/masterbook', label: 'The Masterbook · Full Text' }, { to: '/masterbook/index', label: 'Document Index' }, { to: '/contents', label: 'Masterbook Contents (open)' }, { to: '/read', label: 'Sources Reading Room' }, { to: '/sources', label: 'Source Files' }, { to: '/masterbook/upload', label: 'Upload to the Masterbook' }, { to: '/admin', label: 'My Workspace · Upload & Edit' }] },
   { title: 'Themes & Topics', items: [{ to: '/topics', label: 'All Themes' }, ...TOPICS.map(t => ({ to: `/topics/${t.slug}`, label: t.label }))] },
   { title: 'The Natal Chart', items: [
     { to: '/birth-chart', label: 'Birth Chart' }, { to: '/chart-calculator', label: 'Chart Calculator' }, { to: '/planets', label: 'Planets' }, { to: '/houses', label: 'Houses' },
@@ -47,6 +48,7 @@ export function AppShell() {
   return (
     <PlayerProvider>
     <div className="min-h-screen flex text-foreground relative">
+      <a href="#main-content" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded focus:bg-primary focus:px-4 focus:py-2 focus:text-primary-foreground">Skip to content</a>
       <ScrollProgress />
       <ParticleField />
       <div aria-hidden className="pointer-events-none fixed -top-40 -left-40 w-[520px] h-[520px] rounded-full bg-primary/20 blur-3xl float-orb z-0" />
@@ -59,7 +61,7 @@ export function AppShell() {
       {/* Mobile top bar */}
       <div className="lg:hidden fixed top-0 inset-x-0 z-40 flex items-center justify-between px-4 py-3 border-b border-border bg-background/90 backdrop-blur">
         <div className="font-display text-lg">April · Astrological Compendium</div>
-        <div className="flex items-center gap-2"><AccountButton compact /><button onClick={() => setOpen(v => !v)} aria-label="Toggle navigation" className="p-2 rounded hover:bg-muted">
+        <div className="flex items-center gap-2"><AccountButton compact /><button onClick={() => setOpen(v => !v)} aria-label="Toggle navigation" aria-expanded={open} className="p-2 rounded hover:bg-muted">
           {open ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
         </button></div>
       </div>
@@ -70,10 +72,10 @@ export function AppShell() {
       )}
 
       {/* Main */}
-      <main className="flex-1 min-w-0 lg:pt-0 pt-[57px] relative z-10">
+      <main id="main-content" tabIndex={-1} className="flex-1 min-w-0 lg:pt-0 pt-[57px] relative z-10 outline-none">
         <div className="mx-auto max-w-5xl px-5 sm:px-8 py-10 lg:py-14">
           <motion.div key={location.pathname} initial={{ opacity: 0, y: 24, filter: 'blur(6px)' }} animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }} transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}>
-            <Outlet />
+            <PageErrorBoundary key={location.pathname}><Outlet /></PageErrorBoundary>
           </motion.div>
         </div>
         <footer className="border-t border-border mt-16">
@@ -94,7 +96,7 @@ export function AppShell() {
 function SidebarInner() {
   const location = useLocation();
   const { items: rels } = useRelationships();
-  const allGroups = [...groups.slice(0, 1), { title: 'Our Shared Space', items: [{ to: '/shared', label: 'Shared Dashboard' }, { to: '/shared/conversations', label: 'Conversations' }, { to: '/shared/posts', label: 'Posts' }, { to: '/shared/wonderings', label: 'Wonderings About You' }, { to: '/shared/notes', label: 'Notes' }, { to: '/shared/later', label: 'Talk Later' }, { to: '/shared/accounts', label: 'Shared Accounts' }] }, { title: 'Relationships', items: [{ to: '/relationships', label: 'All Relationships' }, { to: '/guides/relationships', label: 'Relationships in the Sources' }, ...rels.map(r => ({ to: `/relationships/${r.id}`, label: `↳ ${r.name}${r.relation ? ` · ${r.relation}` : ''}` }))] }, ...groups.slice(1)];
+  const allGroups = [...groups.slice(0, 1), { title: 'Our Shared Space', items: [{ to: '/shared', label: 'Shared Dashboard' }, { to: '/shared/conversations', label: 'Conversations' }, { to: '/shared/posts', label: 'Posts' }, { to: '/shared/wonderings', label: 'Wonderings' }, { to: '/shared/reading', label: 'Reading Together' }, { to: '/shared/notes', label: 'Notes' }, { to: '/shared/later', label: 'Talk Later' }, { to: '/shared/accounts', label: 'Shared Accounts' }] }, { title: 'Relationships', items: [{ to: '/relationships', label: 'All Relationships' }, { to: '/guides/relationships', label: 'Relationships in the Sources' }, ...rels.map(r => ({ to: `/relationships/${r.id}`, label: `↳ ${r.name}${r.relation ? ` · ${r.relation}` : ''}` }))] }, ...groups.slice(1)];
   return (
     <div className="p-6 flex flex-col gap-6 h-full overflow-y-auto">
       <div>

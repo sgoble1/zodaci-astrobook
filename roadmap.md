@@ -14,3 +14,8 @@
 - [x] Move extracted Masterbook/source text behind signed password unlock tokens and remove public copies.
 - [x] Improve private chat query scope, unread counts, errors, dialogs, and phone layout.
 - [x] Verify saved messages, posts, comments, and reactions from both accounts.
+- [x] Dedicated Wonderings page with mobile layout.
+- [x] Faster private text loading, no blank screens on failure.
+- [x] Keyboard and screen-reader pass (skip link, focus, labels).
+- [x] Public Masterbook index page (chapters/sections, no password).
+- [x] Shared reading space: upload + annotate documents together.

@@ -1,4 +1,5 @@
 import { useEffect, useState, type ReactNode, type FormEvent } from 'react';
+import { useLocation } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { CONTENT_TOKEN_KEY, CONTENT_UNLOCKED_EVENT, getContentToken } from '@/lib/protectedContent';
 import { Button } from '@/components/ui/button';
@@ -15,7 +16,8 @@ export function SitePasswordGate({ children }: { children: ReactNode }) {
     return () => window.removeEventListener('private-content-locked', lock);
   }, []);
 
-  if (unlocked) return <>{children}</>;
+  const { pathname } = useLocation();
+  if (unlocked || pathname === '/contents' || pathname.startsWith('/contents/')) return <>{children}</>;
 
   const submit = async (e: FormEvent) => {
     e.preventDefault();
@@ -35,7 +37,8 @@ export function SitePasswordGate({ children }: { children: ReactNode }) {
       <form onSubmit={submit} className="w-full max-w-sm rounded-lg border border-border bg-card/70 backdrop-blur p-8 space-y-4 shadow-lg">
         <h1 className="text-2xl font-display text-foreground">Private site</h1>
         <p className="text-sm text-muted-foreground">Enter the password to continue.</p>
-        <input
+        <label htmlFor="site-password" className="sr-only">Password</label>
+        <input id="site-password"
           type="password" autoFocus value={pw} onChange={(e) => setPw(e.target.value)}
           className="w-full rounded-md border border-input bg-background px-3 py-2 text-foreground"
           placeholder="Password"
