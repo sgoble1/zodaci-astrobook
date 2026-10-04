@@ -13,3 +13,4 @@
 - Relationships: relationships table (owner-only RLS); synastry math in src/lib/synastry.ts, Kua/Eight Mansions in src/lib/kua.ts — keeps chart math out of pages.
 - April Kua stays 1 (from her Feng Shui guide) even though the standard female formula gives 8 — sources win, discrepancy shown in UI.
 - The human shared space is database- and storage-enforced for exactly Shane and April's approved email accounts; never rely on client-only access checks.
+- The compact private conversation feed is shared between Home and My Dashboard and must stay hidden for signed-out or unapproved accounts.
