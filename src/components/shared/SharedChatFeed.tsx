@@ -13,6 +13,7 @@ const names: Record<string, string> = {
   'shanealecompte@gmail.com': 'Shane',
   'babybluepuppet@gmail.com': 'April',
 };
+let feedSubscriber = 0;
 
 export function SharedChatFeed() {
   const session = useSession();
@@ -33,14 +34,16 @@ export function SharedChatFeed() {
 
   useEffect(() => {
     if (!session || !ALLOWED.has(email)) return;
+    const subscriber = ++feedSubscriber;
+    let disposed = false;
     let channel: ReturnType<typeof supabase.channel> | null = null;
     supabase.rpc('ensure_shared_main_conversation').then(({ data }) => {
-      if (!data) return;
+      if (!data || disposed) return;
       setConversationId(data);
       load(data);
-      channel = supabase.channel(`shared-feed:${session.user.id}`).on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'shared_messages', filter: `conversation_id=eq.${data}` }, () => load(data)).subscribe();
+      channel = supabase.channel(`shared-feed:${session.user.id}:${subscriber}`).on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'shared_messages', filter: `conversation_id=eq.${data}` }, () => load(data)).subscribe();
     });
-    return () => { if (channel) supabase.removeChannel(channel); };
+    return () => { disposed = true; if (channel) supabase.removeChannel(channel); };
   }, [email, load, session]);
 
   if (!session || !ALLOWED.has(email)) return null;

@@ -2,7 +2,7 @@ import { createClient } from "npm:@supabase/supabase-js@2";
 import { convertToModelMessages, type UIMessage } from "npm:ai@7.0.127";
 import { z } from "npm:zod@3";
 import { createResponsesCall, gatewayError } from "../_shared/responses.ts";
-import { APRIL_CHART, APRIL_PSYCHOLOGY, SAFETY, SITE_PAGES } from "../_shared/april-profile.ts";
+import { APRIL_CHART, APRIL_CONTEXT_RULES, APRIL_PSYCHOLOGY, SAFETY, SITE_PAGES } from "../_shared/april-profile.ts";
 
 const cors = {
   "Access-Control-Allow-Origin": "*",
@@ -22,6 +22,8 @@ const INSTRUCTIONS = `You are "The Oracle Within", a therapeutic companion who k
 ${APRIL_CHART}
 
 ${APRIL_PSYCHOLOGY}
+
+${APRIL_CONTEXT_RULES}
 
 How you work:
 - Blend evidence-based therapy with her chart: CBT (thoughts → feelings → actions), ACT (values, defusion, acceptance), DBT skills (TIPP, opposite action, wise mind), Internal Family Systems (parts, e.g. "the critic", "the fighter"), attachment theory, somatic grounding, narrative therapy, motivational interviewing, Jungian shadow work and positive psychology. Name the technique briefly when you use one.
@@ -62,7 +64,7 @@ Deno.serve(async (req) => {
       await sb.from("therapy_sessions").update(patch).eq("id", sessionId);
     }
 
-    const model = await convertToModelMessages(messages.slice(-40));
+    const model = await convertToModelMessages(messages);
     if (passages.length) {
       const ctx = passages.map(p => `[${p.n}] (${p.source} — ${p.loc})\n${p.text.slice(0, 1500)}`).join("\n\n");
       model.push({ role: "user", content: `(Context for this turn — numbered passages from April's own source documents; cite them like [n] when you use them.)\n\n${ctx}` });

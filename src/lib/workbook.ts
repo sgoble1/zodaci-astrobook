@@ -1,5 +1,5 @@
 import { supabase } from '@/integrations/supabase/client';
-import { loadCorpus, rank } from '@/lib/corpus';
+import { aprilOnly, loadCorpus, rank } from '@/lib/corpus';
 
 export type WorkbookEntry = {
   id: string; owner_id: string; kind: 'prompt' | 'checkin' | 'reframe'; module: string; prompt_key: string;
@@ -19,7 +19,7 @@ export async function listEntries() {
 export async function passagesFor(query: string, k = 6): Promise<FeedbackPassage[]> {
   try {
     const corpus = await loadCorpus();
-    return rank(corpus, query, k).map((p, i) => ({ n: i + 1, source: p.source, loc: p.loc, text: p.text.slice(0, 1400), href: p.href }));
+    return rank(aprilOnly(corpus), query, k).map((p, i) => ({ n: i + 1, source: p.source, loc: p.loc, text: p.text.slice(0, 1400), href: p.href }));
   } catch { return []; }
 }
 

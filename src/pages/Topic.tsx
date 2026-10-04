@@ -48,7 +48,7 @@ export default function Topic() {
     try {
       const res = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ask-sources`, {
         method: 'POST', headers: { 'Content-Type': 'application/json', apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY, Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}` },
-        body: JSON.stringify({ question: `Write a clear, well-organised overview of "${topic.label}" for April only (never describe anyone else's chart, family or home), with short headed sections: key placements, recurring patterns, challenges, and practical guidance. Use only the passages.`, passages: top.map((p, i) => ({ n: i + 1, source: p.source, loc: p.loc, text: p.text })) }),
+        body: JSON.stringify({ question: `Write a clear, well-organised overview of "${topic.label}" for April only. Use only April's verified birth-chart placements and the supplied passages. Never infer or mention named relatives, surnames, ancestry, family lineage, inherited trauma, or biographical family events. For Family & Home, discuss only chart symbolism and home-setting ideas. Use short headed sections: key placements, recurring patterns, challenges, and practical guidance.`, passages: top.map((p, i) => ({ n: i + 1, source: p.source, loc: p.loc, text: p.text })) }),
       });
       if (!res.ok || !res.body) { const j = await res.json().catch(() => ({})); throw new Error(j.error ?? 'Something went wrong.'); }
       const r = res.body.getReader(); const d = new TextDecoder();
@@ -126,7 +126,7 @@ export default function Topic() {
           </div>
         )}
       </section>
-      <SourceChapters exclude={/Shane|Goble|LeCompte|relationship|synastry/i} match={topic.chapters} ids={topic.sourceIds} title={`${topic.label} — the full source chapters`} />
+      <SourceChapters exclude={/Shane|Gobles?|LeComptes?|relationship|synastry|ancestor|ancestry|lineage/i} match={topic.chapters} ids={topic.sourceIds} title={`${topic.label} — the full source chapters`} />
     </div>
   );
 }

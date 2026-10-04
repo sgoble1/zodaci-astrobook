@@ -24,4 +24,6 @@
 - Illustration plates are generated images in src/assets/plates, swapped in for plate descriptions at render time by withPlates(); the protected text itself is unchanged.
 - April's own pages filter passages with aprilOnly() so Shane's chart/family/home appears only on Relationship pages.
 - Social Integration uses separate owner-only conversation tables and its own counselor function so its history never enters the shared chat or therapy history.
+- April-focused tools must never infer named relatives, ancestry, lineage or childhood events from chart symbolism; Family & Home stays limited to verified placements and home-setting guidance.
+- Private counselor chats replay the complete saved session and use one shared verified April profile; they may retain in-session corrections but must not claim hidden cross-session learning.
 - AstroBook branding uses one shared logo component across desktop and mobile so the identity remains consistent at every viewport.

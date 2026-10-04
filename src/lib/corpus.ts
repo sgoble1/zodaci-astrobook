@@ -78,5 +78,5 @@ export function rank(passages: Passage[], query: string, k = 12): Passage[] {
 }
 
 /** Passages about Shane (his chart, family or home) belong only on Relationship pages — April's own pages use this filter. */
-export const SHANE_RE = /\bShane\b|\bGoble\b|LeCompte|synastry|composite chart/i;
+export const SHANE_RE = /\bShane\b|\bGobles?\b|LeComptes?|synastry|composite chart/i;
 export const aprilOnly = (ps: Passage[]) => ps.filter(p => !SHANE_RE.test(p.text + ' ' + p.source + ' ' + p.loc) && !/relationship/i.test(p.source));
