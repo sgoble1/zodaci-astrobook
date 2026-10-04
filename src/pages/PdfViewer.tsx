@@ -4,6 +4,7 @@ import { ChevronLeft, ChevronRight, ZoomIn, ZoomOut, Download, FileText } from '
 import type { PDFDocumentProxy } from 'pdfjs-dist';
 import { BUILT_IN_SOURCES } from '@/content/sources';
 import { loadLibraryIndex } from '@/lib/corpus';
+import { loadProtectedJson } from '@/lib/protectedContent';
 
 /** In-app PDF reader: renders one page at a time with pdf.js, with the extracted page text alongside. */
 export default function PdfViewer() {
@@ -47,7 +48,7 @@ export default function PdfViewer() {
         if (!cancelled) setDoc(d);
       } catch { if (!cancelled) setTextOnly(true); }
     })();
-    if (meta.libId) fetch(`/library/${meta.libId}.json`).then(r => r.json()).then((u: { text: string }[]) => setText(u.map(x => x.text))).catch(() => {});
+    if (meta.libId) loadProtectedJson<{ text: string }[]>('library', `${meta.libId}.json`).then((u) => setText(u.map(x => x.text))).catch(() => {});
     return () => { cancelled = true; };
   }, [meta, err]);
 

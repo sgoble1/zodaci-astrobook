@@ -13,4 +13,4 @@
 - [x] Add private wonderings with comments, reactions, discussed state, and shared-dashboard visibility.
 - [x] Move extracted Masterbook/source text behind signed password unlock tokens and remove public copies.
 - [x] Improve private chat query scope, unread counts, errors, dialogs, and phone layout.
-- [ ] Verify saved messages, posts, comments, and reactions from both accounts (blocked until both account sessions are approved for testing).
+- [x] Verify saved messages, posts, comments, and reactions from both accounts.

@@ -1,4 +1,5 @@
 import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors';
+import { ARCHIVE_GZ_B64 } from './archive.ts';
 
 type Archive = { masterbook: Record<string, string>; library: Record<string, string> };
 let archivePromise: Promise<Archive> | null = null;
@@ -23,7 +24,7 @@ async function validToken(token: string, secret: string) {
 
 async function loadArchive() {
   archivePromise ??= (async () => {
-    const compressed = await Deno.readFile(new URL('./private-content.json.gz', import.meta.url));
+    const compressed = Uint8Array.from(atob(ARCHIVE_GZ_B64), (c) => c.charCodeAt(0));
     const stream = new Blob([compressed]).stream().pipeThrough(new DecompressionStream('gzip'));
     return JSON.parse(await new Response(stream).text()) as Archive;
   })();
