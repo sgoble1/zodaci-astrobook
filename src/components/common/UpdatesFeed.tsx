@@ -1,11 +1,23 @@
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { supabase } from '@/integrations/supabase/client';
 import { Link } from 'react-router-dom';
-import { UPDATES, type UpdateKind } from '@/content/updates';
+import { UPDATES as STATIC, type Update, type UpdateKind } from '@/content/updates';
 
 const KIND_COLOR: Record<UpdateKind, string> = { Feature: '--primary', Content: '--accent', Change: '--candle', Fix: '--oxblood' };
 
 export function UpdatesFeed({ limit = 6 }: { limit?: number }) {
   const [all, setAll] = useState(false);
+  const [live, setLive] = useState<Update[]>([]);
+  useEffect(() => {
+    supabase.from('library_items').select('id,kind,title,description,category,created_at').order('created_at', { ascending: false }).limit(50)
+      .then(({ data }) => setLive((data ?? []).filter(d => !(d.category ?? '').startsWith('Relationship')).map(d => ({
+        date: d.created_at, kind: 'Content' as UpdateKind,
+        title: d.kind === 'podcast' ? `New podcast: ${d.title}` : `New document: ${d.title}`,
+        body: d.description || (d.kind === 'podcast' ? 'A new episode was added to Podcasts.' : 'A new source document was added to the library.'),
+        to: d.kind === 'podcast' ? '/podcasts' : d.kind === 'masterbook' ? '/masterbook/index' : '/sources',
+      }))));
+  }, []);
+  const UPDATES = useMemo(() => [...live, ...STATIC].sort((a, b) => toTime(b.date) - toTime(a.date)), [live]);
   const shown = all ? UPDATES : UPDATES.slice(0, limit);
   return (
     <section className="space-y-3">
@@ -18,7 +30,7 @@ export function UpdatesFeed({ limit = 6 }: { limit?: number }) {
           const c = `hsl(var(${KIND_COLOR[u.kind]}))`;
           const inner = (
             <div className="flex gap-3 p-4">
-              <div className="w-20 shrink-0 text-[11px] text-muted-foreground pt-0.5">{new Date(u.date + 'T12:00').toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}</div>
+              <div className="w-20 shrink-0 text-[11px] text-muted-foreground pt-0.5">{new Date(toTime(u.date)).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}</div>
               <div className="min-w-0">
                 <span className="text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full mr-2" style={{ color: c, background: `hsl(var(${KIND_COLOR[u.kind]}) / 0.12)` }}>{u.kind}</span>
                 <span className="font-medium">{u.title}</span>
@@ -32,3 +44,5 @@ export function UpdatesFeed({ limit = 6 }: { limit?: number }) {
     </section>
   );
 }
+
+function toTime(d: string) { return new Date(d.length === 10 ? d + 'T12:00' : d).getTime(); }
