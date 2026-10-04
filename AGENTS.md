@@ -8,6 +8,7 @@
 - Podcast queue, speed and resume positions are stored per device in localStorage.
 
 - Natal/Ba Zi math lives in src/lib/astro.ts (astronomy-engine, Porphyry houses); it cross-checks the PDF values rather than replacing them.
+- Main navigation and the clickable Instructions guide share one registry so feature links and help stay synchronized.
 - In-app PDF viewer uses the pdfjs-dist legacy build, because the modern build needs very new browser APIs.
 - Admin = user_roles table + has_role(); claim_admin() RPC grants admin to the verified owner email on sign-in (no triggers on auth schema allowed).
 - Birth Chart Book uses bcb-XX protected-content entries split on the .docx Heading2 styles; src/content/birthChartBook.ts maps chart points to chapters.

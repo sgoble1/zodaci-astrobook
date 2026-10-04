@@ -12,6 +12,7 @@ import { Message, MessageContent, MessageResponse } from '@/components/ai-elemen
 import { PromptInput, PromptInputFooter, PromptInputSubmit, PromptInputTextarea } from '@/components/ai-elements/prompt-input';
 import { Shimmer } from '@/components/ai-elements/shimmer';
 import { passagesFor, type FeedbackPassage } from '@/lib/workbook';
+import { authenticatedFunctionHeaders, friendlyChatError } from '@/lib/chatAuth';
 import oracle from '@/assets/oracle-within.png';
 
 type Session = { id: string; title: string; updated_at: string };
@@ -122,18 +123,16 @@ function SessionChat({ sessionId, initial }: { sessionId: string; initial: UIMes
   const transport = useMemo(() => new DefaultChatTransport({
     api: `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/therapy-chat`,
     prepareSendMessagesRequest: async ({ messages }) => {
-      const { data } = await supabase.auth.getSession();
       return {
-        headers: { apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY, Authorization: `Bearer ${data.session?.access_token ?? ''}` },
+        headers: await authenticatedFunctionHeaders(),
         body: { sessionId, messages, passages: passages.current.map(({ href: _h, ...p }) => p) },
       };
     },
   }), [sessionId]);
-  const { messages, sendMessage, status, stop } = useChat({
+  const { messages, sendMessage, status, stop, error: chatError } = useChat({
     id: sessionId, messages: initial, transport,
     onError: (e) => {
-      let msg = e.message;
-      try { msg = JSON.parse(e.message)?.error ?? msg; } catch { /* plain text */ }
+      const msg = friendlyChatError(e);
       toast.error(msg || 'The Oracle could not respond. Please try again.');
     },
     onFinish: () => window.dispatchEvent(new Event(SESSIONS_CHANGED)),
@@ -150,7 +149,8 @@ function SessionChat({ sessionId, initial }: { sessionId: string; initial: UIMes
     const prev = lastUser?.parts.map(p => (p.type === 'text' ? p.text : '')).join(' ') ?? '';
     passages.current = await passagesFor(`${t} ${prev}`, 6);
     setCited(passages.current);
-    sendMessage({ text: t }); setDraft('');
+    try { await sendMessage({ text: t }); setDraft(''); }
+    catch (error) { toast.error(friendlyChatError(error instanceof Error ? error : new Error('The Oracle could not respond.'))); }
     if (params.has('q')) { const next = new URLSearchParams(params); next.delete('q'); setParams(next, { replace: true }); }
   };
 
@@ -184,7 +184,8 @@ function SessionChat({ sessionId, initial }: { sessionId: string; initial: UIMes
           <ol className="mt-2 space-y-1">{cited.map(p => <li key={p.n}><span className="text-gold">[{p.n}]</span> {p.source} · {p.loc} — <Link className="underline" to={p.href}>open</Link></li>)}</ol>
         </details>
       )}
-      <div className="border-t border-border p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
+    <div className="border-t border-border p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
+      {chatError && <p role="alert" className="mb-2 text-sm text-destructive">{friendlyChatError(chatError)}</p>}
         <PromptInput onSubmit={({ text }) => send(text)}>
           <PromptInputTextarea aria-label="Message The Oracle Within" placeholder="Tell me what's on your mind…" value={draft} onChange={event => setDraft(event.target.value)} />
           <PromptInputFooter className="justify-end">

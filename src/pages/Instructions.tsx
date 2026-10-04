@@ -103,10 +103,10 @@ export default function Instructions() {
   return <article className="space-y-10">
     <header className="max-w-3xl"><div className="font-smallcaps text-xs text-gold">Clickable guide · Every main feature</div><h1 className="mt-2">Instructions &amp; Help</h1><p className="mt-4 text-lg text-muted-foreground">Choose a menu section to understand what is inside, or search for the thing you want to do. Every feature name below opens the real page.</p></header>
     <section aria-labelledby="quick-help"><h2 id="quick-help" className="text-2xl">Common tasks</h2><div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-      <Button asChild variant="outline" className="h-auto justify-start py-4"><Link to="#make-podcast"><Headphones />Create a podcast</Link></Button>
-      <Button asChild variant="outline" className="h-auto justify-start py-4"><Link to="#choose-chat"><MessageCircle />Choose the right chat</Link></Button>
-      <Button asChild variant="outline" className="h-auto justify-start py-4"><Link to="#privacy"><Lock />Understand privacy</Link></Button>
-      <Button asChild variant="outline" className="h-auto justify-start py-4"><Link to="#all-features"><BookOpen />Browse all features</Link></Button>
+      <Button asChild variant="outline" className="h-auto justify-start py-4"><a href="#make-podcast"><Headphones />Create a podcast</a></Button>
+      <Button asChild variant="outline" className="h-auto justify-start py-4"><a href="#choose-chat"><MessageCircle />Choose the right chat</a></Button>
+      <Button asChild variant="outline" className="h-auto justify-start py-4"><a href="#privacy"><Lock />Understand privacy</a></Button>
+      <Button asChild variant="outline" className="h-auto justify-start py-4"><a href="#all-features"><BookOpen />Browse all features</a></Button>
     </div></section>
     <section aria-label="Search instructions"><label htmlFor="help-search" className="font-medium">Search the guide</label><div className="relative mt-2 max-w-xl"><Search className="pointer-events-none absolute left-3 top-3 h-4 w-4 text-muted-foreground" aria-hidden /><Input id="help-search" value={query} onChange={event => setQuery(event.target.value)} placeholder="Try podcast, chart, counselor, upload…" className="pl-9" /></div></section>
     <nav aria-label="Help guide sections" className="flex flex-wrap gap-2">{groups.map(group => <Button asChild size="sm" variant="outline" key={group.title}><a href={`#${slug(group.title)}`}>{group.title}</a></Button>)}</nav>

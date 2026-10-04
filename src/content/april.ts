@@ -316,7 +316,7 @@ export const ASPECTS: Aspect[] = [
       'Mars in Gemini and Jupiter in Leo work together easily. In everyday terms, curiosity, words and creative action can open larger opportunities when April chooses to use them.',
   },
   {
-    a: 'moon', b: 'uranus', type: 'Square', orb: '0°60′',
+    a: 'moon', b: 'uranus', type: 'Square', orb: '1°00′',
     interpretation:
       'The Moon and Uranus form a close square. Feelings can change suddenly when freedom feels threatened; the constructive outlet is making room for honest emotion and independent choices before pressure builds.',
   },

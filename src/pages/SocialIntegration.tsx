@@ -12,6 +12,7 @@ import { Message, MessageContent, MessageResponse } from '@/components/ai-elemen
 import { PromptInput, PromptInputFooter, PromptInputSubmit, PromptInputTextarea } from '@/components/ai-elements/prompt-input';
 import { Shimmer } from '@/components/ai-elements/shimmer';
 import { passagesFor, type FeedbackPassage } from '@/lib/workbook';
+import { authenticatedFunctionHeaders, friendlyChatError } from '@/lib/chatAuth';
 
 type Session = { id: string; title: string; updated_at: string };
 const SESSIONS_CHANGED = 'social-sessions-changed';
@@ -100,18 +101,19 @@ function SocialSessionChat({ sessionId, initial }: { sessionId: string; initial:
   const transport = useMemo(() => new DefaultChatTransport({
     api: `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/social-counselor`,
     prepareSendMessagesRequest: async ({ messages }) => {
-      const { data } = await supabase.auth.getSession();
-      return { headers: { apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY, Authorization: `Bearer ${data.session?.access_token ?? ''}` }, body: { sessionId, messages, passages: passages.current.map(({ href: _href, ...passage }) => passage) } };
+      const headers = await authenticatedFunctionHeaders();
+      return { headers, body: { sessionId, messages, passages: passages.current.map(({ href: _href, ...passage }) => passage) } };
     },
   }), [sessionId]);
-  const { messages, sendMessage, status, stop } = useChat({ id: sessionId, messages: initial, transport, onError: error => toast.error(error.message || 'The Social Counselor could not respond.'), onFinish: () => window.dispatchEvent(new Event(SESSIONS_CHANGED)) });
+  const { messages, sendMessage, status, stop, error: chatError } = useChat({ id: sessionId, messages: initial, transport, onError: error => toast.error(friendlyChatError(error) || 'The Social Counselor could not respond.'), onFinish: () => window.dispatchEvent(new Event(SESSIONS_CHANGED)) });
   const busy = status === 'submitted' || status === 'streaming';
   useEffect(() => { box.current?.querySelector('textarea')?.focus(); }, []);
   useEffect(() => { if (status === 'ready' || status === 'error') box.current?.querySelector('textarea')?.focus(); }, [status]);
   const send = async (text: string) => {
     const value = text.trim(); if (!value || busy) return;
     passages.current = await passagesFor(value, 6); setCited(passages.current);
-    sendMessage({ text: value }); setDraft('');
+    try { await sendMessage({ text: value }); setDraft(''); }
+    catch (error) { toast.error(friendlyChatError(error instanceof Error ? error : new Error('The Social Counselor could not respond.'))); }
     if (params.has('q')) { const next = new URLSearchParams(params); next.delete('q'); setParams(next, { replace: true }); }
   };
   return <section ref={box} className="parchment flex min-h-[70dvh] min-w-0 flex-col overflow-hidden lg:h-[72vh] lg:min-h-0" aria-label="Social Counselor conversation">
@@ -123,6 +125,6 @@ function SocialSessionChat({ sessionId, initial }: { sessionId: string; initial:
       </ConversationContent><ConversationScrollButton aria-label="Scroll to newest message" />
     </Conversation>
     {cited.length > 0 && <details className="border-t border-border px-4 py-2 text-xs"><summary className="cursor-pointer text-muted-foreground">Sources considered in this reply ({cited.length})</summary><ol className="mt-2 space-y-1">{cited.map(passage => <li key={passage.n}><span className="text-gold">[{passage.n}]</span> {passage.source} · {passage.loc} — <Link className="underline" to={passage.href}>open</Link></li>)}</ol></details>}
-    <div className="border-t border-border p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]"><PromptInput onSubmit={({ text }) => send(text)}><PromptInputTextarea aria-label="Message the Social Counselor" placeholder="Describe the social situation…" value={draft} onChange={event => setDraft(event.target.value)} /><PromptInputFooter className="justify-end"><PromptInputSubmit status={status} onStop={stop} /></PromptInputFooter></PromptInput></div>
+    <div className="border-t border-border p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">{chatError && <p role="alert" className="mb-2 text-sm text-destructive">{friendlyChatError(chatError)}</p>}<PromptInput onSubmit={({ text }) => send(text)}><PromptInputTextarea aria-label="Message the Social Counselor" placeholder="Describe the social situation…" value={draft} onChange={event => setDraft(event.target.value)} /><PromptInputFooter className="justify-end"><PromptInputSubmit status={status} onStop={stop} /></PromptInputFooter></PromptInput></div>
   </section>;
 }
