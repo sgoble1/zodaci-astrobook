@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { CircleHelp, MessageCircle, Send, Trash2, Upload, X } from 'lucide-react';
+import { CircleHelp, FolderPlus, MessageCircle, Pencil, Send, Trash2, Upload, X } from 'lucide-react';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
@@ -15,7 +15,7 @@ const CATS = ['Movie', 'Show', 'Music', 'Book', 'Podcast', 'Place', 'Other'];
 const stamp = (v: string) => new Intl.DateTimeFormat(undefined, { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }).format(new Date(v));
 
 type Rec = { id: string; author_id: string; category: string; title: string; link: string; note: string; created_at: string };
-type Media = { id: string; uploaded_by: string; file_path: string; file_name: string; mime_type: string | null; caption: string; created_at: string; url?: string };
+type Media = { id: string; uploaded_by: string; file_path: string; file_name: string; mime_type: string | null; caption: string; created_at: string; folder_id?: string | null; url?: string };
 type Comment = { id: string; author_id: string; body: string; created_at: string };
 type Reaction = { id: string; user_id: string; emoji: string };
 
@@ -108,16 +108,27 @@ export function Recommendations({ userId, compact = false }: { userId: string; c
   );
 }
 
+type Folder = { id: string; name: string; created_by: string; created_at: string };
+
 export function MediaLibrary({ userId }: { userId: string }) {
   const dir = useDirectory();
   const [items, setItems] = useState<Media[] | null>(null); const [busy, setBusy] = useState(false); const [view, setView] = useState<Media | null>(null); const [caption, setCaption] = useState('');
+  const [folders, setFolders] = useState<Folder[]>([]); const [current, setCurrent] = useState<string>('all'); const [newFolder, setNewFolder] = useState('');
+  const [q, setQ] = useState(''); const [sort, setSort] = useState<'new' | 'old' | 'name'>('new'); const [dropOn, setDropOn] = useState<string | null>(null); const [editCaption, setEditCaption] = useState('');
   const load = useCallback(async () => {
-    const { data } = await db('shared_media').select('*').order('created_at', { ascending: false });
+    const [{ data }, { data: f }] = await Promise.all([db('shared_media').select('*').order('created_at', { ascending: false }), db('shared_media_folders').select('*').order('name')]);
     const rows: Media[] = data ?? [];
+    setFolders(f ?? []);
     const signed = rows.length ? await supabase.storage.from('shared-space').createSignedUrls(rows.map(r => r.file_path), 3600) : { data: [] };
     setItems(rows.map((r, i) => ({ ...r, url: signed.data?.[i]?.signedUrl })));
   }, []);
-  useEffect(() => { load(); const ch = supabase.channel('media').on('postgres_changes', { event: '*', schema: 'public', table: 'shared_media' }, load).subscribe(); return () => { supabase.removeChannel(ch); }; }, [load]);
+  useEffect(() => {
+    load();
+    const id = crypto.randomUUID();
+    const ch = supabase.channel(`media-${id}`).on('postgres_changes', { event: '*', schema: 'public', table: 'shared_media' }, load).on('postgres_changes', { event: '*', schema: 'public', table: 'shared_media_folders' }, load).subscribe();
+    return () => { supabase.removeChannel(ch); };
+  }, [load]);
+  const targetFolder = current === 'all' || current === 'none' ? null : current;
   const upload = async (files: FileList | null) => {
     if (!files?.length) return; setBusy(true);
     try {
@@ -126,35 +137,72 @@ export function MediaLibrary({ userId }: { userId: string }) {
         const path = `${userId}/media/${Date.now()}-${crypto.randomUUID()}-${f.name.replace(/[^\w.-]+/g, '_')}`;
         const up = await supabase.storage.from('shared-space').upload(path, f, { contentType: f.type });
         if (up.error) throw up.error;
-        const ins = await db('shared_media').insert({ uploaded_by: userId, file_path: path, file_name: f.name, mime_type: f.type || null, size_bytes: f.size, caption });
+        const ins = await db('shared_media').insert({ uploaded_by: userId, file_path: path, file_name: f.name, mime_type: f.type || null, size_bytes: f.size, caption, folder_id: targetFolder });
         if (ins.error) throw ins.error;
       }
-      setCaption(''); toast.success('Added to the gallery'); load();
+      setCaption(''); toast.success('Added to the library'); load();
     } catch (e) { toast.error((e as Error).message || 'Upload failed'); }
     setBusy(false);
   };
-  const remove = async (m: Media) => { await supabase.storage.from('shared-space').remove([m.file_path]); await db('shared_media').delete().eq('id', m.id); setView(null); load(); };
+  const remove = async (m: Media) => { if (!confirm('Delete this file for both of you?')) return; await supabase.storage.from('shared-space').remove([m.file_path]); await db('shared_media').delete().eq('id', m.id); setView(null); load(); };
+  const move = async (mediaId: string, folderId: string | null) => {
+    const { error } = await db('shared_media').update({ folder_id: folderId }).eq('id', mediaId);
+    if (error) return toast.error('Could not move that file.');
+    toast.success(`Moved to ${folderId ? folders.find(f => f.id === folderId)?.name : 'Unfiled'}`);
+    setView(v => v && v.id === mediaId ? { ...v, folder_id: folderId } : v); load();
+  };
+  const saveCaption = async (m: Media) => { const { error } = await db('shared_media').update({ caption: editCaption }).eq('id', m.id); if (error) return toast.error('Could not save the caption.'); setView({ ...m, caption: editCaption }); load(); };
+  const addFolder = async (e: React.FormEvent) => { e.preventDefault(); const name = newFolder.trim(); if (!name) return; const { data, error } = await db('shared_media_folders').insert({ name, created_by: userId }).select().single(); if (error) return toast.error('Could not create the folder.'); setNewFolder(''); setCurrent(data.id); load(); };
+  const renameFolder = async (f: Folder) => { const name = prompt('Rename folder', f.name)?.trim(); if (!name || name === f.name) return; await db('shared_media_folders').update({ name }).eq('id', f.id); load(); };
+  const deleteFolder = async (f: Folder) => { if (!confirm(`Delete the folder “${f.name}”? Files inside move to Unfiled — nothing is deleted.`)) return; await db('shared_media_folders').delete().eq('id', f.id); setCurrent('all'); load(); };
   const isVideo = (m: Media) => m.mime_type?.startsWith('video/');
+  const count = (id: string) => (items ?? []).filter(m => id === 'all' ? true : id === 'none' ? !m.folder_id : m.folder_id === id).length;
+  const shown = (items ?? [])
+    .filter(m => current === 'all' ? true : current === 'none' ? !m.folder_id : m.folder_id === current)
+    .filter(m => !q.trim() || `${m.caption} ${m.file_name}`.toLowerCase().includes(q.trim().toLowerCase()))
+    .sort((a, b) => sort === 'name' ? (a.caption || a.file_name).localeCompare(b.caption || b.file_name) : sort === 'old' ? a.created_at.localeCompare(b.created_at) : b.created_at.localeCompare(a.created_at));
+  const dropProps = (id: string) => ({
+    onDragOver: (e: React.DragEvent) => { if (id === 'all') return; e.preventDefault(); setDropOn(id); },
+    onDragLeave: () => setDropOn(d => d === id ? null : d),
+    onDrop: (e: React.DragEvent) => { e.preventDefault(); setDropOn(null); const m = e.dataTransfer.getData('text/media-id'); if (m && id !== 'all') move(m, id === 'none' ? null : id); },
+  });
+  const chip = (id: string, label: string) => <button type="button" {...dropProps(id)} onClick={() => setCurrent(id)} aria-pressed={current === id}
+    className={`rounded-full border px-3 py-1 text-xs transition ${current === id ? 'border-accent bg-accent/15' : 'border-border'} ${dropOn === id ? 'ring-2 ring-accent scale-105' : ''}`}>{label} <span className="text-muted-foreground">({count(id)})</span></button>;
+  const curFolder = folders.find(f => f.id === current);
   return (
     <div className="space-y-5">
       <section className="parchment p-5 space-y-3">
         <h2 className="text-2xl">Media Library</h2>
-        <p className="text-sm text-muted-foreground">Photos, videos and screenshots only the two of you can see. Up to 50 MB each.</p>
+        <p className="text-sm text-muted-foreground">Photos, videos and screenshots only the two of you can see. Up to 50 MB each. Make folders, then drag any file onto a folder to file it. You can also open a file and choose "Move to folder".</p>
         <div className="flex flex-col gap-2 sm:flex-row">
           <Input value={caption} onChange={e => setCaption(e.target.value)} placeholder="Caption (optional)" aria-label="Caption" />
-          <Button asChild disabled={busy}><label className="cursor-pointer"><Upload className="h-4 w-4" />{busy ? 'Uploading…' : 'Upload'}<input type="file" multiple accept="image/*,video/*" className="sr-only" onChange={e => upload(e.target.files)} /></label></Button>
+          <Button asChild disabled={busy}><label className="cursor-pointer"><Upload className="h-4 w-4" />{busy ? 'Uploading…' : `Upload${curFolder ? ` to ${curFolder.name}` : ''}`}<input type="file" multiple accept="image/*,video/*" className="sr-only" onChange={e => upload(e.target.files)} /></label></Button>
         </div>
       </section>
-      {items === null ? <p role="status">Loading the gallery…</p> : !items.length ? <p className="text-sm text-muted-foreground">Nothing here yet — upload the first photo or video.</p> :
-        <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">{items.map((m, i) => <li key={m.id} className="gentle-fade" style={{ animationDelay: `${Math.min(i, 12) * 60}ms` }}>
-          <button type="button" onClick={() => setView(m)} className="group block w-full overflow-hidden rounded-lg border border-border text-left focus-visible:ring-2 focus-visible:ring-ring" aria-label={`Open ${m.caption || m.file_name}`}>
-            <div className="aspect-square bg-muted">{isVideo(m) ? <video src={m.url} muted preload="metadata" className="h-full w-full object-cover" /> : <img src={m.url} alt={m.caption || m.file_name} loading="lazy" className="h-full w-full object-cover transition duration-700 group-hover:scale-105" />}</div>
-            <div className="p-2 text-xs"><p className="truncate">{m.caption || m.file_name}</p><p className="text-muted-foreground">{dir[m.uploaded_by] ?? 'Member'}{isVideo(m) ? ' · video' : ''}</p></div>
+      <section aria-label="Folders" className="space-y-3">
+        <div className="flex flex-wrap items-center gap-2">{chip('all', 'All files')}{chip('none', 'Unfiled')}{folders.map(f => <span key={f.id}>{chip(f.id, `📁 ${f.name}`)}</span>)}</div>
+        <div className="flex flex-wrap items-center gap-2">
+          <form onSubmit={addFolder} className="flex gap-2"><Input value={newFolder} onChange={e => setNewFolder(e.target.value)} placeholder="New folder name" aria-label="New folder name" maxLength={80} className="h-9 w-48" /><Button size="sm" type="submit" variant="outline" disabled={!newFolder.trim()}><FolderPlus className="h-4 w-4" />Add folder</Button></form>
+          {curFolder && <><Button size="sm" variant="ghost" onClick={() => renameFolder(curFolder)}><Pencil className="h-4 w-4" />Rename</Button><Button size="sm" variant="ghost" onClick={() => deleteFolder(curFolder)}><Trash2 className="h-4 w-4" />Delete folder</Button></>}
+          <Input value={q} onChange={e => setQ(e.target.value)} placeholder="Search captions…" aria-label="Search media" className="h-9 w-48 sm:ml-auto" />
+          <select aria-label="Sort media" value={sort} onChange={e => setSort(e.target.value as typeof sort)} className="h-9 rounded-md border border-input bg-background px-2 text-sm"><option value="new">Newest first</option><option value="old">Oldest first</option><option value="name">By name</option></select>
+        </div>
+      </section>
+      {items === null ? <p role="status">Loading the library…</p> : !shown.length ? <p className="text-sm text-muted-foreground">{items.length ? 'Nothing in this view. Drag files here from All files, or upload new ones.' : 'Nothing here yet. Upload the first photo or video.'}</p> :
+        <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">{shown.map((m, i) => <li key={m.id} className="gentle-fade" style={{ animationDelay: `${Math.min(i, 12) * 60}ms` }} draggable onDragStart={e => { e.dataTransfer.setData('text/media-id', m.id); e.dataTransfer.effectAllowed = 'move'; }}>
+          <button type="button" onClick={() => { setView(m); setEditCaption(m.caption); }} className="group block w-full cursor-grab overflow-hidden rounded-lg border border-border text-left focus-visible:ring-2 focus-visible:ring-ring active:cursor-grabbing" aria-label={`Open ${m.caption || m.file_name}`}>
+            <div className="aspect-square bg-muted">{isVideo(m) ? <video src={m.url} muted preload="metadata" className="pointer-events-none h-full w-full object-cover" /> : <img src={m.url} alt={m.caption || m.file_name} loading="lazy" draggable={false} className="h-full w-full object-cover transition duration-700 group-hover:scale-105" />}</div>
+            <div className="p-2 text-xs"><p className="truncate">{m.caption || m.file_name}</p><p className="truncate text-muted-foreground">{dir[m.uploaded_by] ?? 'Member'}{isVideo(m) ? ' · video' : ''}{m.folder_id ? ` · ${folders.find(f => f.id === m.folder_id)?.name ?? ''}` : ''}</p></div>
           </button></li>)}</ul>}
       <Dialog open={!!view} onOpenChange={o => !o && setView(null)}>
         <DialogContent className="max-h-[92vh] max-w-4xl overflow-y-auto">
           {view && <><DialogHeader><DialogTitle>{view.caption || view.file_name}</DialogTitle></DialogHeader>
             {isVideo(view) ? <video src={view.url} controls autoPlay className="max-h-[60vh] w-full rounded" /> : <img src={view.url} alt={view.caption || view.file_name} className="max-h-[60vh] w-full rounded object-contain" />}
+            <div className="grid gap-2 sm:grid-cols-[1fr_auto_auto] sm:items-center">
+              <Input value={editCaption} onChange={e => setEditCaption(e.target.value)} aria-label="Edit caption" placeholder="Caption" />
+              <Button size="sm" variant="outline" onClick={() => saveCaption(view)} disabled={editCaption === view.caption}>Save caption</Button>
+              <select aria-label="Move to folder" value={view.folder_id ?? ''} onChange={e => move(view.id, e.target.value || null)} className="h-9 rounded-md border border-input bg-background px-2 text-sm"><option value="">Unfiled</option>{folders.map(f => <option key={f.id} value={f.id}>{f.name}</option>)}</select>
+            </div>
             <div className="flex flex-wrap gap-2 text-xs text-muted-foreground"><span>{dir[view.uploaded_by] ?? 'Member'} · {stamp(view.created_at)}</span><a className="underline" href={view.url} download={view.file_name}>Download</a>{view.uploaded_by === userId && <button type="button" className="underline" onClick={() => remove(view)}>Delete</button>}<button type="button" className="ml-auto underline" onClick={() => setView(null)}><X className="inline h-3 w-3" /> Close</button></div>
             <ItemThread type="media" id={view.id} userId={userId} title={view.caption || view.file_name} /></>}
         </DialogContent>
