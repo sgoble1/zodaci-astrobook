@@ -262,6 +262,47 @@ export type Database = {
         }
         Relationships: []
       }
+      shared_annotations: {
+        Row: {
+          author_id: string
+          created_at: string
+          document_id: string
+          edited_at: string | null
+          id: string
+          note: string
+          page: number | null
+          quote: string
+        }
+        Insert: {
+          author_id: string
+          created_at?: string
+          document_id: string
+          edited_at?: string | null
+          id?: string
+          note: string
+          page?: number | null
+          quote?: string
+        }
+        Update: {
+          author_id?: string
+          created_at?: string
+          document_id?: string
+          edited_at?: string | null
+          id?: string
+          note?: string
+          page?: number | null
+          quote?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "shared_annotations_document_id_fkey"
+            columns: ["document_id"]
+            isOneToOne: false
+            referencedRelation: "shared_documents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       shared_attachments: {
         Row: {
           created_at: string
@@ -363,6 +404,45 @@ export type Database = {
           kind?: string
           title?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      shared_documents: {
+        Row: {
+          created_at: string
+          description: string
+          file_name: string
+          file_path: string
+          id: string
+          mime_type: string | null
+          size_bytes: number | null
+          title: string
+          updated_at: string
+          uploaded_by: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string
+          file_name: string
+          file_path: string
+          id?: string
+          mime_type?: string | null
+          size_bytes?: number | null
+          title: string
+          updated_at?: string
+          uploaded_by: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          file_name?: string
+          file_path?: string
+          id?: string
+          mime_type?: string | null
+          size_bytes?: number | null
+          title?: string
+          updated_at?: string
+          uploaded_by?: string
         }
         Relationships: []
       }
