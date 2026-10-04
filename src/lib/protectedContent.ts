@@ -12,7 +12,19 @@ export class ContentLockedError extends Error {
 
 export const getContentToken = () => window.localStorage.getItem(CONTENT_TOKEN_KEY) ?? '';
 
-export async function loadProtectedText(area: 'masterbook' | 'library', file: string): Promise<string> {
+const cache = new Map<string, Promise<string>>();
+
+export function loadProtectedText(area: 'masterbook' | 'library', file: string): Promise<string> {
+  const key = `${area}/${file}`;
+  const hit = cache.get(key);
+  if (hit) return hit;
+  const p = fetchProtectedText(area, file);
+  cache.set(key, p);
+  p.catch(() => cache.delete(key));
+  return p;
+}
+
+async function fetchProtectedText(area: 'masterbook' | 'library', file: string): Promise<string> {
   const token = getContentToken();
   if (!token) throw new ContentLockedError();
   const { data, error } = await supabase.functions.invoke('protected-content', { body: { token, area, file } });

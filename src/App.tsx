@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { useMemo, type ReactNode } from 'react';
 import { AppShell } from './components/layout/AppShell';
 import { PublicLibrary, PublicReader } from './pages/PublicLibrary';
+import { MasterbookContents, MasterbookContentsEntry } from './pages/MasterbookContents';
 import { SitePasswordGate } from './components/common/SitePasswordGate';
 import { DetailDrawerProvider, type DrawerPayload } from './components/common/DetailDrawer';
 import { CommandPalette } from './components/common/CommandPalette';
@@ -140,6 +141,8 @@ export default function App() {
     <SitePasswordGate>
       <Providers>
         <Routes>
+          <Route path="/contents" element={<MasterbookContents />} />
+          <Route path="/contents/:id" element={<MasterbookContentsEntry />} />
           <Route path="/read" element={<PublicLibrary />} />
           <Route path="/read/:id" element={<PublicReader />} />
           <Route element={<AppShell />}>
@@ -192,6 +195,7 @@ export default function App() {
             <Route path="/shared/chat/:id" element={<SharedSpace />} />
             <Route path="/shared/posts" element={<SharedSpace section="posts" />} />
             <Route path="/shared/wonderings" element={<SharedSpace section="wonderings" />} />
+            <Route path="/shared/reading" element={<SharedSpace section="reading" />} />
             <Route path="/shared/notes" element={<SharedSpace section="notes" />} />
             <Route path="/shared/later" element={<SharedSpace section="later" />} />
             <Route path="/shared/accounts" element={<SharedSpace section="accounts" />} />
