@@ -3,6 +3,7 @@ export type UpdateKind = 'Feature' | 'Content' | 'Change' | 'Fix';
 export type Update = { date: string; kind: UpdateKind; title: string; body: string; to?: string };
 
 export const UPDATES: Update[] = [
+  { date: '2026-10-04', kind: 'Feature', title: 'Public Sources reading room', body: 'Every document, chapter and section can be browsed and read without the site password.', to: '/read' },
   { date: '2026-10-04', kind: 'Content', title: 'Volume II and the Compendium in full', body: 'All 19 Volume II sections and all 29 Compendium chapters (chakras, Gene Keys, love languages, eclipses, Venus retrograde, journaling prompts and more) are now readable in the Masterbook and appear on matching topic pages.', to: '/masterbook' },
   { date: '2026-10-04', kind: 'Feature', title: 'Recent updates feed', body: 'See the latest content, features and changes on the home page and your dashboard.' },
   { date: '2026-10-04', kind: 'Feature', title: 'AI Chat with history', body: 'Have back-and-forth conversations with the sources. Follow-ups remember context, answers cite passages, and chats are saved to your account.', to: '/chat' },
