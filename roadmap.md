@@ -8,4 +8,4 @@
 - [x] Build the shared overview for messages, posts, notes, files, and future topics.
 - [x] Add the private human chat feed to Home and My Dashboard.
 - [x] Modernize private chat with attachments, replies, reactions, editing, deletion, topics, unread counts, and live updates.
-- [ ] Verify access, source links, relationship updates, and build quality.
+- [x] Verify access, source links, relationship updates, and build quality.
