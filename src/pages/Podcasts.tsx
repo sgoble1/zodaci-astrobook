@@ -10,6 +10,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { fmtSize } from '@/content/sources';
 import { toast } from 'sonner';
 import { usePlayer } from '@/components/podcast/PlayerContext';
+import { Link } from 'react-router-dom';
 
 export default function Podcasts() {
   const lib = useLibrary('podcast');
