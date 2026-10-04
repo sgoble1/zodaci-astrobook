@@ -156,7 +156,7 @@ export const PLACEMENTS: Placement[] = [
   },
   {
     key: 'northNode', name: 'North Node', glyph: '☊', sign: 'Aquarius', signGlyph: '♒',
-    degree: 5, minute: 17, house: 1, motion: 'Direct', dignity: '—',
+    degree: 5, minute: 17, house: 1, motion: 'Retrograde', dignity: '—',
     notes: "Soul's compass · Pluto approaching",
     headline: 'North Node in Aquarius · First House · 5°17′',
     interpretation:
@@ -164,7 +164,7 @@ export const PLACEMENTS: Placement[] = [
   },
   {
     key: 'southNode', name: 'South Node', glyph: '☋', sign: 'Leo', signGlyph: '♌',
-    degree: 5, minute: 17, house: 7, motion: 'Direct', dignity: '—',
+    degree: 5, minute: 17, house: 7, motion: 'Retrograde', dignity: '—',
     notes: 'The stage performer she no longer has to be',
     headline: 'South Node in Leo · Seventh House · 5°17′',
     interpretation:
@@ -379,6 +379,22 @@ export const ASPECTS: Aspect[] = [
     a: 'sun', b: 'saturn', type: 'Trine', orb: '4°58′',
     interpretation:
       'Virgo Sun trine Saturn in Capricorn supports responsibility, endurance and craft. April can build steadily and improve a system without needing immediate recognition.',
+  },
+  // Added after recalculating Sept 6, 1990, 3:38 PM EDT, Geneva NY — wider-orb aspects the source tables did not list.
+  {
+    a: 'moon', b: 'neptune', type: 'Square', orb: '5°16′',
+    interpretation:
+      'The Moon and Neptune form a wide square. In plain words, feelings can blur with other people’s moods, and she can sense more than she can explain. Writing feelings down and checking facts helps her tell intuition apart from worry.',
+  },
+  {
+    a: 'uranus', b: 'neptune', type: 'Conjunction', orb: '6°15′',
+    interpretation:
+      'Uranus and Neptune travel together in Capricorn for everyone born around 1990, so this is a generational signature. For April it sits in her first house, which makes it more personal: she can picture new ways of living and wants them to be practical.',
+  },
+  {
+    a: 'saturn', b: 'neptune', type: 'Conjunction', orb: '7°03′',
+    interpretation:
+      'Saturn and Neptune sit together in Capricorn in her first house. In everyday terms, dreams want structure and structure wants meaning. She does best when a big hope is broken into small, real steps.',
   },
 ];
 

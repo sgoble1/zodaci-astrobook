@@ -27,6 +27,9 @@ export default function Aspects() {
         <p className="max-w-2xl text-lg text-foreground/85 leading-relaxed">
           These are the major planet-to-planet aspects independently confirmed from April’s recorded birth data. The closest include Mars sextile Jupiter, Moon square Uranus, Mercury sextile Pluto, and Sun sextile Pluto. Click any row for its plain-language reading.
         </p>
+        <div className="mt-4 max-w-2xl rounded-sm border border-border bg-card/50 p-4 text-sm text-muted-foreground">
+          <strong className="text-foreground">Recalculated and checked:</strong> all 14 source aspects match a fresh calculation for September 6, 1990, 3:38 PM EDT (19:38 UTC), Geneva, New York. Three wider aspects the source tables left out are now included: Moon square Neptune, Uranus conjunct Neptune and Saturn conjunct Neptune. The tightest aspect in the whole chart involves an angle rather than two planets: Venus trine the Ascendant (0°07′). In plain words, warmth and charm show quickly in how she comes across.
+        </div>
       </header>
 
       <div className="flex flex-wrap gap-2">
