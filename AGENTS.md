@@ -30,3 +30,4 @@
 - Generated podcast duration is a bounded request preset interpreted by make-podcast, so script length and source depth stay synchronized.
 - Relationship needs and coincidences are derived at render time only from saved birth facts and shared chart utilities, preventing invented biography.
 - Wide data tables keep a stable readable width and scroll horizontally on phones instead of compressing headings into vertical text.
+- Usage analytics: ActivityTracker logs page time, click labels and media events to activity_events (insert-own, admin-read); never record typed text or private chat content.
