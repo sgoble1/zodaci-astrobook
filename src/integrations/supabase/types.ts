@@ -226,6 +226,268 @@ export type Database = {
         }
         Relationships: []
       }
+      shared_account_refs: {
+        Row: {
+          account_owner: string
+          created_at: string
+          created_by: string
+          id: string
+          notes: string
+          service_name: string
+          updated_at: string
+          url: string
+          username: string
+        }
+        Insert: {
+          account_owner?: string
+          created_at?: string
+          created_by?: string
+          id?: string
+          notes?: string
+          service_name: string
+          updated_at?: string
+          url?: string
+          username?: string
+        }
+        Update: {
+          account_owner?: string
+          created_at?: string
+          created_by?: string
+          id?: string
+          notes?: string
+          service_name?: string
+          updated_at?: string
+          url?: string
+          username?: string
+        }
+        Relationships: []
+      }
+      shared_attachments: {
+        Row: {
+          created_at: string
+          file_name: string
+          file_path: string
+          id: string
+          message_id: string | null
+          mime_type: string | null
+          post_id: string | null
+          size_bytes: number | null
+          uploaded_by: string
+        }
+        Insert: {
+          created_at?: string
+          file_name: string
+          file_path: string
+          id?: string
+          message_id?: string | null
+          mime_type?: string | null
+          post_id?: string | null
+          size_bytes?: number | null
+          uploaded_by?: string
+        }
+        Update: {
+          created_at?: string
+          file_name?: string
+          file_path?: string
+          id?: string
+          message_id?: string | null
+          mime_type?: string | null
+          post_id?: string | null
+          size_bytes?: number | null
+          uploaded_by?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "shared_attachments_message_id_fkey"
+            columns: ["message_id"]
+            isOneToOne: false
+            referencedRelation: "shared_messages"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "shared_attachments_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "shared_posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      shared_conversation_reads: {
+        Row: {
+          conversation_id: string
+          last_read_at: string
+          user_id: string
+        }
+        Insert: {
+          conversation_id: string
+          last_read_at?: string
+          user_id?: string
+        }
+        Update: {
+          conversation_id?: string
+          last_read_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "shared_conversation_reads_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "shared_conversations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      shared_conversations: {
+        Row: {
+          created_at: string
+          created_by: string
+          id: string
+          kind: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string
+          id?: string
+          kind?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          id?: string
+          kind?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      shared_future_topics: {
+        Row: {
+          created_at: string
+          created_by: string
+          details: string
+          id: string
+          status: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string
+          details?: string
+          id?: string
+          status?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          details?: string
+          id?: string
+          status?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      shared_messages: {
+        Row: {
+          body: string
+          conversation_id: string
+          created_at: string
+          edited_at: string | null
+          id: string
+          sender_id: string
+        }
+        Insert: {
+          body?: string
+          conversation_id: string
+          created_at?: string
+          edited_at?: string | null
+          id?: string
+          sender_id?: string
+        }
+        Update: {
+          body?: string
+          conversation_id?: string
+          created_at?: string
+          edited_at?: string | null
+          id?: string
+          sender_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "shared_messages_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "shared_conversations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      shared_notes: {
+        Row: {
+          body: string
+          created_at: string
+          created_by: string
+          id: string
+          title: string
+          updated_at: string
+          updated_by: string
+        }
+        Insert: {
+          body?: string
+          created_at?: string
+          created_by?: string
+          id?: string
+          title: string
+          updated_at?: string
+          updated_by?: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          created_by?: string
+          id?: string
+          title?: string
+          updated_at?: string
+          updated_by?: string
+        }
+        Relationships: []
+      }
+      shared_posts: {
+        Row: {
+          author_id: string
+          body: string
+          created_at: string
+          id: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          author_id?: string
+          body: string
+          created_at?: string
+          id?: string
+          title?: string
+          updated_at?: string
+        }
+        Update: {
+          author_id?: string
+          body?: string
+          created_at?: string
+          id?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           id: string
@@ -250,6 +512,7 @@ export type Database = {
     }
     Functions: {
       claim_admin: { Args: never; Returns: boolean }
+      ensure_shared_main_conversation: { Args: never; Returns: string }
       get_document_overrides: {
         Args: never
         Returns: {
@@ -267,6 +530,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      is_shared_space_member: { Args: never; Returns: boolean }
       recent_library_items: {
         Args: never
         Returns: {
@@ -275,6 +539,13 @@ export type Database = {
           id: string
           kind: string
           title: string
+        }[]
+      }
+      shared_member_directory: {
+        Args: never
+        Returns: {
+          display_name: string
+          user_id: string
         }[]
       }
     }

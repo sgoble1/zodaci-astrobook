@@ -44,7 +44,7 @@ function Inner() {
         ))}
         <h2 className="font-display text-2xl pt-4">Quick links</h2>
         <div className="flex flex-wrap gap-2 text-sm">
-          {[['/chat', 'AI Chat & history'], ['/admin', 'My Workspace · upload & edit'], ['/chart-calculator', 'Chart calculator'], ['/ask', 'Ask the Sources'], ['/podcasts', 'Podcasts']].map(([to, l]) => (
+          {[['/shared', 'Our Shared Space'], ['/chat', 'AI Chat & history'], ['/admin', 'My Workspace · upload & edit'], ['/chart-calculator', 'Chart calculator'], ['/ask', 'Ask the Sources'], ['/podcasts', 'Podcasts']].map(([to, l]) => (
             <Button key={to} asChild variant="outline" size="sm"><Link to={to}>{l}</Link></Button>
           ))}
         </div>
