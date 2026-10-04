@@ -52,9 +52,9 @@
 - [x] Replace Chat about this with a destination chooser for shared chat, Therapy Oracle, SmarChat, or Sources.
 - [x] Let podcast creators save privately or share immediately, then change that choice later.
 ## Current build
-- [ ] Give every Other Systems page a calculated, system-specific chart and placement meanings.
-- [ ] Split Podcasts into sortable shared and private libraries with complete playback controls.
-- [ ] Make generated episodes use, store, and display citations from protected Masterbook passages.
-- [ ] Rewrite Workbook guidance in plain language and add a step-by-step interpretation guide.
-- [ ] Add plain-language explanations beside every relevant planet, house, and aspect in the chart report.
-- [ ] Verify the updated pages on desktop and mobile, including playback, privacy, citations, and navigation.
+- [x] Give every Other Systems page a calculated, system-specific chart and placement meanings.
+- [x] Split Podcasts into sortable shared and private libraries with complete playback controls.
+- [x] Make generated episodes use, store, and display citations from protected Masterbook passages.
+- [x] Rewrite Workbook guidance in plain language and add a step-by-step interpretation guide.
+- [x] Add plain-language explanations beside every relevant planet, house, and aspect in the chart report.
+- [x] Verify the updated pages on desktop and mobile, including playback, privacy, citations, and navigation.

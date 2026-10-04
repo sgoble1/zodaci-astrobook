@@ -3,12 +3,14 @@
 export type WorkbookQuestion = { key: string; q: string; why: string; lens: string };
 export type WorkbookModule = {
   slug: string; title: string; subtitle: string; placements: string; intro: string;
+  plainMeaning: string; dailyLife: string;
   questions: WorkbookQuestion[]; explore: { to: string; label: string }[];
 };
 
 export const WORKBOOK_MODULES: WorkbookModule[] = [
   {
     slug: 'full-moon-within', title: 'The Full Moon Within', subtitle: 'Say it now vs. perfect it first',
+    plainMeaning: 'One side of you reacts quickly and honestly; another wants time to check every detail.', dailyLife: 'You may swing between speaking immediately and holding everything in until the words feel perfect.',
     placements: 'Sun Virgo 8th ☍ Moon Aries 3rd', intro: 'You were born at a Full Moon: a fast, honest Aries flame facing a careful Virgo mind. Neither is wrong. This module helps them work as a team.',
     questions: [
       { key: 'fm-1', q: 'Think of a recent moment you wanted to say something immediately but held back to get it “right”. What happened, and what did it cost you?', why: 'Aries Moon in the 3rd wants to speak; Virgo Sun in the 8th wants to process privately first.', lens: 'CBT — situation, thought, feeling' },
@@ -21,6 +23,7 @@ export const WORKBOOK_MODULES: WorkbookModule[] = [
   },
   {
     slug: 'inner-critic', title: 'Making Peace with the Inner Critic', subtitle: 'Precision without punishment',
+    plainMeaning: 'Your mind notices tiny details and reviews things repeatedly. That can help you improve, but it can also become harsh self-judgment.', dailyLife: 'You may replay conversations, spot flaws before strengths, or wait too long because the result does not feel perfect.',
     placements: 'Mercury Rx Virgo 8th (domicile) ☌ Sun', intro: 'Your mind is a superb editor. This module helps you keep the editor and retire the prosecutor.',
     questions: [
       { key: 'ic-1', q: 'Write down, word for word, the harshest thing your inner critic said to you this month.', why: 'Mercury retrograde in its own sign turns analysis inward and replays conversations.', lens: 'CBT — catching automatic thoughts' },
@@ -33,6 +36,7 @@ export const WORKBOOK_MODULES: WorkbookModule[] = [
   },
   {
     slug: 'fire-and-feeling', title: 'Fire & Feeling', subtitle: 'Anger, needs and quick sparks',
+    plainMeaning: 'Your feelings can arrive quickly and strongly. The goal is to hear their message before deciding what to do.', dailyLife: 'A small event may create a fast physical reaction, sharp words, or an urgent need to solve the problem now.',
     placements: 'Moon Aries 3rd □ Pluto Scorpio 10th · Mars Gemini 5th', intro: 'Your feelings arrive fast and hot, and they carry information. Here you learn to read them before they read you.',
     questions: [
       { key: 'ff-1', q: 'What reliably makes you angry? List three triggers and the need hiding under each.', why: 'Aries Moon expresses needs as heat; Moon square Pluto adds intensity.', lens: 'Nonviolent Communication — feelings & needs' },
@@ -45,6 +49,7 @@ export const WORKBOOK_MODULES: WorkbookModule[] = [
   },
   {
     slug: 'depth-trust-power', title: 'Depth, Trust & Power', subtitle: 'Letting people in safely',
+    plainMeaning: 'Trust matters deeply to you, so closeness may feel serious rather than casual.', dailyLife: 'You may take time to trust, protect private feelings, or feel safest when expectations and power are discussed honestly.',
     placements: 'Sun, Mercury, Venus, Vertex in the 8th · Pluto 10th', intro: 'With so much in the 8th house, you live life in the deep end. This module explores trust, control and transformation.',
     questions: [
       { key: 'dt-1', q: 'What does someone have to do to earn your full trust? Be specific.', why: 'An 8th-house emphasis makes trust all-or-nothing and slow to build.', lens: 'Attachment theory' },
@@ -57,6 +62,7 @@ export const WORKBOOK_MODULES: WorkbookModule[] = [
   },
   {
     slug: 'love-and-being-chosen', title: 'Love & Being Chosen', subtitle: 'Giving, receiving and being seen',
+    plainMeaning: 'You give love warmly and want to feel clearly chosen, appreciated and emotionally safe in return.', dailyLife: 'You may give extra care hoping it will be returned, or feel hurt when your effort is noticed less than expected.',
     placements: 'Venus Leo 29° 8th · Moon ☍ Venus · Chiron & South Node in the 7th', intro: 'You love loyally and generously. This module looks at how you want to be loved back — and old patterns of over-giving.',
     questions: [
       { key: 'lc-1', q: 'When do you feel most adored? Describe the moment in detail.', why: 'Venus in Leo needs to be seen, celebrated and chosen.', lens: 'Love languages & positive psychology' },
@@ -69,6 +75,7 @@ export const WORKBOOK_MODULES: WorkbookModule[] = [
   },
   {
     slug: 'carrying-the-weight', title: 'Carrying the Weight', subtitle: 'Responsibility, rest and softness',
+    plainMeaning: 'You may have learned to be capable and responsible early. Rest can feel harder than carrying one more task.', dailyLife: 'People may rely on you while you quietly postpone your own needs or judge yourself by demanding standards.',
     placements: 'Saturn, Uranus, Neptune in Capricorn, 1st house', intro: 'You probably grew up early and became the dependable one. This module makes room for rest and softness.',
     questions: [
       { key: 'cw-1', q: 'What responsibilities did you take on younger than you should have?', why: 'Saturn in the 1st often brings early maturity and self-reliance.', lens: 'Inner-child work' },
@@ -81,6 +88,7 @@ export const WORKBOOK_MODULES: WorkbookModule[] = [
   },
   {
     slug: 'becoming-your-own-person', title: 'Becoming Your Own Person', subtitle: 'Independence and your unusual path',
+    plainMeaning: 'Growth comes from defining yourself instead of performing the version of you that others expect.', dailyLife: 'You may notice tension between belonging to a group and saying what you truly think or choosing your own path.',
     placements: 'North Node Aquarius 1st · Lilith Sagittarius 11th', intro: 'Your growth points toward owning your individuality. This module explores freedom, belonging and your own rules.',
     questions: [
       { key: 'yp-1', q: 'Where are you still living by someone else’s rules?', why: 'North Node in Aquarius in the 1st asks you to define yourself on your own terms.', lens: 'Values clarification' },
@@ -93,6 +101,7 @@ export const WORKBOOK_MODULES: WorkbookModule[] = [
   },
   {
     slug: 'meaning-and-calling', title: 'Meaning & Calling', subtitle: 'Truth, purpose and public life',
+    plainMeaning: 'Work feels worthwhile when it serves a larger purpose and changes something for the better.', dailyLife: 'You may lose energy in work that feels empty, yet become deeply focused when a problem is meaningful and useful.',
     placements: 'Ascendant Sagittarius 29° · Pluto 10th · Midheaven Libra · Life Path 7', intro: 'You meet life searching for meaning. This module explores calling, work and the truth you are here to tell.',
     questions: [
       { key: 'mc-1', q: 'What questions have you been asking your whole life?', why: 'Life Path 7 and a Sagittarius Ascendant are both seekers of truth.', lens: 'Existential therapy' },
@@ -105,6 +114,7 @@ export const WORKBOOK_MODULES: WorkbookModule[] = [
   },
   {
     slug: 'this-year', title: 'This Year: Endings & Inner Work', subtitle: 'Your 12th-house year and Personal Year 7',
+    plainMeaning: 'This is framed as a quieter year for finishing old business, understanding yourself and making room for what comes next.', dailyLife: 'You may need more solitude, feel drawn to unfinished emotional matters, or prefer preparation over visible expansion.',
     placements: 'Profection age 35 (12th house) · Personal Year 7 (2026)', intro: 'This year asks for retreat, reflection and closure before a new cycle. Use this module to work with it rather than against it.',
     questions: [
       { key: 'ty-1', q: 'What are you ready to finish, forgive or let go of before your next birthday?', why: 'A 12th-house profection year is about closing a 12-year cycle.', lens: 'Grief & closure work' },
