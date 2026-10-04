@@ -9,8 +9,8 @@ export function UpdatesFeed({ limit = 6 }: { limit?: number }) {
   const [all, setAll] = useState(false);
   const [live, setLive] = useState<Update[]>([]);
   useEffect(() => {
-    supabase.from('library_items').select('id,kind,title,description,category,created_at').order('created_at', { ascending: false }).limit(50)
-      .then(({ data }) => setLive((data ?? []).filter(d => !(d.category ?? '').startsWith('Relationship')).map(d => ({
+    supabase.rpc('recent_library_items')
+      .then(({ data }) => setLive((data ?? []).map(d => ({
         date: d.created_at, kind: 'Content' as UpdateKind,
         title: d.kind === 'podcast' ? `New podcast: ${d.title}` : `New document: ${d.title}`,
         body: d.description || (d.kind === 'podcast' ? 'A new episode was added to Podcasts.' : 'A new source document was added to the library.'),

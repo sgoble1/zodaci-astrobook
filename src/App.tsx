@@ -6,6 +6,7 @@ import UploadedDoc from './pages/UploadedDoc';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { useMemo, type ReactNode } from 'react';
 import { AppShell } from './components/layout/AppShell';
+import { PublicLibrary, PublicReader } from './pages/PublicLibrary';
 import { SitePasswordGate } from './components/common/SitePasswordGate';
 import { DetailDrawerProvider, type DrawerPayload } from './components/common/DetailDrawer';
 import { CommandPalette } from './components/common/CommandPalette';
@@ -134,10 +135,12 @@ function Providers({ children }: { children: ReactNode }) {
 
 export default function App() {
   return (
-    <SitePasswordGate>
     <BrowserRouter>
+    <SitePasswordGate>
       <Providers>
         <Routes>
+          <Route path="/read" element={<PublicLibrary />} />
+          <Route path="/read/:id" element={<PublicReader />} />
           <Route element={<AppShell />}>
             <Route path="/" element={<Home />} />
             <Route path="/birth-chart" element={<BirthChart />} />
@@ -191,7 +194,7 @@ export default function App() {
           </Route>
         </Routes>
       </Providers>
-    </BrowserRouter>
     </SitePasswordGate>
+    </BrowserRouter>
   );
 }

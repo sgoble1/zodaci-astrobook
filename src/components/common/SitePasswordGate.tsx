@@ -1,4 +1,5 @@
 import { useState, type ReactNode, type FormEvent } from 'react';
+import { useLocation } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 
 const KEY = 'site-unlocked-v1';
@@ -9,7 +10,8 @@ export function SitePasswordGate({ children }: { children: ReactNode }) {
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState('');
 
-  if (unlocked) return <>{children}</>;
+  const { pathname } = useLocation();
+  if (unlocked || pathname === '/read' || pathname.startsWith('/read/')) return <>{children}</>;
 
   const submit = async (e: FormEvent) => {
     e.preventDefault();
