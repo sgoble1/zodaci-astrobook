@@ -884,6 +884,68 @@ export type Database = {
         }
         Relationships: []
       }
+      social_messages: {
+        Row: {
+          created_at: string
+          id: string
+          owner_id: string
+          parts: Json
+          role: string
+          session_id: string
+          ui_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          owner_id?: string
+          parts?: Json
+          role: string
+          session_id: string
+          ui_id?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          owner_id?: string
+          parts?: Json
+          role?: string
+          session_id?: string
+          ui_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "social_messages_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "social_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      social_sessions: {
+        Row: {
+          created_at: string
+          id: string
+          owner_id: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          owner_id?: string
+          title?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          owner_id?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       therapy_messages: {
         Row: {
           created_at: string
