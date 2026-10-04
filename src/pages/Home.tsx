@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { NatalWheel } from '@/components/chart/NatalWheel';
 import { BIRTH, PHASES, PLACEMENTS } from '@/content/april';
+import { UpdatesFeed } from '@/components/common/UpdatesFeed';
 import heroImg from '@/assets/hero-threshold.jpg';
 
 const modules = [
@@ -104,6 +105,7 @@ export default function Home() {
           </div>
         </div>
       </section>
+      <UpdatesFeed />
     </div>
   );
 }
