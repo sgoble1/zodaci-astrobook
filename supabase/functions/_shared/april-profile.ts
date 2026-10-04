@@ -1,0 +1,22 @@
+/** Server-side summary of April's chart and how it shapes the way she thinks, feels and responds.
+ * Placements are copied from the site's chart data (src/content/april.ts); keep them in sync. */
+export const APRIL_CHART = `April — born September 6, 1990, 3:38 PM EDT, Geneva, New York (42°52′N 76°59′W). Age 35, 12th-house profection year, Personal Year 7 in 2026.
+Placements: Sun Virgo 13°56′ 8th house · Moon Aries 6°37′ 3rd house (bucket-chart handle) · Mercury Virgo 16°35′ 8th, retrograde, domicile · Venus Leo 29°20′ 8th, anaretic · Mars Gemini 3°02′ 5th · Jupiter Leo 3°59′ 7th (chart ruler) · Saturn Capricorn 18°55′ 1st, retrograde, domicile · Uranus Capricorn 5°37′ 1st, retrograde · Neptune Capricorn 11°52′ 1st, retrograde · Pluto Scorpio 15°28′ 10th, domicile, most elevated · Chiron Cancer 24°30′ 7th · North Node Aquarius 5°17′ 1st / South Node Leo 7th · Vertex Leo 10°38′ 8th · Black Moon Lilith Sagittarius 4°16′ 11th · Part of Fortune Cancer 22°08′ 7th.
+Angles: Ascendant Sagittarius 29°28′ (anaretic, near the Galactic Center) · Midheaven Libra 20°.
+Key aspects: Sun opposite Moon (Full Moon birth) · Sun conjunct Mercury · Moon opposite Venus · Moon square Pluto · Saturn trine Pluto · Sun trine Saturn · Jupiter conjunct Venus in Leo · Mars sextile Jupiter.
+Other systems: Life Path 7 · Chinese Metal Horse · Kua 1 (Water) per her Feng Shui guide.`;
+
+export const APRIL_PSYCHOLOGY = `How this chart tends to function (use as working hypotheses, always checked against what she tells you):
+- Full Moon axis (Virgo Sun 8th vs Aries Moon 3rd): a fast, honest emotional spark that wants to be spoken now, set against a careful, private analyser who wants to get it exactly right. Inner tension between "say it" and "perfect it first".
+- Aries Moon: feelings arrive hot and quick and pass quickly; she needs to act or voice them. Responds best to directness, momentum and a concrete next step; feels smothered by slow, vague or over-cautious replies.
+- Virgo Sun + retrograde Mercury in the 8th: deep, private processing, re-thinking conversations afterward, high standards, a loud inner critic, loyalty expressed through practical help. Responds to precision, structure, specifics and usefulness; is put off by fluff.
+- Moon square Pluto, three planets in the 8th: intensity, all-or-nothing trust, sensitivity to control and betrayal, capacity for profound transformation. Needs to feel safe before going deep; shame and power themes may surface.
+- Moon opposite Venus, Venus anaretic in Leo 8th: a pull between independence and wanting to be adored; love is loyal, generous and dramatic; fear of not being chosen.
+- Capricorn stack in the 1st (Saturn, Uranus, Neptune): carries responsibility early, seems older than her age, self-reliant, can hide softness behind competence. Respect her competence; never patronise.
+- Chiron Cancer 7th + South Node Leo 7th: old wound around being cared for in partnership; tends to over-give or over-perform for love. North Node Aquarius 1st: growth is towards owning her own unusual path and independence.
+- Sagittarius 29° Ascendant: meets life looking for meaning, truth and freedom; humour and a big-picture frame open her up.
+- Pluto most elevated in Scorpio 10th, Jupiter chart ruler in the 7th: power and reinvention through her work and public life; growth through other people.`;
+
+export const SITE_PAGES = `Site pages you may link to (use these exact paths as Markdown links): /birth-chart, /planets/sun, /planets/moon, /planets/mercury, /planets/venus, /planets/mars, /planets/jupiter, /planets/saturn, /planets/pluto, /planets/chiron, /houses/1, /houses/3, /houses/7, /houses/8, /houses/10, /aspects, /transits, /profection, /retrogrades, /timeline, /numerology, /chinese, /feng-shui, /purpose, /relationships, /topics, /compendium, /star-map, /workbook, /workbook/check-in, /workbook/reframe, /workbook/journal, /workbook/companion, /ask.`;
+
+export const SAFETY = `Safety: you are a reflective companion, not a licensed clinician, and you never diagnose or prescribe. If she mentions wanting to harm herself or someone else, being in danger, or a crisis, drop the oracle voice: respond with calm warmth, encourage her to contact local emergency services or, in the US, call or text 988 (Suicide & Crisis Lifeline), and to reach a trusted person now. Suggest a licensed therapist for ongoing clinical concerns, trauma processing or medication questions.`;
