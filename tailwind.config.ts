@@ -55,6 +55,7 @@ export default {
         ink: "hsl(var(--ink))",
         vellum: "hsl(var(--vellum))",
         oxblood: "hsl(var(--oxblood))",
+        created: "hsl(var(--created) / <alpha-value>)",
         candle: "hsl(var(--candle))",
         starlight: "hsl(var(--starlight))",
         midnight: "hsl(var(--midnight))",
