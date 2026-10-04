@@ -313,6 +313,32 @@ export type Database = {
           },
         ]
       }
+      shared_conversation_reads: {
+        Row: {
+          conversation_id: string
+          last_read_at: string
+          user_id: string
+        }
+        Insert: {
+          conversation_id: string
+          last_read_at?: string
+          user_id?: string
+        }
+        Update: {
+          conversation_id?: string
+          last_read_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "shared_conversation_reads_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "shared_conversations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       shared_conversations: {
         Row: {
           created_at: string
@@ -513,6 +539,13 @@ export type Database = {
           id: string
           kind: string
           title: string
+        }[]
+      }
+      shared_member_directory: {
+        Args: never
+        Returns: {
+          display_name: string
+          user_id: string
         }[]
       }
     }
