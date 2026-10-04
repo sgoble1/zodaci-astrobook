@@ -33,6 +33,7 @@ export default function Companion() {
           <div className="font-smallcaps text-xs text-gold">Workbook · Private sessions</div>
           <h1 className="text-4xl sm:text-5xl">The Oracle Within</h1>
           <p className="max-w-2xl text-muted-foreground">A therapy companion that knows your whole chart — how you feel, react and heal — and blends it with proven therapy approaches. Sessions are saved privately to your account.</p>
+          <p role="note" className="max-w-2xl rounded border border-accent/40 bg-accent/10 px-3 py-2 text-sm"><strong>Private to you, April.</strong> Your sessions are never shared with Shane or anyone else — no one but your own account can open them, and Shane cannot see that they exist.</p>
         </div>
       </header>
       <AuthGate what="talk with The Oracle Within">{() => <CompanionInner />}</AuthGate>
