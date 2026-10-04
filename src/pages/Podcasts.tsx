@@ -48,7 +48,7 @@ export default function Podcasts() {
         <section className="parchment p-4">
           <div className="flex items-center justify-between mb-2">
             <div className="font-smallcaps text-[10px] text-gold">Up next · {queue.length}</div>
-            <button className="text-xs underline" onClick={() => setQueue([])}>Clear queue</button>
+            <button className="text-xs underline" onClick={() => setQueue(() => [])}>Clear queue</button>
           </div>
           <ol className="space-y-1 text-sm">
             {queue.map((id, i) => { const ep = byId(id); if (!ep) return null; return (
