@@ -15,3 +15,6 @@ export function useCustomPages() {
   }, []);
   return items;
 }
+
+/** Session key holding the id of a just-created page, so the menu can scroll to it and glow. */
+export const NEW_PAGE_HIGHLIGHT_KEY = 'new-page-highlight';
