@@ -1,4 +1,5 @@
 import { PageErrorBoundary } from '@/components/common/PageErrorBoundary';
+import { VerifySources } from '@/components/common/VerifySources';
 import { NavLink, Outlet, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import ParticleField from '@/components/fx/ParticleField';
@@ -81,7 +82,7 @@ export function AppShell() {
       <main id="main-content" tabIndex={-1} className="flex-1 min-w-0 lg:pt-0 pt-[64px] relative z-10 outline-none">
         <div className="mx-auto max-w-5xl px-4 sm:px-8 py-8 sm:py-10 lg:py-14">
           <motion.div key={location.pathname} initial={{ opacity: 0, y: 24, filter: 'blur(6px)' }} animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }} transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}>
-            <PageErrorBoundary key={location.pathname}><Outlet /></PageErrorBoundary>
+            <PageErrorBoundary key={location.pathname}><Outlet /><VerifySources /></PageErrorBoundary>
           </motion.div>
         </div>
         <footer className="border-t border-border mt-16">
