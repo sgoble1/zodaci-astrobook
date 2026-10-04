@@ -92,3 +92,10 @@
 ## Chat session resilience
 - [x] Refresh private counselor credentials before requests and handle expired sessions without blanking the page.
 - [x] Verify expired-session handling and authenticated Social Counselor loading without screen crashes.
+
+## AstroBook mobile and workbook upgrade
+- [ ] Rebrand the private experience as AstroBook with a purple-and-yellow star logo.
+- [ ] Change the home Begin action to Explore & Discover.
+- [ ] Add chapter-specific visual thinking tools throughout the Workbook.
+- [ ] Repair and verify the complete mobile menu and narrow-screen experience.
+- [ ] Verify accessibility, representative pages, and build quality on mobile and desktop.
