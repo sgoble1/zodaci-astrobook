@@ -62,6 +62,7 @@ import SharedSpace from './pages/SharedSpace';
 import { OtherSystemsDashboard, OtherSystemDetail } from './pages/OtherSystems';
 import { WorkbookHome, WorkbookModulePage, WorkbookCheckIn, WorkbookReframe, WorkbookJournal } from './pages/Workbook';
 import Companion from './pages/Companion';
+import ExploreDiscover from './pages/ExploreDiscover';
 
 
 /** Build a single registry of every drawer-openable Compendium item. Used so
@@ -153,6 +154,7 @@ export default function App() {
           <Route path="/read/:id" element={<PublicReader />} />
           <Route element={<AppShell />}>
             <Route path="/" element={<Home />} />
+            <Route path="/explore" element={<ExploreDiscover />} />
             <Route path="/birth-chart" element={<BirthChart />} />
             <Route path="/planets" element={<Planets />} />
             <Route path="/planets/:key" element={<PlanetDetail />} />
