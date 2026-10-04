@@ -83,8 +83,19 @@ function Conversations({ userId }: { userId: string }) {
     const { data } = await db('shared_conversations').select('*').order('kind').order('updated_at', { ascending: false });
     const rows = (data ?? []) as Conversation[];
     setConversations(rows);
+    const [{ data: messageRows }, { data: readRows }] = await Promise.all([
+      db('shared_messages').select('conversation_id,sender_id,created_at').neq('sender_id', userId),
+      db('shared_conversation_reads').select('conversation_id,last_read_at').eq('user_id', userId),
+    ]);
+    const readAt = new Map((readRows ?? []).map((row: { conversation_id: string; last_read_at: string }) => [row.conversation_id, row.last_read_at]));
+    const counts: Record<string, number> = {};
+    for (const row of messageRows ?? []) {
+      const lastRead = readAt.get(row.conversation_id);
+      if (!lastRead || row.created_at > lastRead) counts[row.conversation_id] = (counts[row.conversation_id] ?? 0) + 1;
+    }
+    setUnread(counts);
     if (!id && main.data) nav(`/shared/chat/${main.data}`, { replace: true });
-  }, [id, nav]);
+  }, [id, nav, userId]);
 
   const loadMessages = useCallback(async () => {
     if (!id) return;
@@ -170,7 +181,7 @@ function TalkLater({ userId }: { userId: string }) {
 function Accounts({ userId }: { userId: string }) {
   const [items, setItems] = useState<AccountRef[]>([]); const [form, setForm] = useState({ service_name: '', url: '', username: '', account_owner: 'Shared', notes: '' });
   const load = useCallback(async () => { const { data } = await db('shared_account_refs').select('*').order('service_name'); setItems((data ?? []) as AccountRef[]); }, []); useEffect(() => { load(); }, [load]);
-  const add = async () => { if (!form.service_name.trim()) return; const { error } = await db('shared_account_refs').insert({ ...form, created_by: userId }); if (error) return toast.error(error.message); setForm({ service_name: '', url: '', username: '', account_owner: 'Shared', notes: '' }); load(); };
+  const add = async () => { if (!form.service_name.trim()) return; if (form.url) { try { const parsed = new URL(form.url); if (!['http:', 'https:'].includes(parsed.protocol)) throw new Error(); } catch { toast.error('Use a complete http or https link.'); return; } } const { error } = await db('shared_account_refs').insert({ ...form, created_by: userId }); if (error) return toast.error(error.message); setForm({ service_name: '', url: '', username: '', account_owner: 'Shared', notes: '' }); load(); };
   const remove = async (id: string) => { const { error } = await db('shared_account_refs').delete().eq('id', id); if (error) toast.error(error.message); else load(); };
   const field = (key: keyof typeof form, placeholder: string) => <Input value={form[key]} onChange={e => setForm(current => ({ ...current, [key]: e.target.value }))} placeholder={placeholder}/>;
   return <div className="space-y-5"><div className="rounded border border-candle/40 bg-candle/10 p-3 text-sm"><strong>Keep this safe:</strong> save links, usernames, ownership, and context here—never passwords, recovery codes, or security answers.</div><div className="parchment grid gap-3 p-4 md:grid-cols-2">{field('service_name', 'Service name')}{field('url', 'https://…')}{field('username', 'Username or account email')}{field('account_owner', 'Owner: Shared, April, or Shane')}<Textarea className="md:col-span-2" rows={3} value={form.notes} onChange={e => setForm(current => ({ ...current, notes: e.target.value }))} placeholder="Notes (never passwords)"/><div className="md:col-span-2"><Button onClick={add} disabled={!form.service_name.trim()}><Plus/>Add account reference</Button></div></div><div className="grid gap-3 sm:grid-cols-2">{items.map(item => <article key={item.id} className="parchment p-4 space-y-2"><div className="flex items-start justify-between gap-2"><h2 className="text-xl">{item.service_name}</h2><Button size="icon" variant="ghost" onClick={() => remove(item.id)} aria-label={`Remove ${item.service_name}`}><Trash2/></Button></div><div className="text-sm"><span className="text-muted-foreground">Owner:</span> {item.account_owner}</div>{item.username && <div className="break-all text-sm"><span className="text-muted-foreground">Username:</span> {item.username}</div>}{item.url && <a className="inline-flex items-center gap-1 break-all text-sm underline" href={item.url} target="_blank" rel="noreferrer"><Link2 className="h-3.5 w-3.5"/>{item.url}</a>}{item.notes && <p className="whitespace-pre-wrap text-sm text-muted-foreground">{item.notes}</p>}</article>)}</div></div>;
