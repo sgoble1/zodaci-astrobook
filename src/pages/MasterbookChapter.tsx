@@ -8,6 +8,7 @@ import { CopyLinkButton } from '@/components/common/CopyLinkButton';
 import { BUILT_IN_SOURCES } from '@/content/sources';
 import { loadLibraryIndex } from '@/lib/corpus';
 import { SummarisePanel, toPassages } from '@/components/common/SummarisePanel';
+import { loadProtectedText } from '@/lib/protectedContent';
 
 const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 60);
 
@@ -16,7 +17,7 @@ export default function MasterbookChapter() {
   const [entries, setEntries] = useState<MbEntry[]>([]);
   const [text, setText] = useState<string | null>(null);
   useEffect(() => { loadIndex().then(setEntries); }, []);
-  useEffect(() => { setText(null); fetch(`/masterbook/${id}.md`).then(r => r.ok ? r.text() : '').then(setText); }, [id]);
+  useEffect(() => { setText(null); loadProtectedText('masterbook', `${id}.md`).then(setText).catch(() => setText('')); }, [id]);
   useEffect(() => {
     if (text && window.location.hash) setTimeout(() => document.getElementById(window.location.hash.slice(1))?.scrollIntoView({ behavior: 'smooth' }), 50);
   }, [text]);
@@ -60,6 +61,7 @@ export default function MasterbookChapter() {
           {next && <Link to={`/masterbook/${next.id}`} className="parchment p-3 flex items-center gap-2 text-sm max-w-[48%] text-right"><span className="truncate">{next.title}</span><ChevronRight className="w-4 h-4 shrink-0" /></Link>}
         </nav>
       </article>
+      {toc.length > 1 && <details className="xl:hidden parchment p-4 h-fit"><summary className="cursor-pointer font-smallcaps text-xs text-gold">On this page</summary><div className="mt-3 space-y-2">{toc.map(t => <a key={t} href={`#${slug(t)}`} className="block text-sm text-muted-foreground hover:text-foreground">{t}</a>)}</div></details>}
       {toc.length > 1 && (
         <aside className="hidden xl:block">
           <div className="sticky top-6 max-h-[85vh] overflow-y-auto text-xs space-y-1">

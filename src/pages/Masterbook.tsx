@@ -2,11 +2,12 @@ import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Input } from '@/components/ui/input';
 import { useLibrary } from '@/hooks/useLibrary';
+import { loadProtectedJson } from '@/lib/protectedContent';
 
 export type MbEntry = { id: string; label: string; title: string; part: string; words: number; sections: string[]; excerpt: string; doc?: string; page?: number };
 
 let cache: Promise<MbEntry[]> | null = null;
-export const loadIndex = () => (cache ??= fetch('/masterbook/index.json').then(r => r.json()));
+export const loadIndex = () => (cache ??= loadProtectedJson<MbEntry[]>('masterbook', 'index.json'));
 
 export const CATEGORIES: [string, RegExp][] = [
   ['Planets & Points', /\b(sun|moon|mercury|venus|mars|jupiter|saturn|uranus|neptune|pluto|node|chiron|lilith|vertex|ascendant|rising|midheaven|fortune|stellium)\b/i],

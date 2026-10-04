@@ -1,4 +1,5 @@
 import { BookmarkButton } from '@/components/common/BookmarkButton';
+import { loadProtectedText } from '@/lib/protectedContent';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
@@ -10,7 +11,7 @@ let indexCache: Promise<Entry[]> | null = null;
 const loadIndex = () => (indexCache ??= fetch('/masterbook/index.json').then(r => r.json()));
 const textCache = new Map<string, Promise<string>>();
 const loadText = (id: string) => {
-  if (!textCache.has(id)) textCache.set(id, fetch(`/masterbook/${id}.md`).then(r => (r.ok ? r.text() : '')));
+  if (!textCache.has(id)) textCache.set(id, loadProtectedText('masterbook', `${id}.md`).catch(() => ''));
   return textCache.get(id)!;
 };
 

@@ -7,6 +7,7 @@ import { BUILT_IN_SOURCES, fmtSize } from '@/content/sources';
 import { useLibrary } from '@/hooks/useLibrary';
 import { Input } from '@/components/ui/input';
 import { useDocOverrides } from '@/hooks/useDocOverrides';
+import { loadProtectedJson } from '@/lib/protectedContent';
 
 type Sec = { title: string; to?: string; pdf?: string; meta?: string };
 type Doc = { key: string; note?: string; title: string; kind: string; size?: string; open?: string; read?: string; ask: string; sections: Sec[] };
@@ -25,7 +26,7 @@ export default function MasterbookSources() {
     if (!expanded?.startsWith('lib:')) return;
     const id = expanded.slice(4);
     if (units[id]) return;
-    fetch(`/library/${id}.json`).then(r => r.json()).then(u => setUnits(x => ({ ...x, [id]: u })));
+    loadProtectedJson<{ loc: string; text: string }[]>('library', `${id}.json`).then(u => setUnits(x => ({ ...x, [id]: u })));
   }, [expanded, units]);
 
   const docs = useMemo<Doc[]>(() => {

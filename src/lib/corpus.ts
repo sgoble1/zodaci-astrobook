@@ -1,10 +1,11 @@
 import { BUILT_IN_SOURCES } from '@/content/sources';
+import { loadProtectedJson, loadProtectedText } from '@/lib/protectedContent';
 
 export type Passage = { key: string; doc: string; source: string; loc: string; text: string; href: string };
 type LibIdx = { id: string; fileName: string; units: number; words: number }[];
 
 let corpus: Promise<Passage[]> | null = null;
-export const loadLibraryIndex = () => fetch('/library/index.json').then(r => r.json() as Promise<LibIdx>);
+export const loadLibraryIndex = () => loadProtectedJson<LibIdx>('library', 'index.json');
 
 const titleFor = (fileName: string) => BUILT_IN_SOURCES.find(s => s.fileName === fileName)?.title ?? fileName;
 
@@ -22,9 +23,9 @@ function chunk(text: string, max = 180): string[] {
 export function loadCorpus(): Promise<Passage[]> {
   return (corpus ??= (async () => {
     const passages: Passage[] = [];
-    const mb = await fetch('/masterbook/index.json').then(r => r.json()) as { id: string; label: string; title: string }[];
+    const mb = await loadProtectedJson<{ id: string; label: string; title: string }[]>('masterbook', 'index.json');
     await Promise.all(mb.filter(e => !/^(c|v2|cmp)-/.test(e.id)).map(async (e) => {
-      const md = await fetch(`/masterbook/${e.id}.md`).then(r => r.text());
+      const md = await loadProtectedText('masterbook', `${e.id}.md`);
       let section = e.title;
       md.split(/\n(?=### )/).forEach((blk) => {
         const m = blk.match(/^### (.+)/); if (m) section = m[1];
@@ -36,7 +37,7 @@ export function loadCorpus(): Promise<Passage[]> {
     }));
     const lib = await loadLibraryIndex();
     await Promise.all(lib.map(async (d) => {
-      const units = await fetch(`/library/${d.id}.json`).then(r => r.json()) as { loc: string; text: string }[];
+      const units = await loadProtectedJson<{ loc: string; text: string }[]>('library', `${d.id}.json`);
       units.forEach((u, ui) => chunk(u.text).forEach((t, i) => passages.push({
         key: `lib:${d.id}:${ui}:${i}`, doc: d.id, source: titleFor(d.fileName), loc: u.loc, text: t, href: `/sources/read/${d.id}#u${ui}`,
       })));
