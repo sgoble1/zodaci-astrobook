@@ -19,7 +19,7 @@ export function calculateOtherSystem(slug: string): SystemChart {
     return { summary: `${placements[0].value.split(' ·')[0]} Sun · ${placements[1].value.split(' ·')[0]} Moon`, method: `Each astronomy-based tropical longitude was shifted back ${ayanamsa.toFixed(2)}° using an approximate Lahiri offset for April’s birth date.`, placements, values: picks.map(b => mod(b.lon-ayanamsa,360)/360) };
   }
   if (slug === 'mayan-tzolkin') {
-    const kin=mod(jdn(1990,9,6)-584283,260), tone=mod(kin,13)+1, sign=TZOLKIN[mod(kin,20)];
+    const kin=mod(jdn(1990,9,6)-584283+159,260), tone=mod(kin,13)+1, sign=TZOLKIN[mod(kin,20)];
     return { summary:`${tone} ${sign}`, method:`Julian day ${jdn(1990,9,6)} minus the GMT 584283 correlation, reduced through the 260-day cycle.`, placements:[{label:'Tone',value:String(tone),meaning:'completion, perspective and moving into a new cycle'},{label:'Day sign',value:sign,meaning:'clarity, reflection and cutting through confusion'},{label:'Calendar position',value:`Kin ${kin+1} of 260`,meaning:'April’s exact place in the repeating sacred calendar'}], values:[tone/13,mod(kin,20)/20,kin/260] };
   }
   if (slug === 'tibetan-mewa') return { summary:'White 1 Mewa · Water', method:'The traditional nine-number birth-year sequence resolves 1990 to Mewa 1.', placements:[{label:'Birth Mewa',value:'1 White',meaning:'a reflective nature that learns by looking beneath the surface'},{label:'Element',value:'Water',meaning:'adaptability, intuition and finding a path around obstacles'},{label:'Direction',value:'North',meaning:'quietness, listening and inner orientation'}], values:[1/9,.75,.12] };
