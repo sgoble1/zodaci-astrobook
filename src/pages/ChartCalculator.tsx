@@ -131,7 +131,7 @@ export default function ChartCalculator() {
               ],
               output: 'Positions shown above; the Δ column compares them with the PDF when the input is April’s birth.',
               confidence: input.time ? 'derived' : 'ambiguous',
-              caveats: ['Chiron, Lilith, Vertex and the Part of Fortune are not computed. See the Planets pages for their values from the sources.'],
+              caveats: ['Lilith (mean), Vertex and Part of Fortune are now calculated here. Chiron needs a separate asteroid ephemeris; for April it is Cancer 24°31′ direct, confirmed with NASA JPL Horizons (shown on the Planets pages).'],
             }} />
             <p className="text-[11px] text-muted-foreground mt-2">Meaning glosses are short keywords written for the app, not quotes from the PDFs.<Cite source={CALC_SRC} /></p>
           </section>

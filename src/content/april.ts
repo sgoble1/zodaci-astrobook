@@ -156,7 +156,7 @@ export const PLACEMENTS: Placement[] = [
   },
   {
     key: 'northNode', name: 'North Node', glyph: '☊', sign: 'Aquarius', signGlyph: '♒',
-    degree: 5, minute: 17, house: 1, motion: 'Direct', dignity: '—',
+    degree: 5, minute: 17, house: 1, motion: 'Retrograde', dignity: '—',
     notes: "Soul's compass · Pluto approaching",
     headline: 'North Node in Aquarius · First House · 5°17′',
     interpretation:
@@ -164,7 +164,7 @@ export const PLACEMENTS: Placement[] = [
   },
   {
     key: 'southNode', name: 'South Node', glyph: '☋', sign: 'Leo', signGlyph: '♌',
-    degree: 5, minute: 17, house: 7, motion: 'Direct', dignity: '—',
+    degree: 5, minute: 17, house: 7, motion: 'Retrograde', dignity: '—',
     notes: 'The stage performer she no longer has to be',
     headline: 'South Node in Leo · Seventh House · 5°17′',
     interpretation:
