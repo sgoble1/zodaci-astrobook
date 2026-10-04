@@ -15,3 +15,7 @@
 - The human shared space is database- and storage-enforced for exactly Shane and April's approved email accounts; never rely on client-only access checks.
 - The compact private conversation feed is shared between Home and My Dashboard and must stay hidden for signed-out or unapproved accounts.
 - Created pages live in custom_pages (menu_group = sidebar section title) and are written by the generate-page function from BM25-ranked source passages; the sidebar merges them in so new pages need no code changes.
+- Shared recommendations and media use shared_recommendations/shared_media with generic shared_item_comments/shared_item_reactions (item_type + item_id) — one thread system for any shared item.
+- Podcast creation runs in the make-podcast function (script → TTS WAV → private library bucket → library_items kind 'podcast') so new episodes appear in the normal podcast list.
+- Illustration plates are generated images in src/assets/plates, swapped in for plate descriptions at render time by withPlates(); the protected text itself is unchanged.
+- April's own pages filter passages with aprilOnly() so Shane's chart/family/home appears only on Relationship pages.
