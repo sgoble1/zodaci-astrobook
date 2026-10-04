@@ -191,6 +191,7 @@ export default function App() {
             <Route path="/shared/conversations" element={<SharedSpace />} />
             <Route path="/shared/chat/:id" element={<SharedSpace />} />
             <Route path="/shared/posts" element={<SharedSpace section="posts" />} />
+            <Route path="/shared/wonderings" element={<SharedSpace section="wonderings" />} />
             <Route path="/shared/notes" element={<SharedSpace section="notes" />} />
             <Route path="/shared/later" element={<SharedSpace section="later" />} />
             <Route path="/shared/accounts" element={<SharedSpace section="accounts" />} />

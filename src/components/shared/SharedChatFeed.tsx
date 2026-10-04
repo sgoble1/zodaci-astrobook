@@ -5,6 +5,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useSession } from '@/hooks/useLibrary';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { toast } from 'sonner';
 
 type FeedMessage = { id: string; body: string; sender_id: string; created_at: string };
 const ALLOWED = new Set(['shanealecompte@gmail.com', 'babybluepuppet@gmail.com']);
@@ -47,7 +48,7 @@ export function SharedChatFeed() {
     if (!body.trim() || !conversationId) return;
     const value = body.trim(); setBody('');
     const { error } = await supabase.from('shared_messages').insert({ conversation_id: conversationId, body: value, sender_id: session.user.id });
-    if (error) setBody(value);
+    if (error) { setBody(value); toast.error('Message not sent. Please try again.'); }
   };
   return (
     <section className="space-y-3">
