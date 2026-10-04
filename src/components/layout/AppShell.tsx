@@ -3,6 +3,7 @@ import { NavLink, Outlet, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import ParticleField from '@/components/fx/ParticleField';
 import ScrollProgress from '@/components/fx/ScrollProgress';
+import { FirstViewReveal } from '@/components/fx/FirstViewReveal';
 import { useEffect, useRef, useState } from 'react';
 import { ChevronDown, Menu, X } from 'lucide-react';
 import { BIRTH } from '@/content/april';
@@ -59,7 +60,7 @@ export function AppShell() {
     <PlayerProvider>
     <div className="min-h-screen flex text-foreground relative">
       <a href="#main-content" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded focus:bg-primary focus:px-4 focus:py-2 focus:text-primary-foreground">Skip to content</a>
-      <ScrollProgress />
+      <ScrollProgress /><FirstViewReveal />
       <ParticleField />
       <div aria-hidden className="pointer-events-none fixed -top-40 -left-40 w-[520px] h-[520px] rounded-full bg-primary/20 blur-3xl float-orb z-0" />
       <div aria-hidden className="pointer-events-none fixed -bottom-40 -right-40 w-[520px] h-[520px] rounded-full bg-accent/15 blur-3xl float-orb z-0" style={{ animationDelay: '-9s' }} />

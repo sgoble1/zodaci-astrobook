@@ -17,8 +17,6 @@ export function FirstViewReveal() {
     const scan = () => document.querySelectorAll(SELECTOR).forEach(el => {
       if (seen.has(el) || el.closest('nav, [role="dialog"], .fv-pending, .fv-shown') || (el as HTMLElement).offsetWidth < 48) return;
       seen.add(el);
-      const r = el.getBoundingClientRect();
-      if (r.top < window.innerHeight && r.bottom > 0) return; // already on screen at load: leave it alone
       el.classList.add('fv-pending'); io.observe(el);
     });
     scan();
