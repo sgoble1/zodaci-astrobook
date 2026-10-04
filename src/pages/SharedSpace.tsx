@@ -68,7 +68,7 @@ function SharedNav({ value }: { value: string }) {
   return <nav className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap" aria-label="Shared space sections">{links.map(([id, to, label, Icon]) => <Button key={id} asChild variant={value === id ? 'default' : 'outline'} size="sm"><Link to={to}><Icon className="h-4 w-4" />{label}</Link></Button>)}</nav>;
 }
 
-export default function SharedSpace({ section = 'chat' }: { section?: 'overview' | 'chat' | 'posts' | 'wonderings' | 'notes' | 'later' | 'accounts' }) {
+export default function SharedSpace({ section = 'chat' }: { section?: 'overview' | 'chat' | 'posts' | 'wonderings' | 'reading' | 'notes' | 'later' | 'accounts' }) {
   return <div className="space-y-6"><header className="space-y-2"><div className="font-smallcaps text-xs text-gold">Private · April & Shane</div><h1 className="text-4xl sm:text-5xl">Our Shared Space</h1><p className="max-w-2xl text-muted-foreground">Messages, posts, notes, files, things to revisit, and useful account references in one private place.</p></header><SharedNav value={section} /><SharedSpaceGate>{userId => section === 'overview' ? <SharedOverview /> : section === 'chat' ? <Conversations userId={userId} /> : section === 'posts' ? <Posts userId={userId} /> : section === 'wonderings' ? <Wonderings userId={userId} /> : section === 'reading' ? <SharedReading userId={userId} /> : section === 'notes' ? <Notes userId={userId} /> : section === 'later' ? <TalkLater userId={userId} /> : <Accounts userId={userId} />}</SharedSpaceGate></div>;
 }
 
