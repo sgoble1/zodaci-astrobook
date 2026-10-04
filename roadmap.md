@@ -114,4 +114,4 @@
 - [x] Add short, standard, and long generated-podcast length choices and preserve source citations.
 - [x] Add verified two-way needs, chart connections, shared facts, and coincidences to each relationship page.
 - [x] Fix narrow mobile tables and overly vertical module-heading layouts across the app.
-- [ ] Verify build quality, keyboard use, and representative mobile/desktop screens.
+- [x] Verify build quality, keyboard use, and representative mobile/desktop screens.
