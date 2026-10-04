@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import ParticleField from '@/components/fx/ParticleField';
 import ScrollProgress from '@/components/fx/ScrollProgress';
 import { useEffect, useState } from 'react';
-import { Menu, X } from 'lucide-react';
+import { ChevronDown, Menu, X } from 'lucide-react';
 import { BIRTH } from '@/content/april';
 import { TOPICS } from '@/content/topics';
 import { useRelationships } from '@/hooks/useRelationships';
@@ -13,20 +13,27 @@ import { PlayerProvider } from '@/components/podcast/PlayerContext';
 
 const GROUP_COLORS = ['--primary', '--oxblood', '--accent', '--candle', '--gold-bright', '--starlight', '--gold', '--glow-violet'];
 
-const groups: { title: string; items: { to: string; label: string }[] }[] = [
-  { title: 'Begin', items: [{ to: '/', label: 'Home' }, { to: '/dashboard', label: 'My Dashboard & Bookmarks' }, { to: '/masterbook', label: 'The Masterbook · Full Text' }, { to: '/masterbook/index', label: 'Document Index' }, { to: '/read', label: 'Sources Reading Room · Public' }, { to: '/guides/timeline-retrogrades', label: 'Guide · Timeline & Retrogrades' }, { to: '/guides/birth-chart-feng-shui', label: 'Guide · Birth Chart & Feng Shui' }, { to: '/guides/feng-shui-pages', label: 'Guide · Feng Shui Page by Page + Flying Stars Wheel' }, { to: '/masterbook/upload', label: 'Upload to the Masterbook' },{ to: '/admin', label: 'My Workspace · Upload & Edit' }, { to: '/ask', label: 'Ask the Sources' }, { to: '/chat', label: 'AI Chat · with History' }, { to: '/reading', label: 'The Complete Reading' }, { to: '/chart-elements', label: 'Chart Elements & Meanings' }, { to: '/bagua-reading', label: 'The Bagua Reading' }, { to: '/masterbook/bagua-wheel', label: 'Masterbook · Bagua Wheel' }] },
+type NavItem = { to: string; label: string };
+type NavSubmenu = { label: string; items: NavItem[] };
+type NavGroup = { title: string; items: NavItem[]; submenus?: NavSubmenu[] };
+
+const groups: NavGroup[] = [
+  { title: 'Begin', items: [{ to: '/', label: 'Home' }, { to: '/dashboard', label: 'My Dashboard & Bookmarks' }, { to: '/ask', label: 'Ask the Sources' }, { to: '/chat', label: 'AI Chat · with History' }, { to: '/reading', label: 'The Complete Reading' }, { to: '/chart-elements', label: 'Chart Elements & Meanings' }] },
+  { title: 'Sources & Documents', items: [{ to: '/masterbook', label: 'The Masterbook · Full Text' }, { to: '/masterbook/index', label: 'Document Index' }, { to: '/read', label: 'Sources Reading Room · Public' }, { to: '/sources', label: 'Source Files' }, { to: '/masterbook/upload', label: 'Upload to the Masterbook' }, { to: '/admin', label: 'My Workspace · Upload & Edit' }] },
   { title: 'Themes & Topics', items: [{ to: '/topics', label: 'All Themes' }, ...TOPICS.map(t => ({ to: `/topics/${t.slug}`, label: t.label }))] },
   { title: 'The Natal Chart', items: [
     { to: '/birth-chart', label: 'Birth Chart' }, { to: '/chart-calculator', label: 'Chart Calculator' }, { to: '/planets', label: 'Planets' }, { to: '/houses', label: 'Houses' },
     { to: '/aspects', label: 'Aspects' }, { to: '/star-map', label: 'Fixed-Star Sky Map' }, { to: '/compendium', label: 'Compendium' }] },
   { title: 'Timing & Cycles', items: [
     { to: '/timeline', label: 'Timeline · 1990–2060' }, { to: '/transits', label: 'Transits · 2026–2040' },
-    { to: '/profection', label: 'Profection · Age 35' }, { to: '/retrogrades', label: 'Retrogrades' }] },
+    { to: '/profection', label: 'Profection · Age 35' }, { to: '/retrogrades', label: 'Retrogrades' }, { to: '/guides/timeline-retrogrades', label: 'Guide · Timeline & Retrogrades' }] },
   { title: 'Other Systems', items: [
     { to: '/numerology', label: 'Numerology · Pinnacles' }, { to: '/purpose', label: 'Purpose & Numerology' },
-    { to: '/chinese', label: 'Chinese · Ba Zi' }, { to: '/feng-shui', label: 'Feng Shui' }, { to: '/feng-shui/bagua', label: 'Feng Shui · Bagua & Home' }, { to: '/feng-shui/flying-stars', label: 'Feng Shui · Flying Stars' }, { to: '/volume-2', label: 'Volume II · Supplement' }] },
+    { to: '/chinese', label: 'Chinese · Ba Zi' }, { to: '/volume-2', label: 'Volume II · Supplement' }], submenus: [{ label: 'Feng Shui', items: [
+      { to: '/feng-shui', label: 'Feng Shui Overview' }, { to: '/guides/birth-chart-feng-shui', label: 'Guide · Birth Chart & Feng Shui' }, { to: '/guides/feng-shui-pages', label: 'Guide · Page by Page & Flying Stars' }, { to: '/feng-shui/bagua', label: 'Bagua & Home' }, { to: '/feng-shui/flying-stars', label: 'Flying Stars' }, { to: '/bagua-reading', label: 'The Bagua Reading' }, { to: '/masterbook/bagua-wheel', label: 'Masterbook · Bagua Wheel' }
+    ] }] },
   { title: 'Library', items: [
-    { to: '/podcasts', label: 'Podcasts' }, { to: '/sources', label: 'Source Files' },
+    { to: '/podcasts', label: 'Podcasts' },
     { to: '/data-quality', label: 'Data Quality' }] },
 ];
 
@@ -84,6 +91,7 @@ export function AppShell() {
 }
 
 function SidebarInner() {
+  const location = useLocation();
   const { items: rels } = useRelationships();
   const allGroups = [...groups.slice(0, 1), { title: 'Relationships', items: [{ to: '/relationships', label: 'All Relationships' }, { to: '/guides/relationships', label: 'Relationships in the Sources' }, ...rels.map(r => ({ to: `/relationships/${r.id}`, label: `↳ ${r.name}${r.relation ? ` · ${r.relation}` : ''}` }))] }, ...groups.slice(1)];
   return (
@@ -118,6 +126,29 @@ function SidebarInner() {
                 }
               >{n.label}</NavLink>
             ))}
+            {g.submenus?.map(submenu => {
+              const containsActiveRoute = submenu.items.some(item => location.pathname === item.to || location.pathname.startsWith(`${item.to}/`));
+              return (
+                <details key={submenu.label} className="group/submenu" open={containsActiveRoute || undefined}>
+                  <summary className="flex cursor-pointer list-none items-center justify-between rounded px-3 py-1.5 text-muted-foreground transition-colors hover:bg-muted/60 hover:text-foreground [&::-webkit-details-marker]:hidden">
+                    <span>{submenu.label}</span>
+                    <ChevronDown className="h-4 w-4 transition-transform group-open/submenu:rotate-180" aria-hidden="true" />
+                  </summary>
+                  <div className="ml-3 flex flex-col gap-0.5 border-l border-border/70 pl-2">
+                    {submenu.items.map(n => (
+                      <NavLink
+                        key={n.to} to={n.to} end={n.to === '/feng-shui'}
+                        className={({ isActive }) =>
+                          `rounded border border-transparent px-3 py-1.5 text-xs transition-colors ${
+                            isActive ? 'bg-accent/15 border-accent/30 text-foreground' : 'text-muted-foreground hover:text-foreground hover:bg-muted/60'
+                          }`
+                        }
+                      >{n.label}</NavLink>
+                    ))}
+                  </div>
+                </details>
+              );
+            })}
           </div>
         ))}
       </nav>
