@@ -110,7 +110,7 @@ export default function Reading() {
   if (!isApril && input) return <ComputedReading input={input} />;
 
   const dayMismatch = check.bazi.find(p => p.label === 'Day')?.romanized !== PILLARS.find(p => p.label.startsWith('Day'))?.romanized;
-  const toc = [['core', 'The Full Moon core'], ['angles', 'Rising & the angles'], ['inner', 'Mind, love & drive'], ['outer', 'The Capricorn stellium & outer planets'], ['aspects', 'The aspect web'], ['compendium', 'Compendium layer'], ['bazi', 'Chinese Four Pillars'], ['fengshui', 'Feng Shui · Flying Stars'], ['synthesis', 'Synthesis across systems'], ['check', 'Calculation cross-check']];
+  const toc = [['core', 'The Sun–Moon pattern'], ['angles', 'Rising & the angles'], ['inner', 'Mind, love & drive'], ['outer', 'The Capricorn stellium & outer planets'], ['aspects', 'The aspect web'], ['compendium', 'Compendium layer'], ['bazi', 'Chinese Four Pillars'], ['fengshui', 'Feng Shui · Flying Stars'], ['synthesis', 'Synthesis across systems'], ['check', 'Calculation cross-check']];
 
   return (
     <div className="space-y-14">
@@ -124,10 +124,10 @@ export default function Reading() {
 
       <section><h2 className="text-2xl mb-3">The natal wheel</h2><p className="text-sm text-muted-foreground mb-3">Calculated from the 3:38 PM birth data; tap any element for its details, confidence and the matching Birth Chart Book chapter.</p><ChartWheel r={check} sourcesFor={aprilSourcesFor} /></section>
 
-      <Section id="core" n="I" title="The Full Moon core" level="confirmed" note="Sun and Moon agree with the calculator to within 1′.">
-        <p className="max-w-3xl">{ASPECTS.find(a => a.a === 'sun' && a.b === 'moon')?.interpretation}<Cite source={SRC_ASP} /></p>
+      <Section id="core" n="I" title="The Sun–Moon pattern" level="derived" note="The positions agree with the calculator to within 1′; their 157.3° separation is waning gibbous, not a standard opposition.">
+        <p className="max-w-3xl">April’s Aries Moon reacts quickly and directly, while her Virgo Sun wants to examine and refine. These different styles remain useful to explore, but the recorded degrees do not form the Full Moon opposition claimed in parts of the source report.<Cite source={SRC_ASP} /></p>
         <div className="grid md:grid-cols-2 gap-4"><PlacementBlock k="sun" /><PlacementBlock k="moon" /></div>
-        <ReasoningPanel reasoning={{ inputs: [{ label: 'Sun', value: 'Virgo 13°56′ H8' }, { label: 'Moon', value: 'Aries 6°37′ H3' }], steps: [{ label: 'Elongation', detail: 'Moon − Sun ≈ 172.7°, within 8° of opposition: a Full Moon birth.' }, { label: 'Houses', detail: 'The H8/H3 axis ties depth and inheritance (H8) to voice and siblings (H3).' }], output: 'The chart is organised around the Full Moon axis.', confidence: 'confirmed' }} />
+        <ReasoningPanel reasoning={{ inputs: [{ label: 'Sun', value: 'Virgo 13°56′ H8 in the source report' }, { label: 'Moon', value: 'Aries 6°37′ H3 in the source report' }], steps: [{ label: 'Angular separation', detail: 'The shortest separation is about 157.3°. A standard opposition is 180°, so these positions do not form one.' }, { label: 'Lunar phase', detail: 'The Moon is past full and moving toward the last quarter: a waning gibbous phase.' }, { label: 'Houses', detail: 'The source report’s H8 and H3 placements connect depth and inheritance with voice and immediate surroundings.' }], output: 'Keep the practical contrast between quick feeling and careful analysis, while labeling the source’s Full Moon claim as inconsistent with its own degrees.', confidence: 'derived' }} />
       </Section>
 
       <Section id="angles" n="II" title="Rising & the angles" level="derived" note="Angles depend on the 3:38 PM birth time. An alternate 11:14 AM time appears in one source; see Data Quality.">
@@ -144,7 +144,7 @@ export default function Reading() {
         <div className="grid md:grid-cols-2 gap-4">{(['saturn', 'uranus', 'neptune', 'pluto', 'chiron', 'northNode'] as PlanetKey[]).map(k => <PlacementBlock key={k} k={k} />)}</div>
       </Section>
 
-      <Section id="aspects" n="V" title="The aspect web" level="derived" note="Orbs come from the sources; the calculator confirms each aspect.">
+      <Section id="aspects" n="V" title="The aspect web" level="derived" note="This list has been limited to planet-to-planet aspects independently confirmed from the recorded positions.">
         <div className="space-y-3">{ASPECTS.map((a, i) => {
           const hit = check.aspects.find(h => h.type === a.type && [h.a.toLowerCase(), h.b.toLowerCase()].includes(P(a.a).name.toLowerCase()) && [h.a.toLowerCase(), h.b.toLowerCase()].includes(P(a.b).name.toLowerCase()));
           return <details key={i} className="parchment p-3" id={`asp-${a.a}-${a.b}`}><summary className="cursor-pointer flex flex-wrap items-center gap-2"><span className="font-display">{P(a.a).glyph} {P(a.a).name} {a.type} {P(a.b).glyph} {P(a.b).name}</span><span className="text-xs text-muted-foreground">orb {a.orb}</span><ConfidenceBadge compact level={hit ? 'confirmed' : 'approximate'} note={hit ? `Calculator orb ${hit.orb.toFixed(2)}°.` : 'Not found within the calculator’s standard orbs (may be a wide or out-of-sign aspect, or involve a point the calculator doesn’t compute).'} /></summary><p className="text-sm mt-2">{a.interpretation}<Cite source={SRC_ASP} /></p></details>;
@@ -183,7 +183,7 @@ export default function Reading() {
       <Section id="synthesis" n="VIII" title="Synthesis across systems" level="derived" note="An interpretive synthesis linking cited statements. The links are the app's inference.">
         {[
           { t: 'Depth before display', body: 'Sun, Venus and Mercury Rx in the 8th house, Pluto in domicile in the 10th, and Life Path 7 all point to truth found at depth and then brought into public work.', steps: [{ label: 'Western', detail: 'H8 stellium (Sun, Mercury, Venus) plus Pluto H10.' }, { label: 'Numerology', detail: 'Life Path 7: the seeker and specialist.' }, { label: 'Compendium', detail: `Sun Sabian “${sabFor('Sun')?.symbol}”: the ancestral, H8 inheritance theme.` }] },
-          { t: 'Fire meeting Metal, with Water keeping the balance', body: 'The Ba Zi’s Fire–Metal tension matches the Western Full Moon (Aries fire against Virgo earth-precision). The Kua 1 Water element in Feng Shui is the balancing term, and the Feng Shui guide says Wood is what’s missing.', steps: [{ label: 'Ba Zi', detail: LIFE_LESSON.headline }, { label: 'Feng Shui', detail: 'Kua 1 Water; Wood is the missing bridge (18B).' }, { label: 'Western', detail: 'Sag ASC + Aries Moon (fire) vs Capricorn/Virgo (earth).' }] },
+          { t: 'Fire meeting Metal, with Water keeping the balance', body: 'The Ba Zi’s Fire–Metal tension echoes the contrast between Aries and Sagittarius fire and Virgo and Capricorn earth. The Kua 1 Water element is the balancing term, and the Feng Shui guide says Wood is what’s missing.', steps: [{ label: 'Ba Zi', detail: LIFE_LESSON.headline }, { label: 'Feng Shui', detail: 'Kua 1 Water; Wood is the missing bridge (18B).' }, { label: 'Western', detail: 'Sag ASC + Aries Moon (fire) alongside Capricorn/Virgo (earth).' }] },
           { t: 'Structure as self', body: 'Saturn, Uranus and Neptune in Capricorn in the 1st house make structure part of her identity. The Feng Shui guide ties this to ritual and Black Obsidian at the entrance.', steps: [{ label: 'Western', detail: 'Capricorn H1 stellium.' }, { label: 'Feng Shui', detail: '18D: Black Obsidian for Saturn Rx H1; 12-week blessing ceremony.' }] },
         ].map((s, i) => <div key={i} className="parchment p-4"><h3 className="text-xl">{s.t}</h3><p className="text-sm mt-1">{s.body}<Cite source={KUA_FOUNDATION.source} /></p><ReasoningPanel reasoning={{ inputs: [], steps: s.steps, output: s.body, confidence: 'derived', caveats: ['Cross-system links are interpretive and are not quoted from the PDFs.'] }} /></div>)}
       </Section>

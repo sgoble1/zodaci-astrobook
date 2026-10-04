@@ -136,14 +136,14 @@ export const TRANSITS: TransitEvent[] = [
     id: 'tr-jupiter-mc',
     window: 'August 2027 – July 2028',
     startYear: 2027, endYear: 2028,
-    transiting: 'Jupiter', aspect: 'conjunct', natalPoint: 'Midheaven · Libra 20° (approx)',
+    transiting: 'Jupiter', aspect: 'conjunct', natalPoint: 'Midheaven · Libra 24°59′ (source-reported)',
     title: 'Jupiter conjunct the Midheaven — public elevation',
     intensity: 'major',
     body: 'The most reliable career-expansion transit. Doors open publicly. What was excavated in the 12th-house year is offered outward.',
     reasoning: {
       inputs: [
         { label: 'Transiting', value: 'Jupiter in Libra' },
-        { label: 'MC',         value: '~20° Libra (angle depends on birth time)' },
+        { label: 'MC',         value: '24°59′ Libra in April’s source report (angle depends on birth time)' },
         orb('3°'),
       ],
       steps: [{ label: 'Jupiter enters Libra', detail: 'Aug 2027; exact conjunction to MC by mid-late 2027.' }],

@@ -25,7 +25,7 @@ export default function Aspects() {
         <h1 className="font-display mt-2">The geometry of the chart.</h1>
         <div className="gold-rule my-5 max-w-xs" />
         <p className="max-w-2xl text-lg text-foreground/85 leading-relaxed">
-          The Full Moon opposition is her central axis. Saturn trines Pluto — the earned-power aspect. The chart ruler conjoins Venus in Leo — a signature of blessing through partnership. Click any row for the full reading.
+          These are the major planet-to-planet aspects independently confirmed from April’s recorded birth data. The closest include Mars sextile Jupiter, Moon square Uranus, Mercury sextile Pluto, and Sun sextile Pluto. Click any row for its plain-language reading.
         </p>
       </header>
 

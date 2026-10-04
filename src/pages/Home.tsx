@@ -6,10 +6,10 @@ import heroImg from '@/assets/hero-threshold.jpg';
 import { SharedChatFeed } from '@/components/shared/SharedChatFeed';
 
 const modules = [
-  { to: '/birth-chart', title: 'The Birth Chart', desc: "The full snapshot — chart shape, elemental balance, chart rulers, most-elevated planet, the Full Moon opposition." },
+  { to: '/birth-chart', title: 'The Birth Chart', desc: "The full snapshot — recorded birth data, sourced placements, independent calculations, chart shape, elemental balance and chart rulers." },
   { to: '/planets', title: 'The Planets', desc: 'All ten bodies plus Chiron, the Nodes, Vertex, Lilith and the Part of Fortune. Every glyph on the wheel is clickable.' },
   { to: '/houses', title: 'The Houses', desc: 'All twelve houses — cusps, rulers, tenants, and the story each one is telling in her life.' },
-  { to: '/aspects', title: 'The Aspects', desc: 'Full Moon opposition, Saturn-Pluto trine, chart-ruler conjunction — the geometric grammar of the chart.' },
+  { to: '/aspects', title: 'The Aspects', desc: 'The independently verified angles between April’s planets, with measured orbs and everyday explanations.' },
   { to: '/timeline', title: 'The Timeline · 1990–2060', desc: 'Ten life phases from Early Life Foundation to the Second Saturn Return. Currently: The Great Opening.' },
   { to: '/retrogrades', title: 'Retrogrades', desc: 'Mercury Rx in domicile, Saturn Rx in the first, Uranus and Neptune Rx — the interior planets that shape her.' },
   { to: '/purpose', title: 'Purpose & Numerology', desc: 'Life Path 7, Personal Year 7 (2026), Kua 1 Water, Metal Horse — the numerical harmonics of the chart.' },

@@ -22,7 +22,7 @@ export const TOPICS: Topic[] = [
       { text: 'Moon in Aries 6°37′ in the 3rd house — "Handle — all chart energy funnels here".', cite: 'Timeline & Retrograde Guide · chart table', to: '/masterbook/c-a4bea1f0-00' },
       { text: '"The Bucket pattern with the Aries Moon H3 as handle is, without question, the most practically important structural feature of April\'s natal chart." The handle is "the exhaust valve, the creative output mechanism".', cite: 'Birth Chart & Feng Shui Guide · 4E', to: '/masterbook/c-ff306540-03' },
       { text: '"Every impulse, every ambition, every talent, every wound in your entire chart funnels through that Moon in Aries in your third house."', cite: 'Timeline & Retrograde Guide · Opening', to: '/masterbook/c-a4bea1f0-00' },
-      { text: 'Full Moon birth: the Aries Moon sits opposite the Virgo Sun, so the handle faces the whole cluster of the chart.', cite: 'Birth Chart page', to: '/birth-chart' },
+      { text: 'The source calls this a Full Moon pattern, but the recorded positions are 157.3° apart: a waning gibbous phase, not a standard opposition.', cite: 'Birth Chart calculation check', to: '/birth-chart' },
       { text: 'Saturn in Aries (2025–2028) is "the Saturn transit of the bucket handle… This is not a blocking transit. This is Saturn strengthening the handle. What you communicate now carries lasting weight."', cite: 'Masterbook · Saturn Transit Guide', to: '/masterbook/ch-38' },
       { text: 'Saturn in Gemini then crosses the 3rd house, the Moon\'s house: the writing, teaching and speaking "receives the structure that will allow it to last".', cite: 'Masterbook · Saturn Transit Guide', to: '/masterbook/ch-38' },
     ],

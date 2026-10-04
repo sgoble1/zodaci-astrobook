@@ -9,17 +9,17 @@ export type WorkbookModule = {
 
 export const WORKBOOK_MODULES: WorkbookModule[] = [
   {
-    slug: 'full-moon-within', title: 'The Full Moon Within', subtitle: 'Say it now vs. perfect it first',
+    slug: 'full-moon-within', title: 'The Two Speeds Within', subtitle: 'Say it now vs. perfect it first',
     plainMeaning: 'One side of you reacts quickly and honestly; another wants time to check every detail.', dailyLife: 'You may swing between speaking immediately and holding everything in until the words feel perfect.',
-    placements: 'Sun Virgo 8th ☍ Moon Aries 3rd', intro: 'You were born at a Full Moon: a fast, honest Aries flame facing a careful Virgo mind. Neither is wrong. This module helps them work as a team.',
+    placements: 'Sun Virgo 8th · Moon Aries 3rd · waning gibbous phase', intro: 'A fast, honest Aries Moon and a careful Virgo Sun can operate at different speeds. They are not in a standard opposition; this exercise simply helps both real tendencies work as a team.',
     questions: [
       { key: 'fm-1', q: 'Think of a recent moment you wanted to say something immediately but held back to get it “right”. What happened, and what did it cost you?', why: 'Aries Moon in the 3rd wants to speak; Virgo Sun in the 8th wants to process privately first.', lens: 'CBT — situation, thought, feeling' },
       { key: 'fm-2', q: 'When you do speak on impulse, what usually follows — relief, regret, or both? Describe a specific time.', why: 'The Moon is the bucket handle of your chart: it steers the whole bowl of planets.', lens: 'Self-observation' },
-      { key: 'fm-3', q: 'If your fiery side and your careful side each wrote you a one-line note, what would they say?', why: 'Oppositions resolve through dialogue between the two ends, not by choosing one.', lens: 'Internal Family Systems (parts)' },
+      { key: 'fm-3', q: 'If your fiery side and your careful side each wrote you a one-line note, what would they say?', why: 'Different inner needs can be heard through dialogue rather than forcing one to win.', lens: 'Internal Family Systems (parts)' },
       { key: 'fm-4', q: 'What would a “good enough” version of speaking up look like for you this week?', why: 'Virgo perfectionism softens when the standard is explicit and reachable.', lens: 'ACT — values-based action' },
       { key: 'fm-5', q: 'Who in your life receives your directness well, and what do they do that makes it safe?', why: 'Moon in the 3rd links feelings with everyday conversation and siblings/neighbours.', lens: 'Attachment & relational safety' },
     ],
-    explore: [{ to: '/planets/moon', label: 'Moon in Aries' }, { to: '/planets/sun', label: 'Sun in Virgo' }, { to: '/aspects', label: 'Sun opposite Moon' }],
+    explore: [{ to: '/planets/moon', label: 'Moon in Aries' }, { to: '/planets/sun', label: 'Sun in Virgo' }, { to: '/aspects', label: 'Verified aspects' }],
   },
   {
     slug: 'inner-critic', title: 'Making Peace with the Inner Critic', subtitle: 'Precision without punishment',
@@ -37,12 +37,12 @@ export const WORKBOOK_MODULES: WorkbookModule[] = [
   {
     slug: 'fire-and-feeling', title: 'Fire & Feeling', subtitle: 'Anger, needs and quick sparks',
     plainMeaning: 'Your feelings can arrive quickly and strongly. The goal is to hear their message before deciding what to do.', dailyLife: 'A small event may create a fast physical reaction, sharp words, or an urgent need to solve the problem now.',
-    placements: 'Moon Aries 3rd □ Pluto Scorpio 10th · Mars Gemini 5th', intro: 'Your feelings arrive fast and hot, and they carry information. Here you learn to read them before they read you.',
+    placements: 'Moon Aries 3rd □ Uranus Capricorn 1st · Mars Gemini 5th', intro: 'Your feelings can arrive fast and strongly, especially when freedom or authenticity feels restricted. Here you learn to read them before they read you.',
     questions: [
-      { key: 'ff-1', q: 'What reliably makes you angry? List three triggers and the need hiding under each.', why: 'Aries Moon expresses needs as heat; Moon square Pluto adds intensity.', lens: 'Nonviolent Communication — feelings & needs' },
+      { key: 'ff-1', q: 'What reliably makes you angry? List three triggers and the need hiding under each.', why: 'Aries Moon expresses needs quickly; the close Moon–Uranus square can react strongly to restriction.', lens: 'Nonviolent Communication — feelings & needs' },
       { key: 'ff-2', q: 'Where in your body do you feel anger first? Describe it like weather.', why: 'Fire Moons move energy physically; noticing the body slows the spark.', lens: 'Somatic awareness' },
       { key: 'ff-3', q: 'What do you do in the first ten minutes after you get upset? What would you like to do instead?', why: 'Aries emotions peak fast and fade fast — the first minutes matter most.', lens: 'DBT — TIPP & opposite action' },
-      { key: 'ff-4', q: 'Which of your feelings were not welcome when you were growing up?', why: 'Moon square Pluto can link emotion with control or power struggles in early life.', lens: 'Attachment history' },
+      { key: 'ff-4', q: 'Which of your feelings were not welcome when you were growing up?', why: 'Moon square Uranus can describe learning to protect emotional independence when reactions feel unpredictable.', lens: 'Attachment history' },
       { key: 'ff-5', q: 'How could you use your fire playfully this week — in movement, creativity or debate?', why: 'Mars in Gemini in the 5th loves play, wit and creative outlets.', lens: 'Behavioural activation' },
     ],
     explore: [{ to: '/planets/mars', label: 'Mars in Gemini' }, { to: '/planets/pluto', label: 'Pluto in Scorpio' }, { to: '/houses/3', label: 'Third house' }],
@@ -53,7 +53,7 @@ export const WORKBOOK_MODULES: WorkbookModule[] = [
     placements: 'Sun, Mercury, Venus, Vertex in the 8th · Pluto 10th', intro: 'With so much in the 8th house, you live life in the deep end. This module explores trust, control and transformation.',
     questions: [
       { key: 'dt-1', q: 'What does someone have to do to earn your full trust? Be specific.', why: 'An 8th-house emphasis makes trust all-or-nothing and slow to build.', lens: 'Attachment theory' },
-      { key: 'dt-2', q: 'Describe a time you felt out of control. What did you do to get control back?', why: 'Moon square Pluto is sensitive to powerlessness.', lens: 'CBT — coping patterns' },
+      { key: 'dt-2', q: 'Describe a time you felt out of control. What did you do to get control back?', why: 'Pluto in the 10th and an emphasized 8th house make power, trust and change important reflective themes.', lens: 'CBT — coping patterns' },
       { key: 'dt-3', q: 'What part of you do you keep most hidden? What would it say if it could speak freely?', why: 'The 8th house is where shadow material waits to be integrated.', lens: 'Jungian shadow work' },
       { key: 'dt-4', q: 'Name an ending in your life that later turned out to be a beginning.', why: 'Pluto and the 8th house are the astrology of death-and-rebirth cycles.', lens: 'Post-traumatic growth' },
       { key: 'dt-5', q: 'Where do you hold power you are not yet using?', why: 'Pluto is your most elevated planet, pointing at power in your public life.', lens: 'Strengths-based coaching' },
@@ -63,11 +63,11 @@ export const WORKBOOK_MODULES: WorkbookModule[] = [
   {
     slug: 'love-and-being-chosen', title: 'Love & Being Chosen', subtitle: 'Giving, receiving and being seen',
     plainMeaning: 'You give love warmly and want to feel clearly chosen, appreciated and emotionally safe in return.', dailyLife: 'You may give extra care hoping it will be returned, or feel hurt when your effort is noticed less than expected.',
-    placements: 'Venus Leo 29° 8th · Moon ☍ Venus · Chiron & South Node in the 7th', intro: 'You love loyally and generously. This module looks at how you want to be loved back — and old patterns of over-giving.',
+    placements: 'Venus Leo 29° 8th □ Mars Gemini 5th · Chiron & South Node in the 7th', intro: 'You love loyally and generously. This module looks at how warmth, attraction, action and old patterns of over-giving can work together.',
     questions: [
       { key: 'lc-1', q: 'When do you feel most adored? Describe the moment in detail.', why: 'Venus in Leo needs to be seen, celebrated and chosen.', lens: 'Love languages & positive psychology' },
       { key: 'lc-2', q: 'Where do you give more than you receive? What do you hope will happen when you do?', why: 'Chiron in Cancer in the 7th can link love with caretaking.', lens: 'Relational patterns' },
-      { key: 'lc-3', q: 'What is the difference between what you need and what you want in love right now?', why: 'Moon opposite Venus sets needs and desires against each other.', lens: 'Emotion-focused therapy' },
+      { key: 'lc-3', q: 'What is the difference between what you need and what you want in love right now?', why: 'Venus square Mars can create friction between what attracts you and how you act on desire.', lens: 'Emotion-focused therapy' },
       { key: 'lc-4', q: 'Which role do you fall into in relationships — the star, the rescuer, the strong one? Where did it start?', why: 'South Node Leo in the 7th shows a familiar, comfortable relationship role to outgrow.', lens: 'Schema therapy' },
       { key: 'lc-5', q: 'Write the kind of love you are ready for now, as if it already exists.', why: 'Venus at 29° is at a culmination point — a chapter ready to complete.', lens: 'Narrative therapy — preferred story' },
     ],
@@ -82,7 +82,7 @@ export const WORKBOOK_MODULES: WorkbookModule[] = [
       { key: 'cw-2', q: 'What do you believe would happen if you stopped being the strong one for a week?', why: 'The Capricorn stack can hide softness behind competence.', lens: 'CBT — testing core beliefs' },
       { key: 'cw-3', q: 'What does real rest look like for you, as opposed to just stopping?', why: 'Neptune in the 1st needs dreaming time; Saturn needs permission.', lens: 'Self-care planning' },
       { key: 'cw-4', q: 'Where are you holding yourself to a standard you would never hold a friend to?', why: 'Domicile Saturn sets very high standards.', lens: 'Self-compassion' },
-      { key: 'cw-5', q: 'What would you build if you trusted that you had already proven yourself?', why: 'Saturn trine Pluto gives the stamina to build lasting things.', lens: 'ACT — committed action' },
+      { key: 'cw-5', q: 'What would you build if you trusted that you had already proven yourself?', why: 'Saturn sextile Pluto supports patient, lasting structural change.', lens: 'ACT — committed action' },
     ],
     explore: [{ to: '/planets/saturn', label: 'Saturn in Capricorn' }, { to: '/houses/1', label: 'First house' }, { to: '/timeline', label: 'Saturn return on the timeline' }],
   },

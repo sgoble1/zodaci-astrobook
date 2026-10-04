@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { MessageCircle, Send, Trash2, Upload, X } from 'lucide-react';
+import { CircleHelp, MessageCircle, Send, Trash2, Upload, X } from 'lucide-react';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
@@ -66,6 +66,7 @@ export function ItemThread({ type, id, userId, title }: { type: string; id: stri
         {EMOJI.map(e => { const n = reactions.filter(r => r.emoji === e).length; const mine = reactions.some(r => r.emoji === e && r.user_id === userId);
           return <button key={e} type="button" onClick={() => toggle(e)} aria-pressed={mine} aria-label={`React ${e}${n ? `, ${n}` : ''}`} className={`min-h-9 rounded-full border px-3 text-sm transition ${mine ? 'border-primary bg-primary/15' : 'border-border hover:border-primary'}`}>{e}{n ? ` ${n}` : ''}</button>; })}
         <Button type="button" variant="outline" size="sm" onClick={() => shareToChat(`💬 About “${title}”`).then(() => toast.success('Added to your conversation')).catch(e => toast.error(e.message))}><MessageCircle className="h-4 w-4" />Chat about this</Button>
+        <Button asChild type="button" variant="outline" size="sm"><Link to="/instructions"><CircleHelp className="h-4 w-4" />Instructions</Link></Button>
       </div>
       <ul className="space-y-2">{comments.map(c => <li key={c.id} className="rounded bg-muted/40 px-3 py-2 text-sm"><span className="font-semibold">{dir[c.author_id] ?? 'Member'}</span> <span className="text-xs text-muted-foreground">{stamp(c.created_at)}</span><p className="whitespace-pre-wrap">{c.body}</p>{c.author_id === userId && <button type="button" className="text-xs text-muted-foreground underline" onClick={() => db('shared_item_comments').delete().eq('id', c.id).then(load)}>Delete</button>}</li>)}</ul>
       <form className="flex gap-2" onSubmit={e => { e.preventDefault(); send(); }}><Input value={body} onChange={e => setBody(e.target.value)} placeholder="Write a comment…" aria-label="Comment" /><Button type="submit" size="icon" aria-label="Send comment"><Send className="h-4 w-4" /></Button></form>

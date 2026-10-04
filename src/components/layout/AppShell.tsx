@@ -7,49 +7,17 @@ import { FirstViewReveal } from '@/components/fx/FirstViewReveal';
 import { useEffect, useRef, useState } from 'react';
 import { ChevronDown, Menu, X } from 'lucide-react';
 import { BIRTH } from '@/content/april';
-import { TOPICS } from '@/content/topics';
 import { useRelationships } from '@/hooks/useRelationships';
 import { CommandPaletteTrigger } from '@/components/common/CommandPalette';
 import { BookmarkButton } from '@/components/common/BookmarkButton';
 import { PlayerProvider } from '@/components/podcast/PlayerContext';
 import { AccountButton } from '@/components/common/AccountButton';
 import { useCustomPages, NEW_PAGE_HIGHLIGHT_KEY } from '@/hooks/useCustomPages';
-import { WORKBOOK_MODULES } from '@/content/workbook';
 import { useSharedBadges } from '@/hooks/useSharedBadges';
 import { Button } from '@/components/ui/button';
+import { NAV_GROUPS, RELATIONSHIPS_GROUP, SHARED_GROUP, type NavGroup, type NavItem } from '@/content/navigation';
 
 const GROUP_COLORS = ['--primary', '--oxblood', '--accent', '--candle', '--gold-bright', '--starlight', '--gold', '--glow-violet'];
-
-type NavItem = { to: string; label: string; created?: boolean; badge?: number };
-type NavSubmenu = { label: string; items: NavItem[] };
-type NavGroup = { title: string; items: NavItem[]; submenus?: NavSubmenu[] };
-
-const groups: NavGroup[] = [
-  { title: 'Begin', items: [{ to: '/', label: 'Home' }, { to: '/explore', label: 'Explore & Discover' }, { to: '/dashboard', label: 'My Dashboard & Bookmarks' }, { to: '/ask', label: 'Ask the Sources' }, { to: '/chat', label: 'SmartChat' }, { to: '/reading', label: 'The Complete Reading' }, { to: '/chart-elements', label: 'Chart Elements & Meanings' }, { to: '/create', label: '+ Create a Topic & Page' }] },
-  { title: "April's Workbook", items: [{ to: '/workbook', label: 'Workbook Overview' }, { to: '/workbook/social-integration', label: 'Social Integration · Counselor' }, { to: '/workbook/companion', label: 'The Oracle Within · Therapy Chat' }, { to: '/workbook/check-in', label: 'Daily Check-in' }, { to: '/workbook/reframe', label: 'Thought Reframe' }, { to: '/workbook/journal', label: 'Journal & Patterns' }, ...WORKBOOK_MODULES.map(m => ({ to: `/workbook/module/${m.slug}`, label: `↳ ${m.title}` }))] },
-  { title: 'Sources & Documents', items: [{ to: '/masterbook', label: 'The Masterbook · Full Text' }, { to: '/masterbook/index', label: 'Document Index' }, { to: '/contents', label: 'Masterbook Contents (open)' }, { to: '/read', label: 'Sources Reading Room' }, { to: '/sources', label: 'Source Files' }, { to: '/masterbook/upload', label: 'Upload to the Masterbook' }, { to: '/admin', label: 'My Workspace · Upload & Edit' }] },
-  { title: 'Themes & Topics', items: [{ to: '/topics', label: 'All Themes' }, ...TOPICS.map(t => ({ to: `/topics/${t.slug}`, label: t.label }))] },
-  { title: 'The Natal Chart', items: [
-    { to: '/birth-chart', label: 'Birth Chart' }, { to: '/chart-guide', label: 'Chart Guide · Plain Language' }, { to: '/chart-calculator', label: 'Chart Calculator' }, { to: '/planets', label: 'Planets' }, { to: '/houses', label: 'Houses' },
-    { to: '/aspects', label: 'Aspects' }, { to: '/star-map', label: 'Fixed-Star Sky Map' }, { to: '/compendium', label: 'Compendium' }] },
-  { title: 'Timing & Cycles', items: [
-    { to: '/guides/timeline-retrogrades', label: 'Timeline Overview' },
-    { to: '/timeline', label: 'Timeline · 1990–2060' }, { to: '/transits', label: 'Transits · 2026–2040' },
-    { to: '/profection', label: 'Profection · Age 35' }, { to: '/retrogrades', label: 'Retrogrades' }] },
-  { title: 'Other Systems', items: [
-    { to: '/other-systems', label: 'Other Systems · Dashboard' },
-    { to: '/numerology', label: 'Numerology · Pinnacles' }, { to: '/purpose', label: 'Purpose & Numerology' },
-    { to: '/chinese', label: 'Chinese · Ba Zi' },
-    { to: '/other-systems/vedic', label: 'Vedic · Jyotish' }, { to: '/other-systems/mayan-tzolkin', label: 'Maya · Tzolk’in' },
-    { to: '/other-systems/tibetan-mewa', label: 'Tibetan Mewa & Parkha' }, { to: '/other-systems/nine-star-ki', label: 'Japanese Nine Star Ki' },
-    { to: '/other-systems/chaldean-numerology', label: 'Chaldean Numerology' }, { to: '/other-systems/tarot-birth-cards', label: 'Tarot Birth Cards' },
-    { to: '/other-systems/celtic-tree-calendar', label: 'Celtic Tree Calendar' }, { to: '/volume-2', label: 'Volume II · Supplement' }], submenus: [{ label: 'Feng Shui', items: [
-      { to: '/feng-shui', label: 'Feng Shui Overview' }, { to: '/guides/birth-chart-feng-shui', label: 'Guide · Birth Chart & Feng Shui' }, { to: '/guides/feng-shui-pages', label: 'Guide · Page by Page & Flying Stars' }, { to: '/feng-shui/bagua', label: 'Bagua & Home' }, { to: '/feng-shui/flying-stars', label: 'Flying Stars' }, { to: '/bagua-reading', label: 'The Bagua Reading' }, { to: '/masterbook/bagua-wheel', label: 'Masterbook · Bagua Wheel' }
-    ] }] },
-  { title: 'Library', items: [
-    { to: '/podcasts', label: 'Podcasts' },
-    { to: '/data-quality', label: 'Data Quality' }] },
-];
 
 export function AppShell() {
   const location = useLocation();
@@ -144,7 +112,9 @@ function SidebarInner() {
     });
     return () => cancelAnimationFrame(raf);
   }, [custom]);
-  const baseGroups: NavGroup[] = [...groups.slice(0, 2), { title: 'Our Shared Space', items: [{ to: '/shared', label: 'Shared Dashboard' }, { to: '/shared/conversations', label: 'Conversations', badge: badges.chat }, { to: '/shared/posts', label: 'Posts' }, { to: '/shared/wonderings', label: 'Wonderings', badge: badges.wonderings }, { to: '/shared/reading', label: 'Reading Together' }, { to: '/shared/media', label: 'Media Library' }, { to: '/shared/recommendations', label: 'Recommendations' }, { to: '/shared/notes', label: 'Notes' }, { to: '/shared/later', label: 'Talk Later' }, { to: '/shared/accounts', label: 'Shared Accounts' }] }, { title: 'Relationships', items: [{ to: '/relationships', label: 'All Relationships' }, { to: '/guides/relationships', label: 'Relationships in the Sources' }, ...rels.map(r => ({ to: `/relationships/${r.id}`, label: `↳ ${r.name}${r.relation ? ` · ${r.relation}` : ''}` }))] }, ...groups.slice(2)];
+  const shared = { ...SHARED_GROUP, items: SHARED_GROUP.items.map(item => ({ ...item, badge: item.to === '/shared/conversations' ? badges.chat : item.to === '/shared/wonderings' ? badges.wonderings : undefined })) };
+  const relationships = { ...RELATIONSHIPS_GROUP, items: [...RELATIONSHIPS_GROUP.items, ...rels.map(r => ({ to: `/relationships/${r.id}`, label: `↳ ${r.name}${r.relation ? ` · ${r.relation}` : ''}` }))] };
+  const baseGroups: NavGroup[] = [...NAV_GROUPS.slice(0, 2), shared, relationships, ...NAV_GROUPS.slice(2)];
   const allGroups = baseGroups.map(g => ({ ...g, items: [...g.items, ...custom.filter(c => c.menu_group === g.title).map(c => ({ to: `/p/${c.id}`, label: c.status === 'generating' ? `${c.title} · writing…` : c.title, created: true } as NavItem))] }));
   return (
     <div className="p-6 flex flex-col gap-6 h-full overflow-y-auto">
@@ -212,5 +182,4 @@ function SidebarInner() {
   );
 }
 
-// Menu sections a created page can be placed in.
-export const MENU_SECTIONS = [groups[0].title, groups[1].title, 'Our Shared Space', 'Relationships', ...groups.slice(2).map(g => g.title)];
+export { MENU_SECTIONS } from '@/content/navigation';

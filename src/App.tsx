@@ -65,6 +65,7 @@ import Companion from './pages/Companion';
 import ExploreDiscover from './pages/ExploreDiscover';
 import SocialIntegration from './pages/SocialIntegration';
 import ChartGuide from './pages/ChartGuide';
+import Instructions from './pages/Instructions';
 
 
 /** Build a single registry of every drawer-openable Compendium item. Used so
@@ -157,6 +158,7 @@ export default function App() {
           <Route element={<AppShell />}>
             <Route path="/" element={<Home />} />
             <Route path="/explore" element={<ExploreDiscover />} />
+            <Route path="/instructions" element={<Instructions />} />
             <Route path="/birth-chart" element={<BirthChart />} />
             <Route path="/chart-guide" element={<ChartGuide />} />
             <Route path="/planets" element={<Planets />} />
