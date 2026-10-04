@@ -19,3 +19,4 @@
 - [x] Keyboard and screen-reader pass (skip link, focus, labels).
 - [x] Public Masterbook index page (chapters/sections, no password).
 - [x] Shared reading space: upload + annotate documents together.
+- [x] Second Shane email as admin + Shane identity; Create a Topic & Page tool.

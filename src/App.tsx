@@ -8,6 +8,8 @@ import { useMemo, type ReactNode } from 'react';
 import { AppShell } from './components/layout/AppShell';
 import { PublicLibrary, PublicReader } from './pages/PublicLibrary';
 import { MasterbookContents, MasterbookContentsEntry } from './pages/MasterbookContents';
+import CreatePage from './pages/CreatePage';
+import CustomPageView from './pages/CustomPageView';
 import { SitePasswordGate } from './components/common/SitePasswordGate';
 import { DetailDrawerProvider, type DrawerPayload } from './components/common/DetailDrawer';
 import { CommandPalette } from './components/common/CommandPalette';
@@ -196,6 +198,8 @@ export default function App() {
             <Route path="/shared/posts" element={<SharedSpace section="posts" />} />
             <Route path="/shared/wonderings" element={<SharedSpace section="wonderings" />} />
             <Route path="/shared/reading" element={<SharedSpace section="reading" />} />
+            <Route path="/create" element={<CreatePage />} />
+            <Route path="/p/:id" element={<CustomPageView />} />
             <Route path="/shared/notes" element={<SharedSpace section="notes" />} />
             <Route path="/shared/later" element={<SharedSpace section="later" />} />
             <Route path="/shared/accounts" element={<SharedSpace section="accounts" />} />

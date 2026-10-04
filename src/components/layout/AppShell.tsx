@@ -12,15 +12,16 @@ import { CommandPaletteTrigger } from '@/components/common/CommandPalette';
 import { BookmarkButton } from '@/components/common/BookmarkButton';
 import { PlayerProvider } from '@/components/podcast/PlayerContext';
 import { AccountButton } from '@/components/common/AccountButton';
+import { useCustomPages } from '@/hooks/useCustomPages';
 
 const GROUP_COLORS = ['--primary', '--oxblood', '--accent', '--candle', '--gold-bright', '--starlight', '--gold', '--glow-violet'];
 
-type NavItem = { to: string; label: string };
+type NavItem = { to: string; label: string; created?: boolean };
 type NavSubmenu = { label: string; items: NavItem[] };
 type NavGroup = { title: string; items: NavItem[]; submenus?: NavSubmenu[] };
 
 const groups: NavGroup[] = [
-  { title: 'Begin', items: [{ to: '/', label: 'Home' }, { to: '/dashboard', label: 'My Dashboard & Bookmarks' }, { to: '/ask', label: 'Ask the Sources' }, { to: '/chat', label: 'SmarChat' }, { to: '/reading', label: 'The Complete Reading' }, { to: '/chart-elements', label: 'Chart Elements & Meanings' }] },
+  { title: 'Begin', items: [{ to: '/', label: 'Home' }, { to: '/dashboard', label: 'My Dashboard & Bookmarks' }, { to: '/ask', label: 'Ask the Sources' }, { to: '/chat', label: 'SmarChat' }, { to: '/create', label: '+ Create a Topic & Page' }, { to: '/reading', label: 'The Complete Reading' }, { to: '/chart-elements', label: 'Chart Elements & Meanings' }] },
   { title: 'Sources & Documents', items: [{ to: '/masterbook', label: 'The Masterbook · Full Text' }, { to: '/masterbook/index', label: 'Document Index' }, { to: '/contents', label: 'Masterbook Contents (open)' }, { to: '/read', label: 'Sources Reading Room' }, { to: '/sources', label: 'Source Files' }, { to: '/masterbook/upload', label: 'Upload to the Masterbook' }, { to: '/admin', label: 'My Workspace · Upload & Edit' }] },
   { title: 'Themes & Topics', items: [{ to: '/topics', label: 'All Themes' }, ...TOPICS.map(t => ({ to: `/topics/${t.slug}`, label: t.label }))] },
   { title: 'The Natal Chart', items: [
@@ -96,7 +97,9 @@ export function AppShell() {
 function SidebarInner() {
   const location = useLocation();
   const { items: rels } = useRelationships();
-  const allGroups = [...groups.slice(0, 1), { title: 'Our Shared Space', items: [{ to: '/shared', label: 'Shared Dashboard' }, { to: '/shared/conversations', label: 'Conversations' }, { to: '/shared/posts', label: 'Posts' }, { to: '/shared/wonderings', label: 'Wonderings' }, { to: '/shared/reading', label: 'Reading Together' }, { to: '/shared/notes', label: 'Notes' }, { to: '/shared/later', label: 'Talk Later' }, { to: '/shared/accounts', label: 'Shared Accounts' }] }, { title: 'Relationships', items: [{ to: '/relationships', label: 'All Relationships' }, { to: '/guides/relationships', label: 'Relationships in the Sources' }, ...rels.map(r => ({ to: `/relationships/${r.id}`, label: `↳ ${r.name}${r.relation ? ` · ${r.relation}` : ''}` }))] }, ...groups.slice(1)];
+  const custom = useCustomPages();
+  const baseGroups: NavGroup[] = [...groups.slice(0, 1), { title: 'Our Shared Space', items: [{ to: '/shared', label: 'Shared Dashboard' }, { to: '/shared/conversations', label: 'Conversations' }, { to: '/shared/posts', label: 'Posts' }, { to: '/shared/wonderings', label: 'Wonderings' }, { to: '/shared/reading', label: 'Reading Together' }, { to: '/shared/notes', label: 'Notes' }, { to: '/shared/later', label: 'Talk Later' }, { to: '/shared/accounts', label: 'Shared Accounts' }] }, { title: 'Relationships', items: [{ to: '/relationships', label: 'All Relationships' }, { to: '/guides/relationships', label: 'Relationships in the Sources' }, ...rels.map(r => ({ to: `/relationships/${r.id}`, label: `↳ ${r.name}${r.relation ? ` · ${r.relation}` : ''}` }))] }, ...groups.slice(1)];
+  const allGroups = baseGroups.map(g => ({ ...g, items: [...g.items, ...custom.filter(c => c.menu_group === g.title).map(c => ({ to: `/p/${c.id}`, label: c.status === 'generating' ? `${c.title} · writing…` : c.title, created: true }))] }));
   return (
     <div className="p-6 flex flex-col gap-6 h-full overflow-y-auto">
       <div>
@@ -125,7 +128,7 @@ function SidebarInner() {
                 className={({ isActive }) =>
                   `px-3 py-1.5 rounded border border-transparent transition-colors ${
                     isActive ? 'bg-accent/15 border-accent/30 text-foreground' : 'text-muted-foreground hover:text-foreground hover:bg-muted/60'
-                  }`
+                  }${n.created ? ' bg-created/20 text-foreground' : ''}`
                 }
               >{n.label}</NavLink>
             ))}
@@ -162,3 +165,6 @@ function SidebarInner() {
     </div>
   );
 }
+
+// Menu sections a created page can be placed in.
+export const MENU_SECTIONS = ['Begin', 'Our Shared Space', 'Relationships', ...groups.slice(1).map(g => g.title)];

@@ -103,6 +103,42 @@ export type Database = {
           },
         ]
       }
+      custom_pages: {
+        Row: {
+          brief: string
+          content: string
+          created_at: string
+          id: string
+          menu_group: string
+          owner_id: string
+          status: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          brief?: string
+          content?: string
+          created_at?: string
+          id?: string
+          menu_group?: string
+          owner_id: string
+          status?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          brief?: string
+          content?: string
+          created_at?: string
+          id?: string
+          menu_group?: string
+          owner_id?: string
+          status?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       document_overrides: {
         Row: {
           doc_key: string
