@@ -43,6 +43,14 @@ function wav(pcm: Uint8Array, rate = 24000): Uint8Array {
   const out = new Uint8Array(44 + pcm.length); out.set(new Uint8Array(h.buffer)); out.set(pcm, 44); return out;
 }
 
+function escapeXml(value: string) { return value.replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&apos;' }[char] ?? char)); }
+
+function podcastCover(title: string) {
+  const safe = escapeXml(title.length > 54 ? `${title.slice(0, 51)}…` : title);
+  const spokes = Array.from({ length: 12 }, (_, i) => { const a = i * Math.PI / 6; return `<line x1="${600 + Math.cos(a) * 230}" y1="${470 + Math.sin(a) * 230}" x2="${600 + Math.cos(a) * 310}" y2="${470 + Math.sin(a) * 310}" stroke="#d9a441" opacity=".5"/>`; }).join('');
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1200" viewBox="0 0 1200 1200"><defs><radialGradient id="sky"><stop stop-color="#2b3858"/><stop offset="1" stop-color="#100f1a"/></radialGradient></defs><rect width="1200" height="1200" fill="url(#sky)"/><circle cx="600" cy="470" r="310" fill="none" stroke="#d9a441" stroke-width="5" opacity=".8"/><circle cx="600" cy="470" r="230" fill="none" stroke="#f0dfb4" stroke-width="2" opacity=".55"/>${spokes}<text x="600" y="440" text-anchor="middle" fill="#f0dfb4" font-family="Georgia,serif" font-size="170">☉</text><text x="600" y="555" text-anchor="middle" fill="#d9a441" font-family="Georgia,serif" font-size="42">APRIL'S CHART</text><text x="600" y="890" text-anchor="middle" fill="#fffaf0" font-family="Georgia,serif" font-size="54">${safe}</text><text x="600" y="990" text-anchor="middle" fill="#d9a441" font-family="Arial,sans-serif" font-size="26">A PRIVATE PODCAST</text></svg>`;
+}
+
 async function speak(apiKey: string, text: string, voice: string): Promise<Uint8Array> {
   const res = await fetch(`${GATEWAY_URL}/audio/speech`, {
     method: 'POST', headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
@@ -82,7 +90,11 @@ Deno.serve(async (req) => {
     const path = `${u.user.id}/podcast/${Date.now()}-${name}`;
     const up = await admin.storage.from('library').upload(path, file, { contentType: 'audio/wav' });
     if (up.error) return json({ error: 'Could not save the audio.' }, 500);
-    const ins = await admin.from('library_items').insert({ kind: 'podcast', title: topic, description: script.split(/(?<=[.!?])\s/).slice(0, 2).join(' '), category: 'Created episodes', file_path: path, file_name: name, mime_type: 'audio/wav', size_bytes: file.length, owner_id: u.user.id }).select('id').single();
+    const coverPath = `${u.user.id}/podcast/${Date.now()}-${name.replace(/\.wav$/i, '')}-cover.svg`;
+    const cover = new TextEncoder().encode(podcastCover(topic));
+    const coverUp = await admin.storage.from('library').upload(coverPath, cover, { contentType: 'image/svg+xml' });
+    if (coverUp.error) return json({ error: 'Could not save the episode cover.' }, 500);
+    const ins = await admin.from('library_items').insert({ kind: 'podcast', title: topic, description: script.split(/(?<=[.!?])\s/).slice(0, 2).join(' '), category: 'Created episodes', file_path: path, cover_path: coverPath, shared_with_space: true, file_name: name, mime_type: 'audio/wav', size_bytes: file.length, owner_id: u.user.id }).select('id').single();
     if (ins.error) return json({ error: 'Could not list the episode.' }, 500);
     return json({ id: ins.data.id, script, seconds: Math.round(joined.length / 48000) });
   } catch (e) {
