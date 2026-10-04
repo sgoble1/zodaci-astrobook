@@ -9,6 +9,9 @@ import { TOPICS } from '@/content/topics';
 import { useRelationships } from '@/hooks/useRelationships';
 import { CommandPaletteTrigger } from '@/components/common/CommandPalette';
 import { BookmarkButton } from '@/components/common/BookmarkButton';
+import { PlayerProvider } from '@/components/podcast/PlayerContext';
+
+const GROUP_COLORS = ['--primary', '--oxblood', '--accent', '--candle', '--gold-bright', '--starlight', '--gold', '--glow-violet'];
 
 const groups: { title: string; items: { to: string; label: string }[] }[] = [
   { title: 'Begin', items: [{ to: '/', label: 'Home' }, { to: '/dashboard', label: 'My Dashboard & Bookmarks' }, { to: '/masterbook', label: 'The Masterbook · Full Text' }, { to: '/masterbook/index', label: 'Document Index' }, { to: '/guides/timeline-retrogrades', label: 'Guide · Timeline & Retrogrades' }, { to: '/guides/birth-chart-feng-shui', label: 'Guide · Birth Chart & Feng Shui' }, { to: '/guides/feng-shui-pages', label: 'Guide · Feng Shui Page by Page + Flying Stars Wheel' }, { to: '/masterbook/upload', label: 'Upload to the Masterbook' },{ to: '/admin', label: 'Admin Dashboard' }, { to: '/ask', label: 'Ask the Sources' }, { to: '/reading', label: 'The Complete Reading' }, { to: '/chart-elements', label: 'Chart Elements & Meanings' }, { to: '/bagua-reading', label: 'The Bagua Reading' }, { to: '/masterbook/bagua-wheel', label: 'Masterbook · Bagua Wheel' }] },
@@ -34,6 +37,7 @@ export function AppShell() {
   useEffect(() => { setOpen(false); window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior }); }, [location.pathname]);
 
   return (
+    <PlayerProvider>
     <div className="min-h-screen flex text-foreground relative">
       <ScrollProgress />
       <ParticleField />
@@ -75,6 +79,7 @@ export function AppShell() {
         </footer>
       </main>
     </div>
+    </PlayerProvider>
   );
 }
 
@@ -100,9 +105,9 @@ function SidebarInner() {
       <div className="pt-1 space-y-2"><CommandPaletteTrigger /><BookmarkButton /></div>
 
       <nav className="flex flex-col gap-4 text-sm">
-        {allGroups.map(g => (
+        {allGroups.map((g, gi) => (
           <div key={g.title} className="flex flex-col gap-0.5">
-            <div className="font-smallcaps text-[10px] text-gold px-3 mb-1">{g.title}</div>
+            <div className="font-smallcaps text-[10px] px-3 py-1 mb-1 rounded border-l-2 font-semibold tracking-wider" style={{ color: `hsl(var(${GROUP_COLORS[gi % GROUP_COLORS.length]}))`, borderColor: `hsl(var(${GROUP_COLORS[gi % GROUP_COLORS.length]}))`, background: `hsl(var(${GROUP_COLORS[gi % GROUP_COLORS.length]}) / 0.1)` }}>{g.title}</div>
             {g.items.map(n => (
               <NavLink
                 key={n.to} to={n.to} end={n.to === '/' || n.to === '/masterbook' || n.to === '/relationships'}

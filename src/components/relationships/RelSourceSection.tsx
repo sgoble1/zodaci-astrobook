@@ -9,7 +9,7 @@ import { SummarisePanel, toPassages } from '@/components/common/SummarisePanel';
 
 /** One relationship-themed source section: full text, page-by-page PDF links, cited summary and Masterbook link. */
 export function RelSourceSection({ e }: { e: MbEntry }) {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
   const [text, setText] = useState<string | null>(null);
   const [libFile, setLibFile] = useState<string | null>(null);
   useEffect(() => { if (open && text === null) fetch(`/masterbook/${e.id}.md`).then(r => r.ok ? r.text() : '').then(setText); }, [open, text, e.id]);
