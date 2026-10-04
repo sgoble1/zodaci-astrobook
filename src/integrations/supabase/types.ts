@@ -267,6 +267,16 @@ export type Database = {
         }
         Returns: boolean
       }
+      recent_library_items: {
+        Args: never
+        Returns: {
+          created_at: string
+          description: string
+          id: string
+          kind: string
+          title: string
+        }[]
+      }
     }
     Enums: {
       app_role: "admin" | "moderator" | "user"
