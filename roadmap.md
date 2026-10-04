@@ -5,4 +5,5 @@
 - [x] Add main and topic conversations with instant messaging.
 - [x] Add posts, shared notes, future discussion items, and safe account references.
 - [x] Add private image and file uploads and sharing.
-- [ ] Verify access controls, account flow, uploads, and live messaging.
+- [x] Verify access controls, account flow, saved notes, and messaging with the available approved account.
+- [ ] Verify live two-way delivery and file sharing between both accounts — blocked until April signs in for a two-account test.
