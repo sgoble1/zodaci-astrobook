@@ -70,3 +70,7 @@
 ## Privacy and naming
 - [x] Block search-engine crawling and indexing for this private April site.
 - [x] Correct SmarChat to SmartChat throughout the interface.
+
+## Discovery sources and plain language
+- [x] Connect every Explore & Discover category to relevant Masterbook chapters and source pages.
+- [x] Add April-specific plain-language explanations for every Other Systems placement and relationship without removing technical details.
