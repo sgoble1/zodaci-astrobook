@@ -45,3 +45,9 @@
 - [x] Add an Other Systems dashboard and seven cross-cultural interpretation pages.
 - [x] Add April's calculated natal chart, houses, aspects, and printable report.
 - [x] Save generated podcasts with cover art for both approved shared-space members.
+
+## Current refinements
+- [ ] Highlight April's Workbook title in yellow and tint its full menu section light yellow.
+- [ ] Add plain-language explanations to technical section titles and unfamiliar concepts.
+- [ ] Replace Chat about this with a destination chooser for shared chat, Therapy Oracle, SmarChat, or Sources.
+- [ ] Let podcast creators save privately or share immediately, then change that choice later.
