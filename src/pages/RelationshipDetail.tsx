@@ -23,9 +23,9 @@ const APRIL_KUA = 1; // As stated in the Feng Shui guide (Section 18A)
 function Sec({ id, n, title, level, note, children }: { id: string; n: string; title: string; level: ConfidenceLevel; note: string; children: React.ReactNode }) {
   return (
     <section id={id} className="scroll-mt-24 space-y-3">
-      <div className="flex flex-wrap items-center gap-3 border-b border-gold/40 pb-2">
-        <span className="font-smallcaps text-xs text-gold">{n}</span><h2 className="text-2xl flex-1">{title}</h2>
-        <ConfidenceBadge level={level} note={note} /><CopyLinkButton hash={id} label="Link" />
+      <div className="module-heading border-b border-gold/40 pb-2">
+        <span className="font-smallcaps text-xs text-gold">{n}</span><h2 className="min-w-0 text-2xl">{title}</h2>
+        <div className="module-heading-actions"><ConfidenceBadge level={level} note={note} /><CopyLinkButton hash={id} label="Link" /></div>
       </div>
       {children}
     </section>
@@ -70,6 +70,20 @@ function Detail({ rel }: { rel: Relationship }) {
   const stars = starContacts(B);
   const top = ia.slice(0, 40);
   const harmonyTop = ia.filter(x => x.tone !== 'tension').slice(0, 5), tensionTop = ia.filter(x => x.tone === 'tension').slice(0, 5);
+  const needKeys = new Set(['moon', 'venus', 'mars', 'saturn']);
+  const aprilNeeds = ia.filter(x => needKeys.has(x.aKey)).slice(0, 4);
+  const otherNeeds = ia.filter(x => needKeys.has(x.bKey)).slice(0, 4);
+  const tightLinks = ia.filter(x => x.orb < 1).slice(0, 5);
+  const coincidences = [
+    b(A, 'sun').sign === b(B, 'sun').sign ? `Both Suns are in ${b(A, 'sun').sign}.` : '',
+    b(A, 'moon').sign === b(B, 'moon').sign ? `Both Moons are in ${b(A, 'moon').sign}${timeKnown ? '.' : ' (the untimed Moon makes this provisional).'}` : '',
+    A.asc != null && B.asc != null && fmtLon(A.asc).sign === fmtLon(B.asc).sign ? `Both Rising signs are ${fmtLon(A.asc).sign}.` : '',
+    yA.animal === yB.animal ? `Both Chinese year signs are ${yA.animal}.` : '',
+    dA.stemElement === dB.stemElement ? `Both Day Masters use the ${dA.stemElement} element.` : '',
+    lpA.n === lpB.n ? `Both Life Paths calculate to ${lpA.n}.` : '',
+    kB && groupOf(kB.kua) === groupOf(APRIL_KUA) ? `Both Kua numbers belong to the ${groupOf(APRIL_KUA)} group.` : '',
+  ].filter(Boolean);
+  const distanceKm = (() => { const rad = (v: number) => v * Math.PI / 180; const dLat = rad(rel.lat - APRIL.lat), dLon = rad(rel.lon - APRIL.lon); const h = Math.sin(dLat / 2) ** 2 + Math.cos(rad(APRIL.lat)) * Math.cos(rad(rel.lat)) * Math.sin(dLon / 2) ** 2; return Math.round(6371 * 2 * Math.atan2(Math.sqrt(h), Math.sqrt(1 - h))); })();
 
   const saveNotes = async () => { setSaved('Saving…'); try { await saveRelationship({ id: rel.id, notes }); setSaved('Saved'); } catch (e) { setSaved((e as Error).message); } };
 
@@ -82,7 +96,7 @@ function Detail({ rel }: { rel: Relationship }) {
         <h1 className="text-4xl">April & {N}</h1>
         <p className="text-muted-foreground">{N}: born {rel.birth_date}{timeKnown ? ` at ${rel.birth_time}` : ' (time unknown — noon used)'} in {rel.place_label} · {rel.sex === 'unspecified' ? 'sex not given' : rel.sex}. April: 6 Sept 1990, 3:38 PM, Geneva NY.</p>
         <div className="flex flex-wrap gap-2">{B.flags.map((f, i) => <ConfidenceBadge key={i} level={f.level} note={`${f.topic}: ${f.note}`} />)}</div>
-        <nav className="flex flex-wrap gap-3 text-xs pt-2">{[['chart', 'Their chart'], ['elements', 'Positions'], ['bazi', 'Ba Zi'], ['kua', 'Feng Shui'], ['overview', 'Overview'], ['synastry', 'Contacts'], ['overlays', 'House overlays'], ['composite', 'Composite'], ['chinese', 'Chinese match'], ['numbers', 'Numerology'], ['notes', 'Notes']].map(([h, l]) => <a key={h} href={`#${h}`} className="underline">{l}</a>)}</nav>
+        <nav className="flex flex-wrap gap-3 text-xs pt-2">{[['chart', 'Their chart'], ['elements', 'Positions'], ['bazi', 'Ba Zi'], ['kua', 'Feng Shui'], ['overview', 'Overview'], ['needs', 'Needs & connections'], ['synastry', 'Contacts'], ['overlays', 'House overlays'], ['composite', 'Composite'], ['chinese', 'Chinese match'], ['numbers', 'Numerology'], ['notes', 'Notes']].map(([h, l]) => <a key={h} href={`#${h}`} className="underline">{l}</a>)}</nav>
         <div className="flex gap-2 pt-2"><Button size="sm" variant="outline" onClick={() => setEditing(true)}>Edit details</Button>
           <Button size="sm" asChild><Link to={`/relationships/${rel.id}/reading`}>Relationship reading</Link></Button>
           <Button size="sm" variant="outline" asChild><Link to={`/relationships/${rel.id}/timeline`}>Timeline</Link></Button>
@@ -94,6 +108,19 @@ function Detail({ rel }: { rel: Relationship }) {
       <Sec id="chart" n="I" title={`${N}’s natal chart`} level={lvl} note="Calculated with the same ephemeris as the Chart Calculator.">
         <ChartWheel r={B} />
         {B.asc != null ? <p><b>Rising {fmtLon(B.asc).sign}</b> ({SIGN_KEYWORDS[fmtLon(B.asc).sign]}) · Midheaven {fmtLon(B.mc!).text}</p> : <p className="text-oxblood text-sm">No birth time: Rising sign, Midheaven and houses aren’t calculated.</p>}
+      </Sec>
+
+      <Sec id="needs" n="V½" title="Needs, connections & coincidences" level={lvl} note="Built from saved birth facts and the calculated chart contacts shown on this page; interpretation is symbolic, not a claim about lived events.">
+        <p className="text-sm text-muted-foreground">This reads the connection in both directions. It does not assume either person’s private history, family story, or behavior.</p>
+        <div className="grid gap-3 md:grid-cols-2">
+          <div className="parchment p-4"><h3 className="text-lg">How {N} connects with April’s needs</h3>{aprilNeeds.length ? <ul className="mt-2 list-disc space-y-2 pl-5 text-sm">{aprilNeeds.map((x, i) => <li key={`${x.aKey}-${x.bKey}-${i}`}>{x.text}</li>)}</ul> : <p className="mt-2 text-sm text-muted-foreground">No major Moon, Venus, Mars, or Saturn contact falls within the chart’s chosen limits.</p>}</div>
+          <div className="parchment p-4"><h3 className="text-lg">How April connects with {N}’s needs</h3>{otherNeeds.length ? <ul className="mt-2 list-disc space-y-2 pl-5 text-sm">{otherNeeds.map((x, i) => <li key={`${x.aKey}-${x.bKey}-${i}`}>{x.text}</li>)}</ul> : <p className="mt-2 text-sm text-muted-foreground">No major Moon, Venus, Mars, or Saturn contact falls within the chart’s chosen limits.</p>}</div>
+        </div>
+        <div className="grid gap-3 md:grid-cols-2">
+          <div><h3 className="text-lg">Strongest exact links</h3>{tightLinks.length ? <ul className="mt-2 space-y-2 text-sm">{tightLinks.map((x, i) => <li key={`${x.aKey}-${x.bKey}-${i}`}><b>April {x.aName} {x.symbol} {N} {x.bName}</b> · {x.orb.toFixed(2)}° apart<p>{x.text}</p></li>)}</ul> : <p className="mt-2 text-sm text-muted-foreground">No major contact is tighter than 1°.</p>}</div>
+          <div><h3 className="text-lg">Shared patterns</h3>{coincidences.length ? <ul className="mt-2 list-disc space-y-1 pl-5 text-sm">{coincidences.map(x => <li key={x}>{x}</li>)}</ul> : <p className="mt-2 text-sm text-muted-foreground">No exact same-sign or same-number pattern appears in these calculations. Connection can still show through aspects and differences.</p>}</div>
+        </div>
+        <div className="rounded-md border border-border p-4 text-sm"><h3 className="text-lg">Birthplace facts</h3><p>April: Geneva, New York. {N}: {rel.place_label}. The saved coordinates are about {distanceKm.toLocaleString()} km ({Math.round(distanceKm * 0.621371).toLocaleString()} miles) apart in a straight line.</p><p className="mt-1 text-xs text-muted-foreground">This is geography only. AstroBook does not turn birthplace distance or a matching place name into a personality claim.</p></div>
       </Sec>
 
       <Sec id="elements" n="II" title={`${N}’s positions and their meanings`} level={lvl} note="Meanings are short in-app keyword notes, not quotes from the source documents.">

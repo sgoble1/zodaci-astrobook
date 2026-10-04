@@ -11,8 +11,9 @@ const Body = z.object({
   topic: z.string().trim().min(2).max(200),
   brief: z.string().max(3000).default(''),
   voice: z.enum(['Kore', 'Aoede', 'Charon', 'Puck']).default('Kore'),
+  duration: z.enum(['short', 'standard', 'long']).default('standard'),
   shared: z.boolean().default(false),
-  passages: z.array(z.object({ n: z.number(), source: z.string(), loc: z.string(), text: z.string(), href: z.string().startsWith('/').optional() })).max(14).default([]),
+  passages: z.array(z.object({ n: z.number(), source: z.string(), loc: z.string(), text: z.string(), href: z.string().startsWith('/').optional() })).max(20).default([]),
 });
 
 /** Split at sentence boundaries into chunks of at most `max` characters. */
@@ -70,12 +71,17 @@ Deno.serve(async (req) => {
     if (!u?.user) return json({ error: 'Please sign in to create podcasts.' }, 401);
     const parsed = Body.safeParse(await req.json());
     if (!parsed.success) return json({ error: 'Please give the episode a topic.' }, 400);
-    const { topic, brief, voice, passages, shared } = parsed.data;
+    const { topic, brief, voice, duration, passages, shared } = parsed.data;
     if (!passages.length) return json({ error: 'No matching passages were found in the sources. Try different words.' }, 400);
     const apiKey = Deno.env.get('LOVABLE_API_KEY'); if (!apiKey) return json({ error: 'AI is not configured.' }, 500);
 
+    const durationConfig = {
+      short: { words: '220–300', minutes: 'about 2', sections: 2 },
+      standard: { words: '450–550', minutes: 'about 4', sections: 3 },
+      long: { words: '900–1,100', minutes: 'about 8', sections: 6 },
+    }[duration];
     const ctx = passages.map(p => `[${p.n}] (${p.source} — ${p.loc})\n${p.text.slice(0, 1800)}`).join('\n\n');
-    const call = createResponsesCall(req, { apiKey, effort: 'low', instructions: `You write short spoken podcast episodes for April about her own chart.\n${APRIL_CHART}\nWrite a single-host script of about 450–550 words (roughly 3–4 minutes spoken). Speak directly to April as "you". Open with a one-line hook, then 3 short spoken sections, end with one practical takeaway. Base every factual claim on the supplied passages; never invent placements or use general astrology knowledge. Naturally name the source when useful (for example, "Your Masterbook describes..."). End each source-grounded paragraph with one or more matching citation numbers like [1] or [2][4]. Plain spoken prose only: no headings, no bullet points, no stage directions, no emoji.` },
+    const call = createResponsesCall(req, { apiKey, effort: 'low', instructions: `You write spoken podcast episodes for April about her own chart.\n${APRIL_CHART}\nWrite a single-host script of ${durationConfig.words} words (${durationConfig.minutes} minutes spoken). Speak directly to April as "you". Open with a one-line hook, use ${durationConfig.sections} short spoken sections, and end with one practical takeaway. Base every factual claim on the supplied passages; never invent placements or use general astrology knowledge. Naturally name the source when useful (for example, "Your Masterbook describes..."). End each source-grounded paragraph with one or more matching citation numbers like [1] or [2][4]. Plain spoken prose only: no headings, no bullet points, no stage directions, no emoji.` },
       [{ role: 'user', content: `Episode topic: ${topic}\n${brief ? `Focus: ${brief}\n` : ''}\nPassages:\n\n${ctx}` }]);
     const script = (await call.result.text).trim();
     if (!script) return json({ error: 'The script came back empty. Please try again.' }, 502);

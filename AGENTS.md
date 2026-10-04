@@ -27,3 +27,6 @@
 - April-focused tools must never infer named relatives, ancestry, lineage or childhood events from chart symbolism; Family & Home stays limited to verified placements and home-setting guidance.
 - Private counselor chats replay the complete saved session and use one shared verified April profile; they may retain in-session corrections but must not claim hidden cross-session learning.
 - AstroBook branding uses one shared logo component across desktop and mobile so the identity remains consistent at every viewport.
+- Generated podcast duration is a bounded request preset interpreted by make-podcast, so script length and source depth stay synchronized.
+- Relationship needs and coincidences are derived at render time only from saved birth facts and shared chart utilities, preventing invented biography.
+- Wide data tables keep a stable readable width and scroll horizontally on phones instead of compressing headings into vertical text.
