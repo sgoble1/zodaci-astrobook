@@ -99,3 +99,10 @@
 - [x] Add chapter-specific visual thinking tools throughout the Workbook.
 - [x] Repair and verify the complete mobile menu and narrow-screen experience.
 - [x] Verify accessibility, representative pages, and build quality on mobile and desktop.
+
+## System history and interpretation expansion
+- [ ] Add an honest origin, history, method, present-day use, and limitations guide to Social Integration.
+- [ ] Expand all seven Other Systems pages with accurate historical context and careful cultural framing.
+- [ ] Add deeper April-specific interpretations without removing calculations or plain-language explanations.
+- [ ] Add readable reference links and clearly distinguish history, modern practice, and symbolic reflection.
+- [ ] Verify the expanded pages on mobile and desktop, including links and build quality.
