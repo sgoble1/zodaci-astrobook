@@ -9,3 +9,8 @@
 - [x] Add the private human chat feed to Home and My Dashboard.
 - [x] Modernize private chat with attachments, replies, reactions, editing, deletion, topics, unread counts, and live updates.
 - [x] Verify access, source links, relationship updates, and build quality.
+- [x] Rename saved AI conversations to SmarChat without changing routes or history.
+- [x] Add private wonderings with comments, reactions, discussed state, and shared-dashboard visibility.
+- [x] Move extracted Masterbook/source text behind signed password unlock tokens and remove public copies.
+- [x] Improve private chat query scope, unread counts, errors, dialogs, and phone layout.
+- [ ] Verify saved messages, posts, comments, and reactions from both accounts (blocked until both account sessions are approved for testing).
