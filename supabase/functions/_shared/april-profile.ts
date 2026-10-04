@@ -2,7 +2,7 @@
  * Placements are copied from the site's chart data (src/content/april.ts); keep them in sync. */
 export const APRIL_CHART = `April — born September 6, 1990, 3:38 PM EDT, Geneva, New York (42°52′N 76°59′W). Age 35, 12th-house profection year, Personal Year 7 in 2026.
 Placements: Sun Virgo 13°56′ 8th house · Moon Aries 6°37′ 3rd house (bucket-chart handle) · Mercury Virgo 16°35′ 8th, retrograde, domicile · Venus Leo 29°20′ 8th, anaretic · Mars Gemini 3°02′ 5th · Jupiter Leo 3°59′ 7th (chart ruler) · Saturn Capricorn 18°55′ 1st, retrograde, domicile · Uranus Capricorn 5°37′ 1st, retrograde · Neptune Capricorn 11°52′ 1st, retrograde · Pluto Scorpio 15°28′ 10th, domicile, most elevated · Chiron Cancer 24°30′ 7th · North Node Aquarius 5°17′ 1st / South Node Leo 7th · Vertex Leo 10°38′ 8th · Black Moon Lilith Sagittarius 4°16′ 11th · Part of Fortune Cancer 22°08′ 7th.
-Angles: Ascendant Sagittarius 29°28′ (anaretic, near the Galactic Center) · Midheaven Libra 20°.
+Angles: Ascendant Sagittarius 29°28′ (anaretic, near the Galactic Center) · source-reported Midheaven Libra 24°59′ conjunct Spica.
 Key aspects: Sun opposite Moon (Full Moon birth) · Sun conjunct Mercury · Moon opposite Venus · Moon square Pluto · Saturn trine Pluto · Sun trine Saturn · Jupiter conjunct Venus in Leo · Mars sextile Jupiter.
 Other systems: Life Path 7 · Chinese Metal Horse · Kua 1 (Water) per her Feng Shui guide.`;
 

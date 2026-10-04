@@ -1,5 +1,5 @@
 import { useLocation, Link } from 'react-router-dom';
-import { Bookmark, BookmarkCheck, CircleHelp } from 'lucide-react';
+import { Bookmark, BookmarkCheck } from 'lucide-react';
 import { useBookmarks } from '@/hooks/useBookmarks';
 import { ChatAboutButton } from './ChatAboutButton';
 import { Button } from '@/components/ui/button';
@@ -16,7 +16,7 @@ export function BookmarkButton({ path: fixedPath, label, compact }: { path?: str
   if (compact) return (<span className="inline-flex flex-wrap items-center gap-3">
     <Button type="button" variant="link" size="sm" onClick={() => existing ? remove(existing.id) : add(path, title())} title={existing ? 'Remove bookmark' : 'Bookmark this'} className="h-auto p-0 text-xs">
       {existing ? <BookmarkCheck className="h-3.5 w-3.5 text-accent" /> : <Bookmark className="h-3.5 w-3.5" />}{existing ? 'Bookmarked' : 'Bookmark'}
-    </Button><ChatAboutButton compact path={fixedPath} label={label} /><Button asChild variant="link" size="sm" className="h-auto p-0 text-xs"><Link to="/instructions"><CircleHelp className="h-3.5 w-3.5" />Instructions</Link></Button></span>
+    </Button><ChatAboutButton compact path={fixedPath} label={label} /></span>
   );
   return (<div className="space-y-2">
     <Button type="button" variant="outline" size="sm"
@@ -25,6 +25,6 @@ export function BookmarkButton({ path: fixedPath, label, compact }: { path?: str
     >
       {existing ? <BookmarkCheck className="h-3.5 w-3.5 text-accent" /> : <Bookmark className="h-3.5 w-3.5" />}
       {existing ? 'Bookmarked — remove' : 'Bookmark this page'}
-    </Button><ChatAboutButton path={fixedPath} label={label} /><Button asChild variant="outline" size="sm" className="w-full justify-start text-xs"><Link to="/instructions"><CircleHelp className="h-3.5 w-3.5" />Instructions</Link></Button></div>
+    </Button><ChatAboutButton path={fixedPath} label={label} /></div>
   );
 }
