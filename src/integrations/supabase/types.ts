@@ -530,6 +530,118 @@ export type Database = {
         }
         Relationships: []
       }
+      shared_wondering_comments: {
+        Row: {
+          author_id: string
+          body: string
+          created_at: string
+          edited_at: string | null
+          id: string
+          wondering_id: string
+        }
+        Insert: {
+          author_id?: string
+          body: string
+          created_at?: string
+          edited_at?: string | null
+          id?: string
+          wondering_id: string
+        }
+        Update: {
+          author_id?: string
+          body?: string
+          created_at?: string
+          edited_at?: string | null
+          id?: string
+          wondering_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "shared_wondering_comments_wondering_id_fkey"
+            columns: ["wondering_id"]
+            isOneToOne: false
+            referencedRelation: "shared_wonderings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      shared_wondering_reactions: {
+        Row: {
+          created_at: string
+          emoji: string
+          id: string
+          user_id: string
+          wondering_id: string
+        }
+        Insert: {
+          created_at?: string
+          emoji: string
+          id?: string
+          user_id?: string
+          wondering_id: string
+        }
+        Update: {
+          created_at?: string
+          emoji?: string
+          id?: string
+          user_id?: string
+          wondering_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "shared_wondering_reactions_wondering_id_fkey"
+            columns: ["wondering_id"]
+            isOneToOne: false
+            referencedRelation: "shared_wonderings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      shared_wondering_reads: {
+        Row: {
+          last_read_at: string
+          user_id: string
+        }
+        Insert: {
+          last_read_at?: string
+          user_id?: string
+        }
+        Update: {
+          last_read_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      shared_wonderings: {
+        Row: {
+          author_id: string
+          body: string
+          created_at: string
+          id: string
+          status: string
+          target_user_id: string
+          updated_at: string
+        }
+        Insert: {
+          author_id?: string
+          body: string
+          created_at?: string
+          id?: string
+          status?: string
+          target_user_id: string
+          updated_at?: string
+        }
+        Update: {
+          author_id?: string
+          body?: string
+          created_at?: string
+          id?: string
+          status?: string
+          target_user_id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           id: string
@@ -573,6 +685,7 @@ export type Database = {
         Returns: boolean
       }
       is_shared_space_member: { Args: never; Returns: boolean }
+      is_shared_space_user_id: { Args: { _user_id: string }; Returns: boolean }
       recent_library_items: {
         Args: never
         Returns: {
@@ -588,6 +701,13 @@ export type Database = {
         Returns: {
           display_name: string
           user_id: string
+        }[]
+      }
+      shared_unread_counts: {
+        Args: never
+        Returns: {
+          conversation_id: string
+          unread_count: number
         }[]
       }
     }
