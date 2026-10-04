@@ -55,6 +55,7 @@ import RelationshipTimeline from './pages/RelationshipTimeline';
 import Relationships from './pages/Relationships';
 import RelationshipDetail from './pages/RelationshipDetail';
 import Reading from './pages/Reading';
+import SharedSpace from './pages/SharedSpace';
 
 
 /** Build a single registry of every drawer-openable Compendium item. Used so
@@ -186,6 +187,12 @@ export default function App() {
             <Route path="/ask" element={<Ask />} />
             <Route path="/chat" element={<Chat />} />
             <Route path="/chat/:id" element={<Chat />} />
+            <Route path="/shared" element={<SharedSpace />} />
+            <Route path="/shared/chat/:id" element={<SharedSpace />} />
+            <Route path="/shared/posts" element={<SharedSpace section="posts" />} />
+            <Route path="/shared/notes" element={<SharedSpace section="notes" />} />
+            <Route path="/shared/later" element={<SharedSpace section="later" />} />
+            <Route path="/shared/accounts" element={<SharedSpace section="accounts" />} />
             <Route path="/topics" element={<TopicsIndex />} />
             <Route path="/guides/:slug" element={<Guide />} />
             <Route path="/topics/:slug" element={<Topic />} />

@@ -10,6 +10,7 @@ import { useRelationships } from '@/hooks/useRelationships';
 import { CommandPaletteTrigger } from '@/components/common/CommandPalette';
 import { BookmarkButton } from '@/components/common/BookmarkButton';
 import { PlayerProvider } from '@/components/podcast/PlayerContext';
+import { AccountButton } from '@/components/common/AccountButton';
 
 const GROUP_COLORS = ['--primary', '--oxblood', '--accent', '--candle', '--gold-bright', '--starlight', '--gold', '--glow-violet'];
 
@@ -58,9 +59,9 @@ export function AppShell() {
       {/* Mobile top bar */}
       <div className="lg:hidden fixed top-0 inset-x-0 z-40 flex items-center justify-between px-4 py-3 border-b border-border bg-background/90 backdrop-blur">
         <div className="font-display text-lg">April · Astrological Compendium</div>
-        <button onClick={() => setOpen(v => !v)} aria-label="Toggle navigation" className="p-2 rounded hover:bg-muted">
+        <div className="flex items-center gap-2"><AccountButton compact /><button onClick={() => setOpen(v => !v)} aria-label="Toggle navigation" className="p-2 rounded hover:bg-muted">
           {open ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-        </button>
+        </button></div>
       </div>
       {open && (
         <div className="lg:hidden fixed inset-0 top-[57px] z-30 bg-background overflow-y-auto">
@@ -93,11 +94,11 @@ export function AppShell() {
 function SidebarInner() {
   const location = useLocation();
   const { items: rels } = useRelationships();
-  const allGroups = [...groups.slice(0, 1), { title: 'Relationships', items: [{ to: '/relationships', label: 'All Relationships' }, { to: '/guides/relationships', label: 'Relationships in the Sources' }, ...rels.map(r => ({ to: `/relationships/${r.id}`, label: `↳ ${r.name}${r.relation ? ` · ${r.relation}` : ''}` }))] }, ...groups.slice(1)];
+  const allGroups = [...groups.slice(0, 1), { title: 'Our Shared Space', items: [{ to: '/shared', label: 'Conversations' }, { to: '/shared/posts', label: 'Posts' }, { to: '/shared/notes', label: 'Notes' }, { to: '/shared/later', label: 'Talk Later' }, { to: '/shared/accounts', label: 'Shared Accounts' }] }, { title: 'Relationships', items: [{ to: '/relationships', label: 'All Relationships' }, { to: '/guides/relationships', label: 'Relationships in the Sources' }, ...rels.map(r => ({ to: `/relationships/${r.id}`, label: `↳ ${r.name}${r.relation ? ` · ${r.relation}` : ''}` }))] }, ...groups.slice(1)];
   return (
     <div className="p-6 flex flex-col gap-6 h-full overflow-y-auto">
       <div>
-        <div className="font-smallcaps text-[10px] text-gold">Companion Document</div>
+        <div className="flex items-center justify-between gap-2"><div className="font-smallcaps text-[10px] text-gold">Companion Document</div><AccountButton /></div>
         <div className="font-display text-2xl leading-tight mt-1">April</div>
         <div className="text-xs text-muted-foreground mt-1">
           {BIRTH.date} · {BIRTH.time}<br />{BIRTH.place}
