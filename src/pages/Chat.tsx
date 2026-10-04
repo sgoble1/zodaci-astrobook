@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Link, useParams, useNavigate } from 'react-router-dom';
+import { Link, useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 import { MessageSquarePlus, Square, Send, Trash2, Telescope } from 'lucide-react';
 import { toast } from 'sonner';
@@ -29,6 +29,7 @@ export default function Chat() {
 function ChatInner() {
   const { id } = useParams();
   const nav = useNavigate();
+  const [params] = useSearchParams();
   const [convos, setConvos] = useState<Convo[]>([]);
   const [msgs, setMsgs] = useState<Msg[]>([]);
   const [corpus, setCorpus] = useState<Passage[] | null>(null);
@@ -42,6 +43,7 @@ function ChatInner() {
     setConvos(data ?? []);
   };
   useEffect(() => { loadCorpus().then(setCorpus); loadConvos(); }, []);
+  useEffect(() => { const prompt = params.get('q'); if (prompt) setQ(prompt); }, [params]);
   useEffect(() => {
     if (!id) { setMsgs([]); return; }
     supabase.from('chat_messages').select('id,role,content,passages').eq('conversation_id', id).order('created_at')

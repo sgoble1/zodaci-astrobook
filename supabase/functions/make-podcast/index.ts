@@ -11,6 +11,7 @@ const Body = z.object({
   topic: z.string().trim().min(2).max(200),
   brief: z.string().max(3000).default(''),
   voice: z.enum(['Kore', 'Aoede', 'Charon', 'Puck']).default('Kore'),
+  shared: z.boolean().default(false),
   passages: z.array(z.object({ n: z.number(), source: z.string(), loc: z.string(), text: z.string() })).max(14).default([]),
 });
 
@@ -69,7 +70,7 @@ Deno.serve(async (req) => {
     if (!u?.user) return json({ error: 'Please sign in to create podcasts.' }, 401);
     const parsed = Body.safeParse(await req.json());
     if (!parsed.success) return json({ error: 'Please give the episode a topic.' }, 400);
-    const { topic, brief, voice, passages } = parsed.data;
+    const { topic, brief, voice, passages, shared } = parsed.data;
     if (!passages.length) return json({ error: 'No matching passages were found in the sources. Try different words.' }, 400);
     const apiKey = Deno.env.get('LOVABLE_API_KEY'); if (!apiKey) return json({ error: 'AI is not configured.' }, 500);
 
@@ -94,7 +95,7 @@ Deno.serve(async (req) => {
     const cover = new TextEncoder().encode(podcastCover(topic));
     const coverUp = await admin.storage.from('library').upload(coverPath, cover, { contentType: 'image/svg+xml' });
     if (coverUp.error) return json({ error: 'Could not save the episode cover.' }, 500);
-    const ins = await admin.from('library_items').insert({ kind: 'podcast', title: topic, description: script.split(/(?<=[.!?])\s/).slice(0, 2).join(' '), category: 'Created episodes', file_path: path, cover_path: coverPath, shared_with_space: true, file_name: name, mime_type: 'audio/wav', size_bytes: file.length, owner_id: u.user.id }).select('id').single();
+    const ins = await admin.from('library_items').insert({ kind: 'podcast', title: topic, description: script.split(/(?<=[.!?])\s/).slice(0, 2).join(' '), category: 'Created episodes', file_path: path, cover_path: coverPath, shared_with_space: shared, file_name: name, mime_type: 'audio/wav', size_bytes: file.length, owner_id: u.user.id }).select('id').single();
     if (ins.error) return json({ error: 'Could not list the episode.' }, 500);
     return json({ id: ins.data.id, script, seconds: Math.round(joined.length / 48000) });
   } catch (e) {

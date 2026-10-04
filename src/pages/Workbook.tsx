@@ -156,6 +156,7 @@ function HomeInner({ userId }: { userId: string }) {
 
       <section aria-labelledby="tools-h" className="space-y-3">
         <h2 id="tools-h" className="text-2xl">Tools</h2>
+        <p className="text-sm text-muted-foreground">Simple places to record how you feel, challenge an unhelpful thought, notice patterns, or talk privately.</p>
         <ul className="grid gap-3 sm:grid-cols-2">
           {tools.map(({ to, title, body, Icon }) => (
             <li key={to}><Link to={to} className="parchment flex h-full gap-3 p-4 transition-colors hover:border-primary/50"><Icon className="mt-1 h-5 w-5 shrink-0 text-accent" aria-hidden /><span><span className="block font-medium">{title}</span><span className="block text-sm text-muted-foreground">{body}</span></span></Link></li>
@@ -165,6 +166,7 @@ function HomeInner({ userId }: { userId: string }) {
 
       <section aria-labelledby="mods-h" className="space-y-3">
         <h2 id="mods-h" className="text-2xl">Guided chapters</h2>
+        <p className="text-sm text-muted-foreground">Each chapter turns a chart idea into ordinary questions about your real life. You do not need to know astrology to answer them.</p>
         <ul className="grid gap-3 md:grid-cols-2">
           {WORKBOOK_MODULES.map(m => {
             const done = m.questions.filter(q => answered.has(q.key)).length;
@@ -211,6 +213,7 @@ function ModuleInner({ userId, m, next }: { userId: string; m: WorkbookModule; n
       <ol className="space-y-4">{m.questions.map((q, i) => <QuestionCard key={q.key} userId={userId} module={m} question={q} existing={latest(q.key)} index={i} />)}</ol>
       <section className="parchment p-5" aria-labelledby="explore-h">
         <h2 id="explore-h" className="text-xl">Explore this further</h2>
+        <p className="mt-1 text-sm text-muted-foreground">Open a related explanation, or bring what you wrote into a private conversation with the Oracle.</p>
         <ul className="mt-2 flex flex-wrap gap-2">{m.explore.map(x => <li key={x.to}><Button asChild variant="outline" size="sm"><Link to={x.to}>{x.label}</Link></Button></li>)}<li><Button asChild variant="outline" size="sm"><Link to={`/workbook/companion`}>Talk it through with The Oracle Within</Link></Button></li></ul>
       </section>
       {next && <Button asChild><Link to={`/workbook/module/${next.slug}`}>Next chapter: {next.title} →</Link></Button>}
