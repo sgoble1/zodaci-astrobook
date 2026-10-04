@@ -12,6 +12,7 @@ import { GuideMarkdown, PassageList, type CitedPassage } from '@/components/work
 import { WORKBOOK_MODULES, ALL_QUESTIONS, EMOTIONS, questionOfTheDay, type WorkbookModule, type WorkbookQuestion } from '@/content/workbook';
 import { listEntries, requestFeedback, WORKBOOK_CHANGED, type WorkbookEntry } from '@/lib/workbook';
 import oracle from '@/assets/oracle-within.png';
+import { ChapterVisualTool } from '@/components/workbook/ChapterVisualTool';
 
 const fmt = (v: string) => new Intl.DateTimeFormat(undefined, { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }).format(new Date(v));
 
@@ -211,6 +212,7 @@ function ModuleInner({ userId, m, next }: { userId: string; m: WorkbookModule; n
   const latest = (key: string) => entries.find(e => e.kind === 'prompt' && e.prompt_key === key);
   return (
     <div className="space-y-6">
+      <ChapterVisualTool module={m} />
       <section className="parchment p-5" aria-labelledby="workbook-steps">
         <h2 id="workbook-steps" className="text-2xl">How to use this chapter</h2>
         <ol className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">

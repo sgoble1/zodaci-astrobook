@@ -4,6 +4,7 @@ export type WorkbookQuestion = { key: string; q: string; why: string; lens: stri
 export type WorkbookModule = {
   slug: string; title: string; subtitle: string; placements: string; intro: string;
   plainMeaning: string; dailyLife: string;
+  visual: { title: string; summary: string; left: string; right: string; responses: [string, string, string]; flow: string[]; signals: string[]; action: string };
   questions: WorkbookQuestion[]; explore: { to: string; label: string }[];
 };
 
@@ -12,6 +13,7 @@ export const WORKBOOK_MODULES: WorkbookModule[] = [
     slug: 'full-moon-within', title: 'The Two Speeds Within', subtitle: 'Say it now vs. perfect it first',
     plainMeaning: 'One side of you reacts quickly and honestly; another wants time to check every detail.', dailyLife: 'You may swing between speaking immediately and holding everything in until the words feel perfect.',
     placements: 'Sun Virgo 8th · Moon Aries 3rd · waning gibbous phase', intro: 'A fast, honest Aries Moon and a careful Virgo Sun can operate at different speeds. They are not in a standard opposition; this exercise simply helps both real tendencies work as a team.',
+    visual: { title: 'Your inner speedometer', summary: 'See whether your quick, direct side or your careful, private side is leading right now.', left: 'Say it now', right: 'Perfect it first', responses: ['You may need a short pause before acting.', 'Both sides have a seat at the table.', 'A small, imperfect first step may help.'], flow: ['Something matters', 'Your fast side reacts', 'Your careful side reviews', 'You choose the next move'], signals: ['Talking before thinking', 'Editing yourself repeatedly', 'Feeling stuck between both', 'Clear and timely honesty'], action: 'Try a two-minute pause, then say one honest sentence without polishing it.' },
     questions: [
       { key: 'fm-1', q: 'Think of a recent moment you wanted to say something immediately but held back to get it “right”. What happened, and what did it cost you?', why: 'Aries Moon in the 3rd wants to speak; Virgo Sun in the 8th wants to process privately first.', lens: 'CBT — situation, thought, feeling' },
       { key: 'fm-2', q: 'When you do speak on impulse, what usually follows — relief, regret, or both? Describe a specific time.', why: 'The Moon is the bucket handle of your chart: it steers the whole bowl of planets.', lens: 'Self-observation' },
@@ -25,6 +27,7 @@ export const WORKBOOK_MODULES: WorkbookModule[] = [
     slug: 'inner-critic', title: 'Making Peace with the Inner Critic', subtitle: 'Precision without punishment',
     plainMeaning: 'Your mind notices tiny details and reviews things repeatedly. That can help you improve, but it can also become harsh self-judgment.', dailyLife: 'You may replay conversations, spot flaws before strengths, or wait too long because the result does not feel perfect.',
     placements: 'Mercury Rx Virgo 8th (domicile) ☌ Sun', intro: 'Your mind is a superb editor. This module helps you keep the editor and retire the prosecutor.',
+    visual: { title: 'Editor or critic?', summary: 'Separate useful correction from punishment so precision can help instead of hurt.', left: 'Harsh critic', right: 'Kind editor', responses: ['Name the fear underneath the criticism.', 'Keep the useful fact and remove the insult.', 'Let the editor suggest one realistic improvement.'], flow: ['Notice the sentence', 'Check the facts', 'Remove the attack', 'Choose one useful edit'], signals: ['Replaying a mistake', 'All-or-nothing words', 'Comparing yourself', 'A specific useful correction'], action: 'Rewrite one harsh thought as advice you would give someone you love.' },
     questions: [
       { key: 'ic-1', q: 'Write down, word for word, the harshest thing your inner critic said to you this month.', why: 'Mercury retrograde in its own sign turns analysis inward and replays conversations.', lens: 'CBT — catching automatic thoughts' },
       { key: 'ic-2', q: 'Whose voice does that sentence sound like? When did you first hear something like it?', why: 'The 8th house holds inherited patterns and what was absorbed from others.', lens: 'Narrative therapy' },
@@ -38,6 +41,7 @@ export const WORKBOOK_MODULES: WorkbookModule[] = [
     slug: 'fire-and-feeling', title: 'Fire & Feeling', subtitle: 'Anger, needs and quick sparks',
     plainMeaning: 'Your feelings can arrive quickly and strongly. The goal is to hear their message before deciding what to do.', dailyLife: 'A small event may create a fast physical reaction, sharp words, or an urgent need to solve the problem now.',
     placements: 'Moon Aries 3rd □ Uranus Capricorn 1st · Mars Gemini 5th', intro: 'Your feelings can arrive fast and strongly, especially when freedom or authenticity feels restricted. Here you learn to read them before they read you.',
+    visual: { title: 'The spark map', summary: 'Trace a fast reaction from the first trigger to the need underneath it.', left: 'Instant reaction', right: 'Clear response', responses: ['Your body may need calming before words.', 'You are noticing the feeling and the choice.', 'Use the clarity without dismissing the feeling.'], flow: ['Trigger', 'Body signal', 'Feeling', 'Need', 'Chosen response'], signals: ['Jaw or shoulders tighten', 'Words speed up', 'Need for freedom', 'Urge to solve it now'], action: 'Name the body signal and need before deciding what to say.' },
     questions: [
       { key: 'ff-1', q: 'What reliably makes you angry? List three triggers and the need hiding under each.', why: 'Aries Moon expresses needs quickly; the close Moon–Uranus square can react strongly to restriction.', lens: 'Nonviolent Communication — feelings & needs' },
       { key: 'ff-2', q: 'Where in your body do you feel anger first? Describe it like weather.', why: 'Fire Moons move energy physically; noticing the body slows the spark.', lens: 'Somatic awareness' },
@@ -51,6 +55,7 @@ export const WORKBOOK_MODULES: WorkbookModule[] = [
     slug: 'depth-trust-power', title: 'Depth, Trust & Power', subtitle: 'Letting people in safely',
     plainMeaning: 'Trust matters deeply to you, so closeness may feel serious rather than casual.', dailyLife: 'You may take time to trust, protect private feelings, or feel safest when expectations and power are discussed honestly.',
     placements: 'Sun, Mercury, Venus, Vertex in the 8th · Pluto 10th', intro: 'With so much in the 8th house, you live life in the deep end. This module explores trust, control and transformation.',
+    visual: { title: 'Trust rings', summary: 'Picture trust as layers rather than an all-or-nothing door.', left: 'Fully guarded', right: 'Fully open', responses: ['Choose one low-risk truth to share.', 'Check whether access matches earned trust.', 'Keep boundaries even when closeness feels safe.'], flow: ['Observe behavior', 'Share a little', 'Check consistency', 'Deepen or step back'], signals: ['Keeping everything private', 'Testing people silently', 'Clear boundaries', 'Mutual honesty'], action: 'Choose one person and identify what they have actually earned access to.' },
     questions: [
       { key: 'dt-1', q: 'What does someone have to do to earn your full trust? Be specific.', why: 'An 8th-house emphasis makes trust all-or-nothing and slow to build.', lens: 'Attachment theory' },
       { key: 'dt-2', q: 'Describe a time you felt out of control. What did you do to get control back?', why: 'Pluto in the 10th and an emphasized 8th house make power, trust and change important reflective themes.', lens: 'CBT — coping patterns' },
@@ -64,6 +69,7 @@ export const WORKBOOK_MODULES: WorkbookModule[] = [
     slug: 'love-and-being-chosen', title: 'Love & Being Chosen', subtitle: 'Giving, receiving and being seen',
     plainMeaning: 'You give love warmly and want to feel clearly chosen, appreciated and emotionally safe in return.', dailyLife: 'You may give extra care hoping it will be returned, or feel hurt when your effort is noticed less than expected.',
     placements: 'Venus Leo 29° 8th □ Mars Gemini 5th · Chiron & South Node in the 7th', intro: 'You love loyally and generously. This module looks at how warmth, attraction, action and old patterns of over-giving can work together.',
+    visual: { title: 'Giving and receiving', summary: 'Compare how much warmth you offer with how clearly your own needs are met.', left: 'Over-giving', right: 'Mutual care', responses: ['Pause before giving more and name your hope.', 'Notice whether care moves in both directions.', 'Receive without immediately paying it back.'], flow: ['You care', 'You give', 'You notice the response', 'You ask for what you need'], signals: ['Hoping they will guess', 'Doing more to feel chosen', 'Clear requests', 'Comfort receiving'], action: 'Make one direct, warm request instead of offering extra care first.' },
     questions: [
       { key: 'lc-1', q: 'When do you feel most adored? Describe the moment in detail.', why: 'Venus in Leo needs to be seen, celebrated and chosen.', lens: 'Love languages & positive psychology' },
       { key: 'lc-2', q: 'Where do you give more than you receive? What do you hope will happen when you do?', why: 'Chiron in Cancer in the 7th can link love with caretaking.', lens: 'Relational patterns' },
@@ -77,6 +83,7 @@ export const WORKBOOK_MODULES: WorkbookModule[] = [
     slug: 'carrying-the-weight', title: 'Carrying the Weight', subtitle: 'Responsibility, rest and softness',
     plainMeaning: 'You may have learned to be capable and responsible early. Rest can feel harder than carrying one more task.', dailyLife: 'People may rely on you while you quietly postpone your own needs or judge yourself by demanding standards.',
     placements: 'Saturn, Uranus, Neptune in Capricorn, 1st house', intro: 'You probably grew up early and became the dependable one. This module makes room for rest and softness.',
+    visual: { title: 'The load you carry', summary: 'Sort real responsibilities from burdens you picked up automatically.', left: 'Carrying everything', right: 'Supported and selective', responses: ['Find one load that is not actually yours.', 'Keep the essentials and ask where help fits.', 'Protect rest as part of responsibility.'], flow: ['A task appears', 'You assume responsibility', 'Your capacity shrinks', 'You keep, share, or release it'], signals: ['Saying yes immediately', 'Rest feeling guilty', 'Others relying on you', 'Asking for help'], action: 'Move one non-urgent responsibility off this week’s list or share it.' },
     questions: [
       { key: 'cw-1', q: 'What responsibilities did you take on younger than you should have?', why: 'Saturn in the 1st often brings early maturity and self-reliance.', lens: 'Inner-child work' },
       { key: 'cw-2', q: 'What do you believe would happen if you stopped being the strong one for a week?', why: 'The Capricorn stack can hide softness behind competence.', lens: 'CBT — testing core beliefs' },
@@ -90,6 +97,7 @@ export const WORKBOOK_MODULES: WorkbookModule[] = [
     slug: 'becoming-your-own-person', title: 'Becoming Your Own Person', subtitle: 'Independence and your unusual path',
     plainMeaning: 'Growth comes from defining yourself instead of performing the version of you that others expect.', dailyLife: 'You may notice tension between belonging to a group and saying what you truly think or choosing your own path.',
     placements: 'North Node Aquarius 1st · Lilith Sagittarius 11th', intro: 'Your growth points toward owning your individuality. This module explores freedom, belonging and your own rules.',
+    visual: { title: 'Belonging compass', summary: 'Notice when connection supports your real self and when it requires a costume.', left: 'Fitting in', right: 'Being fully yourself', responses: ['Name what you hide to stay accepted.', 'Choose connection without abandoning yourself.', 'Stay curious about how others experience you.'], flow: ['Enter a group', 'Read expectations', 'Adjust or stay true', 'Feel drained or connected'], signals: ['Editing your opinions', 'Performing a role', 'Safe disagreement', 'Energy after social time'], action: 'Share one genuine preference in a low-risk social moment.' },
     questions: [
       { key: 'yp-1', q: 'Where are you still living by someone else’s rules?', why: 'North Node in Aquarius in the 1st asks you to define yourself on your own terms.', lens: 'Values clarification' },
       { key: 'yp-2', q: 'What part of you have you been told is “too much”?', why: 'Lilith in Sagittarius is the untamed, truth-telling part of you.', lens: 'Shadow work' },
@@ -103,6 +111,7 @@ export const WORKBOOK_MODULES: WorkbookModule[] = [
     slug: 'meaning-and-calling', title: 'Meaning & Calling', subtitle: 'Truth, purpose and public life',
     plainMeaning: 'Work feels worthwhile when it serves a larger purpose and changes something for the better.', dailyLife: 'You may lose energy in work that feels empty, yet become deeply focused when a problem is meaningful and useful.',
     placements: 'Ascendant Sagittarius 29° · Pluto 10th · Midheaven Libra · Life Path 7', intro: 'You meet life searching for meaning. This module explores calling, work and the truth you are here to tell.',
+    visual: { title: 'Purpose map', summary: 'Look for the overlap between curiosity, usefulness, skill, and meaningful change.', left: 'Expected path', right: 'Meaningful path', responses: ['Identify whose expectation is steering.', 'Test one meaningful direction without a grand decision.', 'Give the calling a practical structure.'], flow: ['Question', 'Explore', 'Serve something useful', 'Create lasting change'], signals: ['Bored by empty work', 'Researching deeply', 'Teaching naturally', 'Transforming a system'], action: 'Write one small experiment that tests a meaningful direction this month.' },
     questions: [
       { key: 'mc-1', q: 'What questions have you been asking your whole life?', why: 'Life Path 7 and a Sagittarius Ascendant are both seekers of truth.', lens: 'Existential therapy' },
       { key: 'mc-2', q: 'When have you felt most useful and most alive at the same time?', why: 'Virgo service meets Sagittarian meaning.', lens: 'Flow & strengths' },
@@ -116,6 +125,7 @@ export const WORKBOOK_MODULES: WorkbookModule[] = [
     slug: 'this-year', title: 'This Year: Endings & Inner Work', subtitle: 'Your 12th-house year and Personal Year 7',
     plainMeaning: 'This is framed as a quieter year for finishing old business, understanding yourself and making room for what comes next.', dailyLife: 'You may need more solitude, feel drawn to unfinished emotional matters, or prefer preparation over visible expansion.',
     placements: 'Profection age 35 (12th house) · Personal Year 7 (2026)', intro: 'This year asks for retreat, reflection and closure before a new cycle. Use this module to work with it rather than against it.',
+    visual: { title: 'Closing the cycle', summary: 'See whether this season needs more outward effort or quiet completion.', left: 'Push forward', right: 'Pause and complete', responses: ['Ask whether urgency is real or habitual.', 'Balance necessary action with protected reflection.', 'Finish gently without disappearing from support.'], flow: ['Notice what lingers', 'Name what is ending', 'Make room to feel it', 'Choose what continues'], signals: ['Needing solitude', 'Old memories returning', 'Unfinished tasks', 'Preparing quietly'], action: 'Choose one unfinished thing to complete, release, or consciously postpone.' },
     questions: [
       { key: 'ty-1', q: 'What are you ready to finish, forgive or let go of before your next birthday?', why: 'A 12th-house profection year is about closing a 12-year cycle.', lens: 'Grief & closure work' },
       { key: 'ty-2', q: 'How much solitude do you need right now, honestly?', why: 'Personal Year 7 and the 12th house both call for inward time.', lens: 'Self-care planning' },

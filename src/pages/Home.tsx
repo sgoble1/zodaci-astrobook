@@ -34,7 +34,7 @@ export default function Home() {
             An interactive companion to the twenty-section birth chart report, the 1990–2060 timeline, the retrograde navigation guide and the feng shui implementation manual. Every planet, house, aspect, life phase and gua is explorable. Every panel is drawn directly from the uploaded source documents.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
-            <Link to="/birth-chart" className="px-5 py-2.5 bg-primary text-primary-foreground rounded font-smallcaps text-xs">Begin the Report</Link>
+            <Link to="/explore" className="px-5 py-2.5 bg-primary text-primary-foreground rounded font-smallcaps text-xs">Explore</Link>
             <Link to="/timeline" className="px-5 py-2.5 border border-border rounded font-smallcaps text-xs hover:border-gold">Current Window · The Great Opening</Link>
           </div>
           <dl className="mt-10 grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs">
