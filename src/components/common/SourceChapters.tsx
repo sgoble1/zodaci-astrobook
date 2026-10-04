@@ -1,3 +1,4 @@
+import { BookmarkButton } from '@/components/common/BookmarkButton';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
@@ -49,7 +50,7 @@ export function SourceChapters({ match, title = 'The full text from the sources'
           <div className="text-xs text-muted-foreground">{it.part}</div>
           <h3 className="font-display text-2xl mt-1 mb-4">{it.title}</h3>
           <div className="mb-prose"><ReactMarkdown remarkPlugins={[remarkGfm]}>{it.text}</ReactMarkdown></div>
-          <Link to={`/masterbook/${it.id}`} className="inline-flex items-center gap-1 text-xs underline mt-4"><BookOpen className="w-3 h-3" />Open this chapter in the Masterbook</Link>
+          <div className="flex flex-wrap gap-4 mt-4"><Link to={`/masterbook/${it.id}`} className="inline-flex items-center gap-1 text-xs underline"><BookOpen className="w-3 h-3" />Open this chapter in the Masterbook</Link><BookmarkButton compact path={`/masterbook/${it.id}`} label={it.title} /></div>
         </article>
       ))}
     </section>

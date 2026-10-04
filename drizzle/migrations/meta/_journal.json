@@ -50,6 +50,13 @@
       "when": 1790903979933,
       "tag": "0006_doc_overrides_rpc",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1791120541483,
+      "tag": "0007_ai_chat_history",
+      "breakpoints": true
     }
   ]
 }
