@@ -37,6 +37,7 @@ export function AppShell() {
   useEffect(() => { setOpen(false); window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior }); }, [location.pathname]);
 
   return (
+    <PlayerProvider>
     <div className="min-h-screen flex text-foreground relative">
       <ScrollProgress />
       <ParticleField />
@@ -78,6 +79,7 @@ export function AppShell() {
         </footer>
       </main>
     </div>
+    </PlayerProvider>
   );
 }
 
