@@ -117,7 +117,7 @@ function Detail({ rel }: { rel: Relationship }) {
       </Sec>
 
       <Sec id="overview" n="V" title="Relationship overview" level={lvl} note="Weighted summary of the contacts between the two charts; interpretive.">
-        <div className="grid sm:grid-cols-3 gap-3 text-center">{([['Harmony', score.harmony], ['Fusion (conjunctions)', score.fusion], ['Tension / growth', score.tension]] as const).map(([l, v]) => <div key={l} className="parchment p-3"><div className="font-display text-3xl">{v}</div><div className="text-xs">{l}</div></div>)}</div>
+        <div className="grid sm:grid-cols-3 gap-3 text-center">{([['Harmony', score.harmony], ['Fusion (conjunctions)', score.fusion], ['Growth energy', score.tension]] as const).map(([l, v]) => <div key={l} className="parchment p-3"><div className="font-display text-3xl">{v}</div><div className="text-xs">{l}</div></div>)}</div>
         <ul className="text-sm space-y-1">
           <li><b>Sun & Sun:</b> {signPair(b(A, 'sun').sign, b(B, 'sun').sign)}</li>
           <li><b>Moon & Moon:</b> {signPair(b(A, 'moon').sign, b(B, 'moon').sign)} {!timeKnown && <ConfidenceBadge compact level="ambiguous" note="Their Moon sign may change without a birth time." />}</li>

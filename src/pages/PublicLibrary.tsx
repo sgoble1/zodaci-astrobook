@@ -4,13 +4,13 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { loadIndex, type MbEntry } from './Masterbook';
 
-/** Public reading room: open to visitors without the site password. Only links within /read. */
+/** Password-protected reading room backed by the extracted Masterbook files. */
 function Frame({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <header className="border-b border-border/60 px-6 py-4 flex items-center justify-between">
         <Link to="/read" className="font-display text-xl">Sources · Reading Room</Link>
-        <Link to="/" className="text-xs text-muted-foreground hover:text-foreground">Full site (password) →</Link>
+        <Link to="/masterbook" className="text-xs text-muted-foreground hover:text-foreground">Open the Masterbook →</Link>
       </header>
       <main className="max-w-4xl mx-auto px-6 py-10">{children}</main>
     </div>
@@ -31,7 +31,7 @@ export function PublicLibrary() {
   return (
     <Frame>
       <h1 className="font-display text-4xl mb-2">Every source, chapter and section</h1>
-      <p className="text-muted-foreground mb-6">Browse and read all {entries.length} chapters from every document. No password needed.</p>
+      <p className="text-muted-foreground mb-6">Browse and read all {entries.length} extracted chapters from the real Masterbook documents. The site password protects this room and every chapter.</p>
       <input value={q} onChange={e => setQ(e.target.value)} placeholder="Find a chapter or section…" className="w-full rounded-md border border-input bg-background px-3 py-2 mb-8" />
       <nav className="flex flex-wrap gap-2 mb-8 text-xs">
         {groups.map(([part]) => <a key={part} href={`#${encodeURIComponent(part)}`} className="px-3 py-1 rounded-full border border-border hover:bg-muted">{part}</a>)}

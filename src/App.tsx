@@ -187,7 +187,8 @@ export default function App() {
             <Route path="/ask" element={<Ask />} />
             <Route path="/chat" element={<Chat />} />
             <Route path="/chat/:id" element={<Chat />} />
-            <Route path="/shared" element={<SharedSpace />} />
+            <Route path="/shared" element={<SharedSpace section="overview" />} />
+            <Route path="/shared/conversations" element={<SharedSpace />} />
             <Route path="/shared/chat/:id" element={<SharedSpace />} />
             <Route path="/shared/posts" element={<SharedSpace section="posts" />} />
             <Route path="/shared/notes" element={<SharedSpace section="notes" />} />
