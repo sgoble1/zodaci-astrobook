@@ -19,7 +19,7 @@ export function PodcastMaker({ onCreated }: { onCreated: () => void }) {
     e.preventDefault(); if (!topic.trim() || step >= 0) return;
     setScript(''); setStep(0);
     try {
-      const passages = rank(aprilOnly(await loadCorpus()), `${topic} ${brief}`, 12).map((p, i) => ({ n: i + 1, source: p.source, loc: p.loc, text: p.text }));
+      const passages = rank(aprilOnly(await loadCorpus()), `${topic} ${brief}`, 12).map((p, i) => ({ n: i + 1, source: p.source, loc: p.loc, text: p.text, href: p.href }));
       setStep(1); const t = window.setTimeout(() => setStep(2), 25000);
       const { data, error } = await supabase.functions.invoke('make-podcast', { body: { topic: topic.trim(), brief, voice, shared, passages } });
       clearTimeout(t);
@@ -42,7 +42,7 @@ export function PodcastMaker({ onCreated }: { onCreated: () => void }) {
         <Button type="submit" disabled={step >= 0 || !topic.trim()}>{step >= 0 ? 'Creating…' : 'Create episode'}</Button>
       </div>
       {step >= 0 && <ol role="status" className="space-y-1 text-sm">{STEPS.map((s, i) => <li key={s} className={i < step ? 'text-muted-foreground line-through' : i === step ? 'animate-pulse text-foreground' : 'text-muted-foreground/60'}>{s}</li>)}</ol>}
-      {script && <details className="text-sm"><summary className="cursor-pointer underline">Read the script</summary><p className="mt-2 whitespace-pre-wrap">{script}</p></details>}
+      {script && <details className="text-sm"><summary className="cursor-pointer underline">Read the cited script</summary><p className="mt-2 whitespace-pre-wrap">{script}</p><p className="mt-2 text-xs text-muted-foreground">Numbers in brackets point to the protected Masterbook and source passages saved with the episode.</p></details>}
     </form>
   );
 }

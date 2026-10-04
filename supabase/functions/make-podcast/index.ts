@@ -12,7 +12,7 @@ const Body = z.object({
   brief: z.string().max(3000).default(''),
   voice: z.enum(['Kore', 'Aoede', 'Charon', 'Puck']).default('Kore'),
   shared: z.boolean().default(false),
-  passages: z.array(z.object({ n: z.number(), source: z.string(), loc: z.string(), text: z.string() })).max(14).default([]),
+  passages: z.array(z.object({ n: z.number(), source: z.string(), loc: z.string(), text: z.string(), href: z.string().startsWith('/').optional() })).max(14).default([]),
 });
 
 /** Split at sentence boundaries into chunks of at most `max` characters. */
@@ -75,14 +75,14 @@ Deno.serve(async (req) => {
     const apiKey = Deno.env.get('LOVABLE_API_KEY'); if (!apiKey) return json({ error: 'AI is not configured.' }, 500);
 
     const ctx = passages.map(p => `[${p.n}] (${p.source} — ${p.loc})\n${p.text.slice(0, 1800)}`).join('\n\n');
-    const call = createResponsesCall(req, { apiKey, effort: 'low', instructions: `You write short spoken podcast episodes for April about her own chart.\n${APRIL_CHART}\nWrite a single-host script of about 450–550 words (roughly 3–4 minutes spoken). Speak directly to April as "you". Open with a one-line hook, then 3 short spoken sections, end with one practical takeaway. Base every claim on the passages; never invent placements. Plain spoken prose only: no headings, no bullet points, no citations, no stage directions, no emoji.` },
+    const call = createResponsesCall(req, { apiKey, effort: 'low', instructions: `You write short spoken podcast episodes for April about her own chart.\n${APRIL_CHART}\nWrite a single-host script of about 450–550 words (roughly 3–4 minutes spoken). Speak directly to April as "you". Open with a one-line hook, then 3 short spoken sections, end with one practical takeaway. Base every factual claim on the supplied passages; never invent placements or use general astrology knowledge. Naturally name the source when useful (for example, "Your Masterbook describes..."). End each source-grounded paragraph with one or more matching citation numbers like [1] or [2][4]. Plain spoken prose only: no headings, no bullet points, no stage directions, no emoji.` },
       [{ role: 'user', content: `Episode topic: ${topic}\n${brief ? `Focus: ${brief}\n` : ''}\nPassages:\n\n${ctx}` }]);
     const script = (await call.result.text).trim();
     if (!script) return json({ error: 'The script came back empty. Please try again.' }, 502);
 
     const parts = chunk(script);
     const pcm: Uint8Array[] = [];
-    for (const p of parts) pcm.push(await speak(apiKey, p, voice)); // ordered, sequential: shared rate-limit budget
+    for (const p of parts) pcm.push(await speak(apiKey, p.replace(/\[\d+\]/g, ''), voice)); // citations remain in transcript but are not read aloud
     const total = pcm.reduce((a, b) => a + b.length, 0); const joined = new Uint8Array(total); let off = 0; for (const b of pcm) { joined.set(b, off); off += b.length; }
     const file = wav(joined);
 
@@ -95,7 +95,8 @@ Deno.serve(async (req) => {
     const cover = new TextEncoder().encode(podcastCover(topic));
     const coverUp = await admin.storage.from('library').upload(coverPath, cover, { contentType: 'image/svg+xml' });
     if (coverUp.error) return json({ error: 'Could not save the episode cover.' }, 500);
-    const ins = await admin.from('library_items').insert({ kind: 'podcast', title: topic, description: script.split(/(?<=[.!?])\s/).slice(0, 2).join(' '), category: 'Created episodes', file_path: path, cover_path: coverPath, shared_with_space: shared, file_name: name, mime_type: 'audio/wav', size_bytes: file.length, owner_id: u.user.id }).select('id').single();
+    const citations = passages.map(p => ({ title: p.source, text: p.text, loc: p.loc, href: p.href ?? '', n: p.n }));
+    const ins = await admin.from('library_items').insert({ kind: 'podcast', title: topic, description: script.split(/(?<=[.!?])\s/).slice(0, 2).join(' '), category: 'Created episodes', file_path: path, cover_path: coverPath, shared_with_space: shared, file_name: name, mime_type: 'audio/wav', size_bytes: file.length, owner_id: u.user.id, sections: [{ title: 'Episode transcript', text: script }, ...citations] }).select('id').single();
     if (ins.error) return json({ error: 'Could not list the episode.' }, 500);
     return json({ id: ins.data.id, script, seconds: Math.round(joined.length / 48000) });
   } catch (e) {
