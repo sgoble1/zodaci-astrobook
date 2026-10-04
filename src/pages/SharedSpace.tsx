@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import { Archive, Check, FileText, Image, Link2, MessageCircle, MoreHorizontal, Paperclip, Plus, Send, StickyNote, Trash2, Users } from 'lucide-react';
+import { Archive, Check, FileText, Image, Link2, MessageCircle, MoreHorizontal, Paperclip, Plus, Reply, Send, StickyNote, Trash2, Users } from 'lucide-react';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import { useSession } from '@/hooks/useLibrary';
@@ -9,9 +9,12 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Conversation as ChatConversation, ConversationContent, ConversationEmptyState, ConversationScrollButton } from '@/components/ai-elements/conversation';
+import { Message as ChatMessage, MessageActions, MessageAction, MessageContent } from '@/components/ai-elements/message';
 
 type Conversation = { id: string; title: string; kind: 'main' | 'topic'; created_by: string; created_at: string; updated_at: string };
-type Message = { id: string; conversation_id: string; sender_id: string; body: string; created_at: string; edited_at: string | null };
+type Message = { id: string; conversation_id: string; sender_id: string; body: string; created_at: string; edited_at: string | null; reply_to_id: string | null };
+type Reaction = { id: string; message_id: string; user_id: string; emoji: string };
 type Attachment = { id: string; message_id: string | null; post_id: string | null; uploaded_by: string; file_path: string; file_name: string; mime_type: string | null; size_bytes: number | null; url?: string };
 type Post = { id: string; author_id: string; title: string; body: string; created_at: string; updated_at: string };
 type Note = { id: string; title: string; body: string; updated_at: string };
@@ -52,14 +55,22 @@ function useDirectory() {
 
 function SharedNav({ value }: { value: string }) {
   const links = [
-    ['chat', '/shared', 'Conversations', MessageCircle], ['posts', '/shared/posts', 'Posts', FileText], ['notes', '/shared/notes', 'Notes', StickyNote],
+    ['overview', '/shared', 'Dashboard', Users], ['chat', '/shared/conversations', 'Conversations', MessageCircle], ['posts', '/shared/posts', 'Posts', FileText], ['notes', '/shared/notes', 'Notes', StickyNote],
     ['later', '/shared/later', 'Talk Later', Archive], ['accounts', '/shared/accounts', 'Accounts', Link2],
   ] as const;
   return <nav className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap" aria-label="Shared space sections">{links.map(([id, to, label, Icon]) => <Button key={id} asChild variant={value === id ? 'default' : 'outline'} size="sm"><Link to={to}><Icon className="h-4 w-4" />{label}</Link></Button>)}</nav>;
 }
 
-export default function SharedSpace({ section = 'chat' }: { section?: 'chat' | 'posts' | 'notes' | 'later' | 'accounts' }) {
-  return <div className="space-y-6"><header className="space-y-2"><div className="font-smallcaps text-xs text-gold">Private · April & Shane</div><h1 className="text-4xl sm:text-5xl">Our Shared Space</h1><p className="max-w-2xl text-muted-foreground">Messages, posts, notes, files, things to revisit, and useful account references in one private place.</p></header><SharedNav value={section} /><SharedSpaceGate>{userId => section === 'chat' ? <Conversations userId={userId} /> : section === 'posts' ? <Posts userId={userId} /> : section === 'notes' ? <Notes userId={userId} /> : section === 'later' ? <TalkLater userId={userId} /> : <Accounts userId={userId} />}</SharedSpaceGate></div>;
+export default function SharedSpace({ section = 'chat' }: { section?: 'overview' | 'chat' | 'posts' | 'notes' | 'later' | 'accounts' }) {
+  return <div className="space-y-6"><header className="space-y-2"><div className="font-smallcaps text-xs text-gold">Private · April & Shane</div><h1 className="text-4xl sm:text-5xl">Our Shared Space</h1><p className="max-w-2xl text-muted-foreground">Messages, posts, notes, files, things to revisit, and useful account references in one private place.</p></header><SharedNav value={section} /><SharedSpaceGate>{userId => section === 'overview' ? <SharedOverview /> : section === 'chat' ? <Conversations userId={userId} /> : section === 'posts' ? <Posts userId={userId} /> : section === 'notes' ? <Notes userId={userId} /> : section === 'later' ? <TalkLater userId={userId} /> : <Accounts userId={userId} />}</SharedSpaceGate></div>;
+}
+
+function SharedOverview() {
+  const directory = useDirectory();
+  const [messages, setMessages] = useState<Message[]>([]); const [posts, setPosts] = useState<Post[]>([]); const [notes, setNotes] = useState<Note[]>([]); const [topics, setTopics] = useState<FutureTopic[]>([]);
+  const load = useCallback(async () => { const [m, p, n, t] = await Promise.all([db('shared_messages').select('*').order('created_at', { ascending: false }).limit(6), db('shared_posts').select('*').order('created_at', { ascending: false }).limit(4), db('shared_notes').select('*').order('updated_at', { ascending: false }).limit(4), db('shared_future_topics').select('*').eq('status', 'open').order('updated_at', { ascending: false }).limit(6)]); setMessages((m.data ?? []) as Message[]); setPosts((p.data ?? []) as Post[]); setNotes((n.data ?? []) as Note[]); setTopics((t.data ?? []) as FutureTopic[]); }, []);
+  useEffect(() => { load(); const channel = supabase.channel('shared-overview').on('postgres_changes', { event: '*', schema: 'public', table: 'shared_messages' }, load).on('postgres_changes', { event: '*', schema: 'public', table: 'shared_posts' }, load).on('postgres_changes', { event: '*', schema: 'public', table: 'shared_notes' }, load).on('postgres_changes', { event: '*', schema: 'public', table: 'shared_future_topics' }, load).subscribe(); return () => { supabase.removeChannel(channel); }; }, [load]);
+  return <div className="grid gap-5 md:grid-cols-2"><section className="parchment p-5 space-y-3"><div className="flex justify-between"><h2 className="text-2xl">Latest messages</h2><Link className="text-xs underline" to="/shared/conversations">Open chat</Link></div>{messages.map(m => <div key={m.id} className="border-t border-border/60 pt-2"><div className="text-[10px] text-gold">{person(directory, m.sender_id)} · {stamp(m.created_at)}</div><p className="text-sm line-clamp-2">{m.body || 'Shared an attachment'}</p></div>)}</section><section className="parchment p-5 space-y-3"><div className="flex justify-between"><h2 className="text-2xl">Recent posts</h2><Link className="text-xs underline" to="/shared/posts">View posts</Link></div>{posts.map(p => <div key={p.id} className="border-t border-border/60 pt-2"><b>{p.title || 'Shared post'}</b><p className="text-sm text-muted-foreground line-clamp-2">{p.body}</p></div>)}</section><section className="parchment p-5 space-y-3"><div className="flex justify-between"><h2 className="text-2xl">Shared notes</h2><Link className="text-xs underline" to="/shared/notes">Open notes</Link></div>{notes.map(n => <div key={n.id} className="border-t border-border/60 pt-2"><b>{n.title}</b><p className="text-sm text-muted-foreground line-clamp-2">{n.body}</p></div>)}</section><section className="parchment p-5 space-y-3"><div className="flex justify-between"><h2 className="text-2xl">Talk later</h2><Link className="text-xs underline" to="/shared/later">Open list</Link></div>{topics.map(t => <div key={t.id} className="border-t border-border/60 pt-2"><b>{t.title}</b><p className="text-sm text-muted-foreground line-clamp-2">{t.details}</p></div>)}</section></div>;
 }
 
 function Conversations({ userId }: { userId: string }) {
@@ -74,6 +85,8 @@ function Conversations({ userId }: { userId: string }) {
   const [topic, setTopic] = useState('');
   const [sending, setSending] = useState(false);
   const [unread, setUnread] = useState<Record<string, number>>({});
+  const [reactions, setReactions] = useState<Reaction[]>([]);
+  const [replyTo, setReplyTo] = useState<Message | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
   const textRef = useRef<HTMLTextAreaElement>(null);
   const endRef = useRef<HTMLDivElement>(null);
@@ -100,9 +113,10 @@ function Conversations({ userId }: { userId: string }) {
 
   const loadMessages = useCallback(async () => {
     if (!id) return;
-    const [{ data: messageRows }, { data: attachmentRows }] = await Promise.all([
+    const [{ data: messageRows }, { data: attachmentRows }, { data: reactionRows }] = await Promise.all([
       db('shared_messages').select('*').eq('conversation_id', id).order('created_at'),
       db('shared_attachments').select('*').not('message_id', 'is', null).order('created_at'),
+      db('shared_message_reactions').select('*'),
     ]);
     setMessages((messageRows ?? []) as Message[]);
     const rows = (attachmentRows ?? []) as Attachment[];
@@ -111,6 +125,7 @@ function Conversations({ userId }: { userId: string }) {
       rows.forEach((row, index) => { row.url = signed.data?.[index]?.signedUrl; });
     }
     setAttachments(rows);
+    setReactions((reactionRows ?? []) as Reaction[]);
     await db('shared_conversation_reads').upsert({ conversation_id: id, user_id: userId, last_read_at: new Date().toISOString() });
     setUnread(current => ({ ...current, [id]: 0 }));
   }, [id, userId]);
@@ -126,6 +141,7 @@ function Conversations({ userId }: { userId: string }) {
         else if (incoming.sender_id !== userId) setUnread(current => ({ ...current, [incoming.conversation_id]: (current[incoming.conversation_id] ?? 0) + 1 }));
       })
       .on('postgres_changes', { event: '*', schema: 'public', table: 'shared_attachments' }, () => loadMessages())
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'shared_message_reactions' }, () => loadMessages())
       .subscribe();
     return () => { supabase.removeChannel(channel); };
   }, [id, loadConversations, loadMessages, userId]);
@@ -140,18 +156,19 @@ function Conversations({ userId }: { userId: string }) {
   const send = async () => {
     if ((!body.trim() && files.length === 0) || !id || sending) return;
     setSending(true);
-    const { data, error } = await db('shared_messages').insert({ conversation_id: id, body: body.trim(), sender_id: userId }).select('*').single();
+    const { data, error } = await db('shared_messages').insert({ conversation_id: id, body: body.trim(), sender_id: userId, reply_to_id: replyTo?.id ?? null }).select('*').single();
     if (error) { toast.error(error.message); setSending(false); return; }
-    try { await uploadAttachments(files, { message_id: data.id }, userId); setBody(''); setFiles([]); await loadMessages(); }
+    try { await uploadAttachments(files, { message_id: data.id }, userId); setBody(''); setFiles([]); setReplyTo(null); await loadMessages(); }
     catch (error) { toast.error(error instanceof Error ? error.message : 'File upload failed'); }
     setSending(false); textRef.current?.focus();
   };
 
   const active = conversations.find(c => c.id === id);
   const filesFor = (messageId: string) => attachments.filter(file => file.message_id === messageId);
+  const toggleReaction = async (messageId: string, emoji: string) => { const existing = reactions.find(r => r.message_id === messageId && r.user_id === userId && r.emoji === emoji); if (existing) await db('shared_message_reactions').delete().eq('id', existing.id); else await db('shared_message_reactions').insert({ message_id: messageId, user_id: userId, emoji }); await loadMessages(); };
   return <div className="grid min-h-[620px] gap-4 lg:grid-cols-[240px_minmax(0,1fr)]">
     <aside className="parchment p-3 space-y-3"><div className="flex items-center gap-2 px-1"><Users className="h-4 w-4 text-accent"/><span className="font-smallcaps text-[10px] text-gold">April & Shane</span></div><div className="flex gap-2"><Input value={topic} onChange={e => setTopic(e.target.value)} onKeyDown={e => e.key === 'Enter' && addTopic()} placeholder="New topic" aria-label="New conversation topic"/><Button size="icon" onClick={addTopic} aria-label="Add topic"><Plus /></Button></div><div className="space-y-1">{conversations.map(c => <Link key={c.id} to={`/shared/chat/${c.id}`} className={`flex items-center justify-between rounded px-3 py-2 text-sm ${c.id === id ? 'bg-accent/15 text-foreground' : 'text-muted-foreground hover:bg-muted/60 hover:text-foreground'}`}><span className="truncate">{c.kind === 'main' ? 'Main conversation' : c.title}</span>{unread[c.id] ? <span className="min-w-5 rounded-full bg-primary px-1.5 text-center text-xs text-primary-foreground">{unread[c.id]}</span> : null}</Link>)}</div></aside>
-    <section className="parchment flex min-h-[620px] min-w-0 flex-col overflow-hidden"><div className="border-b border-border px-4 py-3"><h2 className="text-xl">{active?.kind === 'main' ? 'Main conversation' : active?.title ?? 'Conversation'}</h2><p className="text-xs text-muted-foreground">Live and private to the two of you</p></div><div className="flex-1 space-y-4 overflow-y-auto p-4 max-h-[58vh]">{messages.length === 0 && <div className="py-20 text-center text-sm text-muted-foreground"><MessageCircle className="mx-auto mb-3 h-8 w-8 text-accent"/>Start the conversation.</div>}{messages.map(message => { const own = message.sender_id === userId; return <article key={message.id} className={`flex ${own ? 'justify-end' : 'justify-start'}`}><div className={`max-w-[88%] space-y-2 rounded-lg px-4 py-3 ${own ? 'bg-primary text-primary-foreground' : 'border border-border bg-card/70'}`}><div className={`text-[10px] font-semibold ${own ? 'text-primary-foreground/75' : 'text-muted-foreground'}`}>{person(directory, message.sender_id)} · {stamp(message.created_at)}</div>{message.body && <p className="whitespace-pre-wrap text-sm">{message.body}</p>}<div className="grid gap-2 sm:grid-cols-2">{filesFor(message.id).map(file => file.mime_type?.startsWith('image/') && file.url ? <a key={file.id} href={file.url} target="_blank" rel="noreferrer"><img src={file.url} alt={file.file_name} className="max-h-64 w-full rounded object-cover"/></a> : <a key={file.id} href={file.url} target="_blank" rel="noreferrer" className="flex items-center gap-2 rounded border border-current/20 p-2 text-xs"><Paperclip className="h-4 w-4"/><span className="truncate">{file.file_name}</span></a>)}</div></div></article>; })}<div ref={endRef}/></div><form onSubmit={e => { e.preventDefault(); send(); }} className="border-t border-border p-3"><div className="mb-2 flex flex-wrap gap-2">{files.map(file => <span key={file.name} className="rounded bg-muted px-2 py-1 text-xs">{file.name}</span>)}</div><div className="flex items-end gap-2"><input ref={fileRef} type="file" multiple className="hidden" onChange={e => setFiles(Array.from(e.target.files ?? []))}/><Button type="button" size="icon" variant="outline" onClick={() => fileRef.current?.click()} aria-label="Attach images or files"><Paperclip/></Button><Textarea ref={textRef} value={body} onChange={e => setBody(e.target.value)} onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); } }} rows={2} placeholder="Message April…" className="flex-1"/><Button type="submit" size="icon" disabled={sending || (!body.trim() && files.length === 0)} aria-label="Send message"><Send/></Button></div></form></section>
+    <section className="parchment flex min-h-[620px] min-w-0 flex-col overflow-hidden"><div className="border-b border-border px-4 py-3"><h2 className="text-xl">{active?.kind === 'main' ? 'Main conversation' : active?.title ?? 'Conversation'}</h2><p className="text-xs text-muted-foreground">Live and private to the two of you</p></div><ChatConversation className="min-h-0 flex-1 max-h-[58vh]"><ConversationContent className="gap-4">{messages.length === 0 && <ConversationEmptyState icon={<MessageCircle className="h-8 w-8"/>} title="Start the conversation" description="Messages and attachments appear instantly for both of you."/>}{messages.map(message => { const own = message.sender_id === userId; const replied = messages.find(item => item.id === message.reply_to_id); const counts = reactions.filter(r => r.message_id === message.id).reduce<Record<string, number>>((all, reaction) => ({ ...all, [reaction.emoji]: (all[reaction.emoji] ?? 0) + 1 }), {}); return <ChatMessage key={message.id} from={own ? 'user' : 'assistant'}><MessageContent className={own ? 'bg-primary text-primary-foreground' : 'rounded-lg border border-border bg-card/70 px-4 py-3'}><div className={`text-[10px] font-semibold ${own ? 'text-primary-foreground/75' : 'text-muted-foreground'}`}>{person(directory, message.sender_id)} · {stamp(message.created_at)}</div>{replied && <div className="border-l-2 border-current/30 pl-2 text-xs opacity-75 line-clamp-2">{person(directory, replied.sender_id)}: {replied.body || 'Attachment'}</div>}{message.body && <p className="whitespace-pre-wrap text-sm">{message.body}</p>}<div className="grid gap-2 sm:grid-cols-2">{filesFor(message.id).map(file => file.mime_type?.startsWith('image/') && file.url ? <a key={file.id} href={file.url} target="_blank" rel="noreferrer"><img src={file.url} alt={file.file_name} className="max-h-64 w-full rounded object-cover"/></a> : <a key={file.id} href={file.url} target="_blank" rel="noreferrer" className="flex items-center gap-2 rounded border border-current/20 p-2 text-xs"><Paperclip className="h-4 w-4"/><span className="truncate">{file.file_name}</span></a>)}</div></MessageContent><MessageActions className={own ? 'justify-end' : ''}><MessageAction tooltip="Reply" onClick={() => setReplyTo(message)}><Reply/></MessageAction>{['❤️', '👍', '✨', '😂'].map(emoji => <Button key={emoji} type="button" variant={counts[emoji] ? 'secondary' : 'ghost'} size="sm" onClick={() => toggleReaction(message.id, emoji)}>{emoji}{counts[emoji] ? ` ${counts[emoji]}` : ''}</Button>)}</MessageActions></ChatMessage>; })}<div ref={endRef}/></ConversationContent><ConversationScrollButton/></ChatConversation><form onSubmit={e => { e.preventDefault(); send(); }} className="border-t border-border p-3">{replyTo && <div className="mb-2 flex items-center justify-between rounded border border-border bg-muted/40 px-3 py-2 text-xs"><span className="line-clamp-1">Replying to {person(directory, replyTo.sender_id)}: {replyTo.body || 'Attachment'}</span><Button type="button" size="icon" variant="ghost" onClick={() => setReplyTo(null)} aria-label="Cancel reply"><Trash2/></Button></div>}<div className="mb-2 flex flex-wrap gap-2">{files.map(file => <span key={file.name} className="rounded bg-muted px-2 py-1 text-xs">{file.name}</span>)}</div><div className="flex items-end gap-2"><input ref={fileRef} type="file" multiple className="hidden" onChange={e => setFiles(Array.from(e.target.files ?? []))}/><Button type="button" size="icon" variant="outline" onClick={() => fileRef.current?.click()} aria-label="Attach images or files"><Paperclip/></Button><Textarea ref={textRef} value={body} onChange={e => setBody(e.target.value)} onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); } }} rows={2} placeholder="Write a message…" className="flex-1"/><Button type="submit" size="icon" disabled={sending || (!body.trim() && files.length === 0)} aria-label="Send message"><Send/></Button></div></form></section>
   </div>;
 }
 

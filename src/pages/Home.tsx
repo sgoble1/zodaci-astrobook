@@ -3,6 +3,7 @@ import { NatalWheel } from '@/components/chart/NatalWheel';
 import { BIRTH, PHASES, PLACEMENTS } from '@/content/april';
 import { UpdatesFeed } from '@/components/common/UpdatesFeed';
 import heroImg from '@/assets/hero-threshold.jpg';
+import { SharedChatFeed } from '@/components/shared/SharedChatFeed';
 
 const modules = [
   { to: '/birth-chart', title: 'The Birth Chart', desc: "The full snapshot — chart shape, elemental balance, chart rulers, most-elevated planet, the Full Moon opposition." },
@@ -105,6 +106,7 @@ export default function Home() {
           </div>
         </div>
       </section>
+      <SharedChatFeed />
       <UpdatesFeed />
     </div>
   );
