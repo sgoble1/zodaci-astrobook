@@ -14,6 +14,45 @@ export type Database = {
   }
   public: {
     Tables: {
+      activity_events: {
+        Row: {
+          created_at: string
+          detail: Json
+          device: string
+          duration_seconds: number | null
+          id: string
+          kind: string
+          label: string
+          path: string
+          user_id: string
+          visit_id: string
+        }
+        Insert: {
+          created_at?: string
+          detail?: Json
+          device?: string
+          duration_seconds?: number | null
+          id?: string
+          kind: string
+          label?: string
+          path?: string
+          user_id?: string
+          visit_id?: string
+        }
+        Update: {
+          created_at?: string
+          detail?: Json
+          device?: string
+          duration_seconds?: number | null
+          id?: string
+          kind?: string
+          label?: string
+          path?: string
+          user_id?: string
+          visit_id?: string
+        }
+        Relationships: []
+      }
       bookmarks: {
         Row: {
           created_at: string
