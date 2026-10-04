@@ -9,6 +9,7 @@ type DiscoveryItem = {
   to: string;
   category: string;
   sources: { label: string; to: string }[];
+  next: { label: string; to: string };
 };
 
 const categories = [
@@ -22,7 +23,7 @@ const categories = [
 ];
 
 const items: DiscoveryItem[] = [
-  { category: 'chart', title: 'Start with the complete birth chart', description: 'See April’s strongest traits, needs and patterns, with ordinary-language explanations beside the chart details.', to: '/birth-chart', sources: [{ label: 'Chart foundation chapters', to: '/read/document/part-one-your-natal-chart-the-foundation' }, { label: 'Sun chapter', to: '/read/ch-2' }] },
+  { category: 'chart', title: 'Start with the complete birth chart', description: 'See April’s strongest traits, needs and patterns, with ordinary-language explanations beside the chart details.', to: '/birth-chart', sources: [{ label: 'Chart foundation chapters', to: '/read/document/part-one-your-natal-chart-the-foundation' }, { label: 'Sun chapter', to: '/read/ch-2' }], next: { label: 'Learn the chart words first', to: '/chart-guide' } },
   { category: 'chart', title: 'Meet the planets', description: 'Learn what each part of the chart represents and how its exact position may show up in April’s everyday life.', to: '/planets', sources: [{ label: 'Moon chapter', to: '/read/ch-3' }, { label: 'Mercury chapter', to: '/read/ch-4' }] },
   { category: 'chart', title: 'Explore the twelve life areas', description: 'Understand which part of life each house describes, from identity and money to home, love and career.', to: '/houses', sources: [{ label: 'Browse chart chapters', to: '/contents' }] },
   { category: 'chart', title: 'Compare other traditions', description: 'See what Vedic, Maya, Tibetan, Japanese, Chaldean, Tarot and Celtic systems calculate for April.', to: '/other-systems', sources: [{ label: 'Numerology source', to: '/read/ch-46' }, { label: 'Tarot source', to: '/read/ch-55' }] },

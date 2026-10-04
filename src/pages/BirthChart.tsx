@@ -29,6 +29,7 @@ export default function BirthChart() {
           Sun in Virgo, Moon in Aries, Sagittarius Rising at the anaretic 29°28′. Full Moon birth. Bucket chart with the Aries Moon as the Handle. A triple Capricorn stellium in the first house. Pluto in domicile at the crown of the chart. Every configuration is documented here.
         </p>
         <div className="flex flex-wrap gap-3 mt-5">
+          <Button asChild variant="outline"><Link to="/chart-guide">Read the plain-language chart guide</Link></Button>
           <Link to="/reading" className="px-4 py-2 rounded bg-primary text-primary-foreground text-sm">Read the complete reading →</Link>
           <Link to="/chart-calculator" className="px-4 py-2 rounded border border-border text-sm hover:border-gold">Spin the natal wheel</Link>
           <Button type="button" variant="outline" onClick={() => window.print()}><Printer className="h-4 w-4" aria-hidden="true"/>Print chart</Button>

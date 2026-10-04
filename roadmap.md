@@ -74,3 +74,10 @@
 ## Discovery sources and plain language
 - [x] Connect every Explore & Discover category to relevant Masterbook chapters and source pages.
 - [x] Add April-specific plain-language explanations for every Other Systems placement and relationship without removing technical details.
+
+## Social Integration, chart guide, discovery, and private release
+- [ ] Add private Social Integration conversations and a chart-aware Social Counselor.
+- [ ] Add Social Integration to Workbook navigation, tools, and Chat about this.
+- [ ] Add a separate plain-language guide for every planet, house, and aspect type without removing the report.
+- [ ] Expand Explore & Discover into linked learning trails with real destination pages and source chapters.
+- [ ] Verify private access, responsive accessibility, live no-index headers, and publish.

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Link, NavLink, useParams } from 'react-router-dom';
-import { BookHeart, CalendarHeart, Check, Feather, Loader2, NotebookPen, Scale, Trash2 } from 'lucide-react';
+import { BookHeart, CalendarHeart, Check, Feather, Loader2, NotebookPen, Scale, Trash2, Users } from 'lucide-react';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import { AuthGate } from '@/components/common/AuthGate';
@@ -16,7 +16,7 @@ import oracle from '@/assets/oracle-within.png';
 const fmt = (v: string) => new Intl.DateTimeFormat(undefined, { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }).format(new Date(v));
 
 function WorkbookNav() {
-  const links: [string, string][] = [['/workbook', 'Overview'], ['/workbook/check-in', 'Daily Check-in'], ['/workbook/reframe', 'Thought Reframe'], ['/workbook/journal', 'Journal & Patterns'], ['/workbook/companion', 'The Oracle Within']];
+  const links: [string, string][] = [['/workbook', 'Overview'], ['/workbook/social-integration', 'Social Integration'], ['/workbook/check-in', 'Daily Check-in'], ['/workbook/reframe', 'Thought Reframe'], ['/workbook/journal', 'Journal & Patterns'], ['/workbook/companion', 'The Oracle Within']];
   return (
     <nav aria-label="Workbook sections" className="flex flex-wrap gap-2">
       {links.map(([to, label]) => (
@@ -134,6 +134,7 @@ function HomeInner({ userId }: { userId: string }) {
   }, [checkins]);
   const total = ALL_QUESTIONS.length;
   const tools = [
+    { to: '/workbook/social-integration', title: 'Social Integration', body: 'Understand human situations from an outside view, then get useful scripts, boundaries and next steps.', Icon: Users },
     { to: '/workbook/check-in', title: 'Daily Check-in', body: 'Mood, energy and body in one minute, with care suggestions for today.', Icon: CalendarHeart },
     { to: '/workbook/reframe', title: 'Thought Reframe', body: 'Untangle a hard moment step by step, CBT-style, through your chart.', Icon: Scale },
     { to: '/workbook/journal', title: 'Journal & Patterns', body: 'Everything you have written, your mood over time and what keeps returning.', Icon: NotebookPen },

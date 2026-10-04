@@ -63,6 +63,8 @@ import { OtherSystemsDashboard, OtherSystemDetail } from './pages/OtherSystems';
 import { WorkbookHome, WorkbookModulePage, WorkbookCheckIn, WorkbookReframe, WorkbookJournal } from './pages/Workbook';
 import Companion from './pages/Companion';
 import ExploreDiscover from './pages/ExploreDiscover';
+import SocialIntegration from './pages/SocialIntegration';
+import ChartGuide from './pages/ChartGuide';
 
 
 /** Build a single registry of every drawer-openable Compendium item. Used so
@@ -156,6 +158,7 @@ export default function App() {
             <Route path="/" element={<Home />} />
             <Route path="/explore" element={<ExploreDiscover />} />
             <Route path="/birth-chart" element={<BirthChart />} />
+            <Route path="/chart-guide" element={<ChartGuide />} />
             <Route path="/planets" element={<Planets />} />
             <Route path="/planets/:key" element={<PlanetDetail />} />
             <Route path="/houses" element={<Houses />} />
@@ -216,6 +219,8 @@ export default function App() {
             <Route path="/workbook/journal" element={<WorkbookJournal />} />
             <Route path="/workbook/companion" element={<Companion />} />
             <Route path="/workbook/companion/:sessionId" element={<Companion />} />
+            <Route path="/workbook/social-integration" element={<SocialIntegration />} />
+            <Route path="/workbook/social-integration/:sessionId" element={<SocialIntegration />} />
             <Route path="/p/:id" element={<CustomPageView />} />
             <Route path="/shared/notes" element={<SharedSpace section="notes" />} />
             <Route path="/shared/later" element={<SharedSpace section="later" />} />
