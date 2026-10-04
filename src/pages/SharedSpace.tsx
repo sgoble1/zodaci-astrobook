@@ -29,7 +29,7 @@ type WonderingComment = { id: string; wondering_id: string; author_id: string; b
 type WonderingReaction = { id: string; wondering_id: string; user_id: string; emoji: string };
 type Directory = Record<string, string>;
 
-const ALLOWED = new Set(['shanealecompte@gmail.com', 'babybluepuppet@gmail.com']);
+const ALLOWED = new Set(['shanealecompte@gmail.com', 'shanegoble@gmail.com', 'babybluepuppet@gmail.com']);
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const db = (name: string): any => supabase.from(name as never); // generated table names are runtime-safe; helper keeps CRUD concise.
 const person = (directory: Directory, id: string) => directory[id] ?? 'Shared member';
