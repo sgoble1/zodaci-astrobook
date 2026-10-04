@@ -47,7 +47,7 @@ export const TOPICS: Topic[] = [
       { text: 'The Numerological-Astrological Echo: Life Path 7 and the chart\'s major configurations confirm one another.', cite: 'Birth Chart & Feng Shui Guide · 17D, p. 114', to: '/masterbook/c-ff306540-p114' },
     ],
     questions: ['What does my Life Path number mean for my purpose?', 'Which Personal Year am I in and what does it ask of me?'] },
-  { slug: 'recurring-themes', label: 'Recurring Themes', intro: 'The patterns the documents return to again and again: the Full Moon axis, the anaretic degrees, the Capricorn stellium, service and depth.',
+  { slug: 'recurring-themes', label: 'Recurring Themes', intro: 'The patterns the documents return to again and again, with calculation corrections shown alongside them: the source-described Full Moon theme, anaretic degrees, the Capricorn stellium, service and depth.',
     chapters: /synthes|theme|pattern|signature|overview|big three|blueprint/i, query: 'recurring theme pattern repeatedly signature throughout your chart full moon anaretic stellium',
     sourceIds: ['v2-07', 'v2-08', 'v2-09', 'v2-19'],
     pages: [{ to: '/masterbook/c-ff306540-06', label: 'Section 7 · Repeating Life Patterns' }, { to: '/masterbook/c-ff306540-14', label: 'Section 15 · Seven Core Life Patterns' }, { to: '/reading#synthesis', label: 'Reading · Synthesis across systems' }, { to: '/masterbook/bcb-41', label: 'Birth Chart Book · Ch. 39 Synthesis' }],

@@ -398,9 +398,9 @@ export const PHASES: LifePhase[] = [
   {
     id: 'phase-1', number: 1, title: 'Early Life Foundation',
     years: '1990–2001', ages: 'Age 0–11',
-    summary: 'The Chiron medicine is seeded. A Full Moon child begins learning to hold her own depth.',
+    summary: 'The Chiron medicine is seeded. A sensitive child begins learning to hold her own depth.',
     interpretation:
-      "Born on a Full Moon into a Bucket chart with an Aries Moon Handle, she arrived as a high-contrast child in a household that did not yet have the vocabulary for her. Chiron medicine is seeded here: an early invitation to recognize that her needs and depth deserve an expansive container. The limitations of the adults around her were never evidence of a failing in the child; they became an invitation for her to grow into her own reliable source of shelter while learning to welcome trustworthy support. Everything the report addresses begins here.",
+      "Born with a waning gibbous Aries Moon that the source describes as the Handle of a Bucket chart, she arrived as a high-contrast child in a household that did not yet have the vocabulary for her. Chiron medicine is seeded here: an early invitation to recognize that her needs and depth deserve an expansive container. The limitations of the adults around her were never evidence of a failing in the child; they became an invitation for her to grow into her own reliable source of shelter while learning to welcome trustworthy support. Everything the report addresses begins here.",
   },
   {
     id: 'phase-2', number: 2, title: 'Awakening',
