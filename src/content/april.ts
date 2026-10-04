@@ -199,7 +199,7 @@ export const PLACEMENTS: Placement[] = [
 // Ascendant / Midheaven (angles) — for the wheel
 export const ANGLES = {
   ascendant: { sign: 'Sagittarius' as ZodiacSign, signGlyph: '♐', degree: 29, minute: 28, note: 'Anaretic — the degree of completion and crisis' },
-  midheaven: { sign: 'Libra' as ZodiacSign, signGlyph: '♎', degree: 20, minute: 0, note: 'Public destiny anchored by the tenth house Pluto in Scorpio' },
+  midheaven: { sign: 'Libra' as ZodiacSign, signGlyph: '♎', degree: 24, minute: 59, note: 'Source-reported Midheaven conjunct Spica; public destiny anchored by tenth-house Pluto in Scorpio' },
 };
 
 // ---------- HOUSES ----------

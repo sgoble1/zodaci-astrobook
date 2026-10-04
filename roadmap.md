@@ -83,8 +83,8 @@
 - [x] Verify private access, responsive accessibility, live no-index headers, and publish.
 
 ## Instructions guide and chart source audit
-- [ ] Add an Instructions button directly beneath every “Chat about this page” control.
-- [ ] Build a complete clickable guide covering every menu section, page, tool, counselor, and podcast workflow.
-- [ ] Verify April’s birth inputs against authoritative uploaded sources and correct all calculated chart outputs.
-- [ ] Recheck dependent chart interpretations, houses, aspects, and guide content for consistency.
+- [x] Add an Instructions button directly beneath every “Chat about this page” control.
+- [x] Build a complete clickable guide covering every menu section, page, tool, counselor, and podcast workflow.
+- [x] Verify April’s birth inputs against authoritative uploaded sources and correct all calculated chart outputs.
+- [x] Recheck dependent chart interpretations, houses, aspects, and guide content for consistency.
 - [ ] Verify the guide and corrected chart on desktop and mobile, including keyboard access.

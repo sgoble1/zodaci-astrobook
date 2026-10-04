@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { Search, Loader2 } from 'lucide-react';
 import { computeChart, fmtLon, SIGN_KEYWORDS, BODY_KEYWORDS, type ChartInput } from '@/lib/astro';
-import { PLACEMENTS } from '@/content/april';
+import { ANGLES, PLACEMENTS } from '@/content/april';
 import { PILLARS } from '@/content/chinese';
 import { ConfidenceBadge } from '@/components/common/ConfidenceBadge';
 import { ReasoningPanel } from '@/components/common/ReasoningPanel';
@@ -102,7 +102,7 @@ export default function ChartCalculator() {
               <thead><tr className="text-left font-smallcaps text-[10px] text-muted-foreground border-b border-border"><th className="py-1.5">Point</th><th>Position</th><th>House</th><th>Meaning (in-app gloss)</th>{isApril && <th>Source PDF</th>}<th>Confidence</th></tr></thead>
               <tbody>
                 {result.asc != null && [['Ascendant', result.asc], ['Midheaven', result.mc!]].map(([n, l]) => (
-                  <tr key={n as string} className="border-b border-border/50"><td className="py-1.5 font-medium">{n as string}</td><td className="font-mono">{fmtLon(l as number).text}</td><td>{n === 'Ascendant' ? 1 : 10}</td><td className="text-xs">{SIGN_KEYWORDS[fmtLon(l as number).sign]}</td>{isApril && <td className="text-xs">{n === 'Ascendant' ? 'Sagittarius 29°28′' : 'Libra 24°59′'}<Cite source={BC_SRC} /></td>}<td><ConfidenceBadge compact level={input.placeSource === 'manual' ? 'approximate' : 'derived'} note="Angles move ~1° every 4 minutes; accuracy depends on the birth time." /></td></tr>
+                  <tr key={n as string} className="border-b border-border/50"><td className="py-1.5 font-medium">{n as string}</td><td className="font-mono">{fmtLon(l as number).text}<span className="block text-[10px] text-muted-foreground">independently calculated</span></td><td>{n === 'Ascendant' ? 1 : 10}</td><td className="text-xs">{SIGN_KEYWORDS[fmtLon(l as number).sign]}</td>{isApril && <td className="text-xs">{n === 'Ascendant' ? `${ANGLES.ascendant.sign} ${ANGLES.ascendant.degree}°${String(ANGLES.ascendant.minute).padStart(2, '0')}′` : `${ANGLES.midheaven.sign} ${ANGLES.midheaven.degree}°${String(ANGLES.midheaven.minute).padStart(2, '0')}′ · conjunct Spica`}<Cite source={BC_SRC} /></td>}<td><ConfidenceBadge compact level={input.placeSource === 'manual' ? 'approximate' : 'derived'} note="Angles move ~1° every 4 minutes; accuracy depends on the birth time." /></td></tr>
                 ))}
                 {result.bodies.map(b => {
                   const src = isApril ? PLACEMENTS.find(p => p.key === b.key) : undefined;
@@ -127,7 +127,7 @@ export default function ChartCalculator() {
                 { label: 'Ephemeris', detail: 'Geocentric apparent ecliptic longitudes (of date) from astronomy-engine, which is accurate to under 1 arc-minute for 1900–2100.' },
                 { label: 'Retrograde', detail: 'A planet is marked ℞ when its longitude 12 h later is smaller than 12 h earlier.' },
                 { label: 'Angles', detail: 'RAMC = apparent sidereal time × 15° + longitude. MC and Ascendant come from spherical trigonometry with the mean obliquity.' },
-                { label: 'Houses', detail: 'Porphyry: each quadrant between the angles is divided into equal thirds. The source PDFs use Placidus, so a planet near a cusp can land in a different house.' },
+                { label: 'Houses', detail: 'This independent calculator uses Porphyry: each quadrant between the angles is divided into equal thirds. April’s source report uses Placidus, so a planet near a cusp can land in a different house. Neither result is silently substituted for the other.' },
               ],
               output: 'Positions shown above; the Δ column compares them with the PDF when the input is April’s birth.',
               confidence: input.time ? 'derived' : 'ambiguous',

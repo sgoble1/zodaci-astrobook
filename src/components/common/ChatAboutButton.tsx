@@ -1,4 +1,4 @@
-import { BookOpen, Brain, MessageCircle, Telescope, Users } from 'lucide-react';
+import { BookOpen, Brain, CircleHelp, MessageCircle, Telescope, Users } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { toast } from 'sonner';
 import { useSession } from '@/hooks/useLibrary';
@@ -37,6 +37,8 @@ export function ChatAboutButton({ path: fixed, label, compact }: { path?: string
       <DropdownMenuItem onSelect={() => go('/workbook/social-integration')}><Users className="mr-2 h-4 w-4" />Social Counselor</DropdownMenuItem>
       <DropdownMenuItem onSelect={() => go('/chat')}><Telescope className="mr-2 h-4 w-4" />SmartChat</DropdownMenuItem>
       <DropdownMenuItem onSelect={() => go('/ask')}><BookOpen className="mr-2 h-4 w-4" />Ask the Sources</DropdownMenuItem>
+      <DropdownMenuSeparator />
+      <DropdownMenuItem onSelect={() => nav('/instructions')}><CircleHelp className="mr-2 h-4 w-4" />Instructions for every feature</DropdownMenuItem>
     </DropdownMenuContent>
   </DropdownMenu>;
 }
