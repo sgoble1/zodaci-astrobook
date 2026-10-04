@@ -11,7 +11,7 @@ export function OtherSystemsDashboard() {
       <p className="mt-4 text-lg text-muted-foreground">Seven additional traditions read April’s birth data through different symbolic languages. Their agreements are useful as prompts for reflection, not scientific proof.</p>
     </header>
 
-    <section aria-labelledby="common-threads"><h2 id="common-threads" className="text-3xl">Where the systems meet</h2>
+    <section aria-labelledby="common-threads"><h2 id="common-threads" className="text-3xl">Where the systems meet</h2><p className="mt-2 max-w-2xl text-sm text-muted-foreground">This compares repeated ideas in everyday language. Agreement means several traditions describe a similar pattern; it does not prove that any prediction is certain.</p>
       <div className="mt-5 grid gap-4 md:grid-cols-2">{COMMON_THREADS.map(item => <article key={item.theme} className="parchment p-5">
         <div className="font-smallcaps text-[10px] text-gold">{item.systems.join(' · ')}</div><h3 className="mt-2 text-xl">{item.theme}</h3><p className="mt-2 text-sm leading-relaxed text-muted-foreground">{item.explanation}</p>
       </article>)}</div>
@@ -35,8 +35,8 @@ export function OtherSystemDetail() {
   return <article className="space-y-10">
     <header className="max-w-3xl"><div className="font-smallcaps text-xs text-gold">{system.tradition} · A symbolic lens for April</div><div className="mt-4 flex items-center gap-3"><Icon className="h-8 w-8 text-accent" aria-hidden="true"/><h1 className="text-4xl sm:text-5xl">{system.name}</h1></div><p className="mt-4 text-xl">{system.result}</p></header>
     <section className="parchment p-6"><h2 className="text-2xl">How this was derived</h2><p className="mt-3 leading-relaxed">{system.calculation}</p></section>
-    <section><h2 className="text-2xl">Interpretation</h2><div className="mt-4 space-y-4">{system.interpretation.map((text, index) => <p key={index} className="border-l border-gold/60 pl-4 leading-relaxed text-foreground/90">{text}</p>)}</div></section>
-    <section><h2 className="text-2xl">Themes to explore</h2><ul className="mt-3 flex flex-wrap gap-2">{system.themes.map(theme => <li key={theme} className="rounded border border-border bg-card px-3 py-1 text-sm">{theme}</li>)}</ul></section>
+    <section><h2 className="text-2xl">Interpretation</h2><p className="mt-2 text-sm text-muted-foreground">In plain terms: this is what the result may suggest about April’s habits, strengths, tensions, and choices.</p><div className="mt-4 space-y-4">{system.interpretation.map((text, index) => <p key={index} className="border-l border-gold/60 pl-4 leading-relaxed text-foreground/90">{text}</p>)}</div></section>
+    <section><h2 className="text-2xl">Themes to explore</h2><p className="mt-2 text-sm text-muted-foreground">Use these as questions for reflection, not labels April has to fit.</p><ul className="mt-3 flex flex-wrap gap-2">{system.themes.map(theme => <li key={theme} className="rounded border border-border bg-card px-3 py-1 text-sm">{theme}</li>)}</ul></section>
     <aside className="border border-border bg-muted/30 p-4 text-sm text-muted-foreground"><strong className="text-foreground">Scope:</strong> {system.caution}</aside>
     <Button asChild variant="outline"><Link to="/other-systems">← Compare all systems</Link></Button>
   </article>;

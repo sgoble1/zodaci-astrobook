@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { useChat } from '@ai-sdk/react';
 import { DefaultChatTransport, type UIMessage } from 'ai';
 import { Plus, Trash2 } from 'lucide-react';
@@ -45,6 +45,7 @@ export default function Companion() {
 function CompanionInner() {
   const { sessionId } = useParams();
   const nav = useNavigate();
+  const location = useLocation();
   const [sessions, setSessions] = useState<Session[] | null>(null);
   const creating = useRef(false);
 
@@ -61,12 +62,12 @@ function CompanionInner() {
     creating.current = false;
     if (error || !data) return toast.error('A new session could not be started.');
     await load();
-    nav(`/workbook/companion/${data.id}`);
+    nav(`/workbook/companion/${data.id}${location.search}`);
   };
   useEffect(() => {
     load().then(list => {
       if (sessionId) return;
-      if (list.length) nav(`/workbook/companion/${list[0].id}`, { replace: true });
+      if (list.length) nav(`/workbook/companion/${list[0].id}${location.search}`, { replace: true });
       else create();
     });
     const reload = () => { load(); };
@@ -112,6 +113,9 @@ function SessionLoader({ sessionId }: { sessionId: string }) {
 }
 
 function SessionChat({ sessionId, initial }: { sessionId: string; initial: UIMessage[] }) {
+  const [params, setParams] = useSearchParams();
+  const initialPrompt = params.get('q') ?? '';
+  const [draft, setDraft] = useState(initialPrompt);
   const passages = useRef<FeedbackPassage[]>([]);
   const box = useRef<HTMLDivElement>(null);
   const [cited, setCited] = useState<FeedbackPassage[]>([]);
@@ -146,7 +150,8 @@ function SessionChat({ sessionId, initial }: { sessionId: string; initial: UIMes
     const prev = lastUser?.parts.map(p => (p.type === 'text' ? p.text : '')).join(' ') ?? '';
     passages.current = await passagesFor(`${t} ${prev}`, 6);
     setCited(passages.current);
-    sendMessage({ text: t });
+    sendMessage({ text: t }); setDraft('');
+    if (params.has('q')) { const next = new URLSearchParams(params); next.delete('q'); setParams(next, { replace: true }); }
   };
 
   return (
@@ -181,7 +186,7 @@ function SessionChat({ sessionId, initial }: { sessionId: string; initial: UIMes
       )}
       <div className="border-t border-border p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
         <PromptInput onSubmit={({ text }) => send(text)}>
-          <PromptInputTextarea aria-label="Message The Oracle Within" placeholder="Tell me what's on your mind…" />
+          <PromptInputTextarea aria-label="Message The Oracle Within" placeholder="Tell me what's on your mind…" value={draft} onChange={event => setDraft(event.target.value)} />
           <PromptInputFooter className="justify-end">
             <PromptInputSubmit status={status} onStop={stop} />
           </PromptInputFooter>

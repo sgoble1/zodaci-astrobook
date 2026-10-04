@@ -1,7 +1,7 @@
 import { PodcastMaker } from '@/components/podcast/PodcastMaker';
 import { useEffect, useRef, useState } from 'react';
 import { ListPlus, ListX, SkipForward } from 'lucide-react';
-import { Headphones, Trash2, Download, Upload } from 'lucide-react';
+import { Headphones, Lock, Trash2, Download, Upload, Users } from 'lucide-react';
 import { useLibrary, useSession, useIsAdmin, type LibraryItem } from '@/hooks/useLibrary';
 import { AuthGate } from '@/components/common/AuthGate';
 import { Button } from '@/components/ui/button';
@@ -76,6 +76,7 @@ export default function Podcasts() {
                 <div className="flex-1 min-w-0">
                   <button onClick={() => play(ep)} className="font-display text-lg text-left hover:underline">{ep.title}</button>
                   <div className="text-xs text-muted-foreground">{ep.category && <>{ep.category} · </>}{new Date(ep.created_at).toLocaleDateString()} · {fmtSize(ep.size_bytes)}{positions[ep.id] > 5 && <> · <span className="text-gold">resume at {fmt(positions[ep.id])}</span></>}</div>
+                  <div className="mt-1 inline-flex items-center gap-1 text-xs text-muted-foreground">{ep.shared_with_space ? <><Users className="h-3.5 w-3.5"/>Shared with April &amp; Shane</> : <><Lock className="h-3.5 w-3.5"/>Private to you</>}</div>
                   {ep.description && <p className="text-sm mt-1">{ep.description}</p>}
                 </div>
                 <div className="flex gap-1">
@@ -85,9 +86,7 @@ export default function Podcasts() {
                   </button>
                   {ep.url && <a href={ep.url} download={ep.file_name} className="p-2 rounded hover:bg-muted" aria-label="Download"><Download className="w-4 h-4" /></a>}
                   {(isAdmin || session?.user.id === ep.owner_id) && (
-                    <button className="p-2 rounded hover:bg-muted" aria-label="Delete" onClick={async () => { if (confirm('Delete this episode?')) { await lib.remove(ep); if (current?.id === ep.id) setCurrent(null); } }}>
-                      <Trash2 className="w-4 h-4" />
-                    </button>
+                    <><Button variant="ghost" size="sm" onClick={async () => { try { await lib.setShared(ep, !ep.shared_with_space); toast.success(ep.shared_with_space ? 'Episode is now private' : 'Episode shared with April & Shane'); } catch (error) { toast.error((error as Error).message); } }}>{ep.shared_with_space ? <Lock className="h-4 w-4"/> : <Users className="h-4 w-4"/>}{ep.shared_with_space ? 'Make private' : 'Share'}</Button><button className="p-2 rounded hover:bg-muted" aria-label="Delete" onClick={async () => { if (confirm('Delete this episode?')) { await lib.remove(ep); if (current?.id === ep.id) setCurrent(null); } }}><Trash2 className="w-4 h-4" /></button></>
                   )}
                 </div>
               </li>
@@ -97,22 +96,23 @@ export default function Podcasts() {
 
       <section>
         <AuthGate what="create podcast episodes">{() => <div className="mb-6"><PodcastMaker onCreated={lib.reload} /></div>}</AuthGate>
-        <h2 className="text-2xl mb-3">Upload a shared episode</h2>
+        <h2 className="text-2xl mb-3">Upload an episode</h2>
         <AuthGate what="upload podcast episodes">{(uid) => <UploadForm accept="audio/*" onUpload={(f, m) => lib.upload(f, m, uid)} />}</AuthGate>
       </section>
     </div>
   );
 }
 
-export function UploadForm({ accept, onUpload, categoryLabel = 'Series / topic' }: { accept?: string; categoryLabel?: string; onUpload: (f: File, m: { title: string; description: string; category: string }) => Promise<void> }) {
+export function UploadForm({ accept, onUpload, categoryLabel = 'Series / topic' }: { accept?: string; categoryLabel?: string; onUpload: (f: File, m: { title: string; description: string; category: string; shared_with_space: boolean }) => Promise<void> }) {
   const fileRef = useRef<HTMLInputElement>(null);
   const [title, setTitle] = useState(''); const [description, setDescription] = useState(''); const [category, setCategory] = useState('');
+  const [shared, setShared] = useState(false);
   const [busy, setBusy] = useState(false);
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     const f = fileRef.current?.files?.[0]; if (!f) return;
     setBusy(true);
-    try { await onUpload(f, { title, description, category }); toast.success('Uploaded'); setTitle(''); setDescription(''); setCategory(''); if (fileRef.current) fileRef.current.value = ''; }
+    try { await onUpload(f, { title, description, category, shared_with_space: shared }); toast.success(shared ? 'Uploaded to the shared library' : 'Uploaded privately'); setTitle(''); setDescription(''); setCategory(''); if (fileRef.current) fileRef.current.value = ''; }
     catch (err) { toast.error((err as Error).message); }
     setBusy(false);
   };
@@ -122,6 +122,7 @@ export function UploadForm({ accept, onUpload, categoryLabel = 'Series / topic' 
       <Input aria-label="Episode title" placeholder="Title" value={title} onChange={e => setTitle(e.target.value)} />
       <Input aria-label={categoryLabel} placeholder={categoryLabel} value={category} onChange={e => setCategory(e.target.value)} />
       <Textarea aria-label="Episode description" placeholder="Description (optional)" value={description} onChange={e => setDescription(e.target.value)} />
+      <fieldset className="space-y-2"><legend className="text-sm font-medium">Who can listen?</legend><label className="mr-4 inline-flex items-center gap-2 text-sm"><input type="radio" name="uploaded-podcast-sharing" checked={!shared} onChange={() => setShared(false)} />Only me</label><label className="inline-flex items-center gap-2 text-sm"><input type="radio" name="uploaded-podcast-sharing" checked={shared} onChange={() => setShared(true)} />April &amp; Shane</label></fieldset>
       <Button type="submit" disabled={busy} className="justify-self-start"><Upload className="w-4 h-4 mr-2" />{busy ? 'Uploading…' : 'Upload'}</Button>
     </form>
   );
