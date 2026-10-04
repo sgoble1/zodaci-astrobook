@@ -1,17 +1,18 @@
-# Expand system histories and interpretations
+# Finish shared media, podcasts, relationships, and mobile layout
 
 ## What will change
-- Add a clear “Where this comes from” section to Social Integration explaining that it is AstroBook’s custom framework, not one historical school. It will identify its real influences: perspective-taking, social cognition, cognitive reframing, assertive communication, boundaries, and reflective astrology.
-- Expand each of the seven Other Systems pages with its origin, historical development, core method, how people use it today, and important limits or disputed claims.
-- Add richer April-specific interpretation beside the existing calculated placements and relationships, keeping technical details and plain-language explanations together.
-- Add a concise references section with reputable external reading and explicit labels separating historically established facts from modern revival practices.
+- Finish and verify shared Media Library folders, including create, rename, delete, move, search, sort, upload-to-folder, and drag-and-drop.
+- Add clear Short, Standard, and Long choices when creating a podcast; each choice will set the intended script and listening length while keeping Masterbook citations.
+- Add a plain-language “Needs & connections” section to every relationship page, covering both directions, strongest chart links, verified shared facts, and clearly labeled symbolic coincidences.
+- Reduce the overly tall mobile layouts by making module headings compact, keeping badges and link controls on sensible rows, and giving wide tables a readable horizontal-scroll treatment instead of squeezing words vertically.
 
-## Accuracy safeguards
-- Preserve existing calculated results and source-led chart facts.
-- Treat every system as a symbolic or cultural framework, not scientific proof, diagnosis, or certainty.
-- State uncertainty directly where lineages, dates, correlations, or modern formulas are disputed.
-- Avoid presenting modern inventions—especially tarot birth cards, Chaldean numerology, and the Celtic tree calendar—as unchanged ancient systems.
+## Safety and accuracy
+- Relationship content will use only saved birth details and calculated chart data. It will not invent relatives, ancestry, life events, or birthplace connections.
+- Unknown birth times will remain visibly marked and will not produce confident house-based claims.
+- Private and shared podcast/media visibility rules remain unchanged.
 
-## Verification
-- Check all seven system pages and Social Integration at phone and desktop sizes.
-- Confirm headings, source links, keyboard access, readable layout, and a clean build.
+## Technical details
+- Extend the podcast request validation and generation prompt with bounded duration presets.
+- Derive reciprocal relationship summaries from existing synastry, overlay, and verified profile data rather than storing generated claims.
+- Add reusable mobile typography/table rules at the shared style layer, with targeted layout adjustments where controls currently force narrow columns.
+- Validate the relevant cloud function, type safety, current build status, and representative desktop/mobile interactions.
