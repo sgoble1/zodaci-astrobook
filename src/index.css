@@ -211,6 +211,35 @@ h1 { background-image: linear-gradient(135deg, hsl(var(--foreground)) 30%, hsl(2
   0%, 100% { box-shadow: 0 0 0 0 hsl(var(--created) / 0); background-color: hsl(var(--created) / 0.2); }
   50% { box-shadow: 0 0 22px 4px hsl(var(--created) / 0.55); background-color: hsl(var(--created) / 0.45); }
 }
+
+@keyframes nav-create-pulse {
+  0%, 100% { box-shadow: 0 0 0 1px hsl(var(--candle) / .35), 0 0 14px hsl(var(--candle) / .16); }
+  50% { box-shadow: 0 0 0 1px hsl(var(--gold-bright) / .65), 0 0 24px hsl(var(--candle) / .32); }
+}
+
+.nav-create-glow {
+  color: hsl(var(--foreground));
+  border-color: hsl(var(--candle) / .48);
+  background: linear-gradient(90deg, hsl(var(--candle) / .2), hsl(var(--gold-bright) / .12));
+  animation: nav-create-pulse 5s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-create-glow { animation: none; }
+}
+
+@media print {
+  @page { size: portrait; margin: 12mm; }
+  body { background: hsl(var(--background)); }
+  aside, footer, .print-chart button, .print-chart a, [aria-label="Scroll progress"] { display: none !important; }
+  main { padding: 0 !important; }
+  main > div { max-width: none !important; padding: 0 !important; }
+  .print-chart { font-size: 10pt; }
+  .print-chart header { break-after: avoid; }
+  .print-chart section { break-inside: avoid; margin-top: 10mm !important; }
+  .print-chart .chart-report-lead { grid-template-columns: 1fr 1fr !important; }
+  .print-chart svg { max-width: 150mm !important; }
+}
 .nav-new-glow { animation: nav-new-glow 1.6s ease-in-out 5; border-color: hsl(var(--created) / 0.8) !important; position: relative; }
 
 /* Generated illustration plates inside chapter text */
