@@ -110,8 +110,8 @@
 - [x] Strengthen the private chats with complete stored conversation context and broad, accurate April-chart expertise across astrology, psychology, therapy, life management, and social coaching.
 
 ## Shared libraries, podcast length, relationships, and mobile density
-- [ ] Verify and finish shared Media Library folders, drag-and-drop, and management on desktop and mobile.
-- [ ] Add short, standard, and long generated-podcast length choices and preserve source citations.
-- [ ] Add verified two-way needs, chart connections, shared facts, and coincidences to each relationship page.
-- [ ] Fix narrow mobile tables and overly vertical module-heading layouts across the app.
-- [ ] Verify build quality, keyboard use, and representative mobile/desktop screens.
+- [x] Verify and finish shared Media Library folders, drag-and-drop, and management on desktop and mobile.
+- [x] Add short, standard, and long generated-podcast length choices and preserve source citations.
+- [x] Add verified two-way needs, chart connections, shared facts, and coincidences to each relationship page.
+- [x] Fix narrow mobile tables and overly vertical module-heading layouts across the app.
+- [x] Verify build quality, keyboard use, and representative mobile/desktop screens.
