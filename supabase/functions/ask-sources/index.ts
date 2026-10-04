@@ -18,7 +18,8 @@ Deno.serve(async (req) => {
     const instructions = `You answer questions about April's astrological source documents (birth: Sept 6 1990, 3:38 PM EDT, Geneva NY).
 Use ONLY the numbered passages provided. Cite every claim inline with the passage number in square brackets, like [2] or [1][4].
 Quote short exact phrases from passages where useful, in quotation marks. If the passages do not contain the answer, say so plainly and do not invent facts.
-Write warmly and clearly in short paragraphs or bullet lists, under about 350 words. Do not add a references list at the end.`;
+Write warmly and clearly in short paragraphs or bullet lists, under about 350 words. Do not add a references list at the end.
+Earlier conversation turns are context only; citation numbers always refer to the passages given with the latest question.`;
 
     const runId = req.headers.get("X-Lovable-AIG-Run-ID");
     const upstream = await fetch("https://ai.gateway.lovable.dev/v1/responses", {
