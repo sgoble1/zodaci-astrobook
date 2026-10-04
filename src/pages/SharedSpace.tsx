@@ -192,7 +192,7 @@ function Wonderings({ userId }: { userId: string }) {
   const [reactions, setReactions] = useState<WonderingReaction[]>([]);
   const [body, setBody] = useState('');
   const [commentDrafts, setCommentDrafts] = useState<Record<string, string>>({});
-  const otherId = Object.keys(directory).find(id => id !== userId) ?? '';
+  const otherId = Object.keys(directory).find(id => id !== userId && directory[id] !== directory[userId]) ?? '';
   const load = useCallback(async () => {
     const [w, c, r] = await Promise.all([db('shared_wonderings').select('*').order('updated_at', { ascending: false }), db('shared_wondering_comments').select('*').order('created_at'), db('shared_wondering_reactions').select('*')]);
     if (w.error || c.error || r.error) toast.error('Wonderings could not be refreshed.');
