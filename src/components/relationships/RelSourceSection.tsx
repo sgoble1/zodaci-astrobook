@@ -1,3 +1,4 @@
+import { BookmarkButton } from '@/components/common/BookmarkButton';
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
@@ -26,6 +27,7 @@ export function RelSourceSection({ e }: { e: MbEntry }) {
       <div className="flex flex-wrap gap-3 mt-3 text-xs">
         <button onClick={() => setOpen(o => !o)} className="px-3 py-1.5 rounded bg-primary text-primary-foreground">{open ? 'Hide full text' : 'Read full text & summarise'}</button>
         <Link to={`/masterbook/${e.id}`} className="underline self-center">Open in the Masterbook</Link>
+        <span className="self-center"><BookmarkButton compact path={`/guides/relationships#${e.id}`} label={e.title} /></span>
         {e.doc && src && <Link to={`/masterbook/pdf/${encodeURIComponent(src.id)}?page=${e.page ?? 1}`} className="underline self-center">View PDF page in the app</Link>}
         <Link to={`/ask?doc=${e.doc ?? 'masterbook'}`} className="underline self-center">Ask about this</Link>
       </div>

@@ -39,6 +39,7 @@ import Podcasts from './pages/Podcasts';
 import Sources from './pages/Sources';
 import SourceReader from './pages/SourceReader';
 import Ask from './pages/Ask';
+import Chat from './pages/Chat';
 import Topic, { TopicsIndex } from './pages/Topic';
 import Guide from './pages/Guides';
 import FlyingStars from './pages/FlyingStars';
@@ -180,6 +181,8 @@ export default function App() {
             <Route path="/sources" element={<Sources />} />
             <Route path="/sources/read/:id" element={<SourceReader />} />
             <Route path="/ask" element={<Ask />} />
+            <Route path="/chat" element={<Chat />} />
+            <Route path="/chat/:id" element={<Chat />} />
             <Route path="/topics" element={<TopicsIndex />} />
             <Route path="/guides/:slug" element={<Guide />} />
             <Route path="/topics/:slug" element={<Topic />} />

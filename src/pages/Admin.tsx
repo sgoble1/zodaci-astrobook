@@ -26,17 +26,15 @@ export default function Admin() {
     <div className="space-y-8">
       <header>
         <div className="font-smallcaps text-xs text-gold flex items-center gap-1"><ShieldCheck className="w-3 h-3" />Admin</div>
-        <h1 className="text-4xl sm:text-5xl mt-2">Admin Dashboard</h1>
-        <p className="text-muted-foreground mt-3 max-w-2xl">Upload new documents, edit their sections, and choose how every document appears in the Document Index — no code needed.</p>
+        <h1 className="text-4xl sm:text-5xl mt-2">{isAdmin ? 'Admin Dashboard' : 'My Workspace'}</h1>
+        <p className="text-muted-foreground mt-3 max-w-2xl">Upload Masterbook documents, edit their sections with a live preview, and manage relationships — no code needed.{isAdmin ? ' As admin you can also edit everyone’s uploads and arrange the Document Index.' : ' You can edit the documents you upload; the built-in source books stay as they are.'}</p>
       </header>
-      <AuthGate what="open the admin dashboard">{() => !isAdmin ? (
-        <div className="parchment p-5 max-w-xl text-sm">This dashboard is for the site admin only. If you are the admin, sign in with your admin email and make sure it’s confirmed, then reload this page.</div>
-      ) : (
+      <AuthGate what="open your workspace">{() => (
         <div className="space-y-6">
-          <nav className="flex gap-2 text-sm">{([['upload', 'Upload documents'], ['sections', 'Edit sections'], ['index', 'Document Index'], ['relationships', 'Relationships']] as const).map(([k, l]) => <button key={k} onClick={() => setTab(k)} className={`px-3 py-1.5 rounded-full border ${tab === k ? 'border-accent bg-accent/15' : 'border-border hover:bg-muted'}`}>{l}</button>)}</nav>
+          <nav className="flex gap-2 text-sm">{([['upload', 'Upload documents'], ['sections', 'Edit sections'], ...(isAdmin ? [['index', 'Document Index']] as const : []), ['relationships', 'Relationships']] as const).map(([k, l]) => <button key={k} onClick={() => setTab(k)} className={`px-3 py-1.5 rounded-full border ${tab === k ? 'border-accent bg-accent/15' : 'border-border hover:bg-muted'}`}>{l}</button>)}</nav>
           {tab === 'upload' && <UploadPanel userId={session!.user.id} />}
-          {tab === 'sections' && <SectionsPanel />}
-          {tab === 'index' && <IndexPanel />}
+          {tab === 'sections' && <SectionsPanel ownerId={isAdmin ? null : session!.user.id} />}
+          {tab === 'index' && isAdmin && <IndexPanel />}
           {tab === 'relationships' && <RelationshipsAdmin userId={session!.user.id} />}
         </div>
       )}</AuthGate>
@@ -55,7 +53,7 @@ function UploadPanel({ userId }: { userId: string }) {
       setBusy('Reading the document…');
       const sections = await extractSections(file);
       setBusy(`Saving ${sections.length} sections…`);
-      await upload(file, { title: title || file.name.replace(/\.[^.]+$/, ''), category: category || 'Admin uploads', description, sections }, userId);
+      await upload(file, { title: title || file.name.replace(/\.[^.]+$/, ''), category: category || 'My uploads', description, sections }, userId);
       toast.success(`Added with ${sections.length} sections — edit them under “Edit sections”`);
       setFile(null); setTitle(''); setCategory(''); setDescription('');
     } catch (e) { toast.error((e as Error).message || 'Upload failed'); }
@@ -72,8 +70,10 @@ function UploadPanel({ userId }: { userId: string }) {
   );
 }
 
-function SectionsPanel() {
-  const { items, loading, remove, reload } = useLibrary('masterbook');
+function SectionsPanel({ ownerId }: { ownerId: string | null }) {
+  const lib = useLibrary('masterbook');
+  const { loading, remove, reload } = lib;
+  const items = ownerId ? lib.items.filter(i => i.owner_id === ownerId) : lib.items;
   const [openId, setOpenId] = useState<string | null>(null);
   if (loading) return <p className="text-sm text-muted-foreground">Loading…</p>;
   if (!items.length) return <p className="text-sm text-muted-foreground">No uploaded documents yet. Built-in source documents are fixed; you can rename, reorder or hide them under “Document Index”.</p>;
