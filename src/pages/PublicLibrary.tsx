@@ -1,3 +1,4 @@
+import { withPlates } from '@/content/plates';
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
@@ -62,7 +63,7 @@ export function PublicReader() {
   const [entries, setEntries] = useState<MbEntry[]>([]);
   const [text, setText] = useState<string | null>(null);
   useEffect(() => { loadIndex().then(setEntries); }, []);
-  useEffect(() => { setText(null); window.scrollTo(0, 0); loadProtectedText('masterbook', `${id}.md`).then(setText).catch(() => setText('')); }, [id]);
+  useEffect(() => { setText(null); window.scrollTo(0, 0); loadProtectedText('masterbook', `${id}.md`).then(t => setText(withPlates(t))).catch(() => setText('')); }, [id]);
   const i = entries.findIndex(e => e.id === id);
   const e = entries[i], prev = entries[i - 1], next = entries[i + 1];
   const body = (text ?? '').replace(/<!-- page (\d+) -->/g, (_m, n) => `\n\n###### Page ${n}\n\n`);
@@ -90,7 +91,7 @@ export function PublicDocument() {
   const list = useMemo(() => entries.filter(e => slugify(e.part) === slug), [entries, slug]);
   useEffect(() => {
     if (!list.length) return; setTexts(null);
-    Promise.all(list.map(e => loadProtectedText('masterbook', `${e.id}.md`).catch(() => ''))).then(setTexts);
+    Promise.all(list.map(e => loadProtectedText('masterbook', `${e.id}.md`).then(withPlates).catch(() => ''))).then(setTexts);
   }, [list]);
   const part = list[0]?.part;
   return (
