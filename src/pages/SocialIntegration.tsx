@@ -12,6 +12,7 @@ import { Message, MessageContent, MessageResponse } from '@/components/ai-elemen
 import { PromptInput, PromptInputFooter, PromptInputSubmit, PromptInputTextarea } from '@/components/ai-elements/prompt-input';
 import { Shimmer } from '@/components/ai-elements/shimmer';
 import { passagesFor, type FeedbackPassage } from '@/lib/workbook';
+import { authenticatedFunctionHeaders, friendlyChatError } from '@/lib/chatAuth';
 
 type Session = { id: string; title: string; updated_at: string };
 const SESSIONS_CHANGED = 'social-sessions-changed';
@@ -100,18 +101,19 @@ function SocialSessionChat({ sessionId, initial }: { sessionId: string; initial:
   const transport = useMemo(() => new DefaultChatTransport({
     api: `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/social-counselor`,
     prepareSendMessagesRequest: async ({ messages }) => {
-      const { data } = await supabase.auth.getSession();
-      return { headers: { apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY, Authorization: `Bearer ${data.session?.access_token ?? ''}` }, body: { sessionId, messages, passages: passages.current.map(({ href: _href, ...passage }) => passage) } };
+      const headers = await authenticatedFunctionHeaders();
+      return { headers, body: { sessionId, messages, passages: passages.current.map(({ href: _href, ...passage }) => passage) } };
     },
   }), [sessionId]);
-  const { messages, sendMessage, status, stop } = useChat({ id: sessionId, messages: initial, transport, onError: error => toast.error(error.message || 'The Social Counselor could not respond.'), onFinish: () => window.dispatchEvent(new Event(SESSIONS_CHANGED)) });
+  const { messages, sendMessage, status, stop } = useChat({ id: sessionId, messages: initial, transport, onError: error => toast.error(friendlyChatError(error) || 'The Social Counselor could not respond.'), onFinish: () => window.dispatchEvent(new Event(SESSIONS_CHANGED)) });
   const busy = status === 'submitted' || status === 'streaming';
   useEffect(() => { box.current?.querySelector('textarea')?.focus(); }, []);
   useEffect(() => { if (status === 'ready' || status === 'error') box.current?.querySelector('textarea')?.focus(); }, [status]);
   const send = async (text: string) => {
     const value = text.trim(); if (!value || busy) return;
     passages.current = await passagesFor(value, 6); setCited(passages.current);
-    sendMessage({ text: value }); setDraft('');
+    try { await sendMessage({ text: value }); setDraft(''); }
+    catch (error) { toast.error(friendlyChatError(error instanceof Error ? error : new Error('The Social Counselor could not respond.'))); }
     if (params.has('q')) { const next = new URLSearchParams(params); next.delete('q'); setParams(next, { replace: true }); }
   };
   return <section ref={box} className="parchment flex min-h-[70dvh] min-w-0 flex-col overflow-hidden lg:h-[72vh] lg:min-h-0" aria-label="Social Counselor conversation">

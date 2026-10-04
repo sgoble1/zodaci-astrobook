@@ -88,3 +88,7 @@
 - [x] Verify April’s birth inputs against authoritative uploaded sources and correct all calculated chart outputs.
 - [x] Recheck dependent chart interpretations, houses, aspects, and guide content for consistency.
 - [x] Verify the guide and corrected chart on desktop and mobile, including keyboard access.
+
+## Chat session resilience
+- [x] Refresh private counselor credentials before requests and handle expired sessions without blanking the page.
+- [ ] Verify expired-session and successful-message behavior in the live Social Counselor.
