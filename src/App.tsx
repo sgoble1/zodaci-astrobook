@@ -201,6 +201,8 @@ export default function App() {
             <Route path="/shared/posts" element={<SharedSpace section="posts" />} />
             <Route path="/shared/wonderings" element={<SharedSpace section="wonderings" />} />
             <Route path="/shared/reading" element={<SharedSpace section="reading" />} />
+            <Route path="/shared/media" element={<SharedSpace section="media" />} />
+            <Route path="/shared/recommendations" element={<SharedSpace section="recs" />} />
             <Route path="/create" element={<CreatePage />} />
             <Route path="/workbook" element={<WorkbookHome />} />
             <Route path="/workbook/module/:slug" element={<WorkbookModulePage />} />
