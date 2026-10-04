@@ -19,7 +19,7 @@ const schema = z.object({
   tz: z.string().min(1).max(64), notes: z.string().max(20000),
 });
 
-export const EMPTY: PersonDraft = { name: '', relation: 'Partner', sex: 'unspecified', birth_date: '', birth_time: null, place_label: '', lat: 0, lon: 0, tz: '', notes: '' };
+export const EMPTY: PersonDraft = { name: '', relation: 'Friend', sex: 'unspecified', birth_date: '', birth_time: null, place_label: '', lat: 0, lon: 0, tz: '', notes: '' };
 
 export function PersonForm({ initial, onSave, submitLabel }: { initial: PersonDraft; onSave: (p: PersonDraft) => Promise<void>; submitLabel: string }) {
   const [f, setF] = useState<PersonDraft>(initial);
@@ -45,9 +45,9 @@ export function PersonForm({ initial, onSave, submitLabel }: { initial: PersonDr
 
   return (
     <form onSubmit={submit} className="parchment p-5 grid md:grid-cols-2 gap-4 text-sm">
-      <label>Name<Input value={f.name} maxLength={80} onChange={e => set('name', e.target.value)} placeholder="e.g. Shane" /></label>
-      <label>Relationship<Input value={f.relation} maxLength={40} onChange={e => set('relation', e.target.value)} placeholder="Partner, friend, parent…" list="rel-kinds" />
-        <datalist id="rel-kinds">{['Partner', 'Spouse', 'Friend', 'Parent', 'Child', 'Sibling', 'Colleague', 'Ex'].map(k => <option key={k} value={k} />)}</datalist></label>
+      <label>Name<Input value={f.name} maxLength={80} onChange={e => set('name', e.target.value)} placeholder="e.g. Alex" /></label>
+      <label>Relationship<Input value={f.relation} maxLength={40} onChange={e => set('relation', e.target.value)} placeholder="Friend, sibling, colleague…" list="rel-kinds" />
+        <datalist id="rel-kinds">{['Friend', 'Close friend', 'Sibling', 'Parent', 'Child', 'Colleague', 'Spouse', 'Partner', 'Ex'].map(k => <option key={k} value={k} />)}</datalist></label>
       <label>Birth date<Input type="date" required value={f.birth_date} onChange={e => set('birth_date', e.target.value)} /></label>
       <div>Birth time <span className="text-muted-foreground">(optional)</span>
         <div className="flex gap-3 items-center"><Input type="time" value={f.birth_time ?? ''} onChange={e => set('birth_time', e.target.value || null)} />

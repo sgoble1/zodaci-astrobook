@@ -1,5 +1,4 @@
 import { useState, type ReactNode, type FormEvent } from 'react';
-import { useLocation } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 
 const KEY = 'site-unlocked-v1';
@@ -10,8 +9,7 @@ export function SitePasswordGate({ children }: { children: ReactNode }) {
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState('');
 
-  const { pathname } = useLocation();
-  if (unlocked || pathname === '/read' || pathname.startsWith('/read/')) return <>{children}</>;
+  if (unlocked) return <>{children}</>;
 
   const submit = async (e: FormEvent) => {
     e.preventDefault();
@@ -24,7 +22,7 @@ export function SitePasswordGate({ children }: { children: ReactNode }) {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background p-6">
-      <form onSubmit={submit} className="w-full max-w-sm rounded-2xl border border-border bg-card/70 backdrop-blur p-8 space-y-4 shadow-lg">
+      <form onSubmit={submit} className="w-full max-w-sm rounded-lg border border-border bg-card/70 backdrop-blur p-8 space-y-4 shadow-lg">
         <h1 className="text-2xl font-display text-foreground">Private site</h1>
         <p className="text-sm text-muted-foreground">Enter the password to continue.</p>
         <input

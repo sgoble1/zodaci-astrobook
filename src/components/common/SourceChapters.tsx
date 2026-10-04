@@ -18,18 +18,19 @@ const loadText = (id: string) => {
  * Renders the full text of every Masterbook chapter whose title matches `match`,
  * each as its own section with a jump menu and a link back to the chapter.
  */
-export function SourceChapters({ match, title = 'The full text from the sources', exclude, limit = 40 }: { match: RegExp; title?: string; exclude?: RegExp; limit?: number }) {
+export function SourceChapters({ match, ids = [], title = 'The full text from the sources', exclude, limit = 40 }: { match?: RegExp; ids?: string[]; title?: string; exclude?: RegExp; limit?: number }) {
   const [items, setItems] = useState<(Entry & { text: string })[] | null>(null);
   useEffect(() => {
     let live = true;
     loadIndex().then(async idx => {
-      const hits = idx.filter(e => match.test(e.title) && !(exclude && exclude.test(e.title))).slice(0, limit);
+      const selected = new Set(ids);
+      const hits = idx.filter(e => (selected.has(e.id) || (match?.test(e.title) ?? false)) && !(exclude && exclude.test(e.title))).slice(0, limit);
       const texts = await Promise.all(hits.map(h => loadText(h.id)));
       if (live) setItems(hits.map((h, i) => ({ ...h, text: texts[i].replace(/^#\s.*\n/, '') })));
     });
     return () => { live = false; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [match.source, exclude?.source]);
+  }, [match?.source, ids.join('|'), exclude?.source]);
 
   if (!items) return <p className="text-sm text-muted-foreground">Loading the source chapters…</p>;
   if (!items.length) return null;

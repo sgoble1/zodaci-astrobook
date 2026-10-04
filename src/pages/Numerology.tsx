@@ -106,7 +106,7 @@ export default function Numerology() {
         <Link to="/transits" className="ink-link">Outer-planet transits →</Link>
         <Link to="/chinese" className="ink-link">Chinese astrology · Ba Zi →</Link>
       </nav>
-      <SourceChapters match={/numerolog|life path|personal year|master number/i} />
+      <SourceChapters match={/numerolog|life path|personal year|master number|gene key/i} ids={['v2-10']} title="Numerology and Gene Keys — complete source chapters" />
     </article>
   );
 }

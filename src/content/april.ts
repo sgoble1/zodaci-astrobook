@@ -80,7 +80,7 @@ export const PLACEMENTS: Placement[] = [
     notes: 'FULL MOON BIRTH · Bucket Chart Handle',
     headline: 'Moon in Aries · Third House · 6°37′ · Bucket Handle',
     interpretation:
-      "This is the single most important placement in April's chart. In a Bucket chart, nine of ten planets cluster on one side of the zodiac and one planet stands alone as the Handle — the exhaust valve through which the entire chart's energy funnels. Her Handle is the Aries Moon in the third house of voice, siblings, close environment and daily communication. Every impulse, every ambition, every talent, every wound in the whole chart is delivered through this Moon's willingness to feel, react, and speak. When the Handle is open the engine runs; when it is blocked, everything pressurizes. She was told this Moon was 'too much' — too direct, too fast, too emotionally honest. What she was told was a burden is in fact the release valve the entire chart depends upon. The Full Moon opposition to her Virgo Sun means she was born at the peak of maximum illumination: high-contrast, ripe, unhideable. Aries Moon needs the truth spoken quickly and cleanly; the third house wants that truth in words. The healing work of this lifetime is not to soften the Moon, but to give it a shape that honors it.",
+      "This is the single most important placement in April's chart. In a Bucket chart, nine of ten planets cluster on one side of the zodiac and one planet stands alone as the Handle — the exhaust valve through which the entire chart's energy funnels. Her Handle is the Aries Moon in the third house of voice, siblings, close environment and daily communication. Every impulse, every ambition, every talent, every point of growth in the whole chart is delivered through this Moon's willingness to feel, react, and speak. When the Handle is open the engine runs; when it is blocked, everything pressurizes. She was told this Moon was 'too much' — too direct, too fast, too emotionally honest. What was once perceived as an intensity is in fact the release valve the entire chart depends upon. The Full Moon opposition to her Virgo Sun means she was born at the peak of maximum illumination: high-contrast, ripe, unhideable. Aries Moon needs the truth spoken quickly and cleanly; the third house wants that truth in words. The healing work of this lifetime is not to soften the Moon, but to give it a shape that honors it.",
   },
   {
     key: 'mercury', name: 'Mercury', glyph: '☿', sign: 'Virgo', signGlyph: '♍',
@@ -104,7 +104,7 @@ export const PLACEMENTS: Placement[] = [
     notes: 'Verbal drive and creative action',
     headline: 'Mars in Gemini · Fifth House · 3°02′',
     interpretation:
-      "Mars in Gemini fights with words. Placed in the fifth house of creativity, play, romance and children, her drive expresses itself through language, ideas, witty combat, and the pleasure of making. This is the writer's Mars, the debater's Mars, the improviser's Mars. In the fifth house it wants to be seen creating; it wants an audience for its wit. Coupled with the Aries Moon Handle, it means her assertive fire is delivered largely through voice — she wins fights by naming the thing exactly.",
+      "Mars in Gemini communicates with spirited precision. Placed in the fifth house of creativity, play, romance and children, her drive expresses itself through language, ideas, lively debate, and the pleasure of making. This is the writer's Mars, the debater's Mars, the improviser's Mars. In the fifth house it wants to be seen creating; it wants an audience for its wit. Coupled with the Aries Moon Handle, it means her assertive fire is delivered largely through voice — she achieves resolution by naming the thing exactly.",
   },
   {
     key: 'jupiter', name: 'Jupiter', glyph: '♃', sign: 'Leo', signGlyph: '♌',
@@ -149,10 +149,10 @@ export const PLACEMENTS: Placement[] = [
   {
     key: 'chiron', name: 'Chiron', glyph: '⚷', sign: 'Cancer', signGlyph: '♋',
     degree: 24, minute: 30, house: 7, motion: 'Direct', dignity: '—',
-    notes: 'The wound of the mother, healed through partnership',
+    notes: 'The ancestral healing path, strengthened through relationship',
     headline: 'Chiron in Cancer · Seventh House · 24°30′',
     interpretation:
-      "Chiron in Cancer in the seventh house is the exact astrological name for the wound she carries: the belief, planted early, that she is a burden — that her needs, feelings, directness and depth make her a problem rather than a gift. Cancer is the sign of the mother; Chiron is the wound that becomes the medicine. Placed in the house of partnership, this wound is healed not in solitude but through the mirror of relationship — through partners who can hold what her mother could not. The healing is already well underway.",
+      "Chiron in Cancer in the seventh house describes an ancestral healing path: her depth was vast from the beginning and required a more expansive emotional container than she consistently received. Cancer is the sign of the mother; Chiron marks the place where experience becomes medicine. Placed in the house of relationship, this capacity strengthens through trusted bonds that can honor her needs, feelings, directness and depth. The healing is already well underway.",
   },
   {
     key: 'northNode', name: 'North Node', glyph: '☊', sign: 'Aquarius', signGlyph: '♒',
@@ -368,9 +368,9 @@ export const PHASES: LifePhase[] = [
   {
     id: 'phase-1', number: 1, title: 'Early Life Foundation',
     years: '1990–2001', ages: 'Age 0–11',
-    summary: 'The Chiron wound is planted. Full Moon child in a household that could not hold her.',
+    summary: 'The Chiron medicine is seeded. A Full Moon child begins learning to hold her own depth.',
     interpretation:
-      "Born on a Full Moon into a Bucket chart with an Aries Moon Handle, she arrived as a high-contrast child in a household that did not have the vocabulary for her. Chiron in Cancer in the seventh house is planted here and watered for years — the belief that she is a burden. Her mother's inability to hold her was not personal failing on the child's part; it was the failure of an adult to shelter a force of nature she did not know how to shelter. Everything the report addresses begins here.",
+      "Born on a Full Moon into a Bucket chart with an Aries Moon Handle, she arrived as a high-contrast child in a household that did not yet have the vocabulary for her. Chiron medicine is seeded here: an early invitation to recognize that her needs and depth deserve an expansive container. The limitations of the adults around her were never evidence of a failing in the child; they became an invitation for her to grow into her own reliable source of shelter while learning to welcome trustworthy support. Everything the report addresses begins here.",
   },
   {
     id: 'phase-2', number: 2, title: 'Awakening',
@@ -425,7 +425,7 @@ export const PHASES: LifePhase[] = [
   {
     id: 'phase-9', number: 9, title: 'Chiron Return & Integration',
     years: '2040–2044', ages: 'Age 50–54',
-    summary: 'The wound becomes the medicine, offered publicly.',
+    summary: 'The depth becomes mastery, offered publicly.',
     interpretation:
       'Chiron returns to its natal degree in Cancer in the seventh house. The mother-wound is not just healed — it is transmuted into the specific gift she has been preparing all her life to offer.',
   },
@@ -472,7 +472,7 @@ export const KUA_INFO = {
   group: 'East Group',
   bestDirections: ['SE', 'E', 'S', 'N'] as const,
   worstDirections: ['W', 'NW', 'NE', 'SW'] as const,
-  note: "As a Kua 1 (Water) in the East Group, her best-energy directions are Southeast, East, South and North. Bed, desk, and primary seating should face one of these directions when possible. Kitchen stove and toilets are ideally in her four negative directions so they 'press down' unfavorable energy.",
+  note: "As a Kua 1 (Water) in the East Group, her best-energy directions are Southeast, East, South and North. Bed, desk, and primary seating should face one of these directions when possible. Kitchen stove and toilets can be placed in the four restorative directions to help balance more active energy.",
 };
 
 export const BAGUA: BaguaArea[] = [
@@ -486,19 +486,19 @@ export const BAGUA: BaguaArea[] = [
     guidance: "Her Yan Nian — 'Long Life' — the direction of stable relationships and lasting reputation. Since Pluto sits in her tenth house of public destiny, this zone is unusually important: keep a symbol of her actual work visible here (a book she has written, a badge from her role, a framed intention).",
     isBestForKua1: true },
   { gua: 'Kun', direction: 'SW', element: 'Earth', lifeArea: 'Love & Marriage', color: 'Pink / earth tones',
-    guidance: "One of her four negative directions (Ho Hai — 'Mishaps'). Do not sleep facing SW. Ideal placement for the toilet, storage, or the stove — an area whose function suppresses bad energy.",
+    guidance: "A redirection zone (Ho Hai — traditionally translated as 'Mishaps'). Avoid sleeping facing SW when practical. Toilet, storage, or stove placement here can help balance this more active energy.",
     isBestForKua1: false },
   { gua: 'Dui', direction: 'W', element: 'Metal', lifeArea: 'Children & Creativity', color: 'White / metallic',
-    guidance: "One of her negative directions (Wu Gui — 'Five Ghosts'). Do not place her bed here. A good location for pantry, laundry, or storage.",
+    guidance: "An intensity-balancing direction (Wu Gui — traditionally 'Five Ghosts'). Keep the bed oriented elsewhere when practical; pantry, laundry, or storage can work well here.",
     isBestForKua1: false },
   { gua: 'Qian', direction: 'NW', element: 'Metal', lifeArea: 'Helpful People & Travel', color: 'Silver / grey',
-    guidance: "Her Jue Ming — 'Total Loss' — most challenging direction. Reserve for utility spaces (garage, laundry, storage). Never sleep or work facing NW.",
+    guidance: "Her strongest redirection zone (Jue Ming — traditionally 'Total Loss'). Utility spaces such as a garage, laundry, or storage suit it best; choose a supportive direction for sleep or focused work.",
     isBestForKua1: false },
   { gua: 'Kan', direction: 'N', element: 'Water', lifeArea: 'Career & Life Path', color: 'Black / deep blue',
     guidance: "Her Fu Wei — 'Overall Harmony' — good, steady, harmonizing direction. Water element supports her Kua 1. A small mirror, a bowl of clean water, or an actual career symbol here.",
     isBestForKua1: true },
   { gua: 'Gen', direction: 'NE', element: 'Earth', lifeArea: 'Knowledge & Self-Cultivation', color: 'Blue / earth tones',
-    guidance: "One of her negative directions (Liu Sha — 'Six Killings'). Do not study or sleep facing NE. Store books here, but read facing SE, E or S when possible.",
+    guidance: "An intensity-balancing direction (Liu Sha — traditionally 'Six Killings'). Books can be stored here, while study and sleep benefit from facing SE, E or S when practical.",
     isBestForKua1: false },
   { gua: 'Tai Ji', direction: 'Center', element: 'Earth', lifeArea: 'Health & Center of the Home', color: 'Yellow / ochre',
     guidance: 'The center of the home is the health of the whole. Keep it clear, well-lit, and clean. No heavy furniture, no clutter, no bathroom. Circulation begins here and radiates outward.',

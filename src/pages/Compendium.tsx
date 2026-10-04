@@ -7,6 +7,7 @@ import {
 import { useDetailDrawer, type DrawerPayload } from '@/components/common/DetailDrawer';
 import { SourceRefPanel } from '@/components/common/SourceRefPanel';
 import { Link } from 'react-router-dom';
+import { SourceChapters } from '@/components/common/SourceChapters';
 
 export default function Compendium() {
   return (
@@ -102,6 +103,7 @@ export default function Compendium() {
       <SpecialAspectsSection />
       <ArabicPartsSection />
       <ProfectionSection />
+      <SourceChapters ids={['v2-02', 'v2-03', 'v2-07', 'v2-08', 'v2-09']} title="Volume II reference expansions — complete text" />
     </div>
   );
 }

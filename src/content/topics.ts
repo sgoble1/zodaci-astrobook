@@ -3,6 +3,8 @@ export type Topic = {
   slug: string; label: string; intro: string;
   /** Regex matched against Masterbook / Birth Chart Book chapter and section titles. */
   chapters: RegExp;
+  /** Exact Masterbook sections that belong here even when the title is not an obvious keyword match. */
+  sourceIds?: string[];
   /** Search query for pulling passages from all documents. */
   query: string;
   /** Hand-picked in-app pages that cover this topic. */
@@ -27,6 +29,7 @@ export const TOPICS: Topic[] = [
     questions: ['What does the Aries Moon bucket handle mean for how I express myself?', 'How do the Saturn in Aries and Gemini transits affect my bucket handle?', 'How do I use the handle well instead of burning out?'] },
   { slug: 'past-lives', label: 'Past Lives & Karma', intro: 'What the chart says about karmic history, the South Node inheritance, and soul contracts carried into this life.',
     chapters: /past li|karm|south node|nodal|soul contract|reincarn/i, query: 'past lives karma karmic south node previous incarnation soul contract',
+    sourceIds: ['v2-01'],
     pages: [{ to: '/masterbook/bcb-20', label: 'Birth Chart Book · Ch. 18 Past Lives & Karmic Signatures' }, { to: '/masterbook/c-ff306540-06', label: 'Section 7 · Karmic Themes' }, { to: '/volume-2', label: 'Volume II' }],
     facts: [
       { text: 'Karma here is "not a single past life revealed in tidy narrative form; it is a complex of energetic signatures, patterns carried across time, and the current life\'s particular curriculum".', cite: 'Birth Chart Book · Ch. 18', to: '/masterbook/bcb-20' },
@@ -36,7 +39,7 @@ export const TOPICS: Topic[] = [
     ],
     questions: ['What do my South Node and 12th house say about past lives?', 'What karmic lessons am I here to complete?'] },
   { slug: 'numerology', label: 'Numerology', intro: 'Life Path, Expression, Soul Urge, Personal Years and Pinnacles, and how the numbers echo the chart.',
-    chapters: /numerolog|life path|pinnacle|personal year|master number/i, query: 'numerology life path number personal year pinnacle expression soul urge',
+    chapters: /numerolog|life path|pinnacle|personal year|master number|gene key/i, sourceIds: ['v2-10'], query: 'numerology life path number personal year pinnacle expression soul urge gene keys',
     pages: [{ to: '/masterbook/c-ff306540-16', label: 'Section 17 · Numerology Complement' }, { to: '/numerology', label: 'Numerology · Pinnacles' }, { to: '/purpose', label: 'Purpose & Numerology' }],
     facts: [
       { text: 'Life Path 7 — The Seeker: "September 6, 1990 → 9 + 6 + (1+9+9+0) → 9 + 6 + 19 → 9 + 6 + 10 → 9 + 6 + 1 = 16 → 1+6 = 7."', cite: 'Birth Chart & Feng Shui Guide · 17A', to: '/masterbook/c-ff306540-16' },
@@ -46,6 +49,7 @@ export const TOPICS: Topic[] = [
     questions: ['What does my Life Path number mean for my purpose?', 'Which Personal Year am I in and what does it ask of me?'] },
   { slug: 'recurring-themes', label: 'Recurring Themes', intro: 'The patterns the documents return to again and again: the Full Moon axis, the anaretic degrees, the Capricorn stellium, service and depth.',
     chapters: /synthes|theme|pattern|signature|overview|big three|blueprint/i, query: 'recurring theme pattern repeatedly signature throughout your chart full moon anaretic stellium',
+    sourceIds: ['v2-07', 'v2-08', 'v2-09', 'v2-19'],
     pages: [{ to: '/masterbook/c-ff306540-06', label: 'Section 7 · Repeating Life Patterns' }, { to: '/masterbook/c-ff306540-14', label: 'Section 15 · Seven Core Life Patterns' }, { to: '/reading#synthesis', label: 'Reading · Synthesis across systems' }, { to: '/masterbook/bcb-41', label: 'Birth Chart Book · Ch. 39 Synthesis' }],
     facts: [
       { text: 'Pattern 1: The Full Moon Creative Tension Loop', cite: 'Birth Chart & Feng Shui Guide · Section 7 (expanded in Section 15)', to: '/masterbook/c-ff306540-06' },
@@ -64,16 +68,19 @@ export const TOPICS: Topic[] = [
     questions: ['What are my biggest obstacles and how do I work with them?', 'Which difficult transits are coming and how should I prepare?'] },
   { slug: 'shadow-work', label: 'Shadow Work & Healing', intro: 'The parts of the chart that want to be integrated: Lilith, Pluto, Chiron, the 8th and 12th houses.',
     chapters: /shadow|heal|lilith|pluto|integrat|wound/i, query: 'shadow work integrate healing wound lilith pluto chiron fear',
+    sourceIds: ['v2-15'],
     pages: [{ to: '/masterbook/bcb-28', label: 'Birth Chart Book · Ch. 26 Shadow Work' }],
     facts: [{ text: "\"Your chart identifies several primary shadow patterns — not as accusations but as invitations to the most important interior work of your life.\"", cite: "Birth Chart Book \u00b7 Ch. 26", to: "/masterbook/bcb-28" }, { text: "\"The anaretic Venus in Leo knows what it is to want to shine and to have had that radiance received imperfectly or rejected outright.\"", cite: "Birth Chart Book \u00b7 Ch. 26", to: "/masterbook/bcb-28" }, { text: "Journal prompt: \"Write a letter to your inner critic.\"", cite: "Birth Chart Book \u00b7 Ch. 26", to: "/masterbook/bcb-28" }, { text: "\"Your Chiron in Cancer wound around nurturance: the healing path is learning to receive as well as to give the harvest of care.\"", cite: "Birth Chart Book", to: "/masterbook/bcb-33" }],
     questions: ['What does my shadow work look like?', 'How do I heal my Chiron wound?'] },
   { slug: 'purpose', label: 'Life Purpose & Mission', intro: 'North Node direction, Midheaven vocation and the soul mission statements.',
     chapters: /purpose|mission|north node|calling|dharma|destiny/i, query: 'life purpose mission north node destiny calling soul',
+    sourceIds: ['v2-19'],
     pages: [{ to: '/purpose', label: 'Purpose & Numerology' }, { to: '/masterbook/bcb-26', label: 'Birth Chart Book · Ch. 24 Life Purpose' }],
     facts: [{ text: "\"You are, at the deepest level, a channel and a communicator of transformative truth.\"", cite: "Birth Chart Book \u00b7 Ch. 24", to: "/masterbook/bcb-26" }, { text: "\"Your Pluto in Scorpio in the 10th house establishes the territory and the stakes: your work in the world is in the domain of transformation.\"", cite: "Birth Chart Book \u00b7 Ch. 24", to: "/masterbook/bcb-26" }],
     questions: ['What is my life purpose?', 'How can I fulfil my North Node in Aquarius?'] },
   { slug: 'love', label: 'Love & Relationships', intro: 'Venus, Mars, the 7th house, Jupiter and Chiron in partnership, and compatibility notes.',
     chapters: /love|relationship|partner|venus|marriage|compatib|7th/i, query: 'love relationship partner marriage venus seventh house compatibility romance',
+    sourceIds: ['v2-13'],
     pages: [{ to: '/masterbook/bcb-29', label: 'Birth Chart Book · Ch. 27 Love' }],
     facts: [{ text: "\"Your Venus in Leo at the anaretic 29th degree in the 8th house, conjunct the Vertex, demands soul-level encounter.\"", cite: "Birth Chart Book \u00b7 Ch. 27", to: "/masterbook/bcb-29" }, { text: "\"You deserve a love that is as thorough, as loyal, and as transformative as the love you offer.\"", cite: "Birth Chart Book \u00b7 Ch. 27", to: "/masterbook/bcb-29" }, { text: "Pattern 3: \"The Over-Giving in Partnership Loop\".", cite: "Birth Chart & Feng Shui Guide \u00b7 Section 7", to: "/masterbook/c-ff306540-06" }],
     questions: ['What kind of partner suits me?', 'What patterns show up in my relationships?'] },
@@ -88,6 +95,7 @@ export const TOPICS: Topic[] = [
     questions: ['What does my chart say about money?', 'Which Feng Shui area supports wealth for me?'] },
   { slug: 'health', label: 'Health & Wellness', intro: 'Virgo body-awareness, the 6th house, the astrological body map and elemental balance.',
     chapters: /health|wellness|body|chakra|healing|6th house/i, query: 'health wellness body diet exercise sleep stress sixth house',
+    sourceIds: ['v2-11', 'v2-12'],
     pages: [{ to: '/masterbook/bcb-31', label: 'Birth Chart Book · Ch. 29 Health' }],
     facts: [{ text: "\"Your Virgo Sun and Mercury rule the digestive system, the intestines, and the nervous system.\"", cite: "Birth Chart Book \u00b7 Ch. 29", to: "/masterbook/bcb-31" }, { text: "\"Your Full Moon birth intensifies this: the emotional system operates at a high pitch, and the physical body needs consistent and specific support.\"", cite: "Birth Chart Book \u00b7 Ch. 29", to: "/masterbook/bcb-31" }, { text: "East (Tien Yi) is the Health direction: sleeping with head toward East \"activates physical vitality and immune support\".", cite: "Birth Chart & Feng Shui Guide \u00b7 18A", to: "/feng-shui/bagua" }],
     questions: ['What health areas should I pay attention to?', 'What routines suit my chart?'] },
@@ -98,15 +106,18 @@ export const TOPICS: Topic[] = [
     questions: ['What does my chart say about my family?', 'How should I set up my home?'] },
   { slug: 'spiritual-gifts', label: 'Spiritual Gifts & Intuition', intro: 'Neptune, the 12th house, the Galactic Center, Sabian symbols and intuitive talents.',
     chapters: /spiritual|intuit|psychic|gift|neptune|12th|galactic|sabian|mystic/i, query: 'spiritual gift intuition psychic neptune twelfth house galactic center mystic',
+    sourceIds: ['v2-02', 'v2-03'],
     facts: [{ text: "Affirmation: \"I was born with my identity pointed at the center of the galaxy, and I honor that orientation in everything I do.\"", cite: "Birth Chart Book \u00b7 Ch. 36", to: "/masterbook/bcb-38" }, { text: "\"I am a clear and courageous channel for cosmic truth, and I trust the transmissions that arrive through me.\"", cite: "Birth Chart Book \u00b7 Ch. 36", to: "/masterbook/bcb-38" }],
     questions: ['What spiritual gifts does my chart show?', 'How can I develop my intuition?'] },
   { slug: 'practices', label: 'Rituals, Tarot, Chakras & Affirmations', intro: 'The practical tools: monthly rituals, birth tarot cards, chakras, colour and sound, journaling prompts and affirmations.',
     chapters: /ritual|tarot|chakra|color|colour|sound|journal|affirm|crystal|gene key|human design/i, query: 'ritual tarot chakra affirmation journal prompt crystal colour sound practice',
+    sourceIds: ['v2-11', 'v2-12', 'v2-14', 'v2-16', 'v2-17'],
     pages: [{ to: '/masterbook/bcb-35', label: 'Birth Chart Book · Ch. 33 Tarot' }, { to: '/masterbook/bcb-38', label: 'Birth Chart Book · Ch. 36 Affirmations' }],
     facts: [{ text: "\"Tarot birth cards are calculated by reducing the birth date to the numbers corresponding to Major Arcana cards.\" The two cards \"together form the master narrative of your life.\"", cite: "Birth Chart Book \u00b7 Ch. 33", to: "/masterbook/bcb-35" }, { text: "\"I evolve through transformation, and each death-and-rebirth cycle leaves me more fundamentally and beautifully myself.\"", cite: "Birth Chart Book \u00b7 Ch. 36", to: "/masterbook/bcb-38" }, { text: "A 12-week Feng Shui implementation plan sets out the home changes week by week.", cite: "Birth Chart & Feng Shui Guide \u00b7 Section 18", to: "/feng-shui/bagua" }],
     questions: ['What rituals do the reports recommend each month?', 'What are my birth tarot cards?'] },
   { slug: 'timing', label: 'Key Years & Turning Points', intro: 'Saturn returns, profections, progressions, solar returns and the big dates between 1990 and 2060.',
     chapters: /timeline|return|profection|progress|solar arc|phase|transit|year/i, query: 'saturn return turning point key year age progression solar return timeline',
+    sourceIds: ['v2-04', 'v2-05', 'v2-06', 'v2-18'],
     pages: [{ to: '/timeline', label: 'Timeline' }, { to: '/profection', label: 'Profection' }, { to: '/transits', label: 'Transits' }],
     facts: [{ text: "Saturn in Aries (2025–2028) is \"the Saturn transit of the bucket handle… What you communicate now carries lasting weight.\"", cite: "Masterbook \u00b7 Saturn Transit Guide", to: "/masterbook/ch-38" }, { text: "Saturn in Gemini then crosses the 3rd house: the writing and teaching \"receives the structure that will allow it to last\".", cite: "Masterbook \u00b7 Saturn Transit Guide", to: "/masterbook/ch-38" }, { text: "Life phases 1990–2060 are laid out year by year in the Timeline & Retrograde Guide.", cite: "Timeline & Retrograde Guide", to: "/guides/timeline-retrogrades" }],
     questions: ['What are my biggest turning-point years?', 'What happens at my second Saturn return?'] },

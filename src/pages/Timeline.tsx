@@ -86,7 +86,7 @@ export default function Timeline() {
           ))}
         </div>
       </section>
-      <SourceChapters match={/timeline|life phase|decade|age \d|\b(19|20)\d\d\b|return|progress|solar arc|solar return/i} />
+      <SourceChapters match={/timeline|life phase|decade|age \d|\b(19|20)\d\d\b|return|progress|solar arc|solar return/i} ids={['v2-04', 'v2-05', 'v2-06', 'v2-18']} title="Timing & cycles — complete source chapters" />
     </div>
   );
 }

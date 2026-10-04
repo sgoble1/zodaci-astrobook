@@ -44,7 +44,7 @@ function ReadingBody({ rel }: { rel: Relationship }) {
   const top = ia[0]; const harm = ia.filter(x => x.tone !== 'tension').slice(0, 3), tens = ia.filter(x => x.tone === 'tension').slice(0, 3);
   const in7 = ov.filter(o => [5, 7, 8].includes(o.house));
   const cSun = comp[0], cMoon = comp.find(c => c.key === 'moon')!, cVen = comp.find(c => c.key === 'venus')!;
-  const overall = sc.harmony + sc.fusion >= sc.tension ? 'more flowing than frictional' : 'charged with productive friction';
+  const overall = sc.harmony + sc.fusion >= sc.tension ? 'more flowing than effortful' : 'energised by productive differences';
   const shared = kB ? Object.values(KUA_TABLE[APRIL_KUA]).slice(0, 4).filter(d => Object.values(KUA_TABLE[kB.kua]).slice(0, 4).includes(d)) : [];
 
   return (
@@ -67,7 +67,7 @@ function ReadingBody({ rel }: { rel: Relationship }) {
       <Part n="II" title="Love, attraction and emotional safety" level={lvl} note="Venus–Mars, Moon contacts and house overlays.">
         <p><b>Attraction:</b> April’s Venus in {b(A, 'venus').sign} with {N}’s Mars in {b(B, 'mars').sign} — {signPair(b(A, 'venus').sign, b(B, 'mars').sign)} {N}’s Venus in {b(B, 'venus').sign} with April’s Mars in {b(A, 'mars').sign} — {signPair(b(B, 'venus').sign, b(A, 'mars').sign)}</p>
         <p><b>Feeling at home:</b> Moons in {b(A, 'moon').sign} and {b(B, 'moon').sign} ({elementOf(b(A, 'moon').sign)} and {elementOf(b(B, 'moon').sign)}).</p>
-        {in7.length > 0 && <p><b>In April’s romance, partnership and intimacy houses:</b> {in7.map(o => `${N}’s ${o.body.name} in her ${o.house}th`).join(', ')}. These are the parts of {N} April experiences as partner-like.</p>}
+        {in7.length > 0 && <p><b>In April’s creativity, close-bond and shared-depth houses:</b> {in7.map(o => `${N}’s ${o.body.name} in her ${o.house}th`).join(', ')}. These are the parts of {N} April may experience as especially personally significant.</p>}
       </Part>
 
       <Part n="III" title="Gifts and growing edges" level={lvl} note="Strongest harmonious and challenging contacts.">
