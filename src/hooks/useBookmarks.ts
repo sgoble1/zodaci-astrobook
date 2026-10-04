@@ -7,8 +7,8 @@ export type Bookmark = { id: string; path: string; title: string; note: string; 
 const listeners = new Set<() => void>();
 // Shared fetch so many bookmark buttons on one page make a single request.
 let inflight: Promise<Bookmark[]> | null = null;
-const fetchAll = () => (inflight ??= supabase.from('bookmarks').select('id,path,title,note,created_at').order('created_at', { ascending: false })
-  .then(({ data }) => (data as Bookmark[]) ?? []));
+const fetchAll = () => (inflight ??= Promise.resolve(supabase.from('bookmarks').select('id,path,title,note,created_at').order('created_at', { ascending: false })
+  .then(({ data }) => (data as Bookmark[]) ?? [])));
 const notify = () => { inflight = null; listeners.forEach(l => l()); };
 
 export function useBookmarks() {
