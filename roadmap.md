@@ -58,3 +58,9 @@
 - [x] Rewrite Workbook guidance in plain language and add a step-by-step interpretation guide.
 - [x] Add plain-language explanations beside every relevant planet, house, and aspect in the chart report.
 - [x] Verify the updated pages on desktop and mobile, including playback, privacy, citations, and navigation.
+
+## Timing & Cycles refinement
+- [ ] Rename and move Timeline Overview to the top of Timing & Cycles.
+- [ ] Add a plain-language summary of all timing and retrograde sections while preserving the full source list.
+- [ ] Add a transparent misty light-grey highlight to the full Timing & Cycles menu group.
+- [ ] Verify the updated menu and overview on desktop and mobile.
