@@ -1,4 +1,5 @@
 import { BookmarkButton } from '@/components/common/BookmarkButton';
+import { loadProtectedJson, loadProtectedText } from '@/lib/protectedContent';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
@@ -7,11 +8,11 @@ import { BookOpen } from 'lucide-react';
 
 type Entry = { id: string; title: string; part?: string; words?: number };
 let indexCache: Promise<Entry[]> | null = null;
-const loadIndex = () => (indexCache ??= fetch('/masterbook/index.json').then(r => r.json()));
+const loadIndex = () => (indexCache ??= loadProtectedJson<Entry[]>('masterbook', 'index.json'));
 const textCache = new Map<string, Promise<string>>();
 const loadText = (id: string) => {
-  if (!textCache.has(id)) textCache.set(id, fetch(`/masterbook/${id}.md`).then(r => (r.ok ? r.text() : '')));
-  return textCache.get(id)!;
+  if (!textCache.has(id)) textCache.set(id, loadProtectedText('masterbook', `${id}.md`).catch(() => ''));
+  return textCache.get(id) ?? Promise.resolve('');
 };
 
 /**

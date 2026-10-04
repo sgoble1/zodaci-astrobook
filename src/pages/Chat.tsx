@@ -18,10 +18,10 @@ export default function Chat() {
     <div className="space-y-6">
       <header>
         <div className="font-smallcaps text-xs text-gold">The Oracle Desk · Conversations</div>
-        <h1 className="text-4xl sm:text-5xl mt-2">AI Chat</h1>
+        <h1 className="text-4xl sm:text-5xl mt-2">SmarChat</h1>
         <p className="text-muted-foreground mt-3 max-w-2xl">Talk with the sources over several turns. Every answer cites the passages it used, and your conversations are saved to your account.</p>
       </header>
-      <AuthGate what="use AI chat and keep your history">{() => <ChatInner />}</AuthGate>
+      <AuthGate what="use SmarChat and keep your history">{() => <ChatInner />}</AuthGate>
     </div>
   );
 }

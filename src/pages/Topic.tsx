@@ -4,6 +4,8 @@ import { Link, useParams } from 'react-router-dom';
 import { TOPICS } from '@/content/topics';
 import ReactMarkdown from 'react-markdown';
 import { loadCorpus, rank, type Passage } from '@/lib/corpus';
+import { loadProtectedJson } from '@/lib/protectedContent';
+import { Button } from '@/components/ui/button';
 
 type Entry = { id: string; label: string; title: string };
 
@@ -33,7 +35,7 @@ export default function Topic() {
   const [n, setN] = useState(12);
   const [sum, setSum] = useState(''); const [busy, setBusy] = useState(false); const [err, setErr] = useState<string | null>(null);
 
-  useEffect(() => { fetch('/masterbook/index.json').then(r => r.json()).then(setIndex).catch(() => setIndex([])); }, []);
+  useEffect(() => { loadProtectedJson<Entry[]>('masterbook', 'index.json').then(setIndex).catch(() => setIndex([])); }, []);
   useEffect(() => { setPassages(null); setN(12); setSum(''); setErr(null); loadCorpus().then(setPassages).catch(() => setPassages([])); }, [slug]);
 
   const chapters = useMemo(() => topic ? index.filter(e => topic.chapters.test(e.title) || topic.sourceIds?.includes(e.id)) : [], [index, topic]);
@@ -95,7 +97,7 @@ export default function Topic() {
       <section className="border border-border rounded-lg p-5 bg-card">
         <div className="flex items-center justify-between gap-3 mb-2">
           <h2 className="font-display text-2xl">Theme summary</h2>
-          <button onClick={summarize} disabled={busy || !passages} className="px-3 py-1.5 rounded bg-primary text-primary-foreground text-sm disabled:opacity-50">{busy ? 'Writing…' : sum ? 'Rewrite' : 'Summarise from the sources'}</button>
+          <Button onClick={summarize} disabled={busy || !passages} size="sm">{busy ? 'Writing…' : sum ? 'Rewrite' : 'Summarise from the sources'}</Button>
         </div>
         {!sum && !err && <p className="text-sm text-muted-foreground">A cited overview written only from the passages below. Numbers like [3] match passage 3.</p>}
         {err && <p className="text-sm text-destructive">{err}</p>}
@@ -120,7 +122,7 @@ export default function Topic() {
                 <Link to={p.href} className="text-xs text-muted-foreground hover:text-primary">{p.source} — {p.loc} →</Link>
               </article>
             ))}
-            {n < hits.length && <button onClick={() => setN(n + 12)} className="text-sm underline">Show more passages</button>}
+            {n < hits.length && <Button onClick={() => setN(n + 12)} variant="link">Show more passages</Button>}
           </div>
         )}
       </section>

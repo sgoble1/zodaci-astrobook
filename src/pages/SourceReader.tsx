@@ -3,6 +3,7 @@ import { Link, useParams } from 'react-router-dom';
 import { BUILT_IN_SOURCES } from '@/content/sources';
 import { loadLibraryIndex } from '@/lib/corpus';
 import { Input } from '@/components/ui/input';
+import { loadProtectedJson } from '@/lib/protectedContent';
 
 type Unit = { loc: string; text: string };
 
@@ -14,7 +15,7 @@ export default function SourceReader() {
   const [q, setQ] = useState('');
   useEffect(() => {
     loadLibraryIndex().then(ix => setFileName(ix.find(d => d.id === id)?.fileName ?? ''));
-    fetch(`/library/${id}.json`).then(r => r.ok ? r.json() : []).then(setUnits);
+    loadProtectedJson<Unit[]>('library', `${id}.json`).then(setUnits).catch(() => setUnits([]));
   }, [id]);
   useEffect(() => { if (units && location.hash) setTimeout(() => document.getElementById(location.hash.slice(1))?.scrollIntoView(), 50); }, [units]);
   const src = BUILT_IN_SOURCES.find(s => s.fileName === fileName);
@@ -34,9 +35,7 @@ export default function SourceReader() {
           {q && <span className="text-xs text-muted-foreground">{shown.length} matching</span>}
         </div>
       </header>
-      <div className="flex flex-wrap gap-1">
-        {(units ?? []).map((u, i) => <a key={i} href={`#u${i}`} className="text-[11px] border border-border rounded px-1.5 py-0.5 hover:bg-muted">{u.loc.replace(/^(Page|Slide|Part) /, '')}</a>)}
-      </div>
+      {(units?.length ?? 0) > 1 && <label className="flex max-w-sm items-center gap-3 text-sm"><span className="shrink-0 text-muted-foreground">Jump to</span><select className="h-10 w-full rounded-md border border-input bg-background px-3" defaultValue="" onChange={e => { if (e.target.value) document.getElementById(e.target.value)?.scrollIntoView({ behavior: 'smooth' }); }}><option value="" disabled>Choose a page or section</option>{(units ?? []).map((u, i) => <option key={i} value={`u${i}`}>{u.loc}</option>)}</select></label>}
       {shown.map(u => (
         <section key={u.i} id={`u${u.i}`} className="parchment p-5 scroll-mt-24">
           <div className="font-smallcaps text-[10px] text-gold mb-2">{u.loc}</div>

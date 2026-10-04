@@ -1,4 +1,5 @@
 import { BookmarkButton } from '@/components/common/BookmarkButton';
+import { loadProtectedText } from '@/lib/protectedContent';
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
@@ -13,7 +14,7 @@ export function RelSourceSection({ e }: { e: MbEntry }) {
   const [open, setOpen] = useState(true);
   const [text, setText] = useState<string | null>(null);
   const [libFile, setLibFile] = useState<string | null>(null);
-  useEffect(() => { if (open && text === null) fetch(`/masterbook/${e.id}.md`).then(r => r.ok ? r.text() : '').then(setText); }, [open, text, e.id]);
+  useEffect(() => { if (open && text === null) loadProtectedText('masterbook', `${e.id}.md`).then(setText).catch(() => setText('')); }, [open, text, e.id]);
   useEffect(() => { if (e.doc) loadLibraryIndex().then(l => setLibFile(l.find(d => d.id === e.doc)?.fileName ?? null)); }, [e.doc]);
   const src = e.doc ? BUILT_IN_SOURCES.find(s => s.fileName === libFile) : BUILT_IN_SOURCES.find(s => /Masterbook/.test(s.fileName));
   const pages = useMemo(() => [...(text ?? '').matchAll(/<!-- page (\d+) -->/g)].map(m => +m[1]), [text]);

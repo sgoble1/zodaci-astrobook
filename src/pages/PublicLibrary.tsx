@@ -3,6 +3,7 @@ import { Link, useParams } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { loadIndex, type MbEntry } from './Masterbook';
+import { loadProtectedText } from '@/lib/protectedContent';
 
 /** Password-protected reading room backed by the extracted Masterbook files. */
 function Frame({ children }: { children: React.ReactNode }) {
@@ -59,7 +60,7 @@ export function PublicReader() {
   const [entries, setEntries] = useState<MbEntry[]>([]);
   const [text, setText] = useState<string | null>(null);
   useEffect(() => { loadIndex().then(setEntries); }, []);
-  useEffect(() => { setText(null); window.scrollTo(0, 0); fetch(`/masterbook/${id}.md`).then(r => r.ok ? r.text() : '').then(t => setText(t.startsWith('<!doctype') || t.startsWith('<!DOCTYPE') ? '' : t)); }, [id]);
+  useEffect(() => { setText(null); window.scrollTo(0, 0); loadProtectedText('masterbook', `${id}.md`).then(setText).catch(() => setText('')); }, [id]);
   const i = entries.findIndex(e => e.id === id);
   const e = entries[i], prev = entries[i - 1], next = entries[i + 1];
   const body = (text ?? '').replace(/<!-- page (\d+) -->/g, (_m, n) => `\n\n###### Page ${n}\n\n`);

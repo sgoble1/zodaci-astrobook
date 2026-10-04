@@ -7,6 +7,7 @@ import {
 import { SEARCH_INDEX, type SearchDoc } from '@/content/compendium';
 import { TOPICS } from '@/content/topics';
 import { KUA_DIRECTIONS, ROOMS, CRYSTALS, TWELVE_WEEKS, STAR_INFO, DIR_NAME } from '@/content/fengshui';
+import { loadProtectedJson } from '@/lib/protectedContent';
 
 const FS_DOCS = [
   { id: 'guide-fsp', kind: 'guide', title: 'Feng Shui Guide · Page by Page', subtitle: 'Pages 114–180 + Flying Stars wheel', body: 'feng shui page flying stars wheel year', route: '/guides/feng-shui-pages' },
@@ -72,7 +73,7 @@ export function CommandPalette() {
   useEffect(() => {
     if (!open || extra.length) return;
     (async () => {
-      const mb = await fetch('/masterbook/index.json').then(r => r.json()) as { id: string; label: string; title: string; part: string; sections: string[]; excerpt: string }[];
+      const mb = await loadProtectedJson<{ id: string; label: string; title: string; part: string; sections: string[]; excerpt: string }[]>('masterbook', 'index.json');
       const docs: Doc[] = mb.map(e => ({
         id: 'mb-' + e.id, kind: /^(c|v2|cmp)-/.test(e.id) ? 'companion' : 'masterbook', title: e.title,
         subtitle: `${e.part} · ${e.label}`, body: e.sections.join(' · ') + ' ' + e.excerpt, route: `/masterbook/${e.id}`,

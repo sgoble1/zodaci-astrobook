@@ -1,13 +1,19 @@
-import { useState, type ReactNode, type FormEvent } from 'react';
+import { useEffect, useState, type ReactNode, type FormEvent } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-
-const KEY = 'site-unlocked-v1';
+import { CONTENT_TOKEN_KEY, CONTENT_UNLOCKED_EVENT, getContentToken } from '@/lib/protectedContent';
+import { Button } from '@/components/ui/button';
 
 export function SitePasswordGate({ children }: { children: ReactNode }) {
-  const [unlocked, setUnlocked] = useState(() => localStorage.getItem(KEY) === '1');
+  const [unlocked, setUnlocked] = useState(() => !!getContentToken());
   const [pw, setPw] = useState('');
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState('');
+
+  useEffect(() => {
+    const lock = () => setUnlocked(false);
+    window.addEventListener('private-content-locked', lock);
+    return () => window.removeEventListener('private-content-locked', lock);
+  }, []);
 
   if (unlocked) return <>{children}</>;
 
@@ -16,7 +22,11 @@ export function SitePasswordGate({ children }: { children: ReactNode }) {
     setBusy(true); setErr('');
     const { data, error } = await supabase.functions.invoke('site-password', { body: { password: pw } });
     setBusy(false);
-    if (!error && data?.ok) { localStorage.setItem(KEY, '1'); setUnlocked(true); }
+    if (!error && data?.ok && data?.token) {
+      localStorage.setItem(CONTENT_TOKEN_KEY, data.token);
+      window.dispatchEvent(new Event(CONTENT_UNLOCKED_EVENT));
+      setUnlocked(true);
+    }
     else setErr('That password is not right. Please try again.');
   };
 
@@ -31,9 +41,9 @@ export function SitePasswordGate({ children }: { children: ReactNode }) {
           placeholder="Password"
         />
         {err && <p className="text-sm text-destructive">{err}</p>}
-        <button disabled={busy || !pw} className="w-full rounded-md bg-primary px-3 py-2 text-primary-foreground disabled:opacity-50">
+        <Button type="submit" disabled={busy || !pw} className="w-full">
           {busy ? 'Checking…' : 'Enter'}
-        </button>
+        </Button>
       </form>
     </div>
   );
