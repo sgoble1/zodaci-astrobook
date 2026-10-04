@@ -16,6 +16,7 @@ import { AccountButton } from '@/components/common/AccountButton';
 import { useCustomPages, NEW_PAGE_HIGHLIGHT_KEY } from '@/hooks/useCustomPages';
 import { WORKBOOK_MODULES } from '@/content/workbook';
 import { useSharedBadges } from '@/hooks/useSharedBadges';
+import { Button } from '@/components/ui/button';
 
 const GROUP_COLORS = ['--primary', '--oxblood', '--accent', '--candle', '--gold-bright', '--starlight', '--gold', '--glow-violet'];
 
@@ -35,8 +36,13 @@ const groups: NavGroup[] = [
     { to: '/timeline', label: 'Timeline · 1990–2060' }, { to: '/transits', label: 'Transits · 2026–2040' },
     { to: '/profection', label: 'Profection · Age 35' }, { to: '/retrogrades', label: 'Retrogrades' }, { to: '/guides/timeline-retrogrades', label: 'Guide · Timeline & Retrogrades' }] },
   { title: 'Other Systems', items: [
+    { to: '/other-systems', label: 'Other Systems · Dashboard' },
     { to: '/numerology', label: 'Numerology · Pinnacles' }, { to: '/purpose', label: 'Purpose & Numerology' },
-    { to: '/chinese', label: 'Chinese · Ba Zi' }, { to: '/volume-2', label: 'Volume II · Supplement' }], submenus: [{ label: 'Feng Shui', items: [
+    { to: '/chinese', label: 'Chinese · Ba Zi' },
+    { to: '/other-systems/vedic', label: 'Vedic · Jyotish' }, { to: '/other-systems/mayan-tzolkin', label: 'Maya · Tzolk’in' },
+    { to: '/other-systems/tibetan-mewa', label: 'Tibetan Mewa & Parkha' }, { to: '/other-systems/nine-star-ki', label: 'Japanese Nine Star Ki' },
+    { to: '/other-systems/chaldean-numerology', label: 'Chaldean Numerology' }, { to: '/other-systems/tarot-birth-cards', label: 'Tarot Birth Cards' },
+    { to: '/other-systems/celtic-tree-calendar', label: 'Celtic Tree Calendar' }, { to: '/volume-2', label: 'Volume II · Supplement' }], submenus: [{ label: 'Feng Shui', items: [
       { to: '/feng-shui', label: 'Feng Shui Overview' }, { to: '/guides/birth-chart-feng-shui', label: 'Guide · Birth Chart & Feng Shui' }, { to: '/guides/feng-shui-pages', label: 'Guide · Page by Page & Flying Stars' }, { to: '/feng-shui/bagua', label: 'Bagua & Home' }, { to: '/feng-shui/flying-stars', label: 'Flying Stars' }, { to: '/bagua-reading', label: 'The Bagua Reading' }, { to: '/masterbook/bagua-wheel', label: 'Masterbook · Bagua Wheel' }
     ] }] },
   { title: 'Library', items: [
@@ -47,11 +53,23 @@ const groups: NavGroup[] = [
 export function AppShell() {
   const location = useLocation();
   const [open, setOpen] = useState(false);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const mobileMenuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => { setOpen(false); window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior }); }, [location.pathname]);
   useEffect(() => {
     if (!open) return;
-    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setOpen(false); };
+    const panel = mobileMenuRef.current;
+    panel?.querySelector<HTMLElement>('a, button')?.focus();
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') { setOpen(false); menuButtonRef.current?.focus(); return; }
+      if (e.key !== 'Tab' || !panel) return;
+      const focusable = Array.from(panel.querySelectorAll<HTMLElement>('a[href], button:not([disabled]), summary, [tabindex]:not([tabindex="-1"])'));
+      if (!focusable.length) return;
+      const first = focusable[0]; const last = focusable[focusable.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
   }, [open]);
@@ -72,12 +90,12 @@ export function AppShell() {
       {/* Mobile top bar */}
       <div className="lg:hidden fixed top-0 inset-x-0 z-40 flex items-center justify-between px-4 py-3 border-b border-border bg-background/90 backdrop-blur">
         <div className="font-display text-lg">April · Astrological Compendium</div>
-        <div className="flex items-center gap-2"><AccountButton compact /><button onClick={() => setOpen(v => !v)} aria-label={open ? 'Close menu' : 'Open menu'} aria-expanded={open} aria-controls="mobile-menu" className="p-2 rounded hover:bg-muted min-h-11 min-w-11 flex items-center justify-center">
+        <div className="flex items-center gap-2"><AccountButton compact /><Button ref={menuButtonRef} type="button" size="icon" variant="ghost" onClick={() => setOpen(v => !v)} aria-label={open ? 'Close menu' : 'Open menu'} aria-expanded={open} aria-controls="mobile-menu" className="min-h-11 min-w-11">
           {open ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-        </button></div>
+        </Button></div>
       </div>
       {open && (
-        <div id="mobile-menu" className="lg:hidden fixed inset-0 top-[57px] z-30 bg-background overflow-y-auto">
+        <div ref={mobileMenuRef} id="mobile-menu" role="dialog" aria-modal="true" aria-label="Site menu" className="lg:hidden fixed inset-0 top-[57px] z-30 bg-background overflow-y-auto">
           <SidebarInner />
         </div>
       )}
@@ -155,7 +173,7 @@ function SidebarInner() {
                 className={({ isActive }) =>
                   `flex items-center justify-between gap-2 px-3 py-1.5 rounded border border-transparent transition-colors ${
                     isActive ? 'bg-accent/15 border-accent/30 text-foreground' : 'text-muted-foreground hover:text-foreground hover:bg-muted/60'
-                  }${n.created ? ' bg-created/20 text-foreground' : ''}${glowId && n.to === `/p/${glowId}` ? ' nav-new-glow' : ''}`
+                  }${n.created ? ' bg-created/20 text-foreground' : ''}${n.to === '/create' ? ' nav-create-glow' : ''}${glowId && n.to === `/p/${glowId}` ? ' nav-new-glow' : ''}`
                 }
               ><span>{n.label}{n.created ? <span className="sr-only"> (created page)</span> : null}{glowId && n.to === `/p/${glowId}` ? <span className="sr-only"> — just added</span> : null}</span>{n.badge ? <span className="min-w-5 rounded-full bg-primary px-1.5 text-center text-[10px] text-primary-foreground" aria-label={`${n.badge} new`}>{n.badge}</span> : null}</NavLink>
             ))}

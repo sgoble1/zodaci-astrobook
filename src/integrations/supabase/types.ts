@@ -172,6 +172,7 @@ export type Database = {
       library_items: {
         Row: {
           category: string | null
+          cover_path: string | null
           created_at: string
           description: string | null
           file_name: string
@@ -181,11 +182,13 @@ export type Database = {
           mime_type: string | null
           owner_id: string
           sections: Json | null
+          shared_with_space: boolean
           size_bytes: number | null
           title: string
         }
         Insert: {
           category?: string | null
+          cover_path?: string | null
           created_at?: string
           description?: string | null
           file_name: string
@@ -195,11 +198,13 @@ export type Database = {
           mime_type?: string | null
           owner_id?: string
           sections?: Json | null
+          shared_with_space?: boolean
           size_bytes?: number | null
           title: string
         }
         Update: {
           category?: string | null
+          cover_path?: string | null
           created_at?: string
           description?: string | null
           file_name?: string
@@ -209,6 +214,7 @@ export type Database = {
           mime_type?: string | null
           owner_id?: string
           sections?: Json | null
+          shared_with_space?: boolean
           size_bytes?: number | null
           title?: string
         }

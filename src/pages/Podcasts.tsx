@@ -64,14 +64,14 @@ export default function Podcasts() {
       )}
 
       <section className="space-y-3">
-        <Input placeholder="Search episodes…" value={q} onChange={e => setQ(e.target.value)} className="max-w-sm" />
+        <Input aria-label="Search podcast episodes" placeholder="Search episodes…" value={q} onChange={e => setQ(e.target.value)} className="max-w-sm" />
         {lib.loading ? <p className="text-sm text-muted-foreground">Loading…</p> :
           shown.length === 0 ? <p className="text-sm text-muted-foreground italic">No episodes yet{session ? ' — upload the first one below.' : '.'}</p> :
           <ul className="grid gap-3">
             {shown.map(ep => (
               <li key={ep.id} className={`parchment p-4 flex gap-4 items-start ${current?.id === ep.id ? 'ring-1 ring-accent' : ''}`}>
-                <button onClick={() => play(ep)} aria-label={`Play ${ep.title}`} className="shrink-0 w-12 h-12 rounded-full border border-accent/50 grid place-items-center hover:bg-accent/15">
-                  <Headphones className="w-5 h-5" />
+                <button onClick={() => play(ep)} aria-label={`Play ${ep.title}`} className="relative shrink-0 w-20 h-20 overflow-hidden rounded border border-accent/50 grid place-items-center hover:bg-accent/15">
+                  {ep.cover_url ? <img src={ep.cover_url} alt="" className="absolute inset-0 h-full w-full object-cover"/> : <Headphones className="w-6 h-6" />}
                 </button>
                 <div className="flex-1 min-w-0">
                   <button onClick={() => play(ep)} className="font-display text-lg text-left hover:underline">{ep.title}</button>
@@ -97,7 +97,7 @@ export default function Podcasts() {
 
       <section>
         <AuthGate what="create podcast episodes">{() => <div className="mb-6"><PodcastMaker onCreated={lib.reload} /></div>}</AuthGate>
-        <h2 className="text-2xl mb-3">Upload an episode</h2>
+        <h2 className="text-2xl mb-3">Upload a shared episode</h2>
         <AuthGate what="upload podcast episodes">{(uid) => <UploadForm accept="audio/*" onUpload={(f, m) => lib.upload(f, m, uid)} />}</AuthGate>
       </section>
     </div>
@@ -118,10 +118,10 @@ export function UploadForm({ accept, onUpload, categoryLabel = 'Series / topic' 
   };
   return (
     <form onSubmit={submit} className="parchment deckle p-5 grid gap-3 max-w-xl">
-      <input ref={fileRef} type="file" accept={accept} required className="text-sm" />
-      <Input placeholder="Title" value={title} onChange={e => setTitle(e.target.value)} />
-      <Input placeholder={categoryLabel} value={category} onChange={e => setCategory(e.target.value)} />
-      <Textarea placeholder="Description (optional)" value={description} onChange={e => setDescription(e.target.value)} />
+      <input ref={fileRef} aria-label="Audio file" type="file" accept={accept} required className="text-sm" />
+      <Input aria-label="Episode title" placeholder="Title" value={title} onChange={e => setTitle(e.target.value)} />
+      <Input aria-label={categoryLabel} placeholder={categoryLabel} value={category} onChange={e => setCategory(e.target.value)} />
+      <Textarea aria-label="Episode description" placeholder="Description (optional)" value={description} onChange={e => setDescription(e.target.value)} />
       <Button type="submit" disabled={busy} className="justify-self-start"><Upload className="w-4 h-4 mr-2" />{busy ? 'Uploading…' : 'Upload'}</Button>
     </form>
   );

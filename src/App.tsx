@@ -59,6 +59,7 @@ import Relationships from './pages/Relationships';
 import RelationshipDetail from './pages/RelationshipDetail';
 import Reading from './pages/Reading';
 import SharedSpace from './pages/SharedSpace';
+import { OtherSystemsDashboard, OtherSystemDetail } from './pages/OtherSystems';
 import { WorkbookHome, WorkbookModulePage, WorkbookCheckIn, WorkbookReframe, WorkbookJournal } from './pages/Workbook';
 import Companion from './pages/Companion';
 
@@ -168,6 +169,8 @@ export default function App() {
             <Route path="/numerology" element={<Numerology />} />
             <Route path="/transits" element={<Transits />} />
             <Route path="/chinese" element={<Chinese />} />
+            <Route path="/other-systems" element={<OtherSystemsDashboard />} />
+            <Route path="/other-systems/:slug" element={<OtherSystemDetail />} />
             <Route path="/volume-2" element={<Volume2 />} />
             <Route path="/data-quality" element={<DataQuality />} />
             <Route path="/masterbook" element={<Masterbook />} />

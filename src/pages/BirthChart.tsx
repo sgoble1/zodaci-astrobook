@@ -1,9 +1,13 @@
 import { Link } from 'react-router-dom';
-import { BIRTH, PLACEMENTS, ANGLES, HOUSES, ASPECTS, ZODIAC } from '@/content/april';
-import { NatalWheel } from '@/components/chart/NatalWheel';
-import wheelImg from '@/assets/chart-wheel-hero.jpg';
+import { Printer } from 'lucide-react';
+import { BIRTH, PLACEMENTS, ANGLES, ASPECTS, ZODIAC } from '@/content/april';
+import { APRIL } from '@/pages/ChartCalculator';
+import { computeChart, fmtLon } from '@/lib/astro';
+import { ChartWheel } from '@/components/chart/ChartWheel';
+import { Button } from '@/components/ui/button';
 
 export default function BirthChart() {
+  const chart = computeChart(APRIL);
   const elements = ZODIAC.reduce((acc, z) => {
     acc[z.element] = (acc[z.element] || 0) + PLACEMENTS.filter(p => p.sign === z.name && !['vertex','lilith','fortune','northNode','southNode'].includes(p.key)).length;
     return acc;
@@ -14,7 +18,7 @@ export default function BirthChart() {
   }, {} as Record<string, number>);
 
   return (
-    <article className="space-y-14">
+    <article className="space-y-14 print-chart">
       <header>
         <div className="font-smallcaps text-[11px] text-gold">Section 1 · Natal Chart Snapshot</div>
         <h1 className="font-display mt-2">The Birth Chart, in full.</h1>
@@ -25,13 +29,12 @@ export default function BirthChart() {
         <div className="flex flex-wrap gap-3 mt-5">
           <Link to="/reading" className="px-4 py-2 rounded bg-primary text-primary-foreground text-sm">Read the complete reading →</Link>
           <Link to="/chart-calculator" className="px-4 py-2 rounded border border-border text-sm hover:border-gold">Spin the natal wheel</Link>
+          <Button type="button" variant="outline" onClick={() => window.print()}><Printer className="h-4 w-4" aria-hidden="true"/>Print chart</Button>
         </div>
       </header>
 
-      <section className="grid lg:grid-cols-[1fr,1fr] gap-8 items-start">
-        <div className="deckle p-2 bg-vellum">
-          <img src={wheelImg} alt="An ornate illuminated zodiac wheel with planetary glyphs" width={1200} height={1200} className="w-full h-auto" loading="lazy" />
-        </div>
+      <section className="grid lg:grid-cols-[1fr,1fr] gap-8 items-start chart-report-lead">
+        <div className="deckle p-2 bg-vellum"><ChartWheel r={chart} /></div>
         <div>
           <h2 className="font-display mb-4">Chart at a glance</h2>
           <dl className="text-sm divide-y divide-border/70 border-y border-border/70">
@@ -58,10 +61,14 @@ export default function BirthChart() {
         </div>
       </section>
 
-      <section>
-        <h2 className="font-display mb-6">The interactive wheel</h2>
-        <div className="vellum deckle p-6"><NatalWheel /></div>
+      <section aria-labelledby="calculated-positions">
+        <h2 id="calculated-positions" className="font-display mb-5">Calculated positions & houses</h2>
+        <div className="overflow-x-auto border border-border"><table className="w-full min-w-[560px] text-sm"><thead className="bg-muted/50"><tr><th scope="col" className="p-3 text-left">Point</th><th scope="col" className="p-3 text-left">Position</th><th scope="col" className="p-3 text-left">House</th><th scope="col" className="p-3 text-left">Motion</th></tr></thead><tbody>{chart.bodies.map(body => <tr key={body.key} className="border-t border-border"><th scope="row" className="p-3 text-left font-medium">{body.glyph} {body.name}</th><td className="p-3">{body.sign} {body.deg}°{String(body.min).padStart(2, '0')}′</td><td className="p-3">{body.house ?? '—'}</td><td className="p-3">{body.retro ? 'Retrograde' : 'Direct'}</td></tr>)}</tbody></table></div>
       </section>
+
+      {chart.cusps && <section aria-labelledby="house-cusps"><h2 id="house-cusps" className="font-display mb-5">House cusps · Porphyry</h2><dl className="grid gap-px overflow-hidden border border-border bg-border sm:grid-cols-2 lg:grid-cols-3">{chart.cusps.map((cusp, index) => <div key={index} className="flex justify-between bg-background p-3"><dt>House {index + 1}</dt><dd className="font-mono text-sm">{fmtLon(cusp).text}</dd></div>)}</dl></section>}
+
+      <section aria-labelledby="calculated-aspects"><h2 id="calculated-aspects" className="font-display mb-5">Planetary aspects</h2><div className="overflow-x-auto border border-border"><table className="w-full min-w-[560px] text-sm"><thead className="bg-muted/50"><tr><th scope="col" className="p-3 text-left">Bodies</th><th scope="col" className="p-3 text-left">Aspect</th><th scope="col" className="p-3 text-left">Orb</th></tr></thead><tbody>{chart.aspects.map((aspect, index) => <tr key={`${aspect.a}-${aspect.b}-${index}`} className="border-t border-border"><td className="p-3">{aspect.a} — {aspect.b}</td><td className="p-3">{aspect.symbol} {aspect.type}</td><td className="p-3 font-mono">{aspect.orb.toFixed(2)}°</td></tr>)}</tbody></table></div></section>
 
       <section className="grid md:grid-cols-2 gap-6">
         <div className="p-6 border border-border rounded bg-card/60">
@@ -104,7 +111,8 @@ export default function BirthChart() {
         <h2 className="font-display mb-4">The Big Three — deep dive</h2>
         <div className="space-y-8">
           {['sun','moon'].map(k => {
-            const p = PLACEMENTS.find(pl => pl.key === k)!;
+            const p = PLACEMENTS.find(pl => pl.key === k);
+            if (!p) return null;
             return (
               <div key={k}>
                 <div className="font-smallcaps text-[10px] text-gold">{p.headline}</div>
