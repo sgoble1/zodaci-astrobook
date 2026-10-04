@@ -153,8 +153,11 @@ function SessionChat({ sessionId, initial }: { sessionId: string; initial: UIMes
       <Conversation className="min-h-0 flex-1" aria-label="Session transcript" role="log" aria-live="polite">
         <ConversationContent className="gap-5">
           {messages.length === 0 && (
-            <ConversationEmptyState icon={<img src={oracle} alt="" width={56} height={56} className="h-14 w-14" />} title="What is stirring in you?" description="Say it as it comes. Your chart is already in the room.">
-              <div className="mt-4 flex flex-wrap justify-center gap-2">{STARTERS.map(s => <button key={s} type="button" onClick={() => send(s)} className="min-h-10 rounded-full border border-border px-3 py-1 text-xs hover:bg-muted">{s}</button>)}</div>
+            <ConversationEmptyState>
+              <img src={oracle} alt="" width={56} height={56} className="h-14 w-14" />
+              <h2 className="text-xl">What is stirring in you?</h2>
+              <p className="text-sm text-muted-foreground">Say it as it comes. Your chart is already in the room.</p>
+              <div className="mt-2 flex flex-wrap justify-center gap-2">{STARTERS.map(s => <button key={s} type="button" onClick={() => send(s)} className="min-h-10 rounded-full border border-border px-3 py-1 text-xs hover:bg-muted">{s}</button>)}</div>
             </ConversationEmptyState>
           )}
           {messages.map(m => (
