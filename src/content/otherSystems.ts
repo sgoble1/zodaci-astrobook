@@ -76,7 +76,7 @@ export const OTHER_SYSTEMS: OtherSystem[] = [
     themes: ['direction', 'self-command', 'integration'],
     interpretation: [
       'The Chariot is not speed for its own sake; it is the ability to hold contrary forces in one chosen direction.',
-      'That mirrors April’s Full Moon polarity and her mix of Aries immediacy with Virgo and Capricorn control.',
+      'That mirrors April’s need to coordinate Aries immediacy with Virgo and Capricorn control, even though her calculated Sun–Moon angle is not a standard opposition.',
       'The useful question is not “Which side wins?” but “What purpose is strong enough to coordinate both sides?”'
     ], caution: 'Birth cards are a reflective tarot practice, not a prediction or fixed verdict.'
   },

@@ -35,7 +35,7 @@ export const BIRTH = {
   kuaElement: 'Water',
   chineseZodiac: 'Metal Horse',
   personalYear2026: 7,
-  chartShape: 'Bucket Chart · Moon in Aries H3 as Handle',
+  chartShape: 'Source-described Bucket Chart · Moon in Aries H3 as Handle',
   currentAge: 35,
 } as const;
 
@@ -77,10 +77,10 @@ export const PLACEMENTS: Placement[] = [
   {
     key: 'moon', name: 'Moon', glyph: '☽', sign: 'Aries', signGlyph: '♈',
     degree: 6, minute: 37, house: 3, motion: 'Direct', dignity: 'Peregrine',
-    notes: 'FULL MOON BIRTH · Bucket Chart Handle',
+    notes: 'Waning gibbous Moon · source-described Bucket Chart Handle',
     headline: 'Moon in Aries · Third House · 6°37′ · Bucket Handle',
     interpretation:
-      "This is the single most important placement in April's chart. In a Bucket chart, nine of ten planets cluster on one side of the zodiac and one planet stands alone as the Handle — the exhaust valve through which the entire chart's energy funnels. Her Handle is the Aries Moon in the third house of voice, siblings, close environment and daily communication. Every impulse, every ambition, every talent, every point of growth in the whole chart is delivered through this Moon's willingness to feel, react, and speak. When the Handle is open the engine runs; when it is blocked, everything pressurizes. She was told this Moon was 'too much' — too direct, too fast, too emotionally honest. What was once perceived as an intensity is in fact the release valve the entire chart depends upon. The Full Moon opposition to her Virgo Sun means she was born at the peak of maximum illumination: high-contrast, ripe, unhideable. Aries Moon needs the truth spoken quickly and cleanly; the third house wants that truth in words. The healing work of this lifetime is not to soften the Moon, but to give it a shape that honors it.",
+      "The source report describes this as the Handle of a Bucket chart: the Aries Moon in the third house of voice, siblings, close environment and daily communication becomes a prominent outlet for the chart. Aries Moon needs the truth spoken quickly and cleanly; the third house wants that truth in words. The recorded positions place the Moon 157.3° from the Sun, which is a waning gibbous phase, not a standard 180° natal opposition. The useful, grounded theme remains a dialogue between quick emotional honesty and Virgo's careful private processing, without overstating the geometry.",
   },
   {
     key: 'mercury', name: 'Mercury', glyph: '☿', sign: 'Virgo', signGlyph: '♍',
@@ -311,44 +311,74 @@ export interface Aspect {
 
 export const ASPECTS: Aspect[] = [
   {
-    a: 'sun', b: 'moon', type: 'Opposition', orb: '~7°',
+    a: 'mars', b: 'jupiter', type: 'Sextile', orb: '0°57′',
     interpretation:
-      'The Full Moon opposition is the central axis of her chart — Virgo Sun in the eighth against Aries Moon in the third. Analysis meets impulse, refinement meets fire, silence meets voice. High-contrast, ripe, unhideable. This is what a Full Moon birth is.',
+      'Mars in Gemini and Jupiter in Leo work together easily. In everyday terms, curiosity, words and creative action can open larger opportunities when April chooses to use them.',
   },
   {
-    a: 'sun', b: 'mercury', type: 'Conjunction', orb: '~3°',
+    a: 'moon', b: 'uranus', type: 'Square', orb: '0°60′',
     interpretation:
-      'Sun conjunct Mercury Rx in Virgo means the identity and the mind are fused. She thinks as she is; she is as she thinks. A retrograde Mercury on the Sun deepens introspection and produces a mind that reaches conclusions the outside world will only catch up to later.',
+      'The Moon and Uranus form a close square. Feelings can change suddenly when freedom feels threatened; the constructive outlet is making room for honest emotion and independent choices before pressure builds.',
   },
   {
-    a: 'moon', b: 'venus', type: 'Opposition', orb: '~7°',
+    a: 'mercury', b: 'pluto', type: 'Sextile', orb: '1°06′',
     interpretation:
-      'Aries Moon opposite Venus in Leo pulls the emotional life between raw immediacy and generous performance. The healing is a love that requires no theatre in order to be real.',
+      'Mercury and Pluto support deep investigation. April can notice what is hidden, stay with a difficult question and put complicated truths into precise words.',
   },
   {
-    a: 'saturn', b: 'pluto', type: 'Trine', orb: '~3°',
+    a: 'sun', b: 'pluto', type: 'Sextile', orb: '1°32′',
     interpretation:
-      "Saturn in Capricorn in the first trine Pluto in Scorpio in the tenth is one of the great earned-power aspects of the chart. Discipline and transformation flow in one direction: what she builds in the self becomes what she offers in the world. Slow, permanent, unassailable.",
+      'The Sun and Pluto support focused change. Identity grows stronger when April investigates honestly, releases what no longer works and uses what she learns constructively.',
   },
   {
-    a: 'jupiter', b: 'venus', type: 'Conjunction', orb: '~4° (mutual reception in Leo)',
+    a: 'sun', b: 'neptune', type: 'Trine', orb: '2°04′',
     interpretation:
-      "Chart-ruler Jupiter conjunct Venus in Leo, both in the eighth-to-seventh axis, is a signature of blessing through partnership — love that expands the life rather than shrinks it. The Jupiter Return in 2026 lights this aspect up.",
+      'The Sun and Neptune flow together. Sensitivity, imagination and a sense of meaning can support April’s identity, especially when inspiration is given a practical form.',
   },
   {
-    a: 'moon', b: 'pluto', type: 'Square', orb: '~9°',
+    a: 'mercury', b: 'saturn', type: 'Trine', orb: '2°20′',
     interpretation:
-      "Aries Moon square Pluto in Scorpio is the emotional intensity that has always known too much. It is also the aspect that lets her walk into rooms most people flee from. When the Moon (the handle) speaks, Pluto (the apex) is what people are actually hearing.",
+      'Mercury and Saturn work steadily together. Careful thinking, revision and patience can turn complex information into dependable knowledge.',
   },
   {
-    a: 'sun', b: 'saturn', type: 'Trine', orb: '~5°',
+    a: 'moon', b: 'jupiter', type: 'Trine', orb: '2°38′',
     interpretation:
-      "Virgo Sun trine Saturn in Capricorn — the earth trine of discipline meeting refinement. She was built to work, to build, to last.",
+      'The Moon and Jupiter support emotional generosity, courage and recovery. April may regain perspective by speaking honestly and reconnecting with possibility.',
   },
   {
-    a: 'mars', b: 'jupiter', type: 'Sextile', orb: '~1°',
+    a: 'sun', b: 'mercury', type: 'Conjunction', orb: '2°38′',
     interpretation:
-      'Mars in Gemini sextile Jupiter in Leo is the writer-performer aspect. When she uses her voice publicly, the doors that open are larger than the effort she spent.',
+      'Sun conjunct Mercury retrograde in Virgo closely joins identity and thought. April may understand herself through analysis, writing, revisiting and refining what she means.',
+  },
+  {
+    a: 'saturn', b: 'pluto', type: 'Sextile', orb: '3°27′',
+    interpretation:
+      'Saturn and Pluto form a supportive sextile, not a trine. Patience and disciplined effort can help April make deep changes durable rather than temporary.',
+  },
+  {
+    a: 'moon', b: 'mars', type: 'Sextile', orb: '3°35′',
+    interpretation:
+      'The Moon and Mars support direct emotional action. Naming a feeling and choosing a concrete response can release energy more effectively than holding it in.',
+  },
+  {
+    a: 'neptune', b: 'pluto', type: 'Sextile', orb: '3°36′',
+    interpretation:
+      'Neptune and Pluto form a generational sextile. For April, imagination and deep change can cooperate when ideals are tied to real transformation.',
+  },
+  {
+    a: 'venus', b: 'mars', type: 'Square', orb: '3°42′',
+    interpretation:
+      'Venus and Mars create productive friction between attraction and action. April may need to balance warmth and loyalty with variety, direct speech and room to move.',
+  },
+  {
+    a: 'mercury', b: 'neptune', type: 'Trine', orb: '4°43′',
+    interpretation:
+      'Mercury and Neptune connect analysis with imagination. April can translate subtle impressions into useful language when she also checks the details.',
+  },
+  {
+    a: 'sun', b: 'saturn', type: 'Trine', orb: '4°58′',
+    interpretation:
+      'Virgo Sun trine Saturn in Capricorn supports responsibility, endurance and craft. April can build steadily and improve a system without needing immediate recognition.',
   },
 ];
 

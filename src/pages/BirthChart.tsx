@@ -26,7 +26,7 @@ export default function BirthChart() {
         <h1 className="font-display mt-2">The Birth Chart, in full.</h1>
         <div className="gold-rule my-5 max-w-xs" />
         <p className="max-w-2xl text-lg text-foreground/85 leading-relaxed">
-          Sun in Virgo, Moon in Aries, Sagittarius Rising at the anaretic 29°28′. Full Moon birth. Bucket chart with the Aries Moon as the Handle. A triple Capricorn stellium in the first house. Pluto in domicile at the crown of the chart. Every configuration is documented here.
+          Sun in Virgo, Moon in Aries, Sagittarius Rising at the anaretic 29°28′. Waning gibbous Moon, 157.3° from the Sun. The source describes a Bucket chart with the Aries Moon as the Handle. A triple Capricorn stellium in the first house. Pluto in domicile at the crown of the chart. Source claims and independent calculations are labeled separately here.
         </p>
         <div className="flex flex-wrap gap-3 mt-5">
           <Button asChild variant="outline"><Link to="/chart-guide">Read the plain-language chart guide</Link></Button>
@@ -47,7 +47,7 @@ export default function BirthChart() {
               ['Born', `${BIRTH.date} · ${BIRTH.time}`],
               ['Place', `${BIRTH.place} · ${BIRTH.coords}`],
               ['Sun', 'Virgo ♍ 13°56′ · House 8 · Peregrine'],
-              ['Moon', 'Aries ♈ 6°37′ · House 3 · Bucket Handle · FULL MOON BIRTH'],
+              ['Moon', 'Aries ♈ 6°37′ · House 3 · waning gibbous · source-described Bucket Handle'],
               ['Ascendant', `Sagittarius ♐ ${ANGLES.ascendant.degree}°${ANGLES.ascendant.minute}′ · Anaretic`],
               ['Midheaven', `${ANGLES.midheaven.sign} ${ANGLES.midheaven.signGlyph} ${ANGLES.midheaven.degree}°${String(ANGLES.midheaven.minute).padStart(2, '0')}′ · source-reported · conjunct Spica`],
               ['Chart shape', BIRTH.chartShape],
