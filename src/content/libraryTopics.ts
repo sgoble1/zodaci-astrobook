@@ -34,6 +34,7 @@ export const LIBRARY_TOPICS: Topic[] = [
       { text: 'Mars: Gemini 3°02′ in the 5th house in April’s source chart.', cite: 'Birth Chart Book · Chapter 6 · Mars', to: '/masterbook/bcb-08' },
       { text: 'Jupiter: Leo 3°59′ in the 7th house in the source chart. Jupiter rules April’s Sagittarius Ascendant.', cite: 'Birth Chart Book · Chapter 7 · Jupiter', to: '/masterbook/bcb-09' },
       { text: 'Mars sextile Jupiter: 0°57′ from an exact 60° angle, calculated from Gemini 3°02′ and Leo 3°59′.', cite: 'April’s recorded degrees · aspect check', to: '/aspects' },
+      { text: 'Source correction: the Mars chapter calls Mars–Saturn a trine, but Gemini 3°02′ and Capricorn 18°55′ are 134°07′ apart, not a standard 120° trine. That claim is not used in this reading; the original chapter is preserved below.', cite: 'Original Mars chapter · checked against recorded degrees', to: '/masterbook/bcb-08' },
     ],
     guide: [
       { title: 'Make room for ideas before judging them', text: 'The Mars chapter links Gemini and the 5th house with language, ideas, and creative expression. A plain-language interpretation is that experimenting with words or several approaches may be more inviting than waiting for one perfect idea. This does not establish that April is a writer or must choose any particular creative activity.', cite: 'Interpretation based on the Mars chapter', to: '/masterbook/bcb-08' },
