@@ -1,9 +1,9 @@
 # Roadmap
 
 ## Latest updates and Library topics
-- [ ] Refresh Recent updates with the latest completed changes.
-- [ ] Add two April-specific Library topics with verified chapter links and clear interpretation labels.
-- [ ] Verify the pages, menu links, and update feed.
+- [x] Refresh Recent updates with the latest completed changes.
+- [x] Add two April-specific Library topics with verified chapter links and clear interpretation labels.
+- [x] Verify the pages, menu links, and update feed.
 
 - [x] Map all Volume II content to its relevant pages with full text and citations.
 - [x] Protect the Sources Reading Room and connect entries to real Masterbook chapters.
