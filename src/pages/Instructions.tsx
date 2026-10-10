@@ -15,7 +15,7 @@ const GROUP_HELP: Record<string, string> = {
   'The Natal Chart': 'April’s sourced birth chart, calculated sky positions, visual wheels, and detailed explanations of planets, houses, aspects, and stars.',
   'Timing & Cycles': 'Date-based chapters explaining longer life phases and shorter astrological cycles. Timing depends on the recorded birth time.',
   'Other Systems': 'Independent cultural and symbolic systems shown separately, with a dashboard for comparing repeated themes without pretending the systems are identical.',
-  Library: 'Listen to generated or uploaded audio and inspect which chart inputs are confirmed, calculated, approximate, or unresolved.',
+  Library: 'Listen to generated or uploaded audio, read focused source-linked topics on thinking and creativity, and inspect which chart inputs are confirmed, calculated, approximate, or unresolved.',
 };
 
 function helpFor(item: NavItem) {
@@ -82,6 +82,8 @@ function helpFor(item: NavItem) {
     '/masterbook/bagua-wheel': 'Open the protected Masterbook’s Bagua wheel page.',
     '/podcasts': 'Create, upload, browse, sort, queue, play, download, share, or privatize podcast episodes. Generated episodes cite the protected passages used.',
     '/data-quality': 'See the source, confidence, alternatives, and downstream effects for important chart inputs.',
+    '/topics/thinking-decisions': 'April’s Mercury, Moon, and Mercury–Saturn aspect: recorded placements, clearly labeled everyday interpretations, reflection questions, and original chapter links.',
+    '/topics/creativity-play': 'April’s Mars in Gemini in the 5th house and Mars–Jupiter sextile: creative possibilities, reflection questions, and original source chapters.',
   };
   if (exact[item.to]) return exact[item.to];
   if (item.to.startsWith('/workbook/module/')) return 'A guided workbook lesson with questions, reflection prompts, and private feedback written in everyday language.';

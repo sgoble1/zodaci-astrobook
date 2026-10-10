@@ -12,6 +12,9 @@ export type Topic = {
   questions: string[];
   /** Key facts quoted or summarised from the sources, each with where it comes from. */
   facts?: { text: string; cite: string; to: string }[];
+  /** Editorial interpretations stay separate from recorded chart facts and protected source text. */
+  guide?: { title: string; text: string; to: string; cite: string }[];
+  reflection?: string[];
 };
 
 export const TOPICS: Topic[] = [
