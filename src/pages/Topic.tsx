@@ -2,6 +2,7 @@ import { SourceChapters } from '@/components/common/SourceChapters';
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { TOPICS } from '@/content/topics';
+import { LIBRARY_TOPICS } from '@/content/libraryTopics';
 import ReactMarkdown from 'react-markdown';
 import { loadCorpus, rank, aprilOnly, SHANE_RE, type Passage } from '@/lib/corpus';
 import { loadProtectedJson } from '@/lib/protectedContent';
@@ -29,7 +30,8 @@ export function TopicsIndex() {
 
 export default function Topic() {
   const { slug } = useParams();
-  const topic = TOPICS.find(t => t.slug === slug);
+  const topic = [...TOPICS, ...LIBRARY_TOPICS].find(t => t.slug === slug);
+  const isLibraryTopic = LIBRARY_TOPICS.some(t => t.slug === slug);
   const [index, setIndex] = useState<Entry[]>([]);
   const [passages, setPassages] = useState<Passage[] | null>(null);
   const [n, setN] = useState(12);
@@ -62,10 +64,25 @@ export default function Topic() {
   return (
     <div className="max-w-4xl mx-auto px-6 py-12 space-y-10">
       <header>
-        <Link to="/topics" className="text-xs uppercase tracking-[0.3em] text-muted-foreground hover:text-primary">← Themes & Topics</Link>
+        <Link to={isLibraryTopic ? '/instructions#library' : '/topics'} className="text-xs uppercase tracking-[0.3em] text-muted-foreground hover:text-primary">{isLibraryTopic ? '← Library' : '← Themes & Topics'}</Link>
         <h1 className="font-display text-4xl mt-2 mb-3">{topic.label}</h1>
         <p className="text-muted-foreground">{topic.intro}</p>
       </header>
+
+      {topic.guide && <section aria-labelledby="topic-reading" className="space-y-5">
+        <h2 id="topic-reading" className="font-display text-2xl">What this could mean for April</h2>
+        <p className="text-sm text-muted-foreground">Based on September 6, 1990 · 3:38 PM EDT · Geneva, New York. House placements use the site’s source-aligned Porphyry chart. The readings below are editorial interpretations of April’s chart, not source quotations, proven personality traits, or predictions.</p>
+        {topic.guide.map(section => <div key={section.title} className="border-l-2 border-primary pl-4 space-y-2">
+          <h3 className="font-display text-xl">{section.title}</h3>
+          <p className="text-sm leading-relaxed">{section.text}</p>
+          <Link to={section.to} className="text-xs underline text-muted-foreground hover:text-primary">{section.cite} →</Link>
+        </div>)}
+      </section>}
+
+      {topic.reflection && <section aria-labelledby="topic-reflections" className="space-y-3">
+        <h2 id="topic-reflections" className="font-display text-2xl">Questions to reflect on</h2>
+        <ul className="list-disc pl-5 space-y-2 text-sm">{topic.reflection.map(question => <li key={question}>{question}</li>)}</ul>
+      </section>}
 
       {topic.facts && (
         <section>
