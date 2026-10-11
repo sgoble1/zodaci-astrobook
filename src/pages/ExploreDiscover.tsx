@@ -30,7 +30,7 @@ type DiscoveryItem = {
 
 const categories = [
   { id: 'all', label: 'Everything', icon: Compass },
-  { id: 'chart', label: 'Understand April', icon: Sparkles },
+  { id: 'chart', label: 'Understand the chart', icon: Sparkles },
   { id: 'timing', label: 'What is happening now', icon: Compass },
   { id: 'growth', label: 'Feelings & growth', icon: Heart },
   { id: 'relationships', label: 'Relationships', icon: Users },
