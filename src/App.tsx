@@ -66,6 +66,8 @@ import { WorkbookHome, WorkbookModulePage, WorkbookCheckIn, WorkbookReframe, Wor
 import Companion from './pages/Companion';
 import ExploreDiscover from './pages/ExploreDiscover';
 import SocialIntegration from './pages/SocialIntegration';
+import Onboarding from './pages/Onboarding';
+import MyChart from './pages/MyChart';
 import { CounselorsIndex, CounselorProfile, CounselorSession } from './pages/Counselors';
 import ChartGuide from './pages/ChartGuide';
 import Instructions from './pages/Instructions';
@@ -162,6 +164,8 @@ export default function App() {
           <Route element={<AppShell />}>
             <Route path="/" element={<Home />} />
             <Route path="/explore" element={<ExploreDiscover />} />
+            <Route path="/start" element={<Onboarding />} />
+            <Route path="/my-chart" element={<MyChart />} />
             <Route path="/instructions" element={<Instructions />} />
             <Route path="/birth-chart" element={<BirthChart />} />
             <Route path="/chart-guide" element={<ChartGuide />} />
