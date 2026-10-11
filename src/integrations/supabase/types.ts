@@ -53,6 +53,24 @@ export type Database = {
         }
         Relationships: []
       }
+      ai_access_pauses: {
+        Row: {
+          created_at: string
+          message: string
+          scope: string
+        }
+        Insert: {
+          created_at?: string
+          message: string
+          scope: string
+        }
+        Update: {
+          created_at?: string
+          message?: string
+          scope?: string
+        }
+        Relationships: []
+      }
       ai_usage: {
         Row: {
           created_at: string
@@ -117,6 +135,96 @@ export type Database = {
           status?: string
           stripe_customer_id?: string
           stripe_subscription_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      blog_posts: {
+        Row: {
+          author_id: string
+          author_name: string
+          body: string
+          created_at: string
+          id: string
+          published: boolean
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          author_id: string
+          author_name: string
+          body: string
+          created_at?: string
+          id?: string
+          published?: boolean
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          author_id?: string
+          author_name?: string
+          body?: string
+          created_at?: string
+          id?: string
+          published?: boolean
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      book_orders: {
+        Row: {
+          admin_note: string
+          base_price_cents: number
+          carrier: string
+          cover_path: string | null
+          cover_style: string
+          created_at: string
+          edition: string
+          extra_sections: Json
+          extras_cents: number | null
+          id: string
+          shipping_address: Json
+          shipping_cents: number | null
+          status: string
+          tracking_number: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          admin_note?: string
+          base_price_cents?: number
+          carrier?: string
+          cover_path?: string | null
+          cover_style?: string
+          created_at?: string
+          edition?: string
+          extra_sections?: Json
+          extras_cents?: number | null
+          id?: string
+          shipping_address?: Json
+          shipping_cents?: number | null
+          status?: string
+          tracking_number?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          admin_note?: string
+          base_price_cents?: number
+          carrier?: string
+          cover_path?: string | null
+          cover_style?: string
+          created_at?: string
+          edition?: string
+          extra_sections?: Json
+          extras_cents?: number | null
+          id?: string
+          shipping_address?: Json
+          shipping_cents?: number | null
+          status?: string
+          tracking_number?: string
           updated_at?: string
           user_id?: string
         }
@@ -1461,6 +1569,7 @@ export type Database = {
           title: string
         }[]
       }
+      request_book_quote: { Args: { _order_id: string }; Returns: undefined }
       shared_member_directory: {
         Args: never
         Returns: {
