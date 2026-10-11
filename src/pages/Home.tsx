@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Navigate, Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { BoxArt } from '@/components/common/BoxArt';
 import { useMyBirth } from '@/lib/myBirth';
@@ -35,6 +35,7 @@ export default function Home() {
   const april = useAprilSpace();
   const myBirth = useMyBirth();
   if (april) return <AprilHome />;
+  if (april === false && myBirth === null) return <Navigate to="/start" replace />;
   return (
     <div className="space-y-16">
       {/* Hero */}
