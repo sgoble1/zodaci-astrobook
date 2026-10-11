@@ -47,12 +47,12 @@ export function useLibrary(kind: 'podcast' | 'source' | 'masterbook') {
   }, [kind]);
   useEffect(() => { reload(); }, [reload]);
 
-  const upload = async (file: File, meta: { title: string; description?: string; category?: string; shared_with_space?: boolean; sections?: { title: string; text: string }[] }, userId: string) => {
+  const upload = async (file: File, meta: { title: string; description?: string; category?: string; shared_with_space?: boolean; workspace_id?: string | null; sections?: { title: string; text: string }[] }, userId: string) => {
     const path = `${userId}/${kind}/${Date.now()}-${file.name.replace(/[^\w.-]+/g, '_')}`;
     const up = await supabase.storage.from('library').upload(path, file, { contentType: file.type });
     if (up.error) throw up.error;
     const ins = await supabase.from('library_items').insert({
-      kind, title: meta.title || file.name, description: meta.description || null, category: meta.category || null,
+      kind, owner_id: userId, workspace_id: meta.workspace_id ?? null, title: meta.title || file.name, description: meta.description || null, category: meta.category || null,
       file_path: path, file_name: file.name, mime_type: file.type, size_bytes: file.size, sections: meta.sections ?? null, shared_with_space: meta.shared_with_space ?? false,
     });
     if (ins.error) throw ins.error;
