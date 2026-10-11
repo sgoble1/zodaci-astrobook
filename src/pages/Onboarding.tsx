@@ -34,7 +34,7 @@ export default function Onboarding() {
     try {
       const birth = { ...b, time: unknownTime ? null : b.time };
       const chart = computeChart(toChartInput(birth));
-      const res = await saveMyBirth(birth, { bodies: chart.bodies, asc: unknownTime ? null : chart.asc, mc: unknownTime ? null : chart.mc });
+      const res = await saveMyBirth(birth, { bodies: chart.bodies, asc: unknownTime ? null : chart.asc, mc: unknownTime ? null : chart.mc, aspects: chart.aspects, cusps: chart.cusps, bazi: chart.bazi, elements: chart.elements, flags: chart.flags });
       if (res.error) { setErr('Your chart is saved on this device, but your account could not save it. Please try again.'); return; }
       nav(res.saved === 'device' ? '/my-chart?device=1' : '/my-chart');
     } catch { setErr('Your birth details could not be calculated. Check the date, time and selected place.'); }
@@ -45,7 +45,7 @@ export default function Onboarding() {
     <article className="mx-auto max-w-lg space-y-6 py-6">
       <header>
         <p className="font-smallcaps text-xs text-gold">Step {step + 1} of 4 · {STEPS[step]}</p>
-        <h1 className="font-display text-3xl">Let's build your Zodaci</h1>
+        <h1 className="font-display text-3xl">Let's create your chart</h1>
         <div className="mt-3 h-1.5 rounded bg-muted" aria-hidden><div className="h-full rounded bg-primary transition-all" style={{ width: `${((step + 1) / 4) * 100}%` }} /></div>
       </header>
       <form className="space-y-4" onSubmit={e => { e.preventDefault(); if (!ok) return; step < 3 ? setStep(step + 1) : finish(); }}>

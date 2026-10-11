@@ -23,6 +23,9 @@ function chartFacts(p: any): string {
   const lines = (c.bodies ?? []).map((b: any) => `${b.name}: ${b.sign} ${b.deg}°${String(b.min).padStart(2, '0')}′${p.birth_time && b.house ? `, house ${b.house}` : ''}${b.retro ? ', retrograde' : ''}`);
   if (p.birth_time && typeof c.asc === 'number') lines.push(`Ascendant: ${fmt(c.asc)}`);
   if (p.birth_time && typeof c.mc === 'number') lines.push(`Midheaven: ${fmt(c.mc)}`);
+  for (const a of c.aspects ?? []) lines.push(`Calculated aspect: ${a.a} ${a.type} ${a.b}; orb ${a.orb} degrees; ${a.applying ? 'applying' : 'separating'}`);
+  if (p.birth_time && Array.isArray(c.cusps)) c.cusps.forEach((lon: number, i: number) => lines.push(`House ${i + 1} cusp: ${fmt(lon)}`));
+  for (const flag of c.flags ?? []) lines.push(`Calculation limitation: ${flag.topic}: ${flag.note}`);
   return `Birth: ${p.birth_date}${p.birth_time ? ` at ${p.birth_time}` : ' (time unknown — houses and angles are unreliable, do not use them)'}, ${p.place_label}. House system: ${p.house_system}.\n${lines.join('\n')}`;
 }
 

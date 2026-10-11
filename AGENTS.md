@@ -27,14 +27,16 @@
 - Social Integration uses separate owner-only conversation tables and its own counselor function so its history never enters the shared chat or therapy history.
 - April-focused tools must never infer named relatives, ancestry, lineage or childhood events from chart symbolism; Family & Home stays limited to verified placements and home-setting guidance.
 - Private counselor chats replay the complete saved session and use one shared verified April profile; they may retain in-session corrections but must not claim hidden cross-session learning.
-- AstroBook branding uses one shared logo component across desktop and mobile so the identity remains consistent at every viewport.
+- Application branding uses one shared logo; printed products retain their own names.
 - Generated podcast duration is a bounded request preset interpreted by make-podcast, so script length and source depth stay synchronized.
 - Relationship needs and coincidences are derived at render time only from saved birth facts and shared chart utilities, preventing invented biography.
 - Wide data tables keep a stable readable width and scroll horizontally on phones instead of compressing headings into vertical text.
 - Usage analytics: ActivityTracker logs page time, click labels and media events to activity_events (insert-own, admin-read); never record typed text or private chat content.
 
 - Public members' birth data lives in profiles (device copy as fallback) via src/lib/myBirth.ts; personal chart pages compute live from it so readings always match the saved birth facts.
-- Box grids use BoxArt(seed,label) for deterministic unique art per box, so new boxes never repeat images.
+- Box grids use BoxArt(seed,label) for unique art.
+- Personal context is owner-only and opt-in; user reports never override chart facts.
+- Public podcast sharing requires workspace membership and authorized audio URLs.
 
 - Starters use one sequential per-visit queue after paid entitlement and saved birth data; failures stop automatically.
 - book_orders uses owner reads, admin fulfillment and verified webhooks; clients cannot confirm payment.
