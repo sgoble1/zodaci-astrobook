@@ -2,12 +2,12 @@
 - Explore links to existing readings.
 - Source text stays in protected-content; approved-account authentication plus password tokens are required.
 - Podcasts and added source files use one library_items table + private "library" storage bucket with signed URLs; podcast owners choose private or approved shared-space visibility and may change it later.
-- Ask the Sources: client-side BM25 retrieval over the protected content loader, with top passages sent to the ask-sources function for a streamed cited answer.
+- Ask the Sources uses protected-loader BM25 and ask-sources for streamed cited answers.
 - Podcast queue, speed and resume positions are stored per device in localStorage.
 
 - Chart math uses astronomy-engine in astro.ts with selectable houses, cross-checking source values.
 - Main navigation and the clickable Instructions guide share one registry so feature links and help stay synchronized.
-- Library learning topics use the shared Topic renderer with separate chart facts, labeled editorial interpretations, and protected source links, so new readings do not duplicate or expose source text.
+- Topics share one renderer separating facts, interpretations and protected links to avoid exposing source text.
 - In-app PDF viewer uses the pdfjs-dist legacy build, because the modern build needs very new browser APIs.
 - Admin = user_roles table + has_role(); claim_admin() RPC grants admin to the verified owner email on sign-in (no triggers on auth schema allowed).
 - Birth Chart Book uses bcb-XX protected-content entries split on the .docx Heading2 styles; src/content/birthChartBook.ts maps chart points to chapters.
@@ -19,7 +19,7 @@
 - The compact private conversation feed is shared between Home and My Dashboard and must stay hidden for signed-out or unapproved accounts.
 - custom_pages stores menu_group and source-ranked generated content; sidebar merges it dynamically.
 - Shared recommendations and media use shared_recommendations/shared_media with generic shared_item_comments/shared_item_reactions (item_type + item_id) — one thread system for any shared item.
-- Podcast creation runs in the make-podcast function (script → TTS WAV → private library bucket → library_items kind 'podcast') so new episodes appear in the normal podcast list.
+- make-podcast saves script→TTS WAV to private library storage and library_items so episodes appear in the normal list.
 - Private edition data and plates load via account-authorized private-edition; sign-out clears memory and public bundles contain no archived payload.
 - April's own pages filter passages with aprilOnly() so Shane's chart/family/home appears only on Relationship pages.
 - Social Integration uses separate owner-only conversation tables and its own counselor function so its history never enters the shared chat or therapy history.
@@ -27,7 +27,7 @@
 - Private counselor chats replay the complete saved session and use one shared verified April profile; they may retain in-session corrections but must not claim hidden cross-session learning.
 - Application branding uses one shared logo; printed products retain their own names.
 - Generated podcast duration is a bounded request preset interpreted by make-podcast, so script length and source depth stay synchronized.
-- Relationship needs and coincidences are derived at render time only from saved birth facts and shared chart utilities, preventing invented biography.
+- Relationship needs derive only from saved birth facts and chart utilities, never invented biography.
 - Wide data tables keep a stable readable width and scroll horizontally on phones instead of compressing headings into vertical text.
 - Usage analytics: ActivityTracker logs page time, click labels and media events to activity_events (insert-own, admin-read); never record typed text or private chat content.
 
@@ -42,3 +42,6 @@
 - book-cover streams saved-chart artwork through authenticated requests; no April chart reuse.
 - Workspace Wonderings use separate member policies; relationship notes stay owner-only.
 - Owner PDFs stay private; book checkout is blocked pending production manuscripts and printer review.
+- /welcome is a separate generic-art brand page; private app routes remain unchanged.
+- Newsletter requires consent, validated service-only writes and admin-only reads/deletes; signup sends no campaigns.
+- Example covers are separate, non-orderable artwork to avoid selling placeholders as personal charts.

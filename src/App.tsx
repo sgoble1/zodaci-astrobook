@@ -176,6 +176,7 @@ export default function App() {
         <AutomaticChapters />
         <Routes>
           <Route path="/welcome" element={<BrandLanding />} />
+          <Route path="/brand-launch" element={<div className="max-w-5xl mx-auto p-5 sm:p-10"><BrandLaunch /></div>} />
           <Route path="/contents" element={<MasterbookContents />} />
           <Route path="/contents/:id" element={<MasterbookContentsEntry />} />
           <Route path="/read" element={<PublicLibrary />} />
@@ -225,7 +226,6 @@ export default function App() {
             <Route path="/masterbook/index" element={<MasterbookSources />} />
             <Route path="/masterbook/upload" element={<MyUploads />} />
             <Route path="/admin" element={<Admin />} />
-            <Route path="/brand-launch" element={<BrandLaunch />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/masterbook/u/:id" element={<UploadedDoc />} />
             <Route path="/masterbook/pdf/:id" element={<PdfViewer />} />
