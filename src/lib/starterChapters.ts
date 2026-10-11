@@ -1,0 +1,2 @@
+export const STARTER_CHAPTERS = ['Your Big Three: Sun, Moon and Rising', 'Love and Relationships', 'Work, Purpose and Calling', 'Mind and Communication', 'Drive, Energy and Conflict', 'Growth, Challenges and Life Lessons'];
+export const STARTER_EVENT = 'astrobook-starters-updated';
