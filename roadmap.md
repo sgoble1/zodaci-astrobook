@@ -120,3 +120,11 @@
 - [x] Add verified two-way needs, chart connections, shared facts, and coincidences to each relationship page.
 - [x] Fix narrow mobile tables and overly vertical module-heading layouts across the app.
 - [x] Verify build quality, keyboard use, and representative mobile/desktop screens.
+
+## Illustrations, chart accuracy, live updates
+- [x] Themed illustrations on Explore & Discover; all 16 Compendium illustrations generated from the Illustration Guide prompts.
+- [x] Mercury house: books use Placidus (all points match); Placidus is now the default; Porphyry/Whole Sign/Equal switcher with Mercury note.
+- [x] Chiron table from NASA JPL Horizons (1940–2060) in the calculator.
+- [x] Accuracy dashboard on the Birth Chart and Data Quality pages.
+- [x] Recent updates refresh live (verified with a test photo and podcast, then removed).
+- [ ] AI credits — blocked: workspace billing (Settings → Plans & credits).
