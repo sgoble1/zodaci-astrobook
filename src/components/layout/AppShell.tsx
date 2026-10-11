@@ -11,6 +11,7 @@ import { useMyBirth } from '@/lib/myBirth';
 import { useAprilSpace } from '@/hooks/useAprilSpace';
 import { BIRTH } from '@/content/april';
 import { PublicWording } from '@/components/common/PublicWording';
+import { PublicChartFallback, isPublicPath } from '@/components/common/PublicChartFallback';
 import { useRelationships } from '@/hooks/useRelationships';
 import { CommandPaletteTrigger } from '@/components/common/CommandPalette';
 import { BookmarkButton } from '@/components/common/BookmarkButton';
@@ -86,7 +87,7 @@ export function AppShell() {
       <main id="main-content" tabIndex={-1} className="flex-1 min-w-0 lg:pt-0 pt-[64px] relative z-10 outline-none">
         <div className="mx-auto max-w-5xl px-4 sm:px-8 py-8 sm:py-10 lg:py-14">
           <motion.div key={location.pathname} initial={{ opacity: 0, y: 24, filter: 'blur(6px)' }} animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }} transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}>
-            <PageErrorBoundary key={location.pathname}>{!april && <PublicWording />}<Outlet /><VerifySources /></PageErrorBoundary>
+            <PageErrorBoundary key={location.pathname}>{!april && <PublicWording />}{april === undefined && !isPublicPath(location.pathname) ? null : april || isPublicPath(location.pathname) ? <Outlet /> : <PublicChartFallback />}<VerifySources /></PageErrorBoundary>
           </motion.div>
         </div>
         <footer className="border-t border-border mt-16">
