@@ -3,6 +3,16 @@ import { supabase } from '@/integrations/supabase/client';
 import { clearPrivateEdition, hydratePrivateEdition } from '@/lib/privateEditionStore';
 
 let cached: { uid: string; ok: boolean } | null = null;
+export const ADMIN_EDITION_KEY = 'zodaci-admin-edition';
+const ADMIN_EMAIL = 'shanegoble@gmail.com';
+if (typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('edition') === 'april') {
+  sessionStorage.setItem(ADMIN_EDITION_KEY, 'april');
+}
+/** The admin sees his own edition by default; April's edition only in a tab he opened for it. */
+const adminWantsOwn = (email?: string) => email?.toLowerCase() === ADMIN_EMAIL && sessionStorage.getItem(ADMIN_EDITION_KEY) !== 'april';
+export const isAdminEmail = (email?: string | null) => email?.toLowerCase() === ADMIN_EMAIL;
+export function openAprilEditionTab() { window.open(`${window.location.origin}/?edition=april`, '_blank', 'noopener'); }
+export function leaveAprilEdition() { sessionStorage.removeItem(ADMIN_EDITION_KEY); window.location.href = '/'; }
 const listeners = new Set<(v: boolean | undefined) => void>();
 
 let pending: Promise<void> | null = null;
@@ -17,7 +27,8 @@ async function performCheck() {
   if (cached?.uid === uid) { listeners.forEach(l => l(cached?.ok ?? false)); return; }
   listeners.forEach(l => l(undefined));
   clearPrivateEdition();
-  const { data: ok } = await supabase.rpc('is_shared_space_member');
+  const { data: member } = await supabase.rpc('is_shared_space_member');
+  const ok = member && !adminWantsOwn(data.session?.user.email);
   if (ok) {
     const response = await supabase.functions.invoke('private-edition', { body: {} });
     if (response.error || !Number.isInteger(response.data?.segments) || response.data.segments > 10) { listeners.forEach(l => l(false)); return; }
