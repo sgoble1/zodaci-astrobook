@@ -32,3 +32,6 @@
 - Relationship needs and coincidences are derived at render time only from saved birth facts and shared chart utilities, preventing invented biography.
 - Wide data tables keep a stable readable width and scroll horizontally on phones instead of compressing headings into vertical text.
 - Usage analytics: ActivityTracker logs page time, click labels and media events to activity_events (insert-own, admin-read); never record typed text or private chat content.
+
+- Public members' birth data lives in profiles (device copy as fallback) via src/lib/myBirth.ts; personal chart pages compute live from it so readings always match the saved birth facts.
+- Box grids use BoxArt(seed,label) for deterministic unique art per box, so new boxes never repeat images.

@@ -10,7 +10,6 @@ import { PublicLibrary, PublicReader, PublicDocument } from './pages/PublicLibra
 import { MasterbookContents, MasterbookContentsEntry } from './pages/MasterbookContents';
 import CreatePage from './pages/CreatePage';
 import CustomPageView from './pages/CustomPageView';
-import { SitePasswordGate } from './components/common/SitePasswordGate';
 import { DetailDrawerProvider, type DrawerPayload } from './components/common/DetailDrawer';
 import { CommandPalette } from './components/common/CommandPalette';
 import { ActivityTracker } from './components/common/ActivityTracker';
@@ -66,6 +65,8 @@ import { WorkbookHome, WorkbookModulePage, WorkbookCheckIn, WorkbookReframe, Wor
 import Companion from './pages/Companion';
 import ExploreDiscover from './pages/ExploreDiscover';
 import SocialIntegration from './pages/SocialIntegration';
+import Onboarding from './pages/Onboarding';
+import MyChart from './pages/MyChart';
 import { CounselorsIndex, CounselorProfile, CounselorSession } from './pages/Counselors';
 import ChartGuide from './pages/ChartGuide';
 import Instructions from './pages/Instructions';
@@ -150,7 +151,7 @@ function Providers({ children }: { children: ReactNode }) {
 export default function App() {
   return (
     <BrowserRouter>
-    <SitePasswordGate>
+    <>
       <Providers>
         <ActivityTracker />
         <Routes>
@@ -162,6 +163,8 @@ export default function App() {
           <Route element={<AppShell />}>
             <Route path="/" element={<Home />} />
             <Route path="/explore" element={<ExploreDiscover />} />
+            <Route path="/start" element={<Onboarding />} />
+            <Route path="/my-chart" element={<MyChart />} />
             <Route path="/instructions" element={<Instructions />} />
             <Route path="/birth-chart" element={<BirthChart />} />
             <Route path="/chart-guide" element={<ChartGuide />} />
@@ -243,7 +246,7 @@ export default function App() {
           </Route>
         </Routes>
       </Providers>
-    </SitePasswordGate>
+    </>
     </BrowserRouter>
   );
 }
