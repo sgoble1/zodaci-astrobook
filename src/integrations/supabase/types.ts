@@ -53,6 +53,27 @@ export type Database = {
         }
         Relationships: []
       }
+      ai_usage: {
+        Row: {
+          created_at: string
+          feature: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          feature: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          feature?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       bookmarks: {
         Row: {
           created_at: string
@@ -208,6 +229,48 @@ export type Database = {
         }
         Relationships: []
       }
+      generated_pages: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          image_path: string | null
+          owner_id: string
+          page_key: string
+          section: string
+          status: string
+          title: string
+          updated_at: string
+          version: number
+        }
+        Insert: {
+          content?: string
+          created_at?: string
+          id?: string
+          image_path?: string | null
+          owner_id: string
+          page_key: string
+          section?: string
+          status?: string
+          title?: string
+          updated_at?: string
+          version?: number
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          image_path?: string | null
+          owner_id?: string
+          page_key?: string
+          section?: string
+          status?: string
+          title?: string
+          updated_at?: string
+          version?: number
+        }
+        Relationships: []
+      }
       library_items: {
         Row: {
           category: string | null
@@ -256,6 +319,54 @@ export type Database = {
           shared_with_space?: boolean
           size_bytes?: number | null
           title?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          birth_date: string | null
+          birth_time: string | null
+          chart: Json | null
+          created_at: string
+          display_name: string
+          house_system: string
+          id: string
+          lat: number | null
+          lon: number | null
+          onboarded_at: string | null
+          place_label: string
+          tz: string
+          updated_at: string
+        }
+        Insert: {
+          birth_date?: string | null
+          birth_time?: string | null
+          chart?: Json | null
+          created_at?: string
+          display_name?: string
+          house_system?: string
+          id: string
+          lat?: number | null
+          lon?: number | null
+          onboarded_at?: string | null
+          place_label?: string
+          tz?: string
+          updated_at?: string
+        }
+        Update: {
+          birth_date?: string | null
+          birth_time?: string | null
+          chart?: Json | null
+          created_at?: string
+          display_name?: string
+          house_system?: string
+          id?: string
+          lat?: number | null
+          lon?: number | null
+          onboarded_at?: string | null
+          place_label?: string
+          tz?: string
+          updated_at?: string
         }
         Relationships: []
       }
@@ -1017,6 +1128,124 @@ export type Database = {
         }
         Relationships: []
       }
+      space_invites: {
+        Row: {
+          accepted_at: string | null
+          created_at: string
+          email: string
+          id: string
+          invited_by: string
+          space_id: string
+          token: string
+        }
+        Insert: {
+          accepted_at?: string | null
+          created_at?: string
+          email: string
+          id?: string
+          invited_by: string
+          space_id: string
+          token?: string
+        }
+        Update: {
+          accepted_at?: string | null
+          created_at?: string
+          email?: string
+          id?: string
+          invited_by?: string
+          space_id?: string
+          token?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "space_invites_space_id_fkey"
+            columns: ["space_id"]
+            isOneToOne: false
+            referencedRelation: "spaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      space_members: {
+        Row: {
+          joined_at: string
+          role: string
+          space_id: string
+          user_id: string
+        }
+        Insert: {
+          joined_at?: string
+          role?: string
+          space_id: string
+          user_id: string
+        }
+        Update: {
+          joined_at?: string
+          role?: string
+          space_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "space_members_space_id_fkey"
+            columns: ["space_id"]
+            isOneToOne: false
+            referencedRelation: "spaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      spaces: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          owner_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+          owner_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          owner_id?: string
+        }
+        Relationships: []
+      }
+      subscriptions: {
+        Row: {
+          current_period_end: string | null
+          plan: string
+          provider_customer_id: string | null
+          provider_subscription_id: string | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          current_period_end?: string | null
+          plan?: string
+          provider_customer_id?: string | null
+          provider_subscription_id?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          current_period_end?: string | null
+          plan?: string
+          provider_customer_id?: string | null
+          provider_subscription_id?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       therapy_messages: {
         Row: {
           created_at: string
@@ -1144,7 +1373,9 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      accept_space_invite: { Args: { _token: string }; Returns: string }
       claim_admin: { Args: never; Returns: boolean }
+      create_space: { Args: { _name: string }; Returns: string }
       ensure_shared_main_conversation: { Args: never; Returns: string }
       get_document_overrides: {
         Args: never
@@ -1165,6 +1396,8 @@ export type Database = {
       }
       is_shared_space_member: { Args: never; Returns: boolean }
       is_shared_space_user_id: { Args: { _user_id: string }; Returns: boolean }
+      is_space_member: { Args: { _space_id: string }; Returns: boolean }
+      is_space_owner: { Args: { _space_id: string }; Returns: boolean }
       recent_library_items: {
         Args: never
         Returns: {
