@@ -66,6 +66,7 @@ import { WorkbookHome, WorkbookModulePage, WorkbookCheckIn, WorkbookReframe, Wor
 import Companion from './pages/Companion';
 import ExploreDiscover from './pages/ExploreDiscover';
 import SocialIntegration from './pages/SocialIntegration';
+import { CounselorsIndex, CounselorProfile, CounselorSession } from './pages/Counselors';
 import ChartGuide from './pages/ChartGuide';
 import Instructions from './pages/Instructions';
 
@@ -224,6 +225,9 @@ export default function App() {
             <Route path="/workbook/reframe" element={<WorkbookReframe />} />
             <Route path="/workbook/journal" element={<WorkbookJournal />} />
             <Route path="/workbook/companion" element={<Companion />} />
+            <Route path="/counselors" element={<CounselorsIndex />} />
+            <Route path="/counselors/:key" element={<CounselorProfile />} />
+            <Route path="/counselors/:key/sessions/:sessionId" element={<CounselorSession />} />
             <Route path="/workbook/companion/:sessionId" element={<Companion />} />
             <Route path="/workbook/social-integration" element={<SocialIntegration />} />
             <Route path="/workbook/social-integration/:sessionId" element={<SocialIntegration />} />
