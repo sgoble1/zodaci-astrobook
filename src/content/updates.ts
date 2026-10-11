@@ -2,7 +2,11 @@
 export type UpdateKind = 'Feature' | 'Content' | 'Change' | 'Fix';
 export type Update = { date: string; kind: UpdateKind; title: string; body: string; to?: string };
 
-export const UPDATES: Update[] = [
+export const UPDATES: Update[
+  { date: '2026-10-11', kind: 'Content', title: 'All 16 Compendium illustrations', body: 'Every illustration described in the Illustration Reference Guide is now a real picture, shown on the Compendium page.', to: '/compendium' },
+  { date: '2026-10-11', kind: 'Feature', title: 'Chart accuracy check and house systems', body: 'The Birth Chart page re-checks every placement against a fresh calculation and lets you switch between Placidus, Porphyry, Whole Sign and Equal houses. Chiron is now calculated too.', to: '/birth-chart' },
+  { date: '2026-10-11', kind: 'Feature', title: 'Live Recent updates', body: 'New podcasts, pages, photos and recommendations now appear here by themselves.' },
+  { date: '2026-10-11', kind: 'Content', title: 'Pictures on Explore & Discover', body: 'Each subject now has its own illustration.', to: '/explore' },] = [
   { date: '2026-10-10', kind: 'Content', title: 'Two new Library topics', body: 'Thinking & Decisions and Creativity & Play connect April’s recorded placements with plain-language interpretations, reflection prompts, and original Birth Chart Book chapters.', to: '/topics/thinking-decisions' },
   { date: '2026-10-10', kind: 'Fix', title: 'Clearer messages when AI is unavailable', body: 'AI tools now explain credit-related failures rather than showing a generic error. Creating an answer or episode still requires available workspace credits.', to: '/podcasts' },
   { date: '2026-10-10', kind: 'Feature', title: 'Choose your podcast length', body: 'Generated episodes offer shorter and longer duration choices while keeping their source citations. Requested duration is a target, not an exact recording length.', to: '/podcasts' },
