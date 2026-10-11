@@ -272,6 +272,33 @@ export type Database = {
         }
         Relationships: []
       }
+      brand_email_subscribers: {
+        Row: {
+          consent_at: string
+          consent_version: string
+          created_at: string
+          email: string
+          id: string
+          source: string
+        }
+        Insert: {
+          consent_at?: string
+          consent_version?: string
+          created_at?: string
+          email: string
+          id?: string
+          source?: string
+        }
+        Update: {
+          consent_at?: string
+          consent_version?: string
+          created_at?: string
+          email?: string
+          id?: string
+          source?: string
+        }
+        Relationships: []
+      }
       chat_conversations: {
         Row: {
           created_at: string
