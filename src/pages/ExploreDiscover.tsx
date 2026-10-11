@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, BookOpen, Compass, Heart, Home, Sparkles, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { BoxArt } from '@/components/common/BoxArt';
 import chartImg from '@/assets/explore/chart.jpg';
 import timingImg from '@/assets/explore/timing.jpg';
 import growthImg from '@/assets/explore/growth.jpg';
@@ -105,7 +106,7 @@ export default function ExploreDiscover() {
         <div className="mt-5 grid gap-4 sm:grid-cols-2">
           {visibleItems.map(item => (
             <article key={`${item.category}-${item.to}`} className="overflow-hidden rounded border border-border bg-card/60 p-5">
-              {active === 'all' && ART[item.category] && <img src={ART[item.category].src} alt="" loading="lazy" className="-mx-5 -mt-5 mb-4 h-28 w-[calc(100%+2.5rem)] max-w-none object-cover opacity-90" />}
+              <div className="-mx-5 -mt-5 mb-4"><BoxArt seed={item.to + item.title} label={item.title} /></div>
               <h3 className="font-display text-xl leading-tight"><Link to={item.to} className="group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">{item.title}</Link></h3>
               <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{item.description}</p>
               <Link to={item.to} className="group mt-5 inline-flex items-center gap-2 font-smallcaps text-[10px] text-gold">Open this page <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" aria-hidden="true" /></Link>
