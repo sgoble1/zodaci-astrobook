@@ -19,6 +19,14 @@ export async function loadMyTopicReadings(): Promise<TopicRow[]> {
   return (data ?? []) as TopicRow[];
 }
 export async function writeTopicReading(slug: string): Promise<void> {
-  const { data, error } = await supabase.functions.invoke('topic-readings', { body: { slug } });
-  if (error || data?.error) throw new Error(data?.error ?? (await (error as { context?: Response })?.context?.json?.().catch(() => null))?.error ?? 'This reading could not be written right now.');
+  let res;
+  try { res = await supabase.functions.invoke('topic-readings', { body: { slug } }); } catch { throw new Error('This reading could not be written right now.'); }
+  const { data, error } = res;
+  if (error || data?.error) {
+    let message = data?.error as string | undefined;
+    const ctx = (error as { context?: unknown } | null)?.context;
+    if (!message && ctx instanceof Response) message = (await ctx.json().catch(() => null))?.error;
+    if ((ctx as Response | undefined)?.status === 401) message = 'Please sign in again to keep writing your readings.';
+    throw new Error(message || 'This reading could not be written right now.');
+  }
 }

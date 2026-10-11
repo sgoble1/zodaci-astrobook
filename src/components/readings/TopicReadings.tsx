@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { supabase } from '@/integrations/supabase/client';
 import { BoxArt } from '@/components/common/BoxArt';
 import { loadMyTopicReadings, TOPIC_READINGS, writeTopicReading, type TopicRow } from '@/lib/topicReadings';
 
@@ -9,7 +10,8 @@ export function TopicReadings({ seed }: { seed: string }) {
   const [writing, setWriting] = useState<string | null>(null);
   const [error, setError] = useState('');
   const started = useRef(false);
-  useEffect(() => { loadMyTopicReadings().then(setRows); }, []);
+  const [signedIn, setSignedIn] = useState<boolean | null>(null);
+  useEffect(() => { supabase.auth.getSession().then(({ data }) => { setSignedIn(!!data.session); if (data.session) loadMyTopicReadings().then(setRows).catch(() => setRows([])); }); }, []);
   useEffect(() => {
     if (!rows || started.current) return;
     started.current = true;
@@ -17,6 +19,8 @@ export function TopicReadings({ seed }: { seed: string }) {
       for (const t of TOPIC_READINGS) {
         if (rows.some(r => r.page_key === `topic-${t.slug}`)) continue;
         setWriting(t.title);
+        const { data: s } = await supabase.auth.getSession();
+        if (!s.session) { setError('Please sign in to keep writing your readings.'); break; }
         try { await writeTopicReading(t.slug); setRows(await loadMyTopicReadings()); }
         catch (e) { setError((e as Error).message); break; }
       }
@@ -24,6 +28,7 @@ export function TopicReadings({ seed }: { seed: string }) {
     })();
   }, [rows]);
   const done = (slug: string) => rows?.find(r => r.page_key === `topic-${slug}`);
+  if (signedIn === false) return <p className="text-sm text-muted-foreground">Sign in to get your in-depth topic readings.</p>;
   return (
     <section aria-labelledby="deep-h" className="space-y-4">
       <h2 id="deep-h" className="font-display text-3xl">In-depth topic readings</h2>
