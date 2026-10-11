@@ -2,6 +2,8 @@ import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { BoxArt } from '@/components/common/BoxArt';
 import { useMyBirth } from '@/lib/myBirth';
+import { useAprilSpace } from '@/hooks/useAprilSpace';
+import AprilHome from '@/pages/AprilHome';
 import heroImg from '@/assets/hero-threshold.jpg';
 
 const steps = [
@@ -30,7 +32,9 @@ const faqs = [
 ];
 
 export default function Home() {
+  const april = useAprilSpace();
   const myBirth = useMyBirth();
+  if (april) return <AprilHome />;
   return (
     <div className="space-y-16">
       {/* Hero */}
