@@ -183,6 +183,13 @@
       "when": 1791740969256,
       "tag": "0025_billing_subscriptions",
       "breakpoints": true
+    },
+    {
+      "idx": 26,
+      "version": "7",
+      "when": 1791741246767,
+      "tag": "0026_lock_generated_pages_by_plan",
+      "breakpoints": true
     }
   ]
 }

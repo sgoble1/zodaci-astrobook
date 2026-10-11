@@ -1,0 +1,116 @@
+import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors';
+import { createClient } from 'npm:@supabase/supabase-js@2';
+import { z } from 'npm:zod@3';
+import { createResponsesCall, gatewayError, GATEWAY_URL } from '../_shared/responses.ts';
+
+const TTS_MODEL = 'google/gemini-3.1-flash-tts-preview';
+const json = (b: unknown, status = 200) => new Response(JSON.stringify(b), { status, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+
+const Body = z.object({
+  kind: z.enum(['chapter', 'podcast']),
+  topic: z.string().trim().min(2).max(200),
+  duration: z.enum(['short', 'standard', 'long']).default('standard'),
+  environment: z.enum(['sandbox', 'live']),
+});
+
+const SIGNS = ['Aries', 'Taurus', 'Gemini', 'Cancer', 'Leo', 'Virgo', 'Libra', 'Scorpio', 'Sagittarius', 'Capricorn', 'Aquarius', 'Pisces'];
+const fmt = (lon: number) => { const s = Math.floor(lon / 30); const d = lon - s * 30; return `${SIGNS[s]} ${Math.floor(d)}°${String(Math.round((d % 1) * 60)).padStart(2, '0')}′`; };
+
+// deno-lint-ignore no-explicit-any
+function chartFacts(p: any): string {
+  const c = p.chart ?? {};
+  const lines = (c.bodies ?? []).map((b: any) => `${b.name}: ${b.sign} ${b.deg}°${String(b.min).padStart(2, '0')}′${b.house ? `, house ${b.house}` : ''}${b.retro ? ', retrograde' : ''}`);
+  if (typeof c.asc === 'number') lines.push(`Ascendant: ${fmt(c.asc)}`);
+  if (typeof c.mc === 'number') lines.push(`Midheaven: ${fmt(c.mc)}`);
+  return `Birth: ${p.birth_date}${p.birth_time ? ` at ${p.birth_time}` : ' (time unknown — houses and angles are unreliable, do not use them)'}, ${p.place_label}. House system: ${p.house_system}.\n${lines.join('\n')}`;
+}
+
+function chunk(text: string, max = 1400): string[] {
+  const parts = text.replace(/\s+/g, ' ').match(/[^.!?]+[.!?]+["”’)]*\s*|[^.!?]+$/g) ?? [text];
+  const out: string[] = []; let cur = '';
+  for (const s of parts) { if ((cur + s).length > max && cur) { out.push(cur.trim()); cur = s; } else cur += s; }
+  if (cur.trim()) out.push(cur.trim());
+  return out;
+}
+function pcmFromWav(buf: Uint8Array): Uint8Array {
+  const v = new DataView(buf.buffer, buf.byteOffset, buf.byteLength);
+  if (String.fromCharCode(...buf.slice(0, 4)) !== 'RIFF') return buf;
+  let o = 12;
+  while (o + 8 <= buf.length) { const id = String.fromCharCode(...buf.slice(o, o + 4)); const size = v.getUint32(o + 4, true); if (id === 'data') return buf.slice(o + 8, o + 8 + size); o += 8 + size + (size % 2); }
+  return buf.slice(44);
+}
+function wav(pcm: Uint8Array, rate = 24000): Uint8Array {
+  const h = new DataView(new ArrayBuffer(44)); const w = (o: number, s: string) => [...s].forEach((c, i) => h.setUint8(o + i, c.charCodeAt(0)));
+  w(0, 'RIFF'); h.setUint32(4, 36 + pcm.length, true); w(8, 'WAVE'); w(12, 'fmt '); h.setUint32(16, 16, true); h.setUint16(20, 1, true); h.setUint16(22, 1, true);
+  h.setUint32(24, rate, true); h.setUint32(28, rate * 2, true); h.setUint16(32, 2, true); h.setUint16(34, 16, true); w(36, 'data'); h.setUint32(40, pcm.length, true);
+  const out = new Uint8Array(44 + pcm.length); out.set(new Uint8Array(h.buffer)); out.set(pcm, 44); return out;
+}
+async function speak(apiKey: string, text: string): Promise<Uint8Array> {
+  const res = await fetch(`${GATEWAY_URL}/audio/speech`, {
+    method: 'POST', headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ model: TTS_MODEL, contents: [{ role: 'user', parts: [{ text: `Read warmly and calmly, like a podcast host: ${text}` }] }], generationConfig: { responseModalities: ['AUDIO'], speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: 'Kore' } } } }, stream_format: 'audio' }),
+  });
+  if (!res.ok) { const t = await res.text(); throw Object.assign(new Error(`speech ${res.status}: ${t.slice(0, 300)}`), { statusCode: res.status }); }
+  return pcmFromWav(new Uint8Array(await res.arrayBuffer()));
+}
+
+const RULES = 'Use ONLY the placements listed. Never invent placements, aspects, relatives, events or biography. Explain each technical term in everyday words right after using it. Present meanings as reflective interpretation, not prediction.';
+
+Deno.serve(async (req) => {
+  if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
+  try {
+    const admin = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!);
+    const token = req.headers.get('Authorization')?.replace('Bearer ', '');
+    const { data: { user } } = await admin.auth.getUser(token);
+    if (!user) return json({ error: 'Please sign in first.' }, 401);
+    const parsed = Body.safeParse(await req.json());
+    if (!parsed.success) return json({ error: 'Please give it a topic.' }, 400);
+    const { kind, topic, duration, environment } = parsed.data;
+
+    // Creator tools require an active Creator plan, checked here — never trusted from the browser.
+    const { data: subs } = await admin.from('billing_subscriptions').select('status,current_period_end,price_id').eq('user_id', user.id).eq('environment', environment).eq('price_id', 'creator_monthly');
+    const now = Date.now();
+    const ok = (subs ?? []).some(s => (!s.current_period_end || +new Date(s.current_period_end) > now) && ['active', 'trialing', 'past_due', 'canceled'].includes(s.status) && (s.status !== 'canceled' || !!s.current_period_end));
+    if (!ok) return json({ error: 'Creator tools need the Creator plan.' }, 403);
+
+    const { data: profile } = await admin.from('profiles').select('*').eq('id', user.id).maybeSingle();
+    if (!profile?.birth_date || !profile.chart) return json({ error: 'Save your birth details to your account first.' }, 400);
+    const facts = chartFacts(profile);
+    const apiKey = Deno.env.get('LOVABLE_API_KEY'); if (!apiKey) return json({ error: 'AI is not configured.' }, 500);
+
+    if (kind === 'chapter') {
+      const call = createResponsesCall(req, { apiKey, effort: 'medium', instructions: `You write one chapter of a personal astrology Masterbook for ${profile.display_name || 'the reader'}, addressed as "you".\nTheir calculated chart:\n${facts}\n${RULES}\nWrite 900–1,200 words in Markdown: a short intro, 3–5 "##" sections each naming the placements it draws on, and a closing "## Questions to reflect on" list.` },
+        [{ role: 'user', content: `Chapter topic: ${topic}` }]);
+      const content = (await call.result.text).trim();
+      if (!content) return json({ error: 'The chapter came back empty. Please try again.' }, 502);
+      const page_key = `chapter-${Date.now()}`;
+      const ins = await admin.from('generated_pages').insert({ owner_id: user.id, page_key, section: 'My Masterbook', title: topic, content, status: 'ready' }).select('id').single();
+      if (ins.error) { console.error(ins.error); return json({ error: 'Could not save the chapter.' }, 500); }
+      await admin.from('ai_usage').insert({ user_id: user.id, feature: 'creator-chapter' });
+      return json({ id: ins.data.id });
+    }
+
+    const words = { short: '220–300', standard: '450–550', long: '900–1,100' }[duration];
+    const call = createResponsesCall(req, { apiKey, effort: 'low', instructions: `You write a spoken single-host podcast episode for ${profile.display_name || 'the listener'} about their own chart, addressed as "you".\nTheir calculated chart:\n${facts}\n${RULES}\nWrite ${words} words of plain spoken prose: a one-line hook, short spoken sections, one practical takeaway. No headings, bullets, stage directions or emoji.` },
+      [{ role: 'user', content: `Episode topic: ${topic}` }]);
+    const script = (await call.result.text).trim();
+    if (!script) return json({ error: 'The script came back empty. Please try again.' }, 502);
+    const pcm: Uint8Array[] = [];
+    for (const p of chunk(script)) pcm.push(await speak(apiKey, p));
+    const total = pcm.reduce((a, b) => a + b.length, 0); const joined = new Uint8Array(total); let off = 0; for (const b of pcm) { joined.set(b, off); off += b.length; }
+    const file = wav(joined);
+    const name = `${topic.replace(/[^\w]+/g, '_').slice(0, 60)}.wav`;
+    const path = `${user.id}/podcast/${Date.now()}-${name}`;
+    const up = await admin.storage.from('library').upload(path, file, { contentType: 'audio/wav' });
+    if (up.error) return json({ error: 'Could not save the audio.' }, 500);
+    const ins = await admin.from('library_items').insert({ kind: 'podcast', title: topic, description: script.split(/(?<=[.!?])\s/).slice(0, 2).join(' '), category: 'My episodes', file_path: path, shared_with_space: false, file_name: name, mime_type: 'audio/wav', size_bytes: file.length, owner_id: user.id, sections: [{ title: 'Episode transcript', text: script }] }).select('id').single();
+    if (ins.error) return json({ error: 'Could not list the episode.' }, 500);
+    await admin.from('ai_usage').insert({ user_id: user.id, feature: 'creator-podcast' });
+    return json({ id: ins.data.id, seconds: Math.round(joined.length / 48000) });
+  } catch (e) {
+    if (req.signal.aborted) return new Response(null, { status: 499, headers: corsHeaders });
+    console.error(e);
+    const { status, message } = gatewayError(e);
+    return json({ error: message }, status);
+  }
+});

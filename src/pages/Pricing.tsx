@@ -4,11 +4,12 @@ import { Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useSubscription, type Tier } from '@/hooks/useSubscription';
 import { StripeEmbeddedCheckout } from '@/components/payments/StripeEmbeddedCheckout';
+import { CreatorStudio } from '@/components/payments/CreatorStudio';
 import { PaymentTestModeBanner } from '@/components/payments/PaymentTestModeBanner';
 
 const plans: { tier: Tier; name: string; price: string; priceId?: string; blurb: string; items: string[] }[] = [
   { tier: 'free', name: 'Free', price: 'Free', blurb: 'Everything you need to meet your chart.', items: ['Your calculated birth chart wheel', 'Planets, houses and aspects in plain words', 'Short personal readings', 'Explore & Discover and the Chart Guide', 'Save your chart to your account'] },
-  { tier: 'full', name: 'Full Access', price: '$12.99/month', priceId: 'full_access_monthly', blurb: 'The complete book written from your chart.', items: ['Every reading at full length', 'Your own Masterbook, written from your chart', 'Timing & cycles: transits, retrogrades, life phases', 'Seven other systems: Vedic, Ba Zi, Maya and more', 'A monthly allowance of AI credits', 'Shared spaces with people you invite'] },
+  { tier: 'full', name: 'Full Access', price: '$12.99/month', priceId: 'full_access_monthly', blurb: 'The complete book written from your chart.', items: ['Every reading at full length', 'Read your own Masterbook, written from your chart', 'Timing & cycles: transits, retrogrades, life phases', 'Seven other systems: Vedic, Ba Zi, Maya and more', 'A monthly allowance of AI credits', 'Shared spaces with people you invite'] },
   { tier: 'creator', name: 'Creator', price: '$14.99/month', priceId: 'creator_monthly', blurb: 'Make new things from your chart.', items: ['Everything in Full Access', 'Generate personal podcasts about your chart', 'Generate new Masterbook chapters and pages', 'A larger monthly allowance of AI credits'] },
 ];
 const rank: Record<Tier, number> = { free: 0, full: 1, creator: 2 };
@@ -58,6 +59,7 @@ export default function Pricing() {
           })}
         </div>
       )}
+      {sub.tier === 'creator' && <div className="space-y-2"><CreatorStudio /><p className="text-sm text-center"><Link to="/my-masterbook" className="underline">Open My Masterbook to read and play what you've made</Link></p></div>}
       <section className="space-y-4" aria-labelledby="pricing-faq"><h2 id="pricing-faq" className="text-2xl">Questions</h2>
         <dl className="grid gap-4 sm:grid-cols-2">{faqs.map(f => <div key={f.q} className="parchment p-4"><dt className="font-medium">{f.q}</dt><dd className="mt-1 text-sm text-muted-foreground">{f.a}</dd></div>)}</dl>
       </section>
