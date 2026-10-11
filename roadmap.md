@@ -8,7 +8,7 @@ April's private AstroBook is untouched; this draft is the public version.
 - [~] Remove remaining April-only content (sidebar header, footer, homepage and nav groups done; still: April-specific page content, protected books, fixed-email shared space)
 - [x] 4-step birth data setup (/start) + live personal chart page (/my-chart)
 - [x] Public /auth sign-up+sign-in page; device-only save banner nudges to account; nav links to My Chart
-- [ ] Personal reading generator + per-page illustrations
+- [x] Personal readings page (/my-readings, built from own chart, unique art per section); AI-written longer versions wait on draft acceptance + credits
 - [ ] Shared spaces UI with email invites; move shared_* tables to space membership
 - [ ] Subscriptions (pick Stripe or Paddle), locked previews, server-side checks
 - [x] Public homepage with FAQ (pricing pending Stripe/Paddle choice)
