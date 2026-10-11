@@ -26,17 +26,28 @@ function fields(subscription: any) {
 async function created(subscription: any, env: StripeEnv) {
   const userId = subscription.metadata?.userId;
   if (!userId) { console.error("No userId in subscription metadata"); return; }
-  await db().from("billing_subscriptions").upsert({
+  const result = await db().from("billing_subscriptions").upsert({
     user_id: userId,
     stripe_subscription_id: subscription.id,
     stripe_customer_id: subscription.customer,
     environment: env,
     ...fields(subscription),
   }, { onConflict: "stripe_subscription_id" });
+  if (result.error) throw result.error;
 }
 
 async function updated(subscription: any, env: StripeEnv) {
-  await db().from("billing_subscriptions").update(fields(subscription)).eq("stripe_subscription_id", subscription.id).eq("environment", env);
+  await created(subscription, env);
+}
+
+async function bookPaid(session: any, env: StripeEnv) {
+  const orderId = session.metadata?.orderId; const userId = session.metadata?.userId;
+  if (!orderId || !userId || session.payment_status !== 'paid') return;
+  const address = session.collected_information?.shipping_details?.address || session.shipping_details?.address;
+  if (address && address.country !== 'US') throw new Error('Non-US shipping address');
+  const patch = { status:'paid',payment_total_cents:session.amount_total,updated_at:new Date().toISOString(), ...(address ? { shipping_address: { ...address,name:session.collected_information?.shipping_details?.name || session.shipping_details?.name || '' } } : {}) };
+  const result = await db().from('book_orders').update(patch).eq('id',orderId).eq('user_id',userId).eq('checkout_session_id',session.id).eq('environment',env).in('status',['draft','awaiting_payment']);
+  if (result.error) throw result.error;
 }
 
 async function deleted(subscription: any, env: StripeEnv) {
@@ -53,6 +64,8 @@ Deno.serve(async (req) => {
   try {
     const event = await verifyWebhook(req, env);
     switch (event.type) {
+      case 'checkout.session.completed':
+      case 'checkout.session.async_payment_succeeded': await bookPaid(event.data.object,env); break;
       case "customer.subscription.created": await created(event.data.object, env); break;
       case "customer.subscription.updated": await updated(event.data.object, env); break;
       case "customer.subscription.deleted": await deleted(event.data.object, env); break;
