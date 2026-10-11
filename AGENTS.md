@@ -8,7 +8,7 @@
 - Chart math uses astronomy-engine in astro.ts with selectable houses, cross-checking source values.
 - Main navigation and the clickable Instructions guide share one registry so feature links and help stay synchronized.
 - Topics share one renderer separating facts, interpretations and protected links to avoid exposing source text.
-- In-app PDF viewer uses the pdfjs-dist legacy build, because the modern build needs very new browser APIs.
+- PDF viewer uses pdfjs-dist legacy for browser compatibility.
 - Admin = user_roles table + has_role(); claim_admin() RPC grants admin to the verified owner email on sign-in (no triggers on auth schema allowed).
 - Birth Chart Book uses bcb-XX protected-content entries split on the .docx Heading2 styles; src/content/birthChartBook.ts maps chart points to chapters.
 - ChartWheel (src/components/chart) renders any computed chart; fixed-star contacts are derived by parsing Compendium star degrees.
@@ -28,7 +28,7 @@
 - Application branding uses one shared logo; printed products retain their own names.
 - Generated podcast duration is a bounded request preset interpreted by make-podcast, so script length and source depth stay synchronized.
 - Relationship needs derive only from saved birth facts and chart utilities, never invented biography.
-- Wide data tables keep a stable readable width and scroll horizontally on phones instead of compressing headings into vertical text.
+- Wide tables scroll horizontally on phones to keep headings readable.
 - Usage analytics: ActivityTracker logs page time, click labels and media events to activity_events (insert-own, admin-read); never record typed text or private chat content.
 
 - Personal chart pages compute from profiles, with device fallback, to match saved birth facts.
@@ -44,4 +44,5 @@
 - Owner PDFs stay private; book checkout is blocked pending production manuscripts and printer review.
 - /welcome is a separate generic-art brand page; private app routes remain unchanged.
 - Newsletter requires consent, validated service-only writes and admin-only reads/deletes; signup sends no campaigns.
-- Example covers are separate, non-orderable artwork to avoid selling placeholders as personal charts.
+- Book examples are non-orderable; landing readings use separate public editorial content, never private source text.
+- Public community tables stay separate from private workspaces; public reads and owner-only posting prevent private-feed exposure.

@@ -1,6 +1,9 @@
 # Roadmap — Zodaci Public
 
 ## Current request
+- [x] Replace landing cover examples with three original public readings and illustrations
+- [x] Public blog layout and sourced editorial article pages; preserve subscriber publishing
+- [x] Public community categories, discussions, replies and guidelines; private workspace remains separate
 - [x] Separate Zodaci brand landing with chart signup, pricing and printed-book links
 - [x] Three labeled generic placeholder AstroBook covers
 - [x] Consented email signup and admin-only list/export/removal

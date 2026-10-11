@@ -86,6 +86,9 @@ import ChartGuide from './pages/ChartGuide';
 import Instructions from './pages/Instructions';
 import BrandLanding from './pages/BrandLanding';
 import BrandLaunch from './pages/BrandLaunch';
+import { PublicSiteLayout } from './components/brand/PublicSiteLayout';
+import PublicArticle from './pages/PublicArticle';
+import Community, { CommunityGuidelines } from './pages/Community';
 
 
 /** Build a single registry of every drawer-openable Compendium item. Used so
@@ -176,6 +179,13 @@ export default function App() {
         <AutomaticChapters />
         <Routes>
           <Route path="/welcome" element={<BrandLanding />} />
+          <Route element={<PublicSiteLayout />}>
+            <Route path="/blog" element={<Blog />} />
+            <Route path="/blog/learn/:slug" element={<PublicArticle />} />
+            <Route path="/community" element={<Community />} />
+            <Route path="/community/guidelines" element={<CommunityGuidelines />} />
+            <Route path="/community/:id" element={<Community />} />
+          </Route>
           <Route path="/brand-launch" element={<div className="max-w-5xl mx-auto p-5 sm:p-10"><BrandLaunch /></div>} />
           <Route path="/contents" element={<MasterbookContents />} />
           <Route path="/contents/:id" element={<MasterbookContentsEntry />} />
@@ -198,7 +208,6 @@ export default function App() {
             <Route path="/my-masterbook" element={<MyMasterbook />} />
             <Route path="/books" element={<Books />} />
             <Route path="/orders" element={<Orders />} />
-            <Route path="/blog" element={<Blog />} />
             <Route path="/instructions" element={<Instructions />} />
             <Route path="/birth-chart" element={<BirthChart />} />
             <Route path="/chart-guide" element={<ChartGuide />} />
