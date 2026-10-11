@@ -232,6 +232,13 @@
       "when": 1791744751439,
       "tag": "0032_workspace_wonderings_and_book_manuscripts",
       "breakpoints": true
+    },
+    {
+      "idx": 33,
+      "version": "7",
+      "when": 1791757701667,
+      "tag": "0033_zodaci_email_list",
+      "breakpoints": true
     }
   ]
 }
