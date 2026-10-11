@@ -58,7 +58,7 @@ async function speak(apiKey: string, text: string): Promise<Uint8Array> {
   return pcmFromWav(new Uint8Array(await res.arrayBuffer()));
 }
 
-const RULES = 'Use ONLY the placements listed. Never invent placements, aspects, relatives, events or biography. Explain each technical term in everyday words right after using it. Present meanings as reflective interpretation, not prediction.';
+const RULES = 'Use ONLY the placements listed. Never invent placements, aspects, relatives, events or biography. Explain each technical term in everyday words right after using it. Present meanings as reflective interpretation, not prediction. For sex, desire and attraction, focus on consent, boundaries, communication and non-graphic adult reflection. Never infer sexual orientation, libido, sexual history, preferences, trauma or consent from a chart. A Venus/Mars contact is symbolism, not evidence of mutual attraction. Never sexualize minors.';
 
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
@@ -75,7 +75,7 @@ Deno.serve(async (req) => {
     const { kind, topic, duration, environment, workspaceId } = parsed.data;
     if(workspaceId){const {data:member}=await admin.from('space_members').select('user_id').eq('space_id',workspaceId).eq('user_id',user.id).maybeSingle();if(!member)return json({error:'You are not a member of that workspace.'},403);}
 
-    const STARTER = ['Your Big Three: Sun, Moon and Rising', 'Love and Relationships', 'Work, Purpose and Calling', 'Mind and Communication', 'Drive, Energy and Conflict', 'Growth, Challenges and Life Lessons'];
+    const STARTER = ['Your Big Three: Sun, Moon and Rising', 'Love and Relationships', 'Work, Purpose and Calling', 'Mind and Communication', 'Drive, Energy and Conflict', 'Growth, Challenges and Life Lessons', 'Sex & Attraction'];
     const now = Date.now();
     const active = (s: { status: string; current_period_end: string | null }) => (!s.current_period_end || +new Date(s.current_period_end) > now) && ['active', 'trialing', 'past_due', 'canceled'].includes(s.status) && (s.status !== 'canceled' || !!s.current_period_end);
     if (kind === 'starter') {

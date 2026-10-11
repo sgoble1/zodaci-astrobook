@@ -225,6 +225,13 @@
       "when": 1791744492468,
       "tag": "0031_scope_recent_library_metadata",
       "breakpoints": true
+    },
+    {
+      "idx": 32,
+      "version": "7",
+      "when": 1791744751439,
+      "tag": "0032_workspace_wonderings_and_book_manuscripts",
+      "breakpoints": true
     }
   ]
 }

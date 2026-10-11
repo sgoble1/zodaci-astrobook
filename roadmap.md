@@ -1,5 +1,12 @@
 # Roadmap — Zodaci Public
 
+## Current request
+- [ ] Add automatically generated Sex & Attraction topic with consent-first, non-deterministic interpretation
+- [ ] Suggest Wonderings for workspace members and added people; save selected questions to owner-only relationship notes
+- [ ] Compose a real paginated PDF manuscript with contents and selected cover; connect it to book orders
+- [ ] Audit and close public April-content exposure while preserving approved-account original pages
+- [ ] Verify live shipping/payment order flow; live Stripe activation is blocked on owner onboarding
+
 ## Zodaci public readiness
 - [x] Public brand and metadata use Zodaci; printed books retain AstroBook
 - [x] Podcast visibility choice for private or invited workspace members; audio authorization deployed

@@ -13,6 +13,7 @@ export class ContentLockedError extends Error {
 export const getContentToken = () => window.localStorage.getItem(CONTENT_TOKEN_KEY) ?? '';
 
 const cache = new Map<string, Promise<string>>();
+supabase.auth.onAuthStateChange(() => cache.clear());
 
 export function loadProtectedText(area: 'masterbook' | 'library', file: string): Promise<string> {
   const key = `${area}/${file}`;

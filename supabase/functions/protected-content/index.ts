@@ -1,5 +1,6 @@
 import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors';
 import { ARCHIVE_GZ_B64 } from './archive.ts';
+import { createClient } from 'npm:@supabase/supabase-js@2';
 
 type Archive = { masterbook: Record<string, string>; library: Record<string, string> };
 let archivePromise: Promise<Archive> | null = null;
@@ -35,6 +36,15 @@ Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
   if (req.method !== 'POST') return json({ error: 'Method not allowed.' }, 405);
   try {
+    const auth = req.headers.get('Authorization') ?? '';
+    const url = Deno.env.get('SUPABASE_URL');
+    const key = Deno.env.get('SUPABASE_ANON_KEY');
+    if (!url || !key || !auth.startsWith('Bearer ')) return json({ error: 'Sign in to your private edition.', code: 'LOCKED' }, 401);
+    const client = createClient(url, key, { global: { headers: { Authorization: auth } } });
+    const { data: user, error: authError } = await client.auth.getUser(auth.slice(7));
+    if (authError || !user.user) return json({ error: 'Sign in to your private edition.', code: 'LOCKED' }, 401);
+    const { data: allowed, error: accessError } = await client.rpc('is_shared_space_member');
+    if (accessError || allowed !== true) return json({ error: 'This document belongs to the private edition.' }, 403);
     const secret = Deno.env.get('CONTENT_UNLOCK_SECRET') ?? '';
     const body = await req.json();
     const token = typeof body?.token === 'string' ? body.token : '';
