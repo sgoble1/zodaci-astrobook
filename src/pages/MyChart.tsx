@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { Printer } from 'lucide-react';
 import { computeChart, fmtLon, HOUSE_SYSTEMS, type HouseSystem } from '@/lib/astro';
 import { toChartInput, useMyBirth } from '@/lib/myBirth';
@@ -14,6 +14,8 @@ const ASPECT: Record<string, string> = { Conjunction: 'These two act as one.', O
 export default function MyChart() {
   const birth = useMyBirth();
   const [hs, setHs] = useState<HouseSystem | null>(null);
+  const [params] = useSearchParams();
+  const deviceOnly = params.get('device') === '1';
   const chart = useMemo(() => birth ? computeChart({ ...toChartInput(birth), houseSystem: hs ?? birth.houseSystem }) : null, [birth, hs]);
   if (birth === undefined) return <p role="status">Loading your chart…</p>;
   if (!birth || !chart) return (
@@ -27,6 +29,11 @@ export default function MyChart() {
   const rising = chart.asc != null ? fmtLon(chart.asc) : null;
   return (
     <article className="space-y-10">
+      {deviceOnly && (
+        <div role="note" className="rounded border border-gold/40 bg-card p-4 text-sm">
+          Your chart is saved on this device only. <Link to="/auth" className="text-primary underline underline-offset-2">Create a free account</Link> to keep it safe, sync it everywhere and unlock your personal readings.
+        </div>
+      )}
       <header>
         <p className="font-smallcaps text-xs text-gold">{birth.name ? `${birth.name}'s chart` : 'Your chart'}</p>
         <h1 className="font-display mt-1 text-4xl">Your birth chart</h1>

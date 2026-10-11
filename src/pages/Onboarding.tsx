@@ -32,8 +32,8 @@ export default function Onboarding() {
     setBusy(true);
     const birth = { ...b, time: unknownTime ? null : b.time };
     const chart = computeChart(toChartInput(birth));
-    await saveMyBirth(birth, { bodies: chart.bodies, asc: chart.asc, mc: chart.mc });
-    nav('/my-chart');
+    const res = await saveMyBirth(birth, { bodies: chart.bodies, asc: chart.asc, mc: chart.mc });
+    nav(res.saved === 'device' ? '/my-chart?device=1' : '/my-chart');
   };
 
   return (
