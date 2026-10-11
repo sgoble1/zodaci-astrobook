@@ -2,6 +2,7 @@
 // Planet positions: astronomy-engine (VSOP87 / ELP-based, arc-second level for 1900–2100).
 // Angles: RAMC from Greenwich apparent sidereal time + longitude; Placidus houses by default (Porphyry, Whole Sign, Equal selectable).
 // Ba Zi: sexagenary cycle with solar-term (sun-longitude) boundaries.
+import { chironLon } from './chiron';
 import * as Astronomy from 'astronomy-engine';
 import type { ConfidenceLevel } from '@/content/confidence';
 
@@ -234,6 +235,11 @@ export function computeChart(input: ChartInput): ChartResult {
     const f = fmtLon(lon);
     bodies.push({ key, name, glyph, lon, sign: f.sign, signGlyph: f.signGlyph, deg: f.deg, min: f.min, house: cusps ? houseOf(lon, cusps) : null, retro: false, confidence: 'derived', note });
   };
+  const ch = chironLon(utc);
+  if (ch != null) {
+    const f = fmtLon(ch); const later = chironLon(new Date(utc.getTime() + 864e5)), earlier = chironLon(new Date(utc.getTime() - 864e5));
+    bodies.push({ key: 'chiron', name: 'Chiron', glyph: '⚷', lon: ch, sign: f.sign, signGlyph: f.signGlyph, deg: f.deg, min: f.min, house: cusps ? houseOf(ch, cusps) : null, retro: later != null && earlier != null && norm(later - earlier + 180) - 180 < 0, confidence: 'derived', note: 'From a NASA JPL Horizons table (1940–2060), interpolated.' });
+  }
   point('lilith', 'Black Moon Lilith (mean)', '⚸', meanLilith(utc), 'Mean lunar apogee; the “true”/oscillating Lilith can differ by several degrees.');
   if (asc != null && vertex != null) {
     const sunLon = bodies[0].lon, moonLon = bodies[1].lon;
