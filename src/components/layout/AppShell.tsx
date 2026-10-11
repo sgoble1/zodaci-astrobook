@@ -90,7 +90,7 @@ export function AppShell() {
           <div className="mx-auto max-w-5xl px-5 sm:px-8 py-10 text-sm text-muted-foreground">
             <div className="gold-rule mb-6" />
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
-              <div className="font-smallcaps text-xs">Prepared for {BIRTH.name} · {BIRTH.date} · {BIRTH.place}</div>
+              <div className="font-smallcaps text-xs">AstroBook · Your chart, your book</div>
               <div className="font-smallcaps text-xs">An Illuminated Compendium · Ink on Vellum · Touched with Gold</div>
             </div>
           </div>
@@ -194,7 +194,7 @@ function SidebarInner({ mobile = false, onNavigate }: { mobile?: boolean; onNavi
       </nav>
 
       <div className="mt-auto text-[11px] text-muted-foreground leading-relaxed">
-        Every planet, house, aspect and phase in this site is drawn verbatim from April's uploaded reports. Click any element in a chart, table, timeline or bagua for the full interpretation.
+        Every chart here is calculated live from real birth details. Click any element in a chart, table or timeline for the full interpretation.
       </div>
     </div>
   );
