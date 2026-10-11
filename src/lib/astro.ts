@@ -1,6 +1,6 @@
 // In-app natal chart + Ba Zi calculator.
 // Planet positions: astronomy-engine (VSOP87 / ELP-based, arc-second level for 1900–2100).
-// Angles: RAMC from Greenwich apparent sidereal time + longitude; Porphyry houses.
+// Angles: RAMC from Greenwich apparent sidereal time + longitude; Placidus houses by default (Porphyry, Whole Sign, Equal selectable).
 // Ba Zi: sexagenary cycle with solar-term (sun-longitude) boundaries.
 import * as Astronomy from 'astronomy-engine';
 import type { ConfidenceLevel } from '@/content/confidence';

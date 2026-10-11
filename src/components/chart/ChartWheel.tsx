@@ -6,7 +6,7 @@ import { ConfidenceBadge } from '@/components/common/ConfidenceBadge';
 import { Cite } from '@/components/common/Cite';
 import type { ConfidenceLevel } from '@/content/confidence';
 
-const CALC: SourceRef = { doc: 'Calculated in the app', section: 'astronomy-engine ephemeris · Porphyry houses' };
+const CALC: SourceRef = { doc: 'Calculated in the app', section: 'astronomy-engine ephemeris · Placidus houses' };
 const BAZI_SRC: SourceRef = { doc: 'Calculated in the app', section: 'Four Pillars — solar terms & sexagenary cycle' };
 
 /** Parse "Libra 24°08′" style longitudes from the Compendium into ecliptic degrees. */
