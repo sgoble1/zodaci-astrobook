@@ -4,20 +4,15 @@ import { ArrowRight, BookOpen, Compass, Heart, Home, Sparkles, Users } from 'luc
 import { Button } from '@/components/ui/button';
 import { useAprilSpace } from '@/hooks/useAprilSpace';
 import { BoxArt } from '@/components/common/BoxArt';
-import chartImg from '@/assets/explore/chart.jpg';
-import timingImg from '@/assets/explore/timing.jpg';
-import growthImg from '@/assets/explore/growth.jpg';
-import relImg from '@/assets/explore/relationships.jpg';
-import homeImg from '@/assets/explore/home.jpg';
-import sourcesImg from '@/assets/explore/sources.jpg';
+import { privateImage } from '@/content/privateAssets';
 
 const ART: Record<string, { src: string; alt: string }> = {
-  chart: { src: chartImg, alt: 'Etched zodiac wheel above an open book' },
-  timing: { src: timingImg, alt: 'Star-filled hourglass beside a road of moon phases' },
-  growth: { src: growthImg, alt: 'Woman with a lantern watching a seedling grow from a journal' },
-  relationships: { src: relImg, alt: 'Two overlapping zodiac wheels above reaching hands' },
-  home: { src: homeImg, alt: 'Calm room with a compass and bagua pattern on the floor' },
-  sources: { src: sourcesImg, alt: 'Candlelit library with open astrology books' },
+  chart: { src: 'explore/chart.jpg', alt: 'Etched zodiac wheel above an open book' },
+  timing: { src: 'explore/timing.jpg', alt: 'Star-filled hourglass beside a road of moon phases' },
+  growth: { src: 'explore/growth.jpg', alt: 'Woman with a lantern watching a seedling grow from a journal' },
+  relationships: { src: 'explore/relationships.jpg', alt: 'Two overlapping zodiac wheels above reaching hands' },
+  home: { src: 'explore/home.jpg', alt: 'Calm room with a compass and bagua pattern on the floor' },
+  sources: { src: 'explore/sources.jpg', alt: 'Candlelit library with open astrology books' },
 };
 
 type DiscoveryItem = {
@@ -117,7 +112,7 @@ export default function ExploreDiscover() {
           </div>
           <span className="text-xs text-muted-foreground">{visibleItems.length} places to explore</span>
         </div>
-        {april && ART[active] && <img src={ART[active].src} alt={ART[active].alt} width={1152} height={640} className="mt-5 aspect-[16/7] w-full rounded border border-border object-cover gentle-fade" />}
+        {april && ART[active] && <img src={privateImage(ART[active].src)} alt={ART[active].alt} width={1152} height={640} className="mt-5 aspect-[16/7] w-full rounded border border-border object-cover gentle-fade" />}
         <div className="mt-5 grid gap-4 sm:grid-cols-2">
           {visibleItems.map(item => (
             <article key={`${item.category}-${item.to}`} className="overflow-hidden rounded border border-border bg-card/60 p-5">

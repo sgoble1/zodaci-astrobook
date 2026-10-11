@@ -1,10 +1,10 @@
 import { useMemo } from 'react';
 import { computeChart, localToUtc, type ChartInput } from '@/lib/astro';
 import { PLACEMENTS, longitudeOf } from '@/content/april';
+import { APRIL } from '@/pages/ChartCalculator';
 
 // Re-runs April's chart from the official birth facts every time the page opens and grades
 // every recorded placement against the fresh calculation. No stored scores — always live.
-const BIRTH: ChartInput = { date: '1990-09-06', time: '15:38', lat: 42.8689, lon: -76.9856, tz: 'America/New_York', placeLabel: 'Geneva, New York', placeSource: 'manual', sex: 'female' };
 const TOL: Record<string, number> = { northNode: 1.6, southNode: 1.6, lilith: 0.25 }; // known method differences (mean vs true)
 
 type Grade = 'match' | 'close' | 'off' | 'separate';
@@ -18,7 +18,7 @@ const dm = (d: number) => `${Math.floor(d)}°${String(Math.round((d % 1) * 60)).
 
 export function DataAudit() {
   const rows = useMemo(() => {
-    const c = computeChart(BIRTH);
+    const c = computeChart(APRIL);
     return PLACEMENTS.map(p => {
       const b = c.bodies.find(x => x.key === p.key);
       const rec = longitudeOf(p);
@@ -32,7 +32,7 @@ export function DataAudit() {
       return { p, grade, calc: `${b.sign} ${b.deg}°${String(b.min).padStart(2, '0')}′ · house ${b.house ?? '?'}${b.retro ? ' · Rx' : ''}`, diff, note: notes || (grade === 'close' ? b.note ?? '' : '') };
     });
   }, []);
-  const { utc } = localToUtc(BIRTH.date, BIRTH.time!, BIRTH.tz);
+  const { utc } = localToUtc(APRIL.date, APRIL.time ?? '12:00', APRIL.tz);
   const checked = rows.filter(r => r.grade !== 'separate');
   const score = Math.round(checked.reduce((s, r) => s + (r.grade === 'match' ? 1 : r.grade === 'close' ? 0.9 : 0), 0) / checked.length * 100);
   const offs = rows.filter(r => r.grade === 'off').length;
