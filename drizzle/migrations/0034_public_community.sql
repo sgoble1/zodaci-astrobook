@@ -1,0 +1,17 @@
+CREATE TABLE public.community_posts (id uuid PRIMARY KEY DEFAULT gen_random_uuid(), author_id uuid NOT NULL, author_name text NOT NULL CHECK (char_length(author_name) BETWEEN 1 AND 80), title text NOT NULL CHECK (char_length(title) BETWEEN 3 AND 180), body text NOT NULL CHECK (char_length(body) BETWEEN 20 AND 10000), category text NOT NULL DEFAULT 'Chart questions' CHECK (category IN ('Chart questions','Reflection','Reading club')), created_at timestamptz NOT NULL DEFAULT now());
+GRANT SELECT ON public.community_posts TO anon;
+GRANT SELECT,INSERT,DELETE ON public.community_posts TO authenticated;
+GRANT ALL ON public.community_posts TO service_role;
+ALTER TABLE public.community_posts ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Public discussion reads" ON public.community_posts FOR SELECT USING (true);
+CREATE POLICY "Own discussion inserts" ON public.community_posts FOR INSERT TO authenticated WITH CHECK (auth.uid() = author_id);
+CREATE POLICY "Own or admin discussion delete" ON public.community_posts FOR DELETE TO authenticated USING (auth.uid() = author_id OR public.has_role(auth.uid(),'admin'));
+CREATE TABLE public.community_replies (id uuid PRIMARY KEY DEFAULT gen_random_uuid(), post_id uuid NOT NULL REFERENCES public.community_posts(id) ON DELETE CASCADE, author_id uuid NOT NULL, author_name text NOT NULL CHECK (char_length(author_name) BETWEEN 1 AND 80), body text NOT NULL CHECK (char_length(body) BETWEEN 2 AND 5000), created_at timestamptz NOT NULL DEFAULT now());
+GRANT SELECT ON public.community_replies TO anon;
+GRANT SELECT,INSERT,DELETE ON public.community_replies TO authenticated;
+GRANT ALL ON public.community_replies TO service_role;
+ALTER TABLE public.community_replies ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Public reply reads" ON public.community_replies FOR SELECT USING (true);
+CREATE POLICY "Own reply inserts" ON public.community_replies FOR INSERT TO authenticated WITH CHECK (auth.uid() = author_id);
+CREATE POLICY "Own or admin reply delete" ON public.community_replies FOR DELETE TO authenticated USING (auth.uid() = author_id OR public.has_role(auth.uid(),'admin'));
+CREATE INDEX community_replies_post ON public.community_replies(post_id);
