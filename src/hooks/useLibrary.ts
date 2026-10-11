@@ -5,7 +5,7 @@ import { supabase } from '@/integrations/supabase/client';
 export type LibraryItem = {
   id: string; kind: string; title: string; description: string | null; category: string | null;
   file_path: string; file_name: string; mime_type: string | null; size_bytes: number | null;
-  owner_id: string; created_at: string; url?: string; cover_path?: string | null; cover_url?: string; shared_with_space?: boolean; sections?: unknown;
+  owner_id: string; created_at: string; url?: string; cover_path?: string | null; cover_url?: string; shared_with_space?: boolean; workspace_id?: string | null; sections?: unknown;
 };
 
 export function useSession() {
@@ -40,6 +40,8 @@ export function useLibrary(kind: 'podcast' | 'source' | 'masterbook') {
       const { data: signed } = await supabase.storage.from('library').createSignedUrls(paths, 60 * 60 * 6);
       const urls = new Map(paths.map((path, index) => [path, signed?.[index]?.signedUrl]));
       rows.forEach(r => { r.url = urls.get(r.file_path) ?? undefined; r.cover_url = r.cover_path ? urls.get(r.cover_path) ?? undefined : undefined; });
+      const sharedRows=rows.filter(r=>r.workspace_id && !r.url);
+      await Promise.all(sharedRows.map(async r=>{const result=await supabase.functions.invoke('workspace-audio',{body:{itemId:r.id}});if(result.data?.url)r.url=result.data.url;}));
     }
     setItems(rows); setLoading(false);
   }, [kind]);
