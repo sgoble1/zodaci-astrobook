@@ -150,3 +150,19 @@ export function UploadForm({ accept, onUpload, categoryLabel = 'Series / topic' 
     </form>
   );
 }
+
+/** Episode length: exact from WAV size (24 kHz 16-bit mono), otherwise read from the audio file's metadata. */
+function EpisodeLength({ ep }: { ep: LibraryItem }) {
+  const isWav = /wav/i.test(ep.mime_type ?? '') || /\.wav$/i.test(ep.file_name ?? '');
+  const [secs, setSecs] = useState<number | null>(isWav && ep.size_bytes ? Math.max(0, (ep.size_bytes - 44) / 48000) : null);
+  useEffect(() => {
+    if (secs != null || !ep.url) return;
+    const a = new Audio(); a.preload = 'metadata';
+    a.onloadedmetadata = () => { if (Number.isFinite(a.duration)) setSecs(a.duration); };
+    a.src = ep.url;
+    return () => { a.src = ''; };
+  }, [ep.url, secs]);
+  if (secs == null) return <span>length loading…</span>;
+  const m = Math.floor(secs / 60), s = Math.round(secs % 60);
+  return <span className="text-foreground">{m ? `${m} min ${s}s` : `${s}s`}</span>;
+}
