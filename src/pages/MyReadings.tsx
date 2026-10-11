@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button';
 export default function MyReadings() {
   const birth = useMyBirth();
   const chart = useMemo(() => birth ? computeChart({ ...toChartInput(birth), houseSystem: birth.houseSystem }) : null, [birth]);
-  const readings = useMemo(() => chart ? buildReadings(chart, !!birth?.time) : [], [chart, birth]);
+  const readings = useMemo(() => chart ? buildReadings(chart, !!birth?.time, birth?.date) : [], [chart, birth]);
   if (birth === undefined) return <p role="status">Loading your readings…</p>;
   if (!birth || !chart) return (
     <article className="mx-auto max-w-lg space-y-4 py-10 text-center">
