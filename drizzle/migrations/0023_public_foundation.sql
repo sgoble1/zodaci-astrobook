@@ -1,4 +1,3 @@
--- Public version foundation: personal birth profiles, generated readings, invite-based shared spaces, subscriptions.
 CREATE TABLE IF NOT EXISTS public.profiles (
   id uuid PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
   display_name text NOT NULL DEFAULT '',
@@ -72,7 +71,6 @@ CREATE OR REPLACE FUNCTION public.is_space_owner(_space_id uuid)
 RETURNS boolean LANGUAGE sql STABLE SECURITY DEFINER SET search_path = public AS
 $$ SELECT EXISTS (SELECT 1 FROM public.spaces WHERE id = _space_id AND owner_id = auth.uid()) $$;
 
--- Creates a space and makes the caller its owner-member in one step.
 CREATE OR REPLACE FUNCTION public.create_space(_name text)
 RETURNS uuid LANGUAGE plpgsql SECURITY DEFINER SET search_path = public AS $$
 DECLARE sid uuid;
@@ -83,7 +81,6 @@ BEGIN
   RETURN sid;
 END $$;
 
--- Accepts an invite only when the signed-in verified email matches it.
 CREATE OR REPLACE FUNCTION public.accept_space_invite(_token uuid)
 RETURNS uuid LANGUAGE plpgsql SECURITY DEFINER SET search_path = public AS $$
 DECLARE inv record;
