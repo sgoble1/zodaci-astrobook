@@ -22,5 +22,6 @@ export type OtherSystem = {
 export let OTHER_SYSTEMS: OtherSystem[] = [];
 
 export let COMMON_THREADS: { theme: string; systems: string[]; explanation: string; }[] = [];
-registerPrivateValue("otherSystems", "OTHER_SYSTEMS", value => { OTHER_SYSTEMS = value as typeof OTHER_SYSTEMS; }, []);
+const icons = [Compass, CircleDot, Grid3X3, Sparkles, Layers3, Feather, Trees];
+registerPrivateValue("otherSystems", "OTHER_SYSTEMS", value => { OTHER_SYSTEMS = (value as OtherSystem[]).map((item, index) => ({ ...item, icon: icons[index] ?? Compass })); }, []);
 registerPrivateValue("otherSystems", "COMMON_THREADS", value => { COMMON_THREADS = value as typeof COMMON_THREADS; }, []);

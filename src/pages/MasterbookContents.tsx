@@ -1,11 +1,10 @@
 import { useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import toc from '@/content/masterbookToc.json';
+import { entries } from '@/content/privateToc';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 
 type Entry = { id: string; label?: string; title: string; part?: string; words?: number; sections?: string[] };
-const entries = toc as Entry[];
 
 function Shell({ children }: { children: React.ReactNode }) {
   return (

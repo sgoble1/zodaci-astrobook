@@ -1,18 +1,18 @@
 import { computeChart, fmtLon, type ChartInput } from '@/lib/astro';
+import { APRIL } from '@/pages/ChartCalculator';
 
 export type SystemPlacement = { label: string; value: string; meaning: string };
 export type SystemAspect = { title: string; technical: string; plain: string };
 export type SystemChart = { summary: string; method: string; placements: SystemPlacement[]; aspects: SystemAspect[]; values: number[] };
 
-const APRIL: ChartInput = { date: '1990-09-06', time: '15:38', lat: 42.8689, lon: -76.9856, tz: 'America/New_York', placeLabel: 'Geneva, New York', placeSource: 'manual', sex: 'female' };
 const reduce = (n: number) => { while (n > 9) n = String(n).split('').reduce((a, x) => a + Number(x), 0); return n; };
 const jdn = (y: number, m: number, d: number) => { const a = Math.floor((14-m)/12), yy=y+4800-a, mm=m+12*a-3; return d+Math.floor((153*mm+2)/5)+365*yy+Math.floor(yy/4)-Math.floor(yy/100)+Math.floor(yy/400)-32045; };
 const mod = (n: number, d: number) => ((n % d) + d) % d;
 const TZOLKIN = ["Imix'","Ik'","Ak'b'al","K'an","Chikchan","Kimi","Manik'","Lamat","Muluk","Ok","Chuwen","Eb'","B'en","Ix","Men","Kib'","Kab'an","Etz'nab'","Kawak","Ajaw"];
 const ARCANA = ['The Fool','The Magician','The High Priestess','The Empress','The Emperor','The Hierophant','The Lovers','The Chariot','Strength','The Hermit','Wheel of Fortune','Justice','The Hanged Man','Death','Temperance','The Devil','The Tower','The Star','The Moon','The Sun','Judgement','The World'];
-const chart = computeChart(APRIL);
 
 export function calculateOtherSystem(slug: string): SystemChart {
+  const chart = computeChart(APRIL);
   if (slug === 'vedic') {
     const ayanamsa = 23.72;
     const picks = chart.bodies.filter(b => ['sun','moon','mercury','venus','mars','jupiter','saturn','northNode'].includes(b.key));
