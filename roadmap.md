@@ -1,130 +1,14 @@
-# Roadmap
+# Roadmap — AstroBook Public (draft)
 
-## Latest updates and Library topics
-- [x] Refresh Recent updates with the latest completed changes.
-- [x] Add two April-specific Library topics with verified chapter links and clear interpretation labels.
-- [x] Verify the pages, menu links, and update feed.
+April's private AstroBook is untouched; this draft is the public version.
 
-- [x] Map all Volume II content to its relevant pages with full text and citations.
-- [x] Protect the Sources Reading Room and connect entries to real Masterbook chapters.
-- [x] Change Shane and new relationship defaults from Partner to Friend.
-- [x] Reframe relationship cautions constructively without hiding calculated facts.
-- [x] Add reciprocal April/Shane contact access.
-- [x] Build the shared overview for messages, posts, notes, files, and future topics.
-- [x] Add the private human chat feed to Home and My Dashboard.
-- [x] Modernize private chat with attachments, replies, reactions, editing, deletion, topics, unread counts, and live updates.
-- [x] Verify access, source links, relationship updates, and build quality.
-- [x] Rename saved AI conversations to SmarChat without changing routes or history.
-- [x] Add private wonderings with comments, reactions, discussed state, and shared-dashboard visibility.
-- [x] Move extracted Masterbook/source text behind signed password unlock tokens and remove public copies.
-- [x] Improve private chat query scope, unread counts, errors, dialogs, and phone layout.
-- [x] Verify saved messages, posts, comments, and reactions from both accounts.
-- [x] Dedicated Wonderings page with mobile layout.
-- [x] Faster private text loading, no blank screens on failure.
-- [x] Keyboard and screen-reader pass (skip link, focus, labels).
-- [x] Public Masterbook index page (chapters/sections, no password).
-- [x] Shared reading space: upload + annotate documents together.
-- [x] Second Shane email as admin + Shane identity; Create a Topic & Page tool.
-
-## Current batch
-- [x] Reading Together notes searchable in Ask the Sources / SmarChat.
-- [x] Keyboard + screen-reader fixes: Wonderings, Reading Room, private chat, Ask, shared space forms.
-- [x] Masterbook Contents chapters show full text after the password (unlock in place).
-- [x] Full-document page in the Reading Room (whole document text).
-- [x] Workbook menu section: hub, guided modules with AI feedback, daily check-in, thought reframe, journal & patterns.
-- [x] Therapy companion chat (separate sessions, private per account, chart-aware).
-- [x] Move "Create a Topic & Page" to bottom of Begin.
-- [x] Create-a-page: AI or write-it-myself, save button, edit later.
-- [x] Page writer cites real passages and shows them on the page.
-- [x] After create: menu refreshes, scrolls to new item, glowing animated highlight.
-- [x] Second Shane email allowed in shared-space screens; unread badges in menu.
-- [x] Tell April her Oracle sessions and workbook are private (not shared with Shane).
-- [x] Fix Family & Home topic: April-only content (remove Shane's info); audit build for non-April info.
-- [x] Shared dashboard: Recommendations (movies, music, etc.).
-- [x] Shared Media Library: upload images/videos/screenshots, native viewer, likes/reactions, chat about each file.
-- [x] "Chat about this" + bookmark actions on content that post into shared chat.
-- [x] Real working podcast generator (AI script + speech) that lists and plays in Podcasts.
-- [x] Replace illustration descriptions with generated images.
-- [x] Global first-view animations for charts and graphics.
-- [x] Highlight Create a Topic & Page with an always-visible amber glow.
-- [x] Add an Other Systems dashboard and seven cross-cultural interpretation pages.
-- [x] Add April's calculated natal chart, houses, aspects, and printable report.
-- [x] Save generated podcasts with cover art for both approved shared-space members.
-
-## Current refinements
-- [x] Highlight April's Workbook title in yellow and tint its full menu section light yellow.
-- [x] Add plain-language explanations to technical section titles and unfamiliar concepts.
-- [x] Replace Chat about this with a destination chooser for shared chat, Therapy Oracle, SmarChat, or Sources.
-- [x] Let podcast creators save privately or share immediately, then change that choice later.
-## Current build
-- [x] Give every Other Systems page a calculated, system-specific chart and placement meanings.
-- [x] Split Podcasts into sortable shared and private libraries with complete playback controls.
-- [x] Make generated episodes use, store, and display citations from protected Masterbook passages.
-- [x] Rewrite Workbook guidance in plain language and add a step-by-step interpretation guide.
-- [x] Add plain-language explanations beside every relevant planet, house, and aspect in the chart report.
-- [x] Verify the updated pages on desktop and mobile, including playback, privacy, citations, and navigation.
-
-## Timing & Cycles refinement
-- [x] Rename and move Timeline Overview to the top of Timing & Cycles.
-- [x] Add a plain-language summary of all timing and retrograde sections while preserving the full source list.
-- [x] Add a transparent misty light-grey highlight to the full Timing & Cycles menu group.
-- [x] Verify the updated menu and overview on desktop and mobile.
-- [x] Add an Explore & Discover page with interactive categories linking to related content.
-- [x] Add Explore & Discover to the menu and verify its links on desktop and mobile.
-
-## Privacy and naming
-- [x] Block search-engine crawling and indexing for this private April site.
-- [x] Correct SmarChat to SmartChat throughout the interface.
-
-## Discovery sources and plain language
-- [x] Connect every Explore & Discover category to relevant Masterbook chapters and source pages.
-- [x] Add April-specific plain-language explanations for every Other Systems placement and relationship without removing technical details.
-
-## Social Integration, chart guide, discovery, and private release
-- [x] Add private Social Integration conversations and a chart-aware Social Counselor.
-- [x] Add Social Integration to Workbook navigation, tools, and Chat about this.
-- [x] Add a separate plain-language guide for every planet, house, and aspect type without removing the report.
-- [x] Expand Explore & Discover into linked learning trails with real destination pages and source chapters.
-- [x] Verify private access, responsive accessibility, live no-index headers, and publish.
-
-## Instructions guide and chart source audit
-- [x] Add an Instructions button directly beneath every “Chat about this page” control.
-- [x] Build a complete clickable guide covering every menu section, page, tool, counselor, and podcast workflow.
-- [x] Verify April’s birth inputs against authoritative uploaded sources and correct all calculated chart outputs.
-- [x] Recheck dependent chart interpretations, houses, aspects, and guide content for consistency.
-- [x] Verify the guide and corrected chart on desktop and mobile, including keyboard access.
-
-## Chat session resilience
-- [x] Refresh private counselor credentials before requests and handle expired sessions without blanking the page.
-- [x] Verify expired-session handling and authenticated Social Counselor loading without screen crashes.
-
-## AstroBook mobile and workbook upgrade
-- [x] Rebrand the private experience as AstroBook with a purple-and-yellow star logo.
-- [x] Change the home Begin action to Explore & Discover.
-- [x] Add chapter-specific visual thinking tools throughout the Workbook.
-- [x] Repair and verify the complete mobile menu and narrow-screen experience.
-- [x] Verify accessibility, representative pages, and build quality on mobile and desktop.
-
-## System history and interpretation expansion
-- [x] Add an honest origin, history, method, present-day use, and limitations guide to Social Integration.
-- [x] Expand all seven Other Systems pages with accurate historical context and careful cultural framing.
-- [x] Add deeper April-specific interpretations without removing calculations or plain-language explanations.
-- [x] Add readable reference links and clearly distinguish history, modern practice, and symbolic reflection.
-- [x] Verify the expanded pages on mobile and desktop, including links and build quality.
-- [x] Remove all specific ancestry and family-history claims from April-focused content; keep Family & Home birth-chart-specific.
-- [x] Strengthen the private chats with complete stored conversation context and broad, accurate April-chart expertise across astrology, psychology, therapy, life management, and social coaching.
-
-## Shared libraries, podcast length, relationships, and mobile density
-- [x] Verify and finish shared Media Library folders, drag-and-drop, and management on desktop and mobile.
-- [x] Add short, standard, and long generated-podcast length choices and preserve source citations.
-- [x] Add verified two-way needs, chart connections, shared facts, and coincidences to each relationship page.
-- [x] Fix narrow mobile tables and overly vertical module-heading layouts across the app.
-- [x] Verify build quality, keyboard use, and representative mobile/desktop screens.
-
-## Illustrations, chart accuracy, live updates
-- [x] Themed illustrations on Explore & Discover; all 16 Compendium illustrations generated from the Illustration Guide prompts.
-- [x] Mercury house: books use Placidus (all points match); Placidus is now the default; Porphyry/Whole Sign/Equal switcher with Mercury note.
-- [x] Chiron table from NASA JPL Horizons (1940–2060) in the calculator.
-- [x] Accuracy dashboard on the Birth Chart and Data Quality pages.
-- [x] Recent updates refresh live (verified with a test photo and podcast, then removed).
-- [ ] AI credits — blocked: workspace billing (Settings → Plans & credits).
+- [x] Unique graphic on every box (Explore, Instructions, Planets, Workbook modules)
+- [x] Staged database foundation: profiles, generated readings, shared spaces + email invites, subscriptions, AI usage (applies when the draft is accepted)
+- [ ] Remove April-only content (hard-coded chart, protected books, password gate, fixed-email shared space)
+- [ ] Sign-up + 4-step birth data onboarding saving the user's chart
+- [ ] Personal reading generator + per-page illustrations
+- [ ] Shared spaces UI with email invites; move shared_* tables to space membership
+- [ ] Subscriptions (pick Stripe or Paddle), locked previews, server-side checks
+- [ ] Public homepage with pricing and FAQ
+- [ ] "My AstroBook" organized library
+- [ ] Top recommendations: 1, 2, 4, 13, 18, 19, 28, 38, 47, 50
