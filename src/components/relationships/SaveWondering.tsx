@@ -7,7 +7,7 @@ import { toast } from 'sonner';
 export function SaveWondering({ text }: { text: string }) {
   const { items } = useRelationships();
   const [id, setId] = useState(''); const [busy, setBusy] = useState(false);
-  if (!items.length) return null;
+  if (!items.length || !text.trim()) return null;
   return <div className="flex flex-wrap gap-2 items-center"><select aria-label="Relationship to save this question to" className="min-w-0 max-w-full rounded border border-input bg-background p-2 text-sm" value={id} onChange={e => setId(e.target.value)}><option value="">Save to a relationship…</option>{items.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}</select><Button variant="outline" size="sm" disabled={!id || busy} onClick={async () => {
     const r = items.find(p => p.id === id); if (!r) return;
     setBusy(true);

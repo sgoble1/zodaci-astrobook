@@ -54,6 +54,9 @@ Deno.serve(async (req) => {
       if (orderError || !order) return json({ error: 'Order not available.' }, 404);
       if (!['draft','awaiting_payment'].includes(order.status)) return json({ error: 'This order is not awaiting payment.' }, 400);
       if (order.shipping_address?.country !== 'US' || !order.cover_path?.startsWith(`${user.id}/book-covers/`)) return json({ error: 'A personal cover and US address are required.' }, 400);
+      if (!order.manuscript_path?.startsWith(`${user.id}/manuscripts/`) || !Number.isInteger(order.manuscript_pages) || order.manuscript_pages < 4) return json({ error: 'Compose and review your manuscript before paying.' }, 400);
+      const manuscript = await admin.storage.from('library').download(order.manuscript_path);
+      if (manuscript.error || !manuscript.data || manuscript.data.size < 1000) return json({ error: 'Your manuscript file is not available. Please compose it again.' }, 400);
       const extras = Array.isArray(order.extra_sections) ? order.extra_sections : [];
       if (extras.length > 2 || extras.some((s:unknown) => typeof s !== 'string' || !s.trim() || s.length > 160)) return json({ error: 'Choose up to two additional sections.' }, 400);
       if (order.checkout_session_id && order.environment === env) {
