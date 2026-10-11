@@ -29,7 +29,7 @@ export function SourceChapters({ match, ids = [], title = 'The full text from th
       const hits = idx.filter(e => (selected.has(e.id) || (match?.test(e.title) ?? false)) && !(exclude && exclude.test(e.title))).slice(0, limit);
       const texts = await Promise.all(hits.map(h => loadText(h.id)));
       if (live) setItems(hits.map((h, i) => ({ ...h, text: texts[i].replace(/^#\s.*\n/, '') })));
-    });
+    }).catch(() => { if (live) setItems([]); });
     return () => { live = false; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [match?.source, ids.join('|'), exclude?.source]);

@@ -85,7 +85,7 @@ export function CommandPalette() {
         ((u.sections as { title: string }[] | null) ?? []).forEach((sec, i) => docs.push({ id: `up-${u.id}-${i}`, kind: 'upload', title: sec.title, subtitle: u.title, body: '', route: `/masterbook/u/${u.id}#s${i}` } as Doc));
       });
       setExtra(docs);
-    })();
+    })().catch(() => {});
   }, [open, extra.length]);
   const all = useMemo(() => [...(SEARCH_INDEX as Doc[]), ...FS_DOCS, ...extra], [extra]);
 
