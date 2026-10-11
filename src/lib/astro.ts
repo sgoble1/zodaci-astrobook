@@ -20,8 +20,8 @@ export interface ChartInput {
 }
 export type HouseSystem = 'porphyry' | 'placidus' | 'whole' | 'equal';
 export const HOUSE_SYSTEMS: { id: HouseSystem; label: string; note: string }[] = [
-  { id: 'porphyry', label: 'Porphyry', note: 'Splits each quarter between the Ascendant and Midheaven into three equal parts. Used by AstroBook by default and matches most of the source books.' },
-  { id: 'placidus', label: 'Placidus', note: 'Splits each quarter by the time a degree takes to rise. The most common modern Western system.' },
+  { id: 'porphyry', label: 'Porphyry', note: 'Splits each quarter between the Ascendant and Midheaven into three equal parts. Mercury falls 7′ past this system's 9th-house line, so it reads as 9th here.' },
+  { id: 'placidus', label: 'Placidus', note: 'Splits each quarter by the time a degree takes to rise. The most common modern Western system, and the one April's books use: every placement in the books matches it. AstroBook's default.' },
   { id: 'whole', label: 'Whole Sign', note: 'Each house is one whole sign, starting with the rising sign. The oldest Hellenistic method.' },
   { id: 'equal', label: 'Equal', note: 'Twelve 30° houses measured from the exact Ascendant degree.' },
 ];
@@ -212,7 +212,7 @@ export function computeChart(input: ChartInput): ChartResult {
   if (yr < 1970) flags.push({ level: 'approximate', topic: 'Historical time zone', note: 'Pre-1970 daylight-saving rules were irregular in many places; confirm the offset below.' });
 
   let asc: number | null = null, mc: number | null = null, cusps: number[] | null = null, vertex: number | null = null;
-  if (timeKnown) { const a = angles(utc, input.lat, input.lon); ({ asc, mc, vertex } = a); cusps = cuspsFor(input.houseSystem ?? 'porphyry', a, input.lat); }
+  if (timeKnown) { const a = angles(utc, input.lat, input.lon); ({ asc, mc, vertex } = a); cusps = cuspsFor(input.houseSystem ?? 'placidus', a, input.lat); }
 
   const bodies: BodyPos[] = BODIES.map(([key, name, glyph, b]) => {
     const lon = eclLon(b, utc);

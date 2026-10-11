@@ -49,7 +49,7 @@ export function DataAudit() {
       <p className="text-sm text-foreground/85">
         <strong>In plain words:</strong> AstroBook takes April's official birth facts — September 6, 1990, 3:38 PM EDT, Geneva, New York — works out the sky again from scratch, and compares every saved placement with the new result. Green means it agrees to within 6 arc‑minutes (a tenth of a degree). "Close" means a small, known difference between calculation methods, not a mistake.
       </p>
-      <p className="text-xs text-muted-foreground">Birth time converted to world time: {utc.toISOString().replace('T', ' ').slice(0, 16)} UTC (EDT = UTC−4). Location 42°52′N, 76°59′W. Houses: Porphyry.</p>
+      <p className="text-xs text-muted-foreground">Birth time converted to world time: {utc.toISOString().replace('T', ' ').slice(0, 16)} UTC (EDT = UTC−4). Location 42°52′N, 76°59′W. Houses: Placidus (the system the books use).</p>
       <div className="overflow-x-auto">
         <table className="w-full min-w-[640px] text-sm">
           <thead><tr className="text-left text-xs text-muted-foreground"><th className="py-2 pr-3">Point</th><th className="pr-3">Saved in AstroBook</th><th className="pr-3">Fresh calculation</th><th className="pr-3">Gap</th><th>Result</th></tr></thead>
