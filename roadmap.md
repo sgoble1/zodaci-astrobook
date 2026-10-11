@@ -12,5 +12,5 @@ April's private AstroBook is untouched; this draft is the public version.
 - [ ] Shared spaces UI with email invites; move shared_* tables to space membership
 - [ ] Subscriptions (pick Stripe or Paddle), locked previews, server-side checks
 - [x] Public homepage with FAQ (pricing pending Stripe/Paddle choice)
-- [ ] "My AstroBook" organized library
+- [x] "My AstroBook" organized library (/my-astrobook)
 - [ ] Top recommendations: 1, 2, 4, 13, 18, 19, 28, 38, 47, 50

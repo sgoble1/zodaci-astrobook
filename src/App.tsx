@@ -68,6 +68,7 @@ import SocialIntegration from './pages/SocialIntegration';
 import Onboarding from './pages/Onboarding';
 import MyChart from './pages/MyChart';
 import MyReadings from './pages/MyReadings';
+import MyLibrary from './pages/MyLibrary';
 import Auth from './pages/Auth';
 import { CounselorsIndex, CounselorProfile, CounselorSession } from './pages/Counselors';
 import ChartGuide from './pages/ChartGuide';
@@ -168,6 +169,7 @@ export default function App() {
             <Route path="/start" element={<Onboarding />} />
             <Route path="/my-chart" element={<MyChart />} />
             <Route path="/my-readings" element={<MyReadings />} />
+            <Route path="/my-astrobook" element={<MyLibrary />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/instructions" element={<Instructions />} />
             <Route path="/birth-chart" element={<BirthChart />} />
