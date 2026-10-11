@@ -25,8 +25,8 @@ export function UpdatesFeed({ limit = 6 }: { limit?: number }) {
           to: d.kind === 'podcast' ? '/podcasts' : d.kind === 'masterbook' ? '/masterbook/index' : '/sources',
         })),
         ...(pages.data ?? []).map(p => ({ date: p.created_at, kind: 'Content' as UpdateKind, title: `New page: ${p.title}`, body: p.brief ? p.brief.slice(0, 160) : `Added to the ${p.menu_group} menu.`, to: `/p/${p.id}` })),
-        ...(media.data ?? []).map(m => ({ date: m.created_at, kind: 'Content' as UpdateKind, title: `New in the Media Library: ${m.caption || m.file_name}`, body: 'A photo, video or file was added to the shared space.', to: '/shared' })),
-        ...(recs.data ?? []).map(r => ({ date: r.created_at, kind: 'Content' as UpdateKind, title: `New recommendation: ${r.title}`, body: r.category ? `Filed under ${r.category}.` : 'Added to shared Recommendations.', to: '/shared' })),
+        ...(media.data ?? []).map(m => ({ date: m.created_at, kind: 'Content' as UpdateKind, title: `New in the Media Library: ${m.caption || m.file_name}`, body: 'A photo, video or file was added to the shared space.', to: '/shared/media' })),
+        ...(recs.data ?? []).map(r => ({ date: r.created_at, kind: 'Content' as UpdateKind, title: `New recommendation: ${r.title}`, body: r.category ? `Filed under ${r.category}.` : 'Added to shared Recommendations.', to: '/shared/recommendations' })),
       ]);
     };
     void load();
