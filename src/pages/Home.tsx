@@ -4,7 +4,7 @@ import { BoxArt } from '@/components/common/BoxArt';
 import { useMyBirth } from '@/lib/myBirth';
 import { useAprilSpace } from '@/hooks/useAprilSpace';
 import AprilHome from '@/pages/AprilHome';
-import heroImg from '@/assets/hero-threshold.jpg';
+import heroImg from '@/assets/astrobook-public.jpg';
 
 const steps = [
   { n: '1', title: 'Enter your birth details', desc: 'Date, time and place. No birth time? There is a mode for that too — your chart still works.' },
@@ -38,13 +38,13 @@ export default function Home() {
   return (
     <div className="space-y-16">
       {/* Hero */}
-      <section className="grid lg:grid-cols-[1.05fr,0.95fr] gap-10 items-center gentle-fade">
-        <div>
+      <section className="relative isolate overflow-hidden rounded min-h-[540px] gentle-fade">
+        <img src={heroImg} alt="Printed AstroBook and an open chart book" width={1536} height={1024} className="absolute inset-0 -z-20 h-full w-full object-cover" />
+        <div className="absolute inset-0 -z-10 bg-background/65" />
+        <div className="max-w-2xl p-6 sm:p-10">
           <div className="font-smallcaps text-[11px] text-gold mb-4">AstroBook · A Personal Chart Library</div>
           <h1 className="font-display leading-[0.95]">
-            Your chart.
-            <br />
-            <span className="italic text-muted-foreground">A book written from your sky.</span>
+            AstroBook
           </h1>
           <div className="gold-rule my-6 max-w-md" />
           <p className="text-lg leading-relaxed text-foreground/85 max-w-xl">
@@ -67,10 +67,9 @@ export default function Home() {
           </div>
           <p className="mt-6 text-xs text-muted-foreground">Free to start · No birth time needed · Your data stays yours</p>
         </div>
-        <div className="deckle p-2 bg-vellum">
-          <img src={heroImg} alt="A woman viewed from behind stands at the threshold of a great celestial doorway; above her a natal chart in antique gold." width={1600} height={1024} className="w-full h-auto" />
-        </div>
       </section>
+
+      <section className="flex flex-wrap items-center justify-between gap-4 border-y border-border py-6"><div><h2 className="text-2xl">Your sky, in print.</h2><p className="text-muted-foreground mt-2">Personal softcover books from $45. Free US shipping.</p></div><div className="flex gap-2"><Button asChild><Link to="/books">Create my printed book</Link></Button><Button asChild variant="outline"><Link to="/blog">Community journal</Link></Button></div></section>
 
       {/* How it works */}
       <section className="gentle-fade">

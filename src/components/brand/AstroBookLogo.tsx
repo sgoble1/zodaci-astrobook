@@ -1,4 +1,4 @@
-import astroBookLogo from '@/assets/astrobook-logo-concept-a.png';
+import astroBookLogo from '@/assets/astrobook-planet.png';
 import { cn } from '@/lib/utils';
 
 export function AstroBookLogo({ compact = false, className }: { compact?: boolean; className?: string }) {
