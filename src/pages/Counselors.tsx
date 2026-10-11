@@ -76,7 +76,7 @@ export function CounselorProfile() {
   }, [c]);
   if (!c) return <p>Counselor not found. <Link className="underline" to="/counselors">See all counselors</Link></p>;
   return (
-    <AuthGate>
+    <AuthGate what="your counselor sessions">{() => (
       <article className="mx-auto max-w-4xl space-y-6">
         <header className="flex items-center gap-4">
           {c.image && <img src={c.image} alt="" className="h-20 w-20 rounded-full object-cover" />}
@@ -97,7 +97,7 @@ export function CounselorProfile() {
                 <span className="font-medium">{s.title}</span><span className="text-sm text-muted-foreground">Started {fmt(s.created_at)} · last {fmt(s.updated_at)}</span></Link></li>))}</ul>}
         </section>
       </article>
-    </AuthGate>
+    )}</AuthGate>
   );
 }
 
@@ -123,7 +123,7 @@ export function CounselorSession() {
   if (!c) return <p>Counselor not found.</p>;
   const text = (p: unknown) => (Array.isArray(p) ? p : []).map((x: { type?: string; text?: string }) => (x.type === 'text' ? x.text : '')).join('');
   return (
-    <AuthGate>
+    <AuthGate what="this session">{() => (
       <article className="mx-auto max-w-3xl space-y-4">
         <nav aria-label="Breadcrumb" className="text-sm text-muted-foreground"><Link className="underline" to="/counselors">Counselors</Link> / <Link className="underline" to={`/counselors/${c.key}`}>{c.name}</Link></nav>
         {denied ? <p role="alert">This session isn't available. Sessions can only be opened by the person who had them.</p> : <>
@@ -143,6 +143,6 @@ export function CounselorSession() {
             })}</ol>}
         </>}
       </article>
-    </AuthGate>
+    )}</AuthGate>
   );
 }
