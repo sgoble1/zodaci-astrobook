@@ -67,6 +67,7 @@ import ExploreDiscover from './pages/ExploreDiscover';
 import SocialIntegration from './pages/SocialIntegration';
 import Onboarding from './pages/Onboarding';
 import MyChart from './pages/MyChart';
+import MyReadings from './pages/MyReadings';
 import Auth from './pages/Auth';
 import { CounselorsIndex, CounselorProfile, CounselorSession } from './pages/Counselors';
 import ChartGuide from './pages/ChartGuide';
@@ -166,6 +167,7 @@ export default function App() {
             <Route path="/explore" element={<ExploreDiscover />} />
             <Route path="/start" element={<Onboarding />} />
             <Route path="/my-chart" element={<MyChart />} />
+            <Route path="/my-readings" element={<MyReadings />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/instructions" element={<Instructions />} />
             <Route path="/birth-chart" element={<BirthChart />} />
