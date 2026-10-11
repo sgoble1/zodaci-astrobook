@@ -10,7 +10,6 @@ import { PublicLibrary, PublicReader, PublicDocument } from './pages/PublicLibra
 import { MasterbookContents, MasterbookContentsEntry } from './pages/MasterbookContents';
 import CreatePage from './pages/CreatePage';
 import CustomPageView from './pages/CustomPageView';
-import { SitePasswordGate } from './components/common/SitePasswordGate';
 import { DetailDrawerProvider, type DrawerPayload } from './components/common/DetailDrawer';
 import { CommandPalette } from './components/common/CommandPalette';
 import { ActivityTracker } from './components/common/ActivityTracker';
@@ -152,7 +151,7 @@ function Providers({ children }: { children: ReactNode }) {
 export default function App() {
   return (
     <BrowserRouter>
-    <SitePasswordGate>
+    <>
       <Providers>
         <ActivityTracker />
         <Routes>
@@ -247,7 +246,7 @@ export default function App() {
           </Route>
         </Routes>
       </Providers>
-    </SitePasswordGate>
+    </>
     </BrowserRouter>
   );
 }
