@@ -24,7 +24,7 @@ export default function AprilHome() {
       {/* Hero */}
       <section className="grid lg:grid-cols-[1.05fr,0.95fr] gap-10 items-center gentle-fade">
         <div>
-          <div className="font-smallcaps text-[11px] text-gold mb-4">AstroBook · A Personal Chart Library</div>
+          <div className="font-smallcaps text-[11px] text-gold mb-4">Zodaci · A Personal Chart Library</div>
           <h1 className="font-display leading-[0.95]">
             April.
             <br />
