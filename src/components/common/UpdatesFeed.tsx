@@ -11,13 +11,15 @@ export function UpdatesFeed({ limit = 6 }: { limit?: number }) {
   useEffect(() => {
     // Live feed: new podcasts, documents, created pages and shared items appear automatically.
     const load = async () => {
-      const [lib, pages, media, recs] = await Promise.all([
+      const [lib, pages, media, recs, posts] = await Promise.all([
         supabase.rpc('recent_library_items'),
         supabase.from('custom_pages').select('id,title,brief,menu_group,created_at').eq('status', 'ready').order('created_at', { ascending: false }).limit(15),
         supabase.from('shared_media').select('id,caption,file_name,created_at').order('created_at', { ascending: false }).limit(10),
         supabase.from('shared_recommendations').select('id,title,category,created_at').order('created_at', { ascending: false }).limit(10),
+        supabase.from('blog_posts').select('id,title,author_name,created_at').eq('published',true).order('created_at',{ ascending:false }).limit(10),
       ]);
       setLive([
+        ...(posts.data ?? []).map(p => ({ date:p.created_at,kind:'Content' as UpdateKind,title:`New article: ${p.title}`,body:`Published by ${p.author_name}.`,to:'/blog' })),
         ...(lib.data ?? []).map(d => ({
           date: d.created_at, kind: 'Content' as UpdateKind,
           title: d.kind === 'podcast' ? `New podcast: ${d.title}` : `New document: ${d.title}`,
@@ -31,7 +33,7 @@ export function UpdatesFeed({ limit = 6 }: { limit?: number }) {
     };
     void load();
     const ch = supabase.channel(`updates-feed-${Math.random().toString(36).slice(2)}`);
-    ['library_items', 'custom_pages', 'shared_media', 'shared_recommendations'].forEach(t => ch.on('postgres_changes', { event: 'INSERT', schema: 'public', table: t }, () => void load()));
+    ['library_items', 'custom_pages', 'shared_media', 'shared_recommendations','blog_posts'].forEach(t => ch.on('postgres_changes', { event: '*', schema: 'public', table: t }, () => void load()));
     ch.subscribe();
     const t = setInterval(() => void load(), 120000);
     return () => { clearInterval(t); void supabase.removeChannel(ch); };

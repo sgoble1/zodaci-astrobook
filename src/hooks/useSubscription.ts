@@ -23,15 +23,20 @@ export function useSubscription(): SubState {
       const env = envOrNull();
       if (!uid || !env) { if (alive) setS({ loading: false, userId: uid, tier: 'free' }); return; }
       const { data } = await supabase.from('billing_subscriptions').select('*').eq('user_id', uid).eq('environment', env).order('created_at', { ascending: false });
-      const row = (data ?? []).find(isActive);
+      const activeRows = (data ?? []).filter(isActive);
+      const row = activeRows.find(r => r.price_id === 'creator_monthly') || activeRows.find(r => r.price_id === 'full_access_monthly');
       if (alive) setS({ loading: false, userId: uid, tier: row ? TIER[row.price_id] ?? 'full' : 'free', status: row?.status, periodEnd: row?.current_period_end, cancelAtEnd: !!row?.cancel_at_period_end });
     };
-    supabase.auth.getUser().then(({ data }) => {
-      const uid = data.user?.id ?? null; load(uid);
+    const bind = (uid: string | null) => {
+      if (channel) { void supabase.removeChannel(channel); channel = null; }
+      void load(uid);
       if (uid) channel = supabase.channel(`billing-${uid}-${Math.random().toString(36).slice(2)}`)
         .on('postgres_changes', { event: '*', schema: 'public', table: 'billing_subscriptions', filter: `user_id=eq.${uid}` }, () => load(uid)).subscribe();
-    });
-    return () => { alive = false; if (channel) supabase.removeChannel(channel); };
+    };
+    supabase.auth.getUser().then(({ data }) => { if(alive) bind(data.user?.id ?? null); });
+    const { data: auth } = supabase.auth.onAuthStateChange((_event, session) => { setTimeout(() => { if(alive) bind(session?.user.id ?? null); },0); });
+    const timer = window.setInterval(() => { void supabase.auth.getUser().then(({ data }) => { if(alive) void load(data.user?.id ?? null); }); },15000);
+    return () => { alive = false; window.clearInterval(timer); auth.subscription.unsubscribe(); if (channel) void supabase.removeChannel(channel); };
   }, []);
   return s;
 }
