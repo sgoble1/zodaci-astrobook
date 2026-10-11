@@ -71,6 +71,7 @@ import MyReadings from './pages/MyReadings';
 import MyLibrary from './pages/MyLibrary';
 import Auth from './pages/Auth';
 import Pricing from './pages/Pricing';
+import CheckoutReturn from './pages/CheckoutReturn';
 import { CounselorsIndex, CounselorProfile, CounselorSession } from './pages/Counselors';
 import ChartGuide from './pages/ChartGuide';
 import Instructions from './pages/Instructions';
@@ -173,6 +174,7 @@ export default function App() {
             <Route path="/my-astrobook" element={<MyLibrary />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/pricing" element={<Pricing />} />
+            <Route path="/checkout/return" element={<CheckoutReturn />} />
             <Route path="/instructions" element={<Instructions />} />
             <Route path="/birth-chart" element={<BirthChart />} />
             <Route path="/chart-guide" element={<ChartGuide />} />

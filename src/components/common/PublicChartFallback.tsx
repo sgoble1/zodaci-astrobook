@@ -4,7 +4,7 @@ import { useMyBirth } from '@/lib/myBirth';
 import MyChart from '@/pages/MyChart';
 import MyReadings from '@/pages/MyReadings';
 
-const PUBLIC = ['/', '/explore', '/start', '/my-chart', '/my-readings', '/my-astrobook', '/auth', '/instructions', '/chart-guide', '/chart-calculator', '/pricing', '/podcasts', '/relationships', '/dashboard'];
+const PUBLIC = ['/', '/explore', '/start', '/my-chart', '/my-readings', '/my-astrobook', '/auth', '/instructions', '/chart-guide', '/chart-calculator', '/pricing', '/checkout', '/podcasts', '/relationships', '/dashboard'];
 export const isPublicPath = (p: string) => PUBLIC.some(x => p === x || (x !== '/' && p.startsWith(`${x}/`)));
 const CHART = ['/birth-chart', '/planets', '/houses', '/aspects', '/star-map', '/chart-elements', '/reading', '/compendium'];
 
