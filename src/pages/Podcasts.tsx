@@ -89,7 +89,7 @@ export default function Podcasts() {
                 </button>
                 <div className="flex-1 min-w-0">
                   <button onClick={() => play(ep)} className="font-display text-lg text-left hover:underline">{ep.title}</button>
-                  <div className="text-xs text-muted-foreground">{ep.category && <>{ep.category} · </>}{new Date(ep.created_at).toLocaleDateString()} · {fmtSize(ep.size_bytes)}{positions[ep.id] > 5 && <> · <span className="text-gold">resume at {fmt(positions[ep.id])}</span></>}</div>
+                  <div className="text-xs text-muted-foreground">{ep.category && <>{ep.category} · </>}{new Date(ep.created_at).toLocaleDateString()} · <EpisodeLength ep={ep} /> · {fmtSize(ep.size_bytes)}{positions[ep.id] > 5 && <> · <span className="text-gold">resume at {fmt(positions[ep.id])}</span></>}</div>
                   <div className="mt-1 inline-flex items-center gap-1 text-xs text-muted-foreground">{ep.shared_with_space ? <><Users className="h-3.5 w-3.5"/>Shared with April &amp; Shane</> : <><Lock className="h-3.5 w-3.5"/>Private to you</>}</div>
                   {ep.description && <p className="text-sm mt-1">{ep.description}</p>}
                   {Array.isArray(ep.sections) && ep.sections.length > 0 && <EpisodeSources episode={ep} />}
@@ -149,4 +149,20 @@ export function UploadForm({ accept, onUpload, categoryLabel = 'Series / topic' 
       <Button type="submit" disabled={busy} className="justify-self-start"><Upload className="w-4 h-4 mr-2" />{busy ? 'Uploading…' : 'Upload'}</Button>
     </form>
   );
+}
+
+/** Episode length: exact from WAV size (24 kHz 16-bit mono), otherwise read from the audio file's metadata. */
+function EpisodeLength({ ep }: { ep: LibraryItem }) {
+  const isWav = /wav/i.test(ep.mime_type ?? '') || /\.wav$/i.test(ep.file_name ?? '');
+  const [secs, setSecs] = useState<number | null>(isWav && ep.size_bytes ? Math.max(0, (ep.size_bytes - 44) / 48000) : null);
+  useEffect(() => {
+    if (secs != null || !ep.url) return;
+    const a = new Audio(); a.preload = 'metadata';
+    a.onloadedmetadata = () => { if (Number.isFinite(a.duration)) setSecs(a.duration); };
+    a.src = ep.url;
+    return () => { a.src = ''; };
+  }, [ep.url, secs]);
+  if (secs == null) return <span>length loading…</span>;
+  const m = Math.floor(secs / 60), s = Math.round(secs % 60);
+  return <span className="text-foreground">{m ? `${m} min ${s}s` : `${s}s`}</span>;
 }
