@@ -90,6 +90,7 @@ import Instructions from './pages/Instructions';
  * deep links (#sabian-sun) and the ⌘K palette can hydrate the drawer on any
  * page that renders <DetailDrawerProvider>. */
 function useDrawerRegistry(): Record<string, DrawerPayload> {
+  const april = useAprilSpace();
   return useMemo(() => {
     const reg: Record<string, DrawerPayload> = {};
     const p = (payload: DrawerPayload) => { reg[payload.id] = payload; };
@@ -149,12 +150,13 @@ function useDrawerRegistry(): Record<string, DrawerPayload> {
     }));
 
     return reg;
-  }, []);
+  }, [april]);
 }
 
 function Providers({ children }: { children: ReactNode }) {
   const registry = useDrawerRegistry();
   const april = useAprilSpace();
+  if (april === undefined) return <div role="status" className="p-8 text-muted-foreground">Opening your library…</div>;
   return (
     <DetailDrawerProvider registry={registry}>
       {april && <CommandPalette />}

@@ -24,16 +24,24 @@ export async function saveMyBirth(b: MyBirth, chart: unknown) {
 export function useMyBirth() {
   const [birth, setBirth] = useState<MyBirth | null | undefined>(undefined);
   useEffect(() => {
-    (async () => {
+    let active = true;
+    const load = async () => {
       const { data: u } = await supabase.auth.getUser();
       if (u.user) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const { data } = await (supabase as any).from('profiles').select('*').eq('id', u.user.id).maybeSingle();
-        if (data?.birth_date) return setBirth({ name: data.display_name, date: data.birth_date, time: data.birth_time, placeLabel: data.place_label, lat: data.lat, lon: data.lon, tz: data.tz, houseSystem: data.house_system });
+        if (data?.birth_date && active) return setBirth({ name: data.display_name, date: data.birth_date, time: data.birth_time, placeLabel: data.place_label, lat: data.lat, lon: data.lon, tz: data.tz, houseSystem: data.house_system });
+        if (active) setBirth(null);
+        return;
       }
       const raw = localStorage.getItem(LOCAL);
-      setBirth(raw ? JSON.parse(raw) : null);
-    })();
+      try { if (active) setBirth(raw ? JSON.parse(raw) : null); } catch { if (active) setBirth(null); }
+    };
+    void load();
+    const refresh = () => { void load(); };
+    window.addEventListener('astrobook-birth-saved', refresh);
+    const { data: listener } = supabase.auth.onAuthStateChange(() => { if (active) setBirth(undefined); setTimeout(refresh, 0); });
+    return () => { active = false; window.removeEventListener('astrobook-birth-saved', refresh); listener.subscription.unsubscribe(); };
   }, []);
   return birth;
 }

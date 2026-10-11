@@ -49,6 +49,7 @@ Deno.serve(async (req) => {
 
     const stripe = createStripeClient(env);
     if (orderId) {
+      return json({ error: 'Printed-book payment is not open yet. Your draft remains saved while printer specifications and production-ready manuscripts are finalized.' }, 409);
       if (typeof orderId !== 'string' || !/^[a-f0-9-]{36}$/.test(orderId)) return json({ error: 'Invalid order' }, 400);
       const { data: order, error: orderError } = await admin.from('book_orders').select('*').eq('id', orderId).eq('user_id', user.id).single();
       if (orderError || !order) return json({ error: 'Order not available.' }, 404);
