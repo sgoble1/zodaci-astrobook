@@ -32,7 +32,7 @@ export function DataAudit() {
       return { p, grade, calc: `${b.sign} ${b.deg}°${String(b.min).padStart(2, '0')}′ · house ${b.house ?? '?'}${b.retro ? ' · Rx' : ''}`, diff, note: notes || (grade === 'close' ? b.note ?? '' : '') };
     });
   }, []);
-  const utc = localToUtc(BIRTH.date, BIRTH.time!, BIRTH.tz);
+  const { utc } = localToUtc(BIRTH.date, BIRTH.time!, BIRTH.tz);
   const checked = rows.filter(r => r.grade !== 'separate');
   const score = Math.round(checked.reduce((s, r) => s + (r.grade === 'match' ? 1 : r.grade === 'close' ? 0.9 : 0), 0) / checked.length * 100);
   const offs = rows.filter(r => r.grade === 'off').length;
