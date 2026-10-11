@@ -21,7 +21,7 @@ export interface ChartInput {
 }
 export type HouseSystem = 'porphyry' | 'placidus' | 'whole' | 'equal';
 export const HOUSE_SYSTEMS: { id: HouseSystem; label: string; note: string }[] = [
-  { id: 'porphyry', label: 'Porphyry', note: 'Splits each quarter between the Ascendant and Midheaven into three equal parts. Mercury falls 7′ past this system's 9th-house line, so it reads as 9th here.' },
+  { id: 'porphyry', label: 'Porphyry', note: 'Splits each quarter between the Ascendant and Midheaven into three equal parts. Mercury falls 7′ past this system’s 9th-house line, so it reads as 9th here.' },
   { id: 'placidus', label: 'Placidus', note: 'Splits each quarter by the time a degree takes to rise. The most common modern Western system, and the one April's books use: every placement in the books matches it. AstroBook's default.' },
   { id: 'whole', label: 'Whole Sign', note: 'Each house is one whole sign, starting with the rising sign. The oldest Hellenistic method.' },
   { id: 'equal', label: 'Equal', note: 'Twelve 30° houses measured from the exact Ascendant degree.' },
