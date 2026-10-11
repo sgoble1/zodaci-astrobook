@@ -1,12 +1,12 @@
 # Navigation discovery
 - Explore links to existing readings.
 - Source text stays in protected-content; approved-account authentication plus password tokens are required.
-- Podcasts and added source files use one library_items table + private "library" storage bucket with signed URLs; podcast owners choose private or approved shared-space visibility and may change it later.
+- Podcasts and source uploads use library_items and private library storage with signed URLs; owners can change private/approved-shared visibility.
 - Ask the Sources uses protected-loader BM25 and ask-sources for streamed cited answers.
 - Podcast queue, speed and resume positions are stored per device in localStorage.
 
 - Chart math uses astronomy-engine in astro.ts with selectable houses, cross-checking source values.
-- Main navigation and the clickable Instructions guide share one registry so feature links and help stay synchronized.
+- Navigation and Instructions share one registry to keep links synchronized.
 - Topics share one renderer separating facts, interpretations and protected links to avoid exposing source text.
 - PDF viewer uses pdfjs-dist legacy for browser compatibility.
 - Admin = user_roles table + has_role(); claim_admin() RPC grants admin to the verified owner email on sign-in (no triggers on auth schema allowed).
