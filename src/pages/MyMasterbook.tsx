@@ -4,7 +4,10 @@ import ReactMarkdown from 'react-markdown';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
 import { useSubscription } from '@/hooks/useSubscription';
+import { getStripeEnvironment } from '@/lib/stripe';
 import { CreatorStudio } from '@/components/payments/CreatorStudio';
+
+const STARTER = ['Your Big Three: Sun, Moon and Rising', 'Love and Relationships', 'Work, Purpose and Calling', 'Mind and Communication', 'Drive, Energy and Conflict', 'Growth, Challenges and Life Lessons'];
 
 type Chapter = { id: string; title: string; content: string; created_at: string };
 type Episode = { id: string; title: string; file_path: string; created_at: string; url?: string };
@@ -15,6 +18,8 @@ export default function MyMasterbook() {
   const [chapters, setChapters] = useState<Chapter[]>([]);
   const [episodes, setEpisodes] = useState<Episode[]>([]);
   const [open, setOpen] = useState<string | null>(null);
+  const [writing, setWriting] = useState<string | null>(null);
+  const [startErr, setStartErr] = useState('');
 
   const load = useCallback(async () => {
     if (!sub.userId) return;
@@ -25,6 +30,20 @@ export default function MyMasterbook() {
     setEpisodes(withUrls);
   }, [sub.userId]);
   useEffect(() => { if (sub.tier !== 'free') load(); }, [sub.tier, load]);
+
+  // Ready-made chapters: written one at a time the first time a subscriber opens their Masterbook.
+  const writeStarter = async () => {
+    setStartErr('');
+    for (const t of STARTER) {
+      if (chapters.some(c => c.title === t)) continue;
+      setWriting(t);
+      const { data, error } = await supabase.functions.invoke('creator-studio', { body: { kind: 'starter', topic: t, environment: getStripeEnvironment() } });
+      if (error || data?.error) { setStartErr(data?.error || 'A chapter could not be written. Please try again.'); break; }
+      await load();
+    }
+    setWriting(null);
+  };
+  const missing = STARTER.filter(t => !chapters.some(c => c.title === t));
 
   if (sub.loading) return null;
   if (!sub.userId || sub.tier === 'free') return (
@@ -39,6 +58,12 @@ export default function MyMasterbook() {
   return (
     <article className="mx-auto max-w-3xl space-y-8">
       <header><h1 className="font-display text-4xl">My Masterbook</h1><p className="text-muted-foreground">Chapters and episodes written from your own chart.</p></header>
+      {missing.length > 0 && <section className="parchment p-5 space-y-2" aria-labelledby="starter-h">
+        <h2 id="starter-h" className="text-xl">Your ready-made chapters</h2>
+        <p className="text-sm text-muted-foreground">Six chapters written from your own chart come with your plan. {missing.length} still to write.</p>
+        <Button onClick={writeStarter} disabled={!!writing}>{writing ? `Writing “${writing}”…` : 'Write my chapters'}</Button>
+        {startErr && <p className="text-sm text-destructive" role="alert">{startErr}</p>}
+      </section>}
       <CreatorStudio onMade={load} />
       {current ? (
         <section className="parchment p-6 space-y-4">
@@ -53,7 +78,7 @@ export default function MyMasterbook() {
             : <p className="text-sm text-muted-foreground">No chapters yet.{sub.tier === 'creator' ? ' Write your first one above.' : ''}</p>}
         </section>
       )}
-      {episodes.length > 0 && <section aria-labelledby="ep-h" className="space-y-3"><h2 id="ep-h" className="text-2xl">My episodes</h2>
+      {episodes.length > 0 && <section aria-labelledby="ep-h" className="space-y-3"><h2 id="ep-h" className="text-2xl">My episodes</h2><p className="text-sm text-muted-foreground">Also in <Link to="/podcasts" className="underline">Podcasts</Link> → your private library, with queue and speed controls.</p>
         {episodes.map(e => <div key={e.id} className="parchment p-4 space-y-2"><div className="font-medium">{e.title}</div>{e.url && <audio controls preload="none" src={e.url} className="w-full" aria-label={e.title} />}</div>)}
       </section>}
     </article>
