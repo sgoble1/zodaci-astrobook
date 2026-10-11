@@ -73,3 +73,6 @@ April's original content has been preserved in the authenticated archive; approv
 
 - [x] In-depth AI topic readings per member chart + admin Member charts tab (edit/publish)
 - [ ] Verify topic generation on an account with saved birth details
+
+- [x] Pre-launch Phase 1: no member menu signed out, sign-in-first with return link, password reset, new members routed to /start then /my-readings
+- [ ] Pre-launch Phases 2–10 (see .lovable/plan/pre-launch-plan-*.md)

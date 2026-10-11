@@ -46,3 +46,4 @@
 - Newsletter requires consent, validated service-only writes and admin-only reads/deletes; signup sends no campaigns.
 - Book examples are non-orderable; landing readings use separate public editorial content, never private source text.
 - Public community tables stay separate from private workspaces; public reads and owner-only posting prevent private-feed exposure.
+- Signed-out visitors get only public chrome in AppShell (SIGNED_OUT_PATHS); all other app routes redirect to /auth?next= — keeps member menus and private data out of signed-out views.
