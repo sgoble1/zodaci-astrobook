@@ -87,12 +87,12 @@ Deno.serve(async (req) => {
     const apiKey = Deno.env.get('LOVABLE_API_KEY'); if (!apiKey) return json({ error: 'AI is not configured.' }, 500);
 
     if (kind === 'chapter' || kind === 'starter') {
+      const page_key = kind === 'starter' ? `starter-${STARTER.indexOf(topic)}-${user.id}` : `chapter-${Date.now()}-${user.id}`;
+      if (kind === 'starter') { const { data: have } = await admin.from('generated_pages').select('id').eq('owner_id', user.id).eq('page_key', page_key).maybeSingle(); if (have) return json({ id: have.id }); }
       const call = createResponsesCall(req, { apiKey, effort: 'medium', instructions: `You write one chapter of a personal astrology Masterbook for ${profile.display_name || 'the reader'}, addressed as "you".\nTheir calculated chart:\n${facts}\n${RULES}\nWrite 900–1,200 words in Markdown: a short intro, 3–5 "##" sections each naming the placements it draws on, and a closing "## Questions to reflect on" list.` },
         [{ role: 'user', content: `Chapter topic: ${topic}` }]);
       const content = (await call.result.text).trim();
       if (!content) return json({ error: 'The chapter came back empty. Please try again.' }, 502);
-      const page_key = kind === 'starter' ? `starter-${STARTER.indexOf(topic)}` : `chapter-${Date.now()}`;
-      if (kind === 'starter') { const { data: have } = await admin.from('generated_pages').select('id').eq('owner_id', user.id).eq('page_key', page_key).maybeSingle(); if (have) return json({ id: have.id }); }
       const ins = await admin.from('generated_pages').insert({ owner_id: user.id, page_key, section: 'My Masterbook', title: topic, content, status: 'ready' }).select('id').single();
       if (ins.error) { console.error(ins.error); return json({ error: 'Could not save the chapter.' }, 500); }
       await admin.from('ai_usage').insert({ user_id: user.id, feature: kind === 'starter' ? 'starter-chapter' : 'creator-chapter' });
