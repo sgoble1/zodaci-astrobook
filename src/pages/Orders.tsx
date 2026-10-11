@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { EmbeddedCheckoutProvider, EmbeddedCheckout } from '@stripe/react-stripe-js';
 import { Button } from '@/components/ui/button';
@@ -14,13 +14,14 @@ import type { Tables } from '@/integrations/supabase/types';
 export default function Orders() {
   const session = useSession(); const admin = useIsAdmin(session); const [params] = useSearchParams();
   const [orders,setOrders] = useState<Tables<'book_orders'>[]>([]); const [checkout,setCheckout] = useState<string|null>(null); const [error,setError] = useState(''); const [all,setAll] = useState(false);
-  const load = async () => {
-    if (!session) return;
+  const userId = session?.user.id;
+  const load = useCallback(async () => {
+    if (!userId) { setOrders([]); return; }
     let query = supabase.from('book_orders').select('*').order('created_at',{ ascending:false });
-    if (!admin || !all) query = query.eq('user_id',session.user.id);
+    if (!admin || !all) query = query.eq('user_id',userId);
     const { data,error:err } = await query; if(err) setError(err.message); else setOrders(data || []);
-  };
-  useEffect(() => { void load(); const timer=window.setInterval(load,5000); return () => window.clearInterval(timer); },[session?.user.id,admin,all]);
+  }, [userId,admin,all]);
+  useEffect(() => { void load(); const timer=window.setInterval(load,5000); return () => window.clearInterval(timer); },[load]);
   const change = async (id:string, patch:Partial<Tables<'book_orders'>>) => { const { error:err } = await supabase.from('book_orders').update({ ...patch,updated_at:new Date().toISOString() }).eq('id',id); if(err) setError(err.message); else void load(); };
   return <article className="space-y-8"><header><p className="text-gold font-smallcaps text-xs">Printed AstroBook</p><h1 className="text-4xl mt-2">{all ? 'Book order management':'My orders'}</h1><p className="text-muted-foreground mt-3">Order details, production progress and delivery tracking.</p></header><PaymentTestModeBanner /><div className="flex gap-2"><Button asChild variant="outline"><Link to="/books">Create a book</Link></Button>{admin && <Button variant={all ? 'default':'outline'} onClick={() => setAll(x => !x)}>{all ? 'Show my orders':'Manage all orders'}</Button>}</div>{!session && <p><Link to="/auth" className="underline">Sign in</Link> to see your orders.</p>}
     {params.get('session_id') && <p role="status" className="text-gold">Payment submitted. Your order updates after payment verification; do not pay again while confirmation is pending.</p>}
