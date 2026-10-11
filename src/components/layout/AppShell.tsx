@@ -7,7 +7,6 @@ import ScrollProgress from '@/components/fx/ScrollProgress';
 import { FirstViewReveal } from '@/components/fx/FirstViewReveal';
 import { useEffect, useRef, useState } from 'react';
 import { ChevronDown, Menu, X } from 'lucide-react';
-import { BIRTH } from '@/content/april';
 import { useMyBirth } from '@/lib/myBirth';
 import { useRelationships } from '@/hooks/useRelationships';
 import { CommandPaletteTrigger } from '@/components/common/CommandPalette';
