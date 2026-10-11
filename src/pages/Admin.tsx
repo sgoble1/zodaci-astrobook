@@ -16,7 +16,8 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import ReactMarkdown from 'react-markdown';
 
-type Tab = 'upload' | 'sections' | 'index' | 'relationships' | 'activity';
+type Tab = 'upload' | 'sections' | 'index' | 'relationships' | 'activity' | 'charts';
+import { MemberCharts } from '@/components/admin/MemberCharts';
 import { ActivityFeed } from '@/components/admin/ActivityFeed';
 
 export default function Admin() {
@@ -33,11 +34,12 @@ export default function Admin() {
       </header>
       <AuthGate what="open your workspace">{() => (
         <div className="space-y-6">
-          <nav className="flex flex-wrap gap-2 text-sm">{([['upload', 'Upload documents'], ['sections', 'Edit sections'], ...(isAdmin ? [['index', 'Document Index'], ['activity', 'Usage feed']] as const : []), ['relationships', 'Relationships']] as const).map(([k, l]) => <button key={k} onClick={() => setTab(k)} className={`px-3 py-1.5 rounded-full border ${tab === k ? 'border-accent bg-accent/15' : 'border-border hover:bg-muted'}`}>{l}</button>)}</nav>
+          <nav className="flex flex-wrap gap-2 text-sm">{([['upload', 'Upload documents'], ['sections', 'Edit sections'], ...(isAdmin ? [['index', 'Document Index'], ['activity', 'Usage feed'], ['charts', 'Member charts & readings']] as const : []), ['relationships', 'Relationships']] as const).map(([k, l]) => <button key={k} onClick={() => setTab(k)} className={`px-3 py-1.5 rounded-full border ${tab === k ? 'border-accent bg-accent/15' : 'border-border hover:bg-muted'}`}>{l}</button>)}</nav>
           {tab === 'upload' && <UploadPanel userId={session!.user.id} />}
           {tab === 'sections' && <SectionsPanel ownerId={isAdmin ? null : session!.user.id} />}
           {tab === 'index' && isAdmin && <IndexPanel />}
           {tab === 'activity' && isAdmin && <ActivityFeed />}
+          {tab === 'charts' && isAdmin && <MemberCharts />}
           {tab === 'relationships' && <RelationshipsAdmin userId={session!.user.id} />}
         </div>
       )}</AuthGate>
