@@ -165,6 +165,7 @@ export default function App() {
             <Route path="/explore" element={<ExploreDiscover />} />
             <Route path="/start" element={<Onboarding />} />
             <Route path="/my-chart" element={<MyChart />} />
+            <Route path="/auth" element={<Auth />} />
             <Route path="/instructions" element={<Instructions />} />
             <Route path="/birth-chart" element={<BirthChart />} />
             <Route path="/chart-guide" element={<ChartGuide />} />
