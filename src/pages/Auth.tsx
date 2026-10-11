@@ -40,7 +40,7 @@ export default function Auth() {
   const submit = async (e: React.FormEvent) => {
     e.preventDefault(); setBusy(true); setMsg(null);
     const res = mode === 'up'
-      ? await supabase.auth.signUp({ email, password: pw, options: { emailRedirectTo: window.location.origin } })
+      ? await supabase.auth.signUp({ email, password: pw, options: { emailRedirectTo: `${window.location.origin}/start` } })
       : await supabase.auth.signInWithPassword({ email, password: pw });
     setBusy(false);
     if (res.error) return setMsg(res.error.message);
@@ -62,6 +62,7 @@ export default function Auth() {
       <form onSubmit={submit} className="space-y-3">
         <div className="space-y-1"><Label htmlFor="e">Email</Label><Input id="e" type="email" required autoComplete="email" value={email} onChange={e => setEmail(e.target.value)} /></div>
         <div className="space-y-1"><Label htmlFor="p">Password</Label><Input id="p" type="password" required minLength={6} autoComplete={mode === 'up' ? 'new-password' : 'current-password'} value={pw} onChange={e => setPw(e.target.value)} /></div>
+        {mode === 'in' && <button type="button" className="text-xs text-primary underline underline-offset-2" onClick={forgot}>Forgot password?</button>}
         {msg && <p role="alert" className="text-sm text-destructive">{msg}</p>}
         <Button type="submit" className="w-full" disabled={busy}>{busy ? 'One moment…' : mode === 'up' ? 'Create account' : 'Sign in'}</Button>
       </form>
