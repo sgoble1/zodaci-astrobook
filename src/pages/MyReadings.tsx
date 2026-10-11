@@ -4,6 +4,7 @@ import { computeChart } from '@/lib/astro';
 import { toChartInput, useMyBirth } from '@/lib/myBirth';
 import { buildReadings, risingLine } from '@/lib/readings';
 import { BoxArt } from '@/components/common/BoxArt';
+import { TopicReadings } from '@/components/readings/TopicReadings';
 import { Button } from '@/components/ui/button';
 
 /** Personal life-area readings built only from the member's own calculated chart. */
@@ -28,6 +29,8 @@ export default function MyReadings() {
           {readings.map(r => <a key={r.key} href={`#${r.key}`} className="rounded-full border border-border px-3 py-1 text-sm hover:bg-muted focus-visible:outline focus-visible:outline-2">{r.title}</a>)}
         </nav>
       </header>
+      <TopicReadings seed={`${birth.date}-${birth.placeLabel}`} />
+      <h2 className="font-display text-3xl">Quick readings</h2>
       {readings.map(r => (
         <section key={r.key} id={r.key} aria-labelledby={`${r.key}-h`} className="grid gap-5 rounded-lg border border-border bg-card p-5 md:grid-cols-[180px_1fr]">
           <BoxArt seed={r.art} label={r.title} className="aspect-square w-full rounded" />
