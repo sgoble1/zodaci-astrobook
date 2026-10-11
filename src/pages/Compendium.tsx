@@ -1,3 +1,4 @@
+import { IllustrationGallery } from '@/components/common/IllustrationGallery';
 import { ZODIAC, PLACEMENTS, HOUSES } from '@/content/april';
 import {
   SABIAN_SYMBOLS, FIXED_STARS, ASTEROIDS, SPECIAL_ASPECTS,
@@ -20,6 +21,7 @@ export default function Compendium() {
           Every reference table, symbol, star, goddess, aspect and lot from the compendium. Click any card to open its full entry with the exact PDF page it was transcribed from. Press <kbd className="text-[10px] border border-border rounded px-1.5 py-0.5">⌘K</kbd> to search everything at once.
         </p>
       </header>
+      <IllustrationGallery />
 
       <section>
         <h2 className="font-display mb-4">Zodiac fundamentals</h2>

@@ -1,3 +1,4 @@
+import { IllustrationGallery } from '@/components/common/IllustrationGallery';
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { BUILT_IN_SOURCES } from '@/content/sources';
