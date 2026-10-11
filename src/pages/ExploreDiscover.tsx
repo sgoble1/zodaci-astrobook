@@ -69,6 +69,8 @@ const publicItems: DiscoveryItem[] = [
  {category:'sources',title:'Listen to your podcasts',description:'Creator members can make audio episodes from their own chart.',to:'/podcasts',sources:[]},
  {category:'home',title:'Your book, in print',description:'Choose a personal cover and up to two additional topics.',to:'/books',sources:[]},
  {category:'growth',title:'Community journal',description:'Read reflections and publish your own articles with Full Access or Creator.',to:'/blog',sources:[]},
+ {category:'growth',title:'Your life, in context',description:'Save real experiences privately, choose what informs generation, and turn an example into a suggested chapter.',to:'/personal-context',sources:[]},
+ {category:'relationships',title:'Your invited workspaces',description:'Create a workspace and share selected podcasts with invited members.',to:'/workspaces',sources:[]},
 ];
 export default function ExploreDiscover() {
   const april = useAprilSpace();
