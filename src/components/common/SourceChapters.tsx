@@ -9,7 +9,7 @@ import { BookOpen } from 'lucide-react';
 
 type Entry = { id: string; title: string; part?: string; words?: number };
 let indexCache: Promise<Entry[]> | null = null;
-const loadIndex = () => (indexCache ??= loadProtectedJson<Entry[]>('masterbook', 'index.json'));
+const loadIndex = () => (indexCache ??= loadProtectedJson<Entry[]>('masterbook', 'index.json').catch(e => { indexCache = undefined; throw e; }));
 const textCache = new Map<string, Promise<string>>();
 const loadText = (id: string) => {
   if (!textCache.has(id)) textCache.set(id, loadProtectedText('masterbook', `${id}.md`).then(withPlates).catch(() => ''));
