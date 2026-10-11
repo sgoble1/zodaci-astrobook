@@ -55,11 +55,13 @@ export default function Home() {
               <>
                 <Button asChild><Link to="/my-chart" className="font-smallcaps text-xs">Open my chart</Link></Button>
                 <Button asChild variant="outline" className="h-auto min-h-10 whitespace-normal"><Link to="/explore" className="font-smallcaps text-xs">Explore & Discover</Link></Button>
+                <Button asChild variant="ghost" className="h-auto min-h-10"><Link to="/pricing" className="font-smallcaps text-xs">Plans & pricing</Link></Button>
               </>
             ) : (
               <>
                 <Button asChild><Link to="/start" className="font-smallcaps text-xs">See your chart free</Link></Button>
                 <Button asChild variant="outline" className="h-auto min-h-10 whitespace-normal"><Link to="/explore" className="font-smallcaps text-xs">Explore & Discover</Link></Button>
+                <Button asChild variant="ghost" className="h-auto min-h-10"><Link to="/pricing" className="font-smallcaps text-xs">Plans & pricing</Link></Button>
               </>
             )}
           </div>

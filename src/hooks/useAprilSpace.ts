@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 
 let cached: { uid: string; ok: boolean } | null = null;
-const listeners = new Set<(v: boolean) => void>();
+const listeners = new Set<(v: boolean | undefined) => void>();
 
 async function check() {
   const { data } = await supabase.auth.getSession();
@@ -15,9 +15,9 @@ async function check() {
 }
 supabase.auth.onAuthStateChange(() => { setTimeout(check, 0); });
 
-/** True only for the approved April & Shane accounts (checked by the database), which see the original April edition. */
+/** undefined while checking; true only for the approved April & Shane accounts (checked by the database), which see the original April edition. */
 export function useAprilSpace() {
-  const [ok, setOk] = useState(cached?.ok ?? false);
+  const [ok, setOk] = useState<boolean | undefined>(cached?.ok);
   useEffect(() => { listeners.add(setOk); check(); return () => { listeners.delete(setOk); }; }, []);
   return ok;
 }

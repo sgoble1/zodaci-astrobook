@@ -14,3 +14,7 @@ April's private AstroBook is untouched; this draft is the public version.
 - [x] Public homepage with FAQ (pricing pending Stripe/Paddle choice)
 - [x] "My AstroBook" organized library (/my-astrobook)
 - [ ] Top recommendations: 1, 2, 4, 13, 18, 19, 28, 38, 47, 50
+- [x] April edition restored for approved accounts; public pages free of "April"
+- [x] Public sign-up turned on; April-only pages show visitors their own chart/readings or a birth-details prompt
+- [x] Counselors private to April edition; each reply logged as AI use in the Usage feed
+- [x] Plans & Pricing page (price pending payment provider choice)

@@ -1,0 +1,2 @@
+CREATE POLICY "admins read usage" ON public.ai_usage FOR SELECT TO authenticated USING (public.has_role(auth.uid(), 'admin'));
+CREATE INDEX IF NOT EXISTS ai_usage_user_created ON public.ai_usage (user_id, created_at DESC);

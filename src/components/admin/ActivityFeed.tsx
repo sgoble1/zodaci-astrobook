@@ -19,6 +19,7 @@ export function ActivityFeed() {
   const [made, setMade] = useState<Made[]>([]);
   const [filter, setFilter] = useState('all');
   const [loading, setLoading] = useState(false);
+  const [ai, setAi] = useState<{ feature: string }[]>([]);
 
   useEffect(() => { supabase.rpc('shared_member_directory').then(({ data }) => {
     const list = (data ?? []) as Member[]; setMembers(list);
@@ -36,6 +37,8 @@ export function ActivityFeed() {
       if (!data || data.length < 1000) break;
     }
     setRows(all);
+    const { data: aiRows } = await supabase.from('ai_usage').select('feature').eq('user_id', who).gte('created_at', since).limit(1000);
+    setAi((aiRows ?? []) as { feature: string }[]);
     const sources: [string, string, string][] = [['custom_pages', 'Created page', 'owner_id'], ['library_items', 'Added item', 'owner_id'], ['shared_posts', 'Posted', 'author_id'], ['shared_recommendations', 'Recommended', 'author_id'], ['shared_media', 'Uploaded media', 'uploaded_by'], ['shared_wonderings', 'Wondering', 'author_id'], ['workbook_entries', 'Workbook answer', 'owner_id']];
     const out: Made[] = [];
     await Promise.all(sources.map(async ([t, what, col]) => {
@@ -85,6 +88,7 @@ export function ActivityFeed() {
         <Box title="Visits (sessions)">{stats.visits.slice(0, 20).map(([id, v]) => <Line key={id} a={`${fmtTime(v.first)} · ${v.device}`} b={`${fmtDur(Math.round((+new Date(v.last) - +new Date(v.first)) / 1000))} · ${v.n} actions`} />)}</Box>
         <Box title="Podcasts & media listened to">{stats.media.length ? stats.media.map(([t, m]) => <Line key={t} a={t} b={`${m.plays} plays · reached ${fmtDur(m.furthest)}${m.length ? ` of ${fmtDur(m.length)}` : ''}${m.finished ? ' · finished' : ''}`} />) : <Empty />}</Box>
         <Box title="Most-used buttons & tools">{stats.tools.length ? stats.tools.map(([t, n]) => <Line key={t} a={t} b={`${n}×`} />) : <Empty />}</Box>
+        <Box title="AI replies used (credits)">{ai.length ? [...ai.reduce((m, r) => m.set(r.feature, (m.get(r.feature) ?? 0) + 1), new Map<string, number>())].map(([f, n]) => <Line key={f} a={f === 'oracle' ? 'The Oracle Within' : f === 'social-counselor' ? 'Social Counselor' : f} b={`${n} replies`} />) : <Empty />}</Box>
         <Box title="Things she created">{made.length ? made.slice(0, 40).map((m, i) => <Line key={i} a={`${m.what}: ${m.title}`} b={fmtTime(m.when)} />) : <Empty />}</Box>
       </div>
 
