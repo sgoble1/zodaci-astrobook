@@ -48,7 +48,7 @@ export default function Onboarding() {
         <h1 className="font-display text-3xl">Let's create your chart</h1>
         <div className="mt-3 h-1.5 rounded bg-muted" aria-hidden><div className="h-full rounded bg-primary transition-all" style={{ width: `${((step + 1) / 4) * 100}%` }} /></div>
       </header>
-      <form className="space-y-4" onSubmit={e => { e.preventDefault(); if (!ok) return; step < 3 ? setStep(step + 1) : finish(); }}>
+      <form className="space-y-4" onSubmit={e => { e.preventDefault(); if (!ok) return; if (step < 3) setStep(step + 1); else void finish(); }}>
         {step === 0 && <div className="space-y-2"><Label htmlFor="n">What should we call you?</Label><Input id="n" autoFocus value={b.name} onChange={e => setB({ ...b, name: e.target.value })} maxLength={80} /></div>}
         {step === 1 && <div className="space-y-2"><Label htmlFor="d">Date of birth</Label><Input id="d" type="date" autoFocus value={b.date} onChange={e => setB({ ...b, date: e.target.value })} /></div>}
         {step === 2 && <div className="space-y-2">

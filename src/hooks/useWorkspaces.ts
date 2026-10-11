@@ -7,6 +7,6 @@ export function useWorkspaces() {
   useEffect(() => {
     if (!session) { setSpaces([]); return; }
     void supabase.from('spaces').select('id,name').then(({data}) => setSpaces(data ?? []));
-  }, [session?.user.id]);
+  }, [session]);
   return spaces;
 }
