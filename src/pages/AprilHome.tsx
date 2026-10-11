@@ -18,7 +18,7 @@ const modules = [
   { to: '/compendium', title: 'The Master Compendium', desc: 'Reference tables, dignities, karmic axis and past-life notation, tarot and fixed stars.' },
 ];
 
-export default function Home() {
+export default function AprilHome() {
   return (
     <div className="space-y-16">
       {/* Hero */}
