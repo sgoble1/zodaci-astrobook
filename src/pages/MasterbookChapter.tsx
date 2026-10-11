@@ -17,7 +17,7 @@ export default function MasterbookChapter() {
   const { id = '' } = useParams();
   const [entries, setEntries] = useState<MbEntry[]>([]);
   const [text, setText] = useState<string | null>(null);
-  useEffect(() => { loadIndex().then(setEntries); }, []);
+  useEffect(() => { loadIndex().then(setEntries).catch(() => setEntries([])); }, []);
   useEffect(() => { setText(null); loadProtectedText('masterbook', `${id}.md`).then(t => setText(withPlates(t))).catch(() => setText('')); }, [id]);
   useEffect(() => {
     if (text && window.location.hash) setTimeout(() => document.getElementById(window.location.hash.slice(1))?.scrollIntoView({ behavior: 'smooth' }), 50);

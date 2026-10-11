@@ -22,7 +22,7 @@ function Body({ rel }: { rel: Relationship }) {
   const [years, setYears] = useState(10);
   const [planet, setPlanet] = useState('all');
   const [idx, setIdx] = useState<MbEntry[]>([]);
-  useEffect(() => { loadIndex().then(setIdx); }, []);
+  useEffect(() => { loadIndex().then(setIdx).catch(() => setIdx([])); }, []);
   const A = useMemo(() => computeChart(APRIL), []);
   const B = useMemo(() => computeChart(toInput(rel)), [rel]);
   const start = useMemo(() => { const d = new Date(); d.setDate(1); return d; }, []);

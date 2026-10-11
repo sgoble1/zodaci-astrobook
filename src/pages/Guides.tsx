@@ -16,7 +16,7 @@ export default function Guide() {
   const { slug } = useParams();
   const g = GUIDES.find(x => x.slug === slug) ?? GUIDES[0];
   const [entries, setEntries] = useState<MbEntry[]>([]);
-  useEffect(() => { loadIndex().then(setEntries); }, []);
+  useEffect(() => { loadIndex().then(setEntries).catch(() => setEntries([])); }, []);
   const secs = g.match ? entries.filter(e => g.match!.test(e.title)) : entries.filter(e => e.id.startsWith(g.prefix) && (g.prefix.endsWith('-p') || !/-p\d+$/.test(e.id)));
   return (
     <div className="space-y-6">
