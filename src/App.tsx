@@ -66,6 +66,7 @@ import Companion from './pages/Companion';
 import ExploreDiscover from './pages/ExploreDiscover';
 import SocialIntegration from './pages/SocialIntegration';
 import Onboarding from './pages/Onboarding';
+import ResetPassword from './pages/ResetPassword';
 import MyTopicReading from './pages/MyTopicReading';
 import MyChart from './pages/MyChart';
 import MyReadings from './pages/MyReadings';
@@ -205,6 +206,7 @@ export default function App() {
             <Route path="/my-readings/topic/:slug" element={<MyTopicReading />} />
             <Route path="/my-astrobook" element={<MyLibrary />} />
             <Route path="/auth" element={<Auth />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/pricing" element={<Pricing />} />
             <Route path="/checkout/return" element={<CheckoutReturn />} />
             <Route path="/my-masterbook" element={<MyMasterbook />} />
