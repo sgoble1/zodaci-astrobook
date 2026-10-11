@@ -36,6 +36,7 @@ export default function SourceReader() {
           {q && <span className="text-xs text-muted-foreground">{shown.length} matching</span>}
         </div>
       </header>
+      {/^d-(8c102f25|b9d9e723)$/.test(id) && <IllustrationGallery />}
       {(units?.length ?? 0) > 1 && <label className="flex max-w-sm items-center gap-3 text-sm"><span className="shrink-0 text-muted-foreground">Jump to</span><select className="h-10 w-full rounded-md border border-input bg-background px-3" defaultValue="" onChange={e => { if (e.target.value) document.getElementById(e.target.value)?.scrollIntoView({ behavior: 'smooth' }); }}><option value="" disabled>Choose a page or section</option>{(units ?? []).map((u, i) => <option key={i} value={`u${i}`}>{u.loc}</option>)}</select></label>}
       {shown.map(u => (
         <section key={u.i} id={`u${u.i}`} className="parchment p-5 scroll-mt-24">
