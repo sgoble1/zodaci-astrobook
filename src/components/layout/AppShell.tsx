@@ -131,16 +131,23 @@ function SidebarInner({ mobile = false, onNavigate }: { mobile?: boolean; onNavi
     <div className={`flex min-h-full flex-col gap-6 overflow-x-hidden ${mobile ? 'px-4 pb-8 pt-4' : 'h-full overflow-y-auto p-6'}`}>
       <div>
         <div className="flex items-center justify-between gap-2"><AstroBookLogo />{!mobile && <AccountButton />}</div>
-        <div className="font-display text-2xl leading-tight mt-1">April</div>
-        <div className="text-xs text-muted-foreground mt-1">
-          {BIRTH.date} · {BIRTH.time}<br />{BIRTH.place}
-        </div>
-        <div className="gold-rule my-4" />
-        <div className="text-xs text-muted-foreground leading-relaxed">
-          <span className="font-smallcaps text-[10px] text-foreground">Sun</span> ♍ Virgo H8 &middot;{' '}
-          <span className="font-smallcaps text-[10px] text-foreground">Moon</span> ♈ Aries H3 &middot;{' '}
-          <span className="font-smallcaps text-[10px] text-foreground">ASC</span> ♐ 29° Sag
-        </div>
+        {myBirth ? (
+          <>
+            <div className="font-display text-2xl leading-tight mt-1">{myBirth.name}</div>
+            <div className="text-xs text-muted-foreground mt-1">
+              {myBirth.date}{myBirth.time ? ` · ${myBirth.time}` : ' · time unknown'}<br />{myBirth.placeLabel}
+            </div>
+            <div className="gold-rule my-4" />
+            <NavLink to="/my-chart" onClick={onNavigate} className="text-xs text-primary underline-offset-2 hover:underline">Open my chart →</NavLink>
+          </>
+        ) : (
+          <>
+            <div className="font-display text-2xl leading-tight mt-1">Your AstroBook</div>
+            <div className="text-xs text-muted-foreground mt-1">Enter your birth details to get your own chart and readings.</div>
+            <div className="gold-rule my-4" />
+            <NavLink to="/start" onClick={onNavigate} className="text-xs text-primary underline-offset-2 hover:underline">Get started →</NavLink>
+          </>
+        )}
       </div>
 
       <div className="pt-1 space-y-2"><CommandPaletteTrigger /><BookmarkButton /></div>
