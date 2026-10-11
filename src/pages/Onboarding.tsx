@@ -39,7 +39,7 @@ export default function Onboarding() {
       const chart = computeChart(toChartInput(birth));
       const res = await saveMyBirth(birth, { bodies: chart.bodies, asc: unknownTime ? null : chart.asc, mc: unknownTime ? null : chart.mc, aspects: chart.aspects, cusps: chart.cusps, bazi: chart.bazi, elements: chart.elements, flags: chart.flags });
       if (res.error) { setErr('Your chart is saved on this device, but your account could not save it. Please try again.'); return; }
-      nav(res.saved === 'device' ? '/my-chart?device=1' : '/my-chart');
+      nav(res.saved === 'device' ? '/my-chart?device=1' : '/my-readings');
     } catch { setErr('Your birth details could not be calculated. Check the date, time and selected place.'); }
     finally { setBusy(false); }
   };
