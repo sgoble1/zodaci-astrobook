@@ -67,6 +67,7 @@ import ExploreDiscover from './pages/ExploreDiscover';
 import SocialIntegration from './pages/SocialIntegration';
 import Onboarding from './pages/Onboarding';
 import MyChart from './pages/MyChart';
+import Auth from './pages/Auth';
 import { CounselorsIndex, CounselorProfile, CounselorSession } from './pages/Counselors';
 import ChartGuide from './pages/ChartGuide';
 import Instructions from './pages/Instructions';
