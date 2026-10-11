@@ -50,7 +50,7 @@ export function loadCorpus(): Promise<Passage[]> {
       }))));
     } catch { /* uploads optional */ }
     return passages;
-  })());
+  })().catch(e => { corpus = null; throw e; }));
 }
 
 const STOP = new Set('the a an and or of to in is are was were be for on with as by at from that this it its what how why who does do i my me about her she april you your which when where'.split(' '));
