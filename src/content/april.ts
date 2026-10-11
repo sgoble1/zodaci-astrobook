@@ -25,7 +25,7 @@ export const ZODIAC: { name: ZodiacSign; glyph: string; element: string; modalit
   { name: 'Pisces', glyph: '♓', element: 'Water', modality: 'Mutable', ruler: 'Neptune' },
 ];
 
-export let BIRTH: { readonly name: "April"; readonly date: "September 6, 1990"; readonly time: "3:38 PM EDT"; readonly place: "Geneva, New York"; readonly coords: "42°52′N, 76°59′W"; readonly lifePath: 7; readonly kuaNumber: 1; readonly kuaElement: "Water"; readonly chineseZodiac: "Metal Horse"; readonly personalYear2026: 7; readonly chartShape: "Source-described Bucket Chart · Moon in Aries H3 as Handle"; readonly currentAge: 35; } = {"name":"","date":"","time":"","place":"","coords":"","lifePath":0,"kuaNumber":0,"kuaElement":"","chineseZodiac":"","personalYear2026":0,"chartShape":"","currentAge":0};
+export let BIRTH: { readonly name: string; readonly date: string; readonly time: string; readonly place: string; readonly coords: string; readonly lifePath: number; readonly kuaNumber: number; readonly kuaElement: string; readonly chineseZodiac: string; readonly personalYear2026: number; readonly chartShape: string; readonly currentAge: number; } = {"name":"","date":"","time":"","place":"","coords":"","lifePath":0,"kuaNumber":0,"kuaElement":"","chineseZodiac":"","personalYear2026":0,"chartShape":"","currentAge":0};
 
 export type PlanetKey =
   | 'sun' | 'moon' | 'mercury' | 'venus' | 'mars'
@@ -56,7 +56,7 @@ export const longitudeOf = (p: Pick<Placement, 'sign' | 'degree' | 'minute'>) =>
 export let PLACEMENTS: Placement[] = [];
 
 // Ascendant / Midheaven (angles) — for the wheel
-export let ANGLES: { ascendant: { sign: ZodiacSign; signGlyph: string; degree: number; minute: number; note: string; }; midheaven: { sign: ZodiacSign; signGlyph: string; degree: number; minute: number; note: string; }; } = {"ascendant":{"sign":"","signGlyph":"","degree":0,"minute":0,"note":""},"midheaven":{"sign":"","signGlyph":"","degree":0,"minute":0,"note":""}};
+export let ANGLES: { ascendant: { sign: ZodiacSign; signGlyph: string; degree: number; minute: number; note: string; }; midheaven: { sign: ZodiacSign; signGlyph: string; degree: number; minute: number; note: string; }; } = {"ascendant":{"sign":"Aries","signGlyph":"","degree":0,"minute":0,"note":""},"midheaven":{"sign":"Aries","signGlyph":"","degree":0,"minute":0,"note":""}};
 
 // ---------- HOUSES ----------
 export interface HouseInfo {
@@ -115,7 +115,7 @@ export interface BaguaArea {
   isBestForKua1: boolean;
 }
 
-export let KUA_INFO: { number: number; element: string; group: string; bestDirections: readonly ["SE", "E", "S", "N"]; worstDirections: readonly ["W", "NW", "NE", "SW"]; note: string; } = {"number":0,"element":"","group":"","bestDirections":[],"worstDirections":[],"note":""};
+export let KUA_INFO: { number: number; element: string; group: string; bestDirections: readonly string[]; worstDirections: readonly string[]; note: string; } = {"number":0,"element":"","group":"","bestDirections":[],"worstDirections":[],"note":""};
 
 export let BAGUA: BaguaArea[] = [];
 
@@ -123,7 +123,7 @@ export let BAGUA: BaguaArea[] = [];
 export let NUMEROLOGY: { lifePath: { number: number; meaning: string; }; personalYear2026: { number: number; meaning: string; }; chineseZodiac: { animal: string; meaning: string; }; } = {"lifePath":{"number":0,"meaning":""},"personalYear2026":{"number":0,"meaning":""},"chineseZodiac":{"animal":"","meaning":""}};
 
 // Two-color palette from the illustration reference guide.
-export let PALETTE_NOTE: "The site's palette is drawn directly from the illustration reference guide: black ink on cream vellum, touched with antique gold — the visual language of an illuminated manuscript." = "";
+export let PALETTE_NOTE: string = "";
 
 registerPrivateValue("april", "BIRTH", value => { BIRTH = value as typeof BIRTH; }, {"name":"","date":"","time":"","place":"","coords":"","lifePath":0,"kuaNumber":0,"kuaElement":"","chineseZodiac":"","personalYear2026":0,"chartShape":"","currentAge":0});
 registerPrivateValue("april", "PLACEMENTS", value => { PLACEMENTS = value as typeof PLACEMENTS; }, []);

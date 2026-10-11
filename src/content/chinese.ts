@@ -29,7 +29,7 @@ export interface ElementBalance { element: string; count: number; note: string; 
 
 export let ELEMENT_BALANCE: ElementBalance[] = [];
 
-export let LIFE_LESSON: { readonly headline: "Fire and Metal in the same body"; readonly body: "The Ba Zi says what the natal chart says in a different language. Fire = the visible, generous, illuminating self (Leo Venus, Sag ASC, Aries Moon). Metal = the sharp discernment (Virgo Sun, Capricorn stellium). The single drop of Water (Zi) keeps them from consuming each other — and it is exactly the Kua-1 Water element from the Feng Shui reading. Every system points at the same person."; } = {"headline":"","body":""};
+export let LIFE_LESSON: { readonly headline: string; readonly body: string; } = {"headline":"","body":""};
 
 export let LUCK_PILLARS: { id: string; window: string; pillar: string; note: string; }[] = [];
 
