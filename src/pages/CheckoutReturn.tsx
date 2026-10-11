@@ -17,7 +17,8 @@ export default function CheckoutReturn() {
         ? `Your plan is active. Your own Masterbook and full readings are unlocked, and your monthly AI credits are ready to use.${sub.tier === 'creator' ? ' You can now generate podcasts and new chapters from your chart.' : ''}`
         : 'Thanks! This usually takes a few seconds. The page updates by itself.'}</p>
       {paid && <div className="flex flex-wrap justify-center gap-3">
-        <Button asChild><Link to="/my-readings">Open my readings</Link></Button>
+        <Button asChild><Link to="/my-masterbook">Open my Masterbook</Link></Button>
+        <Button asChild variant="outline"><Link to="/my-readings">My readings</Link></Button>
         <Button asChild variant="outline"><Link to="/my-astrobook">My AstroBook</Link></Button>
       </div>}
     </article>

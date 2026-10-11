@@ -72,6 +72,7 @@ import MyLibrary from './pages/MyLibrary';
 import Auth from './pages/Auth';
 import Pricing from './pages/Pricing';
 import CheckoutReturn from './pages/CheckoutReturn';
+import MyMasterbook from './pages/MyMasterbook';
 import { CounselorsIndex, CounselorProfile, CounselorSession } from './pages/Counselors';
 import ChartGuide from './pages/ChartGuide';
 import Instructions from './pages/Instructions';
@@ -175,6 +176,7 @@ export default function App() {
             <Route path="/auth" element={<Auth />} />
             <Route path="/pricing" element={<Pricing />} />
             <Route path="/checkout/return" element={<CheckoutReturn />} />
+            <Route path="/my-masterbook" element={<MyMasterbook />} />
             <Route path="/instructions" element={<Instructions />} />
             <Route path="/birth-chart" element={<BirthChart />} />
             <Route path="/chart-guide" element={<ChartGuide />} />

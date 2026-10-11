@@ -11,7 +11,7 @@ April's private AstroBook is untouched; this draft is the public version.
 - [x] Personal readings page (/my-readings, built from own chart, unique art per section); AI-written longer versions wait on draft acceptance + credits
 - [ ] Shared spaces UI with email invites; move shared_* tables to space membership
 - [x] Subscriptions: Full Access $12.99 + Creator $14.99 checkout, confirmation page, Usage feed
-- [ ] Lock full-length readings and Creator tools (podcasts, chapter generation) for public members by plan, server-side
+- [x] My Masterbook locked to paid plans (database-enforced); Creator Studio chapters + podcasts (server-checked Creator plan)
 - [x] Public homepage with FAQ; Full Access priced at $12.99/month (payments provider still to set up)
 - [x] "My AstroBook" organized library (/my-astrobook)
 - [ ] Top recommendations: 1, 2, 4, 13, 18, 19, 28, 38, 47, 50
