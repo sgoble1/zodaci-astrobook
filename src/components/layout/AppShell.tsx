@@ -1,7 +1,8 @@
 import { AdminEditionSwitch } from '@/components/common/AdminEditionSwitch';
 import { PageErrorBoundary } from '@/components/common/PageErrorBoundary';
 import { VerifySources } from '@/components/common/VerifySources';
-import { NavLink, Outlet, useLocation } from 'react-router-dom';
+import { Link, Navigate, NavLink, Outlet, useLocation } from 'react-router-dom';
+import { supabase } from '@/integrations/supabase/client';
 import { motion } from 'framer-motion';
 import ParticleField from '@/components/fx/ParticleField';
 import ScrollProgress from '@/components/fx/ScrollProgress';
@@ -24,6 +25,7 @@ import { Button } from '@/components/ui/button';
 import { APRIL_NAV_GROUPS, NAV_GROUPS, RELATIONSHIPS_GROUP, SHARED_GROUP, type NavGroup, type NavItem } from '@/content/navigation';
 import { ZodaciLogo } from '@/components/brand/ZodaciLogo';
 
+const SIGNED_OUT_PATHS = ['/auth', '/pricing', '/books', '/reset-password'];
 const GROUP_COLORS = ['--primary', '--oxblood', '--accent', '--candle', '--gold-bright', '--starlight', '--gold', '--glow-violet'];
 
 export function AppShell() {
@@ -33,6 +35,12 @@ export function AppShell() {
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const mobileMenuRef = useRef<HTMLDivElement>(null);
   const openedRef = useRef(false);
+  const [signedIn, setSignedIn] = useState<boolean | null>(null);
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => setSignedIn(!!data.session));
+    const { data } = supabase.auth.onAuthStateChange((_e, s) => setSignedIn(!!s));
+    return () => data.subscription.unsubscribe();
+  }, []);
 
   useEffect(() => { setOpen(false); window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior }); }, [location.pathname]);
   useEffect(() => {
@@ -58,6 +66,21 @@ export function AppShell() {
     return () => window.removeEventListener('keydown', onKey);
   }, [open]);
 
+  if (signedIn === null) return <div role="status" className="p-8 text-muted-foreground">Opening Zodaci…</div>;
+  // Signed-out visitors never see the member menu: open pages get the public header, everything else asks to sign in first.
+  if (!signedIn) {
+    if (location.pathname === '/') return <Navigate to="/welcome" replace />;
+    if (!SIGNED_OUT_PATHS.includes(location.pathname)) return <Navigate to={`/auth?next=${encodeURIComponent(location.pathname + location.search)}`} replace />;
+    return (
+      <div className="min-h-screen bg-background text-foreground">
+        <header className="border-b border-border"><div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-5 py-4">
+          <Link to="/welcome"><ZodaciLogo /></Link>
+          <nav aria-label="Public pages" className="flex flex-wrap gap-1">{[['/welcome', 'Zodaci'], ['/blog', 'Blog'], ['/community', 'Community'], ['/books', 'AstroBook'], ['/pricing', 'Pricing']].map(([to, label]) => <Button asChild variant="ghost" key={to}><Link to={to}>{label}</Link></Button>)}<Button asChild variant="outline"><Link to="/auth">Sign in</Link></Button></nav>
+        </div></header>
+        <main id="main-content" className="mx-auto max-w-5xl px-4 py-10 sm:px-8"><PageErrorBoundary key={location.pathname}><Outlet /></PageErrorBoundary></main>
+      </div>
+    );
+  }
   return (
     <PlayerProvider>
     <div className="min-h-screen flex text-foreground relative">

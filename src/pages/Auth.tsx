@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useSearchParams, Navigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { lovable } from '@/integrations/lovable/index';
 import { useSession } from '@/hooks/useLibrary';
@@ -16,7 +16,16 @@ export default function Auth() {
   const [pw, setPw] = useState('');
   const [msg, setMsg] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [params] = useSearchParams();
+  const raw = params.get('next') ?? '';
+  const next = raw.startsWith('/') && !raw.startsWith('//') ? raw : '/start';
+  const forgot = async () => {
+    if (!email) return setMsg('Enter your email above first.');
+    const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo: `${window.location.origin}/reset-password` });
+    setMsg(error ? error.message : 'Check your email for a link to set a new password.');
+  };
 
+  if (session && raw) return <Navigate to={next} replace />;
   if (session) return (
     <article className="mx-auto max-w-md space-y-4 py-10 text-center">
       <h1 className="font-display text-3xl">You're signed in</h1>
@@ -36,7 +45,7 @@ export default function Auth() {
     setBusy(false);
     if (res.error) return setMsg(res.error.message);
     if (mode === 'up' && !res.data.session) return setMsg('Check your email to confirm your account, then sign in.');
-    nav('/start');
+    nav(next);
   };
 
   return (
