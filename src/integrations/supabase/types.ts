@@ -178,13 +178,16 @@ export type Database = {
           admin_note: string
           base_price_cents: number
           carrier: string
+          checkout_session_id: string | null
           cover_path: string | null
           cover_style: string
           created_at: string
           edition: string
+          environment: string
           extra_sections: Json
           extras_cents: number | null
           id: string
+          payment_total_cents: number | null
           shipping_address: Json
           shipping_cents: number | null
           status: string
@@ -196,13 +199,16 @@ export type Database = {
           admin_note?: string
           base_price_cents?: number
           carrier?: string
+          checkout_session_id?: string | null
           cover_path?: string | null
           cover_style?: string
           created_at?: string
           edition?: string
+          environment?: string
           extra_sections?: Json
           extras_cents?: number | null
           id?: string
+          payment_total_cents?: number | null
           shipping_address?: Json
           shipping_cents?: number | null
           status?: string
@@ -214,13 +220,16 @@ export type Database = {
           admin_note?: string
           base_price_cents?: number
           carrier?: string
+          checkout_session_id?: string | null
           cover_path?: string | null
           cover_style?: string
           created_at?: string
           edition?: string
+          environment?: string
           extra_sections?: Json
           extras_cents?: number | null
           id?: string
+          payment_total_cents?: number | null
           shipping_address?: Json
           shipping_cents?: number | null
           status?: string
