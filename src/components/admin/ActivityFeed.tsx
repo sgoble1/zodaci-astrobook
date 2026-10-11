@@ -20,6 +20,8 @@ export function ActivityFeed() {
   const [filter, setFilter] = useState('all');
   const [loading, setLoading] = useState(false);
   const [ai, setAi] = useState<{ feature: string }[]>([]);
+  const [subs, setSubs] = useState<{ user_id: string; price_id: string; status: string; environment: string; created_at: string; current_period_end: string | null }[]>([]);
+  useEffect(() => { supabase.from('billing_subscriptions').select('user_id,price_id,status,environment,created_at,current_period_end').order('created_at', { ascending: false }).limit(200).then(({ data }) => setSubs(data ?? [])); }, []);
 
   useEffect(() => { supabase.rpc('shared_member_directory').then(({ data }) => {
     const list = (data ?? []) as Member[]; setMembers(list);
@@ -89,6 +91,7 @@ export function ActivityFeed() {
         <Box title="Podcasts & media listened to">{stats.media.length ? stats.media.map(([t, m]) => <Line key={t} a={t} b={`${m.plays} plays · reached ${fmtDur(m.furthest)}${m.length ? ` of ${fmtDur(m.length)}` : ''}${m.finished ? ' · finished' : ''}`} />) : <Empty />}</Box>
         <Box title="Most-used buttons & tools">{stats.tools.length ? stats.tools.map(([t, n]) => <Line key={t} a={t} b={`${n}×`} />) : <Empty />}</Box>
         <Box title="AI replies used (credits)">{ai.length ? [...ai.reduce((m, r) => m.set(r.feature, (m.get(r.feature) ?? 0) + 1), new Map<string, number>())].map(([f, n]) => <Line key={f} a={f === 'oracle' ? 'The Oracle Within' : f === 'social-counselor' ? 'Social Counselor' : f} b={`${n} replies`} />) : <Empty />}</Box>
+        <Box title="Subscriptions (all members)">{subs.length ? subs.map((r, i) => <Line key={i} a={`${r.price_id === 'creator_monthly' ? 'Creator $14.99' : 'Full Access $12.99'} · ${r.status}${r.environment === 'sandbox' ? ' · test' : ''} · ${r.user_id.slice(0, 6)}`} b={fmtTime(r.created_at)} />) : <Empty />}</Box>
         <Box title="Things she created">{made.length ? made.slice(0, 40).map((m, i) => <Line key={i} a={`${m.what}: ${m.title}`} b={fmtTime(m.when)} />) : <Empty />}</Box>
       </div>
 
