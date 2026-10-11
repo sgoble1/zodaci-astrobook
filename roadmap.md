@@ -19,3 +19,11 @@ April's private AstroBook is untouched; this draft is the public version.
 - [x] Public sign-up turned on; April-only pages show visitors their own chart/readings or a birth-details prompt
 - [x] Counselors private to April edition; each reply logged as AI use in the Usage feed
 - [x] Plans & Pricing page (price pending payment provider choice)
+
+## October 11 refresh
+- [ ] Planet logo, subtly rounded boxes, public/private illustration separation
+- [ ] Automatic six chapters after saved birth details for paid members, with safe failure recovery
+- [ ] Printed books: $45 / $80, four base sections, up to two extras, three personal cover previews, US delivery details
+- [ ] Book orders and admin management; checkout waits for shipping and extra-section prices
+- [ ] Subscriber blog: compose, own posts, published feed
+- [ ] Verify new pages, privacy boundaries, and relevant app errors
