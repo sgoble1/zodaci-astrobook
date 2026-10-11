@@ -452,6 +452,7 @@ export type Database = {
           shared_with_space: boolean
           size_bytes: number | null
           title: string
+          workspace_id: string | null
         }
         Insert: {
           category?: string | null
@@ -468,6 +469,7 @@ export type Database = {
           shared_with_space?: boolean
           size_bytes?: number | null
           title: string
+          workspace_id?: string | null
         }
         Update: {
           category?: string | null
@@ -484,6 +486,45 @@ export type Database = {
           shared_with_space?: boolean
           size_bytes?: number | null
           title?: string
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "library_items_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "spaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      personal_context: {
+        Row: {
+          body: string
+          created_at: string
+          id: string
+          owner_id: string
+          title: string
+          updated_at: string
+          use_in_generation: boolean
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          id?: string
+          owner_id: string
+          title: string
+          updated_at?: string
+          use_in_generation?: boolean
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          id?: string
+          owner_id?: string
+          title?: string
+          updated_at?: string
+          use_in_generation?: boolean
         }
         Relationships: []
       }

@@ -1,0 +1,13 @@
+CREATE TABLE public.personal_context (id uuid PRIMARY KEY DEFAULT gen_random_uuid(), owner_id uuid NOT NULL, title text NOT NULL, body text NOT NULL, use_in_generation boolean NOT NULL DEFAULT false, created_at timestamptz NOT NULL DEFAULT now(), updated_at timestamptz NOT NULL DEFAULT now(), CHECK (char_length(title) BETWEEN 1 AND 160), CHECK (char_length(body) BETWEEN 1 AND 6000));
+GRANT SELECT,INSERT,UPDATE,DELETE ON public.personal_context TO authenticated;
+GRANT ALL ON public.personal_context TO service_role;
+ALTER TABLE public.personal_context ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Owners manage personal context" ON public.personal_context FOR ALL TO authenticated USING (owner_id=auth.uid()) WITH CHECK (owner_id=auth.uid());
+ALTER TABLE public.library_items ADD COLUMN IF NOT EXISTS workspace_id uuid REFERENCES public.spaces(id) ON DELETE SET NULL;
+CREATE POLICY "Workspace members read shared podcasts" ON public.library_items FOR SELECT TO authenticated USING (workspace_id IS NOT NULL AND public.is_space_member(workspace_id));
+CREATE POLICY "Members manage owned podcasts" ON public.library_items FOR UPDATE TO authenticated USING (owner_id=auth.uid()) WITH CHECK (owner_id=auth.uid() AND (workspace_id IS NULL OR public.is_space_member(workspace_id)) AND (NOT shared_with_space OR public.is_shared_space_member()));
+CREATE POLICY "Members delete owned podcasts" ON public.library_items FOR DELETE TO authenticated USING (owner_id=auth.uid());
+GRANT SELECT,INSERT,UPDATE,DELETE ON public.personal_context TO authenticated;
+GRANT SELECT,UPDATE,DELETE ON public.library_items TO authenticated;
+CREATE INDEX personal_context_owner_idx ON public.personal_context(owner_id);
+CREATE INDEX library_workspace_idx ON public.library_items(workspace_id) WHERE workspace_id IS NOT NULL;

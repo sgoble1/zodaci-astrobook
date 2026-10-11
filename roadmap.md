@@ -1,5 +1,12 @@
 # Roadmap — AstroBook Public (draft)
 
+## Zodaci public readiness
+- [ ] Rebrand application as Zodaci; reserve AstroBook for printed books
+- [ ] Podcast visibility choice for private or invited workspace members
+- [ ] Owner-only life context with consent for generation and suggested topics
+- [ ] Chart-grounded detailed generation using saved context and existing chapters
+- [ ] Verify privacy, layouts, and generation blockers; do not claim public readiness prematurely
+
 April's private AstroBook is untouched; this draft is the public version.
 
 - [x] Unique graphic on every box (Explore, Instructions, Planets, Workbook modules)

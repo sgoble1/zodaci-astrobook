@@ -76,6 +76,8 @@ import MyMasterbook from './pages/MyMasterbook';
 import Books from './pages/Books';
 import Orders from './pages/Orders';
 import Blog from './pages/Blog';
+import PersonalContext from './pages/PersonalContext';
+import Workspaces from './pages/Workspaces';
 import { AutomaticChapters } from './components/payments/AutomaticChapters';
 import { CounselorsIndex, CounselorProfile, CounselorSession } from './pages/Counselors';
 import ChartGuide from './pages/ChartGuide';
@@ -174,6 +176,8 @@ export default function App() {
           <Route element={<AppShell />}>
             <Route path="/" element={<Home />} />
             <Route path="/explore" element={<ExploreDiscover />} />
+            <Route path="/personal-context" element={<PersonalContext />} />
+            <Route path="/workspaces" element={<Workspaces />} />
             <Route path="/start" element={<Onboarding />} />
             <Route path="/my-chart" element={<MyChart />} />
             <Route path="/my-readings" element={<MyReadings />} />

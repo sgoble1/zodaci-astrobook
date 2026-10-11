@@ -11,21 +11,27 @@ import { fmtSize } from '@/content/sources';
 import { toast } from 'sonner';
 import { usePlayer } from '@/components/podcast/PlayerContext';
 import { Link } from 'react-router-dom';
+import { CreatorStudio } from '@/components/payments/CreatorStudio';
+import { useAprilSpace } from '@/hooks/useAprilSpace';
+import { useWorkspaces } from '@/hooks/useWorkspaces';
+import { supabase } from '@/integrations/supabase/client';
 
 export default function Podcasts() {
   const lib = useLibrary('podcast');
+  const april=useAprilSpace();
+  const spaces=useWorkspaces();
   const session = useSession();
   const isAdmin = useIsAdmin(session);
   const { current, queue, setQueue, speed, setSpeed, positions, play, playNext, stop, setCatalog } = usePlayer();
   const setCurrent = (v: null) => { if (v === null) stop(); };
   const [q, setQ] = useState('');
-  const [library, setLibrary] = useState<'shared' | 'private'>('shared');
+  const [library, setLibrary] = useState<'shared' | 'private'>('private');
   const [sort, setSort] = useState<'newest' | 'oldest' | 'title' | 'series'>('newest');
   useEffect(() => { setCatalog(lib.items); }, [lib.items, setCatalog]);
   const byId = (id: string) => lib.items.find(i => i.id === id);
   const fmt = (t: number) => `${Math.floor(t / 60)}:${String(Math.floor(t % 60)).padStart(2, '0')}`;
   const shown = lib.items
-    .filter(i => library === 'shared' ? i.shared_with_space : !i.shared_with_space && i.owner_id === session?.user.id)
+    .filter(i => library === 'shared' ? i.shared_with_space || i.workspace_id : !i.shared_with_space && !i.workspace_id && i.owner_id === session?.user.id)
     .filter(i => (i.title + ' ' + (i.description ?? '') + ' ' + (i.category ?? '')).toLowerCase().includes(q.toLowerCase()))
     .sort((a, b) => sort === 'title' ? a.title.localeCompare(b.title) : sort === 'series' ? (a.category ?? '').localeCompare(b.category ?? '') || a.title.localeCompare(b.title) : sort === 'oldest' ? +new Date(a.created_at) - +new Date(b.created_at) : +new Date(b.created_at) - +new Date(a.created_at));
 
@@ -34,7 +40,7 @@ export default function Podcasts() {
       <header>
         <div className="font-smallcaps text-xs text-gold">The Listening Room</div>
         <h1 className="text-4xl sm:text-5xl mt-2">Podcasts & Audio Readings</h1>
-        <p className="text-muted-foreground mt-3 max-w-2xl">Audio episodes about April’s chart. Press any episode to listen; it keeps playing in the mini player while you browse other pages.</p>
+        <p className="text-muted-foreground mt-3 max-w-2xl">Personal chart episodes, private to you or shared with invited workspace members.</p>
       </header>
 
       {current?.url && (
@@ -74,7 +80,7 @@ export default function Podcasts() {
           <Button variant={library === 'shared' ? 'default' : 'outline'} aria-pressed={library === 'shared'} onClick={() => setLibrary('shared')}><Users />Shared Library</Button>
           <Button variant={library === 'private' ? 'default' : 'outline'} aria-pressed={library === 'private'} onClick={() => setLibrary('private')}><Lock />My Private Library</Button>
         </div>
-        <p className="text-sm text-muted-foreground">{library === 'shared' ? 'Episodes both April and Shane can open and play.' : 'Episodes only you can open. Share one whenever you are ready.'}</p>
+        <p className="text-sm text-muted-foreground">{library === 'shared' ? 'Episodes shared with members of your workspaces.' : 'Episodes only you can open. Share one whenever you are ready.'}</p>
         <div className="flex flex-wrap gap-3">
           <Input aria-label="Search podcast episodes" placeholder="Search episodes…" value={q} onChange={e => setQ(e.target.value)} className="max-w-sm" />
           <label className="flex items-center gap-2 text-sm"><span>Sort by</span><select value={sort} onChange={e => setSort(e.target.value as typeof sort)} className="h-10 rounded-md border border-input bg-background px-3"><option value="newest">Newest first</option><option value="oldest">Oldest first</option><option value="title">Title A–Z</option><option value="series">Series / topic</option></select></label>
@@ -90,7 +96,8 @@ export default function Podcasts() {
                 <div className="flex-1 min-w-0">
                   <button onClick={() => play(ep)} className="font-display text-lg text-left hover:underline">{ep.title}</button>
                   <div className="text-xs text-muted-foreground">{ep.category && <>{ep.category} · </>}{new Date(ep.created_at).toLocaleDateString()} · <EpisodeLength ep={ep} /> · {fmtSize(ep.size_bytes)}{positions[ep.id] > 5 && <> · <span className="text-gold">resume at {fmt(positions[ep.id])}</span></>}</div>
-                  <div className="mt-1 inline-flex items-center gap-1 text-xs text-muted-foreground">{ep.shared_with_space ? <><Users className="h-3.5 w-3.5"/>Shared with April &amp; Shane</> : <><Lock className="h-3.5 w-3.5"/>Private to you</>}</div>
+                  <div className="mt-1 inline-flex items-center gap-1 text-xs text-muted-foreground">{ep.workspace_id || ep.shared_with_space ? <><Users className="h-3.5 w-3.5"/>Shared workspace</> : <><Lock className="h-3.5 w-3.5"/>Private to you</>}</div>
+                  {session?.user.id === ep.owner_id && <select aria-label={`Visibility of ${ep.title}`} value={ep.workspace_id ?? ''} className="mt-3 h-10 max-w-full border border-input rounded bg-background px-2 text-sm" onChange={async e=>{const r=await supabase.from('library_items').update({workspace_id:e.target.value||null,shared_with_space:false}).eq('id',ep.id);if(r.error)toast.error(r.error.message);else void lib.reload();}}><option value="">Private</option>{spaces.map(s=><option key={s.id} value={s.id}>{s.name}</option>)}</select>}
                   {ep.description && <p className="text-sm mt-1">{ep.description}</p>}
                   {Array.isArray(ep.sections) && ep.sections.length > 0 && <EpisodeSources episode={ep} />}
                 </div>
@@ -100,7 +107,7 @@ export default function Podcasts() {
                     {queue.includes(ep.id) ? <ListX className="w-4 h-4" /> : <ListPlus className="w-4 h-4" />}
                   </button>
                   {ep.url && <a href={ep.url} download={ep.file_name} className="p-2 rounded hover:bg-muted" aria-label="Download"><Download className="w-4 h-4" /></a>}
-                  {(isAdmin || session?.user.id === ep.owner_id) && (
+                  {april && (isAdmin || session?.user.id === ep.owner_id) && (
                     <><Button variant="ghost" size="sm" onClick={async () => { try { await lib.setShared(ep, !ep.shared_with_space); toast.success(ep.shared_with_space ? 'Episode is now private' : 'Episode shared with April & Shane'); } catch (error) { toast.error((error as Error).message); } }}>{ep.shared_with_space ? <Lock className="h-4 w-4"/> : <Users className="h-4 w-4"/>}{ep.shared_with_space ? 'Make private' : 'Share'}</Button><button className="p-2 rounded hover:bg-muted" aria-label="Delete" onClick={async () => { if (confirm('Delete this episode?')) { await lib.remove(ep); if (current?.id === ep.id) setCurrent(null); } }}><Trash2 className="w-4 h-4" /></button></>
                   )}
                 </div>
@@ -110,7 +117,7 @@ export default function Podcasts() {
       </section>
 
       <section>
-        <AuthGate what="create podcast episodes">{() => <div className="mb-6"><PodcastMaker onCreated={lib.reload} /></div>}</AuthGate>
+        {april ? <AuthGate what="create podcast episodes">{() => <div className="mb-6"><PodcastMaker onCreated={lib.reload} /></div>}</AuthGate> : <CreatorStudio onMade={lib.reload} />}
         <h2 className="text-2xl mb-3">Upload an episode</h2>
         <AuthGate what="upload podcast episodes">{(uid) => <UploadForm accept="audio/*" onUpload={(f, m) => lib.upload(f, m, uid)} />}</AuthGate>
       </section>

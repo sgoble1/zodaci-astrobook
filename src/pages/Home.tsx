@@ -9,7 +9,7 @@ import heroImg from '@/assets/astrobook-public.jpg';
 const steps = [
   { n: '1', title: 'Enter your birth details', desc: 'Date, time and place. No birth time? There is a mode for that too — your chart still works.' },
   { n: '2', title: 'We calculate your real chart', desc: 'Planets, houses, aspects and angles are computed live from astronomical data — never copied from a template.' },
-  { n: '3', title: 'Your book is written for you', desc: 'Every reading is generated from your placements only, in plain words, with the technical details kept alongside.' },
+  { n: '3', title: 'Your readings grow with you', desc: 'Every reading is generated from your placements only, in plain words, with the technical details kept alongside.' },
 ];
 
 const features = [
@@ -17,18 +17,18 @@ const features = [
   { seed: 'planets', to: '/planets', title: 'Planets & Houses', desc: 'Every placement explained twice: the technical reading, and what it means in everyday words.' },
   { seed: 'systems', to: '/other-systems', title: 'Seven Other Systems', desc: 'Vedic, Chinese Ba Zi, Maya Tzolk’in, Nine Star Ki, numerology and more — all from your one birth chart.' },
   { seed: 'timing', to: '/transits', title: 'Timing & Cycles', desc: 'Transits, retrogrades and life phases — what the sky is doing around your chart right now.' },
-  { seed: 'counselor', to: '/counselors', title: 'AI Counselors', desc: 'Chat with counselors that know your chart — therapy-style conversations tuned to your placements.' },
+  { seed: 'counselor', to: '/personal-context', title: 'Your Life, In Context', desc: 'Keep your own examples private and choose which ones inform your readings.' },
   { seed: 'podcast', to: '/podcasts', title: 'Personal Podcasts', desc: 'Turn your readings into audio episodes you can listen to anywhere, saved to your library.' },
-  { seed: 'shared', to: '/shared', title: 'Shared Spaces', desc: 'Invite a partner or friend by email and explore your charts together — notes, media and chats.' },
+  { seed: 'shared', to: '/workspaces', title: 'Shared Spaces', desc: 'Invite a partner or friend by email and explore your charts together — notes, media and chats.' },
   { seed: 'relationships', to: '/relationships', title: 'Relationships', desc: 'Add anyone’s birth details and see how your charts meet — shared placements and real synastry.' },
-  { seed: 'create', to: '/create', title: 'Create Your Own Pages', desc: 'Ask for a topic and a fully written, illustrated page is compiled into your personal library.' },
+  { seed: 'create', to: '/my-masterbook', title: 'Create Your Own Pages', desc: 'Ask for a topic and a fully written, illustrated page is compiled into your personal library.' },
 ];
 
 const faqs = [
   { q: 'Is my birth data private?', a: 'Yes. Your birth details and readings belong to your account. Shared spaces only include the people you invite, and private chats are never visible to anyone else — not even an admin.' },
   { q: 'How accurate is the chart?', a: 'Positions are calculated with the same astronomy used by observatories, and every chart page includes a live accuracy check that re-runs the calculation and grades the match.' },
   { q: 'What if I don’t know my birth time?', a: 'You can still get your planets, signs and aspects. Houses and the Rising sign need a time, so those sections explain what changes without one.' },
-  { q: 'Is this a prediction service?', a: 'No. AstroBook interprets your birth chart as a mirror for reflection. It never invents facts about your family, past or future.' },
+  { q: 'Is this a prediction service?', a: 'No. Zodaci interprets your birth chart as a mirror for reflection. It never invents facts about your family, past or future.' },
 ];
 
 export default function Home() {
@@ -42,13 +42,13 @@ export default function Home() {
         <img src={heroImg} alt="Printed AstroBook and an open chart book" width={1536} height={1024} className="absolute inset-0 -z-20 h-full w-full object-cover" />
         <div className="absolute inset-0 -z-10 bg-background/65" />
         <div className="max-w-2xl p-6 sm:p-10">
-          <div className="font-smallcaps text-[11px] text-gold mb-4">AstroBook · A Personal Chart Library</div>
+          <div className="font-smallcaps text-[11px] text-gold mb-4">Zodaci · A Personal Chart Library</div>
           <h1 className="font-display leading-[0.95]">
-            AstroBook
+            Zodaci
           </h1>
           <div className="gold-rule my-6 max-w-md" />
           <p className="text-lg leading-relaxed text-foreground/85 max-w-xl">
-            Enter your birth details and AstroBook calculates your real natal chart, then writes a personal library of readings from it — planets, houses, timing, seven world systems, counselors and podcasts. Every page is yours alone.
+            Enter your birth details and Zodaci calculates your real natal chart, then writes a personal library of readings from it — planets, houses, timing, seven world systems, counselors and podcasts. Every page is yours alone.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             {myBirth ? (
@@ -74,7 +74,7 @@ export default function Home() {
       {/* How it works */}
       <section className="gentle-fade">
         <div className="font-smallcaps text-[11px] text-gold mb-2">How it works</div>
-        <h2 className="font-display mb-8">Three steps to your book.</h2>
+        <h2 className="font-display mb-8">Three steps to your personal chart.</h2>
         <div className="grid sm:grid-cols-3 gap-4">
           {steps.map(s => (
             <div key={s.n} className="p-5 rounded border border-border bg-card/60">
@@ -89,7 +89,7 @@ export default function Home() {
 
       {/* Feature grid */}
       <section className="gentle-fade">
-        <div className="font-smallcaps text-[11px] text-gold mb-2">Inside your AstroBook</div>
+        <div className="font-smallcaps text-[11px] text-gold mb-2">Inside your Zodaci</div>
         <h2 className="font-display mb-8">The complete compendium.</h2>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {features.map(m => (

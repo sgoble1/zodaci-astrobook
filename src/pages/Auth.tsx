@@ -43,7 +43,7 @@ export default function Auth() {
     <article className="mx-auto max-w-md space-y-6 py-10">
       <header className="text-center">
         <h1 className="font-display text-3xl">{mode === 'up' ? 'Create your free account' : 'Welcome back'}</h1>
-        <p className="mt-2 text-sm text-muted-foreground">{mode === 'up' ? 'Keep your chart safe, sync it across devices and unlock your personal readings.' : 'Sign in to open your AstroBook.'}</p>
+        <p className="mt-2 text-sm text-muted-foreground">{mode === 'up' ? 'Keep your chart safe, sync it across devices and unlock your personal readings.' : 'Sign in to open your Zodaci.'}</p>
       </header>
       <Button type="button" variant="outline" className="w-full" onClick={async () => {
         const r = await lovable.auth.signInWithOAuth('google', { redirect_uri: window.location.origin });
@@ -57,7 +57,7 @@ export default function Auth() {
         <Button type="submit" className="w-full" disabled={busy}>{busy ? 'One moment…' : mode === 'up' ? 'Create account' : 'Sign in'}</Button>
       </form>
       <p className="text-center text-sm text-muted-foreground">
-        {mode === 'up' ? 'Already have an account?' : 'New to AstroBook?'}{' '}
+        {mode === 'up' ? 'Already have an account?' : 'New to Zodaci?'}{' '}
         <button type="button" className="text-primary underline underline-offset-2" onClick={() => { setMode(mode === 'up' ? 'in' : 'up'); setMsg(null); }}>
           {mode === 'up' ? 'Sign in' : 'Create one free'}
         </button>

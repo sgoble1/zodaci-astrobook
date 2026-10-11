@@ -21,7 +21,7 @@ import { useCustomPages, NEW_PAGE_HIGHLIGHT_KEY } from '@/hooks/useCustomPages';
 import { useSharedBadges } from '@/hooks/useSharedBadges';
 import { Button } from '@/components/ui/button';
 import { APRIL_NAV_GROUPS, NAV_GROUPS, RELATIONSHIPS_GROUP, SHARED_GROUP, type NavGroup, type NavItem } from '@/content/navigation';
-import { AstroBookLogo } from '@/components/brand/AstroBookLogo';
+import { ZodaciLogo } from '@/components/brand/ZodaciLogo';
 
 const GROUP_COLORS = ['--primary', '--oxblood', '--accent', '--candle', '--gold-bright', '--starlight', '--gold', '--glow-violet'];
 
@@ -70,13 +70,13 @@ export function AppShell() {
 
       {/* Mobile top bar */}
       <div className="lg:hidden fixed top-0 inset-x-0 z-50 flex min-h-[64px] items-center justify-between gap-2 border-b border-border bg-background/95 px-3 py-2 backdrop-blur-xl pt-[max(0.5rem,env(safe-area-inset-top))]">
-        <NavLink to="/" className="min-w-0 rounded focus-visible:outline-none"><AstroBookLogo compact /></NavLink>
+        <NavLink to="/" className="min-w-0 rounded focus-visible:outline-none"><ZodaciLogo compact /></NavLink>
         <div className="flex items-center gap-2"><AccountButton compact /><Button ref={menuButtonRef} type="button" size="icon" variant="ghost" onClick={() => setOpen(v => !v)} aria-label={open ? 'Close menu' : 'Open menu'} aria-expanded={open} aria-controls="mobile-menu" className="min-h-11 min-w-11">
           {open ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
         </Button></div>
       </div>
       {open && (
-        <div ref={mobileMenuRef} id="mobile-menu" role="dialog" aria-modal="true" aria-label="AstroBook menu" className="lg:hidden fixed inset-x-0 bottom-0 top-[64px] z-40 overflow-y-auto overscroll-contain bg-background pb-[env(safe-area-inset-bottom)]">
+        <div ref={mobileMenuRef} id="mobile-menu" role="dialog" aria-modal="true" aria-label="Zodaci menu" className="lg:hidden fixed inset-x-0 bottom-0 top-[64px] z-40 overflow-y-auto overscroll-contain bg-background pb-[env(safe-area-inset-bottom)]">
           <SidebarInner mobile onNavigate={() => setOpen(false)} />
         </div>
       )}
@@ -92,7 +92,7 @@ export function AppShell() {
           <div className="mx-auto max-w-5xl px-5 sm:px-8 py-10 text-sm text-muted-foreground">
             <div className="gold-rule mb-6" />
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
-              <div className="font-smallcaps text-xs">{april ? `Prepared for ${BIRTH.name} · ${BIRTH.date} · ${BIRTH.place}` : 'AstroBook · Your chart, your book'}</div>
+              <div className="font-smallcaps text-xs">{april ? `Prepared for ${BIRTH.name} · ${BIRTH.date} · ${BIRTH.place}` : 'Zodaci · Your sky, your story'}</div>
               <div className="font-smallcaps text-xs">An Illuminated Compendium · Ink on Vellum · Touched with Gold</div>
             </div>
           </div>
@@ -133,7 +133,7 @@ function SidebarInner({ mobile = false, onNavigate }: { mobile?: boolean; onNavi
   return (
     <div className={`flex min-h-full flex-col gap-6 overflow-x-hidden ${mobile ? 'px-4 pb-8 pt-4' : 'h-full overflow-y-auto p-6'}`}>
       <div>
-        <div className="flex items-center justify-between gap-2"><AstroBookLogo compact={!mobile} />{!mobile && <AccountButton compact />}</div>
+        <div className="flex items-center justify-between gap-2"><ZodaciLogo compact={!mobile} />{!mobile && <AccountButton compact />}</div>
         {april ? (
           <>
             <div className="font-display text-2xl leading-tight mt-1">April</div>
@@ -156,7 +156,7 @@ function SidebarInner({ mobile = false, onNavigate }: { mobile?: boolean; onNavi
           </>
         ) : (
           <>
-            <div className="font-display text-2xl leading-tight mt-1">Your AstroBook</div>
+            <div className="font-display text-2xl leading-tight mt-1">Your Zodaci</div>
             <div className="text-xs text-muted-foreground mt-1">Enter your birth details to get your own chart and readings.</div>
             <div className="gold-rule my-4" />
             <NavLink to="/start" onClick={onNavigate} className="text-xs text-primary underline-offset-2 hover:underline">Get started →</NavLink>
