@@ -2,6 +2,21 @@ import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, BookOpen, Compass, Heart, Home, Sparkles, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import chartImg from '@/assets/explore/chart.jpg';
+import timingImg from '@/assets/explore/timing.jpg';
+import growthImg from '@/assets/explore/growth.jpg';
+import relImg from '@/assets/explore/relationships.jpg';
+import homeImg from '@/assets/explore/home.jpg';
+import sourcesImg from '@/assets/explore/sources.jpg';
+
+const ART: Record<string, { src: string; alt: string }> = {
+  chart: { src: chartImg, alt: 'Etched zodiac wheel above an open book' },
+  timing: { src: timingImg, alt: 'Star-filled hourglass beside a road of moon phases' },
+  growth: { src: growthImg, alt: 'Woman with a lantern watching a seedling grow from a journal' },
+  relationships: { src: relImg, alt: 'Two overlapping zodiac wheels above reaching hands' },
+  home: { src: homeImg, alt: 'Calm room with a compass and bagua pattern on the floor' },
+  sources: { src: sourcesImg, alt: 'Candlelit library with open astrology books' },
+};
 
 type DiscoveryItem = {
   title: string;
@@ -86,9 +101,11 @@ export default function ExploreDiscover() {
           </div>
           <span className="text-xs text-muted-foreground">{visibleItems.length} places to explore</span>
         </div>
+        {ART[active] && <img src={ART[active].src} alt={ART[active].alt} width={1152} height={640} className="mt-5 aspect-[16/7] w-full rounded border border-border object-cover gentle-fade" />}
         <div className="mt-5 grid gap-4 sm:grid-cols-2">
           {visibleItems.map(item => (
-            <article key={`${item.category}-${item.to}`} className="rounded border border-border bg-card/60 p-5">
+            <article key={`${item.category}-${item.to}`} className="overflow-hidden rounded border border-border bg-card/60 p-5">
+              {active === 'all' && ART[item.category] && <img src={ART[item.category].src} alt="" loading="lazy" className="-mx-5 -mt-5 mb-4 h-28 w-[calc(100%+2.5rem)] max-w-none object-cover opacity-90" />}
               <h3 className="font-display text-xl leading-tight"><Link to={item.to} className="group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">{item.title}</Link></h3>
               <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{item.description}</p>
               <Link to={item.to} className="group mt-5 inline-flex items-center gap-2 font-smallcaps text-[10px] text-gold">Open this page <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" aria-hidden="true" /></Link>

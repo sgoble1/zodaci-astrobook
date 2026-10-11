@@ -16,7 +16,7 @@ import { aprilSourcesFor } from '@/content/birthChartBook';
 
 export const APRIL: ChartInput = { date: '1990-09-06', time: '15:38', lat: 42.8689, lon: -76.9856, tz: 'America/New_York', placeLabel: 'Geneva, New York, United States', placeSource: 'geocoded', sex: 'female' };
 const BC_SRC: SourceRef = { doc: 'Complete Birth Chart Analysis & Feng Shui Guide', section: 'Planetary positions', page: 'pp. 1–10' };
-const CALC_SRC: SourceRef = { doc: 'Calculated in the app', section: 'astronomy-engine ephemeris · Porphyry houses' };
+const CALC_SRC: SourceRef = { doc: 'Calculated in the app', section: 'astronomy-engine ephemeris · Placidus houses' };
 type Geo = { name: string; admin1?: string; country?: string; latitude: number; longitude: number; timezone: string };
 
 export const fromParams = (sp: URLSearchParams): ChartInput | null => {
@@ -127,11 +127,11 @@ export default function ChartCalculator() {
                 { label: 'Ephemeris', detail: 'Geocentric apparent ecliptic longitudes (of date) from astronomy-engine, which is accurate to under 1 arc-minute for 1900–2100.' },
                 { label: 'Retrograde', detail: 'A planet is marked ℞ when its longitude 12 h later is smaller than 12 h earlier.' },
                 { label: 'Angles', detail: 'RAMC = apparent sidereal time × 15° + longitude. MC and Ascendant come from spherical trigonometry with the mean obliquity.' },
-                { label: 'Houses', detail: 'This independent calculator uses Porphyry: each quadrant between the angles is divided into equal thirds. April’s source report uses Placidus, so a planet near a cusp can land in a different house. Neither result is silently substituted for the other.' },
+                { label: 'Houses', detail: 'This calculator uses Placidus, the same system as April’s source report, so its houses match the books. Porphyry, Whole Sign and Equal can be compared on the Birth Chart page.' },
               ],
               output: 'Positions shown above; the Δ column compares them with the PDF when the input is April’s birth.',
               confidence: input.time ? 'derived' : 'ambiguous',
-              caveats: ['Lilith (mean), Vertex and Part of Fortune are now calculated here. Chiron needs a separate asteroid ephemeris; for April it is Cancer 24°31′ direct, confirmed with NASA JPL Horizons (shown on the Planets pages).'],
+              caveats: ['Lilith (mean), Vertex, Part of Fortune and Chiron are calculated here. Chiron comes from a NASA JPL Horizons table covering 1940–2060; outside those years it is left out.'],
             }} />
             <p className="text-[11px] text-muted-foreground mt-2">Meaning glosses are short keywords written for the app, not quotes from the PDFs.<Cite source={CALC_SRC} /></p>
           </section>

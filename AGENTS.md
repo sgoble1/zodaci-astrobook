@@ -7,7 +7,7 @@
 - Ask the Sources: client-side BM25 retrieval over the protected content loader, with top passages sent to the ask-sources function for a streamed cited answer.
 - Podcast queue, speed and resume positions are stored per device in localStorage.
 
-- Natal/Ba Zi math lives in src/lib/astro.ts (astronomy-engine, Porphyry houses); it cross-checks the PDF values rather than replacing them.
+- Natal/Ba Zi math lives in src/lib/astro.ts (astronomy-engine; Placidus houses by default to match the sources, with Porphyry, Whole Sign and Equal selectable); it cross-checks the PDF values rather than replacing them.
 - Main navigation and the clickable Instructions guide share one registry so feature links and help stay synchronized.
 - Library learning topics use the shared Topic renderer with separate chart facts, labeled editorial interpretations, and protected source links, so new readings do not duplicate or expose source text.
 - In-app PDF viewer uses the pdfjs-dist legacy build, because the modern build needs very new browser APIs.

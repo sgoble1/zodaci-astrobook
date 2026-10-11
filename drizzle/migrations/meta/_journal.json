@@ -155,6 +155,13 @@
       "when": 1791155631971,
       "tag": "0021_activity_events",
       "breakpoints": true
+    },
+    {
+      "idx": 22,
+      "version": "7",
+      "when": 1791737814911,
+      "tag": "0022_realtime_updates_feed",
+      "breakpoints": true
     }
   ]
 }

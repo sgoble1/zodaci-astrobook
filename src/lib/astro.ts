@@ -1,7 +1,8 @@
 // In-app natal chart + Ba Zi calculator.
 // Planet positions: astronomy-engine (VSOP87 / ELP-based, arc-second level for 1900–2100).
-// Angles: RAMC from Greenwich apparent sidereal time + longitude; Porphyry houses.
+// Angles: RAMC from Greenwich apparent sidereal time + longitude; Placidus houses by default (Porphyry, Whole Sign, Equal selectable).
 // Ba Zi: sexagenary cycle with solar-term (sun-longitude) boundaries.
+import { chironLon } from './chiron';
 import * as Astronomy from 'astronomy-engine';
 import type { ConfidenceLevel } from '@/content/confidence';
 
@@ -16,7 +17,15 @@ export interface ChartInput {
   placeLabel: string;
   placeSource: 'geocoded' | 'manual';
   sex?: 'male' | 'female' | 'unspecified';
+  houseSystem?: HouseSystem;
 }
+export type HouseSystem = 'porphyry' | 'placidus' | 'whole' | 'equal';
+export const HOUSE_SYSTEMS: { id: HouseSystem; label: string; note: string }[] = [
+  { id: 'porphyry', label: 'Porphyry', note: 'Splits each quarter between the Ascendant and Midheaven into three equal parts. Mercury falls 7′ past this system’s 9th-house line, so it reads as 9th here.' },
+  { id: 'placidus', label: 'Placidus', note: 'Splits each quarter by the time a degree takes to rise. The most common modern Western system, and the one April’s books use: every placement in the books matches it. AstroBook’s default.' },
+  { id: 'whole', label: 'Whole Sign', note: 'Each house is one whole sign, starting with the rising sign. The oldest Hellenistic method.' },
+  { id: 'equal', label: 'Equal', note: 'Twelve 30° houses measured from the exact Ascendant degree.' },
+];
 
 export interface Flag { level: ConfidenceLevel; topic: string; note: string; }
 
@@ -102,7 +111,34 @@ function angles(d: Date, lat: number, lon: number) {
   const asc = ascAt(r, phi);
   // Vertex: the western ecliptic–prime-vertical intersection (ascendant of the co-latitude, RAMC + 180°).
   const vertex = ascAt(r + Math.PI, Math.PI / 2 - phi);
-  return { asc, mc, vertex };
+  return { asc, mc, vertex, ramc, eps };
+}
+
+function placidus(asc: number, mc: number, ramc: number, eps: number, lat: number) {
+  const phi = lat * rad;
+  const lonOfRa = (ra: number) => norm(Math.atan2(Math.sin(ra * rad), Math.cos(ra * rad) * Math.cos(eps)) / rad);
+  const cusp = (f: number, above: boolean) => {
+    let ra = ramc + (above ? f * 90 : 180 - f * 90);
+    for (let i = 0; i < 30; i++) {
+      const dec = Math.asin(Math.sin(eps) * Math.sin(lonOfRa(ra) * rad));
+      const x = Math.tan(phi) * Math.tan(dec);
+      if (Math.abs(x) >= 1) return null;
+      const ad = Math.asin(x) / rad;
+      ra = above ? ramc + f * (90 + ad) : ramc + 180 - f * (90 - ad);
+    }
+    return lonOfRa(ra);
+  };
+  const c11 = cusp(1 / 3, true), c12 = cusp(2 / 3, true), c2 = cusp(2 / 3, false), c3 = cusp(1 / 3, false);
+  if ([c11, c12, c2, c3].some(c => c == null)) return null; // undefined near the polar circles
+  const c = [asc, c2!, c3!, norm(mc + 180)];
+  return [...c, norm(c11! + 180), norm(c12! + 180), norm(asc + 180), norm(c2! + 180), norm(c3! + 180), mc, c11!, c12!];
+}
+
+export function cuspsFor(system: HouseSystem, a: { asc: number; mc: number; ramc: number; eps: number }, lat: number): number[] {
+  if (system === 'whole') { const s0 = Math.floor(a.asc / 30) * 30; return Array.from({ length: 12 }, (_, i) => norm(s0 + i * 30)); }
+  if (system === 'equal') return Array.from({ length: 12 }, (_, i) => norm(a.asc + i * 30));
+  if (system === 'placidus') return placidus(a.asc, a.mc, a.ramc, a.eps, lat) ?? porphyry(a.asc, a.mc);
+  return porphyry(a.asc, a.mc);
 }
 
 function porphyry(asc: number, mc: number) {
@@ -177,7 +213,7 @@ export function computeChart(input: ChartInput): ChartResult {
   if (yr < 1970) flags.push({ level: 'approximate', topic: 'Historical time zone', note: 'Pre-1970 daylight-saving rules were irregular in many places; confirm the offset below.' });
 
   let asc: number | null = null, mc: number | null = null, cusps: number[] | null = null, vertex: number | null = null;
-  if (timeKnown) { ({ asc, mc, vertex } = angles(utc, input.lat, input.lon)); cusps = porphyry(asc, mc); }
+  if (timeKnown) { const a = angles(utc, input.lat, input.lon); ({ asc, mc, vertex } = a); cusps = cuspsFor(input.houseSystem ?? 'placidus', a, input.lat); }
 
   const bodies: BodyPos[] = BODIES.map(([key, name, glyph, b]) => {
     const lon = eclLon(b, utc);
@@ -199,6 +235,11 @@ export function computeChart(input: ChartInput): ChartResult {
     const f = fmtLon(lon);
     bodies.push({ key, name, glyph, lon, sign: f.sign, signGlyph: f.signGlyph, deg: f.deg, min: f.min, house: cusps ? houseOf(lon, cusps) : null, retro: false, confidence: 'derived', note });
   };
+  const ch = chironLon(utc);
+  if (ch != null) {
+    const f = fmtLon(ch); const later = chironLon(new Date(utc.getTime() + 864e5)), earlier = chironLon(new Date(utc.getTime() - 864e5));
+    bodies.push({ key: 'chiron', name: 'Chiron', glyph: '⚷', lon: ch, sign: f.sign, signGlyph: f.signGlyph, deg: f.deg, min: f.min, house: cusps ? houseOf(ch, cusps) : null, retro: later != null && earlier != null && norm(later - earlier + 180) - 180 < 0, confidence: 'derived', note: 'From a NASA JPL Horizons table (1940–2060), interpolated.' });
+  }
   point('lilith', 'Black Moon Lilith (mean)', '⚸', meanLilith(utc), 'Mean lunar apogee; the “true”/oscillating Lilith can differ by several degrees.');
   if (asc != null && vertex != null) {
     const sunLon = bodies[0].lon, moonLon = bodies[1].lon;
