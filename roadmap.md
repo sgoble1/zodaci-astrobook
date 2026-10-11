@@ -1,11 +1,14 @@
-# Roadmap — AstroBook Public (draft)
+# Roadmap — Zodaci Public
 
 ## Zodaci public readiness
-- [ ] Rebrand application as Zodaci; reserve AstroBook for printed books
-- [ ] Podcast visibility choice for private or invited workspace members
-- [ ] Owner-only life context with consent for generation and suggested topics
-- [ ] Chart-grounded detailed generation using saved context and existing chapters
-- [ ] Verify privacy, layouts, and generation blockers; do not claim public readiness prematurely
+- [x] Public brand and metadata use Zodaci; printed books retain AstroBook
+- [x] Podcast visibility choice for private or invited workspace members; audio authorization deployed
+- [x] Owner-only life context with consent and suggested chapter links; save/reload/delete verified
+- [x] Creator generation includes saved aspects, house cusps, consented context and relevant chapters
+- [x] Public screens and workspace creation verified; clean lint/build; recent library metadata scoped to owner/member
+- [ ] Full public readiness: April-specific static modules remain in delivered application code; private bundle isolation needs completion
+- [ ] Extend generic workspaces beyond podcasts to all legacy shared tools without widening April's protected space
+- [ ] Verify paid live generation and privacy with two ordinary member accounts; needs paid entitlement, saved chart and available AI credits
 
 April's private AstroBook is untouched; this draft is the public version.
 
@@ -16,12 +19,12 @@ April's private AstroBook is untouched; this draft is the public version.
 - [x] 4-step birth data setup (/start) + live personal chart page (/my-chart)
 - [x] Public /auth sign-up+sign-in page; device-only save banner nudges to account; nav links to My Chart
 - [x] Personal readings page (/my-readings, built from own chart, unique art per section); AI-written longer versions wait on draft acceptance + credits
-- [ ] Shared spaces UI with email invites; move shared_* tables to space membership
+- [~] Workspace creation and email-bound invitation links built; legacy shared tools remain separate; invitation emails are not sent
 - [x] Subscriptions: Full Access $12.99 + Creator $14.99 checkout, confirmation page, Usage feed
 - [x] My Masterbook locked to paid plans (database-enforced); Creator Studio chapters + podcasts (server-checked Creator plan)
 - [x] Public homepage with FAQ; Full Access priced at $12.99/month (payments provider still to set up)
 - [x] "My AstroBook" organized library (/my-astrobook)
-- [ ] Top recommendations: 1, 2, 4, 13, 18, 19, 28, 38, 47, 50
+- [ ] Extend recommendations and owner-scoped uploaded-source retrieval across every generation tool
 - [x] April edition restored for approved accounts; public pages free of "April"
 - [x] Public sign-up turned on; April-only pages show visitors their own chart/readings or a birth-details prompt
 - [x] Counselors private to April edition; each reply logged as AI use in the Usage feed
