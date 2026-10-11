@@ -1,6 +1,12 @@
 # Roadmap — Zodaci Public
 
 ## Current request
+- [x] Separate Zodaci brand landing with chart signup, pricing and printed-book links
+- [x] Three labeled generic placeholder AstroBook covers
+- [x] Consented email signup and admin-only list/export/removal
+- [x] Social-profile drafts, first-post copy and downloadable brand artwork
+- [ ] Actual social accounts and verified profile URLs — requires owner account setup
+- [ ] Email campaigns — requires verified sender setup
 - [x] Add automatically generated Sex & Attraction topic with consent-first, non-deterministic interpretation
 - [x] Suggest Wonderings for workspace members and added people; save selected questions to owner-only relationship notes
 - [x] Compose a real paginated PDF manuscript with contents and selected cover; connect it to book orders (10-page sample visually checked)

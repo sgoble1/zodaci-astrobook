@@ -55,6 +55,16 @@
 }
 .dark { }
 
+.brand-site .brand-wordmark { font-size: 5rem; background: none; color: hsl(var(--foreground)); }
+.brand-site h1, .brand-site h2, .brand-site h3 { letter-spacing: 0; }
+.brand-site h2 { font-size: 2.75rem; }
+.brand-band { max-width: 80rem; margin-inline: auto; padding: 4.5rem 2.5rem; scroll-margin-top: 1rem; }
+@media (max-width: 639px) {
+  .brand-site .brand-wordmark { font-size: 3.5rem; }
+  .brand-site h2 { font-size: 2rem; }
+  .brand-band { padding: 3rem 1.25rem; }
+}
+
 @theme inline {
   --color-background: hsl(var(--background));
   --color-foreground: hsl(var(--foreground));

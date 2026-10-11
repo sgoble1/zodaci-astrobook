@@ -84,6 +84,8 @@ import { AutomaticChapters } from './components/payments/AutomaticChapters';
 import { CounselorsIndex, CounselorProfile, CounselorSession } from './pages/Counselors';
 import ChartGuide from './pages/ChartGuide';
 import Instructions from './pages/Instructions';
+import BrandLanding from './pages/BrandLanding';
+import BrandLaunch from './pages/BrandLaunch';
 
 
 /** Build a single registry of every drawer-openable Compendium item. Used so
@@ -173,6 +175,7 @@ export default function App() {
         <ActivityTracker />
         <AutomaticChapters />
         <Routes>
+          <Route path="/welcome" element={<BrandLanding />} />
           <Route path="/contents" element={<MasterbookContents />} />
           <Route path="/contents/:id" element={<MasterbookContentsEntry />} />
           <Route path="/read" element={<PublicLibrary />} />
@@ -222,6 +225,7 @@ export default function App() {
             <Route path="/masterbook/index" element={<MasterbookSources />} />
             <Route path="/masterbook/upload" element={<MyUploads />} />
             <Route path="/admin" element={<Admin />} />
+            <Route path="/brand-launch" element={<BrandLaunch />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/masterbook/u/:id" element={<UploadedDoc />} />
             <Route path="/masterbook/pdf/:id" element={<PdfViewer />} />
