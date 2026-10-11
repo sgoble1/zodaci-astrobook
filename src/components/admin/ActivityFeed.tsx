@@ -28,8 +28,14 @@ export function ActivityFeed() {
   const load = async () => {
     if (!who) return; setLoading(true);
     const since = new Date(Date.now() - days * 864e5).toISOString();
-    const { data } = await supabase.from('activity_events').select('*').eq('user_id', who).gte('created_at', since).order('created_at', { ascending: false }).limit(2000);
-    setRows((data ?? []) as Row[]);
+    // The backend returns at most 1000 rows per request, so page through everything.
+    const all: Row[] = [];
+    for (let from = 0; from < 20000; from += 1000) {
+      const { data } = await supabase.from('activity_events').select('*').eq('user_id', who).gte('created_at', since).order('created_at', { ascending: false }).range(from, from + 999);
+      all.push(...((data ?? []) as Row[]));
+      if (!data || data.length < 1000) break;
+    }
+    setRows(all);
     const sources: [string, string, string][] = [['custom_pages', 'Created page', 'owner_id'], ['library_items', 'Added item', 'owner_id'], ['shared_posts', 'Posted', 'author_id'], ['shared_recommendations', 'Recommended', 'author_id'], ['shared_media', 'Uploaded media', 'uploaded_by'], ['shared_wonderings', 'Wondering', 'author_id'], ['workbook_entries', 'Workbook answer', 'owner_id']];
     const out: Made[] = [];
     await Promise.all(sources.map(async ([t, what, col]) => {

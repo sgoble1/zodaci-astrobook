@@ -89,7 +89,7 @@ export default function Podcasts() {
                 </button>
                 <div className="flex-1 min-w-0">
                   <button onClick={() => play(ep)} className="font-display text-lg text-left hover:underline">{ep.title}</button>
-                  <div className="text-xs text-muted-foreground">{ep.category && <>{ep.category} · </>}{new Date(ep.created_at).toLocaleDateString()} · {fmtSize(ep.size_bytes)}{positions[ep.id] > 5 && <> · <span className="text-gold">resume at {fmt(positions[ep.id])}</span></>}</div>
+                  <div className="text-xs text-muted-foreground">{ep.category && <>{ep.category} · </>}{new Date(ep.created_at).toLocaleDateString()} · <EpisodeLength ep={ep} /> · {fmtSize(ep.size_bytes)}{positions[ep.id] > 5 && <> · <span className="text-gold">resume at {fmt(positions[ep.id])}</span></>}</div>
                   <div className="mt-1 inline-flex items-center gap-1 text-xs text-muted-foreground">{ep.shared_with_space ? <><Users className="h-3.5 w-3.5"/>Shared with April &amp; Shane</> : <><Lock className="h-3.5 w-3.5"/>Private to you</>}</div>
                   {ep.description && <p className="text-sm mt-1">{ep.description}</p>}
                   {Array.isArray(ep.sections) && ep.sections.length > 0 && <EpisodeSources episode={ep} />}
