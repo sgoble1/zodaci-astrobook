@@ -4,9 +4,9 @@ import { useMyBirth } from '@/lib/myBirth';
 import MyChart from '@/pages/MyChart';
 import MyReadings from '@/pages/MyReadings';
 
-const PUBLIC = ['/', '/explore', '/start', '/my-chart', '/my-readings', '/my-astrobook', '/auth', '/instructions', '/chart-guide', '/chart-calculator', '/pricing', '/checkout', '/my-masterbook', '/podcasts', '/relationships', '/dashboard', '/books', '/orders', '/blog', '/personal-context', '/workspaces'];
+const PUBLIC = ['/', '/explore', '/start', '/my-chart', '/my-readings', '/my-astrobook', '/auth', '/instructions', '/pricing', '/checkout', '/my-masterbook', '/podcasts', '/dashboard', '/books', '/orders', '/blog', '/personal-context', '/workspaces', '/wonderings', '/shared/wonderings'];
 export const isPublicPath = (p: string) => PUBLIC.some(x => p === x || (x !== '/' && p.startsWith(`${x}/`)));
-const CHART = ['/birth-chart', '/planets', '/houses', '/aspects', '/star-map', '/chart-elements', '/reading', '/compendium'];
+const CHART = ['/birth-chart', '/planets', '/houses', '/aspects', '/star-map', '/chart-elements', '/reading', '/compendium', '/chart-guide', '/chart-calculator'];
 
 /** Public visitors never see the private edition's pages: they get their own chart or readings instead. */
 export function PublicChartFallback() {

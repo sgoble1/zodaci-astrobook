@@ -3,10 +3,11 @@ import App from "./App.tsx";
 import "./index.css";
 
 // Set defaults in the head for SEO — real title & description.
-document.title = "April · Complete Birth Chart & Astrological Compendium";
+document.title = "Zodaci · Your Chart, Readings & Printed AstroBook";
 const desc = document.querySelector('meta[name="description"]');
 if (desc) desc.setAttribute("content",
-  "An interactive, illuminated companion to April's complete birth chart, timeline, retrograde guide and feng shui report — every planet, house, aspect, phase and gua explorable in the style of a Victorian pen-and-ink manuscript."
+  "Explore your own calculated birth chart, personal readings and private library, and create a printed AstroBook with Zodaci."
 );
 
-createRoot(document.getElementById("root")!).render(<App />);
+const root = document.getElementById('root');
+if (root) createRoot(root).render(<App />);

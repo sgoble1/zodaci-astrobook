@@ -1,8 +1,6 @@
 # Navigation discovery
-- Explore is a link hub, avoiding duplicated interpretations.
-
-
-- Masterbook and extracted-source text is bundled only with the protected-content function and fetched through short-lived password unlock tokens; never restore public static copies.
+- Explore links to existing readings.
+- Source text stays in protected-content; approved-account authentication plus password tokens are required.
 - Podcasts and added source files use one library_items table + private "library" storage bucket with signed URLs; podcast owners choose private or approved shared-space visibility and may change it later.
 - Ask the Sources: client-side BM25 retrieval over the protected content loader, with top passages sent to the ask-sources function for a streamed cited answer.
 - Podcast queue, speed and resume positions are stored per device in localStorage.
@@ -33,7 +31,7 @@
 - Wide data tables keep a stable readable width and scroll horizontally on phones instead of compressing headings into vertical text.
 - Usage analytics: ActivityTracker logs page time, click labels and media events to activity_events (insert-own, admin-read); never record typed text or private chat content.
 
-- Public members' birth data lives in profiles (device copy as fallback) via src/lib/myBirth.ts; personal chart pages compute live from it so readings always match the saved birth facts.
+- Personal chart pages compute from profiles, with device fallback, to match saved birth facts.
 - Box grids use BoxArt(seed,label) for unique art.
 - Personal context is owner-only and opt-in; user reports never override chart facts.
 - Public podcast sharing requires workspace membership and authorized audio URLs.
@@ -42,3 +40,5 @@
 - book_orders uses owner reads, admin fulfillment and verified webhooks; clients cannot confirm payment.
 - blog_posts permits subscriber writes and explicit publication; drafts remain private.
 - book-cover streams saved-chart artwork through authenticated requests; no April chart reuse.
+- Workspace Wonderings use separate member policies; relationship notes stay owner-only.
+- Manuscript PDFs paginate saved owner chapters and use private owner paths; real page counts require printer review.

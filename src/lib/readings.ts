@@ -31,7 +31,7 @@ const AREAS: { key: string; title: string; body: string; theme: string; q: strin
 ];
 
 export function buildReadings(chart: ChartResult, timeKnown: boolean): Reading[] {
-  return AREAS.flatMap(a => {
+  const readings = AREAS.flatMap(a => {
     const b = chart.bodies.find(x => x.key === a.body);
     if (!b) return [];
     const s = SIGN[b.sign];
@@ -42,6 +42,10 @@ export function buildReadings(chart: ChartResult, timeKnown: boolean): Reading[]
     const daily = `In daily life, lean into ${s.strength}${house ? ` especially around ${HOUSE[house]}` : ''}. Something to watch: ${s.watch}.${aspects[0] ? ` Your closest link is ${aspects[0].a} ${aspects[0].type.toLowerCase()} ${aspects[0].b}, so these two parts of you tend to show up together.` : ''}`;
     return [{ key: a.key, title: a.title, facts, plain, daily, questions: [a.q, `Where have you noticed being ${s.style.split(',')[0]}?`, `How could you handle "${s.watch}" a little better this week?`], art: `${b.key}-${b.sign}` }];
   });
+  const venus = chart.bodies.find(b => b.key === 'venus');
+  const mars = chart.bodies.find(b => b.key === 'mars');
+  if (venus && mars) readings.push({ key: 'sex-attraction', title: 'Sex & Attraction', facts: [venus, mars].map(b => `${b.name}: ${b.sign} ${b.deg}°${String(b.min).padStart(2, '0')}′${timeKnown && b.house ? ` · house ${b.house}` : ''}`).concat(chart.aspects.filter(a => ['Venus', 'Mars'].includes(a.a) && ['Venus', 'Mars'].includes(a.b)).map(a => `${a.a} ${a.type} ${a.b} · orb ${a.orb.toFixed(2)}°`)), plain: `In traditional astrology, Venus represents enjoyment and relating, while Mars represents initiative. Your Venus in ${venus.sign} offers a ${SIGN[venus.sign].style} reflection lens; Mars in ${mars.sign} offers a ${SIGN[mars.sign].style} lens for taking action. These symbols do not establish what you desire or who you are attracted to.`, daily: 'Ask rather than assume. Discuss comfort, boundaries, pace and affection openly; consent must be freely given, specific and changeable. Neither chart symbolism nor compatibility scores establish mutual attraction.', questions: ['What helps me feel comfortable discussing attraction?', 'How do I communicate a boundary or a change of mind?', 'What kinds of affection do I actually enjoy, rather than assume I should?'], art: `attraction-${venus.sign}-${mars.sign}` });
+  return readings;
 }
 
 export const risingLine = (chart: ChartResult) => chart.asc != null ? `Rising sign ${fmtLon(chart.asc)}` : null;

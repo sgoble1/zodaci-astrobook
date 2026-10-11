@@ -187,6 +187,8 @@ export type Database = {
           extra_sections: Json
           extras_cents: number | null
           id: string
+          manuscript_pages: number | null
+          manuscript_path: string | null
           payment_total_cents: number | null
           shipping_address: Json
           shipping_cents: number | null
@@ -208,6 +210,8 @@ export type Database = {
           extra_sections?: Json
           extras_cents?: number | null
           id?: string
+          manuscript_pages?: number | null
+          manuscript_path?: string | null
           payment_total_cents?: number | null
           shipping_address?: Json
           shipping_cents?: number | null
@@ -229,6 +233,8 @@ export type Database = {
           extra_sections?: Json
           extras_cents?: number | null
           id?: string
+          manuscript_pages?: number | null
+          manuscript_path?: string | null
           payment_total_cents?: number | null
           shipping_address?: Json
           shipping_cents?: number | null
@@ -1574,6 +1580,41 @@ export type Database = {
         }
         Relationships: []
       }
+      workspace_wonderings: {
+        Row: {
+          author_id: string
+          body: string
+          created_at: string
+          id: string
+          target_user_id: string
+          workspace_id: string
+        }
+        Insert: {
+          author_id: string
+          body: string
+          created_at?: string
+          id?: string
+          target_user_id: string
+          workspace_id: string
+        }
+        Update: {
+          author_id?: string
+          body?: string
+          created_at?: string
+          id?: string
+          target_user_id?: string
+          workspace_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "workspace_wonderings_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "spaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -1632,6 +1673,13 @@ export type Database = {
         Returns: {
           conversation_id: string
           unread_count: number
+        }[]
+      }
+      workspace_member_directory: {
+        Args: { _space_id: string }
+        Returns: {
+          display_name: string
+          user_id: string
         }[]
       }
     }

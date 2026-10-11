@@ -1,0 +1,11 @@
+ALTER TABLE public.book_orders ADD COLUMN IF NOT EXISTS manuscript_path text, ADD COLUMN IF NOT EXISTS manuscript_pages integer;
+CREATE TABLE public.workspace_wonderings (id uuid PRIMARY KEY DEFAULT gen_random_uuid(), workspace_id uuid NOT NULL REFERENCES public.spaces(id) ON DELETE CASCADE, author_id uuid NOT NULL, target_user_id uuid NOT NULL, body text NOT NULL, created_at timestamptz NOT NULL DEFAULT now());
+GRANT SELECT, INSERT, DELETE ON public.workspace_wonderings TO authenticated;
+GRANT ALL ON public.workspace_wonderings TO service_role;
+ALTER TABLE public.workspace_wonderings ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Members read workspace wonderings" ON public.workspace_wonderings FOR SELECT TO authenticated USING (public.is_space_member(workspace_id));
+CREATE POLICY "Members ask another member" ON public.workspace_wonderings FOR INSERT TO authenticated WITH CHECK (author_id = auth.uid() AND public.is_space_member(workspace_id) AND EXISTS (SELECT 1 FROM public.space_members m WHERE m.space_id = workspace_id AND m.user_id = target_user_id));
+CREATE POLICY "Authors delete workspace wonderings" ON public.workspace_wonderings FOR DELETE TO authenticated USING (author_id = auth.uid() AND public.is_space_member(workspace_id));
+CREATE OR REPLACE FUNCTION public.workspace_member_directory(_space_id uuid) RETURNS TABLE(user_id uuid, display_name text) LANGUAGE sql STABLE SECURITY DEFINER SET search_path = public AS $$ SELECT m.user_id, coalesce(nullif(p.display_name,''), 'Workspace member') FROM public.space_members m LEFT JOIN public.profiles p ON p.id=m.user_id WHERE m.space_id=_space_id AND public.is_space_member(_space_id) $$;
+REVOKE ALL ON FUNCTION public.workspace_member_directory(uuid) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.workspace_member_directory(uuid) TO authenticated, service_role;
