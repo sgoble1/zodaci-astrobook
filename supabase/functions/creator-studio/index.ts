@@ -7,7 +7,7 @@ const TTS_MODEL = 'google/gemini-3.1-flash-tts-preview';
 const json = (b: unknown, status = 200) => new Response(JSON.stringify(b), { status, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
 
 const Body = z.object({
-  kind: z.enum(['chapter', 'podcast']),
+  kind: z.enum(['chapter', 'podcast', 'starter']),
   topic: z.string().trim().min(2).max(200),
   duration: z.enum(['short', 'standard', 'long']).default('standard'),
   environment: z.enum(['sandbox', 'live']),
@@ -67,10 +67,18 @@ Deno.serve(async (req) => {
     if (!parsed.success) return json({ error: 'Please give it a topic.' }, 400);
     const { kind, topic, duration, environment } = parsed.data;
 
+    const STARTER = ['Your Big Three: Sun, Moon and Rising', 'Love and Relationships', 'Work, Purpose and Calling', 'Mind and Communication', 'Drive, Energy and Conflict', 'Growth, Challenges and Life Lessons'];
+    const now = Date.now();
+    const active = (s: { status: string; current_period_end: string | null }) => (!s.current_period_end || +new Date(s.current_period_end) > now) && ['active', 'trialing', 'past_due', 'canceled'].includes(s.status) && (s.status !== 'canceled' || !!s.current_period_end);
+    if (kind === 'starter') {
+      // Ready-made chapters for any paid plan; one chapter per request, each written once.
+      if (!STARTER.includes(topic)) return json({ error: 'Unknown chapter.' }, 400);
+      const { data: paid } = await admin.from('billing_subscriptions').select('status,current_period_end').eq('user_id', user.id).eq('environment', environment).in('price_id', ['full_access_monthly', 'creator_monthly']);
+      if (!(paid ?? []).some(active)) return json({ error: 'Ready-made chapters need Full Access.' }, 403);
+    }
     // Creator tools require an active Creator plan, checked here — never trusted from the browser.
     const { data: subs } = await admin.from('billing_subscriptions').select('status,current_period_end,price_id').eq('user_id', user.id).eq('environment', environment).eq('price_id', 'creator_monthly');
-    const now = Date.now();
-    const ok = (subs ?? []).some(s => (!s.current_period_end || +new Date(s.current_period_end) > now) && ['active', 'trialing', 'past_due', 'canceled'].includes(s.status) && (s.status !== 'canceled' || !!s.current_period_end));
+    const ok = kind === 'starter' || (subs ?? []).some(s => (!s.current_period_end || +new Date(s.current_period_end) > now) && ['active', 'trialing', 'past_due', 'canceled'].includes(s.status) && (s.status !== 'canceled' || !!s.current_period_end));
     if (!ok) return json({ error: 'Creator tools need the Creator plan.' }, 403);
 
     const { data: profile } = await admin.from('profiles').select('*').eq('id', user.id).maybeSingle();
@@ -78,15 +86,16 @@ Deno.serve(async (req) => {
     const facts = chartFacts(profile);
     const apiKey = Deno.env.get('LOVABLE_API_KEY'); if (!apiKey) return json({ error: 'AI is not configured.' }, 500);
 
-    if (kind === 'chapter') {
+    if (kind === 'chapter' || kind === 'starter') {
       const call = createResponsesCall(req, { apiKey, effort: 'medium', instructions: `You write one chapter of a personal astrology Masterbook for ${profile.display_name || 'the reader'}, addressed as "you".\nTheir calculated chart:\n${facts}\n${RULES}\nWrite 900–1,200 words in Markdown: a short intro, 3–5 "##" sections each naming the placements it draws on, and a closing "## Questions to reflect on" list.` },
         [{ role: 'user', content: `Chapter topic: ${topic}` }]);
       const content = (await call.result.text).trim();
       if (!content) return json({ error: 'The chapter came back empty. Please try again.' }, 502);
-      const page_key = `chapter-${Date.now()}`;
+      const page_key = kind === 'starter' ? `starter-${STARTER.indexOf(topic)}` : `chapter-${Date.now()}`;
+      if (kind === 'starter') { const { data: have } = await admin.from('generated_pages').select('id').eq('owner_id', user.id).eq('page_key', page_key).maybeSingle(); if (have) return json({ id: have.id }); }
       const ins = await admin.from('generated_pages').insert({ owner_id: user.id, page_key, section: 'My Masterbook', title: topic, content, status: 'ready' }).select('id').single();
       if (ins.error) { console.error(ins.error); return json({ error: 'Could not save the chapter.' }, 500); }
-      await admin.from('ai_usage').insert({ user_id: user.id, feature: 'creator-chapter' });
+      await admin.from('ai_usage').insert({ user_id: user.id, feature: kind === 'starter' ? 'starter-chapter' : 'creator-chapter' });
       return json({ id: ins.data.id });
     }
 
