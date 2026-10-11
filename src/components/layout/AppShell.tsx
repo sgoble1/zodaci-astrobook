@@ -1,3 +1,4 @@
+import { AdminEditionSwitch } from '@/components/common/AdminEditionSwitch';
 import { PageErrorBoundary } from '@/components/common/PageErrorBoundary';
 import { VerifySources } from '@/components/common/VerifySources';
 import { NavLink, Outlet, useLocation } from 'react-router-dom';
@@ -134,6 +135,7 @@ function SidebarInner({ mobile = false, onNavigate }: { mobile?: boolean; onNavi
     <div className={`flex min-h-full flex-col gap-6 overflow-x-hidden ${mobile ? 'px-4 pb-8 pt-4' : 'h-full overflow-y-auto p-6'}`}>
       <div>
         <div className="flex items-center justify-between gap-2"><ZodaciLogo compact={!mobile} />{!mobile && <AccountButton compact />}</div>
+        <div className="mt-3"><AdminEditionSwitch /></div>
         {april ? (
           <>
             <div className="font-display text-2xl leading-tight mt-1">April</div>
