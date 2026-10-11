@@ -16,7 +16,7 @@ export function AutomaticChapters() {
     const start = async () => {
       if (running.has(uid) || attempted.has(uid)) return;
       const { data: profile } = await supabase.from('profiles').select('birth_date,chart').eq('id', uid).maybeSingle();
-      if (!profile?.birth_date || !profile.chart) return;
+      if (!profile?.birth_date || !profile.chart || running.has(uid) || attempted.has(uid)) return;
       running.add(uid); attempted.add(uid);
       try {
         const { data: pages } = await supabase.from('generated_pages').select('title').eq('owner_id', uid).eq('section', 'My Masterbook');

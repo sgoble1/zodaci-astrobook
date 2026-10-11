@@ -3,6 +3,10 @@ export type UpdateKind = 'Feature' | 'Content' | 'Change' | 'Fix';
 export type Update = { date: string; kind: UpdateKind; title: string; body: string; to?: string };
 
 export const UPDATES: Update[] = [
+  { date: '2026-10-11', kind: 'Change', title: 'A new AstroBook identity', body: 'A purple planet logo, softly rounded boxes and separate public artwork.', to: '/explore' },
+  { date: '2026-10-11', kind: 'Feature', title: 'Your AstroBook in print', body: 'Configure a standard or expanded softcover, choose a personal cover and add up to two extra topics. US shipping is free.', to: '/books' },
+  { date: '2026-10-11', kind: 'Feature', title: 'The community journal', body: 'Subscribers can write articles, keep private drafts and publish to the public journal.', to: '/blog' },
+  { date: '2026-10-11', kind: 'Feature', title: 'Chapters start automatically', body: 'After saved birth details and a paid plan, your six foundational chapters begin writing automatically when AI credits are available.', to: '/my-masterbook' },
   { date: '2026-10-11', kind: 'Content', title: 'All 16 Compendium illustrations', body: 'Every illustration described in the Illustration Reference Guide is now a real picture, shown on the Compendium page.', to: '/compendium' },
   { date: '2026-10-11', kind: 'Feature', title: 'Chart accuracy check and house systems', body: 'The Birth Chart page re-checks every placement against a fresh calculation and lets you switch between Placidus, Porphyry, Whole Sign and Equal houses. Chiron is now calculated too.', to: '/birth-chart' },
   { date: '2026-10-11', kind: 'Feature', title: 'Live Recent updates', body: 'New podcasts, pages, photos and recommendations now appear here by themselves.' },

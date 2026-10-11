@@ -21,9 +21,12 @@ April's private AstroBook is untouched; this draft is the public version.
 - [x] Plans & Pricing page (price pending payment provider choice)
 
 ## October 11 refresh
-- [ ] Planet logo, subtly rounded boxes, public/private illustration separation
-- [ ] Automatic six chapters after saved birth details for paid members, with safe failure recovery
-- [ ] Printed books: $45 / $80, four base sections, up to two extras, three personal cover previews, US delivery details
-- [ ] Book orders and admin management; checkout waits for shipping and extra-section prices
-- [ ] Subscriber blog: compose, own posts, published feed
-- [ ] Verify new pages, privacy boundaries, and relevant app errors
+- [x] Planet logo, subtly rounded boxes, public/private illustration separation on Home and Explore
+- [x] Automatic six chapters after saved birth details for paid members, with safe failure recovery
+- [x] Printed-book configurator: $45 / $80, four base sections, two $6.99 extras, three personal cover choices, free US delivery
+- [x] Book orders, embedded checkout and admin management; forged paid inserts blocked
+- [x] Subscriber blog: compose, own posts, published feed
+- [x] Verify new pages and phone menu; no runtime errors or horizontal overflow in checked pages
+- [ ] Generate and paginate print-ready personal manuscripts (250/400-page targets); requires available AI credits and printer specifications
+- [ ] Verify real cover generation and complete paid checkout with saved birth data; requesting account has no saved chart
+- [ ] Enable live payments by claiming and verifying Stripe; owner action required
