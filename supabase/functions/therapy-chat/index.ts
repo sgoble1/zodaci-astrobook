@@ -45,6 +45,10 @@ Deno.serve(async (req) => {
     const sb = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_ANON_KEY")!, { global: { headers: { Authorization: req.headers.get("Authorization") ?? "" } } });
     const { data: u } = await sb.auth.getUser();
     if (!u?.user) return json({ error: "Please sign in to talk with the companion." }, 401);
+    const { data: member } = await sb.rpc("is_shared_space_member");
+    if (!member) return json({ error: "This counselor is part of a private edition and isn't available on this account." }, 403);
+    const admin = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
+    await admin.from("ai_usage").insert({ user_id: u.user.id, feature: "oracle" });
 
     const parsed = Body.safeParse(await req.json());
     if (!parsed.success) return json({ error: "Invalid request." }, 400);

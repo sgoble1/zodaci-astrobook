@@ -38,6 +38,10 @@ Deno.serve(async request => {
     const sb = createClient(url, anonKey, { global: { headers: { Authorization: request.headers.get("Authorization") ?? "" } } });
     const { data: auth } = await sb.auth.getUser();
     if (!auth.user) return json({ error: "Please sign in to use the Social Counselor." }, 401);
+    const { data: member } = await sb.rpc("is_shared_space_member");
+    if (!member) return json({ error: "This counselor is part of a private edition and isn't available on this account." }, 403);
+    const admin = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
+    await admin.from("ai_usage").insert({ user_id: auth.user.id, feature: "social-counselor" });
     const parsed = Body.safeParse(await request.json()); if (!parsed.success) return json({ error: "Invalid request." }, 400);
     const { sessionId, passages } = parsed.data; const messages = parsed.data.messages as UIMessage[];
     const { data: session } = await sb.from("social_sessions").select("id,title").eq("id", sessionId).maybeSingle();
