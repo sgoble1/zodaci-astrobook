@@ -1,7 +1,10 @@
+import { useAprilSpace } from '@/hooks/useAprilSpace';
 import { COMPENDIUM_ILLUSTRATIONS } from '@/content/compendiumIllustrations';
 
 /** Shows the 16 Master Compendium illustrations, each made from its own prompt in April's Illustration Reference Guide. */
 export function IllustrationGallery() {
+  const april = useAprilSpace();
+  if (!april) return null;
   return (
     <section aria-labelledby="ill-gallery" className="space-y-4">
       <div>
