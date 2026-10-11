@@ -19,7 +19,7 @@ export default function CheckoutReturn() {
       {paid && <div className="flex flex-wrap justify-center gap-3">
         <Button asChild><Link to="/my-masterbook">Open my Masterbook</Link></Button>
         <Button asChild variant="outline"><Link to="/my-readings">My readings</Link></Button>
-        <Button asChild variant="outline"><Link to="/my-astrobook">My AstroBook</Link></Button>
+        <Button asChild variant="outline"><Link to="/my-astrobook">My Zodaci</Link></Button>
       </div>}
     </article>
   );

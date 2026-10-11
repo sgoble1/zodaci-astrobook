@@ -14,7 +14,7 @@ const ITEMS = [
   { to: '/start', title: 'Birth details', group: 'Chart', note: 'Edit your date, time and place' },
 ];
 
-/** "My AstroBook" — one organized, searchable home for a member's own content. */
+/** "My Zodaci" — one organized, searchable home for a member's own content. */
 export default function MyLibrary() {
   const [q, setQ] = useState('');
   const [group, setGroup] = useState('All');
@@ -22,9 +22,9 @@ export default function MyLibrary() {
   const shown = useMemo(() => ITEMS.filter(i => (group === 'All' || i.group === group) && (i.title + i.note).toLowerCase().includes(q.toLowerCase())), [q, group]);
   return (
     <article className="space-y-6">
-      <header><h1 className="font-display text-4xl">My AstroBook</h1><p className="mt-2 text-muted-foreground">Everything that's yours, in one tidy place.</p></header>
+      <header><h1 className="font-display text-4xl">My Zodaci</h1><p className="mt-2 text-muted-foreground">Everything that's yours, in one tidy place.</p></header>
       <div className="flex flex-wrap items-center gap-2">
-        <Input aria-label="Search my AstroBook" placeholder="Search…" value={q} onChange={e => setQ(e.target.value)} className="max-w-xs" />
+        <Input aria-label="Search my Zodaci" placeholder="Search…" value={q} onChange={e => setQ(e.target.value)} className="max-w-xs" />
         {groups.map(g => <button key={g} aria-pressed={group === g} onClick={() => setGroup(g)} className={`rounded-full border px-3 py-1 text-sm ${group === g ? 'bg-primary text-primary-foreground' : 'border-border hover:bg-muted'}`}>{g}</button>)}
       </div>
       <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">

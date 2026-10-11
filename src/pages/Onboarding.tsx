@@ -45,7 +45,7 @@ export default function Onboarding() {
     <article className="mx-auto max-w-lg space-y-6 py-6">
       <header>
         <p className="font-smallcaps text-xs text-gold">Step {step + 1} of 4 · {STEPS[step]}</p>
-        <h1 className="font-display text-3xl">Let's build your AstroBook</h1>
+        <h1 className="font-display text-3xl">Let's build your Zodaci</h1>
         <div className="mt-3 h-1.5 rounded bg-muted" aria-hidden><div className="h-full rounded bg-primary transition-all" style={{ width: `${((step + 1) / 4) * 100}%` }} /></div>
       </header>
       <form className="space-y-4" onSubmit={e => { e.preventDefault(); if (!ok) return; step < 3 ? setStep(step + 1) : finish(); }}>
