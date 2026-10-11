@@ -1,3 +1,4 @@
+import { BoxArt } from '@/components/common/BoxArt';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Link, NavLink, useParams } from 'react-router-dom';
 import { BookHeart, CalendarHeart, Check, Feather, Loader2, NotebookPen, Scale, Trash2, Users } from 'lucide-react';
@@ -176,7 +177,8 @@ function HomeInner({ userId }: { userId: string }) {
             const done = m.questions.filter(q => answered.has(q.key)).length;
             return (
               <li key={m.slug}>
-                <Link to={`/workbook/module/${m.slug}`} className="parchment block h-full p-4 transition-colors hover:border-primary/50">
+                <Link to={`/workbook/module/${m.slug}`} className="parchment block h-full overflow-hidden p-4 transition-colors hover:border-primary/50">
+                  <div className="-mx-4 -mt-4 mb-3"><BoxArt seed={m.slug} label={m.title + m.placements} className="h-16 w-full" /></div>
                   <div className="font-smallcaps text-[10px] text-gold">{m.placements}</div>
                   <div className="mt-1 text-lg">{m.title}</div>
                   <div className="text-sm text-muted-foreground">{m.subtitle}</div>
