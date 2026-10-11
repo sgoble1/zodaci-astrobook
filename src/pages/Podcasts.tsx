@@ -31,7 +31,7 @@ export default function Podcasts() {
   const byId = (id: string) => lib.items.find(i => i.id === id);
   const fmt = (t: number) => `${Math.floor(t / 60)}:${String(Math.floor(t % 60)).padStart(2, '0')}`;
   const shown = lib.items
-    .filter(i => library === 'shared' ? i.shared_with_space || i.workspace_id : !i.shared_with_space && !i.workspace_id && i.owner_id === session?.user.id)
+    .filter(i => library === 'shared' ? (april && i.shared_with_space) || spaces.some(s => s.id === i.workspace_id) : !i.shared_with_space && !i.workspace_id && i.owner_id === session?.user.id)
     .filter(i => (i.title + ' ' + (i.description ?? '') + ' ' + (i.category ?? '')).toLowerCase().includes(q.toLowerCase()))
     .sort((a, b) => sort === 'title' ? a.title.localeCompare(b.title) : sort === 'series' ? (a.category ?? '').localeCompare(b.category ?? '') || a.title.localeCompare(b.title) : sort === 'oldest' ? +new Date(a.created_at) - +new Date(b.created_at) : +new Date(b.created_at) - +new Date(a.created_at));
 
@@ -133,7 +133,10 @@ function EpisodeSources({ episode }: { episode: LibraryItem }) {
   return <details className="mt-3 text-sm"><summary className="inline-flex cursor-pointer items-center gap-1 font-medium text-gold"><BookOpen className="h-4 w-4" />Transcript &amp; sources</summary>{transcript?.text && <p className="mt-3 whitespace-pre-wrap leading-relaxed">{transcript.text}</p>}{sources.length > 0 && <div className="mt-4"><h4 className="font-medium">Masterbook passages used</h4><ol className="mt-2 space-y-2">{sources.map((source, index) => <li key={`${source.n}-${index}`} id={`episode-${episode.id}-source-${source.n}`} className="border-l border-gold/50 pl-3"><div className="text-xs text-muted-foreground">[{source.n}] {source.title}{source.loc ? ` · ${source.loc}` : ''}</div><p className="mt-1 line-clamp-3">{source.text}</p>{source.href?.startsWith('/') && <Link to={source.href} className="mt-1 inline-block text-xs underline">Open protected source</Link>}</li>)}</ol></div>}</details>;
 }
 
-export function UploadForm({ accept, onUpload, categoryLabel = 'Series / topic' }: { accept?: string; categoryLabel?: string; onUpload: (f: File, m: { title: string; description: string; category: string; shared_with_space: boolean }) => Promise<void> }) {
+export function UploadForm({ accept, onUpload, categoryLabel = 'Series / topic' }: { accept?: string; categoryLabel?: string; onUpload: (f: File, m: { title: string; description: string; category: string; shared_with_space: boolean; workspace_id?: string | null }) => Promise<void> }) {
+  const april = useAprilSpace();
+  const spaces = useWorkspaces();
+  const [workspaceId, setWorkspaceId] = useState('');
   const fileRef = useRef<HTMLInputElement>(null);
   const [title, setTitle] = useState(''); const [description, setDescription] = useState(''); const [category, setCategory] = useState('');
   const [shared, setShared] = useState(false);
@@ -142,7 +145,7 @@ export function UploadForm({ accept, onUpload, categoryLabel = 'Series / topic' 
     e.preventDefault();
     const f = fileRef.current?.files?.[0]; if (!f) return;
     setBusy(true);
-    try { await onUpload(f, { title, description, category, shared_with_space: shared }); toast.success(shared ? 'Uploaded to the shared library' : 'Uploaded privately'); setTitle(''); setDescription(''); setCategory(''); if (fileRef.current) fileRef.current.value = ''; }
+    try { await onUpload(f, { title, description, category, shared_with_space: april && shared, workspace_id: workspaceId || null }); toast.success(shared || workspaceId ? 'Uploaded to the shared library' : 'Uploaded privately'); setTitle(''); setDescription(''); setCategory(''); if (fileRef.current) fileRef.current.value = ''; }
     catch (err) { toast.error((err as Error).message); }
     setBusy(false);
   };
@@ -152,7 +155,7 @@ export function UploadForm({ accept, onUpload, categoryLabel = 'Series / topic' 
       <Input aria-label="Episode title" placeholder="Title" value={title} onChange={e => setTitle(e.target.value)} />
       <Input aria-label={categoryLabel} placeholder={categoryLabel} value={category} onChange={e => setCategory(e.target.value)} />
       <Textarea aria-label="Episode description" placeholder="Description (optional)" value={description} onChange={e => setDescription(e.target.value)} />
-      <fieldset className="space-y-2"><legend className="text-sm font-medium">Who can listen?</legend><label className="mr-4 inline-flex items-center gap-2 text-sm"><input type="radio" name="uploaded-podcast-sharing" checked={!shared} onChange={() => setShared(false)} />Only me</label><label className="inline-flex items-center gap-2 text-sm"><input type="radio" name="uploaded-podcast-sharing" checked={shared} onChange={() => setShared(true)} />April &amp; Shane</label></fieldset>
+      {april ? <fieldset className="space-y-2"><legend className="text-sm font-medium">Who can listen?</legend><label className="mr-4 inline-flex items-center gap-2 text-sm"><input type="radio" name="uploaded-podcast-sharing" checked={!shared} onChange={() => setShared(false)} />Only me</label><label className="inline-flex items-center gap-2 text-sm"><input type="radio" name="uploaded-podcast-sharing" checked={shared} onChange={() => setShared(true)} />April &amp; Shane</label></fieldset> : <label className="space-y-2 text-sm">Who can listen?<select aria-label="Upload visibility" value={workspaceId} onChange={e => setWorkspaceId(e.target.value)} className="block w-full rounded border border-input bg-background p-2"><option value="">Only me</option>{spaces.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}</select></label>}
       <Button type="submit" disabled={busy} className="justify-self-start"><Upload className="w-4 h-4 mr-2" />{busy ? 'Uploading…' : 'Upload'}</Button>
     </form>
   );

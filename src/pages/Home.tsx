@@ -15,18 +15,18 @@ const steps = [
 const features = [
   { seed: 'chart', to: '/my-chart', title: 'Your Birth Chart', desc: 'A full interactive wheel — planets, houses and aspects calculated from your actual birth moment.' },
   { seed: 'planets', to: '/planets', title: 'Planets & Houses', desc: 'Every placement explained twice: the technical reading, and what it means in everyday words.' },
-  { seed: 'systems', to: '/other-systems', title: 'Seven Other Systems', desc: 'Vedic, Chinese Ba Zi, Maya Tzolk’in, Nine Star Ki, numerology and more — all from your one birth chart.' },
-  { seed: 'timing', to: '/transits', title: 'Timing & Cycles', desc: 'Transits, retrogrades and life phases — what the sky is doing around your chart right now.' },
+  { seed: 'systems', to: '/my-chart', title: 'Chart Details', desc: 'Inspect calculated positions and compare house systems while keeping uncertainty visible.' },
+  { seed: 'timing', to: '/my-readings', title: 'Growth & Patterns', desc: 'Consider the patterns in your chart as prompts for reflection, not fixed predictions.' },
   { seed: 'counselor', to: '/personal-context', title: 'Your Life, In Context', desc: 'Keep your own examples private and choose which ones inform your readings.' },
   { seed: 'podcast', to: '/podcasts', title: 'Personal Podcasts', desc: 'Turn your readings into audio episodes you can listen to anywhere, saved to your library.' },
-  { seed: 'shared', to: '/workspaces', title: 'Shared Spaces', desc: 'Invite a partner or friend by email and explore your charts together — notes, media and chats.' },
+  { seed: 'shared', to: '/workspaces', title: 'Shared Spaces', desc: 'Create a workspace, invite someone with an email-bound link, and share selected podcasts.' },
   { seed: 'relationships', to: '/relationships', title: 'Relationships', desc: 'Add anyone’s birth details and see how your charts meet — shared placements and real synastry.' },
-  { seed: 'create', to: '/my-masterbook', title: 'Create Your Own Pages', desc: 'Ask for a topic and a fully written, illustrated page is compiled into your personal library.' },
+  { seed: 'create', to: '/my-masterbook', title: 'Create Your Own Chapters', desc: 'Creator members can request a detailed chart-based chapter, organized in their personal library.' },
 ];
 
 const faqs = [
   { q: 'Is my birth data private?', a: 'Yes. Your birth details and readings belong to your account. Shared spaces only include the people you invite, and private chats are never visible to anyone else — not even an admin.' },
-  { q: 'How accurate is the chart?', a: 'Positions are calculated with the same astronomy used by observatories, and every chart page includes a live accuracy check that re-runs the calculation and grades the match.' },
+  { q: 'How accurate is the chart?', a: 'Positions use astronomical calculations. Your birth time, location and chosen house system affect the results. Astrological interpretations are not scientifically verified predictions.' },
   { q: 'What if I don’t know my birth time?', a: 'You can still get your planets, signs and aspects. Houses and the Rising sign need a time, so those sections explain what changes without one.' },
   { q: 'Is this a prediction service?', a: 'No. Zodaci interprets your birth chart as a mirror for reflection. It never invents facts about your family, past or future.' },
 ];
@@ -48,7 +48,7 @@ export default function Home() {
           </h1>
           <div className="gold-rule my-6 max-w-md" />
           <p className="text-lg leading-relaxed text-foreground/85 max-w-xl">
-            Enter your birth details and Zodaci calculates your real natal chart, then writes a personal library of readings from it — planets, houses, timing, seven world systems, counselors and podcasts. Every page is yours alone.
+            Explore your calculated birth chart and personal readings. Paid plans add six foundational chapters; Creator adds custom chapters and podcasts, informed by life examples you choose to share.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             {myBirth ? (
@@ -89,7 +89,7 @@ export default function Home() {
 
       {/* Feature grid */}
       <section className="gentle-fade">
-        <div className="font-smallcaps text-[11px] text-gold mb-2">Inside your Zodaci</div>
+        <div className="font-smallcaps text-[11px] text-gold mb-2">Inside Zodaci</div>
         <h2 className="font-display mb-8">The complete compendium.</h2>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {features.map(m => (
@@ -112,9 +112,9 @@ export default function Home() {
           <div className="font-smallcaps text-[11px] text-gold">Our promise</div>
           <h2 className="font-display mt-2">Calculated, not copied.</h2>
           <p className="text-muted-foreground text-sm mt-3 leading-relaxed">
-            Every position comes from a live astronomical calculation of your birth moment, cross-checked on the Data Quality page where you can watch the audit re-run. Interpretations are written only from what is actually in your chart — never invented biography, never generic horoscopes.
+            Your chart is calculated from your saved birth moment. Compare house systems and inspect the measured positions. Readings distinguish chart facts, your own reports and reflective interpretations—without treating symbolism as biography.
           </p>
-          <Button asChild variant="outline" className="mt-6"><Link to="/data-quality" className="font-smallcaps text-xs">See the accuracy audit</Link></Button>
+          <Button asChild variant="outline" className="mt-6"><Link to="/my-chart" className="font-smallcaps text-xs">Inspect your chart</Link></Button>
         </div>
       </section>
 

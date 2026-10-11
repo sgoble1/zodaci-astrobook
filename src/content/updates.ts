@@ -3,7 +3,8 @@ export type UpdateKind = 'Feature' | 'Content' | 'Change' | 'Fix';
 export type Update = { date: string; kind: UpdateKind; title: string; body: string; to?: string };
 
 export const UPDATES: Update[] = [
-  { date: '2026-10-11', kind: 'Change', title: 'A new AstroBook identity', body: 'A purple planet logo, softly rounded boxes and separate public artwork.', to: '/explore' },
+  { date: '2026-10-11T18:48:00Z', kind: 'Feature', title: 'Private examples and invited podcasts', body: 'Save life examples privately, opt into their use in new chapters, and choose a private or invited workspace library for podcasts.', to: '/personal-context' },
+  { date: '2026-10-11', kind: 'Change', title: 'The Zodaci identity', body: 'Zodaci is the site; AstroBook is its printed book product. A purple planet logo, softly rounded boxes and separate public artwork.', to: '/explore' },
   { date: '2026-10-11', kind: 'Feature', title: 'Your AstroBook in print', body: 'Configure a standard or expanded softcover, choose a personal cover and add up to two extra topics. US shipping is free.', to: '/books' },
   { date: '2026-10-11', kind: 'Feature', title: 'The community journal', body: 'Subscribers can write articles, keep private drafts and publish to the public journal.', to: '/blog' },
   { date: '2026-10-11', kind: 'Feature', title: 'Chapters start automatically', body: 'After saved birth details and a paid plan, your six foundational chapters begin writing automatically when AI credits are available.', to: '/my-masterbook' },
