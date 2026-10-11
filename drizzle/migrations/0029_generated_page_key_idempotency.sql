@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX IF NOT EXISTS generated_pages_owner_page_key ON public.generated_pages(owner_id,page_key);

@@ -73,6 +73,10 @@ import Auth from './pages/Auth';
 import Pricing from './pages/Pricing';
 import CheckoutReturn from './pages/CheckoutReturn';
 import MyMasterbook from './pages/MyMasterbook';
+import Books from './pages/Books';
+import Orders from './pages/Orders';
+import Blog from './pages/Blog';
+import { AutomaticChapters } from './components/payments/AutomaticChapters';
 import { CounselorsIndex, CounselorProfile, CounselorSession } from './pages/Counselors';
 import ChartGuide from './pages/ChartGuide';
 import Instructions from './pages/Instructions';
@@ -160,6 +164,7 @@ export default function App() {
     <>
       <Providers>
         <ActivityTracker />
+        <AutomaticChapters />
         <Routes>
           <Route path="/contents" element={<MasterbookContents />} />
           <Route path="/contents/:id" element={<MasterbookContentsEntry />} />
@@ -177,6 +182,9 @@ export default function App() {
             <Route path="/pricing" element={<Pricing />} />
             <Route path="/checkout/return" element={<CheckoutReturn />} />
             <Route path="/my-masterbook" element={<MyMasterbook />} />
+            <Route path="/books" element={<Books />} />
+            <Route path="/orders" element={<Orders />} />
+            <Route path="/blog" element={<Blog />} />
             <Route path="/instructions" element={<Instructions />} />
             <Route path="/birth-chart" element={<BirthChart />} />
             <Route path="/chart-guide" element={<ChartGuide />} />

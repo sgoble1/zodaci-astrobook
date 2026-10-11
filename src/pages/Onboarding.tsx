@@ -30,10 +30,15 @@ export default function Onboarding() {
 
   const finish = async () => {
     setBusy(true);
-    const birth = { ...b, time: unknownTime ? null : b.time };
-    const chart = computeChart(toChartInput(birth));
-    const res = await saveMyBirth(birth, { bodies: chart.bodies, asc: chart.asc, mc: chart.mc });
-    nav(res.saved === 'device' ? '/my-chart?device=1' : '/my-chart');
+    setErr('');
+    try {
+      const birth = { ...b, time: unknownTime ? null : b.time };
+      const chart = computeChart(toChartInput(birth));
+      const res = await saveMyBirth(birth, { bodies: chart.bodies, asc: unknownTime ? null : chart.asc, mc: unknownTime ? null : chart.mc });
+      if (res.error) { setErr('Your chart is saved on this device, but your account could not save it. Please try again.'); return; }
+      nav(res.saved === 'device' ? '/my-chart?device=1' : '/my-chart');
+    } catch { setErr('Your birth details could not be calculated. Check the date, time and selected place.'); }
+    finally { setBusy(false); }
   };
 
   return (

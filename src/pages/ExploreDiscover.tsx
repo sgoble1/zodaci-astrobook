@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, BookOpen, Compass, Heart, Home, Sparkles, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useAprilSpace } from '@/hooks/useAprilSpace';
 import { BoxArt } from '@/components/common/BoxArt';
 import chartImg from '@/assets/explore/chart.jpg';
 import timingImg from '@/assets/explore/timing.jpg';
@@ -59,9 +60,21 @@ const items: DiscoveryItem[] = [
   { category: 'sources', title: 'Explore themes and questions', description: 'Choose a life topic and see its key ideas, linked source passages and useful questions to consider.', to: '/topics', sources: [{ label: 'All protected sources', to: '/read' }] },
 ];
 
+const publicItems: DiscoveryItem[] = [
+ {category:'chart',title:'Your calculated birth chart',description:'Explore your own planets, houses and aspects from your saved birth details.',to:'/my-chart',sources:[],next:{label:'Chart guide',to:'/chart-guide'}},
+ {category:'chart',title:'Your personal readings',description:'Reflect on identity, feelings and daily patterns using your own chart.',to:'/my-readings',sources:[]},
+ {category:'growth',title:'Your six foundational chapters',description:'Full Access includes six chapters written from your own chart. Creator adds custom chapters.',to:'/my-masterbook',sources:[],next:{label:'Compare plans',to:'/pricing'}},
+ {category:'relationships',title:'Compare relationships',description:'Add birth details with permission and compare placements.',to:'/relationships',sources:[]},
+ {category:'sources',title:'Your private library',description:'Keep your own readings and uploaded material together.',to:'/my-astrobook',sources:[]},
+ {category:'sources',title:'Listen to your podcasts',description:'Creator members can make audio episodes from their own chart.',to:'/podcasts',sources:[]},
+ {category:'home',title:'Your book, in print',description:'Choose a personal cover and up to two additional topics.',to:'/books',sources:[]},
+ {category:'growth',title:'Community journal',description:'Read reflections and publish your own articles with Full Access or Creator.',to:'/blog',sources:[]},
+];
 export default function ExploreDiscover() {
+  const april = useAprilSpace();
+  const collection = april ? items : publicItems;
   const [active, setActive] = useState('all');
-  const visibleItems = useMemo(() => active === 'all' ? items : items.filter(item => item.category === active), [active]);
+  const visibleItems = useMemo(() => active === 'all' ? collection : collection.filter(item => item.category === active), [active,collection]);
   const activeLabel = categories.find(category => category.id === active)?.label ?? 'Everything';
 
   return (
@@ -77,7 +90,7 @@ export default function ExploreDiscover() {
       <section aria-labelledby="discovery-categories">
         <h2 id="discovery-categories" className="font-display text-2xl">What are you curious about?</h2>
         <div className="mt-4 flex flex-wrap gap-2" role="group" aria-label="Filter discoveries by subject">
-          {categories.map(category => {
+          {categories.filter(c => c.id === 'all' || collection.some(i => i.category === c.id)).map(category => {
             const Icon = category.icon;
             return (
               <Button
@@ -102,7 +115,7 @@ export default function ExploreDiscover() {
           </div>
           <span className="text-xs text-muted-foreground">{visibleItems.length} places to explore</span>
         </div>
-        {ART[active] && <img src={ART[active].src} alt={ART[active].alt} width={1152} height={640} className="mt-5 aspect-[16/7] w-full rounded border border-border object-cover gentle-fade" />}
+        {april && ART[active] && <img src={ART[active].src} alt={ART[active].alt} width={1152} height={640} className="mt-5 aspect-[16/7] w-full rounded border border-border object-cover gentle-fade" />}
         <div className="mt-5 grid gap-4 sm:grid-cols-2">
           {visibleItems.map(item => (
             <article key={`${item.category}-${item.to}`} className="overflow-hidden rounded border border-border bg-card/60 p-5">
@@ -110,8 +123,8 @@ export default function ExploreDiscover() {
               <h3 className="font-display text-xl leading-tight"><Link to={item.to} className="group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">{item.title}</Link></h3>
               <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{item.description}</p>
               <Link to={item.to} className="group mt-5 inline-flex items-center gap-2 font-smallcaps text-[10px] text-gold">Open this page <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" aria-hidden="true" /></Link>
-              <div className="mt-4 border-t border-border/60 pt-3"><div className="font-smallcaps text-[10px] text-muted-foreground">Read the source text</div><ul className="mt-2 space-y-1">{item.sources.map(source => <li key={source.to}><Link className="text-sm underline decoration-border underline-offset-4 hover:text-gold" to={source.to}>{source.label}</Link></li>)}</ul></div>
-              <div className="mt-4 border-t border-border/60 pt-3"><div className="font-smallcaps text-[10px] text-muted-foreground">Continue this trail</div><ul className="mt-2 space-y-1">{item.next && <li><Link className="text-sm underline decoration-border underline-offset-4 hover:text-gold" to={item.next.to}>{item.next.label}</Link></li>}{items.filter(other => other.category === item.category && other.to !== item.to).slice(0, item.next ? 1 : 2).map(other => <li key={other.to}><Link className="text-sm underline decoration-border underline-offset-4 hover:text-gold" to={other.to}>{other.title}</Link></li>)}</ul></div>
+              {april && <div className="mt-4 border-t border-border/60 pt-3"><div className="font-smallcaps text-[10px] text-muted-foreground">Read the source text</div><ul className="mt-2 space-y-1">{item.sources.map(source => <li key={source.to}><Link className="text-sm underline decoration-border underline-offset-4 hover:text-gold" to={source.to}>{source.label}</Link></li>)}</ul></div>}
+              <div className="mt-4 border-t border-border/60 pt-3"><div className="font-smallcaps text-[10px] text-muted-foreground">Continue this trail</div><ul className="mt-2 space-y-1">{item.next && <li><Link className="text-sm underline decoration-border underline-offset-4 hover:text-gold" to={item.next.to}>{item.next.label}</Link></li>}{collection.filter(other => other.category === item.category && other.to !== item.to).slice(0, item.next ? 1 : 2).map(other => <li key={other.to}><Link className="text-sm underline decoration-border underline-offset-4 hover:text-gold" to={other.to}>{other.title}</Link></li>)}</ul></div>
             </article>
           ))}
         </div>

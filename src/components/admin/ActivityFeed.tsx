@@ -41,16 +41,16 @@ export function ActivityFeed() {
     setRows(all);
     const { data: aiRows } = await supabase.from('ai_usage').select('feature').eq('user_id', who).gte('created_at', since).limit(1000);
     setAi((aiRows ?? []) as { feature: string }[]);
-    const sources: [string, string, string][] = [['custom_pages', 'Created page', 'owner_id'], ['library_items', 'Added item', 'owner_id'], ['shared_posts', 'Posted', 'author_id'], ['shared_recommendations', 'Recommended', 'author_id'], ['shared_media', 'Uploaded media', 'uploaded_by'], ['shared_wonderings', 'Wondering', 'author_id'], ['workbook_entries', 'Workbook answer', 'owner_id']];
+    const sources: [string, string, string][] = [['generated_pages', 'Masterbook chapter', 'owner_id'], ['book_orders', 'Book order', 'user_id'], ['custom_pages', 'Created page', 'owner_id'], ['library_items', 'Added item', 'owner_id'], ['shared_posts', 'Posted', 'author_id'], ['shared_recommendations', 'Recommended', 'author_id'], ['shared_media', 'Uploaded media', 'uploaded_by'], ['shared_wonderings', 'Wondering', 'author_id'], ['workbook_entries', 'Workbook answer', 'owner_id']];
     const out: Made[] = [];
     await Promise.all(sources.map(async ([t, what, col]) => {
       const { data: d } = await (supabase.from(t as never) as any).select('*').eq(col, who).gte('created_at', since).limit(100);
-      (d ?? []).forEach((r: any) => out.push({ when: r.created_at, what: t === 'library_items' ? (r.kind === 'podcast' ? 'Made podcast' : 'Added file') : what, title: r.title || r.caption || r.question || r.file_name || (r.body ?? '').slice(0, 80) }));
+      (d ?? []).forEach((r: any) => out.push({ when: r.created_at, what: t === 'library_items' ? (r.kind === 'podcast' ? 'Made podcast' : 'Added file') : what, title: t === 'book_orders' ? `${r.edition} · ${r.status}` : r.title || r.caption || r.file_name || 'Saved item' }));
     }));
     setMade(out.sort((a, b) => b.when.localeCompare(a.when)));
     setLoading(false);
   };
-  useEffect(() => { void load(); }, [who, days]);
+  useEffect(() => { void load(); const timer = window.setInterval(load,15000); return () => window.clearInterval(timer); }, [who, days]);
 
   const stats = useMemo(() => {
     const leaves = rows.filter(r => r.kind === 'page_leave');

@@ -1,0 +1,34 @@
+import { useCallback, useEffect, useState } from 'react';
+import { Link, useSearchParams } from 'react-router-dom';
+import { EmbeddedCheckoutProvider, EmbeddedCheckout } from '@stripe/react-stripe-js';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { useSession, useIsAdmin } from '@/hooks/useLibrary';
+import { supabase } from '@/integrations/supabase/client';
+import { getStripe, getStripeEnvironment } from '@/lib/stripe';
+import { bookTotal, money } from '@/lib/books';
+import { PaymentTestModeBanner } from '@/components/payments/PaymentTestModeBanner';
+import type { Tables } from '@/integrations/supabase/types';
+
+export default function Orders() {
+  const session = useSession(); const admin = useIsAdmin(session); const [params] = useSearchParams();
+  const [orders,setOrders] = useState<Tables<'book_orders'>[]>([]); const [checkout,setCheckout] = useState<string|null>(null); const [error,setError] = useState(''); const [all,setAll] = useState(false);
+  const userId = session?.user.id;
+  const load = useCallback(async () => {
+    if (!userId) { setOrders([]); return; }
+    let query = supabase.from('book_orders').select('*').order('created_at',{ ascending:false });
+    if (!admin || !all) query = query.eq('user_id',userId);
+    const { data,error:err } = await query; if(err) setError(err.message); else setOrders(data || []);
+  }, [userId,admin,all]);
+  useEffect(() => { void load(); const timer=window.setInterval(load,5000); return () => window.clearInterval(timer); },[load]);
+  const change = async (id:string, patch:Partial<Tables<'book_orders'>>) => { const { error:err } = await supabase.from('book_orders').update({ ...patch,updated_at:new Date().toISOString() }).eq('id',id); if(err) setError(err.message); else void load(); };
+  return <article className="space-y-8"><header><p className="text-gold font-smallcaps text-xs">Printed AstroBook</p><h1 className="text-4xl mt-2">{all ? 'Book order management':'My orders'}</h1><p className="text-muted-foreground mt-3">Order details, production progress and delivery tracking.</p></header><PaymentTestModeBanner /><div className="flex gap-2"><Button asChild variant="outline"><Link to="/books">Create a book</Link></Button>{admin && <Button variant={all ? 'default':'outline'} onClick={() => setAll(x => !x)}>{all ? 'Show my orders':'Manage all orders'}</Button>}</div>{!session && <p><Link to="/auth" className="underline">Sign in</Link> to see your orders.</p>}
+    {params.get('session_id') && <p role="status" className="text-gold">Payment submitted. Your order updates after payment verification; do not pay again while confirmation is pending.</p>}
+    {orders.map(o => {
+      const extras=Array.isArray(o.extra_sections) ? o.extra_sections.filter((s):s is string => typeof s==='string') : [];
+      const address = o.shipping_address as Record<string,string>;
+      return <section key={o.id} className="border-b border-border pb-8 space-y-4"><div className="flex flex-wrap items-start justify-between gap-3"><div><p className="text-xs text-muted-foreground">Order {o.id.slice(0,8)} · {new Date(o.created_at).toLocaleDateString()}</p><h2 className="text-2xl mt-2 capitalize">{o.edition} AstroBook</h2><p className="text-sm text-muted-foreground mt-2">{o.cover_style} · {money(bookTotal(o.edition,extras.length))} before tax · free shipping</p></div><span className="text-gold capitalize">{o.status.replace(/_/g,' ')}</span></div>{extras.length > 0 && <p className="text-sm">Extra sections: {extras.join(' · ')}</p>}<p className="text-sm text-muted-foreground">{address.name}<br />{[address.line1,address.line2,address.city,address.state,address.postal_code].filter(Boolean).join(', ')} · United States</p>{o.tracking_number && <p>Tracking: {o.carrier} · {o.tracking_number}</p>}{o.user_id === session?.user.id && ['draft','awaiting_payment'].includes(o.status) && <Button onClick={() => { setError(''); setCheckout(o.id); }}>Pay for this book</Button>}{checkout === o.id && <div><Button variant="ghost" onClick={() => setCheckout(null)}>Close checkout</Button><EmbeddedCheckoutProvider key={o.id} stripe={getStripe()} options={{ fetchClientSecret:async () => { const { data,error:err } = await supabase.functions.invoke('create-checkout',{ body:{ orderId:o.id,environment:getStripeEnvironment(),returnUrl:`${window.location.origin}/orders?order=${o.id}&session_id={CHECKOUT_SESSION_ID}` } }); if(err || !data?.clientSecret) { let message=data?.error; if(!message && err?.context instanceof Response) message=(await err.context.json().catch(() => null))?.error; setError(message || 'Checkout could not open.'); throw new Error(message || 'Checkout could not open.'); } return data.clientSecret; } }}><EmbeddedCheckout /></EmbeddedCheckoutProvider></div>}
+      {admin && all && <form onSubmit={e => { e.preventDefault(); const form=new FormData(e.currentTarget); void change(o.id,{ status:String(form.get('status')),carrier:String(form.get('carrier')),tracking_number:String(form.get('tracking')),admin_note:String(form.get('note')) }); }} className="grid sm:grid-cols-2 gap-3 border-t border-border pt-4"><div><Label htmlFor={`status-${o.id}`}>Order status</Label><select id={`status-${o.id}`} name="status" defaultValue={o.status} className="w-full bg-input border border-border rounded h-10 px-3">{['draft','quote_requested','awaiting_payment','paid','printing','shipped','delivered','canceled'].map(s => <option key={s} value={s}>{s.replace(/_/g,' ')}</option>)}</select></div><div><Label htmlFor={`carrier-${o.id}`}>Carrier</Label><select id={`carrier-${o.id}`} name="carrier" defaultValue={o.carrier} className="w-full bg-input border border-border rounded h-10 px-3"><option value="">Not assigned</option>{['USPS','UPS','FedEx'].map(c => <option key={c}>{c}</option>)}</select></div><div><Label htmlFor={`track-${o.id}`}>Tracking number</Label><Input id={`track-${o.id}`} name="tracking" defaultValue={o.tracking_number} maxLength={120} /></div><div><Label htmlFor={`note-${o.id}`}>Order note (visible to customer)</Label><Input id={`note-${o.id}`} name="note" defaultValue={o.admin_note} maxLength={500} /></div><Button type="submit">Save order changes</Button><p className="text-xs text-muted-foreground">Only mark printing after reviewing and preparing the personal manuscript.</p></form>}{o.admin_note && <p className="text-sm text-muted-foreground">{o.admin_note}</p>}</section>;
+    })}{session && !orders.length && <p className="text-muted-foreground">No orders yet.</p>}{error && <p role="alert" className="text-destructive">{error}</p>}</article>;
+}

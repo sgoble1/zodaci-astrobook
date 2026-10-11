@@ -6,8 +6,9 @@ import { supabase } from '@/integrations/supabase/client';
 import { useSubscription } from '@/hooks/useSubscription';
 import { getStripeEnvironment } from '@/lib/stripe';
 import { CreatorStudio } from '@/components/payments/CreatorStudio';
+import { STARTER_CHAPTERS, STARTER_EVENT } from '@/lib/starterChapters';
 
-const STARTER = ['Your Big Three: Sun, Moon and Rising', 'Love and Relationships', 'Work, Purpose and Calling', 'Mind and Communication', 'Drive, Energy and Conflict', 'Growth, Challenges and Life Lessons'];
+const STARTER = STARTER_CHAPTERS;
 
 type Chapter = { id: string; title: string; content: string; created_at: string };
 type Episode = { id: string; title: string; file_path: string; created_at: string; url?: string };
@@ -30,6 +31,17 @@ export default function MyMasterbook() {
     setEpisodes(withUrls);
   }, [sub.userId]);
   useEffect(() => { if (sub.tier !== 'free') load(); }, [sub.tier, load]);
+  useEffect(() => {
+    const update = (event: Event) => {
+      const detail = (event as CustomEvent).detail;
+      if (detail?.writing) setWriting(detail.writing);
+      if (detail?.saved || detail?.done || detail?.error) void load();
+      if (detail?.done || detail?.error) setWriting(null);
+      if (detail?.error) setStartErr(detail.error);
+    };
+    window.addEventListener(STARTER_EVENT, update);
+    return () => window.removeEventListener(STARTER_EVENT, update);
+  }, [load]);
 
   // Ready-made chapters: written one at a time the first time a subscriber opens their Masterbook.
   const writeStarter = async () => {
@@ -60,8 +72,8 @@ export default function MyMasterbook() {
       <header><h1 className="font-display text-4xl">My Masterbook</h1><p className="text-muted-foreground">Chapters and episodes written from your own chart.</p></header>
       {missing.length > 0 && <section className="parchment p-5 space-y-2" aria-labelledby="starter-h">
         <h2 id="starter-h" className="text-xl">Your ready-made chapters</h2>
-        <p className="text-sm text-muted-foreground">Six chapters written from your own chart come with your plan. {missing.length} still to write.</p>
-        <Button onClick={writeStarter} disabled={!!writing}>{writing ? `Writing “${writing}”…` : 'Write my chapters'}</Button>
+        <p className="text-sm text-muted-foreground" role="status">Your six chapters are written automatically after your birth details are saved and your plan is active. {missing.length} still to write.{writing ? ` Writing “${writing}”…` : ''}</p>
+        {startErr && <Button onClick={writeStarter} disabled={!!writing}>Resume my chapters</Button>}
         {startErr && <p className="text-sm text-destructive" role="alert">{startErr}</p>}
       </section>}
       <CreatorStudio onMade={load} />

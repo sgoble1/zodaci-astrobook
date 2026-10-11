@@ -1,6 +1,7 @@
 import { Link, useLocation } from 'react-router-dom';
 import { ExternalLink, ShieldCheck } from 'lucide-react';
 import { verifyGroupFor, type VerifyGroup } from '@/content/verifySources';
+import { useAprilSpace } from '@/hooks/useAprilSpace';
 
 export function VerifySourceList({ group }: { group: VerifyGroup }) {
   return (
@@ -20,6 +21,7 @@ export function VerifySourceList({ group }: { group: VerifyGroup }) {
 
 /** Shown at the bottom of every chart & system page, chosen by the current address. */
 export function VerifySources() {
+  const april = useAprilSpace();
   const { pathname } = useLocation();
   const group = verifyGroupFor(pathname);
   if (!group) return null;
@@ -27,7 +29,7 @@ export function VerifySources() {
     <section aria-labelledby="verify-sources" className="mt-16 vellum p-6 sm:p-8">
       <div className="flex items-center gap-2 text-gold"><ShieldCheck className="w-4 h-4" aria-hidden /><span className="font-smallcaps text-[11px]">Check it yourself</span></div>
       <h2 id="verify-sources" className="font-display mt-1 text-2xl">Verify the claims · {group.title}</h2>
-      <p className="mt-2 text-sm text-muted-foreground">{group.plain} Astronomy links confirm the sky positions. History and primary-text links show where each meaning comes from. Research links show what scientists have tested — they do not prove or disprove what a placement means for April.</p>
+      <p className="mt-2 text-sm text-muted-foreground">{group.plain} Astronomy links confirm the sky positions. History and primary-text links show where each meaning comes from. Research links show what scientists have tested — they do not prove or disprove what a placement means for {april ? 'April' : 'you'}.</p>
       <VerifySourceList group={group} />
       <Link to="/verify" className="mt-4 inline-block text-xs underline">See every source in one place</Link>
     </section>

@@ -1,3 +1,4 @@
+import { useId } from 'react';
 /** Deterministic, unique constellation art for any box. Same key → same art; different keys → different art. */
 const GLYPHS: [RegExp, string][] = [
   [/aries/i, '♈'], [/taurus/i, '♉'], [/gemini/i, '♊'], [/cancer/i, '♋'], [/leo\b/i, '♌'], [/virgo/i, '♍'], [/libra/i, '♎'], [/scorpio/i, '♏'], [/sagittarius/i, '♐'], [/capricorn/i, '♑'], [/aquarius/i, '♒'], [/pisces/i, '♓'],
@@ -14,7 +15,8 @@ export function BoxArt({ seed, label, className = 'h-28 w-full' }: { seed: strin
   const hue2 = (hue + 40 + Math.floor(r() * 80)) % 360;
   const stars = Array.from({ length: 7 + Math.floor(r() * 5) }, () => ({ x: 20 + r() * 360, y: 12 + r() * 96, s: 0.8 + r() * 2.2 }));
   const glyph = GLYPHS.find(([re]) => re.test(label ?? seed))?.[1] ?? '✦';
-  const id = `ba${hash(seed).toString(36)}`;
+  const uniqueId = useId();
+  const id = `ba${uniqueId.replace(/:/g,'')}${hash(seed).toString(36)}`;
   return (
     <svg viewBox="0 0 400 120" preserveAspectRatio="xMidYMid slice" className={className} aria-hidden="true">
       <defs>

@@ -133,7 +133,7 @@ function SidebarInner({ mobile = false, onNavigate }: { mobile?: boolean; onNavi
   return (
     <div className={`flex min-h-full flex-col gap-6 overflow-x-hidden ${mobile ? 'px-4 pb-8 pt-4' : 'h-full overflow-y-auto p-6'}`}>
       <div>
-        <div className="flex items-center justify-between gap-2"><AstroBookLogo />{!mobile && <AccountButton />}</div>
+        <div className="flex items-center justify-between gap-2"><AstroBookLogo compact={!mobile} />{!mobile && <AccountButton compact />}</div>
         {april ? (
           <>
             <div className="font-display text-2xl leading-tight mt-1">April</div>

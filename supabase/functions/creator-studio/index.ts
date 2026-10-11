@@ -19,9 +19,9 @@ const fmt = (lon: number) => { const s = Math.floor(lon / 30); const d = lon - s
 // deno-lint-ignore no-explicit-any
 function chartFacts(p: any): string {
   const c = p.chart ?? {};
-  const lines = (c.bodies ?? []).map((b: any) => `${b.name}: ${b.sign} ${b.deg}°${String(b.min).padStart(2, '0')}′${b.house ? `, house ${b.house}` : ''}${b.retro ? ', retrograde' : ''}`);
-  if (typeof c.asc === 'number') lines.push(`Ascendant: ${fmt(c.asc)}`);
-  if (typeof c.mc === 'number') lines.push(`Midheaven: ${fmt(c.mc)}`);
+  const lines = (c.bodies ?? []).map((b: any) => `${b.name}: ${b.sign} ${b.deg}°${String(b.min).padStart(2, '0')}′${p.birth_time && b.house ? `, house ${b.house}` : ''}${b.retro ? ', retrograde' : ''}`);
+  if (p.birth_time && typeof c.asc === 'number') lines.push(`Ascendant: ${fmt(c.asc)}`);
+  if (p.birth_time && typeof c.mc === 'number') lines.push(`Midheaven: ${fmt(c.mc)}`);
   return `Birth: ${p.birth_date}${p.birth_time ? ` at ${p.birth_time}` : ' (time unknown — houses and angles are unreliable, do not use them)'}, ${p.place_label}. House system: ${p.house_system}.\n${lines.join('\n')}`;
 }
 
@@ -58,8 +58,11 @@ const RULES = 'Use ONLY the placements listed. Never invent placements, aspects,
 
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
+  if (req.method !== 'POST') return json({ error: 'Method not allowed' }, 405);
   try {
-    const admin = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!);
+    const url = Deno.env.get('SUPABASE_URL'); const key = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
+    if (!url || !key) return json({ error: 'Generation is not configured.' }, 500);
+    const admin = createClient(url, key);
     const token = req.headers.get('Authorization')?.replace('Bearer ', '');
     const { data: { user } } = await admin.auth.getUser(token);
     if (!user) return json({ error: 'Please sign in first.' }, 401);
@@ -85,6 +88,8 @@ Deno.serve(async (req) => {
     if (!profile?.birth_date || !profile.chart) return json({ error: 'Save your birth details to your account first.' }, 400);
     const facts = chartFacts(profile);
     const apiKey = Deno.env.get('LOVABLE_API_KEY'); if (!apiKey) return json({ error: 'AI is not configured.' }, 500);
+    const { data: paused } = await admin.from('ai_access_pauses').select('message').eq('scope','workspace').maybeSingle();
+    if (paused) return json({ error: paused.message }, 402);
 
     if (kind === 'chapter' || kind === 'starter') {
       const page_key = kind === 'starter' ? `starter-${STARTER.indexOf(topic)}-${user.id}` : `chapter-${Date.now()}-${user.id}`;
@@ -93,10 +98,12 @@ Deno.serve(async (req) => {
         [{ role: 'user', content: `Chapter topic: ${topic}` }]);
       const content = (await call.result.text).trim();
       if (!content) return json({ error: 'The chapter came back empty. Please try again.' }, 502);
-      const ins = await admin.from('generated_pages').insert({ owner_id: user.id, page_key, section: 'My Masterbook', title: topic, content, status: 'ready' }).select('id').single();
+      const ins = kind === 'starter'
+        ? await admin.from('generated_pages').upsert({ owner_id:user.id,page_key,section:'My Masterbook',title:topic,content,status:'ready' }, { onConflict:'owner_id,page_key',ignoreDuplicates:true }).select('id').maybeSingle()
+        : await admin.from('generated_pages').insert({ owner_id: user.id, page_key, section: 'My Masterbook', title: topic, content, status: 'ready' }).select('id').single();
       if (ins.error) { console.error(ins.error); return json({ error: 'Could not save the chapter.' }, 500); }
       await admin.from('ai_usage').insert({ user_id: user.id, feature: kind === 'starter' ? 'starter-chapter' : 'creator-chapter' });
-      return json({ id: ins.data.id });
+      return json({ id: ins.data?.id, saved:true });
     }
 
     const words = { short: '220–300', standard: '450–550', long: '900–1,100' }[duration];
@@ -120,6 +127,10 @@ Deno.serve(async (req) => {
     if (req.signal.aborted) return new Response(null, { status: 499, headers: corsHeaders });
     console.error(e);
     const { status, message } = gatewayError(e);
+    if ([402,403].includes(status)) {
+      const url=Deno.env.get('SUPABASE_URL'); const key=Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
+      if (url && key) await createClient(url,key).from('ai_access_pauses').upsert({ scope:'workspace',message });
+    }
     return json({ error: message }, status);
   }
 });

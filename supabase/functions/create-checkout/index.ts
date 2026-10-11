@@ -39,13 +39,48 @@ Deno.serve(async (req) => {
     const { data: { user } } = await admin.auth.getUser(token);
     if (!user) return json({ error: "Please sign in first." }, 401);
 
-    const { priceId, returnUrl, environment } = await req.json();
-    if (!ALLOWED.has(priceId)) return json({ error: "Unknown plan" }, 400);
+    const { priceId, orderId, returnUrl, environment } = await req.json();
+    if (!orderId && !ALLOWED.has(priceId)) return json({ error: "Unknown plan" }, 400);
     if (environment !== "sandbox" && environment !== "live") return json({ error: "Invalid environment" }, 400);
     if (typeof returnUrl !== "string" || !/^https?:\/\//.test(returnUrl)) return json({ error: "Invalid return URL" }, 400);
+    const origin = req.headers.get('Origin');
+    if (!origin || new URL(returnUrl).origin !== origin) return json({ error: 'Return URL must match this site.' }, 400);
     const env = environment as StripeEnv;
 
     const stripe = createStripeClient(env);
+    if (orderId) {
+      if (typeof orderId !== 'string' || !/^[a-f0-9-]{36}$/.test(orderId)) return json({ error: 'Invalid order' }, 400);
+      const { data: order, error: orderError } = await admin.from('book_orders').select('*').eq('id', orderId).eq('user_id', user.id).single();
+      if (orderError || !order) return json({ error: 'Order not available.' }, 404);
+      if (!['draft','awaiting_payment'].includes(order.status)) return json({ error: 'This order is not awaiting payment.' }, 400);
+      if (order.shipping_address?.country !== 'US' || !order.cover_path?.startsWith(`${user.id}/book-covers/`)) return json({ error: 'A personal cover and US address are required.' }, 400);
+      const extras = Array.isArray(order.extra_sections) ? order.extra_sections : [];
+      if (extras.length > 2 || extras.some((s:unknown) => typeof s !== 'string' || !s.trim() || s.length > 160)) return json({ error: 'Choose up to two additional sections.' }, 400);
+      if (order.checkout_session_id && order.environment === env) {
+        const previous = await stripe.checkout.sessions.retrieve(order.checkout_session_id);
+        if (previous.status === 'open') return json({ clientSecret: previous.client_secret });
+        if (previous.status === 'complete') return json({ error: 'Payment was submitted. Please wait for order confirmation.' }, 409);
+      }
+      const lookup = order.edition === 'expanded' ? 'astrobook_print_expanded' : 'astrobook_print_standard';
+      const prices = await stripe.prices.list({ lookup_keys: [lookup,'astrobook_print_extra'] });
+      const base = prices.data.find(p => p.lookup_key === lookup);
+      const extra = prices.data.find(p => p.lookup_key === 'astrobook_print_extra');
+      if (!base || (extras.length && !extra)) return json({ error: 'Book prices are not configured.' }, 404);
+      const productId = typeof base.product === 'string' ? base.product : base.product.id;
+      const product = await stripe.products.retrieve(productId);
+      const customerId = await resolveOrCreateCustomer(stripe, { email: user.email ?? undefined, userId: user.id });
+      const session = await stripe.checkout.sessions.create({
+        mode: 'payment', ui_mode: 'embedded_page', return_url: returnUrl, customer: customerId,
+        line_items: [{ price: base.id, quantity: 1 }, ...(extras.length && extra ? [{ price: extra.id, quantity: extras.length }] : [])],
+        automatic_tax: { enabled: true }, customer_update: { shipping: 'auto' },
+        shipping_address_collection: { allowed_countries: ['US'] },
+        payment_intent_data: { description: product.name, metadata: { userId: user.id, orderId: order.id } },
+        metadata: { userId: user.id, orderId: order.id, managed_payments: 'false' },
+      }, { idempotencyKey: `book-${order.id}-${env}-${order.checkout_session_id || 'first'}` });
+      const saved = await admin.from('book_orders').update({ checkout_session_id:session.id,environment:env,status:'awaiting_payment',shipping_cents:0,extras_cents:extras.length * 699,updated_at:new Date().toISOString() }).eq('id',order.id);
+      if (saved.error) throw saved.error;
+      return json({ clientSecret:session.client_secret });
+    }
     const prices = await stripe.prices.list({ lookup_keys: [priceId] });
     if (!prices.data.length) return json({ error: "Price not found" }, 404);
     const customerId = await resolveOrCreateCustomer(stripe, { email: user.email ?? undefined, userId: user.id });

@@ -1,5 +1,5 @@
 # Navigation discovery
-- Keep Explore & Discover as a curated link hub over existing pages rather than duplicating interpretation content, so updates remain consistent.
+- Explore is a link hub, avoiding duplicated interpretations.
 
 
 - Masterbook and extracted-source text is bundled only with the protected-content function and fetched through short-lived password unlock tokens; never restore public static copies.
@@ -7,7 +7,7 @@
 - Ask the Sources: client-side BM25 retrieval over the protected content loader, with top passages sent to the ask-sources function for a streamed cited answer.
 - Podcast queue, speed and resume positions are stored per device in localStorage.
 
-- Natal/Ba Zi math lives in src/lib/astro.ts (astronomy-engine; Placidus houses by default to match the sources, with Porphyry, Whole Sign and Equal selectable); it cross-checks the PDF values rather than replacing them.
+- Chart math uses astronomy-engine in astro.ts with selectable houses, cross-checking source values.
 - Main navigation and the clickable Instructions guide share one registry so feature links and help stay synchronized.
 - Library learning topics use the shared Topic renderer with separate chart facts, labeled editorial interpretations, and protected source links, so new readings do not duplicate or expose source text.
 - In-app PDF viewer uses the pdfjs-dist legacy build, because the modern build needs very new browser APIs.
@@ -19,7 +19,7 @@
 - April Kua stays 1 (from her Feng Shui guide) even though the standard female formula gives 8 — sources win, discrepancy shown in UI.
 - The human shared space is database- and storage-enforced for exactly Shane and April's approved email accounts; never rely on client-only access checks.
 - The compact private conversation feed is shared between Home and My Dashboard and must stay hidden for signed-out or unapproved accounts.
-- Created pages live in custom_pages (menu_group = sidebar section title) and are written by the generate-page function from BM25-ranked source passages; the sidebar merges them in so new pages need no code changes.
+- custom_pages stores menu_group and source-ranked generated content; sidebar merges it dynamically.
 - Shared recommendations and media use shared_recommendations/shared_media with generic shared_item_comments/shared_item_reactions (item_type + item_id) — one thread system for any shared item.
 - Podcast creation runs in the make-podcast function (script → TTS WAV → private library bucket → library_items kind 'podcast') so new episodes appear in the normal podcast list.
 - Illustration plates are generated images in src/assets/plates, swapped in for plate descriptions at render time by withPlates(); the protected text itself is unchanged.
@@ -35,3 +35,8 @@
 
 - Public members' birth data lives in profiles (device copy as fallback) via src/lib/myBirth.ts; personal chart pages compute live from it so readings always match the saved birth facts.
 - Box grids use BoxArt(seed,label) for deterministic unique art per box, so new boxes never repeat images.
+
+- Starters use one sequential per-visit queue after paid entitlement and saved birth data; failures stop automatically.
+- book_orders uses owner reads, admin fulfillment and verified webhooks; clients cannot confirm payment.
+- blog_posts permits subscriber writes and explicit publication; drafts remain private.
+- book-cover streams saved-chart artwork through authenticated requests; no April chart reuse.

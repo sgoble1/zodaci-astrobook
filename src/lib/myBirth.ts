@@ -17,6 +17,7 @@ export async function saveMyBirth(b: MyBirth, chart: unknown) {
     id: u.user.id, display_name: b.name, birth_date: b.date, birth_time: b.time, place_label: b.placeLabel,
     lat: b.lat, lon: b.lon, tz: b.tz, house_system: b.houseSystem, chart, onboarded_at: new Date().toISOString(), updated_at: new Date().toISOString(),
   });
+  if (!error) window.dispatchEvent(new Event('astrobook-birth-saved'));
   return { saved: error ? ('device' as const) : ('account' as const), error };
 }
 

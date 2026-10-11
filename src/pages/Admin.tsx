@@ -29,6 +29,7 @@ export default function Admin() {
         <div className="font-smallcaps text-xs text-gold flex items-center gap-1"><ShieldCheck className="w-3 h-3" />Admin</div>
         <h1 className="text-4xl sm:text-5xl mt-2">{isAdmin ? 'Admin Dashboard' : 'My Workspace'}</h1>
         <p className="text-muted-foreground mt-3 max-w-2xl">Upload Masterbook documents, edit their sections with a live preview, and manage relationships — no code needed.{isAdmin ? ' As admin you can also edit everyone’s uploads and arrange the Document Index.' : ' You can edit the documents you upload; the built-in source books stay as they are.'}</p>
+        {isAdmin && <Button asChild variant="outline" className="mt-4"><Link to="/orders">Manage printed book orders</Link></Button>}
       </header>
       <AuthGate what="open your workspace">{() => (
         <div className="space-y-6">
