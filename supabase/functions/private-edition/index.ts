@@ -1,8 +1,8 @@
 import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors';
 import { createClient } from 'npm:@supabase/supabase-js@2';
-import { PAYLOAD_GZ_B64 } from './payload.ts';
+
 const json = (data: unknown, status = 200) => new Response(JSON.stringify(data), { status, headers: { ...corsHeaders, 'Content-Type': 'application/json', 'Cache-Control': 'private, no-store' } });
-let payload: Promise<unknown> | undefined;
+
 Deno.serve(async req => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
   if (req.method !== 'POST') return json({ error: 'Method not allowed' }, 405);
@@ -17,11 +17,6 @@ Deno.serve(async req => {
     if (user.error || !user.data.user) return json({ error: 'Sign in first.' }, 401);
     const allowed = await client.rpc('is_shared_space_member');
     if (allowed.error || allowed.data !== true) return json({ error: 'This edition is private.' }, 403);
-    payload ??= (async () => {
-      const bytes = Uint8Array.from(atob(PAYLOAD_GZ_B64), c => c.charCodeAt(0));
-      const stream = new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'));
-      return JSON.parse(await new Response(stream).text());
-    })();
-    return json(await payload);
+    return json({ segments: 6 });
   } catch { return json({ error: 'The private edition could not load. Please try again.' }, 503); }
 });
