@@ -1,24 +1,36 @@
 import { Link } from 'react-router-dom';
-import { NatalWheel } from '@/components/chart/NatalWheel';
-import { BIRTH, PHASES, PLACEMENTS } from '@/content/april';
-import { UpdatesFeed } from '@/components/common/UpdatesFeed';
-import heroImg from '@/assets/hero-threshold.jpg';
-import { SharedChatFeed } from '@/components/shared/SharedChatFeed';
 import { Button } from '@/components/ui/button';
+import { BoxArt } from '@/components/common/BoxArt';
+import { useMyBirth } from '@/lib/myBirth';
+import heroImg from '@/assets/hero-threshold.jpg';
 
-const modules = [
-  { to: '/birth-chart', title: 'The Birth Chart', desc: "The full snapshot — recorded birth data, sourced placements, independent calculations, chart shape, elemental balance and chart rulers." },
-  { to: '/planets', title: 'The Planets', desc: 'All ten bodies plus Chiron, the Nodes, Vertex, Lilith and the Part of Fortune. Every glyph on the wheel is clickable.' },
-  { to: '/houses', title: 'The Houses', desc: 'All twelve houses — cusps, rulers, tenants, and the story each one is telling in her life.' },
-  { to: '/aspects', title: 'The Aspects', desc: 'The independently verified angles between April’s planets, with measured orbs and everyday explanations.' },
-  { to: '/timeline', title: 'The Timeline · 1990–2060', desc: 'Ten life phases from Early Life Foundation to the Second Saturn Return. Currently: The Great Opening.' },
-  { to: '/retrogrades', title: 'Retrogrades', desc: 'Mercury Rx in domicile, Saturn Rx in the first, Uranus and Neptune Rx — the interior planets that shape her.' },
-  { to: '/purpose', title: 'Purpose & Numerology', desc: 'Life Path 7, Personal Year 7 (2026), Kua 1 Water, Metal Horse — the numerical harmonics of the chart.' },
-  { to: '/feng-shui', title: 'Feng Shui · Kua 1', desc: 'Interactive bagua overlay tuned to a Water Kua in the East group.' },
-  { to: '/compendium', title: 'The Master Compendium', desc: 'Reference tables, dignities, karmic axis and past-life notation, tarot and fixed stars.' },
+const steps = [
+  { n: '1', title: 'Enter your birth details', desc: 'Date, time and place. No birth time? There is a mode for that too — your chart still works.' },
+  { n: '2', title: 'We calculate your real chart', desc: 'Planets, houses, aspects and angles are computed live from astronomical data — never copied from a template.' },
+  { n: '3', title: 'Your book is written for you', desc: 'Every reading is generated from your placements only, in plain words, with the technical details kept alongside.' },
+];
+
+const features = [
+  { seed: 'chart', to: '/my-chart', title: 'Your Birth Chart', desc: 'A full interactive wheel — planets, houses and aspects calculated from your actual birth moment.' },
+  { seed: 'planets', to: '/planets', title: 'Planets & Houses', desc: 'Every placement explained twice: the technical reading, and what it means in everyday words.' },
+  { seed: 'systems', to: '/other-systems', title: 'Seven Other Systems', desc: 'Vedic, Chinese Ba Zi, Maya Tzolk’in, Nine Star Ki, numerology and more — all from your one birth chart.' },
+  { seed: 'timing', to: '/transits', title: 'Timing & Cycles', desc: 'Transits, retrogrades and life phases — what the sky is doing around your chart right now.' },
+  { seed: 'counselor', to: '/counselors', title: 'AI Counselors', desc: 'Chat with counselors that know your chart — therapy-style conversations tuned to your placements.' },
+  { seed: 'podcast', to: '/podcasts', title: 'Personal Podcasts', desc: 'Turn your readings into audio episodes you can listen to anywhere, saved to your library.' },
+  { seed: 'shared', to: '/shared', title: 'Shared Spaces', desc: 'Invite a partner or friend by email and explore your charts together — notes, media and chats.' },
+  { seed: 'relationships', to: '/relationships', title: 'Relationships', desc: 'Add anyone’s birth details and see how your charts meet — shared placements and real synastry.' },
+  { seed: 'create', to: '/create', title: 'Create Your Own Pages', desc: 'Ask for a topic and a fully written, illustrated page is compiled into your personal library.' },
+];
+
+const faqs = [
+  { q: 'Is my birth data private?', a: 'Yes. Your birth details and readings belong to your account. Shared spaces only include the people you invite, and private chats are never visible to anyone else — not even an admin.' },
+  { q: 'How accurate is the chart?', a: 'Positions are calculated with the same astronomy used by observatories, and every chart page includes a live accuracy check that re-runs the calculation and grades the match.' },
+  { q: 'What if I don’t know my birth time?', a: 'You can still get your planets, signs and aspects. Houses and the Rising sign need a time, so those sections explain what changes without one.' },
+  { q: 'Is this a prediction service?', a: 'No. AstroBook interprets your birth chart as a mirror for reflection. It never invents facts about your family, past or future.' },
 ];
 
 export default function Home() {
+  const myBirth = useMyBirth();
   return (
     <div className="space-y-16">
       {/* Hero */}
@@ -26,89 +38,101 @@ export default function Home() {
         <div>
           <div className="font-smallcaps text-[11px] text-gold mb-4">AstroBook · A Personal Chart Library</div>
           <h1 className="font-display leading-[0.95]">
-            April.
+            Your chart.
             <br />
-            <span className="italic text-muted-foreground">A complete map of the sky at 3:38pm.</span>
+            <span className="italic text-muted-foreground">A book written from your sky.</span>
           </h1>
           <div className="gold-rule my-6 max-w-md" />
           <p className="text-lg leading-relaxed text-foreground/85 max-w-xl">
-            An interactive companion to the twenty-section birth chart report, the 1990–2060 timeline, the retrograde navigation guide and the feng shui implementation manual. Every planet, house, aspect, life phase and gua is explorable. Every panel is drawn directly from the uploaded source documents.
+            Enter your birth details and AstroBook calculates your real natal chart, then writes a personal library of readings from it — planets, houses, timing, seven world systems, counselors and podcasts. Every page is yours alone.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
-            <Button asChild><Link to="/explore" className="font-smallcaps text-xs">Explore</Link></Button>
-            <Button asChild variant="outline" className="h-auto min-h-10 whitespace-normal"><Link to="/timeline" className="font-smallcaps text-xs">Current Window · The Great Opening</Link></Button>
+            {myBirth ? (
+              <>
+                <Button asChild><Link to="/my-chart" className="font-smallcaps text-xs">Open my chart</Link></Button>
+                <Button asChild variant="outline" className="h-auto min-h-10 whitespace-normal"><Link to="/explore" className="font-smallcaps text-xs">Explore & Discover</Link></Button>
+              </>
+            ) : (
+              <>
+                <Button asChild><Link to="/start" className="font-smallcaps text-xs">See your chart free</Link></Button>
+                <Button asChild variant="outline" className="h-auto min-h-10 whitespace-normal"><Link to="/explore" className="font-smallcaps text-xs">Explore & Discover</Link></Button>
+              </>
+            )}
           </div>
-          <dl className="mt-10 grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs">
-            {[
-              ['Born', BIRTH.date],
-              ['Time', BIRTH.time],
-              ['Place', BIRTH.place],
-              ['Chart Shape', 'Bucket · Moon Handle'],
-            ].map(([k, v]) => (
-              <div key={k}>
-                <dt className="font-smallcaps text-[10px] text-muted-foreground">{k}</dt>
-                <dd className="mt-1 text-foreground">{v}</dd>
-              </div>
-            ))}
-          </dl>
+          <p className="mt-6 text-xs text-muted-foreground">Free to start · No birth time needed · Your data stays yours</p>
         </div>
         <div className="deckle p-2 bg-vellum">
           <img src={heroImg} alt="A woman viewed from behind stands at the threshold of a great celestial doorway; above her a natal chart in antique gold." width={1600} height={1024} className="w-full h-auto" />
         </div>
       </section>
 
-      {/* Wheel */}
-      <section className="vellum deckle p-6 sm:p-10 gentle-fade">
-        <div className="text-center max-w-2xl mx-auto mb-8">
-          <div className="font-smallcaps text-[11px] text-gold">The Natal Wheel</div>
-          <h2 className="font-display mt-2">Every glyph is a doorway.</h2>
-          <p className="text-muted-foreground text-sm mt-3">
-            Hover any planet to see its placement. Click a planet or house to open its complete interpretation.
-          </p>
+      {/* How it works */}
+      <section className="gentle-fade">
+        <div className="font-smallcaps text-[11px] text-gold mb-2">How it works</div>
+        <h2 className="font-display mb-8">Three steps to your book.</h2>
+        <div className="grid sm:grid-cols-3 gap-4">
+          {steps.map(s => (
+            <div key={s.n} className="p-5 rounded border border-border bg-card/60">
+              <div className="font-display text-3xl text-gold">{s.n}</div>
+              <div className="font-display text-xl leading-tight mt-2">{s.title}</div>
+              <div className="gold-rule my-3 w-12" />
+              <div className="text-sm text-muted-foreground leading-relaxed">{s.desc}</div>
+            </div>
+          ))}
         </div>
-        <NatalWheel />
       </section>
 
-      {/* Module grid */}
+      {/* Feature grid */}
       <section className="gentle-fade">
-        <div className="font-smallcaps text-[11px] text-gold mb-2">Explore</div>
+        <div className="font-smallcaps text-[11px] text-gold mb-2">Inside your AstroBook</div>
         <h2 className="font-display mb-8">The complete compendium.</h2>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {modules.map(m => (
-            <Link key={m.to} to={m.to} className="group block p-5 rounded border border-border bg-card/60 hover:border-gold hover:shadow-[var(--shadow-gold)] transition-all">
-              <div className="font-display text-xl leading-tight">{m.title}</div>
-              <div className="gold-rule my-3 w-12" />
-              <div className="text-sm text-muted-foreground leading-relaxed">{m.desc}</div>
-              <div className="mt-4 font-smallcaps text-[10px] text-gold opacity-0 group-hover:opacity-100 transition-opacity">Open →</div>
+          {features.map(m => (
+            <Link key={m.to} to={m.to} className="group block rounded border border-border bg-card/60 hover:border-gold hover:shadow-[var(--shadow-gold)] transition-all overflow-hidden">
+              <BoxArt seed={m.seed} label={m.title} className="h-28 w-full object-cover" />
+              <div className="p-5">
+                <div className="font-display text-xl leading-tight">{m.title}</div>
+                <div className="gold-rule my-3 w-12" />
+                <div className="text-sm text-muted-foreground leading-relaxed">{m.desc}</div>
+                <div className="mt-4 font-smallcaps text-[10px] text-gold opacity-0 group-hover:opacity-100 transition-opacity">Open →</div>
+              </div>
             </Link>
           ))}
         </div>
       </section>
 
-      {/* Current window */}
-      <section className="gentle-fade">
-        <div className="font-smallcaps text-[11px] text-gold mb-2">Current Window · 2022–2027</div>
-        <h2 className="font-display mb-6">You are standing at the threshold.</h2>
-        <div className="grid md:grid-cols-2 gap-6">
-          {PHASES.filter(p => p.current).map(p => (
-            <div key={p.id} className="p-6 border border-gold/40 rounded bg-card">
-              <div className="font-smallcaps text-[10px] text-gold">Phase {p.number} · {p.years}</div>
-              <h3 className="font-display mt-2">{p.title}</h3>
-              <p className="text-sm text-foreground/85 mt-3 leading-relaxed">{p.interpretation}</p>
-            </div>
-          ))}
-          <div className="p-6 border border-border rounded bg-card/60">
-            <div className="font-smallcaps text-[10px] text-muted-foreground">Chart apex</div>
-            <h3 className="font-display mt-2">Pluto · Scorpio · House 10</h3>
-            <p className="text-sm text-foreground/85 mt-3 leading-relaxed">
-              {PLACEMENTS.find(p => p.key === 'pluto')?.interpretation.slice(0, 380)}…
-            </p>
-            <Link to="/planets/pluto" className="ink-link text-xs mt-4 inline-block font-smallcaps">Read the full Pluto chapter</Link>
-          </div>
+      {/* Accuracy promise */}
+      <section className="vellum deckle p-6 sm:p-10 gentle-fade">
+        <div className="max-w-2xl mx-auto text-center">
+          <div className="font-smallcaps text-[11px] text-gold">Our promise</div>
+          <h2 className="font-display mt-2">Calculated, not copied.</h2>
+          <p className="text-muted-foreground text-sm mt-3 leading-relaxed">
+            Every position comes from a live astronomical calculation of your birth moment, cross-checked on the Data Quality page where you can watch the audit re-run. Interpretations are written only from what is actually in your chart — never invented biography, never generic horoscopes.
+          </p>
+          <Button asChild variant="outline" className="mt-6"><Link to="/data-quality" className="font-smallcaps text-xs">See the accuracy audit</Link></Button>
         </div>
       </section>
-      <SharedChatFeed />
-      <UpdatesFeed />
+
+      {/* FAQ */}
+      <section className="gentle-fade">
+        <div className="font-smallcaps text-[11px] text-gold mb-2">Questions</div>
+        <h2 className="font-display mb-8">Before you begin.</h2>
+        <div className="grid md:grid-cols-2 gap-4">
+          {faqs.map(f => (
+            <div key={f.q} className="p-5 rounded border border-border bg-card/60">
+              <div className="font-display text-lg leading-tight">{f.q}</div>
+              <p className="text-sm text-muted-foreground leading-relaxed mt-2">{f.a}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Final CTA */}
+      <section className="text-center gentle-fade">
+        <h2 className="font-display">Ready when you are.</h2>
+        <p className="text-muted-foreground text-sm mt-3">Two minutes of birth details, a lifetime of reading.</p>
+        <Button asChild className="mt-6"><Link to={myBirth ? '/my-chart' : '/start'} className="font-smallcaps text-xs">{myBirth ? 'Open my chart' : 'See your chart free'}</Link></Button>
+      </section>
     </div>
   );
 }
