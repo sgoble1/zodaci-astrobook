@@ -8,6 +8,9 @@ import { FirstViewReveal } from '@/components/fx/FirstViewReveal';
 import { useEffect, useRef, useState } from 'react';
 import { ChevronDown, Menu, X } from 'lucide-react';
 import { useMyBirth } from '@/lib/myBirth';
+import { useAprilSpace } from '@/hooks/useAprilSpace';
+import { BIRTH } from '@/content/april';
+import { PublicWording } from '@/components/common/PublicWording';
 import { useRelationships } from '@/hooks/useRelationships';
 import { CommandPaletteTrigger } from '@/components/common/CommandPalette';
 import { BookmarkButton } from '@/components/common/BookmarkButton';
@@ -16,13 +19,14 @@ import { AccountButton } from '@/components/common/AccountButton';
 import { useCustomPages, NEW_PAGE_HIGHLIGHT_KEY } from '@/hooks/useCustomPages';
 import { useSharedBadges } from '@/hooks/useSharedBadges';
 import { Button } from '@/components/ui/button';
-import { NAV_GROUPS, RELATIONSHIPS_GROUP, SHARED_GROUP, type NavGroup, type NavItem } from '@/content/navigation';
+import { APRIL_NAV_GROUPS, NAV_GROUPS, RELATIONSHIPS_GROUP, SHARED_GROUP, type NavGroup, type NavItem } from '@/content/navigation';
 import { AstroBookLogo } from '@/components/brand/AstroBookLogo';
 
 const GROUP_COLORS = ['--primary', '--oxblood', '--accent', '--candle', '--gold-bright', '--starlight', '--gold', '--glow-violet'];
 
 export function AppShell() {
   const location = useLocation();
+  const april = useAprilSpace();
   const [open, setOpen] = useState(false);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const mobileMenuRef = useRef<HTMLDivElement>(null);
@@ -89,7 +93,7 @@ export function AppShell() {
           <div className="mx-auto max-w-5xl px-5 sm:px-8 py-10 text-sm text-muted-foreground">
             <div className="gold-rule mb-6" />
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
-              <div className="font-smallcaps text-xs">AstroBook · Your chart, your book</div>
+              <div className="font-smallcaps text-xs">{april ? `Prepared for ${BIRTH.name} · ${BIRTH.date} · ${BIRTH.place}` : 'AstroBook · Your chart, your book'}</div>
               <div className="font-smallcaps text-xs">An Illuminated Compendium · Ink on Vellum · Touched with Gold</div>
             </div>
           </div>
@@ -103,6 +107,7 @@ export function AppShell() {
 function SidebarInner({ mobile = false, onNavigate }: { mobile?: boolean; onNavigate?: () => void }) {
   const location = useLocation();
   const myBirth = useMyBirth();
+  const april = useAprilSpace();
   const { items: rels } = useRelationships();
   const custom = useCustomPages();
   const badges = useSharedBadges();
@@ -124,13 +129,24 @@ function SidebarInner({ mobile = false, onNavigate }: { mobile?: boolean; onNavi
   }, [custom]);
   const shared = { ...SHARED_GROUP, items: SHARED_GROUP.items.map(item => ({ ...item, badge: item.to === '/shared/conversations' ? badges.chat : item.to === '/shared/wonderings' ? badges.wonderings : undefined })) };
   const relationships = { ...RELATIONSHIPS_GROUP, items: [...RELATIONSHIPS_GROUP.items, ...rels.map(r => ({ to: `/relationships/${r.id}`, label: `↳ ${r.name}${r.relation ? ` · ${r.relation}` : ''}` }))] };
-  const baseGroups: NavGroup[] = [...NAV_GROUPS.slice(0, 2), shared, relationships, ...NAV_GROUPS.slice(2)];
+  const baseGroups: NavGroup[] = (april ? [...APRIL_NAV_GROUPS.slice(0, 2), shared, relationships, ...APRIL_NAV_GROUPS.slice(2)] : [...NAV_GROUPS.slice(0, 2), relationships, ...NAV_GROUPS.slice(2)]);
   const allGroups = baseGroups.map(g => ({ ...g, items: [...g.items, ...custom.filter(c => c.menu_group === g.title).map(c => ({ to: `/p/${c.id}`, label: c.status === 'generating' ? `${c.title} · writing…` : c.title, created: true } as NavItem))] }));
   return (
     <div className={`flex min-h-full flex-col gap-6 overflow-x-hidden ${mobile ? 'px-4 pb-8 pt-4' : 'h-full overflow-y-auto p-6'}`}>
       <div>
         <div className="flex items-center justify-between gap-2"><AstroBookLogo />{!mobile && <AccountButton />}</div>
-        {myBirth ? (
+        {april ? (
+          <>
+            <div className="font-display text-2xl leading-tight mt-1">April</div>
+            <div className="text-xs text-muted-foreground mt-1">{BIRTH.date} · {BIRTH.time}<br />{BIRTH.place}</div>
+            <div className="gold-rule my-4" />
+            <div className="text-xs text-muted-foreground leading-relaxed">
+              <span className="font-smallcaps text-[10px] text-foreground">Sun</span> ♍ Virgo H8 &middot;{' '}
+              <span className="font-smallcaps text-[10px] text-foreground">Moon</span> ♈ Aries H3 &middot;{' '}
+              <span className="font-smallcaps text-[10px] text-foreground">ASC</span> ♐ 29° Sag
+            </div>
+          </>
+        ) : myBirth ? (
           <>
             <div className="font-display text-2xl leading-tight mt-1">{myBirth.name}</div>
             <div className="text-xs text-muted-foreground mt-1">
@@ -193,7 +209,7 @@ function SidebarInner({ mobile = false, onNavigate }: { mobile?: boolean; onNavi
       </nav>
 
       <div className="mt-auto text-[11px] text-muted-foreground leading-relaxed">
-        Every chart here is calculated live from real birth details. Click any element in a chart, table or timeline for the full interpretation.
+        {april ? "Every planet, house, aspect and phase in this site is drawn verbatim from April's uploaded reports. Click any element in a chart, table, timeline or bagua for the full interpretation." : 'Every chart here is calculated live from real birth details. Click any element in a chart, table or timeline for the full interpretation.'}
       </div>
     </div>
   );
