@@ -4,7 +4,8 @@
 - [x] Add automatically generated Sex & Attraction topic with consent-first, non-deterministic interpretation
 - [x] Suggest Wonderings for workspace members and added people; save selected questions to owner-only relationship notes
 - [x] Compose a real paginated PDF manuscript with contents and selected cover; connect it to book orders (10-page sample visually checked)
-- [~] Original content modules and illustrations now load from an approved-account archive; remaining hardcoded private-page prose and legacy source URLs still need full isolation audit
+- [x] Original content modules, TOC, source pointers and 38 illustrations moved to approved-account loading; verified preserved counts, artwork restoration and sign-out clearing
+- [ ] Audit remaining hardcoded private-page prose and migrate legacy source URLs to private storage; public-release privacy is not yet fully verified
 - [ ] Verify live shipping/payment order flow; live Stripe activation is blocked on owner onboarding
 
 ## Zodaci public readiness
@@ -13,11 +14,11 @@
 - [x] Owner-only life context with consent and suggested chapter links; save/reload/delete verified
 - [x] Creator generation includes saved aspects, house cusps, consented context and relevant chapters
 - [x] Public screens and workspace creation verified; clean lint/build; recent library metadata scoped to owner/member
-- [ ] Full public readiness: April-specific static modules remain in delivered application code; private bundle isolation needs completion
+- [ ] Public release waits on remaining private-page prose/legacy source isolation and ordinary-account testing
 - [ ] Extend generic workspaces beyond podcasts to all legacy shared tools without widening April's protected space
 - [ ] Verify paid live generation and privacy with two ordinary member accounts; needs paid entitlement, saved chart and available AI credits
 
-April's private AstroBook is untouched; this draft is the public version.
+April's original content has been preserved in the authenticated archive; approved-account chart and Other Systems pages were verified after migration.
 
 - [x] Unique graphic on every box (Explore, Instructions, Planets, Workbook modules)
 - [x] Staged database foundation: profiles, generated readings, shared spaces + email invites, subscriptions, AI usage (applies when the draft is accepted)
@@ -47,3 +48,16 @@ April's private AstroBook is untouched; this draft is the public version.
 - [ ] Generate and paginate print-ready personal manuscripts (250/400-page targets); requires available AI credits and printer specifications
 - [ ] Verify real cover generation and complete paid checkout with saved birth data; requesting account has no saved chart
 - [ ] Enable live payments by claiming and verifying Stripe; owner action required
+
+## Verified in this pass
+- [x] Public Home, Explore, Books, Contents, My Chart and Wonderings open without runtime errors
+- [x] Approved private chart and Other Systems load; signing out removes April from public Explore
+- [x] Anonymous archive segments and protected source requests return 401
+- [x] Book checkout server-blocked until production manuscripts and printer specifications are ready
+- [x] Latest automatic validation reports build OK; no oversized repository files remain
+
+## Still unfinished
+- Remaining static private-page prose and previously exposed source-file URLs need further privacy work.
+- Generic workspace media/notes/recommendations and full uploaded-source retrieval remain to implement.
+- Live payments need owner Stripe activation; live AI generation needs credits and saved birth details.
+- 250/400-page production manuscripts need printer specifications and available AI generation; drafts are not sold as finished books.
