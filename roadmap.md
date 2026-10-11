@@ -70,3 +70,6 @@ April's original content has been preserved in the authenticated archive; approv
 - Generic workspace media/notes/recommendations and full uploaded-source retrieval remain to implement.
 - Live payments need owner Stripe activation; live AI generation needs credits and saved birth details.
 - 250/400-page production manuscripts need printer specifications and available AI generation; drafts are not sold as finished books.
+
+- [x] In-depth AI topic readings per member chart + admin Member charts tab (edit/publish)
+- [ ] Verify topic generation on an account with saved birth details
