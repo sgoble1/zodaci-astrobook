@@ -9,7 +9,7 @@ import { BookOpen } from 'lucide-react';
 
 type Entry = { id: string; title: string; part?: string; words?: number };
 let indexCache: Promise<Entry[]> | null = null;
-const loadIndex = () => (indexCache ??= loadProtectedJson<Entry[]>('masterbook', 'index.json'));
+const loadIndex = () => (indexCache ??= loadProtectedJson<Entry[]>('masterbook', 'index.json').catch(e => { indexCache = null; throw e; }));
 const textCache = new Map<string, Promise<string>>();
 const loadText = (id: string) => {
   if (!textCache.has(id)) textCache.set(id, loadProtectedText('masterbook', `${id}.md`).then(withPlates).catch(() => ''));
@@ -29,7 +29,7 @@ export function SourceChapters({ match, ids = [], title = 'The full text from th
       const hits = idx.filter(e => (selected.has(e.id) || (match?.test(e.title) ?? false)) && !(exclude && exclude.test(e.title))).slice(0, limit);
       const texts = await Promise.all(hits.map(h => loadText(h.id)));
       if (live) setItems(hits.map((h, i) => ({ ...h, text: texts[i].replace(/^#\s.*\n/, '') })));
-    });
+    }).catch(() => { if (live) setItems([]); });
     return () => { live = false; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [match?.source, ids.join('|'), exclude?.source]);

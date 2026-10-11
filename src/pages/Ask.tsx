@@ -28,7 +28,7 @@ export default function Ask() {
   const docs = corpus ? [...new Map(corpus.map(p => [p.doc, p.source])).entries()] : [];
   const pool = corpus && doc !== 'all' ? corpus.filter(p => p.doc === doc) : corpus;
 
-  useEffect(() => { loadCorpus().then(setCorpus); }, []);
+  useEffect(() => { loadCorpus().then(setCorpus).catch(() => setCorpus([])); }, []);
   useEffect(() => { const pq = params.get('q'); if (pq) setQ(pq); }, [params]);
 
   const ask = async (question: string) => {

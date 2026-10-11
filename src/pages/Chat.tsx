@@ -42,7 +42,7 @@ function ChatInner() {
     const { data } = await supabase.from('chat_conversations').select('id,title,updated_at').order('updated_at', { ascending: false });
     setConvos(data ?? []);
   };
-  useEffect(() => { loadCorpus().then(setCorpus); loadConvos(); }, []);
+  useEffect(() => { loadCorpus().then(setCorpus).catch(() => setCorpus([])); loadConvos(); }, []);
   useEffect(() => { const prompt = params.get('q'); if (prompt) setQ(prompt); }, [params]);
   useEffect(() => {
     if (!id) { setMsgs([]); return; }

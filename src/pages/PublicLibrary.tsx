@@ -24,7 +24,7 @@ function Frame({ children }: { children: React.ReactNode }) {
 export function PublicLibrary() {
   const [entries, setEntries] = useState<MbEntry[]>([]);
   const [q, setQ] = useState('');
-  useEffect(() => { loadIndex().then(setEntries); }, []);
+  useEffect(() => { loadIndex().then(setEntries).catch(() => setEntries([])); }, []);
   const groups = useMemo(() => {
     const needle = q.trim().toLowerCase();
     const m = new Map<string, MbEntry[]>();
@@ -62,7 +62,7 @@ export function PublicReader() {
   const { id = '' } = useParams();
   const [entries, setEntries] = useState<MbEntry[]>([]);
   const [text, setText] = useState<string | null>(null);
-  useEffect(() => { loadIndex().then(setEntries); }, []);
+  useEffect(() => { loadIndex().then(setEntries).catch(() => setEntries([])); }, []);
   useEffect(() => { setText(null); window.scrollTo(0, 0); loadProtectedText('masterbook', `${id}.md`).then(t => setText(withPlates(t))).catch(() => setText('')); }, [id]);
   const i = entries.findIndex(e => e.id === id);
   const e = entries[i], prev = entries[i - 1], next = entries[i + 1];
@@ -87,7 +87,7 @@ export function PublicDocument() {
   const { slug = '' } = useParams();
   const [entries, setEntries] = useState<MbEntry[]>([]);
   const [texts, setTexts] = useState<string[] | null>(null);
-  useEffect(() => { loadIndex().then(setEntries); }, []);
+  useEffect(() => { loadIndex().then(setEntries).catch(() => setEntries([])); }, []);
   const list = useMemo(() => entries.filter(e => slugify(e.part) === slug), [entries, slug]);
   useEffect(() => {
     if (!list.length) return; setTexts(null);

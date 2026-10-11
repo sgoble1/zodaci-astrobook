@@ -7,7 +7,7 @@ import { loadProtectedJson } from '@/lib/protectedContent';
 export type MbEntry = { id: string; label: string; title: string; part: string; words: number; sections: string[]; excerpt: string; doc?: string; page?: number };
 
 let cache: Promise<MbEntry[]> | null = null;
-export const loadIndex = () => (cache ??= loadProtectedJson<MbEntry[]>('masterbook', 'index.json'));
+export const loadIndex = () => (cache ??= loadProtectedJson<MbEntry[]>('masterbook', 'index.json').catch(e => { cache = null; throw e; }));
 
 export const CATEGORIES: [string, RegExp][] = [
   ['Planets & Points', /\b(sun|moon|mercury|venus|mars|jupiter|saturn|uranus|neptune|pluto|node|chiron|lilith|vertex|ascendant|rising|midheaven|fortune|stellium)\b/i],
@@ -30,7 +30,7 @@ export default function Masterbook() {
   const [q, setQ] = useState('');
   const [cat, setCat] = useState<string | null>(null);
   const [view, setView] = useState<'parts' | 'topics'>('parts');
-  useEffect(() => { loadIndex().then(setEntries); }, []);
+  useEffect(() => { loadIndex().then(setEntries).catch(() => setEntries([])); }, []);
   const parts = useMemo(() => {
     const m = new Map<string, MbEntry[]>();
     entries.filter(e => (!cat || catsFor(e).includes(cat)) && (e.title + e.label + e.sections.join(' ') + e.excerpt).toLowerCase().includes(q.toLowerCase()))

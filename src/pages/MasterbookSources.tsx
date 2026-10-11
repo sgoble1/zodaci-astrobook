@@ -20,13 +20,13 @@ export default function MasterbookSources() {
   const [q, setQ] = useState('');
   const uploads = useLibrary('masterbook');
   const ov = useDocOverrides().map;
-  useEffect(() => { loadIndex().then(setMb); loadLibraryIndex().then(setLib); }, []);
+  useEffect(() => { loadIndex().then(setMb).catch(() => setMb([])); loadLibraryIndex().then(setLib).catch(() => setLib([])); }, []);
 
   useEffect(() => {
     if (!expanded?.startsWith('lib:')) return;
     const id = expanded.slice(4);
     if (units[id]) return;
-    loadProtectedJson<{ loc: string; text: string }[]>('library', `${id}.json`).then(u => setUnits(x => ({ ...x, [id]: u })));
+    loadProtectedJson<{ loc: string; text: string }[]>('library', `${id}.json`).then(u => setUnits(x => ({ ...x, [id]: u }))).catch(() => setUnits(x => ({ ...x, [id]: [] })));
   }, [expanded, units]);
 
   const docs = useMemo<Doc[]>(() => {

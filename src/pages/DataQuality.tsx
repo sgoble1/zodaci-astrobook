@@ -1,3 +1,4 @@
+import { DataAudit } from '@/components/common/DataAudit';
 import { BIRTH_CONFIDENCE, CONFIDENCE_STYLE } from '@/content/confidence';
 import { ConfidenceBadge } from '@/components/common/ConfidenceBadge';
 import { SourceRefPanel } from '@/components/common/SourceRefPanel';
@@ -14,6 +15,8 @@ export default function DataQuality() {
           Every insight on this site inherits the confidence of its inputs. This page names each input, grades it, and lists which downstream readings soften if it turns out to be wrong.
         </p>
       </header>
+
+      <DataAudit />
 
       <section className="space-y-4">
         {BIRTH_CONFIDENCE.map(r => (
