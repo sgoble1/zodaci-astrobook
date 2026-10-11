@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 
 const plans = [
   { name: 'Free', price: 'Free', blurb: 'Everything you need to meet your chart.', items: ['Your calculated birth chart wheel', 'Planets, houses and aspects in plain words', 'Short personal readings', 'Explore & Discover and the Chart Guide', 'Save your chart to your account'] },
-  { name: 'Full Access', price: 'Pricing coming soon', blurb: 'The complete book written from your chart.', items: ['Every reading at full length', 'Timing & cycles: transits, retrogrades, life phases', 'Seven other systems: Vedic, Ba Zi, Maya and more', 'AI counselors that know your chart', 'Personal podcasts and created pages', 'Shared spaces with people you invite'] },
+  { name: 'Full Access', price: '$12.99/month', blurb: 'The complete book written from your chart.', items: ['Every reading at full length', 'Timing & cycles: transits, retrogrades, life phases', 'Seven other systems: Vedic, Ba Zi, Maya and more', 'AI counselors that know your chart', 'Personal podcasts and created pages', 'Shared spaces with people you invite'] },
 ];
 const faqs = [
   { q: 'What are AI credits?', a: 'Counselor replies, podcasts and newly written pages are created live by AI. Each one uses a small amount of credit. Full Access includes a monthly allowance, and you can always see how much you have used.' },
