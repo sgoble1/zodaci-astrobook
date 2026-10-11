@@ -13,6 +13,7 @@ function revive(value: unknown): unknown {
   return value;
 }
 export function hydratePrivateEdition(data: Record<string, Record<string, unknown>>) {
+  setters.get('privateAssets.images')?.set(data.privateAssets);
   for (const [module, entries] of Object.entries(data)) {
     for (const [key, value] of Object.entries(entries)) setters.get(`${module}.${key}`)?.set(revive(value));
   }

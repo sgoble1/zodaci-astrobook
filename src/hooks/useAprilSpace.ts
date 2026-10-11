@@ -5,7 +5,12 @@ import { clearPrivateEdition, hydratePrivateEdition } from '@/lib/privateEdition
 let cached: { uid: string; ok: boolean } | null = null;
 const listeners = new Set<(v: boolean | undefined) => void>();
 
-async function check() {
+let pending: Promise<void> | null = null;
+function check() {
+  pending ??= performCheck().finally(() => { pending = null; });
+  return pending;
+}
+async function performCheck() {
   const { data } = await supabase.auth.getSession();
   const uid = data.session?.user.id;
   if (!uid) { cached = null; clearPrivateEdition(); listeners.forEach(l => l(false)); return; }

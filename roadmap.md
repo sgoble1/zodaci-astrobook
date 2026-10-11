@@ -4,7 +4,7 @@
 - [x] Add automatically generated Sex & Attraction topic with consent-first, non-deterministic interpretation
 - [x] Suggest Wonderings for workspace members and added people; save selected questions to owner-only relationship notes
 - [x] Compose a real paginated PDF manuscript with contents and selected cover; connect it to book orders (10-page sample visually checked)
-- [ ] Close public April-content exposure: original static narratives must migrate to authenticated loading; protected source endpoint now requires approved account plus password token
+- [~] Original content modules and illustrations now load from an approved-account archive; remaining hardcoded private-page prose and legacy source URLs still need full isolation audit
 - [ ] Verify live shipping/payment order flow; live Stripe activation is blocked on owner onboarding
 
 ## Zodaci public readiness

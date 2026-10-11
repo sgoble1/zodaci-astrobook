@@ -20,7 +20,7 @@
 - custom_pages stores menu_group and source-ranked generated content; sidebar merges it dynamically.
 - Shared recommendations and media use shared_recommendations/shared_media with generic shared_item_comments/shared_item_reactions (item_type + item_id) — one thread system for any shared item.
 - Podcast creation runs in the make-podcast function (script → TTS WAV → private library bucket → library_items kind 'podcast') so new episodes appear in the normal podcast list.
-- Illustration plates are generated images in src/assets/plates, swapped in for plate descriptions at render time by withPlates(); the protected text itself is unchanged.
+- Private edition data and plates load via account-authorized private-edition; sign-out clears memory and public bundles contain no archived payload.
 - April's own pages filter passages with aprilOnly() so Shane's chart/family/home appears only on Relationship pages.
 - Social Integration uses separate owner-only conversation tables and its own counselor function so its history never enters the shared chat or therapy history.
 - April-focused tools must never infer named relatives, ancestry, lineage or childhood events from chart symbolism; Family & Home stays limited to verified placements and home-setting guidance.
@@ -41,4 +41,4 @@
 - blog_posts permits subscriber writes and explicit publication; drafts remain private.
 - book-cover streams saved-chart artwork through authenticated requests; no April chart reuse.
 - Workspace Wonderings use separate member policies; relationship notes stay owner-only.
-- Manuscript PDFs paginate saved owner chapters and use private owner paths; real page counts require printer review.
+- Owner PDFs stay private; book checkout is blocked pending production manuscripts and printer review.

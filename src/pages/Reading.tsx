@@ -5,7 +5,7 @@ import { PILLARS, ELEMENT_BALANCE, LIFE_LESSON, CHINESE_SOURCE } from '@/content
 import { SABIAN_SYMBOLS, FIXED_STARS, ASTEROIDS, ARABIC_PARTS, PROFECTION_35, type SourceRef } from '@/content/compendium';
 import { KUA_FOUNDATION } from '@/content/fengshui';
 import { computeChart, SIGN_KEYWORDS, BODY_KEYWORDS, fmtLon } from '@/lib/astro';
-import { fromParams, toParams } from './ChartCalculator';
+import { APRIL, fromParams, toParams } from './ChartCalculator';
 import { ConfidenceBadge } from '@/components/common/ConfidenceBadge';
 import { ReasoningPanel } from '@/components/common/ReasoningPanel';
 import { Cite } from '@/components/common/Cite';
@@ -105,8 +105,8 @@ function ComputedReading({ input }: { input: NonNullable<ReturnType<typeof fromP
 export default function Reading() {
   const [sp] = useSearchParams();
   const input = fromParams(sp);
-  const isApril = !input || (input.date === '1990-09-06' && Math.abs(input.lat - 42.87) < 0.5);
-  const check = useMemo(() => computeChart({ date: '1990-09-06', time: '15:38', lat: 42.8689, lon: -76.9856, tz: 'America/New_York', placeLabel: 'Geneva NY', placeSource: 'geocoded' }), []);
+  const isApril = !input || (input.date === APRIL.date && Math.abs(input.lat - APRIL.lat) < 0.5);
+  const check = useMemo(() => computeChart(APRIL), []);
   if (!isApril && input) return <ComputedReading input={input} />;
 
   const dayMismatch = check.bazi.find(p => p.label === 'Day')?.romanized !== PILLARS.find(p => p.label.startsWith('Day'))?.romanized;
