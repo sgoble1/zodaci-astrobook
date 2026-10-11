@@ -1,5 +1,6 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Navigate, useNavigate } from 'react-router-dom';
+import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -18,6 +19,8 @@ export default function Onboarding() {
   const [geo, setGeo] = useState<Geo[]>([]);
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState('');
+  const [signedIn, setSignedIn] = useState<boolean | null>(null);
+  useEffect(() => { supabase.auth.getSession().then(({ data }) => setSignedIn(!!data.session)); const { data } = supabase.auth.onAuthStateChange((_e, s) => setSignedIn(!!s)); return () => data.subscription.unsubscribe(); }, []);
 
   const search = async () => {
     setErr('');
@@ -41,6 +44,9 @@ export default function Onboarding() {
     finally { setBusy(false); }
   };
 
+  if (signedIn === null) return <p role="status" className="p-8 text-muted-foreground">Getting things ready…</p>;
+  // Account first, so birth details save once and nothing asks to sign in again later.
+  if (!signedIn) return <Navigate to="/auth" replace />;
   return (
     <article className="mx-auto max-w-lg space-y-6 py-6">
       <header>
