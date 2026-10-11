@@ -16,7 +16,15 @@ export interface ChartInput {
   placeLabel: string;
   placeSource: 'geocoded' | 'manual';
   sex?: 'male' | 'female' | 'unspecified';
+  houseSystem?: HouseSystem;
 }
+export type HouseSystem = 'porphyry' | 'placidus' | 'whole' | 'equal';
+export const HOUSE_SYSTEMS: { id: HouseSystem; label: string; note: string }[] = [
+  { id: 'porphyry', label: 'Porphyry', note: 'Splits each quarter between the Ascendant and Midheaven into three equal parts. Used by AstroBook by default and matches most of the source books.' },
+  { id: 'placidus', label: 'Placidus', note: 'Splits each quarter by the time a degree takes to rise. The most common modern Western system.' },
+  { id: 'whole', label: 'Whole Sign', note: 'Each house is one whole sign, starting with the rising sign. The oldest Hellenistic method.' },
+  { id: 'equal', label: 'Equal', note: 'Twelve 30° houses measured from the exact Ascendant degree.' },
+];
 
 export interface Flag { level: ConfidenceLevel; topic: string; note: string; }
 
@@ -102,7 +110,34 @@ function angles(d: Date, lat: number, lon: number) {
   const asc = ascAt(r, phi);
   // Vertex: the western ecliptic–prime-vertical intersection (ascendant of the co-latitude, RAMC + 180°).
   const vertex = ascAt(r + Math.PI, Math.PI / 2 - phi);
-  return { asc, mc, vertex };
+  return { asc, mc, vertex, ramc, eps };
+}
+
+function placidus(asc: number, mc: number, ramc: number, eps: number, lat: number) {
+  const phi = lat * rad;
+  const lonOfRa = (ra: number) => norm(Math.atan2(Math.sin(ra * rad), Math.cos(ra * rad) * Math.cos(eps)) / rad);
+  const cusp = (f: number, above: boolean) => {
+    let ra = ramc + (above ? f * 90 : 180 - f * 90);
+    for (let i = 0; i < 30; i++) {
+      const dec = Math.asin(Math.sin(eps) * Math.sin(lonOfRa(ra) * rad));
+      const x = Math.tan(phi) * Math.tan(dec);
+      if (Math.abs(x) >= 1) return null;
+      const ad = Math.asin(x) / rad;
+      ra = above ? ramc + f * (90 + ad) : ramc + 180 - f * (90 - ad);
+    }
+    return lonOfRa(ra);
+  };
+  const c11 = cusp(1 / 3, true), c12 = cusp(2 / 3, true), c2 = cusp(2 / 3, false), c3 = cusp(1 / 3, false);
+  if ([c11, c12, c2, c3].some(c => c == null)) return null; // undefined near the polar circles
+  const c = [asc, c2!, c3!, norm(mc + 180)];
+  return [...c, norm(c11! + 180), norm(c12! + 180), norm(asc + 180), norm(c2! + 180), norm(c3! + 180), mc, c11!, c12!];
+}
+
+export function cuspsFor(system: HouseSystem, a: { asc: number; mc: number; ramc: number; eps: number }, lat: number): number[] {
+  if (system === 'whole') { const s0 = Math.floor(a.asc / 30) * 30; return Array.from({ length: 12 }, (_, i) => norm(s0 + i * 30)); }
+  if (system === 'equal') return Array.from({ length: 12 }, (_, i) => norm(a.asc + i * 30));
+  if (system === 'placidus') return placidus(a.asc, a.mc, a.ramc, a.eps, lat) ?? porphyry(a.asc, a.mc);
+  return porphyry(a.asc, a.mc);
 }
 
 function porphyry(asc: number, mc: number) {
@@ -177,7 +212,7 @@ export function computeChart(input: ChartInput): ChartResult {
   if (yr < 1970) flags.push({ level: 'approximate', topic: 'Historical time zone', note: 'Pre-1970 daylight-saving rules were irregular in many places; confirm the offset below.' });
 
   let asc: number | null = null, mc: number | null = null, cusps: number[] | null = null, vertex: number | null = null;
-  if (timeKnown) { ({ asc, mc, vertex } = angles(utc, input.lat, input.lon)); cusps = porphyry(asc, mc); }
+  if (timeKnown) { const a = angles(utc, input.lat, input.lon); ({ asc, mc, vertex } = a); cusps = cuspsFor(input.houseSystem ?? 'porphyry', a, input.lat); }
 
   const bodies: BodyPos[] = BODIES.map(([key, name, glyph, b]) => {
     const lon = eclLon(b, utc);
