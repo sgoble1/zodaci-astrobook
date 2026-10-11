@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { computeChart, localToUtc, type ChartInput } from '@/lib/astro';
-import { PLACEMENTS, placementLon } from '@/content/april';
+import { PLACEMENTS, longitudeOf } from '@/content/april';
 
 // Re-runs April's chart from the official birth facts every time the page opens and grades
 // every recorded placement against the fresh calculation. No stored scores — always live.
@@ -21,7 +21,7 @@ export function DataAudit() {
     const c = computeChart(BIRTH);
     return PLACEMENTS.map(p => {
       const b = c.bodies.find(x => x.key === p.key);
-      const rec = placementLon(p);
+      const rec = longitudeOf(p);
       if (!b) return { p, grade: 'separate' as Grade, calc: '—', diff: null as number | null, note: 'This point needs extra tables; it was checked against NASA JPL Horizons instead.' };
       const diff = Math.abs(((b.lon - rec + 540) % 360) - 180);
       const tol = TOL[p.key] ?? 0.1;
