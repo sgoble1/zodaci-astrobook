@@ -8,6 +8,7 @@ import { FirstViewReveal } from '@/components/fx/FirstViewReveal';
 import { useEffect, useRef, useState } from 'react';
 import { ChevronDown, Menu, X } from 'lucide-react';
 import { BIRTH } from '@/content/april';
+import { useMyBirth } from '@/lib/myBirth';
 import { useRelationships } from '@/hooks/useRelationships';
 import { CommandPaletteTrigger } from '@/components/common/CommandPalette';
 import { BookmarkButton } from '@/components/common/BookmarkButton';
@@ -102,6 +103,7 @@ export function AppShell() {
 
 function SidebarInner({ mobile = false, onNavigate }: { mobile?: boolean; onNavigate?: () => void }) {
   const location = useLocation();
+  const myBirth = useMyBirth();
   const { items: rels } = useRelationships();
   const custom = useCustomPages();
   const badges = useSharedBadges();
