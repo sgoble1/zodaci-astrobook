@@ -239,6 +239,13 @@
       "when": 1791757701667,
       "tag": "0033_zodaci_email_list",
       "breakpoints": true
+    },
+    {
+      "idx": 34,
+      "version": "7",
+      "when": 1791758030236,
+      "tag": "0034_public_community",
+      "breakpoints": true
     }
   ]
 }
