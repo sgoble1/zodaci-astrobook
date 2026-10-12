@@ -1,17 +1,18 @@
+import { BIRTH } from '@/content/april';
 import { SourceChapters } from '@/components/common/SourceChapters';
 import { useState } from 'react';
 import { PHASES, type LifePhase } from '@/content/april';
 
 export default function Timeline() {
   const [selected, setSelected] = useState<LifePhase>(PHASES.find(p => p.current) || PHASES[0]);
-  const startYear = 1990, endYear = 2060;
+  const startYear = Number(BIRTH.date.match(/\d{4}/)?.[0] ?? 2000), endYear = startYear + 70;
   const total = endYear - startYear;
 
   return (
     <div className="space-y-10">
       <header>
         <div className="font-smallcaps text-[11px] text-gold">Section 14 · Life Journey & Timing</div>
-        <h1 className="font-display mt-2">The timeline · 1990–2060.</h1>
+        <h1 className="font-display mt-2">The timeline · {startYear}–{endYear}.</h1>
         <div className="gold-rule my-5 max-w-xs" />
         <p className="max-w-2xl text-lg text-foreground/85 leading-relaxed">
           Ten life phases, from the Chiron wound of Early Life Foundation through the consecration of the Second Saturn Return. Click any phase.
@@ -24,7 +25,7 @@ export default function Timeline() {
           {/* baseline */}
           <div className="absolute inset-x-0 top-1/2 h-px bg-gold/60" />
           {/* decade ticks */}
-          {Array.from({ length: 8 }, (_, i) => 1990 + i * 10).map(y => {
+          {Array.from({ length: 8 }, (_, i) => startYear + i * 10).map(y => {
             const left = ((y - startYear) / total) * 100;
             return (
               <div key={y} className="absolute" style={{ left: `${left}%`, top: 0, bottom: 0 }}>

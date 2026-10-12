@@ -1,3 +1,4 @@
+import { BIRTH } from '@/content/april';
 import { useMemo } from 'react';
 import { computeChart, localToUtc, type ChartInput } from '@/lib/astro';
 import { PLACEMENTS, longitudeOf } from '@/content/april';
@@ -47,7 +48,7 @@ export function DataAudit() {
         <span className={`rounded-full border px-3 py-1 text-sm ${offs ? STYLE.off[1] : STYLE.match[1]}`}>{offs ? `${offs} item${offs > 1 ? 's' : ''} need review` : 'No errors found'}</span>
       </div>
       <p className="text-sm text-foreground/85">
-        <strong>In plain words:</strong> AstroBook takes April's official birth facts — September 6, 1990, 3:38 PM EDT, Geneva, New York — works out the sky again from scratch, and compares every saved placement with the new result. Green means it agrees to within 6 arc‑minutes (a tenth of a degree). "Close" means a small, known difference between calculation methods, not a mistake.
+        <strong>In plain words:</strong> AstroBook takes April's official birth facts — {BIRTH.date}, {BIRTH.time}, {BIRTH.place} — works out the sky again from scratch, and compares every saved placement with the new result. Green means it agrees to within 6 arc‑minutes (a tenth of a degree). "Close" means a small, known difference between calculation methods, not a mistake.
       </p>
       <p className="text-xs text-muted-foreground">Birth time converted to world time: {utc.toISOString().replace('T', ' ').slice(0, 16)} UTC (EDT = UTC−4). Location 42°52′N, 76°59′W. Houses: Placidus (the system the books use).</p>
       <div className="overflow-x-auto">

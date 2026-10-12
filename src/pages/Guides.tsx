@@ -30,7 +30,7 @@ export default function Guide() {
         </div>
         <div className="grid gap-3 sm:grid-cols-2">
           {[
-            { to: '/timeline', title: 'Life phases · 1990–2060', text: 'The widest view: ten long chapters showing how April’s priorities and growth may change across her life.' },
+            { to: '/timeline', title: 'Life phases · 70 years', text: 'The widest view: ten long chapters showing how April’s priorities and growth may change across her life.' },
             { to: '/transits', title: 'Current cycles · 2026–2040', text: 'A closer look at the years ahead, including longer planetary cycles, returns and periods of change.' },
             { to: '/profection', title: 'This year · Age 35', text: 'The current birthday-to-birthday focus, explained as one life area receiving extra attention.' },
             { to: '/retrogrades', title: 'Retrogrades at birth', text: 'Patterns April may process inwardly, revisit repeatedly or understand better after reflection.' },

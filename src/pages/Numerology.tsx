@@ -1,3 +1,4 @@
+import { BIRTH } from '@/content/april';
 import { SourceChapters } from '@/components/common/SourceChapters';
 import { Link } from 'react-router-dom';
 import { CORE_NUMBERS, PINNACLES, CHALLENGES, PERSONAL_YEARS, NUMEROLOGY_SOURCE } from '@/content/numerology';
@@ -11,7 +12,7 @@ export default function Numerology() {
         <h1 className="font-display mt-2">Numerology, derived.</h1>
         <div className="gold-rule my-5 max-w-xs" />
         <p className="max-w-2xl text-lg text-foreground/85 leading-relaxed">
-          Every number below is computed from September 6, 1990 — the formulas are shown so nothing has to be taken on faith. Life Path 7. Birthday 6. Currently in Pinnacle 2 (7) and Challenge 2 (5).
+          Every number below is computed from {BIRTH.date} — the formulas are shown so nothing has to be taken on faith. Life Path 7. Birthday 6. Currently in Pinnacle 2 (7) and Challenge 2 (5).
         </p>
       </header>
 

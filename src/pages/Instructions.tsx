@@ -65,7 +65,7 @@ function helpFor(item: NavItem) {
     '/star-map': 'Explore fixed stars near April’s chart points and open their cited Compendium entries.',
     '/compendium': 'A detailed reference for symbols, fixed stars, asteroids, special aspects, and related source material.',
     '/guides/timeline-retrogrades': 'A plain-language overview connecting the detailed timeline, transit, profection, and retrograde pages.',
-    '/timeline': 'Browse major life phases from 1990 to 2060.',
+    '/timeline': 'Browse major life phases across the 70-year timeline.',
     '/transits': 'Review forecast windows from 2026 to 2040, including confidence notes where timing depends on April’s birth time.',
     '/profection': 'Explains the traditional annual house emphasis for April’s current age.',
     '/retrogrades': 'Explains natal and future retrograde periods and how to interpret them carefully.',

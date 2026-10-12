@@ -9,7 +9,7 @@ export type VerifySource = { label: string; href: string; kind: VerifyKind; chec
 export type VerifyGroup = { id: string; title: string; plain: string; routes: string[]; sources: VerifySource[] };
 
 const S = {
-  horizons: { label: 'NASA JPL Horizons ephemeris', href: 'https://ssd.jpl.nasa.gov/horizons/', kind: 'Astronomy', checks: 'Look up where each planet really was on Sept 6, 1990, 19:38 UTC from Geneva, NY. This confirms the degrees in her chart.' },
+  horizons: { label: 'NASA JPL Horizons ephemeris', href: 'https://ssd.jpl.nasa.gov/horizons/', kind: 'Astronomy', checks: 'Look up where each planet really was at the recorded birth date, time and place. This confirms the degrees in her chart.' },
   zodiac: { label: 'Britannica — Zodiac', href: 'https://www.britannica.com/topic/zodiac', kind: 'History', checks: 'Where the twelve signs come from (Babylonian astronomy) and how they relate to constellations.' },
   astrology: { label: 'Britannica — Astrology', href: 'https://www.britannica.com/topic/astrology', kind: 'History', checks: 'A neutral history of Western astrology, houses, aspects and horoscopes.' },
   precession: { label: 'Britannica — Precession of the equinoxes', href: 'https://www.britannica.com/science/precession-of-the-equinoxes', kind: 'Astronomy', checks: 'Why tropical signs (used here) now differ from the visible constellations by about 24°.' },

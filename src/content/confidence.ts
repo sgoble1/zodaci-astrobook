@@ -11,7 +11,7 @@ export type ConfidenceLevel = 'confirmed' | 'derived' | 'approximate' | 'ambiguo
 export interface InputRecord {
   id: string;
   field: string;                    // "Birth Time"
-  value: string;                    // "3:38 PM EDT"
+  value: string;                    // e.g. a birth time
   status: ConfidenceLevel;
   note: string;                     // one-line summary
   detail?: string;                  // longer explanation
@@ -22,7 +22,7 @@ export interface InputRecord {
 
 const V1: SourceRef = { doc: 'Complete Birth Chart Analysis · Vol I', section: 'Cover · birth data',        page: 'p. 1' };
 const V2: SourceRef = { doc: 'Supplementary Volume II',               section: 'Cover · birth data',        page: 'p. 1' };
-const TL: SourceRef = { doc: 'Personal Astrological Timeline 1990–2060', section: 'Cover · birth data',    page: 'p. 1' };
+const TL: SourceRef = { doc: 'Personal Astrological Timeline', section: 'Cover · birth data',    page: 'p. 1' };
 
 export let BIRTH_CONFIDENCE: InputRecord[] = [];
 
