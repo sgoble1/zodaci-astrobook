@@ -4,6 +4,7 @@ import ReactMarkdown from 'react-markdown';
 import { MessageSquarePlus, Square, Send, Trash2, Telescope } from 'lucide-react';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
+import { useAprilSpace } from '@/hooks/useAprilSpace';
 import { loadCorpus, rank, type Passage } from '@/lib/corpus';
 import { AuthGate } from '@/components/common/AuthGate';
 import { Button } from '@/components/ui/button';
@@ -33,6 +34,7 @@ function ChatInner() {
   const [convos, setConvos] = useState<Convo[]>([]);
   const [msgs, setMsgs] = useState<Msg[]>([]);
   const [corpus, setCorpus] = useState<Passage[] | null>(null);
+  const april = useAprilSpace();
   const [q, setQ] = useState('');
   const [busy, setBusy] = useState(false);
   const abort = useRef<AbortController | null>(null);
@@ -57,7 +59,7 @@ function ChatInner() {
     // Retrieve with the previous user turn too, so follow-ups like "tell me more" still find passages.
     const prevUser = [...msgs].reverse().find(m => m.role === 'user')?.content ?? '';
     // Members without the source library still get chart-based answers from their own saved chart.
-    const top = corpus ? rank(corpus, `${question} ${prevUser}`, 12) : [];
+    const top = corpus && april ? rank(corpus, `${question} ${prevUser}`, 12) : [];
     const cited: Cited[] = top.map((p, i) => ({ n: i + 1, source: p.source, loc: p.loc, href: p.href, text: p.text.slice(0, 1200) }));
     setBusy(true); setQ('');
     let convoId = id;
@@ -154,11 +156,11 @@ function ChatInner() {
           <div ref={endRef} />
         </div>
         <form onSubmit={e => { e.preventDefault(); send(); }} className="mt-4 flex gap-2 items-end">
-          <Textarea rows={2} aria-label="Ask SmartChat" aria-describedby="smartchat-keyboard-hint" value={q} onChange={e => setQ(e.target.value)} placeholder={corpus ? 'Ask a question or follow up…' : 'Loading sources…'}
+          <Textarea rows={2} aria-label="Ask SmartChat" aria-describedby="smartchat-keyboard-hint" value={q} onChange={e => setQ(e.target.value)} placeholder={corpus || april === false ? 'Ask a question or follow up…' : 'Loading sources…'}
             onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); } }} className="flex-1" />
           <span id="smartchat-keyboard-hint" className="sr-only">Press Enter to send. Press Shift and Enter for a new line.</span>
           {busy ? <Button type="button" size="icon" variant="outline" aria-label="Stop" onClick={() => abort.current?.abort()}><Square className="w-4 h-4" /></Button>
-            : <Button type="submit" size="icon" aria-label="Send" disabled={!q.trim() || !corpus}><Send className="w-4 h-4" /></Button>}
+            : <Button type="submit" size="icon" aria-label="Send" disabled={!q.trim() || (!corpus && april !== false)}><Send className="w-4 h-4" /></Button>}
         </form>
       </section>
     </div>
