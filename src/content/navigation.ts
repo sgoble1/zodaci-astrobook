@@ -6,7 +6,7 @@ import { TOPIC_READINGS } from '@/lib/topicReadings';
 
 export type NavItem = { to: string; label: string; created?: boolean; badge?: number };
 export type NavSubmenu = { label: string; items: NavItem[] };
-export type NavGroup = { title: string; items: NavItem[]; submenus?: NavSubmenu[] };
+export type NavGroup = { title: string; items: NavItem[]; submenus?: NavSubmenu[]; footer?: NavItem[] };
 
 export const NAV_GROUPS: NavGroup[] = [
   { title: 'Themes & Topics', items: [{ to: '/my-readings', label: 'Your personal themes' }, { to: '/wonderings', label: 'Wonderings · Questions & Topics' }], submenus: [{ label: 'In-depth topic readings', items: TOPIC_READINGS.filter(t => t.slug !== 'timing').map(t => ({ to: `/my-readings/topic/${t.slug}`, label: t.title })) }], footer: [{ to: '/create', label: '+ Create a Topic & Page' }] },
