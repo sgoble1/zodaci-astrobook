@@ -40,8 +40,8 @@ export function systemFacts(slug: string, birthDate: string, bodies: SysBody[], 
   }
   const yr = (yy: number) => { const s = reduce9(digits(yy).reduce((a, b) => a + b, 0)); return yy >= 2000 ? reduce9(mod(9 - s, 9) || 9) : reduce9(11 - s); };
   if (slug === 'nine-star-ki') {
-    const star = yr(solarYear); const month = reduce9(mod(star === 1 || star === 4 || star === 7 ? 8 - (m - 2) : star === 3 || star === 6 || star === 9 ? 5 - (m - 2) : 2 - (m - 2), 9) || 9);
-    return { title: 'Japanese Nine Star Ki', summary: KI[star], method: `Solar year ${solarYear} (the year turns around February 4). Year-star digits reduced and subtracted from 11 (or from 9 after 2000).`, rows: [['Year (principal) star', KI[star]], ['Month (character) star', `${KI[month]} (approximate — exact month changes on solar-term dates)`]] };
+    const star = yr(solarYear);
+    return { title: 'Japanese Nine Star Ki', summary: KI[star], method: `Solar year ${solarYear} (the year turns around February 4). Year-star digits reduced and subtracted from 11 (or from 9 after 2000).`, rows: [['Year (principal) star', KI[star]]] };
   }
   if (slug === 'tibetan-mewa') {
     const mw = yr(solarYear);
@@ -52,7 +52,7 @@ export function systemFacts(slug: string, birthDate: string, bodies: SysBody[], 
     return { title: 'Chaldean Numerology', summary: `Birth ${reduce9(d)} · Destiny ${reduce(total)}`, method: `Birth day ${d} reduced to ${reduce9(d)}; all birth-date digits total ${total}, reduced to ${reduce(total)}. Name numbers need a full birth name.`, rows: [['Birth (psychic) number', String(reduce9(d))], ['Destiny number', `${reduce(total)} (from ${total})`], ['Compound number', String(total)]] };
   }
   if (slug === 'tarot-birth-cards') {
-    let n = m + d + digits(y).reduce((a, b) => a + b, 0) * 0 + y; while (n > 21) n = digits(n).reduce((a, b) => a + b, 0);
+    let n = m + d + y; while (n > 21) n = digits(n).reduce((a, b) => a + b, 0);
     const second = n > 9 ? reduce9(n) : null;
     return { title: 'Tarot Birth Cards', summary: `${ARCANA[n]}${second ? ` & ${ARCANA[second]}` : ''}`, method: `Month + day + year (${m} + ${d} + ${y}) reduced until 21 or less gives ${n}${second ? `, then ${second}` : ''} (Mary K. Greer’s method).`, rows: [['Birth card', `${n} · ${ARCANA[n]}`], ...(second ? [['Second card', `${second} · ${ARCANA[second]}`] as [string, string]] : [])] };
   }
