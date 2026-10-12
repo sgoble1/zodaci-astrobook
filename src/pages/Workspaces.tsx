@@ -147,7 +147,7 @@ export default function Workspaces() {
           <ul className="divide-y divide-border">
             {spaces.map((s) => (
               <li key={s.id} className="py-4 flex flex-wrap justify-between gap-3">
-                <h2 className="text-xl">{s.name}</h2>
+                <div><h2 className="text-xl">{s.name}</h2><Members spaceId={s.id} me={session?.user.id} /></div>
                 <div className="flex flex-wrap gap-2">
                   <Button asChild variant="outline">
                     <Link to={`/wonderings?workspace=${s.id}`}>Wonderings</Link>
@@ -167,5 +167,35 @@ export default function Workspaces() {
         </p>
       )}
     </article>
+  );
+}
+
+/** Lists a workspace's members; the owner can remove others, and anyone can leave. */
+function Members({ spaceId, me }: { spaceId: string; me?: string }) {
+  const [rows, setRows] = useState<{ user_id: string; display_name: string; role: string }[]>([]);
+  const load = useCallback(async () => {
+    const [d, m] = await Promise.all([
+      supabase.rpc('workspace_member_directory', { _space_id: spaceId }),
+      supabase.from('space_members').select('user_id,role').eq('space_id', spaceId),
+    ]);
+    const roles = new Map((m.data ?? []).map(r => [r.user_id, r.role]));
+    setRows((d.data ?? []).map((r: { user_id: string; display_name: string }) => ({ ...r, role: roles.get(r.user_id) ?? 'member' })));
+  }, [spaceId]);
+  useEffect(() => { void load(); }, [load]);
+  const iOwn = rows.some(r => r.user_id === me && r.role === 'owner');
+  const remove = async (uid: string) => {
+    if (!confirm(uid === me ? 'Leave this workspace?' : 'Remove this member?')) return;
+    await supabase.from('space_members').delete().eq('space_id', spaceId).eq('user_id', uid);
+    void load();
+  };
+  return (
+    <ul className="mt-2 space-y-1 text-sm text-muted-foreground" aria-label="Members">
+      {rows.map(r => (
+        <li key={r.user_id} className="flex items-center gap-2">
+          <span>{r.display_name}{r.user_id === me ? ' (you)' : ''} · {r.role === 'owner' ? 'Owner' : 'Member'}</span>
+          {r.role !== 'owner' && (iOwn || r.user_id === me) && <button className="underline" onClick={() => remove(r.user_id)}>{r.user_id === me ? 'Leave' : 'Remove'}</button>}
+        </li>
+      ))}
+    </ul>
   );
 }
