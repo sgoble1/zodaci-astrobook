@@ -17,14 +17,14 @@ type Counselor = {
 export const COUNSELORS: Counselor[] = [
   {
     key: 'oracle', name: 'The Oracle Within', role: 'Therapy counselor', chatPath: '/workbook/companion', image: oracle,
-    bio: "A warm, steady therapy companion tuned to April's verified birth chart — Virgo Sun, Aries Moon, Sagittarius rising. It listens first, reflects back what it hears, and offers gentle tools drawn from established therapy approaches, using her chart as a language for patterns rather than a verdict.",
+    bio: "A warm, steady therapy companion tuned to your own calculated birth chart. It listens first, reflects back what it hears, and offers gentle tools drawn from established therapy approaches, using your chart as a language for patterns rather than a verdict.",
     plain: 'Like talking with a kind therapist who already knows your chart, so you never have to explain it from scratch.',
-    specialties: ['Emotional processing & reflection', 'CBT-style thought reframing', 'Self-compassion & inner critic (Virgo Sun, Mercury retrograde)', 'Anger, impulse & quick reactions (Aries Moon)', 'Boundaries & relationships (Chiron in the 7th)', 'Grounding & calming exercises'],
+    specialties: ['Emotional processing & reflection', 'CBT-style thought reframing', 'Self-compassion & the inner critic', 'Quick reactions & emotional triggers', 'Boundaries & relationships', 'Grounding & calming exercises'],
     sessions: 'therapy_sessions', messages: 'therapy_messages',
   },
   {
     key: 'social', name: 'Social Counselor', role: 'Social integration coach', chatPath: '/workbook/social-integration',
-    bio: "A practical coach for the 'outsider looking in' feeling. It explains social situations from a calm third-person view and gives concrete, chart-aware ways for April to connect with people while staying herself.",
+    bio: "A practical coach for the 'outsider looking in' feeling. It explains social situations from a calm third-person view and gives concrete, chart-aware ways for you to connect with people while staying herself.",
     plain: 'Like a friendly guide who explains how people work and gives you simple things to try next time.',
     specialties: ['Reading social situations', 'Small talk & starting conversations', 'Friendship & group belonging (Jupiter in the 7th)', 'Playful expression (Mars in Gemini, 5th house)', 'Recovering after awkward moments', 'Step-by-step practice plans'],
     sessions: 'social_sessions', messages: 'social_messages',
@@ -34,7 +34,7 @@ export const COUNSELORS: Counselor[] = [
 const fmt = (d: string) => new Date(d).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' });
 const PrivacyNote = () => (
   <p className="flex items-start gap-2 rounded-md border border-border bg-muted/40 p-3 text-sm text-muted-foreground">
-    <Lock className="mt-0.5 h-4 w-4 shrink-0" aria-hidden /> Your sessions are private. Only you can see them — not Shane, not the admin, not anyone else.
+    <Lock className="mt-0.5 h-4 w-4 shrink-0" aria-hidden /> Your sessions are private. Only you can see them — not the admin, not anyone else.
   </p>
 );
 

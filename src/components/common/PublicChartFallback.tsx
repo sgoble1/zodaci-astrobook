@@ -12,11 +12,11 @@ import { LIBRARY_TOPICS } from '@/content/libraryTopics';
 
 const TIMING = { '/transits': 'transits', '/retrogrades': 'retrogrades', '/timeline': 'timeline', '/profection': 'profection' } as const;
 const TOPIC_ROUTES: Record<string, string> = { '/numerology': 'numerology', '/purpose': 'purpose', '/family-home': 'family-home', '/love': 'love', '/career': 'career', '/health': 'health' };
-const WORKBOOK: Record<string, string> = { '/workbook': '', '/workbook/check-in': 'check-in', '/workbook/reframe': 'reframe', '/workbook/journal': 'tension', '/workbook/social-integration': 'social', '/workbook/companion': 'check-in', '/counselors': '' };
+const WORKBOOK: Record<string, string> = { '/workbook': '', '/workbook/check-in': 'check-in', '/workbook/reframe': 'reframe', '/workbook/journal': 'tension', };
 // Library topic slugs that map onto a member's own in-depth reading.
 const LIB_TO_READING: Record<string, string> = { love: 'love', career: 'career', money: 'money', health: 'health', mind: 'mind', 'family-home': 'family-home', shadow: 'shadow-work', karma: 'past-lives', spirituality: 'spiritual-gifts', purpose: 'purpose' };
 
-const PUBLIC = ['/', '/explore', '/start', '/my-chart', '/my-readings', '/my-astrobook', '/auth', '/instructions', '/pricing', '/checkout', '/my-masterbook', '/podcasts', '/dashboard', '/books', '/orders', '/blog', '/personal-context', '/workspaces', '/wonderings', '/shared/wonderings', '/chat', '/create', '/verify', '/relationships', '/p', '/about'];
+const PUBLIC = ['/', '/explore', '/start', '/my-chart', '/my-readings', '/my-astrobook', '/auth', '/instructions', '/pricing', '/checkout', '/my-masterbook', '/podcasts', '/dashboard', '/books', '/orders', '/blog', '/personal-context', '/workspaces', '/wonderings', '/shared/wonderings', '/chat', '/create', '/verify', '/relationships', '/p', '/about', '/counselors', '/workbook/companion', '/workbook/social-integration'];
 export const isPublicPath = (p: string) => PUBLIC.some(x => p === x || (x !== '/' && p.startsWith(`${x}/`)));
 const CHART = ['/birth-chart', '/planets', '/houses', '/aspects', '/star-map', '/chart-elements', '/reading', '/compendium', '/chart-guide', '/chart-calculator'];
 

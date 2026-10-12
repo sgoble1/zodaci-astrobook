@@ -2,25 +2,22 @@ import { createClient } from "npm:@supabase/supabase-js@2";
 import { convertToModelMessages, type UIMessage } from "npm:ai@7.0.127";
 import { z } from "npm:zod@3";
 import { createResponsesCall, gatewayError } from "../_shared/responses.ts";
-import { APRIL_CHART, APRIL_CONTEXT_RULES, APRIL_PSYCHOLOGY, SAFETY, SITE_PAGES } from "../_shared/april-profile.ts";
+import { SAFETY, SITE_PAGES } from "../_shared/april-profile.ts";
+import { counselorContext } from "../_shared/member-profile.ts";
 
 const cors = { "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-lovable-aig-run-id", "Access-Control-Expose-Headers": "X-Lovable-AIG-Run-ID" };
 const json = (body: unknown, status = 200) => new Response(JSON.stringify(body), { status, headers: { ...cors, "Content-Type": "application/json" } });
 const Body = z.object({ sessionId: z.string().uuid(), messages: z.array(z.any()).min(1).max(200), passages: z.array(z.object({ n: z.number(), source: z.string(), loc: z.string(), text: z.string() })).max(10).default([]) });
-const INSTRUCTIONS = `You are April's Social Counselor: a calm, perceptive outside observer who studies human interaction almost like a kind alien learning human customs, while always sounding warm and respectful rather than robotic or superior.
+const buildInstructions = (CHART: string) => `You are the person's Social Counselor: a calm, perceptive outside observer who studies human interaction almost like a kind alien learning human customs, while always sounding warm and respectful rather than robotic or superior.
 
-${APRIL_CHART}
-
-${APRIL_PSYCHOLOGY}
-
-${APRIL_CONTEXT_RULES}
+${CHART}
 
 Your job:
 - First separate observable facts from guesses about motives. Explain the likely social dynamics in ordinary language.
-- Use April's chart only as a reflective hypothesis, never as scientific proof or destiny. Say "this may fit" rather than making certainty claims.
-- Tune advice to April: direct enough for her Aries Moon, precise and practical for Virgo Mercury, respectful of Capricorn competence, and spacious enough for Sagittarius rising.
-- Give useful human translation: what the other person may have heard, what April may be protecting, and where expectations may differ.
-- Offer 2–3 concrete choices. When useful, provide exact words April can say, a boundary, and a small next step.
+- Use the person's chart only as a reflective hypothesis, never as scientific proof or destiny. Say "this may fit" rather than making certainty claims.
+- Tune advice to them: matched to their actual Moon, Mercury and rising signs.
+- Give useful human translation: what the other person may have heard, what they may be protecting, and where expectations may differ.
+- Offer 2–3 concrete choices. When useful, provide exact words them can say, a boundary, and a small next step.
 - Do not teach manipulation, diagnose another person, or claim to read minds. Ask for missing context when it materially changes the advice.
 - Draw from evidence-informed psychology, therapy skills, life management, executive planning and social coaching as appropriate. Name the discipline or technique briefly and separate evidence-based guidance from astrological reflection.
 - Keep replies under about 350 words unless depth is requested. End with one clear question or action.
@@ -38,9 +35,10 @@ Deno.serve(async request => {
     const sb = createClient(url, anonKey, { global: { headers: { Authorization: request.headers.get("Authorization") ?? "" } } });
     const { data: auth } = await sb.auth.getUser();
     if (!auth.user) return json({ error: "Please sign in to use the Social Counselor." }, 401);
-    const { data: member } = await sb.rpc("is_shared_space_member");
-    if (!member) return json({ error: "This counselor is part of a private edition and isn't available on this account." }, 403);
-    const admin = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
+        const admin = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
+    const ctx0 = await counselorContext(sb, admin, auth.user.id, auth.user.email ?? "");
+    if (!ctx0.ok) return json({ error: ctx0.error }, 400);
+    const INSTRUCTIONS = buildInstructions(ctx0.context);
     await admin.from("ai_usage").insert({ user_id: auth.user.id, feature: "social-counselor" });
     const parsed = Body.safeParse(await request.json()); if (!parsed.success) return json({ error: "Invalid request." }, 400);
     const { sessionId, passages } = parsed.data; const messages = parsed.data.messages as UIMessage[];
@@ -55,7 +53,7 @@ Deno.serve(async request => {
       await sb.from("social_sessions").update(patch).eq("id", sessionId);
     }
     const model = await convertToModelMessages(messages);
-    if (passages.length) model.push({ role: "user", content: `(Relevant passages from April's sources; cite [n] when used.)\n\n${passages.map(passage => `[${passage.n}] (${passage.source} — ${passage.loc})\n${passage.text.slice(0, 1500)}`).join("\n\n")}` });
+    if (passages.length) model.push({ role: "user", content: `(Relevant passages from the person's sources; cite [n] when used.)\n\n${passages.map(passage => `[${passage.n}] (${passage.source} — ${passage.loc})\n${passage.text.slice(0, 1500)}`).join("\n\n")}` });
     const call = createResponsesCall(request, { apiKey, instructions: INSTRUCTIONS, effort: "medium" }, model);
     const response = call.result.toUIMessageStreamResponse({ originalMessages: messages, sendReasoning: true, headers: cors, onFinish: async ({ responseMessage, isAborted }) => {
       if (!responseMessage?.parts?.length) return; const parts = responseMessage.parts.filter((part: { type: string }) => part.type === "text"); if (!parts.length) return;

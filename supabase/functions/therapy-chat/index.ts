@@ -2,7 +2,8 @@ import { createClient } from "npm:@supabase/supabase-js@2";
 import { convertToModelMessages, type UIMessage } from "npm:ai@7.0.127";
 import { z } from "npm:zod@3";
 import { createResponsesCall, gatewayError } from "../_shared/responses.ts";
-import { APRIL_CHART, APRIL_CONTEXT_RULES, APRIL_PSYCHOLOGY, SAFETY, SITE_PAGES } from "../_shared/april-profile.ts";
+import { SAFETY, SITE_PAGES } from "../_shared/april-profile.ts";
+import { counselorContext } from "../_shared/member-profile.ts";
 
 const cors = {
   "Access-Control-Allow-Origin": "*",
@@ -17,20 +18,16 @@ const Body = z.object({
   passages: z.array(z.object({ n: z.number(), source: z.string(), loc: z.string(), text: z.string() })).max(10).default([]),
 });
 
-const INSTRUCTIONS = `You are "The Oracle Within", a therapeutic companion who knows April's chart completely and speaks to her with serene, ancient, almost all-seeing calm — the voice of someone who has watched her whole sky and is not surprised by anything she brings. You are perceptive, warm, unhurried and quietly certain, never cold, grandiose or mystical for its own sake.
+const buildInstructions = (CHART: string) => `You are "The Oracle Within", a therapeutic companion who knows the person's chart completely and speaks to them with serene, ancient, almost all-seeing calm — the voice of someone who has watched their whole sky and is not surprised by anything they bring. You are perceptive, warm, unhurried and quietly certain, never cold, grandiose or mystical for its own sake.
 
-${APRIL_CHART}
-
-${APRIL_PSYCHOLOGY}
-
-${APRIL_CONTEXT_RULES}
+${CHART}
 
 How you work:
-- Blend evidence-based therapy with her chart: CBT (thoughts → feelings → actions), ACT (values, defusion, acceptance), DBT skills (TIPP, opposite action, wise mind), Internal Family Systems (parts, e.g. "the critic", "the fighter"), attachment theory, somatic grounding, narrative therapy, motivational interviewing, Jungian shadow work and positive psychology. Name the technique briefly when you use one.
-- Read what she says through her placements: name which part of her chart is speaking (e.g. "that's your Aries Moon wanting it said now, and your Virgo Mercury already rehearsing the rebuttal") and why it makes sense.
-- Tune your tone to her: lead with direct validation in one or two sentences (Aries Moon), then give structure and specifics (Virgo), respect her competence (Capricorn), and widen to meaning with a touch of humour when it fits (Sagittarius rising). Be honest, never saccharine.
-- Briefly mention one or two related, accurate things she may not have considered — a current life-phase theme (Personal Year 7, 12th-house profection year at 35), a connected placement, a psychology finding, or what people with similar placements commonly report (label community wisdom as anecdotal) — and link to a relevant site page.
-- End most replies with one powerful question or one small, concrete experiment for the next 24 hours. Keep replies under about 300 words unless she asks for depth.
+- Blend evidence-based therapy with their chart: CBT (thoughts → feelings → actions), ACT (values, defusion, acceptance), DBT skills (TIPP, opposite action, wise mind), Internal Family Systems (parts, e.g. "the critic", "the fighter"), attachment theory, somatic grounding, narrative therapy, motivational interviewing, Jungian shadow work and positive psychology. Name the technique briefly when you use one.
+- Read what they say through their placements: name which part of their chart is speaking (e.g. "that's your Moon sign wanting it said now") and why it makes sense.
+- Tune your tone to them: lead with direct validation in one or two sentences based on their actual Moon, Sun, Mercury and rising signs. Be honest, never saccharine.
+- Briefly mention one or two related, accurate things they may not have considered — a current life-phase theme, a connected placement, a psychology finding, or what people with similar placements commonly report (label community wisdom as anecdotal) — and link to a relevant site page.
+- End most replies with one powerful question or one small, concrete experiment for the next 24 hours. Keep replies under about 300 words unless they ask for depth.
 - When numbered source passages are given, ground chart claims in them and cite like [2]. Never invent placements, dates or facts; say plainly when something is general knowledge or a hypothesis.
 
 ${SITE_PAGES}
@@ -45,9 +42,10 @@ Deno.serve(async (req) => {
     const sb = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_ANON_KEY")!, { global: { headers: { Authorization: req.headers.get("Authorization") ?? "" } } });
     const { data: u } = await sb.auth.getUser();
     if (!u?.user) return json({ error: "Please sign in to talk with the companion." }, 401);
-    const { data: member } = await sb.rpc("is_shared_space_member");
-    if (!member) return json({ error: "This counselor is part of a private edition and isn't available on this account." }, 403);
-    const admin = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
+        const admin = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
+    const ctx0 = await counselorContext(sb, admin, u.user.id, u.user.email ?? "");
+    if (!ctx0.ok) return json({ error: ctx0.error }, 400);
+    const INSTRUCTIONS = buildInstructions(ctx0.context);
     await admin.from("ai_usage").insert({ user_id: u.user.id, feature: "oracle" });
 
     const parsed = Body.safeParse(await req.json());
@@ -71,7 +69,7 @@ Deno.serve(async (req) => {
     const model = await convertToModelMessages(messages);
     if (passages.length) {
       const ctx = passages.map(p => `[${p.n}] (${p.source} — ${p.loc})\n${p.text.slice(0, 1500)}`).join("\n\n");
-      model.push({ role: "user", content: `(Context for this turn — numbered passages from April's own source documents; cite them like [n] when you use them.)\n\n${ctx}` });
+      model.push({ role: "user", content: `(Context for this turn — numbered passages from the person's own source documents; cite them like [n] when you use them.)\n\n${ctx}` });
     }
 
     const call = createResponsesCall(req, { apiKey, instructions: INSTRUCTIONS, effort: "medium" }, model);
