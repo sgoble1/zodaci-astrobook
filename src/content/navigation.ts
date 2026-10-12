@@ -2,6 +2,7 @@ import { registerPrivateValue } from '@/lib/privateEditionStore';
 import { WORKBOOK_MODULES } from '@/content/workbook';
 import { TOPICS } from '@/content/topics';
 import { LIBRARY_TOPICS } from '@/content/libraryTopics';
+import { TOPIC_READINGS } from '@/lib/topicReadings';
 
 export type NavItem = { to: string; label: string; created?: boolean; badge?: number };
 export type NavSubmenu = { label: string; items: NavItem[] };
