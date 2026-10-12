@@ -1,3 +1,4 @@
+import { createClient } from "npm:@supabase/supabase-js@2";
 const cors = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-lovable-aig-run-id",
@@ -12,10 +13,31 @@ Deno.serve(async (req) => {
     const apiKey = Deno.env.get("LOVABLE_API_KEY");
     if (!apiKey) return json({ error: "AI is not configured." }, 500);
     const { question, passages, history } = await req.json() as { question?: string; passages?: Passage[]; history?: { role: string; content: string }[] };
-    if (!question?.trim() || !Array.isArray(passages) || passages.length === 0) return json({ error: "Ask a question first." }, 400);
+    if (!question?.trim() || question.length > 4000) return json({ error: "Ask a question first." }, 400);
+    const list = Array.isArray(passages) ? passages : [];
+    // Members (not the private edition) get answers grounded in their own saved chart.
+    const token = req.headers.get("Authorization")?.replace("Bearer ", "") ?? "";
+    let member: string | null = null;
+    if (token && list.length === 0) {
+      const admin = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
+      const { data: { user } } = await admin.auth.getUser(token);
+      if (user) {
+        const { data: p } = await admin.from("profiles").select("display_name,birth_date,birth_time,place_label,house_system,sex,chart").eq("id", user.id).maybeSingle();
+        if (p?.birth_date && p.chart) {
+          const bodies = (p.chart.bodies ?? []).map((b: any) => `${b.name}: ${b.sign} ${b.deg}°${String(b.min).padStart(2, "0")}′${p.birth_time && b.house ? ` house ${b.house}` : ""}${b.retro ? " retrograde" : ""}`).join("\n");
+          const asp = (p.chart.aspects ?? []).slice(0, 25).map((a: any) => `${a.a} ${a.type} ${a.b} (orb ${Number(a.orb).toFixed(1)}°)`).join("\n");
+          member = `Reader: ${p.display_name || "member"}${p.sex ? ` (${p.sex})` : ""}. Born ${p.birth_date}${p.birth_time ? ` ${p.birth_time}` : " (time unknown: never mention houses, Ascendant or Midheaven)"}, ${p.place_label}. House system ${p.house_system}.\nPlacements:\n${bodies}\nAspects:\n${asp}`;
+        } else {
+          return json({ error: "Save your birth details first so SmartChat can answer from your chart." }, 400);
+        }
+      }
+    }
+    if (!member && list.length === 0) return json({ error: "No passages matched — try different words." }, 400);
 
-    const ctx = passages.slice(0, 16).map(p => `[${p.n}] (${p.source} — ${p.loc})\n${String(p.text).slice(0, 2200)}`).join("\n\n");
-    const instructions = `You answer questions about April's astrological source documents (birth: Sept 6 1990, 3:38 PM EDT, Geneva NY).
+    const ctx = list.slice(0, 16).map(p => `[${p.n}] (${p.source} — ${p.loc})\n${String(p.text).slice(0, 2200)}`).join("\n\n");
+    const instructions = member ? `You are SmartChat, an expert astrologer, psychologist and life coach answering questions about this member's own calculated birth chart.
+${member}
+Use ONLY these placements; never invent placements, relatives, events or biography. Name the placement behind every claim and explain each technical term in plain everyday words. Offer interpretation for reflection, not prediction. Be warm, specific, practical, under about 400 words. For health, legal or crisis topics, encourage qualified help.` : `You answer questions about April's astrological source documents (birth: Sept 6 1990, 3:38 PM EDT, Geneva NY).
 Use ONLY the numbered passages provided. Cite every claim inline with the passage number in square brackets, like [2] or [1][4].
 Quote short exact phrases from passages where useful, in quotation marks. If the passages do not contain the answer, say so plainly and do not invent facts.
 Write warmly and clearly in short paragraphs or bullet lists, under about 350 words. Do not add a references list at the end.
@@ -35,7 +57,7 @@ Earlier conversation turns are context only; citation numbers always refer to th
         input: [
           ...(Array.isArray(history) ? history.slice(-12).filter(m => m && (m.role === "user" || m.role === "assistant") && typeof m.content === "string")
             .map(m => ({ role: m.role, content: m.content.slice(0, 4000) })) : []),
-          { role: "user", content: `Passages for this turn:\n\n${ctx}\n\nQuestion: ${question}` },
+          { role: "user", content: member ? question : `Passages for this turn:\n\n${ctx}\n\nQuestion: ${question}` },
         ],
         stream: true, store: false,
         reasoning: { effort: "low", summary: "auto" }, include: ["reasoning.encrypted_content"],

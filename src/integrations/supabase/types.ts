@@ -596,6 +596,48 @@ export type Database = {
           },
         ]
       }
+      marketing_pages: {
+        Row: {
+          body: string
+          created_at: string
+          cta_label: string
+          cta_link: string
+          headline: string
+          id: string
+          published: boolean
+          slug: string
+          subheadline: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          body?: string
+          created_at?: string
+          cta_label?: string
+          cta_link?: string
+          headline?: string
+          id?: string
+          published?: boolean
+          slug: string
+          subheadline?: string
+          title?: string
+          updated_at?: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          cta_label?: string
+          cta_link?: string
+          headline?: string
+          id?: string
+          published?: boolean
+          slug?: string
+          subheadline?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       personal_context: {
         Row: {
           body: string

@@ -4,6 +4,7 @@ import ReactMarkdown from 'react-markdown';
 import { MessageSquarePlus, Square, Send, Trash2, Telescope } from 'lucide-react';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
+import { useAprilSpace } from '@/hooks/useAprilSpace';
 import { loadCorpus, rank, type Passage } from '@/lib/corpus';
 import { AuthGate } from '@/components/common/AuthGate';
 import { Button } from '@/components/ui/button';
@@ -33,6 +34,7 @@ function ChatInner() {
   const [convos, setConvos] = useState<Convo[]>([]);
   const [msgs, setMsgs] = useState<Msg[]>([]);
   const [corpus, setCorpus] = useState<Passage[] | null>(null);
+  const april = useAprilSpace();
   const [q, setQ] = useState('');
   const [busy, setBusy] = useState(false);
   const abort = useRef<AbortController | null>(null);
@@ -42,7 +44,9 @@ function ChatInner() {
     const { data } = await supabase.from('chat_conversations').select('id,title,updated_at').order('updated_at', { ascending: false });
     setConvos(data ?? []);
   };
-  useEffect(() => { loadCorpus().then(setCorpus).catch(() => setCorpus([])); loadConvos(); }, []);
+  // Only the private edition loads source passages; members chat from their own chart.
+  useEffect(() => { loadConvos(); }, []);
+  useEffect(() => { if (april) loadCorpus().then(setCorpus).catch(() => setCorpus([])); }, [april]);
   useEffect(() => { const prompt = params.get('q'); if (prompt) setQ(prompt); }, [params]);
   useEffect(() => {
     if (!id) { setMsgs([]); return; }
@@ -53,11 +57,11 @@ function ChatInner() {
 
   const send = async () => {
     const question = q.trim();
-    if (!question || busy || !corpus) return;
+    if (!question || busy) return;
     // Retrieve with the previous user turn too, so follow-ups like "tell me more" still find passages.
     const prevUser = [...msgs].reverse().find(m => m.role === 'user')?.content ?? '';
-    const top = rank(corpus, `${question} ${prevUser}`, 12);
-    if (!top.length) { toast.error('No passages matched — try different words.'); return; }
+    // Members without the source library still get chart-based answers from their own saved chart.
+    const top = corpus && april ? rank(corpus, `${question} ${prevUser}`, 12) : [];
     const cited: Cited[] = top.map((p, i) => ({ n: i + 1, source: p.source, loc: p.loc, href: p.href, text: p.text.slice(0, 1200) }));
     setBusy(true); setQ('');
     let convoId = id;
@@ -75,7 +79,7 @@ function ChatInner() {
     try {
       const res = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ask-sources`, {
         method: 'POST', signal: abort.current.signal,
-        headers: { 'Content-Type': 'application/json', apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY, Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}` },
+        headers: { 'Content-Type': 'application/json', apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY, Authorization: `Bearer ${(await supabase.auth.getSession()).data.session?.access_token ?? import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}` },
         body: JSON.stringify({ question, history, passages: cited.map(c => ({ n: c.n, source: c.source, loc: c.loc, text: top[c.n - 1].text })) }),
       });
       if (!res.ok || !res.body) { const j = await res.json().catch(() => ({})); throw new Error(j.error ?? 'Something went wrong.'); }
@@ -154,11 +158,11 @@ function ChatInner() {
           <div ref={endRef} />
         </div>
         <form onSubmit={e => { e.preventDefault(); send(); }} className="mt-4 flex gap-2 items-end">
-          <Textarea rows={2} aria-label="Ask SmartChat" aria-describedby="smartchat-keyboard-hint" value={q} onChange={e => setQ(e.target.value)} placeholder={corpus ? 'Ask a question or follow up…' : 'Loading sources…'}
+          <Textarea rows={2} aria-label="Ask SmartChat" aria-describedby="smartchat-keyboard-hint" value={q} onChange={e => setQ(e.target.value)} placeholder={corpus || april === false ? 'Ask a question or follow up…' : 'Loading sources…'}
             onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); } }} className="flex-1" />
           <span id="smartchat-keyboard-hint" className="sr-only">Press Enter to send. Press Shift and Enter for a new line.</span>
           {busy ? <Button type="button" size="icon" variant="outline" aria-label="Stop" onClick={() => abort.current?.abort()}><Square className="w-4 h-4" /></Button>
-            : <Button type="submit" size="icon" aria-label="Send" disabled={!q.trim() || !corpus}><Send className="w-4 h-4" /></Button>}
+            : <Button type="submit" size="icon" aria-label="Send" disabled={!q.trim() || (!corpus && april !== false)}><Send className="w-4 h-4" /></Button>}
         </form>
       </section>
     </div>
