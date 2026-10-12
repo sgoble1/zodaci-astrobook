@@ -1,3 +1,4 @@
+import { BIRTH } from '@/content/april';
 import { DataAudit } from '@/components/common/DataAudit';
 import { BIRTH_CONFIDENCE, CONFIDENCE_STYLE } from '@/content/confidence';
 import { ConfidenceBadge } from '@/components/common/ConfidenceBadge';
@@ -67,7 +68,7 @@ export default function DataQuality() {
         <div className="font-smallcaps text-[11px] text-gold">Reconciling the birth time</div>
         <h3 className="font-display text-xl mt-1">Two candidates on file</h3>
         <p className="mt-3 leading-relaxed text-sm">
-          The three finished companion PDFs (Volume I, Volume II, Timeline Guide) all list <span className="font-mono">3:38 PM EDT</span>. An earlier working note cited <span className="font-mono">11:14 AM EDT</span>. The site uses <span className="font-mono">3:38 PM</span> everywhere — this yields the Sagittarius 29°28′ Ascendant, the Cap H1 stellium, and the Ba Zi Bing Shen hour pillar that every finished report is built around. If a birth certificate is uploaded, any angle-based reading (Ascendant, Midheaven, house cusps, hour pillar, profection lord) will be re-derived from that instead.
+          The three finished companion PDFs (Volume I, Volume II, Timeline Guide) all list <span className="font-mono">{BIRTH.time}</span>. An earlier working note cited a different morning time. The site uses <span className="font-mono">{BIRTH.time}</span> everywhere — this yields the Sagittarius 29°28′ Ascendant, the Cap H1 stellium, and the Ba Zi Bing Shen hour pillar that every finished report is built around. If a birth certificate is uploaded, any angle-based reading (Ascendant, Midheaven, house cusps, hour pillar, profection lord) will be re-derived from that instead.
         </p>
       </section>
     </article>
