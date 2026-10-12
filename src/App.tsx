@@ -1,15 +1,6 @@
-import Dashboard from "./pages/Dashboard";
-import MasterbookSources from './pages/MasterbookSources';
-import MyUploads from './pages/MyUploads';
-import Admin from './pages/Admin';
-import UploadedDoc from './pages/UploadedDoc';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { useMemo, type ReactNode } from 'react';
+import { lazy, Suspense, useMemo, type ReactNode } from 'react';
 import { AppShell } from './components/layout/AppShell';
-import { PublicLibrary, PublicReader, PublicDocument } from './pages/PublicLibrary';
-import { MasterbookContents, MasterbookContentsEntry } from './pages/MasterbookContents';
-import CreatePage from './pages/CreatePage';
-import CustomPageView from './pages/CustomPageView';
 import { DetailDrawerProvider, type DrawerPayload } from './components/common/DetailDrawer';
 import { CommandPalette } from './components/common/CommandPalette';
 import { ActivityTracker } from './components/common/ActivityTracker';
@@ -17,80 +8,101 @@ import {
   SABIAN_SYMBOLS, FIXED_STARS, ASTEROIDS, SPECIAL_ASPECTS, ARABIC_PARTS,
   PROFECTION_35, PRENATAL_ECLIPSE, PROFECTION_BEATS,
 } from './content/compendium';
-import Home from './pages/Home';
-import BirthChart from './pages/BirthChart';
-import Planets from './pages/Planets';
-import PlanetDetail from './pages/PlanetDetail';
-import Houses from './pages/Houses';
-import HouseDetail from './pages/HouseDetail';
-import AspectsPage from './pages/Aspects';
-import TimelinePage from './pages/Timeline';
-import Retrogrades from './pages/Retrogrades';
-import Purpose from './pages/Purpose';
-import FengShui from './pages/FengShui';
-import Compendium from './pages/Compendium';
-import StarMap from './pages/StarMap';
-import Profection from './pages/Profection';
-import Numerology from './pages/Numerology';
-import Transits from './pages/Transits';
-import Chinese from './pages/Chinese';
-import Volume2 from './pages/Volume2';
-import DataQuality from './pages/DataQuality';
-import NotFound from './pages/NotFound';
-import Masterbook from './pages/Masterbook';
-import MasterbookChapter from './pages/MasterbookChapter';
-import Podcasts from './pages/Podcasts';
-import Sources from './pages/Sources';
-import SourceReader from './pages/SourceReader';
-import Ask from './pages/Ask';
-import Chat from './pages/Chat';
-import Topic, { TopicsIndex } from './pages/Topic';
-import Guide from './pages/Guides';
-import FlyingStars from './pages/FlyingStars';
-import Bagua from './pages/Bagua';
-import PdfViewer from './pages/PdfViewer';
-import ChartCalculator from './pages/ChartCalculator';
-import ChartElements from './pages/ChartElements';
-import BaguaWheelPage from './pages/BaguaWheelPage';
-import BaguaReading from './pages/BaguaReading';
-import RelationshipReading from './pages/RelationshipReading';
-import RelationshipTimeline from './pages/RelationshipTimeline';
-import Relationships from './pages/Relationships';
-import RelationshipDetail from './pages/RelationshipDetail';
-import Reading from './pages/Reading';
-import SharedSpace from './pages/SharedSpace';
-import Verify from './pages/Verify';
-import { OtherSystemsDashboard, OtherSystemDetail } from './pages/OtherSystems';
-import { WorkbookHome, WorkbookModulePage, WorkbookCheckIn, WorkbookReframe, WorkbookJournal } from './pages/Workbook';
-import Companion from './pages/Companion';
-import ExploreDiscover from './pages/ExploreDiscover';
-import SocialIntegration from './pages/SocialIntegration';
-import Onboarding from './pages/Onboarding';
-import ResetPassword from './pages/ResetPassword';
-import MyTopicReading from './pages/MyTopicReading';
-import MyChart from './pages/MyChart';
-import MyReadings from './pages/MyReadings';
-import MyLibrary from './pages/MyLibrary';
-import Auth from './pages/Auth';
-import Pricing from './pages/Pricing';
-import CheckoutReturn from './pages/CheckoutReturn';
-import MyMasterbook from './pages/MyMasterbook';
-import Books from './pages/Books';
-import Orders from './pages/Orders';
-import Blog from './pages/Blog';
-import PersonalContext from './pages/PersonalContext';
-import Workspaces from './pages/Workspaces';
-import Wonderings from './pages/Wonderings';
 import { useAprilSpace } from './hooks/useAprilSpace';
 import { AutomaticChapters } from './components/payments/AutomaticChapters';
-import { CounselorsIndex, CounselorProfile, CounselorSession } from './pages/Counselors';
-import ChartGuide from './pages/ChartGuide';
-import Instructions from './pages/Instructions';
-import BrandLanding from './pages/BrandLanding';
-import BrandLaunch from './pages/BrandLaunch';
 import { PublicSiteLayout } from './components/brand/PublicSiteLayout';
-import PublicArticle from './pages/PublicArticle';
-import Community, { CommunityGuidelines } from './pages/Community';
+const Dashboard = lazy(() => import('./pages/Dashboard'));
+const MasterbookSources = lazy(() => import('./pages/MasterbookSources'));
+const MyUploads = lazy(() => import('./pages/MyUploads'));
+const Admin = lazy(() => import('./pages/Admin'));
+const UploadedDoc = lazy(() => import('./pages/UploadedDoc'));
+const PublicLibrary = lazy(() => import('./pages/PublicLibrary').then(m => ({ default: m.PublicLibrary })));
+const PublicReader = lazy(() => import('./pages/PublicLibrary').then(m => ({ default: m.PublicReader })));
+const PublicDocument = lazy(() => import('./pages/PublicLibrary').then(m => ({ default: m.PublicDocument })));
+const MasterbookContents = lazy(() => import('./pages/MasterbookContents').then(m => ({ default: m.MasterbookContents })));
+const MasterbookContentsEntry = lazy(() => import('./pages/MasterbookContents').then(m => ({ default: m.MasterbookContentsEntry })));
+const CreatePage = lazy(() => import('./pages/CreatePage'));
+const CustomPageView = lazy(() => import('./pages/CustomPageView'));
+const Home = lazy(() => import('./pages/Home'));
+const BirthChart = lazy(() => import('./pages/BirthChart'));
+const Planets = lazy(() => import('./pages/Planets'));
+const PlanetDetail = lazy(() => import('./pages/PlanetDetail'));
+const Houses = lazy(() => import('./pages/Houses'));
+const HouseDetail = lazy(() => import('./pages/HouseDetail'));
+const AspectsPage = lazy(() => import('./pages/Aspects'));
+const TimelinePage = lazy(() => import('./pages/Timeline'));
+const Retrogrades = lazy(() => import('./pages/Retrogrades'));
+const Purpose = lazy(() => import('./pages/Purpose'));
+const FengShui = lazy(() => import('./pages/FengShui'));
+const Compendium = lazy(() => import('./pages/Compendium'));
+const StarMap = lazy(() => import('./pages/StarMap'));
+const Profection = lazy(() => import('./pages/Profection'));
+const Numerology = lazy(() => import('./pages/Numerology'));
+const Transits = lazy(() => import('./pages/Transits'));
+const Chinese = lazy(() => import('./pages/Chinese'));
+const Volume2 = lazy(() => import('./pages/Volume2'));
+const DataQuality = lazy(() => import('./pages/DataQuality'));
+const NotFound = lazy(() => import('./pages/NotFound'));
+const Masterbook = lazy(() => import('./pages/Masterbook'));
+const MasterbookChapter = lazy(() => import('./pages/MasterbookChapter'));
+const Podcasts = lazy(() => import('./pages/Podcasts'));
+const Sources = lazy(() => import('./pages/Sources'));
+const SourceReader = lazy(() => import('./pages/SourceReader'));
+const Ask = lazy(() => import('./pages/Ask'));
+const Chat = lazy(() => import('./pages/Chat'));
+const Topic = lazy(() => import('./pages/Topic'));
+const TopicsIndex = lazy(() => import('./pages/Topic').then(m => ({ default: m.TopicsIndex })));
+const Guide = lazy(() => import('./pages/Guides'));
+const FlyingStars = lazy(() => import('./pages/FlyingStars'));
+const Bagua = lazy(() => import('./pages/Bagua'));
+const PdfViewer = lazy(() => import('./pages/PdfViewer'));
+const ChartCalculator = lazy(() => import('./pages/ChartCalculator'));
+const ChartElements = lazy(() => import('./pages/ChartElements'));
+const BaguaWheelPage = lazy(() => import('./pages/BaguaWheelPage'));
+const BaguaReading = lazy(() => import('./pages/BaguaReading'));
+const RelationshipReading = lazy(() => import('./pages/RelationshipReading'));
+const RelationshipTimeline = lazy(() => import('./pages/RelationshipTimeline'));
+const Relationships = lazy(() => import('./pages/Relationships'));
+const RelationshipDetail = lazy(() => import('./pages/RelationshipDetail'));
+const Reading = lazy(() => import('./pages/Reading'));
+const SharedSpace = lazy(() => import('./pages/SharedSpace'));
+const Verify = lazy(() => import('./pages/Verify'));
+const OtherSystemsDashboard = lazy(() => import('./pages/OtherSystems').then(m => ({ default: m.OtherSystemsDashboard })));
+const OtherSystemDetail = lazy(() => import('./pages/OtherSystems').then(m => ({ default: m.OtherSystemDetail })));
+const WorkbookHome = lazy(() => import('./pages/Workbook').then(m => ({ default: m.WorkbookHome })));
+const WorkbookModulePage = lazy(() => import('./pages/Workbook').then(m => ({ default: m.WorkbookModulePage })));
+const WorkbookCheckIn = lazy(() => import('./pages/Workbook').then(m => ({ default: m.WorkbookCheckIn })));
+const WorkbookReframe = lazy(() => import('./pages/Workbook').then(m => ({ default: m.WorkbookReframe })));
+const WorkbookJournal = lazy(() => import('./pages/Workbook').then(m => ({ default: m.WorkbookJournal })));
+const Companion = lazy(() => import('./pages/Companion'));
+const ExploreDiscover = lazy(() => import('./pages/ExploreDiscover'));
+const SocialIntegration = lazy(() => import('./pages/SocialIntegration'));
+const Onboarding = lazy(() => import('./pages/Onboarding'));
+const ResetPassword = lazy(() => import('./pages/ResetPassword'));
+const MyTopicReading = lazy(() => import('./pages/MyTopicReading'));
+const MyChart = lazy(() => import('./pages/MyChart'));
+const MyReadings = lazy(() => import('./pages/MyReadings'));
+const MyLibrary = lazy(() => import('./pages/MyLibrary'));
+const Auth = lazy(() => import('./pages/Auth'));
+const Pricing = lazy(() => import('./pages/Pricing'));
+const CheckoutReturn = lazy(() => import('./pages/CheckoutReturn'));
+const MyMasterbook = lazy(() => import('./pages/MyMasterbook'));
+const Books = lazy(() => import('./pages/Books'));
+const Orders = lazy(() => import('./pages/Orders'));
+const Blog = lazy(() => import('./pages/Blog'));
+const PersonalContext = lazy(() => import('./pages/PersonalContext'));
+const Workspaces = lazy(() => import('./pages/Workspaces'));
+const Wonderings = lazy(() => import('./pages/Wonderings'));
+const CounselorsIndex = lazy(() => import('./pages/Counselors').then(m => ({ default: m.CounselorsIndex })));
+const CounselorProfile = lazy(() => import('./pages/Counselors').then(m => ({ default: m.CounselorProfile })));
+const CounselorSession = lazy(() => import('./pages/Counselors').then(m => ({ default: m.CounselorSession })));
+const ChartGuide = lazy(() => import('./pages/ChartGuide'));
+const Instructions = lazy(() => import('./pages/Instructions'));
+const BrandLanding = lazy(() => import('./pages/BrandLanding'));
+const BrandLaunch = lazy(() => import('./pages/BrandLaunch'));
+const PublicArticle = lazy(() => import('./pages/PublicArticle'));
+const Community = lazy(() => import('./pages/Community'));
+const CommunityGuidelines = lazy(() => import('./pages/Community').then(m => ({ default: m.CommunityGuidelines })));
 
 
 /** Build a single registry of every drawer-openable Compendium item. Used so
@@ -179,6 +191,7 @@ export default function App() {
       <Providers>
         <ActivityTracker />
         <AutomaticChapters />
+        <Suspense fallback={<div role="status" aria-label="Loading page" className="mx-auto mt-10 h-40 max-w-3xl animate-pulse rounded-lg bg-muted" />}>
         <Routes>
           <Route path="/welcome" element={<BrandLanding />} />
           <Route element={<PublicSiteLayout />}>
@@ -292,6 +305,7 @@ export default function App() {
 
           </Route>
         </Routes>
+        </Suspense>
       </Providers>
     </>
     </BrowserRouter>
