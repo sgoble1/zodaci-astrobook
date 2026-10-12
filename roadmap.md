@@ -75,4 +75,6 @@ April's original content has been preserved in the authenticated archive; approv
 - [ ] Verify topic generation on an account with saved birth details
 
 - [x] Pre-launch Phase 1: no member menu signed out, sign-in-first with return link, password reset, new members routed to /start then /my-readings
+- [x] Phase 2–5 pass: onboarding progress + birth-detail editing, wrong-placement check on readings, member/admin rewrite, admin search and word counts, security scan clean (public community reads intentional)
+- [ ] Remaining: background job queue, per-member rate limits, workspace invite walkthrough, bundle privacy audit, full walkthrough — need AI credits/test accounts
 - [ ] Pre-launch Phases 2–10 (see .lovable/plan/pre-launch-plan-*.md)
