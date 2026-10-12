@@ -20,6 +20,18 @@ export default function Onboarding() {
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState('');
   const [signedIn, setSignedIn] = useState<boolean | null>(null);
+  const [stage, setStage] = useState('');
+  const [editing, setEditing] = useState(false);
+  useEffect(() => {
+    supabase.auth.getUser().then(async ({ data: u }) => {
+      if (!u.user) return;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const { data } = await (supabase as any).from('profiles').select('*').eq('id', u.user.id).maybeSingle();
+      if (!data?.birth_date) return;
+      setEditing(true); setUnknownTime(!data.birth_time); setQ(data.place_label ?? '');
+      setB({ name: data.display_name ?? '', date: data.birth_date, time: data.birth_time ?? '', placeLabel: data.place_label, lat: data.lat, lon: data.lon, tz: data.tz, houseSystem: data.house_system });
+    });
+  }, []);
   useEffect(() => { supabase.auth.getSession().then(({ data }) => setSignedIn(!!data.session)); const { data } = supabase.auth.onAuthStateChange((_e, s) => setSignedIn(!!s)); return () => data.subscription.unsubscribe(); }, []);
 
   const search = async () => {
@@ -32,16 +44,20 @@ export default function Onboarding() {
   const ok = [b.name.trim().length > 0, /^\d{4}-\d{2}-\d{2}$/.test(b.date), unknownTime || /^\d{2}:\d{2}$/.test(b.time ?? ''), !!b.tz][step];
 
   const finish = async () => {
+    if (editing && !confirm('Save these changed birth details? Your chart is recalculated. Open each reading afterwards and use “Rewrite this reading” to update it.')) return;
     setBusy(true);
     setErr('');
     try {
+      setStage('Calculating planet positions…');
       const birth = { ...b, time: unknownTime ? null : b.time };
       const chart = computeChart(toChartInput(birth));
+      setStage('Saving to your account…');
       const res = await saveMyBirth(birth, { bodies: chart.bodies, asc: unknownTime ? null : chart.asc, mc: unknownTime ? null : chart.mc, aspects: chart.aspects, cusps: chart.cusps, bazi: chart.bazi, elements: chart.elements, flags: chart.flags });
       if (res.error) { setErr('Your chart is saved on this device, but your account could not save it. Please try again.'); return; }
+      setStage('Starting your readings…');
       nav(res.saved === 'device' ? '/my-chart?device=1' : '/my-readings');
     } catch { setErr('Your birth details could not be calculated. Check the date, time and selected place.'); }
-    finally { setBusy(false); }
+    finally { setBusy(false); setStage(''); }
   };
 
   if (signedIn === null) return <p role="status" className="p-8 text-muted-foreground">Getting things ready…</p>;
@@ -51,7 +67,7 @@ export default function Onboarding() {
     <article className="mx-auto max-w-lg space-y-6 py-6">
       <header>
         <p className="font-smallcaps text-xs text-gold">Step {step + 1} of 4 · {STEPS[step]}</p>
-        <h1 className="font-display text-3xl">Let's create your chart</h1>
+        <h1 className="font-display text-3xl">{editing ? 'Edit your birth details' : "Let's create your chart"}</h1>
         <div className="mt-3 h-1.5 rounded bg-muted" aria-hidden><div className="h-full rounded bg-primary transition-all" style={{ width: `${((step + 1) / 4) * 100}%` }} /></div>
       </header>
       <form className="space-y-4" onSubmit={e => { e.preventDefault(); if (!ok) return; if (step < 3) setStep(step + 1); else void finish(); }}>
@@ -70,9 +86,10 @@ export default function Onboarding() {
           {b.tz && <p className="text-sm text-muted-foreground">Using {b.placeLabel} ({b.lat.toFixed(3)}, {b.lon.toFixed(3)}, time zone {b.tz}).</p>}
           {err && <p role="alert" className="text-sm text-destructive">{err}</p>}
         </div>}
+        {stage && <p role="status" className="text-sm text-primary">{stage}</p>}
         <div className="flex justify-between">
           <Button type="button" variant="ghost" disabled={step === 0} onClick={() => setStep(step - 1)}>Back</Button>
-          <Button type="submit" disabled={!ok || busy}>{busy ? 'Calculating your chart…' : step < 3 ? 'Next' : 'Create my chart'}</Button>
+          <Button type="submit" disabled={!ok || busy}>{busy ? 'Calculating your chart…' : step < 3 ? 'Next' : (editing ? 'Save changes' : 'Create my chart')}</Button>
         </div>
       </form>
     </article>

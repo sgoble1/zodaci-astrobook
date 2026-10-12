@@ -26,7 +26,19 @@ const TOPICS: Record<string, { title: string; focus: string }> = {
   'big-three': { title: 'Your Big Three', focus: 'Sun, Moon and Ascendant in depth, their rulers and houses, and how the three combine' },
   'mind': { title: 'Mind & Communication', focus: 'Mercury sign, house, aspects and retrograde status, the 3rd and 9th houses, and learning style' },
 };
-const Body = z.object({ slug: z.string().refine(s => s in TOPICS), regenerate: z.boolean().optional() });
+const Body = z.object({ slug: z.string().refine(s => s in TOPICS), regenerate: z.boolean().optional(), targetUserId: z.string().uuid().optional() });
+
+/** Finds "Planet in Sign" claims that contradict the saved chart. */
+// deno-lint-ignore no-explicit-any
+function wrongPlacements(text: string, chart: any): string[] {
+  const bad: string[] = [];
+  // deno-lint-ignore no-explicit-any
+  for (const b of chart?.bodies ?? []) {
+    const re = new RegExp(`\\b${b.name}\\s+in\\s+(${SIGNS.join('|')})\\b`, 'g');
+    for (const m of text.matchAll(re)) if (m[1] !== b.sign) bad.push(`${b.name} in ${m[1]}`);
+  }
+  return [...new Set(bad)];
+}
 
 const SIGNS = ['Aries', 'Taurus', 'Gemini', 'Cancer', 'Leo', 'Virgo', 'Libra', 'Scorpio', 'Sagittarius', 'Capricorn', 'Aquarius', 'Pisces'];
 const fmt = (lon: number) => { const s = Math.floor(lon / 30); const d = lon - s * 30; return `${SIGNS[s]} ${Math.floor(d)}°${String(Math.round((d % 1) * 60)).padStart(2, '0')}′`; };
@@ -57,21 +69,34 @@ Deno.serve(async req => {
     if (!user) return json({ error: 'Please sign in first.' }, 401);
     const parsed = Body.safeParse(await req.json());
     if (!parsed.success) return json({ error: 'Unknown topic.' }, 400);
-    const { slug, regenerate } = parsed.data;
+    const { slug, regenerate, targetUserId } = parsed.data;
+    let ownerId = user.id;
+    if (targetUserId && targetUserId !== user.id) {
+      const { data: isAdmin } = await admin.rpc('has_role', { _user_id: user.id, _role: 'admin' });
+      if (!isAdmin) return json({ error: 'Only an admin can rewrite another member\'s reading.' }, 403);
+      ownerId = targetUserId;
+    }
     const topic = TOPICS[slug];
     const page_key = `topic-${slug}`;
-    const { data: have } = await admin.from('generated_pages').select('id,status').eq('owner_id', user.id).eq('page_key', page_key).maybeSingle();
+    const { data: have } = await admin.from('generated_pages').select('id,status').eq('owner_id', ownerId).eq('page_key', page_key).maybeSingle();
     if (have && !regenerate) return json({ id: have.id, status: have.status });
-    const { data: profile } = await admin.from('profiles').select('*').eq('id', user.id).maybeSingle();
+    const { data: profile } = await admin.from('profiles').select('*').eq('id', ownerId).maybeSingle();
     if (!profile?.birth_date || !profile.chart) return json({ error: 'Save your birth details first.' }, 400);
     const { data: paused } = await admin.from('ai_access_pauses').select('message').eq('scope', 'workspace').maybeSingle();
     if (paused) return json({ error: paused.message }, 402);
-    const { data: ctx } = await admin.from('personal_context').select('title,body').eq('owner_id', user.id).eq('use_in_generation', true).limit(6);
+    const { data: ctx } = await admin.from('personal_context').select('title,body').eq('owner_id', ownerId).eq('use_in_generation', true).limit(6);
     const apiKey = Deno.env.get('LOVABLE_API_KEY'); if (!apiKey) return json({ error: 'AI is not configured.' }, 500);
     const call = createResponsesCall(req, { apiKey, effort: 'medium', instructions: `You are a master astrologer, psychologist and plain-language writer creating one chapter of a personal astrology book for ${profile.display_name || 'the reader'}, addressed as "you". The depth must match a professional printed natal report.\nTheir calculated chart:\n${chartFacts(profile)}\n${RULES}\nUser-reported life examples (optional, never override chart facts):\n${(ctx ?? []).map(c => `- ${c.title}: ${c.body}`).join('\n') || 'none'}\n\nTopic focus: ${topic.focus}.\nWrite 1,800–2,400 words in Markdown:\n1. A short opening overview in plain words.\n2. A "Placements behind this reading" table (placement | where it is | what it means in everyday words).\n3. 5–7 substantial sections, each analysing a specific placement or combination in depth (sign, house, ruler, aspects), each ending with a one-line "In plain words:" summary.\n4. "How this shows up in daily life" with concrete examples.\n5. "Strengths" and "Watch-outs" bullet lists.\n6. "Practices to try" (3–5).\n7. "Reflection questions" (4–6).\n8. A one-line note on what astrology can and cannot tell you.\nDo not start with a level-1 heading.` }, [{ role: 'user', content: `Write the "${topic.title}" chapter.` }]);
-    const content = (await call.result.text).trim();
+    let content = (await call.result.text).trim();
+    let wrong = wrongPlacements(content, profile.chart);
+    if (wrong.length) {
+      const fix = createResponsesCall(req, { apiKey, effort: 'low', instructions: `Correct this astrology chapter. These statements contradict the calculated chart and must be fixed using only these facts:\n${chartFacts(profile)}\nWrong: ${wrong.join('; ')}.\nReturn the full corrected Markdown chapter, otherwise unchanged.` }, [{ role: 'user', content }]);
+      content = (await fix.result.text).trim();
+      wrong = wrongPlacements(content, profile.chart);
+      if (wrong.length) return json({ error: 'The reading mentioned placements your chart does not have, so it was not saved. Please try again.' }, 502);
+    }
     if (content.length < 400) return json({ error: 'The reading came back too short. Please try again.' }, 502);
-    const row = { owner_id: user.id, page_key, section: 'Topic Reading', title: topic.title, content, status: have?.status === 'hidden' ? 'hidden' : 'ready', updated_at: new Date().toISOString() };
+    const row = { owner_id: ownerId, page_key, section: 'Topic Reading', title: topic.title, content, status: have?.status === 'hidden' ? 'hidden' : 'ready', updated_at: new Date().toISOString() };
     const ins = await admin.from('generated_pages').upsert(row, { onConflict: 'owner_id,page_key' }).select('id,status').single();
     if (ins.error) { console.error(ins.error); return json({ error: 'Could not save the reading.' }, 500); }
     await admin.from('ai_usage').insert({ user_id: user.id, feature: 'topic-reading' });
