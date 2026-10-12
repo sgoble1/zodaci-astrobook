@@ -3,11 +3,10 @@
 import { APRIL_CHART, APRIL_CONTEXT_RULES, APRIL_PSYCHOLOGY } from "./april-profile.ts";
 
 // deno-lint-ignore no-explicit-any
-export async function counselorContext(sb: any, admin: any, userId: string): Promise<{ ok: true; context: string; name: string; privateEdition: boolean } | { ok: false; error: string }> {
-  const { data: member } = await sb.rpc("is_shared_space_member");
+export async function counselorContext(sb: any, admin: any, userId: string, email = ""): Promise<{ ok: true; context: string; name: string; privateEdition: boolean } | { ok: false; error: string }> {
   const { data: p } = await admin.from("profiles").select("display_name,birth_date,birth_time,place_label,house_system,sex,chart").eq("id", userId).maybeSingle();
-  // Shane's own account uses his saved chart when he has one; April's account uses her verified profile.
-  if (member && !(p?.birth_date && p?.chart && /shane/i.test(p.display_name ?? ""))) {
+  // April's approved account uses her verified profile; everyone else (Shane included) uses their own saved chart.
+  if (email.toLowerCase() === "babybluepuppet@gmail.com") {
     return { ok: true, privateEdition: true, name: "April", context: `${APRIL_CHART}\n\n${APRIL_PSYCHOLOGY}\n\n${APRIL_CONTEXT_RULES}` };
   }
   if (!p?.birth_date || !p.chart) return { ok: false, error: "Save your birth details first so the counselor can work from your chart." };

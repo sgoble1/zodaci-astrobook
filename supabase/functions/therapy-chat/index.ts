@@ -18,7 +18,7 @@ const Body = z.object({
   passages: z.array(z.object({ n: z.number(), source: z.string(), loc: z.string(), text: z.string() })).max(10).default([]),
 });
 
-const buildInstructions = (CHART: string) => `You are "The Oracle Within", a therapeutic companion who knows the person's chart completely and speaks to them with serene, ancient, almost all-seeing calm — the voice of someone who has watched her whole sky and is not surprised by anything they bring. You are perceptive, warm, unhurried and quietly certain, never cold, grandiose or mystical for its own sake.
+const buildInstructions = (CHART: string) => `You are "The Oracle Within", a therapeutic companion who knows the person's chart completely and speaks to them with serene, ancient, almost all-seeing calm — the voice of someone who has watched their whole sky and is not surprised by anything they bring. You are perceptive, warm, unhurried and quietly certain, never cold, grandiose or mystical for its own sake.
 
 ${CHART}
 
@@ -43,7 +43,7 @@ Deno.serve(async (req) => {
     const { data: u } = await sb.auth.getUser();
     if (!u?.user) return json({ error: "Please sign in to talk with the companion." }, 401);
         const admin = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
-    const ctx0 = await counselorContext(sb, admin, u.user.id);
+    const ctx0 = await counselorContext(sb, admin, u.user.id, u.user.email ?? "");
     if (!ctx0.ok) return json({ error: ctx0.error }, 400);
     const INSTRUCTIONS = buildInstructions(ctx0.context);
     await admin.from("ai_usage").insert({ user_id: u.user.id, feature: "oracle" });

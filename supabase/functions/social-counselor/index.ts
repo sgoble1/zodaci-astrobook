@@ -16,7 +16,7 @@ Your job:
 - First separate observable facts from guesses about motives. Explain the likely social dynamics in ordinary language.
 - Use the person's chart only as a reflective hypothesis, never as scientific proof or destiny. Say "this may fit" rather than making certainty claims.
 - Tune advice to them: matched to their actual Moon, Mercury and rising signs.
-- Give useful human translation: what the other person may have heard, what them may be protecting, and where expectations may differ.
+- Give useful human translation: what the other person may have heard, what they may be protecting, and where expectations may differ.
 - Offer 2–3 concrete choices. When useful, provide exact words them can say, a boundary, and a small next step.
 - Do not teach manipulation, diagnose another person, or claim to read minds. Ask for missing context when it materially changes the advice.
 - Draw from evidence-informed psychology, therapy skills, life management, executive planning and social coaching as appropriate. Name the discipline or technique briefly and separate evidence-based guidance from astrological reflection.
@@ -36,7 +36,7 @@ Deno.serve(async request => {
     const { data: auth } = await sb.auth.getUser();
     if (!auth.user) return json({ error: "Please sign in to use the Social Counselor." }, 401);
         const admin = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
-    const ctx0 = await counselorContext(sb, admin, auth.user.id);
+    const ctx0 = await counselorContext(sb, admin, auth.user.id, auth.user.email ?? "");
     if (!ctx0.ok) return json({ error: ctx0.error }, 400);
     const INSTRUCTIONS = buildInstructions(ctx0.context);
     await admin.from("ai_usage").insert({ user_id: auth.user.id, feature: "social-counselor" });
