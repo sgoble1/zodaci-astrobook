@@ -6,6 +6,7 @@ import MyReadings from '@/pages/MyReadings';
 import { MemberSystem, MemberSystemsDashboard } from '@/pages/MemberSystem';
 import PersonalTiming from '@/pages/PersonalTiming';
 import MyTopicReading from '@/pages/MyTopicReading';
+import MemberStarMap from '@/pages/MemberStarMap';
 import MemberWorkbook from '@/pages/MemberWorkbook';
 import { LIBRARY_TOPICS } from '@/content/libraryTopics';
 
@@ -40,6 +41,7 @@ export function PublicChartFallback() {
   if (pathname === '/chinese') return <MemberSystem birth={birth} slug="chinese" />;
   const sys = pathname.match(/^\/other-systems\/([\w-]+)$/)?.[1];
   if (sys) return <MemberSystem birth={birth} slug={sys} />;
+  if (pathname === '/star-map') return <MemberStarMap birth={birth} />;
   if (pathname in WORKBOOK || pathname.startsWith('/workbook/')) return <MemberWorkbook birth={birth} focus={WORKBOOK[pathname] || undefined} />;
   const lib = pathname.match(/^\/topics\/([\w-]+)$/)?.[1];
   if (lib) { const t = LIBRARY_TOPICS.find(x => x.slug === lib); const guess = LIB_TO_READING[lib] ?? (t ? Object.entries(LIB_TO_READING).find(([k]) => t.slug.includes(k))?.[1] : undefined); return <MyTopicReading slugOverride={guess ?? 'recurring-themes'} />; }

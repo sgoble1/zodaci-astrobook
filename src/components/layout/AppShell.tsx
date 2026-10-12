@@ -24,6 +24,7 @@ import { useSharedBadges } from '@/hooks/useSharedBadges';
 import { Button } from '@/components/ui/button';
 import { APRIL_NAV_GROUPS, NAV_GROUPS, RELATIONSHIPS_GROUP, SHARED_GROUP, type NavGroup, type NavItem } from '@/content/navigation';
 import { ZodaciLogo } from '@/components/brand/ZodaciLogo';
+import { WelcomeTour } from '@/components/common/WelcomeTour';
 
 const SIGNED_OUT_PATHS = ['/auth', '/pricing', '/books', '/reset-password'];
 const GROUP_COLORS = ['--primary', '--oxblood', '--accent', '--candle', '--gold-bright', '--starlight', '--gold', '--glow-violet'];
@@ -109,7 +110,7 @@ export function AppShell() {
       <main id="main-content" tabIndex={-1} className="flex-1 min-w-0 lg:pt-0 pt-[64px] relative z-10 outline-none">
         <div className="mx-auto max-w-5xl px-4 sm:px-8 py-8 sm:py-10 lg:py-14">
           <motion.div key={location.pathname} initial={{ opacity: 0, y: 24, filter: 'blur(6px)' }} animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }} transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}>
-            <PageErrorBoundary key={location.pathname}>{!april && <PublicWording />}{april === undefined && !isPublicPath(location.pathname) ? null : april || isPublicPath(location.pathname) ? <Outlet /> : <PublicChartFallback />}<VerifySources /></PageErrorBoundary>{april === false && <GenerationProgress />}
+            <PageErrorBoundary key={location.pathname}>{!april && <PublicWording />}{april === undefined && !isPublicPath(location.pathname) ? null : april || isPublicPath(location.pathname) ? <Outlet /> : <PublicChartFallback />}<VerifySources /></PageErrorBoundary>{april === false && <><GenerationProgress /><WelcomeTour /></>}
           </motion.div>
         </div>
         <footer className="border-t border-border mt-16">

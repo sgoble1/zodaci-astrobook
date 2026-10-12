@@ -1,3 +1,4 @@
+import { replayWelcomeTour } from '@/components/common/WelcomeTour';
 import { BoxArt } from '@/components/common/BoxArt';
 import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -104,7 +105,7 @@ export default function Instructions() {
     return groups.map(group => ({ ...group, items: group.items.filter(item => `${group.title} ${item.label} ${helpFor(item)}`.toLowerCase().includes(q)), submenus: group.submenus?.map(sub => ({ ...sub, items: sub.items.filter(item => `${group.title} ${sub.label} ${item.label} ${helpFor(item)}`.toLowerCase().includes(q)) })).filter(sub => sub.items.length) })).filter(group => group.items.length || group.submenus?.length);
   }, [query]);
   return <article className="space-y-10">
-    <header className="max-w-3xl"><div className="font-smallcaps text-xs text-gold">Clickable guide · Every main feature</div><h1 className="mt-2">Instructions &amp; Help</h1><p className="mt-4 text-lg text-muted-foreground">Choose a menu section to understand what is inside, or search for the thing you want to do. Every feature name below opens the real page.</p></header>
+    <header className="max-w-3xl"><div className="font-smallcaps text-xs text-gold">Clickable guide · Every main feature</div><h1 className="mt-2">Instructions &amp; Help</h1><p className="mt-4 text-lg text-muted-foreground">Choose a menu section to understand what is inside, or search for the thing you want to do. Every feature name below opens the real page.</p><button type="button" onClick={replayWelcomeTour} className="mt-3 text-sm text-primary underline">Replay the welcome tour</button></header>
     <section aria-labelledby="quick-help"><h2 id="quick-help" className="text-2xl">Common tasks</h2><div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
       <Button asChild variant="outline" className="h-auto justify-start py-4"><a href="#make-podcast"><Headphones />Create a podcast</a></Button>
       <Button asChild variant="outline" className="h-auto justify-start py-4"><a href="#choose-chat"><MessageCircle />Choose the right chat</a></Button>
