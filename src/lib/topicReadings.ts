@@ -12,6 +12,15 @@ export const TOPIC_READINGS: { slug: string; title: string }[] = [
   { slug: 'practices', title: 'Rituals, Tarot, Chakras & Affirmations' }, { slug: 'numerology', title: 'Numerology' },
   { slug: 'timing', title: 'Key Years & Turning Points' }, { slug: 'sex-attraction', title: 'Sex & Attraction' },
 ];
+/** Other Systems chapters, written by the same queue from calculated system values. */
+export const SYSTEM_READINGS: { slug: string; title: string; route: string }[] = [
+  { slug: 'sys-vedic', title: 'Vedic · Jyotish', route: '/other-systems/vedic' }, { slug: 'sys-chinese', title: 'Chinese · Ba Zi', route: '/chinese' },
+  { slug: 'sys-mayan-tzolkin', title: 'Maya · Tzolk’in', route: '/other-systems/mayan-tzolkin' }, { slug: 'sys-tibetan-mewa', title: 'Tibetan Mewa', route: '/other-systems/tibetan-mewa' },
+  { slug: 'sys-nine-star-ki', title: 'Japanese Nine Star Ki', route: '/other-systems/nine-star-ki' }, { slug: 'sys-chaldean-numerology', title: 'Chaldean Numerology', route: '/other-systems/chaldean-numerology' },
+  { slug: 'sys-tarot-birth-cards', title: 'Tarot Birth Cards', route: '/other-systems/tarot-birth-cards' }, { slug: 'sys-celtic-tree-calendar', title: 'Celtic Tree Calendar', route: '/other-systems/celtic-tree-calendar' },
+];
+/** Everything the writing queue produces for each member, in server order. */
+export const ALL_READINGS = [...TOPIC_READINGS, ...SYSTEM_READINGS];
 export type TopicRow = { id: string; page_key: string; title: string; content: string; status: string; updated_at: string };
 
 export async function loadMyTopicReadings(): Promise<TopicRow[]> {
