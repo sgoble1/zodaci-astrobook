@@ -75,7 +75,7 @@ export function AppShell() {
       <div className="min-h-screen bg-background text-foreground">
         <header className="border-b border-border"><div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-5 py-4">
           <Link to="/welcome"><ZodaciLogo /></Link>
-          <nav aria-label="Public pages" className="flex flex-wrap gap-1">{[['/welcome', 'Zodaci'], ['/blog', 'Blog'], ['/community', 'Community'], ['/books', 'AstroBook'], ['/pricing', 'Pricing']].map(([to, label]) => <Button asChild variant="ghost" key={to}><Link to={to}>{label}</Link></Button>)}<Button asChild variant="outline"><Link to="/auth">Sign in</Link></Button></nav>
+          <nav aria-label="Public pages" className="flex flex-wrap gap-1">{[['/welcome', 'Zodaci'], ['/about', 'About'], ['/blog', 'Blog'], ['/community', 'Community'], ['/books', 'AstroBook'], ['/pricing', 'Pricing']].map(([to, label]) => <Button asChild variant="ghost" key={to}><Link to={to}>{label}</Link></Button>)}<Button asChild variant="outline"><Link to="/auth">Sign in</Link></Button></nav>
         </div></header>
         <main id="main-content" className="mx-auto max-w-5xl px-4 py-10 sm:px-8"><PageErrorBoundary key={location.pathname}><Outlet /></PageErrorBoundary></main>
       </div>
@@ -157,7 +157,7 @@ function SidebarInner({ mobile = false, onNavigate }: { mobile?: boolean; onNavi
   return (
     <div className={`flex min-h-full flex-col gap-6 overflow-x-hidden ${mobile ? 'px-4 pb-8 pt-4' : 'h-full overflow-y-auto p-6'}`}>
       <div>
-        <div className="flex items-center justify-between gap-2"><ZodaciLogo compact={!mobile} />{!mobile && <AccountButton compact />}</div>
+        <div className="flex items-center justify-between gap-2"><ZodaciLogo />{!mobile && <AccountButton compact />}</div>
         <div className="mt-3"><AdminEditionSwitch /></div>
         {april ? (
           <>
@@ -217,6 +217,7 @@ function SidebarInner({ mobile = false, onNavigate }: { mobile?: boolean; onNavi
                   </div>
                 </div>
             ))}
+            {g.footer?.map(n => <NavLink key={n.to} to={n.to} onClick={onNavigate} className="mt-1 flex min-h-11 items-center rounded border border-transparent px-3 py-2 text-muted-foreground hover:text-foreground nav-create-glow">{n.label}</NavLink>)}
           </div>
         ))}
       </nav>

@@ -639,6 +639,7 @@ export type Database = {
           lon: number | null
           onboarded_at: string | null
           place_label: string
+          sex: string
           tz: string
           updated_at: string
         }
@@ -654,6 +655,7 @@ export type Database = {
           lon?: number | null
           onboarded_at?: string | null
           place_label?: string
+          sex?: string
           tz?: string
           updated_at?: string
         }
@@ -669,6 +671,7 @@ export type Database = {
           lon?: number | null
           onboarded_at?: string | null
           place_label?: string
+          sex?: string
           tz?: string
           updated_at?: string
         }
