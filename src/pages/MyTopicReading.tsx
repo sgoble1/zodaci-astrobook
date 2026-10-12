@@ -15,7 +15,18 @@ export default function MyTopicReading() {
   const rewrite = async () => {
     if (!slug || !confirm('Rewrite this reading from your chart? The current text will be replaced.')) return;
     setBusy(true);
-    try { await writeTopicReading(slug, { regenerate: true }); const rs = await loadMyTopicReadings(); setRow(rs.find(r => r.page_key === `topic-${slug}`) ?? null); toast.success('Reading rewritten'); }
+    try {
+      const before = row?.updated_at;
+      await writeTopicReading(slug, { regenerate: true });
+      let fresh: TopicRow | null = null;
+      for (let i = 0; i < 24 && !fresh; i++) {
+        await new Promise(r => setTimeout(r, 10000));
+        const rs = await loadMyTopicReadings().catch(() => []);
+        const r = rs.find(x => x.page_key === `topic-${slug}`);
+        if (r && r.updated_at !== before) fresh = r;
+      }
+      if (fresh) { setRow(fresh); toast.success('Reading rewritten'); } else toast.error('The rewrite is taking longer than expected. Check back in a few minutes.');
+    }
     catch (e) { toast.error((e as Error).message); }
     setBusy(false);
   };
