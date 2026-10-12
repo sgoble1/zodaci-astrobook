@@ -23,7 +23,7 @@ export function WelcomeTour() {
   const [open, setOpen] = useState(false);
   const [i, setI] = useState(0);
   useEffect(() => {
-    const check = () => { if (session && !localStorage.getItem(KEY)) { setI(0); setOpen(true); } };
+    const check = () => { if (session && !localStorage.getItem(KEY) && !document.body.dataset.genOverlay) { setI(0); setOpen(true); } };
     check(); window.addEventListener('zodaci-tour', check);
     return () => window.removeEventListener('zodaci-tour', check);
   }, [session]);

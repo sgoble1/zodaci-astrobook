@@ -57,6 +57,8 @@ export function GenerationProgress() {
   const current = ALL_READINGS.find(t => !done?.has(`topic-${t.slug}`));
   const minimize = () => { sessionStorage.setItem(MIN_KEY, '1'); setMinimized(true); if (pathname === '/start') navigate('/dashboard'); };
   const expand = () => { sessionStorage.removeItem(MIN_KEY); setMinimized(false); };
+  // Lets the welcome tour wait until this full-screen view is out of the way.
+  useEffect(() => { const on = active && !minimized; if (on) document.body.dataset.genOverlay = '1'; else delete document.body.dataset.genOverlay; window.dispatchEvent(new Event('zodaci-tour')); return () => { delete document.body.dataset.genOverlay; }; }, [active, minimized]);
   if (!active) return null;
   const pct = Math.round((count / total) * 100);
 
