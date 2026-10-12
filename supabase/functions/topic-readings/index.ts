@@ -90,32 +90,35 @@ Deno.serve(async req => {
     if (paused) return json({ error: paused.message }, 402);
     const { data: ctx } = await admin.from('personal_context').select('title,body').eq('owner_id', ownerId).eq('use_in_generation', true).limit(6);
     const apiKey = Deno.env.get('LOVABLE_API_KEY'); if (!apiKey) return json({ error: 'AI is not configured.' }, 500);
-    const call = createResponsesCall(req, { apiKey, effort: 'medium', instructions: `You are a master astrologer, psychologist and plain-language writer creating one chapter of a personal astrology book for ${profile.display_name || 'the reader'}, addressed as "you". The depth must match a professional printed natal report.\nTheir calculated chart:\n${chartFacts(profile)}\n${RULES}\nUser-reported life examples (optional, never override chart facts):\n${(ctx ?? []).map(c => `- ${c.title}: ${c.body}`).join('\n') || 'none'}\n\nTopic focus: ${topic.focus}.\nWrite 1,800–2,400 words in Markdown:\n1. A short opening overview in plain words.\n2. A "Placements behind this reading" table (placement | where it is | what it means in everyday words).\n3. 5–7 substantial sections, each analysing a specific placement or combination in depth (sign, house, ruler, aspects), each ending with a one-line "In plain words:" summary.\n4. "How this shows up in daily life" with concrete examples.\n5. "Strengths" and "Watch-outs" bullet lists.\n6. "Practices to try" (3–5).\n7. "Reflection questions" (4–6).\n8. A one-line note on what astrology can and cannot tell you.\nDo not start with a level-1 heading.` }, [{ role: 'user', content: `Write the "${topic.title}" chapter.` }]);
-    let content = (await call.result.text).trim();
-    let wrong = wrongPlacements(content, profile.chart);
-    if (wrong.length) {
-      const fix = createResponsesCall(req, { apiKey, effort: 'low', instructions: `Correct this astrology chapter. These statements contradict the calculated chart and must be fixed using only these facts:\n${chartFacts(profile)}\nWrong: ${wrong.join('; ')}.\nReturn the full corrected Markdown chapter, otherwise unchanged.` }, [{ role: 'user', content }]);
-      content = (await fix.result.text).trim();
-      wrong = wrongPlacements(content, profile.chart);
-      if (wrong.length) return json({ error: 'The reading mentioned placements your chart does not have, so it was not saved. Please try again.' }, 502);
-    }
-    if (content.length < 400) return json({ error: 'The reading came back too short. Please try again.' }, 502);
-    const row = { owner_id: ownerId, page_key, section: 'Topic Reading', title: topic.title, content, status: have?.status === 'hidden' ? 'hidden' : 'ready', updated_at: new Date().toISOString() };
-    const ins = await admin.from('generated_pages').upsert(row, { onConflict: 'owner_id,page_key' }).select('id,status').single();
-    if (ins.error) { console.error(ins.error); return json({ error: 'Could not save the reading.' }, 500); }
-    await admin.from('ai_usage').insert({ user_id: ownerId, feature: 'topic-reading' });
-    if (chain && ownerId === user.id) {
-      // Keep writing the next missing reading in the background, even if the tab closes.
-      const { data: done } = await admin.from('generated_pages').select('page_key').eq('owner_id', ownerId).eq('section', 'Topic Reading');
-      const have = new Set((done ?? []).map(d => d.page_key));
-      const next = Object.keys(TOPICS).find(k => !have.has(`topic-${k}`));
-      if (next) {
-        const nextCall = fetch(`${url}/functions/v1/topic-readings`, { method: 'POST', headers: { Authorization: req.headers.get('Authorization')!, apikey: req.headers.get('apikey') ?? '', 'Content-Type': 'application/json' }, body: JSON.stringify({ slug: next, chain: true }) }).catch(e => console.error('chain', e));
-        // deno-lint-ignore no-explicit-any
-        (globalThis as any).EdgeRuntime?.waitUntil?.(nextCall);
-      }
-    }
-    return json(ins.data);
+    const authHeader = req.headers.get('Authorization')!; const apikeyHeader = req.headers.get('apikey') ?? '';
+    // Writing takes over a minute, so it runs in the background and the page polls for the result.
+    const job = (async () => {
+      try {
+        const call = createResponsesCall(req, { apiKey, background: true, effort: 'medium', instructions: `You are a master astrologer, psychologist and plain-language writer creating one chapter of a personal astrology book for ${profile.display_name || 'the reader'}, addressed as "you". The depth must match a professional printed natal report.\nTheir calculated chart:\n${chartFacts(profile)}\n${RULES}\nUser-reported life examples (optional, never override chart facts):\n${(ctx ?? []).map(c => `- ${c.title}: ${c.body}`).join('\n') || 'none'}\n\nTopic focus: ${topic.focus}.\nWrite 1,800–2,400 words in Markdown:\n1. A short opening overview in plain words.\n2. A "Placements behind this reading" table (placement | where it is | what it means in everyday words).\n3. 5–7 substantial sections, each analysing a specific placement or combination in depth (sign, house, ruler, aspects), each ending with a one-line "In plain words:" summary.\n4. "How this shows up in daily life" with concrete examples.\n5. "Strengths" and "Watch-outs" bullet lists.\n6. "Practices to try" (3–5).\n7. "Reflection questions" (4–6).\n8. A one-line note on what astrology can and cannot tell you.\nDo not start with a level-1 heading.` }, [{ role: 'user', content: `Write the "${topic.title}" chapter.` }]);
+        let content = (await call.result.text).trim();
+        let wrong = wrongPlacements(content, profile.chart);
+        if (wrong.length) {
+          const fix = createResponsesCall(req, { apiKey, background: true, effort: 'low', instructions: `Correct this astrology chapter. These statements contradict the calculated chart and must be fixed using only these facts:\n${chartFacts(profile)}\nWrong: ${wrong.join('; ')}.\nReturn the full corrected Markdown chapter, otherwise unchanged.` }, [{ role: 'user', content }]);
+          content = (await fix.result.text).trim();
+          wrong = wrongPlacements(content, profile.chart);
+          if (wrong.length) { console.error('wrong placements', slug, wrong); return; }
+        }
+        if (content.length < 400) { console.error('too short', slug); return; }
+        const row = { owner_id: ownerId, page_key, section: 'Topic Reading', title: topic.title, content, status: have?.status === 'hidden' ? 'hidden' : 'ready', updated_at: new Date().toISOString() };
+        const ins = await admin.from('generated_pages').upsert(row, { onConflict: 'owner_id,page_key' });
+        if (ins.error) { console.error(ins.error); return; }
+        await admin.from('ai_usage').insert({ user_id: ownerId, feature: 'topic-reading' });
+        if (chain && ownerId === user.id) {
+          const { data: done } = await admin.from('generated_pages').select('page_key').eq('owner_id', ownerId).eq('section', 'Topic Reading');
+          const got = new Set((done ?? []).map(d => d.page_key));
+          const next = Object.keys(TOPICS).find(k => !got.has(`topic-${k}`));
+          if (next) await fetch(`${url}/functions/v1/topic-readings`, { method: 'POST', headers: { Authorization: authHeader, apikey: apikeyHeader, 'Content-Type': 'application/json' }, body: JSON.stringify({ slug: next, chain: true }) }).catch(e => console.error('chain', e));
+        }
+      } catch (e) { console.error('topic job', slug, e); }
+    })();
+    // deno-lint-ignore no-explicit-any
+    (globalThis as any).EdgeRuntime?.waitUntil?.(job);
+    return json({ status: 'writing' }, 202);
   } catch (e) {
     console.error(e);
     const { status, message } = gatewayError(e);
