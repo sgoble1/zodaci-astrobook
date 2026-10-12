@@ -4,12 +4,12 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
-import { loadMyTopicReadings, TOPIC_READINGS, writeTopicReading, type TopicRow } from '@/lib/topicReadings';
+import { loadMyTopicReadings, TOPIC_READINGS, CORE_THEMES, writeTopicReading, type TopicRow } from '@/lib/topicReadings';
 
 export default function MyTopicReading({ slugOverride }: { slugOverride?: string } = {}) {
   const params = useParams();
   const slug = slugOverride ?? params.slug;
-  const meta = TOPIC_READINGS.find(t => t.slug === slug);
+  const meta = [...TOPIC_READINGS, ...CORE_THEMES].find(t => t.slug === slug);
   const [row, setRow] = useState<TopicRow | null | undefined>(undefined);
   useEffect(() => { loadMyTopicReadings().then(rs => setRow(rs.find(r => r.page_key === `topic-${slug}`) ?? null)); }, [slug]);
   const [busy, setBusy] = useState(false);

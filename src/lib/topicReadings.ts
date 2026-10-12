@@ -19,8 +19,10 @@ export const SYSTEM_READINGS: { slug: string; title: string; route: string }[] =
   { slug: 'sys-nine-star-ki', title: 'Japanese Nine Star Ki', route: '/other-systems/nine-star-ki' }, { slug: 'sys-chaldean-numerology', title: 'Chaldean Numerology', route: '/other-systems/chaldean-numerology' },
   { slug: 'sys-tarot-birth-cards', title: 'Tarot Birth Cards', route: '/other-systems/tarot-birth-cards' }, { slug: 'sys-celtic-tree-calendar', title: 'Celtic Tree Calendar', route: '/other-systems/celtic-tree-calendar' },
 ];
+/** Twelve general core themes every member gets, written from their own chart. */
+export const CORE_THEMES: { slug: string; title: string }[] = [{ slug: 'core-personality', title: 'Personality & Strengths' }, { slug: 'core-emotions', title: 'Emotional World' }, { slug: 'core-friendship', title: 'Friendship & Community' }, { slug: 'core-creativity', title: 'Creativity & Self-Expression' }, { slug: 'core-work-style', title: 'Work Style & Daily Habits' }, { slug: 'core-leadership', title: 'Leadership & Ambition' }, { slug: 'core-self-worth', title: 'Self-Worth & Confidence' }, { slug: 'core-resilience', title: 'Stress & Resilience' }, { slug: 'core-learning', title: 'Learning & Wisdom' }, { slug: 'core-beliefs-travel', title: 'Beliefs, Travel & Adventure' }, { slug: 'core-freedom-change', title: 'Freedom & Change' }, { slug: 'core-legacy', title: 'Legacy & Life Direction' }];
 /** Everything the writing queue produces for each member, in server order. */
-export const ALL_READINGS = [...TOPIC_READINGS, ...SYSTEM_READINGS];
+export const ALL_READINGS = [...TOPIC_READINGS, ...SYSTEM_READINGS, ...CORE_THEMES];
 export type TopicRow = { id: string; page_key: string; title: string; content: string; status: string; updated_at: string };
 
 export async function loadMyTopicReadings(): Promise<TopicRow[]> {
