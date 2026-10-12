@@ -13,7 +13,7 @@ export const CHAT_MODEL = "openai/gpt-6-astra";
 /** Streams one Responses call through Lovable AI Gateway. Create per request. */
 export function createResponsesCall(
   request: Request,
-  config: { apiKey: string; instructions: string; effort?: "low" | "medium" | "high" },
+  config: { apiKey: string; instructions: string; effort?: "low" | "medium" | "high"; background?: boolean },
   messages: ModelMessage[],
 ) {
   const runIdFetch = createLovableAiGatewayRunIdFetch(getLovableAiGatewayRunId(request));
@@ -27,7 +27,8 @@ export function createResponsesCall(
     model: provider.responses(CHAT_MODEL),
     instructions: config.instructions,
     messages,
-    abortSignal: request.signal,
+    // Background jobs must outlive the browser request that started them.
+    abortSignal: config.background ? undefined : request.signal,
     providerOptions: {
       openai: {
         store: false,
