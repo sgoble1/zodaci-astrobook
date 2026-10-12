@@ -80,5 +80,6 @@ April's original content has been preserved in the authenticated archive; approv
 - [x] Every page loads separately; April pages no longer ship in the first download; menu header no longer embeds her birth details
 - [x] Walkthrough: signed-out redirects, member pages, workspace create + invite link verified; member list with remove/leave added; duplicate sign-in menu item removed
 - [x] Admin can delete any community post or reply (AI usage totals already in Usage feed)
+- [x] April birth facts, dates and Big Three removed from page code; values now come only from the private edition; unused contents copy deleted
 - [ ] Remaining: workspace invite walkthrough, bundle privacy audit, full walkthrough — need AI credits/test accounts
 - [ ] Pre-launch Phases 2–10 (see .lovable/plan/pre-launch-plan-*.md)
