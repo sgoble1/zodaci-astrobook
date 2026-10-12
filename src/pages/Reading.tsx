@@ -130,7 +130,7 @@ export default function Reading() {
         <ReasoningPanel reasoning={{ inputs: [{ label: 'Sun', value: 'Virgo 13°56′ H8 in the source report' }, { label: 'Moon', value: 'Aries 6°37′ H3 in the source report' }], steps: [{ label: 'Angular separation', detail: 'The shortest separation is about 157.3°. A standard opposition is 180°, so these positions do not form one.' }, { label: 'Lunar phase', detail: 'The Moon is past full and moving toward the last quarter: a waning gibbous phase.' }, { label: 'Houses', detail: 'The source report’s H8 and H3 placements connect depth and inheritance with voice and immediate surroundings.' }], output: 'Keep the practical contrast between quick feeling and careful analysis, while labeling the source’s Full Moon claim as inconsistent with its own degrees.', confidence: 'derived' }} />
       </Section>
 
-      <Section id="angles" n="II" title="Rising & the angles" level="derived" note="Angles depend on the recorded birth time. An alternate 11:14 AM time appears in one source; see Data Quality.">
+      <Section id="angles" n="II" title="Rising & the angles" level="derived" note="Angles depend on the recorded birth time. An alternate morning time appears in one source; see Data Quality.">
         <p className="max-w-3xl">Rising at <b>Sagittarius 29°28′</b>, the final (anaretic) degree, with the Midheaven at <b>Libra 24°59′</b>. Jupiter, the chart ruler, sits in Leo in the 7th house, so the self is steered through partnership and warmth.<Cite source={SRC_BC} /></p>
         {sabFor('Midheaven') && <p className="text-sm italic">MC Sabian symbol: “{sabFor('Midheaven')!.symbol}.” {sabFor('Midheaven')!.interpretation}<Cite source={sabFor('Midheaven')!.source} /></p>}
         <PlacementBlock k="jupiter" />
