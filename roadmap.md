@@ -78,5 +78,6 @@ April's original content has been preserved in the authenticated archive; approv
 - [x] Phase 2–5 pass: onboarding progress + birth-detail editing, wrong-placement check on readings, member/admin rewrite, admin search and word counts, security scan clean (public community reads intentional)
 - [x] Background reading chain + daily limit (40/day)
 - [x] Every page loads separately; April pages no longer ship in the first download; menu header no longer embeds her birth details
+- [x] Walkthrough: signed-out redirects, member pages, workspace create + invite link verified; member list with remove/leave added; duplicate sign-in menu item removed
 - [ ] Remaining: workspace invite walkthrough, bundle privacy audit, full walkthrough — need AI credits/test accounts
 - [ ] Pre-launch Phases 2–10 (see .lovable/plan/pre-launch-plan-*.md)
