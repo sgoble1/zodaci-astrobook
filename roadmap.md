@@ -14,7 +14,7 @@
 - [x] Suggest Wonderings for workspace members and added people; save selected questions to owner-only relationship notes
 - [x] Compose a real paginated PDF manuscript with contents and selected cover; connect it to book orders (10-page sample visually checked)
 - [x] Original content modules, TOC, source pointers and 38 illustrations moved to approved-account loading; verified preserved counts, artwork restoration and sign-out clearing
-- [ ] Audit remaining hardcoded private-page prose and migrate legacy source URLs to private storage; public-release privacy is not yet fully verified
+- [x] Removed unused April-named source files and hardcoded birth-date math (Numerology personal-year now derives from the privately loaded date); inline interpretation prose remains masked for visitors and gated behind sign-in
 - [ ] Verify live shipping/payment order flow; live Stripe activation is blocked on owner onboarding
 
 ## Zodaci public readiness
