@@ -29,7 +29,7 @@ export function TopicReadings({ seed }: { seed: string }) {
       if (!left.length) clearInterval(timer);
     }, 20000);
     return () => clearInterval(timer);
-  }, [rows]);
+  }, [rows !== null]); // eslint-disable-line react-hooks/exhaustive-deps
   const done = (slug: string) => rows?.find(r => r.page_key === `topic-${slug}`);
   if (signedIn === false) return <p className="text-sm text-muted-foreground">Sign in to get your in-depth topic readings.</p>;
   return (
