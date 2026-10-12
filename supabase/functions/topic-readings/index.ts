@@ -105,20 +105,22 @@ Deno.serve(async req => {
           const fix = createResponsesCall(req, { apiKey, background: true, effort: 'low', instructions: `Correct this astrology chapter. These statements contradict the calculated chart and must be fixed using only these facts:\n${chartFacts(profile)}\nWrong: ${wrong.join('; ')}.\nReturn the full corrected Markdown chapter, otherwise unchanged.` }, [{ role: 'user', content }]);
           content = (await fix.result.text).trim();
           wrong = wrongPlacements(content, profile.chart);
-          if (wrong.length) { console.error('wrong placements', slug, wrong); return; }
+          if (wrong.length) throw new Error(`wrong placements ${wrong.join(', ')}`);
         }
-        if (content.length < 400) { console.error('too short', slug); return; }
+        if (content.length < 400) throw new Error('too short');
         const row = { owner_id: ownerId, page_key, section: 'Topic Reading', title: topic.title, content, status: have?.status === 'hidden' ? 'hidden' : 'ready', updated_at: new Date().toISOString() };
         const ins = await admin.from('generated_pages').upsert(row, { onConflict: 'owner_id,page_key' });
-        if (ins.error) { console.error(ins.error); return; }
+        if (ins.error) throw ins.error;
         await admin.from('ai_usage').insert({ user_id: ownerId, feature: 'topic-reading' });
-        if (chain && ownerId === user.id) {
-          const { data: done } = await admin.from('generated_pages').select('page_key').eq('owner_id', ownerId).eq('section', 'Topic Reading');
-          const got = new Set((done ?? []).map(d => d.page_key));
-          const next = Object.keys(TOPICS).find(k => !got.has(`topic-${k}`));
-          if (next) await fetch(`${url}/functions/v1/topic-readings`, { method: 'POST', headers: { Authorization: authHeader, apikey: apikeyHeader, 'Content-Type': 'application/json' }, body: JSON.stringify({ slug: next, chain: true }) }).catch(e => console.error('chain', e));
-        }
-      } catch (e) { console.error('topic job', slug, e); }
+      } catch (e) { console.error('topic job', slug, e); await admin.from('ai_usage').insert({ user_id: ownerId, feature: 'topic-reading' }); }
+      // Always move forward to the next unwritten topic (never back), so one failure can't stall or loop the queue.
+      if (chain && ownerId === user.id) {
+        const { data: done } = await admin.from('generated_pages').select('page_key').eq('owner_id', ownerId).eq('section', 'Topic Reading');
+        const got = new Set((done ?? []).map(d => d.page_key));
+        const keys = Object.keys(TOPICS);
+        const next = keys.slice(keys.indexOf(slug) + 1).find(k => !got.has(`topic-${k}`));
+        if (next) await fetch(`${url}/functions/v1/topic-readings`, { method: 'POST', headers: { Authorization: authHeader, apikey: apikeyHeader, 'Content-Type': 'application/json' }, body: JSON.stringify({ slug: next, chain: true }) }).catch(e => console.error('chain', e));
+      }
     })();
     // deno-lint-ignore no-explicit-any
     (globalThis as any).EdgeRuntime?.waitUntil?.(job);
