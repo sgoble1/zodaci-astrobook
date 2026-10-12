@@ -8,13 +8,13 @@ import type { SourceRef } from './compendium';
 import type { Reasoning } from '@/components/common/ReasoningPanel';
 
 const SRC: SourceRef = {
-  doc: 'Personal Astrological Timeline 1990–2060',
+  doc: 'Personal Astrological Timeline',
   section: 'V · Outer-Planet Transits',
   page: 'passim',
 };
 
 const TL = (section: string, page: string): SourceRef =>
-  ({ doc: 'Personal Astrological Timeline 1990–2060', section, page });
+  ({ doc: 'Personal Astrological Timeline', section, page });
 
 export interface TransitEvent {
   id: string;

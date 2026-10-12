@@ -1,3 +1,4 @@
+import { BIRTH } from '@/content/april';
 import { SourceChapters } from '@/components/common/SourceChapters';
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
@@ -71,7 +72,7 @@ export default function Topic() {
 
       {topic.guide && <section aria-labelledby="topic-reading" className="space-y-5">
         <h2 id="topic-reading" className="font-display text-2xl">What this could mean for April</h2>
-        <p className="text-sm text-muted-foreground">Based on September 6, 1990 · 3:38 PM EDT · Geneva, New York. House placements use the source-aligned Placidus chart. The readings below are editorial interpretations of April’s chart, not source quotations, proven personality traits, or predictions.</p>
+        <p className="text-sm text-muted-foreground">Based on {BIRTH.date} · {BIRTH.time} · {BIRTH.place}. House placements use the source-aligned Placidus chart. The readings below are editorial interpretations of April’s chart, not source quotations, proven personality traits, or predictions.</p>
         {topic.guide.map(section => <div key={section.title} className="border-l-2 border-primary pl-4 space-y-2">
           <h3 className="font-display text-xl">{section.title}</h3>
           <p className="text-sm leading-relaxed">{section.text}</p>

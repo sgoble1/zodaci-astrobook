@@ -1,6 +1,6 @@
 import { registerPrivateValue } from '@/lib/privateEditionStore';
 // Pythagorean numerology derived deterministically from April's birth date
-// (September 6, 1990). Every number here is computed, not asserted — the
+// (recorded birth date). Every number here is computed, not asserted — the
 // formulas are shown on the page so the math is auditable.
 
 import type { SourceRef } from './compendium';
@@ -8,7 +8,7 @@ import type { Reasoning } from '@/components/common/ReasoningPanel';
 
 const SRC: SourceRef = {
   doc: 'Derived · Pythagorean Numerology',
-  section: 'Computed from September 6, 1990',
+  section: 'Computed from the recorded birth date',
   page: 'formulas shown inline',
 };
 

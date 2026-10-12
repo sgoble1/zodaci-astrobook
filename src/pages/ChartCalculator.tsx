@@ -70,7 +70,7 @@ export default function ChartCalculator() {
         </div>
         <label className="text-sm">Sex (for the Feng Shui Kua number)<select className="w-full border rounded h-10 px-2 bg-background" value={form.sex ?? 'unspecified'} onChange={e => setForm(f => ({ ...f, sex: e.target.value as ChartInput['sex'] }))}><option value="unspecified">Not given</option><option value="female">Female</option><option value="male">Male</option></select></label>
         <div className="md:col-span-2 text-sm">Place
-          <div className="flex gap-2"><Input value={q} onChange={e => setQ(e.target.value)} onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); search(); } }} placeholder="City, e.g. Geneva New York" />
+          <div className="flex gap-2"><Input value={q} onChange={e => setQ(e.target.value)} onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); search(); } }} placeholder="City, e.g. Lisbon" />
             <Button type="button" variant="outline" onClick={search} disabled={busy}>{busy ? <Loader2 className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />}Find</Button></div>
           {geoErr && <p className="text-xs text-oxblood mt-1">{geoErr}</p>}
           {geo.length > 0 && <ul className="border border-border rounded mt-1 divide-y divide-border bg-background">{geo.map((g, i) => <li key={i}><button type="button" onClick={() => choose(g)} className="w-full text-left px-3 py-1.5 hover:bg-muted text-sm">{[g.name, g.admin1, g.country].filter(Boolean).join(', ')} <span className="text-[11px] text-muted-foreground">· {g.latitude.toFixed(2)}, {g.longitude.toFixed(2)} · {g.timezone}</span></button></li>)}</ul>}
@@ -159,7 +159,7 @@ export default function ChartCalculator() {
                     <div className="text-sm">{p.romanized}</div>
                     <div className="text-[11px] text-muted-foreground">{p.polarity} {p.stemElement} · {p.animal} ({p.branchElement})</div>
                     <div className="mt-2 flex justify-center"><ConfidenceBadge compact level={match === false ? 'ambiguous' : p.confidence} note={p.note} /></div>
-                    {src && <div className={`text-[11px] mt-1 ${match ? 'text-muted-foreground' : 'text-oxblood'}`}>Source says {src.romanized}{match ? ' ✓' : ' — differs'}<Cite source={{ doc: 'Chinese Astrology · Four Pillars', section: 'Ba Zi for Sept 6 1990', page: 'Chinese page' }} /></div>}
+                    {src && <div className={`text-[11px] mt-1 ${match ? 'text-muted-foreground' : 'text-oxblood'}`}>Source says {src.romanized}{match ? ' ✓' : ' — differs'}<Cite source={{ doc: 'Chinese Astrology · Four Pillars', section: 'Ba Zi for the recorded birth data', page: 'Chinese page' }} /></div>}
                   </div>
                 );
               })}

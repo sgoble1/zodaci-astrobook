@@ -122,7 +122,7 @@ export default function Reading() {
         <p className="text-xs mt-3"><Link to="/chart-calculator" className="underline">Calculate a different chart</Link> and choose “Turn into a reading”.</p>
       </header>
 
-      <section><h2 className="text-2xl mb-3">The natal wheel</h2><p className="text-sm text-muted-foreground mb-3">Calculated from the 3:38 PM birth data; tap any element for its details, confidence and the matching Birth Chart Book chapter.</p><ChartWheel r={check} sourcesFor={aprilSourcesFor} /></section>
+      <section><h2 className="text-2xl mb-3">The natal wheel</h2><p className="text-sm text-muted-foreground mb-3">Calculated from the recorded birth data; tap any element for its details, confidence and the matching Birth Chart Book chapter.</p><ChartWheel r={check} sourcesFor={aprilSourcesFor} /></section>
 
       <Section id="core" n="I" title="The Sun–Moon pattern" level="derived" note="The positions agree with the calculator to within 1′; their 157.3° separation is waning gibbous, not a standard opposition.">
         <p className="max-w-3xl">April’s Aries Moon reacts quickly and directly, while her Virgo Sun wants to examine and refine. These different styles remain useful to explore, but the recorded degrees do not form the Full Moon opposition claimed in parts of the source report.<Cite source={SRC_ASP} /></p>
@@ -130,7 +130,7 @@ export default function Reading() {
         <ReasoningPanel reasoning={{ inputs: [{ label: 'Sun', value: 'Virgo 13°56′ H8 in the source report' }, { label: 'Moon', value: 'Aries 6°37′ H3 in the source report' }], steps: [{ label: 'Angular separation', detail: 'The shortest separation is about 157.3°. A standard opposition is 180°, so these positions do not form one.' }, { label: 'Lunar phase', detail: 'The Moon is past full and moving toward the last quarter: a waning gibbous phase.' }, { label: 'Houses', detail: 'The source report’s H8 and H3 placements connect depth and inheritance with voice and immediate surroundings.' }], output: 'Keep the practical contrast between quick feeling and careful analysis, while labeling the source’s Full Moon claim as inconsistent with its own degrees.', confidence: 'derived' }} />
       </Section>
 
-      <Section id="angles" n="II" title="Rising & the angles" level="derived" note="Angles depend on the 3:38 PM birth time. An alternate 11:14 AM time appears in one source; see Data Quality.">
+      <Section id="angles" n="II" title="Rising & the angles" level="derived" note="Angles depend on the recorded birth time. An alternate morning time appears in one source; see Data Quality.">
         <p className="max-w-3xl">Rising at <b>Sagittarius 29°28′</b>, the final (anaretic) degree, with the Midheaven at <b>Libra 24°59′</b>. Jupiter, the chart ruler, sits in Leo in the 7th house, so the self is steered through partnership and warmth.<Cite source={SRC_BC} /></p>
         {sabFor('Midheaven') && <p className="text-sm italic">MC Sabian symbol: “{sabFor('Midheaven')!.symbol}.” {sabFor('Midheaven')!.interpretation}<Cite source={sabFor('Midheaven')!.source} /></p>}
         <PlacementBlock k="jupiter" />

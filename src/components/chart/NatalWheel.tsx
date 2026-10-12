@@ -1,3 +1,4 @@
+import { BIRTH } from '@/content/april';
 import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { PLACEMENTS, ZODIAC, ANGLES, ASPECTS, longitudeOf, signIndex, type Placement } from '@/content/april';
@@ -149,7 +150,7 @@ export function NatalWheel({ size = 640, showAspects = true, interactive = true 
 
         {/* Center — ASC/MC marker */}
         <text x={cx} y={cy - 4} textAnchor="middle" fontSize={size * 0.028} fill={gold} className="font-smallcaps">April</text>
-        <text x={cx} y={cy + size * 0.028} textAnchor="middle" fontSize={size * 0.02} fill={muted}>Sept 6 · 1990</text>
+        <text x={cx} y={cy + size * 0.028} textAnchor="middle" fontSize={size * 0.02} fill={muted}>{BIRTH.date}</text>
       </svg>
 
       {/* Hover legend */}

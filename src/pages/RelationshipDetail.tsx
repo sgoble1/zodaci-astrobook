@@ -1,3 +1,4 @@
+import { BIRTH } from '@/content/april';
 import { useMemo, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { computeChart, fmtLon, SIGN_KEYWORDS, BODY_KEYWORDS, type ChartInput, type ChartResult } from '@/lib/astro';
@@ -94,7 +95,7 @@ function Detail({ rel }: { rel: Relationship }) {
       <header className="space-y-2">
         <div className="font-smallcaps text-xs text-gold">Relationship · {rel.relation}</div>
         <h1 className="text-4xl">April & {N}</h1>
-        <p className="text-muted-foreground">{N}: born {rel.birth_date}{timeKnown ? ` at ${rel.birth_time}` : ' (time unknown — noon used)'} in {rel.place_label} · {rel.sex === 'unspecified' ? 'sex not given' : rel.sex}. April: 6 Sept 1990, 3:38 PM, Geneva NY.</p>
+        <p className="text-muted-foreground">{N}: born {rel.birth_date}{timeKnown ? ` at ${rel.birth_time}` : ' (time unknown — noon used)'} in {rel.place_label} · {rel.sex === 'unspecified' ? 'sex not given' : rel.sex}. April: {BIRTH.date}, {BIRTH.time}, {BIRTH.place}.</p>
         <div className="flex flex-wrap gap-2">{B.flags.map((f, i) => <ConfidenceBadge key={i} level={f.level} note={`${f.topic}: ${f.note}`} />)}</div>
         <nav className="flex flex-wrap gap-3 text-xs pt-2">{[['chart', 'Their chart'], ['elements', 'Positions'], ['bazi', 'Ba Zi'], ['kua', 'Feng Shui'], ['overview', 'Overview'], ['needs', 'Needs & connections'], ['synastry', 'Contacts'], ['overlays', 'House overlays'], ['composite', 'Composite'], ['chinese', 'Chinese match'], ['numbers', 'Numerology'], ['notes', 'Notes']].map(([h, l]) => <a key={h} href={`#${h}`} className="underline">{l}</a>)}</nav>
         <div className="flex flex-wrap gap-2 pt-2"><Button size="sm" variant="outline" onClick={() => setEditing(true)}>Edit details</Button>
@@ -155,7 +156,7 @@ function Detail({ rel }: { rel: Relationship }) {
           <div><h3 className="text-lg">Strongest exact links</h3>{tightLinks.length ? <ul className="mt-2 space-y-2 text-sm">{tightLinks.map((x, i) => <li key={`${x.aKey}-${x.bKey}-${i}`}><b>April {x.aName} {x.symbol} {N} {x.bName}</b> · {x.orb.toFixed(2)}° apart<p>{x.text}</p></li>)}</ul> : <p className="mt-2 text-sm text-muted-foreground">No major contact is tighter than 1°.</p>}</div>
           <div><h3 className="text-lg">Shared patterns</h3>{coincidences.length ? <ul className="mt-2 list-disc space-y-1 pl-5 text-sm">{coincidences.map(x => <li key={x}>{x}</li>)}</ul> : <p className="mt-2 text-sm text-muted-foreground">No exact same-sign or same-number pattern appears in these calculations. Connection can still show through aspects and differences.</p>}</div>
         </div>
-        <div className="rounded-md border border-border p-4 text-sm"><h3 className="text-lg">Birthplace facts</h3><p>April: Geneva, New York. {N}: {rel.place_label}. The saved coordinates are about {distanceKm.toLocaleString()} km ({Math.round(distanceKm * 0.621371).toLocaleString()} miles) apart in a straight line.</p><p className="mt-1 text-xs text-muted-foreground">This is geography only. AstroBook does not turn birthplace distance or a matching place name into a personality claim.</p></div>
+        <div className="rounded-md border border-border p-4 text-sm"><h3 className="text-lg">Birthplace facts</h3><p>April: {BIRTH.place}. {N}: {rel.place_label}. The saved coordinates are about {distanceKm.toLocaleString()} km ({Math.round(distanceKm * 0.621371).toLocaleString()} miles) apart in a straight line.</p><p className="mt-1 text-xs text-muted-foreground">This is geography only. AstroBook does not turn birthplace distance or a matching place name into a personality claim.</p></div>
       </Sec>
 
       <Sec id="synastry" n="VI" title="Planet-to-planet contacts (synastry)" level={lvl} note="Orbs: conjunction/opposition 7°, trine/square 6°, sextile 4°. With no birth time, Moon contacts over 3° are left out.">

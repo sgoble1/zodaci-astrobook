@@ -39,7 +39,7 @@ export default function BaguaReading() {
 
       <section className="space-y-3"><h2 className="text-2xl border-b border-gold/40 pb-1">I · The directions</h2>
         {isApril ? <BaguaWheel /> : k ? <KuaWheel kua={k.kua} /> : <p className="text-oxblood">Sex isn’t given, so the Kua number can’t be calculated. Add it in the Chart Calculator.</p>}
-        {k && <ReasoningPanel reasoning={{ inputs: [{ label: 'Birth date', value: input.date }, { label: 'Sex', value: isApril ? 'female (Kua from guide)' : input.sex ?? '—' }], steps: k.steps.map((s, i) => ({ label: `Step ${i + 1}`, detail: s })), output: `Kua ${k.kua} · ${kEl} · ${groupOf(k.kua)} group`, confidence: isApril ? 'confirmed' : 'derived', caveats: isApril ? ['The standard female formula gives Kua 8 for 1990; the guide’s Kua 1 is used.'] : [] }} />}
+        {k && <ReasoningPanel reasoning={{ inputs: [{ label: 'Birth date', value: input.date }, { label: 'Sex', value: isApril ? 'female (Kua from guide)' : input.sex ?? '—' }], steps: k.steps.map((s, i) => ({ label: `Step ${i + 1}`, detail: s })), output: `Kua ${k.kua} · ${kEl} · ${groupOf(k.kua)} group`, confidence: isApril ? 'confirmed' : 'derived', caveats: isApril ? ['The standard female formula gives Kua 8 for this birth year; the guide’s Kua 1 is used.'] : [] }} />}
       </section>
 
       {k && <section className="space-y-3"><h2 className="text-2xl border-b border-gold/40 pb-1">II · Each direction, read through the chart <ConfidenceBadge level="derived" note="The links between directions and chart placements are the app’s interpretation." /></h2>

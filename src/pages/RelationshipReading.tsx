@@ -1,3 +1,4 @@
+import { BIRTH } from '@/content/april';
 import { useMemo } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { computeChart, fmtLon, SIGN_KEYWORDS } from '@/lib/astro';
@@ -61,7 +62,7 @@ function ReadingBody({ rel }: { rel: Relationship }) {
       <Part n="I" title="The shape of the bond" level={lvl} note="Weighted from all planet-to-planet contacts.">
         <p>Across {ia.length} contacts the connection reads as <b>{overall}</b> (harmony {sc.harmony}, fusion {sc.fusion}, growth energy {sc.tension}). {top && <>The single strongest link is <b>April’s {top.aName} {top.type.toLowerCase()} {N}’s {top.bName}</b> ({top.orb.toFixed(1)}°). {top.text}</>}</p>
         <p>April is a {b(A, 'sun').sign} Sun with an {b(A, 'moon').sign} Moon and {fmtLon(A.asc!).sign} Rising; {N} is a {b(B, 'sun').sign} Sun with a {b(B, 'moon').sign} Moon{!timed && ' (uncertain without a birth time)'}{B.asc != null ? ` and ${fmtLon(B.asc).sign} Rising` : ''}. {signPair(b(A, 'sun').sign, b(B, 'sun').sign)}</p>
-        <ReasoningPanel reasoning={{ inputs: [{ label: 'April', value: '1990-09-06 15:38 Geneva NY' }, { label: N, value: `${rel.birth_date} ${rel.birth_time ?? '(no time)'} ${rel.place_label}` }], steps: [{ label: 'Contacts', detail: 'Every planet/angle pair checked for conjunction, opposition, trine, square, sextile.' }, { label: 'Weighting', detail: 'Personal planets and angles count more; tighter orbs count more.' }], output: overall, confidence: lvl, caveats: ['Interpretive summary, not quoted from the source PDFs.'] }} />
+        <ReasoningPanel reasoning={{ inputs: [{ label: 'April', value: `${BIRTH.date} ${BIRTH.time} ${BIRTH.place}` }, { label: N, value: `${rel.birth_date} ${rel.birth_time ?? '(no time)'} ${rel.place_label}` }], steps: [{ label: 'Contacts', detail: 'Every planet/angle pair checked for conjunction, opposition, trine, square, sextile.' }, { label: 'Weighting', detail: 'Personal planets and angles count more; tighter orbs count more.' }], output: overall, confidence: lvl, caveats: ['Interpretive summary, not quoted from the source PDFs.'] }} />
       </Part>
 
       <Part n="II" title="Love, attraction and emotional safety" level={lvl} note="Venus–Mars, Moon contacts and house overlays.">

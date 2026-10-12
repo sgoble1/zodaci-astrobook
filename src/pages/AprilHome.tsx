@@ -11,7 +11,7 @@ const modules = [
   { to: '/planets', title: 'The Planets', desc: 'All ten bodies plus Chiron, the Nodes, Vertex, Lilith and the Part of Fortune. Every glyph on the wheel is clickable.' },
   { to: '/houses', title: 'The Houses', desc: 'All twelve houses — cusps, rulers, tenants, and the story each one is telling in her life.' },
   { to: '/aspects', title: 'The Aspects', desc: 'The independently verified angles between April’s planets, with measured orbs and everyday explanations.' },
-  { to: '/timeline', title: 'The Timeline · 1990–2060', desc: 'Ten life phases from Early Life Foundation to the Second Saturn Return. Currently: The Great Opening.' },
+  { to: '/timeline', title: 'The Timeline · 70 years', desc: 'Ten life phases from Early Life Foundation to the Second Saturn Return. Currently: The Great Opening.' },
   { to: '/retrogrades', title: 'Retrogrades', desc: 'Mercury Rx in domicile, Saturn Rx in the first, Uranus and Neptune Rx — the interior planets that shape her.' },
   { to: '/purpose', title: 'Purpose & Numerology', desc: 'Life Path 7, Personal Year 7 (2026), Kua 1 Water, Metal Horse — the numerical harmonics of the chart.' },
   { to: '/feng-shui', title: 'Feng Shui · Kua 1', desc: 'Interactive bagua overlay tuned to a Water Kua in the East group.' },
@@ -28,11 +28,11 @@ export default function AprilHome() {
           <h1 className="font-display leading-[0.95]">
             April.
             <br />
-            <span className="italic text-muted-foreground">A complete map of the sky at 3:38pm.</span>
+            <span className="italic text-muted-foreground">A complete map of the sky at the moment of birth.</span>
           </h1>
           <div className="gold-rule my-6 max-w-md" />
           <p className="text-lg leading-relaxed text-foreground/85 max-w-xl">
-            An interactive companion to the twenty-section birth chart report, the 1990–2060 timeline, the retrograde navigation guide and the feng shui implementation manual. Every planet, house, aspect, life phase and gua is explorable. Every panel is drawn directly from the uploaded source documents.
+            An interactive companion to the twenty-section birth chart report, the 70-year timeline, the retrograde navigation guide and the feng shui implementation manual. Every planet, house, aspect, life phase and gua is explorable. Every panel is drawn directly from the uploaded source documents.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             <Button asChild><Link to="/explore" className="font-smallcaps text-xs">Explore</Link></Button>

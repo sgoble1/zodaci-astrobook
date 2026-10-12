@@ -1,13 +1,13 @@
 import { registerPrivateValue } from '@/lib/privateEditionStore';
 // Chinese astrology · Four Pillars of Destiny (Ba Zi) for
-// September 6, 1990 · 3:38 PM EDT · Geneva NY.
+// Recorded birth data (private edition).
 
 import type { SourceRef } from './compendium';
 import type { Reasoning } from '@/components/common/ReasoningPanel';
 
 const SRC: SourceRef = {
   doc: 'Chinese Astrology · Four Pillars of Destiny',
-  section: 'Ba Zi for Sept 6 1990 3:38 PM EDT · Geneva NY',
+  section: 'Ba Zi for the recorded birth data',
   page: 'cross-checked against Astro.com',
 };
 

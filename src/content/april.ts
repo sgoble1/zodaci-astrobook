@@ -1,7 +1,7 @@
 import { registerPrivateValue } from '@/lib/privateEditionStore';
 // April's complete natal chart data, sourced verbatim from the uploaded
 // birth chart analysis, timeline guide, retrograde guide and feng shui report
-// (Sept 6 1990, 3:38 PM EDT, Geneva NY, 42°52'N 76°59'W).
+// (birth facts load from the private edition).
 //
 // All interpretation text is preserved from the source documents so that every
 // section of the site presents the material accurately, not summarized.
