@@ -199,14 +199,9 @@ function SidebarInner({ mobile = false, onNavigate }: { mobile?: boolean; onNavi
                 }
               ><span>{n.label}{n.created ? <span className="sr-only"> (created page)</span> : null}{glowId && n.to === `/p/${glowId}` ? <span className="sr-only"> — just added</span> : null}</span>{n.badge ? <span className="min-w-5 rounded-full bg-primary px-1.5 text-center text-[10px] text-primary-foreground" aria-label={`${n.badge} new`}>{n.badge}</span> : null}</NavLink>
             ))}
-            {g.submenus?.map(submenu => {
-              const containsActiveRoute = submenu.items.some(item => location.pathname === item.to || location.pathname.startsWith(`${item.to}/`));
-              return (
-                <details key={submenu.label} className="group/submenu" open={containsActiveRoute || undefined}>
-                  <summary className="flex cursor-pointer list-none items-center justify-between rounded px-3 py-1.5 text-muted-foreground transition-colors hover:bg-muted/60 hover:text-foreground [&::-webkit-details-marker]:hidden">
-                    <span>{submenu.label}</span>
-                    <ChevronDown className="h-4 w-4 transition-transform group-open/submenu:rotate-180" aria-hidden="true" />
-                  </summary>
+            {g.submenus?.map(submenu => (
+                <div key={submenu.label}>
+                  <p className="px-3 py-1.5 text-xs uppercase tracking-wide text-muted-foreground">{submenu.label}</p>
                   <div className="ml-3 flex flex-col gap-0.5 border-l border-border/70 pl-2">
                     {submenu.items.map(n => (
                       <NavLink
@@ -219,9 +214,8 @@ function SidebarInner({ mobile = false, onNavigate }: { mobile?: boolean; onNavi
                       >{n.label}</NavLink>
                     ))}
                   </div>
-                </details>
-              );
-            })}
+                </div>
+            ))}
           </div>
         ))}
       </nav>
