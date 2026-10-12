@@ -1,0 +1,85 @@
+import { useEffect, useRef, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { AnimatePresence, motion } from 'framer-motion';
+import { supabase } from '@/integrations/supabase/client';
+import { ALL_READINGS, loadMyTopicReadings, writeTopicReading } from '@/lib/topicReadings';
+
+const MIN_KEY = 'zodaci-gen-minimized';
+const STARTED_KEY = 'zodaci-gen-started';
+
+/** Site-wide writing progress: full-screen while pages are being written, minimizable to a corner badge. */
+export function GenerationProgress() {
+  const { pathname } = useLocation();
+  const navigate = useNavigate();
+  const [done, setDone] = useState<Set<string> | null>(null);
+  const [eligible, setEligible] = useState(false);
+  const [minimized, setMinimized] = useState(() => sessionStorage.getItem(MIN_KEY) === '1');
+  const [error, setError] = useState('');
+  const timer = useRef<number>();
+
+  const refresh = async () => {
+    const rows = await loadMyTopicReadings().catch(() => null);
+    if (rows) setDone(new Set(rows.map(r => r.page_key)));
+    return rows;
+  };
+
+  // Re-check after navigation so a fresh birth-details save starts writing right away.
+  useEffect(() => {
+    let alive = true;
+    (async () => {
+      const { data } = await supabase.auth.getSession();
+      if (!data.session) { if (alive) setEligible(false); return; }
+      const { data: p } = await supabase.from('profiles').select('birth_date,chart').eq('id', data.session.user.id).maybeSingle();
+      if (!alive) return;
+      const ok = !!(p?.birth_date && p.chart);
+      setEligible(ok);
+      if (!ok) return;
+      const rows = await refresh();
+      if (!rows || !alive) return;
+      const missing = ALL_READINGS.filter(t => !rows.some(r => r.page_key === `topic-${t.slug}`));
+      if (missing.length && !sessionStorage.getItem(STARTED_KEY)) {
+        sessionStorage.setItem(STARTED_KEY, '1');
+        writeTopicReading(missing[0].slug, { chain: true }).catch(e => setError((e as Error).message));
+      }
+    })();
+    return () => { alive = false; };
+  }, [pathname === '/my-readings' || pathname === '/start']); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const total = ALL_READINGS.length;
+  const count = done ? ALL_READINGS.filter(t => done.has(`topic-${t.slug}`)).length : 0;
+  const active = eligible && done !== null && count < total;
+  useEffect(() => {
+    if (!active) return;
+    timer.current = window.setInterval(refresh, 20000);
+    return () => clearInterval(timer.current);
+  }, [active]);
+
+  const current = ALL_READINGS.find(t => !done?.has(`topic-${t.slug}`));
+  const minimize = () => { sessionStorage.setItem(MIN_KEY, '1'); setMinimized(true); if (pathname === '/start') navigate('/dashboard'); };
+  const expand = () => { sessionStorage.removeItem(MIN_KEY); setMinimized(false); };
+  if (!active) return null;
+  const pct = Math.round((count / total) * 100);
+
+  return (
+    <AnimatePresence>
+      {!minimized ? (
+        <motion.div key="full" className="fixed inset-0 z-[60] flex items-center justify-center bg-background/95 p-6 backdrop-blur" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+          <motion.div layoutId="gen-card" role="status" aria-live="polite" className="w-full max-w-md space-y-5 rounded-2xl border border-border bg-card p-8 text-center shadow-2xl">
+            <motion.div className="mx-auto h-16 w-16 rounded-full border-4 border-primary/30 border-t-primary" animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1.6, ease: 'linear' }} aria-hidden="true" />
+            <h2 className="font-display text-3xl">Building your Zodaci</h2>
+            <p className="text-sm text-muted-foreground">We’re calculating your chart and writing every page for you: topic readings and other-system chapters. About a minute each. You can minimize this and keep exploring. Writing continues even if you close the site.</p>
+            <div className="h-2 w-full overflow-hidden rounded-full bg-muted"><motion.div className="h-full bg-primary" animate={{ width: `${pct}%` }} transition={{ duration: 0.8 }} /></div>
+            <p className="text-sm">{count} of {total} pages ready{current ? ` · writing “${current.title}”` : ''}</p>
+            {error && <p role="alert" className="text-sm text-destructive">Paused: {error}</p>}
+            <button onClick={minimize} className="rounded-md border border-border px-4 py-2 text-sm hover:bg-muted focus-visible:outline focus-visible:outline-2">Minimize & keep exploring</button>
+          </motion.div>
+        </motion.div>
+      ) : (
+        <motion.button key="mini" layoutId="gen-card" onClick={expand} aria-label={`Writing your pages: ${count} of ${total} ready. Open progress`} className="fixed bottom-4 right-4 z-[60] flex items-center gap-3 rounded-full border border-border bg-card px-4 py-2 text-sm shadow-xl focus-visible:outline focus-visible:outline-2">
+          <motion.span className="h-4 w-4 rounded-full border-2 border-primary/30 border-t-primary" animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1.2, ease: 'linear' }} aria-hidden="true" />
+          <span>Writing {count}/{total}</span>
+        </motion.button>
+      )}
+    </AnimatePresence>
+  );
+}
