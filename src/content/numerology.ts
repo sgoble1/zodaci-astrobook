@@ -1,4 +1,5 @@
 import { registerPrivateValue } from '@/lib/privateEditionStore';
+import { BIRTH } from './april';
 // Pythagorean numerology derived deterministically from April's birth date
 // (recorded birth date). Every number here is computed, not asserted — the
 // formulas are shown on the page so the math is auditable.
@@ -50,9 +51,16 @@ function reduce(n: number): number {
   }
   return n;
 }
-export function personalYear(year: number): number {
+const MONTHS = ['january','february','march','april','may','june','july','august','september','october','november','december'];
+export function personalYear(year: number, birthDate?: string): number {
   const y = reduce(String(year).split('').reduce((s, d) => s + Number(d), 0));
-  return reduce(9 + 6 + y);
+  const date = birthDate ?? BIRTH.date;
+  const m = date.match(/([A-Za-z]+)\s+(\d{1,2})/);
+  if (!m) return 0;
+  const month = MONTHS.indexOf(m[1].toLowerCase()) + 1;
+  const day = Number(m[2]);
+  if (!month || !day) return 0;
+  return reduce(reduce(month) + reduce(day) + y);
 }
 
 export interface PersonalYearEntry { year: number; number: number; theme: string; }

@@ -12,7 +12,7 @@ export default function Numerology() {
         <h1 className="font-display mt-2">Numerology, derived.</h1>
         <div className="gold-rule my-5 max-w-xs" />
         <p className="max-w-2xl text-lg text-foreground/85 leading-relaxed">
-          Every number below is computed from {BIRTH.date} — the formulas are shown so nothing has to be taken on faith. Life Path 7. Birthday 6. Currently in Pinnacle 2 (7) and Challenge 2 (5).
+          Every number below is computed from the recorded birth date{BIRTH.date ? ` (${BIRTH.date})` : ''} — the formulas are shown so nothing has to be taken on faith.
         </p>
       </header>
 
@@ -79,7 +79,7 @@ export default function Numerology() {
       <section>
         <h2 className="font-display mb-4">Personal Year cycle</h2>
         <p className="text-sm text-foreground/80 mb-4 max-w-3xl">
-          The Personal Year begins each September 6. Formula: <span className="font-mono text-xs">9 + 6 + reduce(year) = personal year</span>. 2026 = 7, in perfect resonance with the Life Path.
+          The Personal Year begins each birthday. Formula: <span className="font-mono text-xs">birth month + birth day + reduce(year) = personal year</span>. The current year's number is highlighted below.
         </p>
         <div className="grid grid-cols-3 md:grid-cols-6 gap-2">
           {PERSONAL_YEARS.map(y => (
