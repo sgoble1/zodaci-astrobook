@@ -18,14 +18,15 @@ export async function loadMyTopicReadings(): Promise<TopicRow[]> {
   const { data } = await supabase.from('generated_pages').select('id,page_key,title,content,status,updated_at').eq('section', 'Topic Reading');
   return (data ?? []) as TopicRow[];
 }
-export async function writeTopicReading(slug: string): Promise<void> {
+export async function writeTopicReading(slug: string, opts: { regenerate?: boolean; targetUserId?: string } = {}): Promise<void> {
   let res;
-  try { res = await supabase.functions.invoke('topic-readings', { body: { slug } }); } catch { throw new Error('This reading could not be written right now.'); }
+  try { res = await supabase.functions.invoke('topic-readings', { body: { slug, ...opts } }); } catch { throw new Error('This reading could not be written right now.'); }
   const { data, error } = res;
   if (error || data?.error) {
     let message = data?.error as string | undefined;
     const ctx = (error as { context?: unknown } | null)?.context;
     if (!message && ctx instanceof Response) message = (await ctx.json().catch(() => null))?.error;
+    if ((ctx as Response | undefined)?.status === 402) message = 'Writing is paused because the AI credits have run out. It will continue once credits are added.';
     if ((ctx as Response | undefined)?.status === 401) message = 'Please sign in again to keep writing your readings.';
     throw new Error(message || 'This reading could not be written right now.');
   }
