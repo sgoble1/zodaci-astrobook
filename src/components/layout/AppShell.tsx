@@ -11,7 +11,6 @@ import { useEffect, useRef, useState } from 'react';
 import { ChevronDown, Menu, X } from 'lucide-react';
 import { useMyBirth } from '@/lib/myBirth';
 import { useAprilSpace } from '@/hooks/useAprilSpace';
-import { BIRTH } from '@/content/april';
 import { PublicWording } from '@/components/common/PublicWording';
 import { PublicChartFallback, isPublicPath } from '@/components/common/PublicChartFallback';
 import { useRelationships } from '@/hooks/useRelationships';
@@ -116,7 +115,7 @@ export function AppShell() {
           <div className="mx-auto max-w-5xl px-5 sm:px-8 py-10 text-sm text-muted-foreground">
             <div className="gold-rule mb-6" />
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
-              <div className="font-smallcaps text-xs">{april ? `Prepared for ${BIRTH.name} · ${BIRTH.date} · ${BIRTH.place}` : 'Zodaci · Your sky, your story'}</div>
+              <div className="font-smallcaps text-xs">{april ? 'Your private edition' : 'Zodaci · Your sky, your story'}</div>
               <div className="font-smallcaps text-xs">An Illuminated Compendium · Ink on Vellum · Touched with Gold</div>
             </div>
           </div>
@@ -162,7 +161,7 @@ function SidebarInner({ mobile = false, onNavigate }: { mobile?: boolean; onNavi
         {april ? (
           <>
             <div className="font-display text-2xl leading-tight mt-1">April</div>
-            <div className="text-xs text-muted-foreground mt-1">{BIRTH.date} · {BIRTH.time}<br />{BIRTH.place}</div>
+            <div className="text-xs text-muted-foreground mt-1">Private edition</div>
             <div className="gold-rule my-4" />
             <div className="text-xs text-muted-foreground leading-relaxed">
               <span className="font-smallcaps text-[10px] text-foreground">Sun</span> ♍ Virgo H8 &middot;{' '}
