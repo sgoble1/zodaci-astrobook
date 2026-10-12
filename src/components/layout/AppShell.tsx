@@ -163,11 +163,6 @@ function SidebarInner({ mobile = false, onNavigate }: { mobile?: boolean; onNavi
             <div className="font-display text-2xl leading-tight mt-1">April</div>
             <div className="text-xs text-muted-foreground mt-1">Private edition</div>
             <div className="gold-rule my-4" />
-            <div className="text-xs text-muted-foreground leading-relaxed">
-              <span className="font-smallcaps text-[10px] text-foreground">Sun</span> ♍ Virgo H8 &middot;{' '}
-              <span className="font-smallcaps text-[10px] text-foreground">Moon</span> ♈ Aries H3 &middot;{' '}
-              <span className="font-smallcaps text-[10px] text-foreground">ASC</span> ♐ 29° Sag
-            </div>
           </>
         ) : myBirth ? (
           <>
