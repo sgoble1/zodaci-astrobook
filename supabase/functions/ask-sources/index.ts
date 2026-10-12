@@ -1,5 +1,4 @@
 import { createClient } from "npm:@supabase/supabase-js@2";
-const PRIVATE = ["shanealecompte@gmail.com", "shanegoble@gmail.com", "babybluepuppet@gmail.com"];
 const cors = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-lovable-aig-run-id",
@@ -19,17 +18,16 @@ Deno.serve(async (req) => {
     // Members (not the private edition) get answers grounded in their own saved chart.
     const token = req.headers.get("Authorization")?.replace("Bearer ", "") ?? "";
     let member: string | null = null;
-    if (token) {
+    if (token && list.length === 0) {
       const admin = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
       const { data: { user } } = await admin.auth.getUser(token);
-      const email = (user?.email ?? "").toLowerCase();
-      if (user && !PRIVATE.includes(email)) {
+      if (user) {
         const { data: p } = await admin.from("profiles").select("display_name,birth_date,birth_time,place_label,house_system,sex,chart").eq("id", user.id).maybeSingle();
         if (p?.birth_date && p.chart) {
           const bodies = (p.chart.bodies ?? []).map((b: any) => `${b.name}: ${b.sign} ${b.deg}°${String(b.min).padStart(2, "0")}′${p.birth_time && b.house ? ` house ${b.house}` : ""}${b.retro ? " retrograde" : ""}`).join("\n");
           const asp = (p.chart.aspects ?? []).slice(0, 25).map((a: any) => `${a.a} ${a.type} ${a.b} (orb ${Number(a.orb).toFixed(1)}°)`).join("\n");
           member = `Reader: ${p.display_name || "member"}${p.sex ? ` (${p.sex})` : ""}. Born ${p.birth_date}${p.birth_time ? ` ${p.birth_time}` : " (time unknown: never mention houses, Ascendant or Midheaven)"}, ${p.place_label}. House system ${p.house_system}.\nPlacements:\n${bodies}\nAspects:\n${asp}`;
-        } else if (user && !PRIVATE.includes(email)) {
+        } else {
           return json({ error: "Save your birth details first so SmartChat can answer from your chart." }, 400);
         }
       }
