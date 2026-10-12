@@ -1,3 +1,6 @@
+import { supabase } from '@/integrations/supabase/client';
+import { getStripeEnvironment } from '@/lib/stripe';
+import { toast } from 'sonner';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Check } from 'lucide-react';
@@ -24,6 +27,11 @@ export default function Pricing() {
   const sub = useSubscription();
   const nav = useNavigate();
   const [open, setOpen] = useState<string | null>(null);
+  const manage = async () => {
+    const { data, error } = await supabase.functions.invoke('customer-portal', { body: { returnUrl: window.location.href, environment: (() => { try { return getStripeEnvironment(); } catch { return 'live'; } })() } });
+    if (error || !data?.url) return toast.error(data?.error || 'Could not open billing right now.');
+    window.location.href = data.url;
+  };
   const choose = (priceId: string) => { if (!sub.userId) return nav('/auth'); setOpen(priceId); };
 
   return (
@@ -33,6 +41,7 @@ export default function Pricing() {
         <div className="font-smallcaps text-[11px] text-gold">Plans & pricing</div>
         <h1 className="font-display text-4xl">Start free. Unlock the whole book.</h1>
         <p className="mx-auto max-w-2xl text-muted-foreground">Your chart is always free. Paid plans open every reading, your own Masterbook and AI credits, all written from your own birth details.</p>
+        {sub.tier !== 'free' && <div className="flex flex-col items-center gap-1 pt-2"><Button variant="outline" onClick={manage}>Manage subscription · cancel, card & invoices</Button>{sub.periodEnd && <p className="text-xs text-muted-foreground">{sub.cancelAtEnd ? 'Ends' : 'Renews'} {new Date(sub.periodEnd).toLocaleDateString()}</p>}</div>}
       </header>
       {open ? (
         <section className="parchment p-4 space-y-3" aria-label="Checkout">
