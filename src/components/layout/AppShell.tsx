@@ -8,7 +8,7 @@ import ParticleField from '@/components/fx/ParticleField';
 import ScrollProgress from '@/components/fx/ScrollProgress';
 import { FirstViewReveal } from '@/components/fx/FirstViewReveal';
 import { useEffect, useRef, useState } from 'react';
-import { ChevronDown, Menu, X } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import { useMyBirth } from '@/lib/myBirth';
 import { useAprilSpace } from '@/hooks/useAprilSpace';
 import { PublicWording } from '@/components/common/PublicWording';

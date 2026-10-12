@@ -32,8 +32,21 @@ export function TopicReadings({ seed }: { seed: string }) {
   }, [rows !== null]); // eslint-disable-line react-hooks/exhaustive-deps
   const done = (slug: string) => rows?.find(r => r.page_key === `topic-${slug}`);
   if (signedIn === false) return <p className="text-sm text-muted-foreground">Sign in to get your in-depth topic readings.</p>;
+  const finished = TOPIC_READINGS.filter(t => done(t.slug)).length;
+  const loading = rows !== null && !error && finished < TOPIC_READINGS.length;
   return (
     <section aria-labelledby="deep-h" className="space-y-4">
+      {loading && (
+        <div role="status" aria-live="polite" className="fixed inset-0 z-50 flex items-center justify-center bg-background/95 p-6 backdrop-blur">
+          <div className="w-full max-w-md space-y-5 text-center">
+            <div className="mx-auto h-16 w-16 animate-spin rounded-full border-4 border-primary/30 border-t-primary" aria-hidden="true" />
+            <h2 className="font-display text-3xl">Writing your readings</h2>
+            <p className="text-sm text-muted-foreground">We're analysing your chart and writing each topic. This takes about a minute per reading. You can close this page — writing continues and picks up where it left off.</p>
+            <div className="h-2 w-full overflow-hidden rounded-full bg-muted"><div className="h-full bg-primary transition-all duration-700" style={{ width: `${(finished / TOPIC_READINGS.length) * 100}%` }} /></div>
+            <p className="text-sm">{finished} of {TOPIC_READINGS.length} complete{writing ? ` · now writing “${writing}”` : ''}</p>
+          </div>
+        </div>
+      )}
       <h2 id="deep-h" className="font-display text-3xl">In-depth topic readings</h2>
       <p className="max-w-2xl text-sm text-muted-foreground">Long chapters written from your own calculated chart: each one looks at the signs, houses, links between planets and their rulers that apply to that topic.</p>
       {writing && <p role="status" className="text-sm">Writing “{writing}” for your chart… about a minute per reading. Writing continues even if you close this page.</p>}
