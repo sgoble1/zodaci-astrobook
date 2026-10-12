@@ -53,11 +53,11 @@ function ChatInner() {
 
   const send = async () => {
     const question = q.trim();
-    if (!question || busy || !corpus) return;
+    if (!question || busy) return;
     // Retrieve with the previous user turn too, so follow-ups like "tell me more" still find passages.
     const prevUser = [...msgs].reverse().find(m => m.role === 'user')?.content ?? '';
-    const top = rank(corpus, `${question} ${prevUser}`, 12);
-    if (!top.length) { toast.error('No passages matched — try different words.'); return; }
+    // Members without the source library still get chart-based answers from their own saved chart.
+    const top = corpus ? rank(corpus, `${question} ${prevUser}`, 12) : [];
     const cited: Cited[] = top.map((p, i) => ({ n: i + 1, source: p.source, loc: p.loc, href: p.href, text: p.text.slice(0, 1200) }));
     setBusy(true); setQ('');
     let convoId = id;
@@ -75,7 +75,7 @@ function ChatInner() {
     try {
       const res = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ask-sources`, {
         method: 'POST', signal: abort.current.signal,
-        headers: { 'Content-Type': 'application/json', apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY, Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}` },
+        headers: { 'Content-Type': 'application/json', apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY, Authorization: `Bearer ${(await supabase.auth.getSession()).data.session?.access_token ?? import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}` },
         body: JSON.stringify({ question, history, passages: cited.map(c => ({ n: c.n, source: c.source, loc: c.loc, text: top[c.n - 1].text })) }),
       });
       if (!res.ok || !res.body) { const j = await res.json().catch(() => ({})); throw new Error(j.error ?? 'Something went wrong.'); }
