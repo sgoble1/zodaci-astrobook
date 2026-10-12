@@ -26,7 +26,8 @@ const TOPICS: Record<string, { title: string; focus: string }> = {
   'big-three': { title: 'Your Big Three', focus: 'Sun, Moon and Ascendant in depth, their rulers and houses, and how the three combine' },
   'mind': { title: 'Mind & Communication', focus: 'Mercury sign, house, aspects and retrograde status, the 3rd and 9th houses, and learning style' },
 };
-const Body = z.object({ slug: z.string().refine(s => s in TOPICS), regenerate: z.boolean().optional(), targetUserId: z.string().uuid().optional() });
+const Body = z.object({ slug: z.string().refine(s => s in TOPICS), regenerate: z.boolean().optional(), targetUserId: z.string().uuid().optional(), chain: z.boolean().optional() });
+const DAILY_LIMIT = 40;
 
 /** Finds "Planet in Sign" claims that contradict the saved chart. */
 // deno-lint-ignore no-explicit-any
@@ -69,7 +70,7 @@ Deno.serve(async req => {
     if (!user) return json({ error: 'Please sign in first.' }, 401);
     const parsed = Body.safeParse(await req.json());
     if (!parsed.success) return json({ error: 'Unknown topic.' }, 400);
-    const { slug, regenerate, targetUserId } = parsed.data;
+    const { slug, regenerate, targetUserId, chain } = parsed.data;
     let ownerId = user.id;
     if (targetUserId && targetUserId !== user.id) {
       const { data: isAdmin } = await admin.rpc('has_role', { _user_id: user.id, _role: 'admin' });
@@ -82,6 +83,9 @@ Deno.serve(async req => {
     if (have && !regenerate) return json({ id: have.id, status: have.status });
     const { data: profile } = await admin.from('profiles').select('*').eq('id', ownerId).maybeSingle();
     if (!profile?.birth_date || !profile.chart) return json({ error: 'Save your birth details first.' }, 400);
+    const since = new Date(Date.now() - 86400000).toISOString();
+    const { count } = await admin.from('ai_usage').select('id', { count: 'exact', head: true }).eq('user_id', ownerId).eq('feature', 'topic-reading').gte('created_at', since);
+    if ((count ?? 0) >= DAILY_LIMIT) return json({ error: 'Daily writing limit reached. Your remaining readings continue tomorrow.' }, 429);
     const { data: paused } = await admin.from('ai_access_pauses').select('message').eq('scope', 'workspace').maybeSingle();
     if (paused) return json({ error: paused.message }, 402);
     const { data: ctx } = await admin.from('personal_context').select('title,body').eq('owner_id', ownerId).eq('use_in_generation', true).limit(6);
@@ -99,7 +103,18 @@ Deno.serve(async req => {
     const row = { owner_id: ownerId, page_key, section: 'Topic Reading', title: topic.title, content, status: have?.status === 'hidden' ? 'hidden' : 'ready', updated_at: new Date().toISOString() };
     const ins = await admin.from('generated_pages').upsert(row, { onConflict: 'owner_id,page_key' }).select('id,status').single();
     if (ins.error) { console.error(ins.error); return json({ error: 'Could not save the reading.' }, 500); }
-    await admin.from('ai_usage').insert({ user_id: user.id, feature: 'topic-reading' });
+    await admin.from('ai_usage').insert({ user_id: ownerId, feature: 'topic-reading' });
+    if (chain && ownerId === user.id) {
+      // Keep writing the next missing reading in the background, even if the tab closes.
+      const { data: done } = await admin.from('generated_pages').select('page_key').eq('owner_id', ownerId).eq('section', 'Topic Reading');
+      const have = new Set((done ?? []).map(d => d.page_key));
+      const next = Object.keys(TOPICS).find(k => !have.has(`topic-${k}`));
+      if (next) {
+        const nextCall = fetch(`${url}/functions/v1/topic-readings`, { method: 'POST', headers: { Authorization: req.headers.get('Authorization')!, apikey: req.headers.get('apikey') ?? '', 'Content-Type': 'application/json' }, body: JSON.stringify({ slug: next, chain: true }) }).catch(e => console.error('chain', e));
+        // deno-lint-ignore no-explicit-any
+        (globalThis as any).EdgeRuntime?.waitUntil?.(nextCall);
+      }
+    }
     return json(ins.data);
   } catch (e) {
     console.error(e);

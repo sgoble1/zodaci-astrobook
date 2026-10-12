@@ -15,17 +15,20 @@ export function TopicReadings({ seed }: { seed: string }) {
   useEffect(() => {
     if (!rows || started.current) return;
     started.current = true;
-    (async () => {
-      for (const t of TOPIC_READINGS) {
-        if (rows.some(r => r.page_key === `topic-${t.slug}`)) continue;
-        setWriting(t.title);
-        const { data: s } = await supabase.auth.getSession();
-        if (!s.session) { setError('Please sign in to keep writing your readings.'); break; }
-        try { await writeTopicReading(t.slug); setRows(await loadMyTopicReadings()); }
-        catch (e) { setError((e as Error).message); break; }
-      }
-      setWriting(null);
-    })();
+    const missing = TOPIC_READINGS.filter(t => !rows.some(r => r.page_key === `topic-${t.slug}`));
+    if (!missing.length) return;
+    setWriting(missing[0].title);
+    // The server writes this one, then keeps going through the rest in the background.
+    writeTopicReading(missing[0].slug, { chain: true }).catch(e => setError((e as Error).message));
+    const timer = setInterval(async () => {
+      const next = await loadMyTopicReadings().catch(() => null);
+      if (!next) return;
+      setRows(next);
+      const left = TOPIC_READINGS.filter(t => !next.some(r => r.page_key === `topic-${t.slug}`));
+      setWriting(left[0]?.title ?? null);
+      if (!left.length) clearInterval(timer);
+    }, 20000);
+    return () => clearInterval(timer);
   }, [rows]);
   const done = (slug: string) => rows?.find(r => r.page_key === `topic-${slug}`);
   if (signedIn === false) return <p className="text-sm text-muted-foreground">Sign in to get your in-depth topic readings.</p>;
@@ -33,7 +36,7 @@ export function TopicReadings({ seed }: { seed: string }) {
     <section aria-labelledby="deep-h" className="space-y-4">
       <h2 id="deep-h" className="font-display text-3xl">In-depth topic readings</h2>
       <p className="max-w-2xl text-sm text-muted-foreground">Long chapters written from your own calculated chart: each one looks at the signs, houses, links between planets and their rulers that apply to that topic.</p>
-      {writing && <p role="status" className="text-sm">Writing “{writing}” for your chart… this takes about a minute per reading. You can keep browsing.</p>}
+      {writing && <p role="status" className="text-sm">Writing “{writing}” for your chart… about a minute per reading. Writing continues even if you close this page.</p>}
       {error && <p role="alert" className="text-sm text-destructive">Paused: {error}</p>}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {TOPIC_READINGS.map(t => { const r = done(t.slug); return r ? (
