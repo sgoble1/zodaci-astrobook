@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { useMyBirth } from '@/lib/myBirth';
 import MyChart from '@/pages/MyChart';
 import MyReadings from '@/pages/MyReadings';
+import { MemberSystem, MemberSystemsDashboard } from '@/pages/MemberSystem';
 import PersonalTiming from '@/pages/PersonalTiming';
 import MyTopicReading from '@/pages/MyTopicReading';
 
@@ -30,6 +31,10 @@ export function PublicChartFallback() {
   );
   const timing = TIMING[pathname as keyof typeof TIMING];
   if (timing) return <PersonalTiming birth={birth} focus={timing} />;
+  if (pathname === '/other-systems') return <MemberSystemsDashboard birth={birth} />;
+  if (pathname === '/chinese') return <MemberSystem birth={birth} slug="chinese" />;
+  const sys = pathname.match(/^\/other-systems\/([\w-]+)$/)?.[1];
+  if (sys) return <MemberSystem birth={birth} slug={sys} />;
   if (TOPIC_ROUTES[pathname]) return <MyTopicReading slugOverride={TOPIC_ROUTES[pathname]} />;
   return CHART.some(c => pathname === c || pathname.startsWith(`${c}/`)) ? <MyChart /> : <MyReadings />;
 }

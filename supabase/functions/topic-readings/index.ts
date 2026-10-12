@@ -2,6 +2,7 @@ import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors';
 import { createClient } from 'npm:@supabase/supabase-js@2';
 import { z } from 'npm:zod@3';
 import { createResponsesCall, gatewayError } from '../_shared/responses.ts';
+import { systemFacts, SYSTEM_SLUGS } from './systemFacts.ts';
 
 const json = (b: unknown, status = 200) => new Response(JSON.stringify(b), { status, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
 
@@ -26,6 +27,8 @@ const TOPICS: Record<string, { title: string; focus: string }> = {
   'big-three': { title: 'Your Big Three', focus: 'Sun, Moon and Ascendant in depth, their rulers and houses, and how the three combine' },
   'mind': { title: 'Mind & Communication', focus: 'Mercury sign, house, aspects and retrograde status, the 3rd and 9th houses, and learning style' },
 };
+const SYS_TITLES: Record<string, string> = { vedic: 'Vedic · Jyotish', chinese: 'Chinese · Ba Zi', 'mayan-tzolkin': 'Maya · Tzolk’in', 'tibetan-mewa': 'Tibetan Mewa', 'nine-star-ki': 'Japanese Nine Star Ki', 'chaldean-numerology': 'Chaldean Numerology', 'tarot-birth-cards': 'Tarot Birth Cards', 'celtic-tree-calendar': 'Celtic Tree Calendar' };
+for (const k of SYSTEM_SLUGS) TOPICS[`sys-${k}`] = { title: SYS_TITLES[k], focus: `the ${SYS_TITLES[k]} system: interpret ONLY the calculated system values given under "System facts" (explain the system's origin and method briefly, then each value in depth and how they combine), and where useful compare with the Western chart; label traditional meanings as tradition` };
 const Body = z.object({ slug: z.string().refine(s => s in TOPICS), regenerate: z.boolean().optional(), targetUserId: z.string().uuid().optional(), chain: z.boolean().optional() });
 const DAILY_LIMIT = 40;
 
@@ -79,6 +82,7 @@ Deno.serve(async req => {
     }
     const topic = TOPICS[slug];
     const page_key = `topic-${slug}`;
+    const sysSlug = slug.startsWith('sys-') ? slug.slice(4) : null;
     const { data: have } = await admin.from('generated_pages').select('id,status').eq('owner_id', ownerId).eq('page_key', page_key).maybeSingle();
     if (have && !regenerate) return json({ id: have.id, status: have.status });
     const { data: profile } = await admin.from('profiles').select('*').eq('id', ownerId).maybeSingle();
@@ -94,27 +98,29 @@ Deno.serve(async req => {
     // Writing takes over a minute, so it runs in the background and the page polls for the result.
     const job = (async () => {
       try {
-        const call = createResponsesCall(req, { apiKey, background: true, effort: 'medium', instructions: `You are a master astrologer, psychologist and plain-language writer creating one chapter of a personal astrology book for ${profile.display_name || 'the reader'}, addressed as "you". The depth must match a professional printed natal report.\nTheir calculated chart:\n${chartFacts(profile)}\n${RULES}\nUser-reported life examples (optional, never override chart facts):\n${(ctx ?? []).map(c => `- ${c.title}: ${c.body}`).join('\n') || 'none'}\n\nTopic focus: ${topic.focus}.\nWrite 1,800–2,400 words in Markdown:\n1. A short opening overview in plain words.\n2. A "Placements behind this reading" table (placement | where it is | what it means in everyday words).\n3. 5–7 substantial sections, each analysing a specific placement or combination in depth (sign, house, ruler, aspects), each ending with a one-line "In plain words:" summary.\n4. "How this shows up in daily life" with concrete examples.\n5. "Strengths" and "Watch-outs" bullet lists.\n6. "Practices to try" (3–5).\n7. "Reflection questions" (4–6).\n8. A one-line note on what astrology can and cannot tell you.\nDo not start with a level-1 heading.` }, [{ role: 'user', content: `Write the "${topic.title}" chapter.` }]);
+        const call = createResponsesCall(req, { apiKey, background: true, effort: 'medium', instructions: `You are a master astrologer, psychologist and plain-language writer creating one chapter of a personal astrology book for ${profile.display_name || 'the reader'}, addressed as "you". The depth must match a professional printed natal report.\nTheir calculated chart:\n${chartFacts(profile)}\n${RULES}\nUser-reported life examples (optional, never override chart facts):\n${(ctx ?? []).map(c => `- ${c.title}: ${c.body}`).join('\n') || 'none'}\n\nTopic focus: ${topic.focus}.${sysSlug ? `\nSystem facts (calculated, authoritative):\n${(() => { const f = systemFacts(sysSlug, profile.birth_date, profile.chart?.bodies ?? [], profile.chart?.bazi ?? []); return f ? `${f.summary}\nMethod: ${f.method}\n${f.rows.map(r => `${r[0]}: ${r[1]}`).join('\n')}` : 'none'; })()}` : ''}\nWrite 1,800–2,400 words in Markdown:\n1. A short opening overview in plain words.\n2. A "Placements behind this reading" table (placement | where it is | what it means in everyday words).\n3. 5–7 substantial sections, each analysing a specific placement or combination in depth (sign, house, ruler, aspects), each ending with a one-line "In plain words:" summary.\n4. "How this shows up in daily life" with concrete examples.\n5. "Strengths" and "Watch-outs" bullet lists.\n6. "Practices to try" (3–5).\n7. "Reflection questions" (4–6).\n8. A one-line note on what astrology can and cannot tell you.\nDo not start with a level-1 heading.` }, [{ role: 'user', content: `Write the "${topic.title}" chapter.` }]);
         let content = (await call.result.text).trim();
         let wrong = wrongPlacements(content, profile.chart);
         if (wrong.length) {
           const fix = createResponsesCall(req, { apiKey, background: true, effort: 'low', instructions: `Correct this astrology chapter. These statements contradict the calculated chart and must be fixed using only these facts:\n${chartFacts(profile)}\nWrong: ${wrong.join('; ')}.\nReturn the full corrected Markdown chapter, otherwise unchanged.` }, [{ role: 'user', content }]);
           content = (await fix.result.text).trim();
           wrong = wrongPlacements(content, profile.chart);
-          if (wrong.length) { console.error('wrong placements', slug, wrong); return; }
+          if (wrong.length) throw new Error(`wrong placements ${wrong.join(', ')}`);
         }
-        if (content.length < 400) { console.error('too short', slug); return; }
+        if (content.length < 400) throw new Error('too short');
         const row = { owner_id: ownerId, page_key, section: 'Topic Reading', title: topic.title, content, status: have?.status === 'hidden' ? 'hidden' : 'ready', updated_at: new Date().toISOString() };
         const ins = await admin.from('generated_pages').upsert(row, { onConflict: 'owner_id,page_key' });
-        if (ins.error) { console.error(ins.error); return; }
+        if (ins.error) throw ins.error;
         await admin.from('ai_usage').insert({ user_id: ownerId, feature: 'topic-reading' });
-        if (chain && ownerId === user.id) {
-          const { data: done } = await admin.from('generated_pages').select('page_key').eq('owner_id', ownerId).eq('section', 'Topic Reading');
-          const got = new Set((done ?? []).map(d => d.page_key));
-          const next = Object.keys(TOPICS).find(k => !got.has(`topic-${k}`));
-          if (next) await fetch(`${url}/functions/v1/topic-readings`, { method: 'POST', headers: { Authorization: authHeader, apikey: apikeyHeader, 'Content-Type': 'application/json' }, body: JSON.stringify({ slug: next, chain: true }) }).catch(e => console.error('chain', e));
-        }
-      } catch (e) { console.error('topic job', slug, e); }
+      } catch (e) { console.error('topic job', slug, e); await admin.from('ai_usage').insert({ user_id: ownerId, feature: 'topic-reading' }); }
+      // Always move forward to the next unwritten topic (never back), so one failure can't stall or loop the queue.
+      if (chain && ownerId === user.id) {
+        const { data: done } = await admin.from('generated_pages').select('page_key').eq('owner_id', ownerId).eq('section', 'Topic Reading');
+        const got = new Set((done ?? []).map(d => d.page_key));
+        const keys = Object.keys(TOPICS);
+        const next = keys.slice(keys.indexOf(slug) + 1).find(k => !got.has(`topic-${k}`));
+        if (next) await fetch(`${url}/functions/v1/topic-readings`, { method: 'POST', headers: { Authorization: authHeader, apikey: apikeyHeader, 'Content-Type': 'application/json' }, body: JSON.stringify({ slug: next, chain: true }) }).catch(e => console.error('chain', e));
+      }
     })();
     // deno-lint-ignore no-explicit-any
     (globalThis as any).EdgeRuntime?.waitUntil?.(job);
