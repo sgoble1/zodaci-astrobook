@@ -3,6 +3,11 @@ import { Button } from '@/components/ui/button';
 import { useMyBirth } from '@/lib/myBirth';
 import MyChart from '@/pages/MyChart';
 import MyReadings from '@/pages/MyReadings';
+import PersonalTiming from '@/pages/PersonalTiming';
+import MyTopicReading from '@/pages/MyTopicReading';
+
+const TIMING = { '/transits': 'transits', '/retrogrades': 'retrogrades', '/timeline': 'timeline', '/profection': 'profection' } as const;
+const TOPIC_ROUTES: Record<string, string> = { '/numerology': 'numerology', '/purpose': 'purpose' };
 
 const PUBLIC = ['/', '/explore', '/start', '/my-chart', '/my-readings', '/my-astrobook', '/auth', '/instructions', '/pricing', '/checkout', '/my-masterbook', '/podcasts', '/dashboard', '/books', '/orders', '/blog', '/personal-context', '/workspaces', '/wonderings', '/shared/wonderings'];
 export const isPublicPath = (p: string) => PUBLIC.some(x => p === x || (x !== '/' && p.startsWith(`${x}/`)));
@@ -23,5 +28,8 @@ export function PublicChartFallback() {
       </div>
     </article>
   );
+  const timing = TIMING[pathname as keyof typeof TIMING];
+  if (timing) return <PersonalTiming birth={birth} focus={timing} />;
+  if (TOPIC_ROUTES[pathname]) return <MyTopicReading slugOverride={TOPIC_ROUTES[pathname]} />;
   return CHART.some(c => pathname === c || pathname.startsWith(`${c}/`)) ? <MyChart /> : <MyReadings />;
 }
