@@ -44,7 +44,9 @@ function ChatInner() {
     const { data } = await supabase.from('chat_conversations').select('id,title,updated_at').order('updated_at', { ascending: false });
     setConvos(data ?? []);
   };
-  useEffect(() => { loadCorpus().then(setCorpus).catch(() => setCorpus([])); loadConvos(); }, []);
+  // Only the private edition loads source passages; members chat from their own chart.
+  useEffect(() => { loadConvos(); }, []);
+  useEffect(() => { if (april) loadCorpus().then(setCorpus).catch(() => setCorpus([])); }, [april]);
   useEffect(() => { const prompt = params.get('q'); if (prompt) setQ(prompt); }, [params]);
   useEffect(() => {
     if (!id) { setMsgs([]); return; }
