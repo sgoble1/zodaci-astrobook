@@ -157,7 +157,7 @@ function SidebarInner({ mobile = false, onNavigate }: { mobile?: boolean; onNavi
   return (
     <div className={`flex min-h-full flex-col gap-6 overflow-x-hidden ${mobile ? 'px-4 pb-8 pt-4' : 'h-full overflow-y-auto p-6'}`}>
       <div>
-        <div className="flex items-center justify-between gap-2"><ZodaciLogo compact={!mobile} />{!mobile && <AccountButton compact />}</div>
+        <div className="flex items-center justify-between gap-2"><ZodaciLogo />{!mobile && <AccountButton compact />}</div>
         <div className="mt-3"><AdminEditionSwitch /></div>
         {april ? (
           <>
@@ -217,6 +217,7 @@ function SidebarInner({ mobile = false, onNavigate }: { mobile?: boolean; onNavi
                   </div>
                 </div>
             ))}
+            {g.footer?.map(n => <NavLink key={n.to} to={n.to} onClick={onNavigate} className="mt-1 flex min-h-11 items-center rounded border border-transparent px-3 py-2 text-muted-foreground hover:text-foreground nav-create-glow">{n.label}</NavLink>)}
           </div>
         ))}
       </nav>
