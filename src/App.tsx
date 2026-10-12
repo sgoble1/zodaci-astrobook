@@ -81,6 +81,7 @@ const Onboarding = lazy(() => import('./pages/Onboarding'));
 const ResetPassword = lazy(() => import('./pages/ResetPassword'));
 const MyTopicReading = lazy(() => import('./pages/MyTopicReading'));
 const MyChart = lazy(() => import('./pages/MyChart'));
+const About = lazy(() => import('./pages/About'));
 const MyReadings = lazy(() => import('./pages/MyReadings'));
 const MyLibrary = lazy(() => import('./pages/MyLibrary'));
 const Auth = lazy(() => import('./pages/Auth'));
@@ -195,6 +196,7 @@ export default function App() {
         <Routes>
           <Route path="/welcome" element={<BrandLanding />} />
           <Route element={<PublicSiteLayout />}>
+            <Route path="/about" element={<About />} />
             <Route path="/blog" element={<Blog />} />
             <Route path="/blog/learn/:slug" element={<PublicArticle />} />
             <Route path="/community" element={<Community />} />
