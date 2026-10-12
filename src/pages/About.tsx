@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 
-const fade = { initial: { opacity: 0, y: 24 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true }, transition: { duration: 1.1, ease: [0.22, 1, 0.36, 1] } };
+const fade = { initial: { opacity: 0, y: 24 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true }, transition: { duration: 1.1, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] } };
 
 const PILLARS = [
   ['Calculated, not guessed', 'Every planet, house and aspect is computed from your exact birth moment with an astronomy-grade engine — then explained in words anyone can follow.'],
