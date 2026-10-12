@@ -8,6 +8,8 @@ import PersonalTiming from '@/pages/PersonalTiming';
 import MyTopicReading from '@/pages/MyTopicReading';
 import MemberStarMap from '@/pages/MemberStarMap';
 import MemberWorkbook from '@/pages/MemberWorkbook';
+import MemberChartSection, { type ChartFocus } from '@/pages/MemberChartSection';
+const CHART_FOCUS: Record<string, ChartFocus> = { '/planets': 'planets', '/houses': 'houses', '/aspects': 'aspects', '/chart-elements': 'elements', '/chart-calculator': 'calculator' };
 import { LIBRARY_TOPICS } from '@/content/libraryTopics';
 
 const TIMING = { '/transits': 'transits', '/retrogrades': 'retrogrades', '/timeline': 'timeline', '/profection': 'profection' } as const;
@@ -45,6 +47,8 @@ export function PublicChartFallback() {
   if (pathname in WORKBOOK || pathname.startsWith('/workbook/')) return <MemberWorkbook birth={birth} focus={WORKBOOK[pathname] || undefined} />;
   const lib = pathname.match(/^\/topics\/([\w-]+)$/)?.[1];
   if (lib) { const t = LIBRARY_TOPICS.find(x => x.slug === lib); const guess = LIB_TO_READING[lib] ?? (t ? Object.entries(LIB_TO_READING).find(([k]) => t.slug.includes(k))?.[1] : undefined); return <MyTopicReading slugOverride={guess ?? 'recurring-themes'} />; }
+  const cf = CHART_FOCUS[pathname] ?? (pathname.startsWith('/planets/') ? 'planets' : pathname.startsWith('/houses/') ? 'houses' : undefined);
+  if (cf) return <MemberChartSection birth={birth} focus={cf} />;
   if (TOPIC_ROUTES[pathname]) return <MyTopicReading slugOverride={TOPIC_ROUTES[pathname]} />;
   return CHART.some(c => pathname === c || pathname.startsWith(`${c}/`)) ? <MyChart /> : <MyReadings />;
 }
