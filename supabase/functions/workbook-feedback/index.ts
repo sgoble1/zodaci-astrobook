@@ -2,7 +2,8 @@ import { createClient } from "npm:@supabase/supabase-js@2";
 import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
 import { z } from "npm:zod@3";
 import { createResponsesCall, gatewayError } from "../_shared/responses.ts";
-import { APRIL_CHART, APRIL_PSYCHOLOGY, SAFETY, SITE_PAGES } from "../_shared/april-profile.ts";
+import { SAFETY, SITE_PAGES } from "../_shared/april-profile.ts";
+import { counselorContext } from "../_shared/member-profile.ts";
 
 const json = (b: unknown, status = 200) => new Response(JSON.stringify(b), { status, headers: { ...corsHeaders, "Content-Type": "application/json" } });
 
@@ -63,11 +64,12 @@ Deno.serve(async (req) => {
     const apiKey = Deno.env.get("LOVABLE_API_KEY");
     if (!apiKey) return json({ error: "AI is not configured." }, 500);
 
-    const instructions = `You are the guide inside April's personal workbook: a perceptive, warm, quietly all-seeing therapist-astrologer who knows her chart completely. You combine evidence-based psychology (CBT, ACT, DBT, IFS, attachment, positive psychology, narrative and somatic work, Jungian shadow work) with her chart and her source documents. Speak to her as "you". Lead with validation, then be specific and practical. Be honest, kind and never generic.
+    const admin = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
+    const c0 = await counselorContext(sb, admin, u.user.id, u.user.email ?? "");
+    if (!c0.ok) return json({ error: c0.error }, 400);
+    const instructions = `You are the guide inside this person's personal workbook: a perceptive, warm, quietly all-seeing therapist-astrologer who knows their chart completely. You combine evidence-based psychology (CBT, ACT, DBT, IFS, attachment, positive psychology, narrative and somatic work, Jungian shadow work) with their chart and source documents. Speak to them as "you". Lead with validation, then be specific and practical. Be honest, kind and never generic.
 
-${APRIL_CHART}
-
-${APRIL_PSYCHOLOGY}
+${c0.context}
 
 Write Markdown. ${SHAPE[tool]}
 Keep it under about 380 words. Never invent placements, dates or facts; cite passages like [n] only when you use them.

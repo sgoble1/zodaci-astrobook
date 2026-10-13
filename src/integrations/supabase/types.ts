@@ -426,6 +426,24 @@ export type Database = {
           },
         ]
       }
+      counselor_private_profiles: {
+        Row: {
+          content: string
+          key: string
+          updated_at: string
+        }
+        Insert: {
+          content: string
+          key: string
+          updated_at?: string
+        }
+        Update: {
+          content?: string
+          key?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       custom_pages: {
         Row: {
           brief: string
