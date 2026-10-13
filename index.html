@@ -5,8 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Zodaci · Your sky, your story</title>
     <meta name="description" content="Zodaci brings your personal birth chart, reflective readings, podcasts and shared workspaces together. Explore AstroBook, our printed personal book." />
-    <meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex" />
-    <meta name="googlebot" content="noindex, nofollow, noarchive, nosnippet, noimageindex" />
+    <script>
+      // The private April subdomain stays hidden from search; zodaci.com stays searchable.
+      if (/^april\./i.test(location.hostname)) {
+        ['robots', 'googlebot'].forEach(function (n) { var m = document.createElement('meta'); m.name = n; m.content = 'noindex, nofollow, noarchive, nosnippet, noimageindex'; document.head.appendChild(m); });
+      }
+    </script>
+    <script type="application/ld+json">
+      [{ "@context": "https://schema.org", "@type": "Organization", "name": "Zodaci", "url": "https://zodaci.com/", "logo": "https://zodaci.com/favicon.png" },
+       { "@context": "https://schema.org", "@type": "WebSite", "name": "Zodaci", "url": "https://zodaci.com/" }]
+    </script>
     <meta name="author" content="Zodaci" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content="Zodaci · Your sky, your story" />
