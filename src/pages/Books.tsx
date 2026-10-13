@@ -9,7 +9,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useSubscription } from '@/hooks/useSubscription';
 import { useMyBirth } from '@/lib/myBirth';
 import { streamImage } from '@/lib/streamImage';
-import { BOOK_SECTIONS, COVER_STYLES, bookTotal, money } from '@/lib/books';
+import { BOOK_SECTIONS, BOOK_PRICES, COVER_STYLES, bookTotal, money } from '@/lib/books';
 import bookPhoto from '@/assets/astrobook-public.jpg';
 import { ManuscriptPreview } from '@/components/books/ManuscriptPreview';
 import { BOOK_EXAMPLES } from '@/content/bookExamples';
