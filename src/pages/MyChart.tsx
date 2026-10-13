@@ -8,6 +8,7 @@ import { toChartInput, useMyBirth } from '@/lib/myBirth';
 import { ChartWheel } from '@/components/chart/ChartWheel';
 import { BoxArt } from '@/components/common/BoxArt';
 import { Button } from '@/components/ui/button';
+import { HouseRulers } from '@/components/chart/HouseRulers';
 
 const BODY: Record<string, string> = { sun: 'your basic identity and sense of purpose', moon: 'your feelings, instincts and need for safety', mercury: 'how you think, learn and talk', venus: 'how you love and what you value', mars: 'how you act and go after what you want', jupiter: 'where confidence and opportunity grow', saturn: 'where effort, limits and maturity build', uranus: 'where you need freedom', neptune: 'where imagination and sensitivity live', pluto: 'where deep change happens', chiron: 'an old sore spot that can become a gift for helping others', northNode: 'qualities you are learning to grow into', southNode: 'familiar talents to use without getting stuck' };
 const HOUSE_AREA = ['', 'self, body and first impressions', 'money, possessions and self-worth', 'thinking, siblings and your neighbourhood', 'home, family life and inner foundations', 'creativity, romance, play and children', 'daily routine, work habits and health', 'partners and one-to-one relationships', 'shared resources, intimacy and deep change', 'beliefs, study and travel', 'career, reputation and public life', 'friends, groups and hopes', 'rest, solitude and the hidden inner life'];
@@ -53,6 +54,7 @@ export default function MyChart() {
         {!birth.time && <p className="mt-3 rounded border border-border bg-muted/40 p-3 text-sm">Without a birth time, your Rising sign and houses can't be known, so they're hidden. Planet signs are still accurate (the Moon may be off by a sign if it changed signs that day).</p>}
       </header>
       <ChartWheel r={chart} />
+      <HouseRulers chart={chart} />
       <section aria-labelledby="pl"><h2 id="pl" className="font-display text-2xl">Your placements</h2>
         <ul className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{chart.bodies.map(b => (
           <li key={b.key}><button type="button" onClick={() => setSel(b)} aria-label={`More about ${b.name} in ${b.sign}`} className="block h-full w-full overflow-hidden rounded border border-border bg-card text-left transition-all duration-500 hover:-translate-y-0.5 hover:border-primary/60 focus-visible:outline focus-visible:outline-2">
