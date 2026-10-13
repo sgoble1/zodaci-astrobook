@@ -1,3 +1,4 @@
+import { usePageMeta } from '@/hooks/usePageMeta';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
@@ -12,6 +13,7 @@ import type { Tables } from '@/integrations/supabase/types';
 import { PUBLIC_ARTICLES } from '@/content/publicArticles';
 
 export default function Blog() {
+  usePageMeta('Zodaci Blog · Astrology guides in plain language', 'Plain-language guides to birth charts, planets, houses and timing from the Zodaci editorial team.');
   const sub = useSubscription(); const [posts,setPosts] = useState<Tables<'blog_posts'>[]>([]);
   const [view,setView] = useState<'feed'|'mine'>('feed'); const [editing,setEditing] = useState<string|null>(null);
   const [compose,setCompose] = useState(false); const [title,setTitle] = useState(''); const [body,setBody] = useState(''); const [name,setName] = useState(''); const [error,setError] = useState(''); const [busy,setBusy] = useState(false);
