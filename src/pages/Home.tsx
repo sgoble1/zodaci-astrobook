@@ -72,7 +72,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="flex flex-wrap items-center justify-between gap-4 border-y border-border py-6"><div><h2 className="text-2xl">Your sky, in print.</h2><p className="text-muted-foreground mt-2">Personal softcover books from $45. Free US shipping.</p></div><div className="flex gap-2"><Button asChild><Link to="/books">Create my printed book</Link></Button><Button asChild variant="outline"><Link to="/blog">Community journal</Link></Button></div></section>
+      <section className="flex flex-wrap items-center justify-between gap-4 border-y border-border py-6"><div><h2 className="text-2xl">Your sky, in print.</h2><p className="text-muted-foreground mt-2">Personal softcover books from $59. Free US shipping.</p></div><div className="flex gap-2"><Button asChild><Link to="/books">Create my printed book</Link></Button><Button asChild variant="outline"><Link to="/blog">Community journal</Link></Button></div></section>
 
       {/* How it works */}
       <section className="gentle-fade">
