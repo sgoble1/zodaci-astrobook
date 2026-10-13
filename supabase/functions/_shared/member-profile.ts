@@ -1,13 +1,18 @@
 // Builds the chart context a counselor speaks from: April's verified profile in the private
 // edition, otherwise the signed-in member's own saved chart.
-import { APRIL_CHART, APRIL_CONTEXT_RULES, APRIL_PSYCHOLOGY } from "./april-profile.ts";
+// deno-lint-ignore no-explicit-any
+export async function privateAprilProfile(admin: any): Promise<string> {
+  const { data } = await admin.from("counselor_private_profiles").select("key,content").in("key", ["april_chart", "april_psychology", "april_context_rules"]);
+  const m = Object.fromEntries((data ?? []).map((r: { key: string; content: string }) => [r.key, r.content]));
+  return [m.april_chart, m.april_psychology, m.april_context_rules].filter(Boolean).join("\n\n");
+}
 
 // deno-lint-ignore no-explicit-any
 export async function counselorContext(sb: any, admin: any, userId: string, email = ""): Promise<{ ok: true; context: string; name: string; privateEdition: boolean } | { ok: false; error: string }> {
   const { data: p } = await admin.from("profiles").select("display_name,birth_date,birth_time,place_label,house_system,sex,chart").eq("id", userId).maybeSingle();
   // April's approved account uses her verified profile; everyone else (Shane included) uses their own saved chart.
   if (email.toLowerCase() === "babybluepuppet@gmail.com") {
-    return { ok: true, privateEdition: true, name: "April", context: `${APRIL_CHART}\n\n${APRIL_PSYCHOLOGY}\n\n${APRIL_CONTEXT_RULES}` };
+    return { ok: true, privateEdition: true, name: "April", context: await privateAprilProfile(admin) };
   }
   if (!p?.birth_date || !p.chart) return { ok: false, error: "Save your birth details first so the counselor can work from your chart." };
   // deno-lint-ignore no-explicit-any
