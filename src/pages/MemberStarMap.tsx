@@ -15,9 +15,12 @@ const STARS: [string, number, string][] = [
 
 export default function MemberStarMap({ birth }: { birth: MyBirth }) {
   const chart = useMemo(() => computeChart(toChartInput(birth)), [birth]);
+  // Precess to the exact birth moment (years since J2000.0, from the birth UTC instant).
+  const years = (chart.utc.getTime() - Date.UTC(2000, 0, 1, 12)) / (365.25 * 864e5);
   const yr = Number(birth.date.slice(0, 4));
-  const stars = STARS.map(([n, lon, m]) => ({ n, m, lon: (lon + (yr - 2000) * 50.29 / 3600 + 360) % 360 }));
-  const contacts = stars.flatMap(s => chart.bodies.filter(b => { const d = Math.abs(((b.lon - s.lon + 540) % 360) - 180); return d <= 1.5; }).map(b => ({ s, b, orb: Math.abs(((b.lon - s.lon + 540) % 360) - 180) })));
+  const stars = STARS.map(([n, lon, m]) => ({ n, m, lon: (lon + years * 50.29 / 3600 + 360) % 360 }));
+  const points = [...chart.bodies, ...(chart.asc != null ? [{ key: 'asc', name: 'Ascendant', glyph: 'AC', lon: chart.asc }] : []), ...(chart.mc != null ? [{ key: 'mc', name: 'Midheaven', glyph: 'MC', lon: chart.mc }] : [])];
+  const contacts = stars.flatMap(s => points.filter(b => { const d = Math.abs(((b.lon - s.lon + 540) % 360) - 180); return d <= 1.5; }).map(b => ({ s, b, orb: Math.abs(((b.lon - s.lon + 540) % 360) - 180) })));
   const [active, setActive] = useState<string | null>(contacts[0]?.s.n ?? null);
   const xy = (lon: number, r: number) => { const a = (180 - lon) * Math.PI / 180; return [50 + r * Math.cos(a), 50 + r * Math.sin(a)]; };
   const sel = stars.find(s => s.n === active);
@@ -38,7 +41,7 @@ export default function MemberStarMap({ birth }: { birth: MyBirth }) {
           {chart.bodies.map((b, i) => { const [x, y] = xy(b.lon, 30); return <motion.text key={b.key} x={x} y={y} fontSize="3" textAnchor="middle" dominantBaseline="middle" fill="hsl(var(--primary))" initial={{ opacity: 0, scale: 0 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 3 + i * 0.1, duration: 0.8 }}>{b.glyph}</motion.text>; })}
         </svg>
         <div className="space-y-4">
-          {sel && <div className="rounded-lg border border-gold/40 bg-card p-5"><h2 className="font-display text-2xl">{sel.n}</h2><p className="text-xs text-muted-foreground">{fmtLon(sel.lon).sign} {Math.floor(sel.lon % 30)}° (precessed to {yr})</p><p className="mt-2">Traditional meaning: {sel.m}.</p>
+          {sel && <div className="rounded-lg border border-gold/40 bg-card p-5"><h2 className="font-display text-2xl">{sel.n}</h2><p className="text-xs text-muted-foreground">{fmtLon(sel.lon).sign} {Math.floor(sel.lon % 30)}° (precessed to your exact birth moment)</p><p className="mt-2">Traditional meaning: {sel.m}.</p>
             {contacts.filter(c => c.s.n === sel.n).map(c => <p key={c.b.key} className="mt-2 text-sm"><strong>Touches your {c.b.name}</strong> ({c.orb.toFixed(2)}° away): {c.b.name}'s themes take on this star's flavour.</p>)}</div>}
           <h2 className="font-display text-xl">Your star contacts ({contacts.length})</h2>
           {contacts.length ? <ul className="space-y-2">{contacts.map(c => <li key={c.s.n + c.b.key}><button className="w-full rounded border border-border p-3 text-left hover:bg-muted" onClick={() => setActive(c.s.n)}>{c.b.glyph} {c.b.name} · {c.s.n} · {c.orb.toFixed(2)}°</button></li>)}</ul> : <p className="text-sm text-muted-foreground">None of your planets is within 1.5° of these major stars — your chart is read through its planets and houses alone.</p>}
