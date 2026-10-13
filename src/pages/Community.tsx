@@ -15,12 +15,13 @@ export default function Community() {
   const [posts,setPosts] = useState<Tables<'community_posts'>[]>([]); const [replies,setReplies] = useState<Tables<'community_replies'>[]>([]);
   const [category,setCategory] = useState('All'); const [name,setName] = useState(''); const [title,setTitle] = useState(''); const [body,setBody] = useState(''); const [compose,setCompose] = useState(false); const [error,setError] = useState(''); const [loading,setLoading] = useState(true); const [busy,setBusy] = useState(false);
   const load = async () => {
+    if (!session) { setPosts([]); setReplies([]); setLoading(false); return; }
     const result = await supabase.from('community_posts').select('*').order('created_at',{ascending:false}).limit(100);
     if (result.error) setError('Could not load discussions. Please try again.'); else setPosts(result.data || []);
     if (id) { const r = await supabase.from('community_replies').select('*').eq('post_id',id).order('created_at'); if(r.error) setError('Could not load replies.'); else setReplies(r.data || []); }
     setLoading(false);
   };
-  useEffect(() => { setLoading(true); setBody(''); setCompose(false); void load(); const timer=window.setInterval(load,10000); return () => window.clearInterval(timer); },[id]);
+  useEffect(() => { setLoading(true); setBody(''); setCompose(false); void load(); const timer=window.setInterval(load,10000); return () => window.clearInterval(timer); },[id,session]);
   const submit = async () => {
     if(!session) return; setBusy(true); setError('');
     const result = id ? await supabase.from('community_replies').insert({post_id:id,author_id:session.user.id,author_name:name.trim(),body:body.trim()}) : await supabase.from('community_posts').insert({author_id:session.user.id,author_name:name.trim(),title:title.trim(),body:body.trim(),category:category === 'All' ? categories[0] : category});
