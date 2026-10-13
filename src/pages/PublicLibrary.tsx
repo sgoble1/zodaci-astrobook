@@ -71,7 +71,8 @@ export function PublicReader() {
     <Frame>
       <Link to="/read" className="text-xs text-muted-foreground hover:text-foreground">← All sources</Link>
       {text === '' ? <p className="mt-6">Chapter not found.</p> : <>
-        {e && <div className="text-xs text-muted-foreground mt-4">{e.part} · {e.label}</div>}
+        {e && <div className="text-xs text-muted-foreground mt-4">{e.part}</div>}
+        <h1 className="font-display text-3xl sm:text-4xl mt-2">{e?.label ?? 'Masterbook chapter'}</h1>
         <article className="prose prose-invert max-w-none mt-4">{text === null ? <p role="status">Loading chapter…</p> : <ReactMarkdown remarkPlugins={[remarkGfm]}>{body}</ReactMarkdown>}</article>
         <div className="flex justify-between mt-10 text-sm">
           {prev ? <Link to={`/read/${prev.id}`} aria-label={`Previous chapter: ${prev.title}`} className="underline">← {prev.title}</Link> : <span />}
@@ -98,7 +99,7 @@ export function PublicDocument() {
     <Frame>
       <Link to="/read" className="text-xs text-muted-foreground hover:text-foreground">← All sources</Link>
       {entries.length > 0 && !list.length ? <p className="mt-6">Document not found.</p> : <>
-        <h1 className="font-display text-4xl mt-4 mb-2">{part ?? 'Loading…'}</h1>
+        <h1 className="font-display text-4xl mt-4 mb-2">{part ?? 'Masterbook source document'}</h1>
         <p className="text-muted-foreground mb-6">{list.length} chapters · the complete text</p>
         <nav aria-label="Chapters" className="flex flex-wrap gap-2 mb-8 text-xs">{list.map(e => <a key={e.id} href={`#ch-${e.id}`} className="px-3 py-1 rounded-full border border-border hover:bg-muted">{e.title}</a>)}</nav>
         {!texts ? <p role="status">Loading the full document…</p> : list.map((e, i) => (
