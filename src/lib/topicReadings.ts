@@ -29,7 +29,7 @@ export async function loadMyTopicReadings(): Promise<TopicRow[]> {
   const { data } = await supabase.from('generated_pages').select('id,page_key,title,content,status,updated_at').eq('section', 'Topic Reading');
   return (data ?? []) as TopicRow[];
 }
-export async function writeTopicReading(slug: string, opts: { regenerate?: boolean; targetUserId?: string; chain?: boolean } = {}): Promise<void> {
+export async function writeTopicReading(slug: string, opts: { regenerate?: boolean; targetUserId?: string; chain?: boolean; lane?: number; lanes?: number } = {}): Promise<void> {
   let res;
   try { res = await supabase.functions.invoke('topic-readings', { body: { slug, ...opts } }); } catch { throw new Error('This reading could not be written right now.'); }
   const { data, error } = res;

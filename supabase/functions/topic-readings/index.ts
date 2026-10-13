@@ -44,7 +44,7 @@ const CORE_TOPICS: Record<string, { title: string; focus: string }> = {
 const SYS_TITLES: Record<string, string> = { vedic: 'Vedic · Jyotish', chinese: 'Chinese · Ba Zi', 'mayan-tzolkin': 'Maya · Tzolk’in', 'tibetan-mewa': 'Tibetan Mewa', 'nine-star-ki': 'Japanese Nine Star Ki', 'chaldean-numerology': 'Chaldean Numerology', 'tarot-birth-cards': 'Tarot Birth Cards', 'celtic-tree-calendar': 'Celtic Tree Calendar' };
 for (const k of SYSTEM_SLUGS) TOPICS[`sys-${k}`] = { title: SYS_TITLES[k], focus: `the ${SYS_TITLES[k]} system: interpret ONLY the calculated system values given under "System facts" (explain the system's origin and method briefly, then each value in depth and how they combine), and where useful compare with the Western chart; label traditional meanings as tradition` };
 Object.assign(TOPICS, CORE_TOPICS);
-const Body = z.object({ slug: z.string().refine(s => s in TOPICS), regenerate: z.boolean().optional(), targetUserId: z.string().uuid().optional(), chain: z.boolean().optional() });
+const Body = z.object({ slug: z.string().refine(s => s in TOPICS), regenerate: z.boolean().optional(), targetUserId: z.string().uuid().optional(), chain: z.boolean().optional(), lane: z.number().int().min(0).max(3).optional(), lanes: z.number().int().min(1).max(4).optional() });
 const DAILY_LIMIT = 50;
 
 /** Finds "Planet in Sign" claims that contradict the saved chart. */
@@ -88,7 +88,7 @@ Deno.serve(async req => {
     if (!user) return json({ error: 'Please sign in first.' }, 401);
     const parsed = Body.safeParse(await req.json());
     if (!parsed.success) return json({ error: 'Unknown topic.' }, 400);
-    const { slug, regenerate, targetUserId, chain } = parsed.data;
+    const { slug, regenerate, targetUserId, chain, lane, lanes } = parsed.data;
     let ownerId = user.id;
     if (targetUserId && targetUserId !== user.id) {
       const { data: isAdmin } = await admin.rpc('has_role', { _user_id: user.id, _role: 'admin' });
@@ -129,12 +129,16 @@ Deno.serve(async req => {
         await admin.from('ai_usage').insert({ user_id: ownerId, feature: 'topic-reading' });
       } catch (e) { console.error('topic job', slug, e); await admin.from('ai_usage').insert({ user_id: ownerId, feature: 'topic-reading' }); }
       // Always move forward to the next unwritten topic (never back), so one failure can't stall or loop the queue.
-      if (chain && ownerId === user.id) {
+      // Parallel lanes: each lane only takes topics whose index % lanes === lane, so lanes never collide.
+      // A paused workspace (no credits) stops every lane.
+      const { data: pausedNow } = await admin.from('ai_access_pauses').select('message').eq('scope', 'workspace').maybeSingle();
+      if (chain && ownerId === user.id && !pausedNow) {
         const { data: done } = await admin.from('generated_pages').select('page_key').eq('owner_id', ownerId).eq('section', 'Topic Reading');
         const got = new Set((done ?? []).map(d => d.page_key));
         const keys = Object.keys(TOPICS);
-        const next = keys.slice(keys.indexOf(slug) + 1).find(k => !got.has(`topic-${k}`));
-        if (next) await fetch(`${url}/functions/v1/topic-readings`, { method: 'POST', headers: { Authorization: authHeader, apikey: apikeyHeader, 'Content-Type': 'application/json' }, body: JSON.stringify({ slug: next, chain: true }) }).catch(e => console.error('chain', e));
+        const L = lanes ?? 1; const myLane = lane ?? 0;
+        const next = keys.slice(keys.indexOf(slug) + 1).find((k, i, arr) => !got.has(`topic-${k}`) && keys.indexOf(arr[i]) % L === myLane);
+        if (next) await fetch(`${url}/functions/v1/topic-readings`, { method: 'POST', headers: { Authorization: authHeader, apikey: apikeyHeader, 'Content-Type': 'application/json' }, body: JSON.stringify({ slug: next, chain: true, lane: myLane, lanes: L }) }).catch(e => console.error('chain', e));
       }
     })();
     // deno-lint-ignore no-explicit-any

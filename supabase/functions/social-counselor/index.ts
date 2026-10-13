@@ -54,7 +54,7 @@ Deno.serve(async request => {
     }
     const model = await convertToModelMessages(messages);
     if (passages.length) model.push({ role: "user", content: `(Relevant passages from the person's sources; cite [n] when used.)\n\n${passages.map(passage => `[${passage.n}] (${passage.source} — ${passage.loc})\n${passage.text.slice(0, 1500)}`).join("\n\n")}` });
-    const call = createResponsesCall(request, { apiKey, instructions: INSTRUCTIONS, effort: "medium" }, model);
+    const call = createResponsesCall(request, { apiKey, instructions: INSTRUCTIONS, effort: "low" }, model);
     const response = call.result.toUIMessageStreamResponse({ originalMessages: messages, sendReasoning: true, headers: cors, onFinish: async ({ responseMessage, isAborted }) => {
       if (!responseMessage?.parts?.length) return; const parts = responseMessage.parts.filter((part: { type: string }) => part.type === "text"); if (!parts.length) return;
       const { error } = await sb.from("social_messages").insert({ session_id: sessionId, owner_id: auth.user.id, ui_id: responseMessage.id, role: "assistant", parts: isAborted ? [...parts, { type: "text", text: "\n\n_(stopped)_" }] : parts });
