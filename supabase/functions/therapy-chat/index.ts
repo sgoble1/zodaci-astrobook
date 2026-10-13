@@ -72,7 +72,7 @@ Deno.serve(async (req) => {
       model.push({ role: "user", content: `(Context for this turn — numbered passages from the person's own source documents; cite them like [n] when you use them.)\n\n${ctx}` });
     }
 
-    const call = createResponsesCall(req, { apiKey, instructions: INSTRUCTIONS, effort: "medium" }, model);
+    const call = createResponsesCall(req, { apiKey, instructions: INSTRUCTIONS, effort: "low" }, model);
     const response = call.result.toUIMessageStreamResponse({
       originalMessages: messages,
       sendReasoning: true,

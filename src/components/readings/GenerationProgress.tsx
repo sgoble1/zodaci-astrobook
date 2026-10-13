@@ -39,7 +39,13 @@ export function GenerationProgress() {
       const missing = ALL_READINGS.filter(t => !rows.some(r => r.page_key === `topic-${t.slug}`));
       if (missing.length && !sessionStorage.getItem(STARTED_KEY)) {
         sessionStorage.setItem(STARTED_KEY, '1');
-        writeTopicReading(missing[0].slug, { chain: true }).catch(e => setError((e as Error).message));
+        // Three parallel lanes; each lane writes its own share of topics in order.
+        const LANES = 3;
+        const order = ALL_READINGS.map(t => t.slug);
+        for (let lane = 0; lane < LANES; lane++) {
+          const first = missing.find(t => order.indexOf(t.slug) % LANES === lane);
+          if (first) writeTopicReading(first.slug, { chain: true, lane, lanes: LANES }).catch(e => setError((e as Error).message));
+        }
       }
     })();
     return () => { alive = false; };
