@@ -1,3 +1,4 @@
+import { usePageMeta } from '@/hooks/usePageMeta';
 import { PRINT_SPECS } from '@/lib/books';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -15,6 +16,7 @@ import { ManuscriptPreview } from '@/components/books/ManuscriptPreview';
 import { BOOK_EXAMPLES } from '@/content/bookExamples';
 
 export default function Books() {
+  usePageMeta('AstroBook · Your printed personal astrology book', 'Order AstroBook, a printed book written from your own birth chart. Softcover from $59, free US shipping.');
   const sub = useSubscription(); const birth = useMyBirth(); const nav = useNavigate();
   const [edition, setEdition] = useState<'standard'|'expanded'>('standard');
   const [extras, setExtras] = useState<string[]>([]);

@@ -1,3 +1,4 @@
+import { usePageMeta } from '@/hooks/usePageMeta';
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { MessageCircle, Plus, Trash2 } from 'lucide-react';
@@ -11,6 +12,7 @@ import type { Tables } from '@/integrations/supabase/types';
 
 const categories = ['Chart questions','Reflection','Reading club'];
 export default function Community() {
+  usePageMeta('Zodaci Community · Talk charts with members', 'Join Zodaci members to discuss birth charts, readings and astrology questions.');
   const session = useSession(); const isAdmin = useIsAdmin(session); const { id } = useParams();
   const [posts,setPosts] = useState<Tables<'community_posts'>[]>([]); const [replies,setReplies] = useState<Tables<'community_replies'>[]>([]);
   const [category,setCategory] = useState('All'); const [name,setName] = useState(''); const [title,setTitle] = useState(''); const [body,setBody] = useState(''); const [compose,setCompose] = useState(false); const [error,setError] = useState(''); const [loading,setLoading] = useState(true); const [busy,setBusy] = useState(false);

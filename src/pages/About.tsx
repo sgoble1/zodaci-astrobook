@@ -1,3 +1,4 @@
+import { usePageMeta } from '@/hooks/usePageMeta';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
@@ -12,6 +13,7 @@ const PILLARS = [
 ];
 
 export default function About() {
+  usePageMeta('About Zodaci · Why we built it', 'The story behind Zodaci: calculated birth charts, honest interpretation and readings written for one person.');
   return (
     <article className="space-y-20">
       <motion.header {...fade} className="mx-auto max-w-3xl space-y-5 text-center">
