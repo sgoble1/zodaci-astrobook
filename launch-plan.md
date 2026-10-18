@@ -18,7 +18,7 @@ Brand & Revenue Strategist review: repair purchases, privacy and generation befo
 - Standard uses finished Masterbook chapters; Expanded requires additional finished topics. Manifests omit outdated chart readings, deduplicate titles and require paid extras to be finished.
 - Sample reader has keyboard controls, retry, page-text alternative and honest short-sample copy. Preview/order pages use consistent edition/format prices.
 - Public PDF sample and mobile overflow checks passed. Signed-in Masterbook opened with no page errors. Money helpers pass; no charge or new AI writing was initiated for these checks.
-- Functions deployed. Fresh backend scan returned no new actionable findings; a full deep application scan and real payment remain release gates.
+- Functions deployed; live and test payment endpoints now subscribe to failed/expired checkout, refund and dispute events. Fresh backend scan returned no new actionable findings; the saved deep application scan is stale and a fresh deep review and real payment remain release gates.
 
 ## Audit baseline — 18 October 2026
 The findings below describe the initial review; applied repairs above remain subject to acceptance testing.
