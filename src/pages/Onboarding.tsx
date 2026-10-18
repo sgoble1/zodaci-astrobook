@@ -8,7 +8,7 @@ import { computeChart } from '@/lib/astro';
 import { saveMyBirth, toChartInput, type MyBirth } from '@/lib/myBirth';
 
 type Geo = { name: string; admin1?: string; country?: string; latitude: number; longitude: number; timezone: string };
-const STEPS = ['Your name', 'Birth date', 'Birth time', 'Birthplace'];
+const STEPS = ['Your name', 'Birth date', 'Birth time', 'Birthplace', 'Review'];
 
 export default function Onboarding() {
   const nav = useNavigate();
@@ -42,7 +42,7 @@ export default function Onboarding() {
       setGeo(r.results ?? []); if (!r.results?.length) setErr('No places found. Try just the city name.');
     } catch { setErr('Place search is unavailable right now. Please try again.'); }
   };
-  const ok = [b.name.trim().length > 0, /^\d{4}-\d{2}-\d{2}$/.test(b.date), unknownTime || /^\d{2}:\d{2}$/.test(b.time ?? ''), !!b.tz][step];
+  const ok = [b.name.trim().length > 0, /^\d{4}-\d{2}-\d{2}$/.test(b.date), unknownTime || /^\d{2}:\d{2}$/.test(b.time ?? ''), !!b.tz, !!b.tz && !!b.name && !!b.date][step];
 
   const finish = async () => {
     if (editing && !confirm('Save these changed birth details? Your chart is recalculated. Open each reading afterwards and use “Rewrite this reading” to update it.')) return;
@@ -59,7 +59,7 @@ export default function Onboarding() {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       if (u.user) await (supabase as any).from('profiles').update({ sex: sex.slice(0, 60) }).eq('id', u.user.id);
       setStage('Starting your readings…');
-      nav(res.saved === 'device' ? '/my-chart?device=1' : '/my-readings');
+      nav(res.saved === 'device' ? '/my-chart?device=1' : '/dashboard');
     } catch { setErr('Your birth details could not be calculated. Check the date, time and selected place.'); }
     finally { setBusy(false); setStage(''); }
   };
@@ -70,11 +70,11 @@ export default function Onboarding() {
   return (
     <article className="mx-auto max-w-lg space-y-6 py-6">
       <header>
-        <p className="font-smallcaps text-xs text-gold">Step {step + 1} of 4 · {STEPS[step]}</p>
+        <p className="font-smallcaps text-xs text-gold">Step {step + 1} of 5 · {STEPS[step]}</p>
         <h1 className="font-display text-3xl">{editing ? 'Edit your birth details' : "Let's create your chart"}</h1>
-        <div className="mt-3 h-1.5 rounded bg-muted" aria-hidden><div className="h-full rounded bg-primary transition-all" style={{ width: `${((step + 1) / 4) * 100}%` }} /></div>
+        <div className="mt-3 h-1.5 rounded bg-muted" aria-hidden><div className="h-full rounded bg-primary transition-all" style={{ width: `${((step + 1) / 5) * 100}%` }} /></div>
       </header>
-      <form className="space-y-4" onSubmit={e => { e.preventDefault(); if (!ok) return; if (step < 3) setStep(step + 1); else void finish(); }}>
+      <form className="space-y-4" onSubmit={e => { e.preventDefault(); if (!ok) return; if (step < 4) setStep(step + 1); else void finish(); }}>
         {step === 0 && <div className="space-y-2"><Label htmlFor="n">What should we call you?</Label><Input id="n" autoFocus value={b.name} onChange={e => setB({ ...b, name: e.target.value })} maxLength={80} />
           <fieldset className="space-y-2 pt-3"><legend className="text-sm font-medium">Your sex or gender <span className="text-muted-foreground">(optional — shapes wording in love, body and attraction readings)</span></legend>
             <div className="flex flex-wrap gap-2">{['Female', 'Male', 'Non-binary', 'Intersex', 'Transgender woman', 'Transgender man', 'Prefer to self-describe', 'Prefer not to say'].map(o => <button type="button" key={o} aria-pressed={sex === o} onClick={() => setSex(o)} className={`rounded-full border px-3 py-1.5 text-sm transition-colors ${sex === o ? 'border-primary bg-primary/15 text-foreground' : 'border-border text-muted-foreground hover:text-foreground'}`}>{o}</button>)}</div>
@@ -94,10 +94,12 @@ export default function Onboarding() {
           {b.tz && <p className="text-sm text-muted-foreground">Using {b.placeLabel} ({b.lat.toFixed(3)}, {b.lon.toFixed(3)}, time zone {b.tz}).</p>}
           {err && <p role="alert" className="text-sm text-destructive">{err}</p>}
         </div>}
+        {step === 4 && <dl className="divide-y divide-border">{[['Name', b.name], ['Birth date', b.date], ['Birth time', unknownTime ? 'Unknown — Rising sign and houses hidden' : b.time], ['Birthplace', b.placeLabel], ['Time zone', b.tz]].map(([label, value]) => <div key={label} className="py-3"><dt className="text-xs text-muted-foreground">{label}</dt><dd className="mt-1">{value}</dd></div>)}</dl>}
+        {err && step !== 3 && <p role="alert" className="text-destructive">{err}</p>}
         {stage && <p role="status" className="text-sm text-primary">{stage}</p>}
         <div className="flex justify-between">
           <Button type="button" variant="ghost" disabled={step === 0} onClick={() => setStep(step - 1)}>Back</Button>
-          <Button type="submit" disabled={!ok || busy}>{busy ? 'Calculating your chart…' : step < 3 ? 'Next' : (editing ? 'Save changes' : 'Create my chart')}</Button>
+          <Button type="submit" disabled={!ok || busy}>{busy ? 'Calculating your chart…' : step < 4 ? 'Next' : (editing ? 'Save changes' : 'Create my chart')}</Button>
         </div>
       </form>
     </article>

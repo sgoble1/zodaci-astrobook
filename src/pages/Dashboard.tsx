@@ -1,3 +1,5 @@
+import { MemberDashboard } from '@/components/common/MemberDashboard';
+import { useAprilSpace } from '@/hooks/useAprilSpace';
 import { UpdatesFeed } from '@/components/common/UpdatesFeed';
 import { Link } from 'react-router-dom';
 import { AuthGate } from '@/components/common/AuthGate';
@@ -55,6 +57,8 @@ function Inner() {
 }
 
 export default function Dashboard() {
+  const april = useAprilSpace();
+  if (april === false) return <MemberDashboard />;
   return (
     <div className="space-y-6">
       <h1 className="font-display text-4xl">My Dashboard</h1>

@@ -35,7 +35,7 @@ export default function Home() {
   const april = useAprilSpace();
   const myBirth = useMyBirth();
   if (april) return <AprilHome />;
-  if (april === false && myBirth === null) return <Navigate to="/start" replace />;
+  if (april === false) return <Navigate to="/dashboard" replace />;
   return (
     <div className="space-y-16">
       {/* Hero */}

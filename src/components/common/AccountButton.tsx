@@ -1,5 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { LogIn, UserRound } from 'lucide-react';
+import { usePlan } from '@/hooks/usePlan';
 import { useSession } from '@/hooks/useLibrary';
 import { AuthGate } from '@/components/common/AuthGate';
 import { Button } from '@/components/ui/button';
@@ -15,6 +16,7 @@ export const ACCOUNT_LINKS: [string, string][] = [
 
 export function AccountButton({ compact = false }: { compact?: boolean }) {
   const session = useSession();
+  const access = usePlan();
   const navigate = useNavigate();
   if (session) return (
     <DropdownMenu>
@@ -22,7 +24,7 @@ export function AccountButton({ compact = false }: { compact?: boolean }) {
       <DropdownMenuContent align="end" className="w-60">
         <DropdownMenuLabel className="truncate text-xs font-normal text-muted-foreground">{session.user.email}</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        {ACCOUNT_LINKS.map(([to, label]) => <DropdownMenuItem key={to} asChild><Link to={to}>{label}</Link></DropdownMenuItem>)}
+        {ACCOUNT_LINKS.filter(([to]) => to !== '/creator' || access.plan === 'creator').map(([to, label]) => <DropdownMenuItem key={to} asChild><Link to={to}>{label}</Link></DropdownMenuItem>)}
         <DropdownMenuSeparator />
         <DropdownMenuItem onSelect={async () => { await supabase.auth.signOut(); navigate('/welcome'); }}>Sign out</DropdownMenuItem>
       </DropdownMenuContent>
