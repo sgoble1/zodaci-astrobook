@@ -109,12 +109,16 @@ Deno.serve(async req => {
       admin.rpc('is_shared_space_user_id', { _user_id: ownerId }),
     ]);
     const fullAccess = !!(paid || isAdminUser || shared);
-    if (!fullAccess && !FREE_READINGS.includes(slug)) return json({ error: 'This reading is part of Full Access. Upgrade to have it written from your chart.' }, 403);
+    // Free members get a short opening-section preview of every core theme; the full reading needs a paid plan.
+    const teaser = !fullAccess && !FREE_READINGS.includes(slug) && slug in CORE_TOPICS;
+    if (!fullAccess && !FREE_READINGS.includes(slug) && !teaser) return json({ error: 'This reading is part of Full Access. Upgrade to have it written from your chart.' }, 403);
+    if (teaser && regenerate) return json({ error: 'Upgrade to Full Access to have the full reading written.' }, 403);
     const topic = TOPICS[slug];
     const page_key = `topic-${slug}`;
     const sysSlug = slug.startsWith('sys-') ? slug.slice(4) : null;
     const { data: have } = await admin.from('generated_pages').select('id,status').eq('owner_id', ownerId).eq('page_key', page_key).maybeSingle();
-    if (have && !regenerate) return json({ id: have.id, status: have.status });
+    // A paid member opening an old preview gets the full reading written automatically.
+    if (have && !regenerate && !(fullAccess && have.status === 'preview')) return json({ id: have.id, status: have.status });
     const { data: profile } = await admin.from('profiles').select('*').eq('id', ownerId).maybeSingle();
     if (!profile?.birth_date || !profile.chart) return json({ error: 'Save your birth details first.' }, 400);
     if (profile.generation_cancelled) return json({ error: 'Writing was stopped for this chart. Press Resume to continue.' }, 409);
