@@ -8,15 +8,15 @@ This is a redesign proposal, not a claim that every production flow has been tes
 
 ## What the review found
 
-| Priority | Finding | Proposed outcome |
-|---|---|---|
-| First | Reading failures can resemble missing content; waiting can continue without clear recovery. | Accurate requested/writing/preview/ready/stopped/failed states, bounded waits and explicit retry. |
-| First | PDF storage, paid downloads and dispatch already exist, but a paid-order download remains unverified; customer emails remain blocked. | Verify the complete order journey; finish notifications after sender setup. |
-| High | Several competing home/dashboard pages and a long sidebar with repeated destinations. | One member starting point with a clear next action and task-based groups. |
-| High | Unrequested readings can be labeled “Writing”; Creator access uses inconsistent checks across screens. | Consistent status and effective access rules without changing paid entitlements. |
-| High | Changing birth details leaves older readings without a strong freshness signal. | Clearly identify older results and offer selective rewriting, not a costly automatic rewrite. |
-| Medium | Admin growth panels overshadow fulfillment; aggregate counts resemble a sequential conversion funnel. | Separate operations from growth; distinguish aggregate signals from actual cohort conversion. |
-| Medium | Decorative gradients, universal glass surfaces and glowing navigation compete with text hierarchy. | Brand-led editorial layouts and restrained accents rather than a generic AI dashboard. |
+Current-code findings, subject to live verification:
+
+1. **Generation recovery:** failures can resemble missing content; waiting lacks clear recovery. Add accurate states, bounded waits and retry.
+2. **Commerce readiness:** paid PDF downloads and dispatch exist, but paid-download verification and customer emails remain open.
+3. **Organization:** competing dashboards, repeated links and a sprawling sidebar need a task-led hierarchy.
+4. **Access/status:** unrequested readings can say “Writing”; Creator screens use inconsistent entitlement checks.
+5. **Freshness:** changed birth details need older-reading labels and selective regeneration.
+6. **Admin clarity:** fulfillment competes with growth panels; aggregate counts should not imply a sequential conversion funnel.
+7. **Visual hierarchy:** universal glass, glows and gradient headings compete with reading and navigation.
 
 ## Visual direction: a personal celestial atlas
 
@@ -31,10 +31,10 @@ This is a redesign proposal, not a claim that every production flow has been tes
 
 **General member destinations:** Dashboard · My Chart · Readings · Reflect · Relationships · My Library.
 
-- Group Planets, Houses, Aspects, Fixed Stars and Other Systems under My Chart/Explore; keep every existing destination discoverable through labeled groups and search.
+- Group chart details and Other Systems under My Chart/Explore; retain every destination through labeled groups and search.
 - Group themes and deeper topic readings under Readings, with readable “Included,” “First-section preview” and plan-required indicators.
 - Keep account, birth details, pricing and subscription management together in account controls. Show Creator Studio only where appropriate; Admin remains role-only.
-- Keep public community, member workspaces and April/Shane’s restricted shared space distinct. Never expose the private shared menu to ordinary members.
+- Keep public community, workspaces and the restricted April/Shane shared space distinct.
 - Use visible main destinations on desktop and a compact labeled menu on smaller screens. Preserve deep links, current-page highlighting, keyboard navigation and search.
 
 **Member dashboard hierarchy:**
@@ -55,7 +55,7 @@ Adapt these sections to Free, Full and Creator; do not produce three disconnecte
 - On completion, show the calculated chart immediately and recommend one useful starting reading. Respect existing generation-stop choices.
 
 ### 2. Explore → generate → return
-- Keep on-demand writing, low reasoning effort and existing length targets. Do not automatically generate all 38 readings or increase free allowances.
+- Keep on-demand writing, low effort and existing length targets; no bulk 38-reading generation or increased free allowances.
 - Separate not-requested, queued, writing, ready, first-section preview, stopped and failed states. Provide retry/resume and honest progress without invented completion times.
 - Preserve two full free readings and one-section core-theme previews. Paid-only topics remain paid-only; opening a core preview after upgrading expands it according to existing rules.
 - Distinguish calculated placements from interpretation; expose technical detail when wanted. Save reading position and make returning to the last page straightforward.
@@ -71,7 +71,7 @@ Adapt these sections to Free, Full and Creator; do not produce three disconnecte
 - Structure configuration as edition/digital-or-print → cover → manuscript review → address when printed → final total → payment.
 - Preserve both digital editions at **$19.99**, printed Standard **$59**, Expanded **$89**, and existing extras. Clearly distinguish one-off purchases from subscriptions.
 - Show actual reviewed manuscript length; never fake 250/400 pages or claim the sample is the customer’s book.
-- Keep drafts and selected covers through recoverable failures. Freeze the reviewed PDF before checkout and finalize it only after verified payment, as the existing order process requires.
+- Preserve drafts on failure; freeze the reviewed PDF before checkout and finalize only after verified payment.
 - Digital journey: Pending payment → PDF ready → authorized download. No address or dispatch step.
 - Printed journey: Pending payment → PDF ready → fulfillment status → dispatched with carrier, tracking and address. Do not display “Printing” unless fulfillment actually records it.
 - Verify customer/admin PDF downloads and dispatch updates with an authorized test order. Do not submit a real charge without explicit authorization.
@@ -81,23 +81,21 @@ Adapt these sections to Free, Full and Creator; do not produce three disconnecte
 ### 5. Administrator → operational resolution
 - Create distinct Operations, Content and Growth views using existing administration, orders and dispatch tools rather than duplicating them.
 - Operations leads with paid orders needing attention, PDF failures and dispatch readiness; add clear loading/retry/empty states.
-- Growth shows real customers, subscription conversions and book sales; separate test transactions and aggregated events from cohort conversion.
+- Growth distinguishes real customers, test transactions, aggregate events and cohort conversion.
 - Content review stays separate from private counselor histories and preserves current role checks.
 
 ## Product recommendations to validate
 
-These are optional hypotheses, not guaranteed revenue improvements or new pricing commitments.
+Optional hypotheses, not promised revenue or new pricing:
 
-| Recommendation | Smallest useful version | Success signal / guardrail |
-|---|---|---|
-| Continue Reading | Last page/section with a single resume action | More returning members resume reading; private to account |
-| Guided discovery | A few goal-based paths using existing topics | Faster first useful result; no bulk generation or invented personal biography |
-| Book readiness | Honest checklist of selected finished readings and reviewed PDF | Fewer failed checkouts; no false target page count |
-| Usage transparency | Included versus limited generation before starting | Fewer surprise waits/cost questions; no unsupported exact credit promises |
-| Chart confidence | Clear birth-time uncertainty and older-reading labels | Fewer incorrect expectations; chart facts remain calculated |
-| Responsible feedback | Optional usefulness feedback without chat text | Identify weak results without collecting sensitive writing |
+- **Continue Reading:** resume the last section; measure returning members completing a reading.
+- **Guided discovery:** a few goal-based paths using existing topics; measure time to a useful result without bulk generation.
+- **Book readiness:** finished-reading checklist and honest PDF length; measure fewer failed checkouts, never fake page counts.
+- **Usage transparency:** distinguish included and limited actions before generation; reduce cost confusion without invented credit promises.
+- **Chart confidence:** birth-time uncertainty and older-reading labels; reduce incorrect expectations.
+- **Responsible feedback:** optional usefulness ratings without private writing; identify weak results safely.
 
-Start with Continue Reading and Book Readiness; defer additional features until the core journeys are reliable.
+Start with Continue Reading and Book Readiness; defer extras until core journeys are reliable.
 
 ## Delivery phases
 
@@ -109,12 +107,7 @@ Start with Continue Reading and Book Readiness; defer additional features until 
 
 ## Technical implementation notes
 
-- Extend the existing navigation registry; preserve routes and synchronize Instructions/search. Use semantic CSS tokens and existing interface controls.
-- Align Creator/dashboard presentation with effective plan checks; do not weaken server-side subscription, role, row or storage authorization.
-- Model generation states explicitly in the existing on-demand hook/progress displays; avoid a second competing queue. Validate concurrency against the actual generation implementation before changing it.
-- Reuse existing book PDF freeze/finalization/download and Dispatch functionality. Review current delivery settings before assuming integrations are configured.
-- Keep complete protected edition payloads out of public bundles; retain authorized hydration, sign-out clearing and Shane’s approved edition switch.
-- Add focused tests only for changed state/money/access rules; use browser verification for layout and interactions.
+Extend the existing navigation registry and synchronize search/Instructions. Reuse semantic tokens, controls, on-demand generation, PDF delivery and Dispatch rather than duplicating systems. Align effective plan checks without weakening server-side authorization. Preserve April’s authorized loading and sign-out clearing. Add focused rule tests; verify interactions in the browser.
 
 ## Acceptance checks and blockers
 
