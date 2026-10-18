@@ -128,7 +128,10 @@ export function GenerationProgress() {
                   <span className={`shrink-0 text-xs ${ok ? 'text-primary' : 'text-muted-foreground'}`}>{ok ? 'Ready' : now ? 'Writing…' : 'Waiting'}</span>
                 </li>); })}
             </ul>
-            <button onClick={minimize} className="rounded-md border border-border px-4 py-2 text-sm hover:bg-muted focus-visible:outline focus-visible:outline-2">Keep exploring</button>
+            <div className="flex flex-wrap items-center justify-center gap-2">
+              <button onClick={minimize} className="rounded-md border border-border px-4 py-2 text-sm hover:bg-muted focus-visible:outline focus-visible:outline-2">Keep exploring</button>
+              <button onClick={stop} className="rounded-md border border-destructive/40 px-4 py-2 text-sm text-destructive hover:bg-destructive/10 focus-visible:outline focus-visible:outline-2">Stop writing</button>
+            </div>
           </motion.div>
         </motion.div>
       ) : (
