@@ -1,10 +1,13 @@
 # Roadmap
 
+- [x] Prepare evidence-backed public-success plan: launch gaps/bugs, visual theme, SEO, marketing, unit economics and clear printed/digital book pricing.
+- [ ] Implement launch-readiness plan (awaiting owner approval; payment proofs, supplier quote and branded sender remain external dependencies).
+
 - [x] Create and activate Experience Architect UX skill.
 - [x] Prepare and implement approved UX plan: dashboard, task-led menu/search, editorial theme, reading recovery/resume/freshness, book readiness and admin growth.
 - [x] Verify owner dashboard/admin, digital controls, mobile menu; 35 regression tests pass.
 - [ ] Complete paid checkout/download and role-matrix verification (requires authorized test accounts/payment and available generation).
-- [ ] Complete production review (deep security results stale; SEO metadata coverage unavailable; HTTP and page basics passed).
+- [ ] Complete production review (deep security results stale; HTTP, lint and metadata foundations pass; route-specific metadata and Google indexing still need verification).
 
 - [x] Finalize reviewed manuscript automatically after verified payment; store an immutable private PDF per order.
 - [x] Add direct customer/admin PDF downloads and validate fulfillment safeguards (27 tests passed).
