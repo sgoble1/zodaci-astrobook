@@ -1,57 +1,50 @@
-# Navigation discovery
-- Source text stays in protected-content; approved-account authentication plus password tokens are required.
-- Podcasts/uploads use library_items and private signed URLs; owners control sharing.
+# Project rules
+
+## Planning
+- roadmap.md is the sole active-project index. launch-plan.md and .lovable/plan.md mirror only the ongoing launch plan. Keep other active plans separate; remove superseded plans, never code, audits or source/user knowledge, to avoid competing task sources.
+
+## Privacy and access
+- protected-content requires approved-account authentication and password tokens. Public bundles contain no archived payload.
+- private-edition loads authorized data/plates; session-versioned hydration clears immediately on auth changes to prevent stale-account exposure.
+- Admin uses user_roles + has_role(); claim_admin() grants the verified owner on sign-in. No auth-schema triggers.
+- Database/storage enforce Shane/April shared access, never client-only. SharedChatFeed is hidden when signed out/unapproved, including dashboards.
+- April pages use aprilOnly(): Shane chart/family/home appears only in Relationships. Never infer family/ancestry/childhood from symbolism; use verified placements/home guidance.
+- Social Integration has owner-only conversations and a separate counselor; history never enters shared chat or therapy.
+- Counselors replay full sessions with verified profiles; retain session corrections, never claim hidden cross-session learning.
+- Personal context is owner-only/opt-in; user reports never override chart facts.
+- Workspace Wonderings use separate member policies; relationship notes remain owner-only.
+- Public community tables stay separate from private workspaces; public reads/owner-only posting must not expose private feeds.
+- Signed-out AppShell shows public chrome only on SIGNED_OUT_PATHS, otherwise /auth?next=; no member menu/data.
+
+## Charts and content
+- astronomy-engine in astro.ts computes charts with selectable houses/source cross-checks; personal pages use profiles with device fallback.
+- ChartWheel renders computed charts; fixed-star contacts parse Compendium star degrees.
+- Relationships use owner-only relationships RLS, synastry.ts and kua.ts; keep math outside pages. Needs use saved birth facts/utilities, never invented biography.
+- April Kua remains source-reported 1 versus formula 8; show the discrepancy.
+- Birth Chart Book uses bcb-XX protected entries split on DOCX Heading2; birthChartBook.ts maps chart points to chapters.
+- Navigation, member search and Instructions share a registry; search never loads private text. Topics share a renderer separating facts, interpretations and protected links.
+- custom_pages stores menu_group/source-ranked content; sidebar merges dynamically.
 - Ask the Sources uses protected-loader BM25 and ask-sources for streamed cited answers.
-- Podcast queue/speed/resume are per-device localStorage.
+- Free core-theme previews use status 'preview' for the first section; paid opens rewrite fully.
+- Reading failures offer retry; missing rows are not writing; freshness compares birth onboarding time.
+- Atomically claim owner/topic jobs before provider calls; persist terminal states for safe recovery and duplicate-quota prevention.
+- Starters use one sequential per-visit queue after paid entitlement/saved birth data; stop on failure.
+- blog_posts permits subscriber writes/explicit publication; drafts stay private.
+- Member editorial styles preserve archives; dashboard data/reading positions are owner-scoped.
 
-- Chart math uses astronomy-engine in astro.ts with selectable houses, cross-checking source values.
-- Navigation, member search and Instructions share the registry; member search never loads private source text.
-- Topics share one renderer separating facts, interpretations and protected links to avoid exposing source text.
-- PDF viewer: pdfjs-dist legacy (compat).
-- Admin = user_roles table + has_role(); claim_admin() RPC grants admin to the verified owner email on sign-in (no triggers on auth schema allowed).
-- Birth Chart Book uses bcb-XX protected-content entries split on the .docx Heading2 styles; src/content/birthChartBook.ts maps chart points to chapters.
-- ChartWheel (src/components/chart) renders any computed chart; fixed-star contacts are derived by parsing Compendium star degrees.
+## Media and presentation
+- Podcasts/uploads use library_items/private signed URLs with owner-controlled sharing. Public podcast sharing requires workspace membership/authorized audio URLs.
+- make-podcast saves script→TTS WAV in private library storage/library_items; bounded duration presets synchronize script length/source depth.
+- Queue/speed/resume live in per-device localStorage. PDF viewer uses pdfjs-dist legacy compatibility.
+- Shared recommendations/media use shared_recommendations/shared_media plus generic shared_item_comments/shared_item_reactions keyed by item_type/item_id.
+- Box grids use BoxArt(seed,label). One app logo; print products keep their names.
+- /welcome is a separate generic-art brand page; private routes stay unchanged.
+- Book examples are non-orderable; landing readings use public editorial content, never private sources.
 
-- Relationships: relationships table (owner-only RLS); synastry math in src/lib/synastry.ts, Kua/Eight Mansions in src/lib/kua.ts — keeps chart math out of pages.
-- April Kua stays 1 (from her Feng Shui guide) even though the standard female formula gives 8 — sources win, discrepancy shown in UI.
-- Shared-space access is database/storage-enforced for exactly Shane and April; never client-only.
-- SharedChatFeed stays hidden for signed-out/unapproved accounts, including member dashboards.
-- custom_pages stores menu_group and source-ranked generated content; sidebar merges it dynamically.
-- Shared recommendations and media use shared_recommendations/shared_media with generic shared_item_comments/shared_item_reactions (item_type + item_id) — one thread system for any shared item.
-- make-podcast saves script→TTS WAV to private library storage and library_items so episodes appear in the normal list.
-- Private edition data and plates load via account-authorized private-edition; sign-out clears memory and public bundles contain no archived payload.
-- April's own pages filter passages with aprilOnly() so Shane's chart/family/home appears only on Relationship pages.
-- Social Integration uses separate owner-only conversation tables and its own counselor function so its history never enters the shared chat or therapy history.
-- April tools never infer family/ancestry/childhood from symbolism; Family & Home uses verified placements and home guidance.
-- Private counselors replay full sessions using the verified profile; retain in-session corrections but never claim hidden cross-session learning.
-- One app logo; print products keep own names.
-- Generated podcast duration is a bounded request preset interpreted by make-podcast, so script length and source depth stay synchronized.
-- Relationship needs derive only from saved birth facts and chart utilities, never invented biography.
-- Usage analytics: ActivityTracker logs page time, click labels and media events to activity_events (insert-own, admin-read); never record typed text or private chat content.
-
-- Personal chart pages compute from profiles, with device fallback, to match saved birth facts.
-- Box grids use BoxArt(seed,label) for unique art.
-- Personal context is owner-only and opt-in; user reports never override chart facts.
-- Public podcast sharing requires workspace membership and authorized audio URLs.
-
-- Starters use one sequential per-visit queue after paid entitlement and saved birth data; failures stop automatically.
-- book_orders uses owner reads, admin fulfillment and verified webhooks; clients cannot confirm payment.
-- blog_posts permits subscriber writes and explicit publication; drafts remain private.
-- book-cover streams saved-chart artwork through authenticated requests; no April chart reuse.
-- Workspace Wonderings use separate member policies; relationship notes stay owner-only.
-- Order PDFs freeze before checkout, finalize after verified payment in service-only storage, and use owner/admin-authorized downloads.
-- /welcome is a separate generic-art brand page; private app routes remain unchanged.
-- Newsletter requires consent, validated service-only writes and admin-only reads/deletes; signup sends no campaigns.
-- Book examples are non-orderable; landing readings use separate public editorial content, never private source text.
-- Public community tables stay separate from private workspaces; public reads and owner-only posting prevent private-feed exposure.
-- Signed-out: AppShell shows public chrome on SIGNED_OUT_PATHS, else redirects to /auth?next= (no member menu/data).
-- Free core-theme previews: status 'preview' rows (first section); paid opens rewrite them in full.
-
-- Member-only editorial styles preserve archived presentation; dashboard data/reading positions are owner-scoped.
-- Reading failures expose retries; absent readings are not writing, and freshness compares birth onboarding time.
-
-- Reading jobs are claimed atomically per owner/topic before provider calls; persisted terminal states enable safe recovery and prevent duplicate quota admission.
-- Book checkout validates advertised provider amounts and pins its payment environment; physical dispatch excludes sandbox orders to avoid accidental production.
-- Private-edition hydration is session-versioned and clears immediately on auth changes, preventing stale account data.
-
-- Use roadmap.md as the single active-project index; launch-plan.md and .lovable/plan.md mirror only the ongoing launch plan. Keep genuinely separate active plans separate and remove superseded planning documents, never app code, audit reports or source/user knowledge; this prevents competing task sources.
+## Commerce and operations
+- book_orders has owner reads/admin fulfillment/verified webhooks; clients cannot confirm payment.
+- Checkout validates advertised provider amounts and pins environment; dispatch excludes sandbox to prevent accidental production.
+- Order PDFs freeze before checkout, finalize after verified payment in service-only storage, and download only for owner/admin.
+- book-cover streams saved-chart artwork through authenticated requests; never reuse April’s chart.
+- Newsletter requires consent/validated service-only writes/admin-only reads and deletes; signup sends no campaigns.
+- ActivityTracker records page time/click labels/media events in activity_events (insert-own/admin-read), never typed text/private chat.
