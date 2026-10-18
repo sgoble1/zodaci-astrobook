@@ -111,6 +111,7 @@ Deno.serve(async req => {
     if (have && !regenerate) return json({ id: have.id, status: have.status });
     const { data: profile } = await admin.from('profiles').select('*').eq('id', ownerId).maybeSingle();
     if (!profile?.birth_date || !profile.chart) return json({ error: 'Save your birth details first.' }, 400);
+    if (profile.generation_cancelled) return json({ error: 'Writing was stopped for this chart. Press Resume to continue.' }, 409);
     const since = new Date(Date.now() - 86400000).toISOString();
     const { count } = await admin.from('ai_usage').select('id', { count: 'exact', head: true }).eq('user_id', ownerId).eq('feature', 'topic-reading').gte('created_at', since);
     if ((count ?? 0) >= DAILY_LIMIT) return json({ error: 'Daily writing limit reached. Your remaining readings continue tomorrow.' }, 429);
