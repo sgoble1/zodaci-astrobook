@@ -12,6 +12,7 @@ import { usePlan } from '@/hooks/usePlan';
 import { useMyBirth } from '@/lib/myBirth';
 import { streamImage } from '@/lib/streamImage';
 import { BOOK_SECTIONS, BOOK_PRICES, COVER_STYLES, bookTotal, money } from '@/lib/books';
+import { validateBookOrder } from '@/lib/bookOrder';
 import bookPhoto from '@/assets/astrobook-public.jpg';
 import coverMidnightStars from '@/assets/cover-design-midnight-stars.jpg';
 import coverBlueCosmos from '@/assets/cover-design-blue-cosmos.jpg';
@@ -79,7 +80,8 @@ export default function Books() {
   const order = async () => {
     setBusy('Saving your book…'); setError('');
     try {
-      if (!sub.userId || !coverReady || !manuscript || !manuscriptReady) throw new Error('Choose a finished cover and compose your manuscript first.');
+      const invalid = validateBookOrder({ userId: sub.userId, coverReady, manuscriptReady, extras, address });
+      if (invalid || !manuscript) throw new Error(invalid ?? 'Choose a finished cover and compose your manuscript first.');
       const id = crypto.randomUUID();
       let path: string; let coverStyleLabel: string;
       if (design) {
