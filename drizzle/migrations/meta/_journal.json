@@ -281,6 +281,13 @@
       "when": 1791854906150,
       "tag": "0039_restrict_community_reads_to_members",
       "breakpoints": true
+    },
+    {
+      "idx": 40,
+      "version": "7",
+      "when": 1792349373361,
+      "tag": "0040_profiles_generation_cancelled",
+      "breakpoints": true
     }
   ]
 }

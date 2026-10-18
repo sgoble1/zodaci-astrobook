@@ -1,0 +1,2 @@
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS generation_cancelled BOOLEAN NOT NULL DEFAULT FALSE;
+COMMENT ON COLUMN public.profiles.generation_cancelled IS 'Member-level stop switch for the automatic reading-writing queue; true pauses the chain server-side.';

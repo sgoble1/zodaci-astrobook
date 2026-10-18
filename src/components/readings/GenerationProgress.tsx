@@ -17,6 +17,8 @@ export function GenerationProgress() {
   const [targets, setTargets] = useState<typeof ALL_READINGS>([]);
   const [minimized, setMinimized] = useState(() => sessionStorage.getItem(MIN_KEY) === '1');
   const [error, setError] = useState('');
+  const [cancelled, setCancelled] = useState(false);
+  const [runId, setRunId] = useState(0);
   const timer = useRef<number>();
 
   const refresh = async () => {
@@ -31,11 +33,14 @@ export function GenerationProgress() {
     (async () => {
       const { data } = await supabase.auth.getSession();
       if (!data.session) { if (alive) setEligible(false); return; }
-      const { data: p } = await supabase.from('profiles').select('birth_date,chart').eq('id', data.session.user.id).maybeSingle();
+      const uid = data.session.user.id;
+      const { data: p } = await supabase.from('profiles').select('birth_date,chart,generation_cancelled').eq('id', uid).maybeSingle();
       if (!alive) return;
       const ok = !!(p?.birth_date && p.chart);
       setEligible(ok);
-      if (!ok) return;
+      if (!ok) { if (alive) setCancelled(false); return; }
+      setCancelled(!!p?.generation_cancelled);
+      if (p?.generation_cancelled) return;
       const all = await canWriteAllReadings().catch(() => false);
       if (!alive) return;
       const list = all ? ALL_READINGS : ALL_READINGS.filter(t => FREE_READINGS.includes(t.slug));
@@ -43,24 +48,43 @@ export function GenerationProgress() {
       const rows = await refresh();
       if (!rows || !alive) return;
       const missing = list.filter(t => !rows.some(r => r.page_key === `topic-${t.slug}`));
+      // A stop may land after a lane was already started; that is a quiet stop, not an error.
+      const note = (e: Error) => { if (/stopped/i.test(e.message)) { sessionStorage.removeItem(STARTED_KEY); setCancelled(true); } else setError(e.message); };
       if (missing.length && !sessionStorage.getItem(STARTED_KEY)) {
         sessionStorage.setItem(STARTED_KEY, '1');
-        if (!all) { missing.forEach(t => writeTopicReading(t.slug).catch(e => setError((e as Error).message))); return; }
+        if (!all) { missing.forEach(t => writeTopicReading(t.slug).catch(e => note(e as Error))); return; }
         // Three parallel lanes; each lane writes its own share of topics in order.
         const LANES = 3;
         const order = ALL_READINGS.map(t => t.slug);
         for (let lane = 0; lane < LANES; lane++) {
           const first = missing.find(t => order.indexOf(t.slug) % LANES === lane);
-          if (first) writeTopicReading(first.slug, { chain: true, lane, lanes: LANES }).catch(e => setError((e as Error).message));
+          if (first) writeTopicReading(first.slug, { chain: true, lane, lanes: LANES }).catch(e => note(e as Error));
         }
       }
     })();
     return () => { alive = false; };
-  }, [pathname === '/my-readings' || pathname === '/start']); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [(pathname === '/my-readings' || pathname === '/start'), runId]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const stop = async () => {
+    const { data } = await supabase.auth.getSession();
+    if (!data.session) return;
+    await supabase.from('profiles').update({ generation_cancelled: true }).eq('id', data.session.user.id);
+    sessionStorage.removeItem(STARTED_KEY);
+    setError('');
+    setCancelled(true);
+  };
+  const resume = async () => {
+    const { data } = await supabase.auth.getSession();
+    if (!data.session) return;
+    await supabase.from('profiles').update({ generation_cancelled: false }).eq('id', data.session.user.id);
+    sessionStorage.removeItem(STARTED_KEY);
+    setCancelled(false);
+    setRunId(n => n + 1);
+  };
 
   const total = targets.length;
   const count = done ? targets.filter(t => done.has(`topic-${t.slug}`)).length : 0;
-  const active = eligible && done !== null && count < total;
+  const active = eligible && !cancelled && done !== null && count < total;
   useEffect(() => {
     if (!active) return;
     timer.current = window.setInterval(refresh, 20000);
@@ -72,11 +96,22 @@ export function GenerationProgress() {
   const expand = () => { sessionStorage.removeItem(MIN_KEY); setMinimized(false); };
   // Lets the welcome tour wait until this full-screen view is out of the way.
   useEffect(() => { const on = active && !minimized; if (on) document.body.dataset.genOverlay = '1'; else delete document.body.dataset.genOverlay; window.dispatchEvent(new Event('zodaci-tour')); return () => { delete document.body.dataset.genOverlay; }; }, [active, minimized]);
+  if (cancelled && eligible) {
+    return createPortal(
+      <motion.div key="stopped" role="status" className="fixed inset-x-0 top-[64px] lg:top-0 z-[45] border-b border-border bg-card/95 backdrop-blur shadow-md" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+        <div className="mx-auto flex max-w-5xl items-center gap-3 px-4 py-2 text-sm">
+          <span className="min-w-0 flex-1 truncate">Writing was stopped for this chart. {done !== null && targets.length > 0 && `${targets.filter(t => done.has(`topic-${t.slug}`)).length} of ${targets.length} pages are ready.`}</span>
+          <button onClick={resume} className="shrink-0 rounded-md border border-border px-3 py-1 text-xs hover:bg-muted focus-visible:outline focus-visible:outline-2">Resume</button>
+        </div>
+      </motion.div>,
+      document.body
+    );
+  }
   if (!active) return null;
   const pct = Math.round((count / total) * 100);
 
   const pathFor = (slug: string) => (ALL_READINGS.find(t => t.slug === slug) as { route?: string } | undefined)?.route ?? `/my-readings/topic/${slug}`;
-  const paused = error ? (/credit/i.test(error) ? 'Paused: AI writing credits have run out. Your pages continue automatically once credits are added.' : /limit/i.test(error) ? 'Paused for today: the daily writing limit was reached. Writing continues tomorrow.' : `Paused: ${error}`) : '';
+  const paused = error ? (/credit/i.test(error) ? 'Paused: AI writing credits have run out. Your pages continue automatically once credits are added.' : /limit/i.test(error) ? 'Paused for today: the daily writing limit was reached. Writing continues tomorrow.' : /stopped/i.test(error) ? 'Writing was stopped for this chart. Press Resume in the bar above to continue.' : `Paused: ${error}`) : '';
   return createPortal(
     <AnimatePresence>
       {!minimized ? (
@@ -95,7 +130,10 @@ export function GenerationProgress() {
                   <span className={`shrink-0 text-xs ${ok ? 'text-primary' : 'text-muted-foreground'}`}>{ok ? 'Ready' : now ? 'Writing…' : 'Waiting'}</span>
                 </li>); })}
             </ul>
-            <button onClick={minimize} className="rounded-md border border-border px-4 py-2 text-sm hover:bg-muted focus-visible:outline focus-visible:outline-2">Keep exploring</button>
+            <div className="flex flex-wrap items-center justify-center gap-2">
+              <button onClick={minimize} className="rounded-md border border-border px-4 py-2 text-sm hover:bg-muted focus-visible:outline focus-visible:outline-2">Keep exploring</button>
+              <button onClick={stop} className="rounded-md border border-destructive/40 px-4 py-2 text-sm text-destructive hover:bg-destructive/10 focus-visible:outline focus-visible:outline-2">Stop writing</button>
+            </div>
           </motion.div>
         </motion.div>
       ) : (
