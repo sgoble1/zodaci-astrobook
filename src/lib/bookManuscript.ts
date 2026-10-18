@@ -3,7 +3,7 @@ import fontkit from '@pdf-lib/fontkit';
 import { BOOK_SECTIONS } from '@/lib/books';
 
 export type ManuscriptChapter = { title: string; content: string };
-export type ManuscriptInput = { name: string; birthFacts: string; chartFacts: string; chapters: ManuscriptChapter[]; cover?: Uint8Array; edition: string; extras: string[]; fontBytes: Uint8Array };
+export type ManuscriptInput = { name: string; birthFacts: string; chartFacts: string; chapters: ManuscriptChapter[]; cover?: Uint8Array; edition: string; extras: string[]; fontBytes: Uint8Array; bigThree?: string };
 const W = 432, H = 648, M = 48, BOTTOM = 54;
 const ink = rgb(.12, .1, .18), muted = rgb(.38, .36, .42);
 const clean = (s: string) => s.replace(/!\[([^\]]*)\]\([^)]*\)/g, '$1').replace(/\[([^\]]+)\]\(([^)]+)\)/g, '$1 ($2)').replace(/[*`_]/g, '').replace(/\r/g, '');
@@ -24,6 +24,12 @@ export async function composeManuscript(input: ManuscriptInput) {
   cover.drawRectangle({ x: 0, y: H-180, width: W, height: 160, color: rgb(1,1,1), opacity: .94 });
   lines(`${input.name || 'My'} AstroBook`, 27).forEach((line,i) => cover.drawText(line,{ x:M,y:H-76-i*36,size:27,font,color:ink }));
   cover.drawText('A personal sky, in print · Zodaci', { x:M,y:H-154,size:11,font,color:ink });
+  // Title page built from the reader's own chart.
+  const title = pdf.addPage([W,H]);
+  lines(`${input.name || 'My'} AstroBook`, 24).forEach((line,i) => title.drawText(line,{ x:M,y:H*0.62-i*32,size:24,font,color:ink }));
+  if (input.bigThree) lines(input.bigThree, 12).forEach((line,i) => title.drawText(line,{ x:M,y:H*0.62-70-i*18,size:12,font,color:ink }));
+  lines(input.birthFacts, 9).forEach((line,i) => title.drawText(line,{ x:M,y:H*0.62-130-i*14,size:9,font,color:muted }));
+  title.drawText('Zodaci', { x:M,y:M,size:10,font,color:muted });
   let page = pdf.addPage([W,H]), y = H-M;
   const newPage = () => { page = pdf.addPage([W,H]); y=H-M; };
   const write = (text: string, size=10.5, gap=7) => { for(const line of lines(text,size)) { if(y < BOTTOM+size) newPage(); page.drawText(line,{x:M,y,size,font,color:ink}); y-=size*1.55; } y-=gap; };
