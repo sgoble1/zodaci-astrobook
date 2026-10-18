@@ -693,6 +693,7 @@ export type Database = {
           chart: Json | null
           created_at: string
           display_name: string
+          generation_cancelled: boolean
           house_system: string
           id: string
           lat: number | null
@@ -709,6 +710,7 @@ export type Database = {
           chart?: Json | null
           created_at?: string
           display_name?: string
+          generation_cancelled?: boolean
           house_system?: string
           id: string
           lat?: number | null
@@ -725,6 +727,7 @@ export type Database = {
           chart?: Json | null
           created_at?: string
           display_name?: string
+          generation_cancelled?: boolean
           house_system?: string
           id?: string
           lat?: number | null
