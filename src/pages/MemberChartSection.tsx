@@ -1,3 +1,4 @@
+import { ThemeArt } from '@/components/common/ThemeArt';
 import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { computeChart, fmtLon, SIGN_KEYWORDS } from '@/lib/astro';
