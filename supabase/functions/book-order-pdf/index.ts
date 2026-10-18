@@ -24,6 +24,7 @@ Deno.serve(async req=>{
       if(roleError || !admin) return json({error:'Order unavailable.'},404);
     }
     if(!isPaidBook(order)) return json({error:'Your final PDF is available after payment confirmation.'},409);
+    if(order.payment_hold) return json({error:'This order needs a payment review before PDF delivery.'},409);
     const path=await finalizeBookPdf(db,order);
     const signed=await db.storage.from('book-orders').createSignedUrl(path,60,{download:`AstroBook-${order.id.slice(0,8)}.pdf`});
     if(signed.error) throw signed.error;

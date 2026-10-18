@@ -1,5 +1,6 @@
 import { createClient } from "npm:@supabase/supabase-js@2";
-import { type StripeEnv, verifyWebhook } from "../_shared/stripe.ts";
+import { type StripeEnv, verifyWebhook, createStripeClient } from "../_shared/stripe.ts";
+import { verifiedBookAmount } from '../_shared/book-payment-rules.ts';
 
 import { finalizeBookPdf } from '../_shared/book-delivery.ts';
 
@@ -45,9 +46,14 @@ async function updated(subscription: any, env: StripeEnv) {
 async function bookPaid(session: any, env: StripeEnv) {
   const orderId = session.metadata?.orderId; const userId = session.metadata?.userId;
   if (!orderId || !userId || session.payment_status !== 'paid') return;
+  const { data: existing, error: existingError } = await db().from('book_orders').select('*').eq('id', orderId).eq('user_id', userId).eq('checkout_session_id', session.id).eq('environment', env).maybeSingle();
+  if (existingError) throw existingError;
+  if (!existing) return;
+  if (!verifiedBookAmount(existing, session)) throw new Error('Book payment amount does not match order');
+  if (existing.payment_hold) return;
   const address = session.collected_information?.shipping_details?.address || session.shipping_details?.address;
   if (address && address.country !== 'US') throw new Error('Non-US shipping address');
-  const patch = { status:'paid',payment_total_cents:session.amount_total,updated_at:new Date().toISOString(), ...(address ? { shipping_address: { ...address,name:session.collected_information?.shipping_details?.name || session.shipping_details?.name || '' } } : {}) };
+  const patch = { status:'paid',payment_total_cents:session.amount_total,payment_currency:session.currency,payment_tax_cents:session.total_details?.amount_tax ?? 0,payment_intent_id:typeof session.payment_intent === 'string' ? session.payment_intent : session.payment_intent?.id,updated_at:new Date().toISOString(), ...(address ? { shipping_address: { ...address,name:session.collected_information?.shipping_details?.name || session.shipping_details?.name || '' } } : {}) };
   const result = await db().from('book_orders').update(patch).eq('id',orderId).eq('user_id',userId).eq('checkout_session_id',session.id).eq('environment',env).in('status',['draft','awaiting_payment']);
   if (result.error) throw result.error;
   const {data:order,error}=await db().from('book_orders').select('*').eq('id',orderId).eq('user_id',userId).eq('checkout_session_id',session.id).eq('environment',env).single();
@@ -56,7 +62,30 @@ async function bookPaid(session: any, env: StripeEnv) {
 }
 
 async function deleted(subscription: any, env: StripeEnv) {
-  await db().from("billing_subscriptions").update({ status: "canceled", updated_at: new Date().toISOString() }).eq("stripe_subscription_id", subscription.id).eq("environment", env);
+  const result = await db().from("billing_subscriptions").update({ status: "canceled", updated_at: new Date().toISOString() }).eq("stripe_subscription_id", subscription.id).eq("environment", env);
+  if (result.error) throw result.error;
+}
+
+async function retrySession(session: any, env: StripeEnv) {
+  const result = await db().from('book_orders').update({ status: 'draft', checkout_session_id: null, updated_at: new Date().toISOString() }).eq('checkout_session_id', session.id).eq('environment', env).eq('status', 'awaiting_payment').is('payment_total_cents', null);
+  if (result.error) throw result.error;
+}
+
+/** Record provider exceptions; never issue refunds or invent cancellation policy. */
+async function paymentHold(object: any, env: StripeEnv, type: string, created: number) {
+  const intent = typeof object.payment_intent === 'string' ? object.payment_intent : object.payment_intent?.id;
+  if (!intent) return;
+  const stripe = createStripeClient(env);
+  const payment = await stripe.paymentIntents.retrieve(intent);
+  const orderId = payment.metadata?.orderId;
+  if (!orderId) return;
+  const timestamp = new Date(created * 1000).toISOString();
+  const { data: order, error } = await db().from('book_orders').select('id,payment_event_at,payment_hold').eq('id', orderId).eq('environment', env).maybeSingle();
+  if (error) throw error;
+  if (!order || (order.payment_event_at && order.payment_event_at > timestamp)) return;
+  const hold = type === 'charge.refunded' ? 'Refund recorded — review fulfillment' : type === 'charge.dispute.closed' && object.status === 'won' && order.payment_hold?.startsWith('Dispute') ? null : 'Dispute — fulfillment review required';
+  const result = await db().from('book_orders').update({ payment_hold: hold, payment_event_at: timestamp, payment_intent_id: intent }).eq('id', order.id).eq('environment', env);
+  if (result.error) throw result.error;
 }
 
 Deno.serve(async (req) => {
@@ -71,6 +100,11 @@ Deno.serve(async (req) => {
     switch (event.type) {
       case 'checkout.session.completed':
       case 'checkout.session.async_payment_succeeded': await bookPaid(event.data.object,env); break;
+      case 'checkout.session.async_payment_failed':
+      case 'checkout.session.expired': await retrySession(event.data.object, env); break;
+      case 'charge.refunded':
+      case 'charge.dispute.created':
+      case 'charge.dispute.closed': await paymentHold(event.data.object, env, event.type, event.created); break;
       case "customer.subscription.created": await created(event.data.object, env); break;
       case "customer.subscription.updated": await updated(event.data.object, env); break;
       case "customer.subscription.deleted": await deleted(event.data.object, env); break;
