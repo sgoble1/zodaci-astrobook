@@ -21,7 +21,7 @@ export function useOnDemandReading(slug: string | undefined) {
       const [r, full] = await Promise.all([find(), canWriteAllReadings().catch(() => false)]);
       if (!alive) return;
       const upgrading = !!r && r.status === 'preview' && full;
-      setPreview(!full && (r?.status === 'preview' || (!r && isPreviewTheme(slug))));
+      setPreview(!full && isPreviewTheme(slug));
       setRow(upgrading ? null : r);
       if (r && !upgrading) return;
       if (!full && !isPreviewTheme(slug)) { setLocked(true); return; }
