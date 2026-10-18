@@ -3,7 +3,8 @@
   <url><loc>https://zodaci.com/welcome</loc></url>
   <url><loc>https://zodaci.com/about</loc></url>
   <url><loc>https://zodaci.com/pricing</loc></url>
-  <url><loc>https://zodaci.com/astrobook</loc></url>
+  <url><loc>https://zodaci.com/astrobook</loc>
+  <url><loc>https://zodaci.com/book-preview</loc><changefreq>monthly</changefreq><priority>0.8</priority></url></url>
   <url><loc>https://zodaci.com/faq</loc></url>
   <url><loc>https://zodaci.com/blog</loc></url>
   <url><loc>https://zodaci.com/community</loc></url>

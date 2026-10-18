@@ -31,7 +31,7 @@ export function AstroBookPublic() {
           <h1 className="font-display text-4xl leading-tight sm:text-5xl">The book that only you could have written.</h1>
           <p className="text-lg text-muted-foreground">AstroBook is a personalized, printed interpretation of your complete birth chart — chapters on love, purpose, timing and healing, all written from your exact placements.</p>
           <p className="text-sm text-muted-foreground">From {money(BOOK_PRICES.standard)} · free US shipping</p>
-          <div className="flex flex-wrap items-center gap-4"><Button asChild size="lg"><Link to="/auth?next=/books">Order your AstroBook</Link></Button><a href="#inside" className="text-accent">See what's inside →</a></div>
+          <div className="flex flex-wrap items-center gap-4"><Button asChild size="lg"><Link to="/auth?next=/books">Order your AstroBook</Link></Button><Link to="/book-preview" className="text-accent">Read a sample book →</Link></div>
         </div>
         <div className="grid grid-cols-3 gap-3">{[cover1, cover2, cover3].map((c, i) => <img key={i} src={c} alt="Example AstroBook cover design" loading={i ? 'lazy' : 'eager'} className="aspect-[2/3] w-full rounded object-cover shadow-xl" />)}</div>
       </section>
