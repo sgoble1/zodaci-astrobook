@@ -1,3 +1,4 @@
+import { readingJobIsCurrent } from '../_shared/reading-job-rules.ts';
 import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors';
 import { createClient } from 'npm:@supabase/supabase-js@2';
 import { z } from 'npm:zod@3';
@@ -116,40 +117,61 @@ Deno.serve(async req => {
     const topic = TOPICS[slug];
     const page_key = `topic-${slug}`;
     const sysSlug = slug.startsWith('sys-') ? slug.slice(4) : null;
-    const { data: have } = await admin.from('generated_pages').select('id,status').eq('owner_id', ownerId).eq('page_key', page_key).maybeSingle();
+    const { data: have } = await admin.from('generated_pages').select('id,status,updated_at').eq('owner_id', ownerId).eq('page_key', page_key).maybeSingle();
     // A paid member opening an old preview gets the full reading written automatically.
-    if (have && ['ready','preview'].includes(have.status) && !regenerate && !(fullAccess && have.status === 'preview')) return json({ id: have.id, status: have.status });
     const { data: profile } = await admin.from('profiles').select('*').eq('id', ownerId).maybeSingle();
     if (!profile?.birth_date || !profile.chart) return json({ error: 'Save your birth details first.' }, 400);
+    const stale = !!(have && profile.onboarded_at && Date.parse(have.updated_at) < Date.parse(profile.onboarded_at));
+    if (have && !stale && ['ready','preview'].includes(have.status) && !regenerate && !(fullAccess && have.status === 'preview')) return json({ id: have.id, status: have.status });
     if (profile.generation_cancelled) return json({ error: 'Writing was stopped for this chart. Press Resume to continue.' }, 409);
     const { data: paused } = await admin.from('ai_access_pauses').select('message').eq('scope', 'workspace').maybeSingle();
     if (paused) return json({ error: paused.message }, 402);
     const { data: ctx } = await admin.from('personal_context').select('title,body').eq('owner_id', ownerId).eq('use_in_generation', true).limit(6);
     const apiKey = Deno.env.get('LOVABLE_API_KEY'); if (!apiKey) return json({ error: 'AI is not configured.' }, 500);
-    const authHeader = req.headers.get('Authorization')!; const apikeyHeader = req.headers.get('apikey') ?? '';
+    const { data: admission, error: admissionError } = await admin.rpc('claim_topic_reading_job', { p_owner_id: ownerId, p_page_key: page_key, p_regenerate: stale || !!regenerate || have?.status === 'preview' || have?.status === 'hidden' });
+    if (admissionError) throw admissionError;
+    const claimed = admission?.[0];
+    if (!claimed) throw new Error('Job reservation unavailable');
+    if (claimed.quota_exceeded) return json({ error: 'Daily writing limit reached. Please return tomorrow.' }, 429);
+    if (!claimed.claimed) return json({ status: claimed.job_status });
+    const leaseTime = new Date().toISOString();
+    const pending = await admin.from('generated_pages').upsert({ owner_id: ownerId, page_key, section: 'Topic Reading', title: topic.title, content: '', status: 'writing', updated_at: leaseTime }, { onConflict: 'owner_id,page_key' });
+    if (pending.error) {
+      await admin.from('topic_reading_jobs').update({ status: 'failed', updated_at: new Date().toISOString() }).eq('claim_token', claimed.job_id);
+      throw pending.error;
+    }
+    const authHeader = req.headers.get('Authorization') ?? ''; const apikeyHeader = req.headers.get('apikey') ?? '';
     // Writing takes over a minute, so it runs in the background and the page polls for the result.
+    const ensureCurrent = async () => {
+      const { data: current, error } = await admin.from('profiles').select('generation_cancelled,onboarded_at').eq('id', ownerId).single();
+      if (error || !readingJobIsCurrent(current, profile.onboarded_at)) throw new Error('Chart changed or writing stopped');
+    };
+    const controller = new AbortController();
+    const cancellationCheck = setInterval(() => { void ensureCurrent().catch(() => controller.abort()); }, 5000);
     const job = (async () => {
       try {
-        const call = createResponsesCall(req, { apiKey, background: true, effort: 'low', instructions: `You are a master astrologer, psychologist and plain-language writer creating one chapter of a personal astrology book for ${profile.display_name || 'the reader'}, addressed as "you". The depth must match a professional printed natal report.\nTheir calculated chart:\n${chartFacts(profile)}\n${RULES}\nUser-reported life examples (optional, never override chart facts):\n${(ctx ?? []).map(c => `- ${c.title}: ${c.body}`).join('\n') || 'none'}\n\nTopic focus: ${topic.focus}.${sysSlug ? `\nSystem facts (calculated, authoritative):\n${(() => { const f = systemFacts(sysSlug, profile.birth_date, profile.chart?.bodies ?? [], profile.chart?.bazi ?? []); return f ? `${f.summary}\nMethod: ${f.method}\n${f.rows.map(r => `${r[0]}: ${r[1]}`).join('\n')}` : 'none'; })()}` : ''}\n${teaser ? 'Write ONLY the opening section: 250–350 dense, specific words in Markdown under one level-2 heading, analysing the single most important placement for this theme and ending with a one-line "In plain words:" summary. A placements table is added automatically, so do not write one.\n' : `Write 900–1,200 dense, specific words in Markdown (depth over padding; no repetition, no generic filler). A placements table is added automatically, so do not write one:\n1. A short opening overview in plain words.\n2. 4–5 substantial sections, each analysing a specific placement or combination (sign, house, ruler, aspects), each ending with a one-line "In plain words:" summary.\n3. "How this shows up in daily life" with concrete examples.\n4. "Strengths" and "Watch-outs" bullet lists.\n5. "Practices to try" (3).\n6. "Reflection questions" (3–4).\n7. A one-line note on what astrology can and cannot tell you.\n`}Do not start with a level-1 heading.` }, [{ role: 'user', content: `Write the "${topic.title}" chapter.` }]);
+        await ensureCurrent();
+        const call = createResponsesCall(req, { apiKey, background: true, signal: controller.signal, effort: 'low', instructions: `You are a master astrologer, psychologist and plain-language writer creating one chapter of a personal astrology book for ${profile.display_name || 'the reader'}, addressed as "you". The depth must match a professional printed natal report.\nTheir calculated chart:\n${chartFacts(profile)}\n${RULES}\nUser-reported life examples (optional, never override chart facts):\n${(ctx ?? []).map(c => `- ${c.title.slice(0,160)}: ${c.body.slice(0,2500)}`).join('\n') || 'none'}\n\nTopic focus: ${topic.focus}.${sysSlug ? `\nSystem facts (calculated, authoritative):\n${(() => { const f = systemFacts(sysSlug, profile.birth_date, profile.chart?.bodies ?? [], profile.chart?.bazi ?? []); return f ? `${f.summary}\nMethod: ${f.method}\n${f.rows.map(r => `${r[0]}: ${r[1]}`).join('\n')}` : 'none'; })()}` : ''}\n${teaser ? 'Write ONLY the opening section: 250–350 dense, specific words in Markdown under one level-2 heading, analysing the single most important placement for this theme and ending with a one-line "In plain words:" summary. A placements table is added automatically, so do not write one.\n' : `Write 900–1,200 dense, specific words in Markdown (depth over padding; no repetition, no generic filler). A placements table is added automatically, so do not write one:\n1. A short opening overview in plain words.\n2. 4–5 substantial sections, each analysing a specific placement or combination (sign, house, ruler, aspects), each ending with a one-line "In plain words:" summary.\n3. "How this shows up in daily life" with concrete examples.\n4. "Strengths" and "Watch-outs" bullet lists.\n5. "Practices to try" (3).\n6. "Reflection questions" (3–4).\n7. A one-line note on what astrology can and cannot tell you.\n`}Do not start with a level-1 heading.` }, [{ role: 'user', content: `Write the "${topic.title}" chapter.` }]);
         let content = (await call.result.text).trim();
         let wrong = wrongPlacements(content, profile.chart);
         if (wrong.length) {
-          const fix = createResponsesCall(req, { apiKey, background: true, effort: 'low', instructions: `Correct this astrology chapter. These statements contradict the calculated chart and must be fixed using only these facts:\n${chartFacts(profile)}\nWrong: ${wrong.join('; ')}.\nReturn the full corrected Markdown chapter, otherwise unchanged.` }, [{ role: 'user', content }]);
+          await ensureCurrent();
+          const fix = createResponsesCall(req, { apiKey, background: true, signal: controller.signal, effort: 'low', instructions: `Correct this astrology chapter. These statements contradict the calculated chart and must be fixed using only these facts:\n${chartFacts(profile)}\nWrong: ${wrong.join('; ')}.\nReturn the full corrected Markdown chapter, otherwise unchanged.` }, [{ role: 'user', content }]);
           content = (await fix.result.text).trim();
           wrong = wrongPlacements(content, profile.chart);
           if (wrong.length) throw new Error(`wrong placements ${wrong.join(', ')}`);
         }
         if (content.length < (teaser ? 200 : 400)) throw new Error('too short');
         content = `${placementsTable(profile)}\n\n${content}`;
-        const row = { owner_id: ownerId, page_key, section: 'Topic Reading', title: topic.title, content, status: teaser ? 'preview' : have?.status === 'hidden' ? 'hidden' : 'ready', updated_at: new Date().toISOString() };
-        const ins = await admin.from('generated_pages').upsert(row, { onConflict: 'owner_id,page_key' });
-        if (ins.error) throw ins.error;
-        await admin.from('topic_reading_jobs').update({ status: 'succeeded', updated_at: new Date().toISOString() }).eq('id', claimed.job_id);
+        await ensureCurrent();
+        const finished = await admin.rpc('finish_topic_reading_job', { p_owner_id: ownerId, p_page_key: page_key, p_token: claimed.job_id, p_content: content, p_status: teaser ? 'preview' : have?.status === 'hidden' ? 'hidden' : 'ready', p_birth_saved_at: profile.onboarded_at });
+        if (finished.error) throw finished.error;
+        if (!finished.data) return;
       } catch (e) {
         console.error('topic job', slug, e);
-        await admin.from('topic_reading_jobs').update({ status: 'failed', updated_at: new Date().toISOString() }).eq('id', claimed.job_id);
-        await admin.from('generated_pages').update({ status: 'failed', updated_at: new Date().toISOString() }).eq('owner_id', ownerId).eq('page_key', page_key).eq('updated_at', leaseTime);
-      }
+        await admin.rpc('finish_topic_reading_job', { p_owner_id: ownerId, p_page_key: page_key, p_token: claimed.job_id, p_content: '', p_status: 'failed', p_birth_saved_at: profile.onboarded_at });
+        return;
+      } finally { clearInterval(cancellationCheck); }
       // Always move forward to the next unwritten topic (never back), so one failure can't stall or loop the queue.
       // Parallel lanes: each lane only takes topics whose index % lanes === lane, so lanes never collide.
       // A paused workspace (no credits) stops every lane.

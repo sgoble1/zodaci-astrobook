@@ -1,3 +1,4 @@
+import { readingJobIsCurrent } from '../_shared/reading-job-rules.ts';
 import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors';
 import { createClient } from 'npm:@supabase/supabase-js@2';
 import { z } from 'npm:zod@3';
@@ -111,17 +112,39 @@ Deno.serve(async (req) => {
 
     if (kind === 'chapter' || kind === 'starter') {
       const page_key = kind === 'starter' ? `starter-${STARTER.indexOf(topic)}-${user.id}` : `chapter-${Date.now()}-${user.id}`;
-      if (kind === 'starter') { const { data: have } = await admin.from('generated_pages').select('id').eq('owner_id', user.id).eq('page_key', page_key).maybeSingle(); if (have) return json({ id: have.id }); }
+      let claimToken: string | null = null;
+      if (kind === 'starter') {
+        const { data: have } = await admin.from('generated_pages').select('id,status,updated_at').eq('owner_id', user.id).eq('page_key', page_key).maybeSingle();
+        const stale = !!(have && profile.onboarded_at && Date.parse(have.updated_at) < Date.parse(profile.onboarded_at));
+        if (have?.status === 'ready' && !stale) return json({ id: have.id });
+        const admission = await admin.rpc('claim_topic_reading_job', { p_owner_id: user.id, p_page_key: page_key, p_regenerate: stale });
+        if (admission.error) throw admission.error;
+        const reserved = admission.data?.[0];
+        if (!reserved?.claimed) return json({ error: reserved?.quota_exceeded ? 'Daily writing limit reached.' : 'This chapter is already being written. Check back shortly.' }, reserved?.quota_exceeded ? 429 : 409);
+        claimToken = reserved.job_id;
+        const pending = await admin.from('generated_pages').upsert({ owner_id: user.id, page_key, section: 'My Masterbook', title: topic, content: '', status: 'writing' }, { onConflict: 'owner_id,page_key' });
+        if (pending.error) throw pending.error;
+      }
+      try {
       const call = createResponsesCall(req, { apiKey, effort: 'low', instructions: `You write one detailed chapter of a personal astrology Masterbook for ${profile.display_name || 'the reader'}, addressed as "you".\nTheir calculated chart:\n${facts}\n${RULES}\n${knowledge}\nWrite 1,000–1,200 dense, specific words in Markdown with 5–6 sections. Include a placement evidence table, interpretation in plain language beside technical detail, interactions among supplied placements, strengths and trade-offs, practical exercises, questions to reflect on, and an evidence/limitations note. Do not pad to reach length. No April source text or biography. If relevant chart facts are missing, explain what is unavailable instead of fabricating it.` },
         [{ role: 'user', content: `Chapter topic: ${topic}` }]);
       const content = (await call.result.text).trim();
       if (!content) return json({ error: 'The chapter came back empty. Please try again.' }, 502);
-      const ins = kind === 'starter'
-        ? await admin.from('generated_pages').upsert({ owner_id:user.id,page_key,section:'My Masterbook',title:topic,content,status:'ready' }, { onConflict:'owner_id,page_key',ignoreDuplicates:true }).select('id').maybeSingle()
-        : await admin.from('generated_pages').insert({ owner_id: user.id, page_key, section: 'My Masterbook', title: topic, content, status: 'ready' }).select('id').single();
+      const { data: current } = await admin.from('profiles').select('generation_cancelled,onboarded_at').eq('id', user.id).single();
+      if (!readingJobIsCurrent(current, profile.onboarded_at)) throw new Error('Writing stopped or birth details changed.');
+      if (claimToken) {
+        const finished = await admin.rpc('finish_topic_reading_job', { p_owner_id: user.id, p_page_key: page_key, p_token: claimToken, p_content: content, p_status: 'ready', p_birth_saved_at: profile.onboarded_at });
+        if (finished.error || !finished.data) throw finished.error ?? new Error('The chapter changed while writing.');
+        return json({ saved: true });
+      }
+      const ins = await admin.from('generated_pages').insert({ owner_id: user.id, page_key, section: 'My Masterbook', title: topic, content, status: 'ready' }).select('id').single();
       if (ins.error) { console.error(ins.error); return json({ error: 'Could not save the chapter.' }, 500); }
       await admin.from('ai_usage').insert({ user_id: user.id, feature: kind === 'starter' ? 'starter-chapter' : 'creator-chapter' });
       return json({ id: ins.data?.id, saved:true });
+      } catch (e) {
+        if (claimToken) await admin.rpc('finish_topic_reading_job', { p_owner_id: user.id, p_page_key: page_key, p_token: claimToken, p_content: '', p_status: 'failed', p_birth_saved_at: profile.onboarded_at });
+        throw e;
+      }
     }
 
     const words = { short: '220–300', standard: '450–550', long: '900–1,100' }[duration];

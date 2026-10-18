@@ -15,5 +15,13 @@ export function usePageMeta(title: string, description: string) {
     set('meta[property="og:description"]', 'property', 'og:description', description);
     set('meta[name="twitter:title"]', 'name', 'twitter:title', title);
     set('meta[name="twitter:description"]', 'name', 'twitter:description', description);
+    set('meta[property="og:type"]', 'property', 'og:type', 'website');
+    set('meta[name="twitter:card"]', 'name', 'twitter:card', 'summary');
+    const publicPaths = ['/welcome', '/about', '/astrobook', '/book-preview', '/pricing', '/blog', '/faq', '/privacy', '/terms'];
+    if (publicPaths.includes(window.location.pathname)) {
+      let canonical = document.head.querySelector<HTMLLinkElement>('link[rel="canonical"]');
+      if (!canonical) { canonical = document.createElement('link'); canonical.rel = 'canonical'; document.head.appendChild(canonical); }
+      canonical.href = `https://zodaci.com${window.location.pathname}`;
+    }
   }, [title, description]);
 }

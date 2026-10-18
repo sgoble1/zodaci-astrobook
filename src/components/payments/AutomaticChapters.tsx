@@ -20,7 +20,7 @@ export function AutomaticChapters() {
       if (!profile?.birth_date || !profile.chart || running.has(uid) || attempted.has(uid)) return;
       running.add(uid); attempted.add(uid);
       try {
-        const { data: pages } = await supabase.from('generated_pages').select('title').eq('owner_id', uid).eq('section', 'My Masterbook');
+        const { data: pages } = await supabase.from('generated_pages').select('title').eq('status', 'ready').eq('owner_id', uid).eq('section', 'My Masterbook');
         for (const topic of STARTER_CHAPTERS) {
           const { data: current } = await supabase.auth.getSession();
           const { data: state } = await supabase.from('profiles').select('generation_cancelled').eq('id', uid).maybeSingle();

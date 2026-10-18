@@ -55,6 +55,7 @@ Deno.serve(async (req) => {
       const { data: order, error: orderError } = await admin.from('book_orders').select('*').eq('id', orderId).eq('user_id', user.id).single();
       if (orderError || !order) return json({ error: 'Order not available.' }, 404);
       if (!['draft','awaiting_payment'].includes(order.status)) return json({ error: 'This order is not awaiting payment.' }, 400);
+      if (order.payment_hold) return json({ error: 'This order needs a payment review before continuing.' }, 409);
       if (order.checkout_session_id && order.environment !== env) return json({ error: 'This order is already tied to another payment environment.' }, 409);
       const digital = order.format === 'digital';
       const addr = order.shipping_address as Record<string, string> | null;
@@ -82,6 +83,11 @@ Deno.serve(async (req) => {
       const productId = typeof base.product === 'string' ? base.product : base.product.id;
       const product = await stripe.products.retrieve(productId);
       const customerId = await resolveOrCreateCustomer(stripe, { email: user.email ?? undefined, userId: user.id });
+      const reservation = await admin.rpc('reserve_book_checkout', { p_order: order.id, p_owner: user.id });
+      if (reservation.error) throw reservation.error;
+      const lease = reservation.data;
+      if (!lease) return json({ error: 'Checkout is already opening. Please wait a moment, then retry.' }, 409);
+      try {
       const session = await stripe.checkout.sessions.create({
         mode: 'payment', ui_mode: 'embedded_page', return_url: returnUrl, customer: customerId,
         line_items: [{ price: base.id, quantity: 1 }, ...(extras.length && extra ? [{ price: extra.id, quantity: extras.length }] : [])],
@@ -91,9 +97,12 @@ Deno.serve(async (req) => {
         payment_intent_data: { description: product.name, metadata: { userId: user.id, orderId: order.id } },
         metadata: { userId: user.id, orderId: order.id, managed_payments: 'false' },
       }, { idempotencyKey: `book-${order.format}-${order.id}-${env}-${order.checkout_session_id || 'first'}` });
-      const saved = await admin.from('book_orders').update({ checkout_session_id:session.id,environment:env,status:'awaiting_payment',shipping_cents:0,extras_cents:extras.length * 699,updated_at:new Date().toISOString() }).eq('id',order.id);
-      if (saved.error) throw saved.error;
+      const saved = await admin.from('book_orders').update({ checkout_session_id:session.id,environment:env,status:'awaiting_payment',shipping_cents:0,extras_cents:extras.length * 699,updated_at:new Date().toISOString() }).eq('id',order.id).eq('checkout_lease', lease).in('status', ['draft','awaiting_payment']).select('id');
+      if (saved.error || !saved.data?.length) throw saved.error ?? new Error('Order changed while checkout was opening');
       return json({ clientSecret:session.client_secret });
+      } finally {
+        await admin.from('book_orders').update({ checkout_lease: null, checkout_lease_at: null }).eq('id', order.id).eq('checkout_lease', lease);
+      }
     }
     const prices = await stripe.prices.list({ lookup_keys: [priceId] });
     if (!prices.data.length) return json({ error: "Price not found" }, 404);

@@ -27,7 +27,7 @@
 - Ask the Sources uses protected-loader BM25 and ask-sources for streamed cited answers.
 - Free core-theme previews use status 'preview' for the first section; paid opens rewrite fully.
 - Reading failures offer retry; missing rows are not writing; freshness compares birth onboarding time.
-- Atomically claim owner/topic jobs before provider calls; persist terminal states for safe recovery and duplicate-quota prevention.
+- Claim jobs before AI; token-fence terminal writes against retries/chart changes to prevent stale publication and duplicate spend.
 - Starters use one sequential per-visit queue after paid entitlement/saved birth data; stop on failure.
 - blog_posts permits subscriber writes/explicit publication; drafts stay private.
 - Member editorial styles preserve archives; dashboard data/reading positions are owner-scoped.
@@ -44,7 +44,8 @@
 ## Commerce and operations
 - book_orders has owner reads/admin fulfillment/verified webhooks; clients cannot confirm payment.
 - Checkout validates advertised provider amounts and pins environment; dispatch excludes sandbox to prevent accidental production.
-- Order PDFs freeze before checkout, finalize after verified payment in service-only storage, and download only for owner/admin.
+- PDFs use fresh edition manifests; freeze before checkout, finalize privately after verified payment, and authorize owner/admin downloads.
+- Checkout leases serialize orders; provider amount reconciliation and refund/dispute holds protect fulfillment.
 - book-cover streams saved-chart artwork through authenticated requests; never reuse April’s chart.
 - Newsletter requires consent/validated service-only writes/admin-only reads and deletes; signup sends no campaigns.
 - ActivityTracker records page time/click labels/media events in activity_events (insert-own/admin-read), never typed text/private chat.
