@@ -110,12 +110,11 @@ Extend the existing navigation registry and synchronize search/Instructions. Reu
 
 ## Acceptance checks and blockers
 
-- Every existing destination remains reachable; no dead ends or private/shared navigation leaks across signed-out, Free, Full, Creator and Admin states.
-- A free member can read the first core-theme section but cannot retrieve paid content through the redesigned flow; Love/Career retain current paid locks.
-- A requested reading reaches ready or a recoverable failure; stopped generation stays stopped. Unrequested readings never appear as actively writing.
-- Desktop, phone, tablet, 320px reflow, 200% text sizing, long labels, keyboard focus and reduced motion remain usable; no clipping, blank charts or overlapping audio/navigation.
-- An authorized paid test order shows the correct product/total, finalized downloadable PDF and customer-visible dispatch update where applicable.
-- **External gates:** verified sender domain for emails; approved test transaction for payment/download confirmation; real printer quote/integration for actual print automation. No complete-launch claim until these are verified.
+- All destinations remain reachable across visitor/Free/Full/Creator/Admin states without private-data leaks.
+- Free core previews expose one section; Love/Career stay locked. Requested readings finish or offer recovery; stopped stays stopped.
+- Verify phone/tablet/desktop, 320px reflow, 200% text, long labels, keyboard and reduced motion; no overlaps or blank charts.
+- Verify an authorized paid test order’s total, finalized PDF download and dispatch update.
+- **External gates:** sender domain for emails, approved test checkout for downloads, actual printer quote/integration for automation. Do not claim launch readiness before verification.
 
 ## Evidence informing the proposal
 
@@ -125,4 +124,4 @@ Extend the existing navigation registry and synchronize search/Instructions. Reu
 - [WCAG 2.2 guidance](https://www.w3.org/WAI/WCAG22/Understanding/)
 - [Clear form questions and headings](https://design-system.service.gov.uk/get-started/labels-legends-headings/)
 
-These are established usability references, not an invented “latest 2026” trend claim. The celestial-atlas direction is a brand-specific design hypothesis to validate against real tasks.
+Established references, not claimed 2026 trends; validate the visual hypothesis against real tasks.
