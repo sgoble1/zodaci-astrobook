@@ -72,6 +72,8 @@ export default function Pricing() {
         </div>
       )}
       {sub.tier === 'creator' && <p className="text-center"><Button asChild><Link to="/creator">Open your Creator dashboard</Link></Button></p>}
+      <section aria-labelledby="guarantee" className="rounded border border-border bg-card p-5 text-center"><h2 id="guarantee" className="text-xl">7-day refund</h2><p className="text-sm text-muted-foreground mt-2">Not for you? Ask for a refund within 7 days of your first Full Access or Creator payment and we'll return it in full. Contact us from your account email.</p></section>
+      <section aria-labelledby="creator-perks" className="rounded border border-border bg-card p-5"><h2 id="creator-perks" className="text-xl">Creator perks</h2><ul className="mt-3 grid sm:grid-cols-2 gap-2 text-sm"><li>Your own Creator dashboard</li><li>Personal podcasts written and voiced from your chart</li><li>New Masterbook chapters on any topic you choose</li><li>Every Full Access reading, timing page and other system</li></ul></section>
       {sub.tier === 'creator' && <div className="space-y-2"><CreatorStudio /><p className="text-sm text-center"><Link to="/my-masterbook" className="underline">Open My Masterbook to read and play what you've made</Link></p></div>}
       <section className="space-y-3" aria-labelledby="compare">
         <h2 id="compare" className="text-2xl">Compare plans</h2>
