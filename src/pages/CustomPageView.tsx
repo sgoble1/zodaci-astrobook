@@ -36,7 +36,7 @@ export default function CustomPageView() {
         <h1 className="text-4xl sm:text-5xl">{page.title}</h1>
         {page.brief && <p className="max-w-2xl text-sm text-muted-foreground">{page.brief}</p>}
       </header>
-      {page.status === 'ready' ? <div className="prose prose-invert max-w-none"><ReactMarkdown>{page.content}</ReactMarkdown></div>
+      {page.status === 'ready' ? <div className="reading-prose"><ReactMarkdown>{page.content}</ReactMarkdown></div>
         : <p className="parchment p-4">{page.status === 'failed' ? 'This page could not be written. Delete it and try again.' : 'This page is still being written…'}</p>}
       {user && (
         <footer className="flex flex-wrap items-center gap-3 border-t border-border pt-4">
