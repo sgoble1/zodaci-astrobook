@@ -22,6 +22,7 @@ import { ActivityFeed } from '@/components/admin/ActivityFeed';
 import { MarketingPages } from '@/components/admin/MarketingPages';
 import { PrintOrders } from '@/components/admin/PrintOrders';
 import { GrowthStats } from '@/components/admin/GrowthStats';
+import { UpgradeFunnel } from '@/components/admin/UpgradeFunnel';
 
 export default function Admin() {
   const session = useSession();
@@ -33,9 +34,10 @@ export default function Admin() {
         <div className="font-smallcaps text-xs text-gold flex items-center gap-1"><ShieldCheck className="w-3 h-3" />Admin</div>
         <h1 className="text-4xl sm:text-5xl mt-2">{isAdmin ? 'Admin Dashboard' : 'My Workspace'}</h1>
         <p className="text-muted-foreground mt-3 max-w-2xl">Upload Masterbook documents, edit their sections with a live preview, and manage relationships — no code needed.{isAdmin ? ' As admin you can also edit everyone’s uploads and arrange the Document Index.' : ' You can edit the documents you upload; the built-in source books stay as they are.'}</p>
-        {isAdmin && <div className="flex flex-wrap gap-3 mt-4"><Button asChild variant="outline"><Link to="/orders">Manage printed book orders</Link></Button><Button asChild variant="outline"><Link to="/brand-launch">Brand launch & email list</Link></Button></div>}
+        {isAdmin && <div className="flex flex-wrap gap-3 mt-4"><Button asChild variant="outline"><Link to="/orders">Manage printed book orders</Link></Button><Button asChild variant="outline"><Link to="/dispatch">Dispatch books</Link></Button><Button asChild variant="outline"><Link to="/brand-launch">Brand launch & email list</Link></Button></div>}
       </header>
       {isAdmin && <GrowthStats />}
+      {isAdmin && <UpgradeFunnel />}
       <AuthGate what="open your workspace">{() => (
         <div className="space-y-6">
           <nav className="flex flex-wrap gap-2 text-sm">{([['upload', 'Upload documents'], ['sections', 'Edit sections'], ...(isAdmin ? [['index', 'Document Index'], ['activity', 'Usage feed'], ['charts', 'Member charts & readings'], ['marketing', 'Marketing pages & copy'], ['orders', 'Book orders']] as const : []), ['relationships', 'Relationships']] as const).map(([k, l]) => <button key={k} onClick={() => setTab(k)} className={`px-3 py-1.5 rounded-full border ${tab === k ? 'border-accent bg-accent/15' : 'border-border hover:bg-muted'}`}>{l}</button>)}</nav>
