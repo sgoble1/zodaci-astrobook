@@ -15,7 +15,7 @@ export default function Dispatch() {
   const [orders, setOrders] = useState<Tables<'book_orders'>[]>([]);
   const [msg, setMsg] = useState(''); const [err, setErr] = useState('');
   const load = useCallback(async () => {
-    const { data, error } = await supabase.from('book_orders').select('*').in('status', ['paid', 'printing', 'shipped']).not('payment_total_cents', 'is', null).order('created_at');
+    const { data, error } = await supabase.from('book_orders').select('*').in('status', ['paid', 'printing', 'shipped']).not('payment_total_cents', 'is', null).eq('format', 'print').order('created_at');
     if (error) setErr('Orders could not load.'); else setOrders(data ?? []);
   }, []);
   useEffect(() => { if (admin) void load(); }, [admin, load]);

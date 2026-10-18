@@ -1,7 +1,7 @@
 /** Pure validation for a printed AstroBook order, shared by the Books page and its tests. */
 
 export type ShippingAddress = { name: string; line1: string; line2: string; city: string; state: string; postal_code: string; country: string };
-export type BookOrderDraft = { userId?: string | null; coverReady: boolean; manuscriptReady: boolean; extras: string[]; address: ShippingAddress };
+export type BookOrderDraft = { userId?: string | null; coverReady: boolean; manuscriptReady: boolean; extras: string[]; address: ShippingAddress; digital?: boolean };
 
 /** Returns an error message, or null when the order is ready to save and pay. */
 export function validateBookOrder(d: BookOrderDraft): string | null {
@@ -9,6 +9,7 @@ export function validateBookOrder(d: BookOrderDraft): string | null {
   if (!d.coverReady) return 'Choose a finished cover first.';
   if (!d.manuscriptReady) return 'Compose your manuscript first.';
   if (d.extras.some(s => !s.trim())) return 'Every extra section needs a topic, or remove the empty one.';
+  if (d.digital) return null;
   const a = d.address;
   if (!a.name.trim() || !a.line1.trim() || !a.city.trim() || !a.state.trim() || !a.postal_code.trim()) return 'Fill in your full shipping address.';
   if (a.country !== 'US') return 'AstroBook currently ships within the United States only.';
