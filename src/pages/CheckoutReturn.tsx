@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { CheckCircle2, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -6,7 +7,11 @@ import { useSubscription } from '@/hooks/useSubscription';
 export default function CheckoutReturn() {
   const [params] = useSearchParams();
   const sub = useSubscription();
-  const paid = sub.tier !== 'free';
+  const paid = !sub.loading && sub.tier !== 'free';
+  const [waiting, setWaiting] = useState(false);
+  useEffect(() => { const timer = window.setTimeout(() => setWaiting(true), 60000); return () => clearTimeout(timer); }, []);
+  const next = params.get('next');
+  const returnTo = next?.startsWith('/my-readings/topic/') && !next.includes('://') ? next : '/dashboard';
   const name = sub.tier === 'creator' ? 'Creator' : 'Full Access';
   if (!params.get('session_id')) return <article className="mx-auto max-w-xl py-12 text-center space-y-4"><h1 className="font-display text-3xl">No payment found</h1><Button asChild><Link to="/pricing">See plans</Link></Button></article>;
   return (
@@ -14,10 +19,11 @@ export default function CheckoutReturn() {
       {paid ? <CheckCircle2 className="mx-auto h-12 w-12 text-gold" aria-hidden /> : <Loader2 className="mx-auto h-12 w-12 animate-spin text-gold" aria-hidden />}
       <h1 className="font-display text-3xl">{paid ? `Welcome to ${name}` : 'Confirming your payment…'}</h1>
       <p className="text-muted-foreground">{paid
-        ? `Your plan is active. Your own Masterbook and full readings are unlocked. Six chapters begin automatically once your birth details are saved. AI generation depends on available workspace credits.${sub.tier === 'creator' ? ' You can now generate podcasts and new chapters from your chart.' : ''}`
-        : 'Thanks! This usually takes a few seconds. The page updates by itself.'}</p>
+        ? `Your plan is active. Your own Masterbook and full readings are unlocked. Starting readings are created after birth details are saved; other readings are written when opened. Generation is subject to availability and usage limits.${sub.tier === 'creator' ? ' You can now generate podcasts and new chapters from your chart.' : ''}`
+        : waiting ? 'Confirmation is taking longer than expected. Do not pay again. Return to your account to check your plan.' : 'We are waiting for payment confirmation. Access changes only after it is verified.'}</p>
+      {!paid && waiting && <Button asChild variant="outline"><Link to="/dashboard">Check my account</Link></Button>}
       {paid && <div className="flex flex-wrap justify-center gap-3">
-        <Button asChild><Link to="/my-masterbook">Open my Masterbook</Link></Button>
+        <Button asChild><Link to={returnTo}>Continue where I left off</Link></Button>
         <Button asChild variant="outline"><Link to="/my-readings">My readings</Link></Button>
         <Button asChild variant="outline"><Link to="/my-astrobook">My Zodaci</Link></Button>
       </div>}

@@ -2,7 +2,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { getStripeEnvironment } from '@/lib/stripe';
 import { toast } from 'sonner';
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useSubscription, type Tier } from '@/hooks/useSubscription';
@@ -26,6 +26,9 @@ const faqs = [
 export default function Pricing() {
   const sub = useSubscription();
   const nav = useNavigate();
+  const [params] = useSearchParams();
+  const next = params.get('next');
+  const returnTo = next?.startsWith('/my-readings/topic/') && !next.includes('://') ? next : '/dashboard';
   const [open, setOpen] = useState<string | null>(null);
   const [yearly, setYearly] = useState(false);
   const manage = async () => {
@@ -48,7 +51,7 @@ export default function Pricing() {
       {open ? (
         <section className="parchment p-4 space-y-3" aria-label="Checkout">
           <Button variant="outline" size="sm" onClick={() => setOpen(null)}>← Back to plans</Button>
-          <StripeEmbeddedCheckout priceId={open} returnUrl={`${window.location.origin}/checkout/return?session_id={CHECKOUT_SESSION_ID}`} />
+          <StripeEmbeddedCheckout priceId={open} returnUrl={`${window.location.origin}/checkout/return?session_id={CHECKOUT_SESSION_ID}&next=${encodeURIComponent(returnTo)}`} />
         </section>
       ) : (
         <div className="grid gap-5 md:grid-cols-3">
