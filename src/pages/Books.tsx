@@ -1,8 +1,8 @@
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { PRINT_SPECS } from '@/lib/books';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { BookOpen, Check, Truck, Plus, Trash2, Sparkles } from 'lucide-react';
+import { BookOpen, Check, Truck, Plus, Trash2, Sparkles, Upload, Lock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -12,8 +12,18 @@ import { useMyBirth } from '@/lib/myBirth';
 import { streamImage } from '@/lib/streamImage';
 import { BOOK_SECTIONS, BOOK_PRICES, COVER_STYLES, bookTotal, money } from '@/lib/books';
 import bookPhoto from '@/assets/astrobook-public.jpg';
+import coverMidnightStars from '@/assets/cover-design-midnight-stars.jpg';
+import coverBlueCosmos from '@/assets/cover-design-blue-cosmos.jpg';
+import coverGoldAurora from '@/assets/cover-design-gold-aurora.jpg';
 import { ManuscriptPreview } from '@/components/books/ManuscriptPreview';
 import { BOOK_EXAMPLES } from '@/content/bookExamples';
+
+/** Free cover designs every visitor can use, no account or credits needed. */
+const UNIVERSAL_COVERS = [
+  { key: 'midnight-stars', label: 'Midnight Stars', detail: 'Black night sky with fine gold stars and a faint violet glow.', src: coverMidnightStars },
+  { key: 'blue-cosmos', label: 'Blue Cosmos', detail: 'A blue spiral galaxy with a golden planet rising below.', src: coverBlueCosmos },
+  { key: 'gold-aurora', label: 'Gold Aurora', detail: 'Warm gold and violet aurora over a quiet horizon.', src: coverGoldAurora },
+] as const;
 
 export default function Books() {
   usePageMeta('AstroBook · Your printed personal astrology book', 'Order AstroBook, a printed book written from your own birth chart. Softcover from $59, free US shipping.');
