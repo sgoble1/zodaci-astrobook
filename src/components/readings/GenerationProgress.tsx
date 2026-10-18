@@ -82,7 +82,7 @@ export function GenerationProgress() {
 
   const total = targets.length;
   const count = done ? targets.filter(t => done.has(`topic-${t.slug}`)).length : 0;
-  const active = eligible && done !== null && count < total;
+  const active = eligible && !cancelled && done !== null && count < total;
   useEffect(() => {
     if (!active) return;
     timer.current = window.setInterval(refresh, 20000);
@@ -94,6 +94,17 @@ export function GenerationProgress() {
   const expand = () => { sessionStorage.removeItem(MIN_KEY); setMinimized(false); };
   // Lets the welcome tour wait until this full-screen view is out of the way.
   useEffect(() => { const on = active && !minimized; if (on) document.body.dataset.genOverlay = '1'; else delete document.body.dataset.genOverlay; window.dispatchEvent(new Event('zodaci-tour')); return () => { delete document.body.dataset.genOverlay; }; }, [active, minimized]);
+  if (cancelled && eligible) {
+    return createPortal(
+      <motion.div key="stopped" role="status" className="fixed inset-x-0 top-[64px] lg:top-0 z-[45] border-b border-border bg-card/95 backdrop-blur shadow-md" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+        <div className="mx-auto flex max-w-5xl items-center gap-3 px-4 py-2 text-sm">
+          <span className="min-w-0 flex-1 truncate">Writing was stopped for this chart. {done !== null && targets.length > 0 && `${targets.filter(t => done.has(`topic-${t.slug}`)).length} of ${targets.length} pages are ready.`}</span>
+          <button onClick={resume} className="shrink-0 rounded-md border border-border px-3 py-1 text-xs hover:bg-muted focus-visible:outline focus-visible:outline-2">Resume</button>
+        </div>
+      </motion.div>,
+      document.body
+    );
+  }
   if (!active) return null;
   const pct = Math.round((count / total) * 100);
 
