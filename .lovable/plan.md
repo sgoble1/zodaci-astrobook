@@ -11,7 +11,7 @@ SEO foundations pass but deep security is stale. Monthly analytics: 108 visits/8
 **Blocked/unknown:** verified Zodaci Search Console property, printer quote, paid-delivery proof, branded sender, actual AI dollars/fees/CAC/retention. Do not reuse an unrelated verified email domain silently or interpret empty order reads as historical sales proof.
 
 ## Prioritized findings
-**O** observed browser/live rule; **S** source-supported risk, not reproduced in production; **B** blocked proof; **H** hypothesis. High-confidence O/S precede H. Effort S/M/L is relative. Customer impact includes failed purchases, wrong access, lost work, cost waste and unclear offers.
+**O** observed browser/live rule; **S** source-supported risk, not reproduced in production; **B** blocked proof; **H** hypothesis. Effort S/M/L is relative.
 
 | Priority / evidence | Gap → action | Effort / dependency |
 |---|---|---|
