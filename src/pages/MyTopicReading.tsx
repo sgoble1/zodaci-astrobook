@@ -14,7 +14,7 @@ export default function MyTopicReading({ slugOverride }: { slugOverride?: string
   const params = useParams();
   const slug = slugOverride ?? params.slug;
   const meta = [...TOPIC_READINGS, ...CORE_THEMES].find(t => t.slug === slug);
-  const { row, setRow, writing, error, locked } = useOnDemandReading(slug);
+  const { row, setRow, writing, error, locked, preview } = useOnDemandReading(slug);
   const [busy, setBusy] = useState(false);
   const rewrite = async () => {
     if (!slug || !confirm('Rewrite this reading from your chart? The current text will be replaced.')) return;
@@ -46,10 +46,23 @@ export default function MyTopicReading({ slugOverride }: { slugOverride?: string
           <h1 className="font-display text-4xl sm:text-5xl">{meta?.title ?? 'Reading'}</h1>
           <p className="text-sm text-muted-foreground">Written from your own birth chart.</p>
         </div>
-        {row && <Button variant="outline" size="sm" onClick={rewrite} disabled={busy}>{busy ? 'Rewriting… about a minute' : 'Rewrite this reading'}</Button>}
+        {row && !preview && <Button variant="outline" size="sm" onClick={rewrite} disabled={busy}>{busy ? 'Rewriting… about a minute' : 'Rewrite this reading'}</Button>}
       </header>
       {row ? <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_15rem]">
-        <div className="reading-prose"><ReactMarkdown remarkPlugins={[remarkGfm]} components={{ h2: ({ children }) => { const t = String(Array.isArray(children) ? children.join('') : children).replace(/^\d+[.)]\s*/, ''); return <h2 id={slugify(t)}>{t}</h2>; } }}>{row.content}</ReactMarkdown></div>
+        <div><div className="reading-prose"><ReactMarkdown remarkPlugins={[remarkGfm]} components={{ h2: ({ children }) => { const t = String(Array.isArray(children) ? children.join('') : children).replace(/^\d+[.)]\s*/, ''); return <h2 id={slugify(t)}>{t}</h2>; } }}>{row.content}</ReactMarkdown></div>
+        {preview && <div className="relative mt-8">
+          <div aria-hidden="true" className="pointer-events-none select-none space-y-4 opacity-60 blur-sm">
+            {['How this shows up in daily life', 'Strengths & watch-outs', 'Practices to try', 'Reflection questions'].map(h => <div key={h} className="space-y-2"><p className="font-display text-2xl">{h}</p><div className="h-3 w-full rounded bg-muted" /><div className="h-3 w-11/12 rounded bg-muted" /><div className="h-3 w-4/5 rounded bg-muted" /></div>)}
+          </div>
+          <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-b from-transparent via-background/80 to-background">
+            <div className="vellum max-w-md space-y-3 p-6 text-center">
+              <p className="font-smallcaps text-xs text-gold">Preview · section 1 of 5</p>
+              <p className="font-display text-2xl">Unlock the full deep dive</p>
+              <p className="text-sm text-muted-foreground">Your chart has four more sections on daily life, strengths, watch-outs, practices and reflection questions.</p>
+              <Button asChild><Link to="/pricing">Upgrade to Full Access — $12.99/mo</Link></Button>
+            </div>
+          </div>
+        </div>}</div>
         {sections.length > 1 && <nav aria-label="In this reading" className="order-first lg:order-none"><div className="vellum space-y-2 p-4 lg:sticky lg:top-24"><p className="font-smallcaps text-xs text-gold">In this reading</p><ol className="space-y-1.5 text-sm">{sections.map((s, i) => <li key={s}><a href={`#${slugify(s)}`} className="flex gap-2 text-muted-foreground hover:text-foreground"><span className="text-gold">{String(i + 1).padStart(2, '0')}</span><span>{s}</span></a></li>)}</ol></div></nav>}
       </div>
         : writing ? <div role="status" aria-live="polite" className="vellum flex items-center gap-4 p-6"><span className="h-8 w-8 shrink-0 animate-spin rounded-full border-4 border-primary/30 border-t-primary" aria-hidden="true" /><div><p className="font-medium">Writing this reading from your chart…</p><p className="text-sm text-muted-foreground">This takes about a minute. It saves to your account, so it’s instant next time.</p></div></div>

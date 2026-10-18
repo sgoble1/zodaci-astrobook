@@ -109,12 +109,16 @@ Deno.serve(async req => {
       admin.rpc('is_shared_space_user_id', { _user_id: ownerId }),
     ]);
     const fullAccess = !!(paid || isAdminUser || shared);
-    if (!fullAccess && !FREE_READINGS.includes(slug)) return json({ error: 'This reading is part of Full Access. Upgrade to have it written from your chart.' }, 403);
+    // Free members get a short opening-section preview of every core theme; the full reading needs a paid plan.
+    const teaser = !fullAccess && !FREE_READINGS.includes(slug) && slug in CORE_TOPICS;
+    if (!fullAccess && !FREE_READINGS.includes(slug) && !teaser) return json({ error: 'This reading is part of Full Access. Upgrade to have it written from your chart.' }, 403);
+    if (teaser && regenerate) return json({ error: 'Upgrade to Full Access to have the full reading written.' }, 403);
     const topic = TOPICS[slug];
     const page_key = `topic-${slug}`;
     const sysSlug = slug.startsWith('sys-') ? slug.slice(4) : null;
     const { data: have } = await admin.from('generated_pages').select('id,status').eq('owner_id', ownerId).eq('page_key', page_key).maybeSingle();
-    if (have && !regenerate) return json({ id: have.id, status: have.status });
+    // A paid member opening an old preview gets the full reading written automatically.
+    if (have && !regenerate && !(fullAccess && have.status === 'preview')) return json({ id: have.id, status: have.status });
     const { data: profile } = await admin.from('profiles').select('*').eq('id', ownerId).maybeSingle();
     if (!profile?.birth_date || !profile.chart) return json({ error: 'Save your birth details first.' }, 400);
     if (profile.generation_cancelled) return json({ error: 'Writing was stopped for this chart. Press Resume to continue.' }, 409);
@@ -129,7 +133,7 @@ Deno.serve(async req => {
     // Writing takes over a minute, so it runs in the background and the page polls for the result.
     const job = (async () => {
       try {
-        const call = createResponsesCall(req, { apiKey, background: true, effort: 'low', instructions: `You are a master astrologer, psychologist and plain-language writer creating one chapter of a personal astrology book for ${profile.display_name || 'the reader'}, addressed as "you". The depth must match a professional printed natal report.\nTheir calculated chart:\n${chartFacts(profile)}\n${RULES}\nUser-reported life examples (optional, never override chart facts):\n${(ctx ?? []).map(c => `- ${c.title}: ${c.body}`).join('\n') || 'none'}\n\nTopic focus: ${topic.focus}.${sysSlug ? `\nSystem facts (calculated, authoritative):\n${(() => { const f = systemFacts(sysSlug, profile.birth_date, profile.chart?.bodies ?? [], profile.chart?.bazi ?? []); return f ? `${f.summary}\nMethod: ${f.method}\n${f.rows.map(r => `${r[0]}: ${r[1]}`).join('\n')}` : 'none'; })()}` : ''}\nWrite 900–1,200 dense, specific words in Markdown (depth over padding; no repetition, no generic filler). A placements table is added automatically, so do not write one:\n1. A short opening overview in plain words.\n2. 4–5 substantial sections, each analysing a specific placement or combination (sign, house, ruler, aspects), each ending with a one-line "In plain words:" summary.\n3. "How this shows up in daily life" with concrete examples.\n4. "Strengths" and "Watch-outs" bullet lists.\n5. "Practices to try" (3).\n6. "Reflection questions" (3–4).\n7. A one-line note on what astrology can and cannot tell you.\nDo not start with a level-1 heading.` }, [{ role: 'user', content: `Write the "${topic.title}" chapter.` }]);
+        const call = createResponsesCall(req, { apiKey, background: true, effort: 'low', instructions: `You are a master astrologer, psychologist and plain-language writer creating one chapter of a personal astrology book for ${profile.display_name || 'the reader'}, addressed as "you". The depth must match a professional printed natal report.\nTheir calculated chart:\n${chartFacts(profile)}\n${RULES}\nUser-reported life examples (optional, never override chart facts):\n${(ctx ?? []).map(c => `- ${c.title}: ${c.body}`).join('\n') || 'none'}\n\nTopic focus: ${topic.focus}.${sysSlug ? `\nSystem facts (calculated, authoritative):\n${(() => { const f = systemFacts(sysSlug, profile.birth_date, profile.chart?.bodies ?? [], profile.chart?.bazi ?? []); return f ? `${f.summary}\nMethod: ${f.method}\n${f.rows.map(r => `${r[0]}: ${r[1]}`).join('\n')}` : 'none'; })()}` : ''}\n${teaser ? 'Write ONLY the opening section: 250–350 dense, specific words in Markdown under one level-2 heading, analysing the single most important placement for this theme and ending with a one-line "In plain words:" summary. A placements table is added automatically, so do not write one.\n' : `Write 900–1,200 dense, specific words in Markdown (depth over padding; no repetition, no generic filler). A placements table is added automatically, so do not write one:\n1. A short opening overview in plain words.\n2. 4–5 substantial sections, each analysing a specific placement or combination (sign, house, ruler, aspects), each ending with a one-line "In plain words:" summary.\n3. "How this shows up in daily life" with concrete examples.\n4. "Strengths" and "Watch-outs" bullet lists.\n5. "Practices to try" (3).\n6. "Reflection questions" (3–4).\n7. A one-line note on what astrology can and cannot tell you.\n`}Do not start with a level-1 heading.` }, [{ role: 'user', content: `Write the "${topic.title}" chapter.` }]);
         let content = (await call.result.text).trim();
         let wrong = wrongPlacements(content, profile.chart);
         if (wrong.length) {
@@ -138,9 +142,9 @@ Deno.serve(async req => {
           wrong = wrongPlacements(content, profile.chart);
           if (wrong.length) throw new Error(`wrong placements ${wrong.join(', ')}`);
         }
-        if (content.length < 400) throw new Error('too short');
+        if (content.length < (teaser ? 200 : 400)) throw new Error('too short');
         content = `${placementsTable(profile)}\n\n${content}`;
-        const row = { owner_id: ownerId, page_key, section: 'Topic Reading', title: topic.title, content, status: have?.status === 'hidden' ? 'hidden' : 'ready', updated_at: new Date().toISOString() };
+        const row = { owner_id: ownerId, page_key, section: 'Topic Reading', title: topic.title, content, status: teaser ? 'preview' : have?.status === 'hidden' ? 'hidden' : 'ready', updated_at: new Date().toISOString() };
         const ins = await admin.from('generated_pages').upsert(row, { onConflict: 'owner_id,page_key' });
         if (ins.error) throw ins.error;
         await admin.from('ai_usage').insert({ user_id: ownerId, feature: 'topic-reading' });

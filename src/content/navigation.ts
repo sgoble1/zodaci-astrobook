@@ -34,7 +34,8 @@ const FULL_PATHS = ['/my-masterbook', '/counselors', '/workbook/social-integrati
 const CREATOR_PATHS = ['/podcasts', '/create', '/creator'];
 /** The plan a member page needs. Used by the menu locks and the page guard so both always agree. */
 export function requiredPlan(path: string): Plan {
-  if (path.startsWith('/my-readings/topic/')) return FREE_TOPIC_PATHS.includes(path) ? 'free' : 'full';
+  // Core themes are open to free members as a one-section preview.
+  if (path.startsWith('/my-readings/topic/')) return FREE_TOPIC_PATHS.includes(path) || path.startsWith('/my-readings/topic/core-') ? 'free' : 'full';
   if (CREATOR_PATHS.some(p => path === p || path.startsWith(`${p}/`))) return 'creator';
   if (FULL_PATHS.some(p => path === p || path.startsWith(`${p}/`))) return 'full';
   return 'free';

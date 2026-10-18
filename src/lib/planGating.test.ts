@@ -8,8 +8,14 @@ describe("plan gating", () => {
   });
 
   it("all other topic readings need a full plan", () => {
-    for (const slug of ["love", "career", "money", "health", "sex-attraction", "timing", "core-emotions", "core-legacy"]) {
+    for (const slug of ["love", "career", "money", "health", "sex-attraction", "timing"]) {
       expect(requiredPlan(`/my-readings/topic/${slug}`)).toBe("full");
+    }
+  });
+
+  it("free members can open core theme pages as a preview", () => {
+    for (const slug of ["core-emotions", "core-legacy"]) {
+      expect(requiredPlan(`/my-readings/topic/${slug}`)).toBe("free");
     }
   });
 
