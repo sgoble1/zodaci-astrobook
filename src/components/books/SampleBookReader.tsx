@@ -10,6 +10,8 @@ function Reader({ blob, maxPages }: { blob: Blob; maxPages?: number }) {
   const [page, setPage] = useState(1);
   const [scale, setScale] = useState(1.05);
   const [err, setErr] = useState('');
+  const [text, setText] = useState('');
+  const [attempt, setAttempt] = useState(0);
   const canvas = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -24,24 +26,33 @@ function Reader({ blob, maxPages }: { blob: Blob; maxPages?: number }) {
       } catch { if (!cancelled) setErr('The sample book could not be opened in this browser.'); }
     })();
     return () => { cancelled = true; };
-  }, [blob]);
+  }, [blob, attempt]);
 
   useEffect(() => {
     if (!doc || !canvas.current) return;
     let task: { cancel: () => void } | null = null;
+    let active = true;
     (async () => {
+      try {
       const p = await doc.getPage(Math.min(page, doc.numPages));
+      const content = await p.getTextContent();
+      if (!active) return;
+      setText(content.items.map(item => 'str' in item ? item.str : '').join(' '));
       const vp = p.getViewport({ scale: scale * (window.devicePixelRatio || 1) });
-      const c = canvas.current!; c.width = vp.width; c.height = vp.height;
+      const c = canvas.current;
+      const context = c?.getContext('2d');
+      if (!c || !context) return;
+      c.width = vp.width; c.height = vp.height;
       c.style.width = `${vp.width / (window.devicePixelRatio || 1)}px`;
-      const r = p.render({ canvasContext: c.getContext('2d')!, viewport: vp, canvas: c } as Parameters<typeof p.render>[0]);
+      const r = p.render({ canvasContext: context, viewport: vp, canvas: c } as Parameters<typeof p.render>[0]);
       task = r; await r.promise.catch(() => {});
+      } catch { if (active) setErr('This sample page could not be displayed.'); }
     })();
-    return () => task?.cancel();
+    return () => { active = false; task?.cancel(); };
   }, [doc, page, scale]);
 
   const total = Math.min(doc?.numPages ?? 1, maxPages ?? Number.MAX_SAFE_INTEGER);
-  if (err) return <p role="alert" className="text-destructive text-sm">{err}</p>;
+  if (err) return <div role="alert" className="space-y-2"><p className="text-destructive text-sm">{err}</p><Button variant="outline" onClick={() => { setErr(''); setAttempt(n => n + 1); }}>Retry sample</Button></div>;
   return (
     <div className="space-y-3">
       <div className="flex flex-wrap items-center gap-2 rounded border border-border bg-card p-2">
@@ -55,8 +66,9 @@ function Reader({ blob, maxPages }: { blob: Blob; maxPages?: number }) {
       </div>
       <div className="overflow-auto rounded border border-border bg-muted/30 p-2 flex justify-center">
         {!doc && <p className="p-10 text-sm text-muted-foreground">Loading the sample book…</p>}
-        <canvas ref={canvas} className="shadow-lg bg-background max-w-none" />
+        <canvas ref={canvas} aria-label={`Sample AstroBook page ${page}`} className="shadow-lg bg-background max-w-none" />
       </div>
+      <details className="border-t border-border pt-3"><summary className="cursor-pointer text-sm">Read this page as text</summary><p className="mt-3 whitespace-pre-wrap text-sm leading-relaxed">{text || 'Opening page text…'}</p></details>
     </div>
   );
 }
@@ -75,13 +87,14 @@ export function SampleBook({ maxPages, cta }: { maxPages?: number; cta?: React.R
       <div className="space-y-3">
         <Button size="lg" disabled={state === 'busy'} onClick={() => void open()}><BookOpen />{state === 'busy' ? 'Composing the sample book…' : 'Open the sample book'}</Button>
         {state === 'error' && <p role="alert" className="text-destructive text-sm">The sample book could not be composed. <button className="underline" onClick={() => void open()}>Try again</button></p>}
-        <p className="text-xs text-muted-foreground">Composed live in your browser from a fictional reader's chart — the same layout, formatting and length as a real AstroBook.</p>
+        <p className="text-xs text-muted-foreground">A short fictional sample with calculated chart facts and illustrative editorial passages. Your purchased book’s content and actual length are reviewed separately.</p>
       </div>
     );
   }
+  if (!blob) return null;
   return (
     <div className="space-y-4">
-      <Reader blob={blob!} maxPages={maxPages} />
+      <Reader blob={blob} maxPages={maxPages} />
       <p className="text-xs text-muted-foreground">Sample book · fictional reader "Jules Harbor" · your AstroBook is written from your own chart.</p>
       {cta}
     </div>
