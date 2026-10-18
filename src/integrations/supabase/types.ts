@@ -178,6 +178,8 @@ export type Database = {
           admin_note: string
           base_price_cents: number
           carrier: string
+          checkout_lease: string | null
+          checkout_lease_at: string | null
           checkout_session_id: string | null
           cover_path: string | null
           cover_style: string
@@ -191,6 +193,11 @@ export type Database = {
           id: string
           manuscript_pages: number | null
           manuscript_path: string | null
+          payment_currency: string | null
+          payment_event_at: string | null
+          payment_hold: string | null
+          payment_intent_id: string | null
+          payment_tax_cents: number | null
           payment_total_cents: number | null
           pdf_ready_at: string | null
           shipped_at: string | null
@@ -205,6 +212,8 @@ export type Database = {
           admin_note?: string
           base_price_cents?: number
           carrier?: string
+          checkout_lease?: string | null
+          checkout_lease_at?: string | null
           checkout_session_id?: string | null
           cover_path?: string | null
           cover_style?: string
@@ -218,6 +227,11 @@ export type Database = {
           id?: string
           manuscript_pages?: number | null
           manuscript_path?: string | null
+          payment_currency?: string | null
+          payment_event_at?: string | null
+          payment_hold?: string | null
+          payment_intent_id?: string | null
+          payment_tax_cents?: number | null
           payment_total_cents?: number | null
           pdf_ready_at?: string | null
           shipped_at?: string | null
@@ -232,6 +246,8 @@ export type Database = {
           admin_note?: string
           base_price_cents?: number
           carrier?: string
+          checkout_lease?: string | null
+          checkout_lease_at?: string | null
           checkout_session_id?: string | null
           cover_path?: string | null
           cover_style?: string
@@ -245,6 +261,11 @@ export type Database = {
           id?: string
           manuscript_pages?: number | null
           manuscript_path?: string | null
+          payment_currency?: string | null
+          payment_event_at?: string | null
+          payment_hold?: string | null
+          payment_intent_id?: string | null
+          payment_tax_cents?: number | null
           payment_total_cents?: number | null
           pdf_ready_at?: string | null
           shipped_at?: string | null
@@ -1901,6 +1922,10 @@ export type Database = {
         }[]
       }
       request_book_quote: { Args: { _order_id: string }; Returns: undefined }
+      reserve_book_checkout: {
+        Args: { p_order: string; p_owner: string }
+        Returns: string
+      }
       shared_member_directory: {
         Args: never
         Returns: {

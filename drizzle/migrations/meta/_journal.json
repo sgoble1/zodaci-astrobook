@@ -351,6 +351,13 @@
       "when": 1792360846582,
       "tag": "0049_reading_claim_fencing",
       "breakpoints": true
+    },
+    {
+      "idx": 50,
+      "version": "7",
+      "when": 1792360903444,
+      "tag": "0050_book_payment_evidence_and_checkout_lease",
+      "breakpoints": true
     }
   ]
 }
