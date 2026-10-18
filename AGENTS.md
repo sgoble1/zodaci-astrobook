@@ -27,7 +27,6 @@
 - One shared app logo; printed products keep their own names.
 - Generated podcast duration is a bounded request preset interpreted by make-podcast, so script length and source depth stay synchronized.
 - Relationship needs derive only from saved birth facts and chart utilities, never invented biography.
-- Wide tables scroll horizontally on phones.
 - Usage analytics: ActivityTracker logs page time, click labels and media events to activity_events (insert-own, admin-read); never record typed text or private chat content.
 
 - Personal chart pages compute from profiles, with device fallback, to match saved birth facts.
@@ -46,4 +45,4 @@
 - Book examples are non-orderable; landing readings use separate public editorial content, never private source text.
 - Public community tables stay separate from private workspaces; public reads and owner-only posting prevent private-feed exposure.
 - Signed-out: AppShell shows public chrome on SIGNED_OUT_PATHS, else redirects to /auth?next= (no member menu/data).
-- Free core-theme previews are generated_pages rows with status 'preview' (opening section only); paid members opening a preview get the full reading rewritten automatically.
+- Free core-theme previews: status 'preview' rows (first section); paid opens rewrite them in full.
