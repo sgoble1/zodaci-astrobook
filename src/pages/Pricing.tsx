@@ -11,7 +11,7 @@ import { CreatorStudio } from '@/components/payments/CreatorStudio';
 import { PaymentTestModeBanner } from '@/components/payments/PaymentTestModeBanner';
 
 const plans: { tier: Tier; name: string; price: string; priceId?: string; blurb: string; items: string[] }[] = [
-  { tier: 'free', name: 'Free', price: 'Free', blurb: 'Everything you need to meet your chart.', items: ['Your calculated birth chart wheel', 'Planets, houses and aspects in plain words', 'Short personal readings', 'Explore & Discover and the Chart Guide', 'Save your chart to your account'] },
+  { tier: 'free', name: 'Free', price: 'Free', blurb: 'Everything you need to meet your chart.', items: ['Your calculated birth chart wheel', 'Planets, houses and aspects in plain words', 'Two full readings: Your Big Three and Personality & Strengths', 'Explore & Discover and the Chart Guide', 'Save your chart to your account'] },
   { tier: 'full', name: 'Full Access', price: '$12.99/month', priceId: 'full_access_monthly', blurb: 'The complete book written from your chart.', items: ['Every reading at full length', 'Read your own Masterbook, written from your chart', 'Timing & cycles: transits, retrogrades, life phases', 'Seven other systems: Vedic, Ba Zi, Maya and more', 'A monthly allowance of AI credits', 'Shared spaces with people you invite'] },
   { tier: 'creator', name: 'Creator', price: '$14.99/month', priceId: 'creator_monthly', blurb: 'Make new things from your chart.', items: ['Everything in Full Access', 'Generate personal podcasts about your chart', 'Generate new Masterbook chapters and pages', 'A larger monthly allowance of AI credits'] },
 ];
@@ -69,6 +69,22 @@ export default function Pricing() {
         </div>
       )}
       {sub.tier === 'creator' && <div className="space-y-2"><CreatorStudio /><p className="text-sm text-center"><Link to="/my-masterbook" className="underline">Open My Masterbook to read and play what you've made</Link></p></div>}
+      <section className="space-y-3" aria-labelledby="compare">
+        <h2 id="compare" className="text-2xl">Compare plans</h2>
+        <div className="overflow-x-auto rounded-lg border border-border">
+          <table className="w-full min-w-[520px] text-sm">
+            <thead><tr className="border-b border-border text-left"><th className="p-3 font-medium">Feature</th><th className="p-3 font-medium">Free</th><th className="p-3 font-medium">Full Access</th><th className="p-3 font-medium">Creator</th></tr></thead>
+            <tbody>{([
+              ['Birth chart wheel, planets, houses & aspects', '✓', '✓', '✓'],
+              ['Full written readings from your chart', '2', 'All 38', 'All 38'],
+              ['Other Systems readings (Vedic, Ba Zi, Maya…)', 'Values only', '✓', '✓'],
+              ['Timing, transits & retrogrades', 'Basic', '✓', '✓'],
+              ['AI counselors & SmartChat', 'Limited', '✓', '✓'],
+              ['Personal podcasts & new chapters', '—', '—', '✓'],
+            ] as const).map(r => <tr key={r[0]} className="border-b border-border last:border-0">{r.map((c, i) => <td key={i} className={`p-3 ${i ? 'text-center' : ''}`}>{c}</td>)}</tr>)}</tbody>
+          </table>
+        </div>
+      </section>
       <section className="space-y-4" aria-labelledby="pricing-faq"><h2 id="pricing-faq" className="text-2xl">Questions</h2>
         <dl className="grid gap-4 sm:grid-cols-2">{faqs.map(f => <div key={f.q} className="parchment p-4"><dt className="font-medium">{f.q}</dt><dd className="mt-1 text-sm text-muted-foreground">{f.a}</dd></div>)}</dl>
       </section>
