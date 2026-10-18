@@ -33,11 +33,14 @@ export function GenerationProgress() {
     (async () => {
       const { data } = await supabase.auth.getSession();
       if (!data.session) { if (alive) setEligible(false); return; }
-      const { data: p } = await supabase.from('profiles').select('birth_date,chart').eq('id', data.session.user.id).maybeSingle();
+      const uid = data.session.user.id;
+      const { data: p } = await supabase.from('profiles').select('birth_date,chart,generation_cancelled').eq('id', uid).maybeSingle();
       if (!alive) return;
       const ok = !!(p?.birth_date && p.chart);
       setEligible(ok);
-      if (!ok) return;
+      if (!ok) { if (alive) setCancelled(false); return; }
+      setCancelled(!!p?.generation_cancelled);
+      if (p?.generation_cancelled) return;
       const all = await canWriteAllReadings().catch(() => false);
       if (!alive) return;
       const list = all ? ALL_READINGS : ALL_READINGS.filter(t => FREE_READINGS.includes(t.slug));
@@ -58,7 +61,24 @@ export function GenerationProgress() {
       }
     })();
     return () => { alive = false; };
-  }, [pathname === '/my-readings' || pathname === '/start']); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [(pathname === '/my-readings' || pathname === '/start'), runId]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const stop = async () => {
+    const { data } = await supabase.auth.getSession();
+    if (!data.session) return;
+    await supabase.from('profiles').update({ generation_cancelled: true }).eq('id', data.session.user.id);
+    sessionStorage.removeItem(STARTED_KEY);
+    setError('');
+    setCancelled(true);
+  };
+  const resume = async () => {
+    const { data } = await supabase.auth.getSession();
+    if (!data.session) return;
+    await supabase.from('profiles').update({ generation_cancelled: false }).eq('id', data.session.user.id);
+    sessionStorage.removeItem(STARTED_KEY);
+    setCancelled(false);
+    setRunId(n => n + 1);
+  };
 
   const total = targets.length;
   const count = done ? targets.filter(t => done.has(`topic-${t.slug}`)).length : 0;
