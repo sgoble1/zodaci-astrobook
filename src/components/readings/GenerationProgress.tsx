@@ -94,7 +94,7 @@ export function GenerationProgress() {
   useEffect(() => { const on = active && !minimized; if (on) document.body.dataset.genOverlay = '1'; else delete document.body.dataset.genOverlay; window.dispatchEvent(new Event('zodaci-tour')); return () => { delete document.body.dataset.genOverlay; }; }, [active, minimized]);
   if (cancelled && eligible) {
     return createPortal(
-      <motion.div key="stopped" role="status" className="fixed bottom-4 left-4 right-4 lg:left-80 z-[45] border-b border-border bg-card/95 backdrop-blur shadow-md" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+      <motion.div data-generation-notice key="stopped" role="status" className="fixed bottom-4 left-4 right-4 lg:left-80 z-[45] border-b border-border bg-card/95 backdrop-blur shadow-md" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
         <div className="mx-auto flex max-w-5xl items-center gap-3 px-4 py-2 text-sm">
           <span className="min-w-0 flex-1 truncate">Writing was stopped for this chart. {done !== null && targets.length > 0 && `${targets.filter(t => done.has(`topic-${t.slug}`)).length} of ${targets.length} pages are ready.`}</span>
           <Button variant="outline" onClick={resume} className="shrink-0 rounded-md border border-border px-3 py-1 text-xs hover:bg-muted focus-visible:outline focus-visible:outline-2">Resume</Button>
@@ -133,7 +133,7 @@ export function GenerationProgress() {
           </motion.div>
         </motion.div>
       ) : (
-        <motion.div key="mini" layoutId="gen-card" role="status" aria-live="polite" className="fixed bottom-4 left-4 right-4 lg:left-80 z-[45] border-b border-border bg-card/95 backdrop-blur shadow-md">
+        <motion.div data-generation-notice key="mini" layoutId="gen-card" role="status" aria-live="polite" className="fixed bottom-4 left-4 right-4 lg:left-80 z-[45] border-b border-border bg-card/95 backdrop-blur shadow-md">
           <div className="mx-auto flex max-w-5xl items-center gap-3 px-4 py-2 text-sm">
             <motion.span className="h-4 w-4 shrink-0 rounded-full border-2 border-primary/30 border-t-primary" animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1.2, ease: 'linear' }} aria-hidden="true" />
             <span className="min-w-0 flex-1 truncate">{paused ? paused : <>Writing your pages: <strong>{count} of {total}</strong> ready{current ? ` · ${current.title}` : ''}</>}</span>

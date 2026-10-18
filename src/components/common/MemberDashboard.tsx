@@ -11,6 +11,7 @@ import { useMyBirth, toChartInput } from '@/lib/myBirth';
 import { computeChart, fmtLon } from '@/lib/astro';
 import { loadMyTopicReadings, type TopicRow } from '@/lib/topicReadings';
 import { readingVisitKey, type ReadingVisit } from '@/lib/readingExperience';
+import { SharedChatFeed } from '@/components/shared/SharedChatFeed';
 import { supabase } from '@/integrations/supabase/client';
 
 type OrderSummary = { id: string; status: string; edition: string; format: string };
@@ -52,5 +53,6 @@ export function MemberDashboard() {
     {orders.length > 0 && <section className="space-y-4"><h2 className="text-2xl">Your AstroBooks</h2><ul className="divide-y divide-border">{orders.map(order => <li key={order.id}><Link to={`/orders?order=${order.id}`} className="flex items-center justify-between gap-4 py-4"><span className="capitalize">{order.edition} · {order.format === 'digital' ? 'Digital PDF' : 'Printed book'}</span><span className="text-sm capitalize text-muted-foreground">{order.status.replace(/_/g, ' ')} →</span></Link></li>)}</ul></section>}
     </>}
     <section className="flex flex-wrap items-center justify-between gap-4 border-t border-border pt-6"><h2 className="text-2xl">Explore next</h2><div className="flex flex-wrap gap-2"><Button asChild variant="outline"><Link to="/explore"><Compass className="h-4 w-4" />Explore</Link></Button><Button asChild variant="outline"><Link to="/books"><BookOpen className="h-4 w-4" />AstroBook</Link></Button>{access.plan === 'creator' && <Button asChild variant="outline"><Link to="/creator">Creator Studio</Link></Button>}</div></section>
+    <SharedChatFeed />
   </article>;
 }

@@ -347,3 +347,5 @@ svg.fv-shown circle, svg.fv-shown path, svg.fv-shown line { animation: fv-draw 1
 .member-experience .nav-create-glow { animation: none; box-shadow: none; }
 @media (max-width: 639px) { .member-experience h1 { font-size: 2.25rem; } .member-experience h2 { font-size: 1.75rem; } }
 @media (prefers-reduced-motion: reduce) { .member-experience *, .member-experience *::before, .member-experience *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }
+
+body:has(#mobile-menu) [data-generation-notice] { display: none; }
