@@ -149,6 +149,9 @@ function SidebarInner({ mobile = false, onNavigate }: { mobile?: boolean; onNavi
   const { items: rels } = useRelationships();
   const custom = useCustomPages();
   const badges = useSharedBadges();
+  const { plan, loading: planLoading } = usePlan();
+  const locked = (to: string) => !april && !planLoading && !planAllows(plan, requiredPlan(to));
+  const lockTag = (to: string) => locked(to) ? <span className="ml-auto inline-flex shrink-0 items-center gap-1 rounded-full border border-border px-1.5 py-0.5 text-[9px] uppercase tracking-wide"><Lock className="h-2.5 w-2.5" aria-hidden="true" />{PLAN_LABEL[requiredPlan(to)]}</span> : null;
   const navRef = useRef<HTMLElement>(null);
   const [glowId, setGlowId] = useState<string | null>(null);
   // After a page is created: scroll its new menu item into view and make it glow.
@@ -199,6 +202,7 @@ function SidebarInner({ mobile = false, onNavigate }: { mobile?: boolean; onNavi
         )}
       </div>
 
+      {!april && !planLoading && plan === 'free' && <NavLink to="/pricing" onClick={onNavigate} className="block rounded-xl border border-primary/40 bg-primary/10 p-3 text-xs"><span className="font-semibold text-foreground">Free plan</span> · 2 full readings included. Items marked <Lock className="inline h-3 w-3" aria-label="locked" /> need Full Access. <span className="text-primary underline">Upgrade →</span></NavLink>}
       <div className="pt-1 space-y-2"><CommandPaletteTrigger /><BookmarkButton /></div>
 
       <nav ref={navRef} aria-label="Site menu" className="flex flex-col gap-4 text-sm">
@@ -211,9 +215,9 @@ function SidebarInner({ mobile = false, onNavigate }: { mobile?: boolean; onNavi
                 className={({ isActive }) =>
                   `flex min-h-11 items-center justify-between gap-2 rounded border border-transparent px-3 py-2 transition-colors ${
                     isActive ? 'bg-accent/15 border-accent/30 text-foreground' : 'text-muted-foreground hover:text-foreground hover:bg-muted/60'
-                  }${n.created ? ' bg-created/20 text-foreground' : ''}${n.to === '/create' ? ' nav-create-glow' : ''}${glowId && n.to === `/p/${glowId}` ? ' nav-new-glow' : ''}`
+                  }${locked(n.to) ? ' opacity-60' : ''}${n.created ? ' bg-created/20 text-foreground' : ''}${n.to === '/create' ? ' nav-create-glow' : ''}${glowId && n.to === `/p/${glowId}` ? ' nav-new-glow' : ''}`
                 }
-              ><span>{n.label}{n.created ? <span className="sr-only"> (created page)</span> : null}{glowId && n.to === `/p/${glowId}` ? <span className="sr-only"> — just added</span> : null}</span>{n.badge ? <span className="min-w-5 rounded-full bg-primary px-1.5 text-center text-[10px] text-primary-foreground" aria-label={`${n.badge} new`}>{n.badge}</span> : null}</NavLink>
+              ><span>{n.label}{n.created ? <span className="sr-only"> (created page)</span> : null}{glowId && n.to === `/p/${glowId}` ? <span className="sr-only"> — just added</span> : null}</span>{lockTag(n.to)}{n.badge ? <span className="min-w-5 rounded-full bg-primary px-1.5 text-center text-[10px] text-primary-foreground" aria-label={`${n.badge} new`}>{n.badge}</span> : null}</NavLink>
             ))}
             {g.submenus?.map(submenu => (
                 <div key={submenu.label}>
@@ -225,14 +229,14 @@ function SidebarInner({ mobile = false, onNavigate }: { mobile?: boolean; onNavi
                         className={({ isActive }) =>
                           `flex min-h-11 items-center rounded border border-transparent px-3 py-2 text-xs transition-colors ${
                             isActive ? 'bg-accent/15 border-accent/30 text-foreground' : 'text-muted-foreground hover:text-foreground hover:bg-muted/60'
-                          }`
+                          }${locked(n.to) ? ' opacity-60' : ''}`
                         }
-                      >{n.label}</NavLink>
+                      ><span>{n.label}</span>{lockTag(n.to)}</NavLink>
                     ))}
                   </div>
                 </div>
             ))}
-            {g.footer?.map(n => <NavLink key={n.to} to={n.to} onClick={onNavigate} className="mt-1 flex min-h-11 items-center rounded border border-transparent px-3 py-2 text-muted-foreground hover:text-foreground nav-create-glow">{n.label}</NavLink>)}
+            {g.footer?.map(n => <NavLink key={n.to} to={n.to} onClick={onNavigate} className={`mt-1 flex min-h-11 items-center gap-2 rounded border border-transparent px-3 py-2 text-muted-foreground hover:text-foreground nav-create-glow${locked(n.to) ? ' opacity-60' : ''}`}><span>{n.label}</span>{lockTag(n.to)}</NavLink>)}
           </div>
         ))}
       </nav>
