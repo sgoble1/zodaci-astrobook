@@ -9,6 +9,7 @@ import cover1 from '@/assets/cover-example-cosmic.jpg';
 import cover2 from '@/assets/cover-example-botanical.jpg';
 import cover3 from '@/assets/cover-example-atlas.jpg';
 import { ThemeArt } from '@/components/common/ThemeArt';
+import { SampleBook } from '@/components/books/SampleBookReader';
 
 const CHAPTERS = [
   ['Your Chart Snapshot', 'The full birth chart in one illustrated spread'],
@@ -59,6 +60,11 @@ export function AstroBookPublic() {
           <ul className="mt-5 flex-1 space-y-2">{e.perks.map(x => <li key={x} className="flex gap-2 text-sm"><Check className="h-5 w-5 shrink-0 text-accent" aria-hidden />{x}</li>)}</ul>
           <Button asChild size="lg" variant={e.featured ? 'default' : 'outline'} className="mt-6"><Link to="/auth?next=/books">Order {e.name}<ArrowRight /></Link></Button>
         </div>)}</div>
+      </section>
+      <section id="look-inside" className="space-y-6">
+        <h2 className="font-display text-3xl">Look inside before you order.</h2>
+        <p className="text-muted-foreground">A real sample book, composed live from a fictional reader's chart — the same layout, voice and depth as your own. Turn the first pages below, or <Link to="/book-preview" className="underline text-accent">read the full sample book</Link>.</p>
+        <SampleBook maxPages={6} cta={<Button asChild variant="outline"><Link to="/book-preview">Read the full sample<ArrowRight /></Link></Button>} />
       </section>
       <section className="space-y-6">
         <h2 className="font-display text-3xl">The details.</h2>
