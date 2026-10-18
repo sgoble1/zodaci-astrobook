@@ -309,6 +309,13 @@
       "when": 1792354279565,
       "tag": "0043_upgrade_funnel_and_dispatch_date",
       "breakpoints": true
+    },
+    {
+      "idx": 44,
+      "version": "7",
+      "when": 1792354589072,
+      "tag": "0044_members_read_own_preview_readings",
+      "breakpoints": true
     }
   ]
 }
