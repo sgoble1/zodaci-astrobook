@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { Check, ArrowRight, Gift } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { usePageMeta } from '@/hooks/usePageMeta';
+import { useJsonLd } from '@/hooks/useJsonLd';
 import { Faq, ASTROBOOK_FAQ, GENERAL_FAQ } from '@/components/brand/Faq';
 import { BOOK_PRICES, money } from '@/lib/books';
 import cover1 from '@/assets/cover-example-cosmic.jpg';
@@ -19,6 +20,7 @@ const CHAPTERS = [
 
 export function AstroBookPublic() {
   usePageMeta('AstroBook — Your Personalized Printed Birth Chart Book | Zodaci', 'A printed book written entirely from your birth chart. Love, purpose, timing and healing in one volume, personalized to your exact placements.');
+  useJsonLd('product-schema', { '@type': 'Product', name: 'AstroBook', brand: { '@type': 'Brand', name: 'Zodaci' }, description: 'A printed book written from your own birth chart.', offers: [{ '@type': 'Offer', name: 'Standard softcover', price: (BOOK_PRICES.standard / 100).toFixed(2), priceCurrency: 'USD', availability: 'https://schema.org/InStock', url: 'https://zodaci.com/astrobook' }, { '@type': 'Offer', name: 'Expanded softcover', price: (BOOK_PRICES.expanded / 100).toFixed(2), priceCurrency: 'USD', availability: 'https://schema.org/InStock', url: 'https://zodaci.com/astrobook' }] });
   return (
     <article className="space-y-20">
       <section className="grid items-center gap-10 md:grid-cols-2">
