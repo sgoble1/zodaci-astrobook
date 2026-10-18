@@ -55,9 +55,11 @@ Deno.serve(async (req) => {
       const { data: order, error: orderError } = await admin.from('book_orders').select('*').eq('id', orderId).eq('user_id', user.id).single();
       if (orderError || !order) return json({ error: 'Order not available.' }, 404);
       if (!['draft','awaiting_payment'].includes(order.status)) return json({ error: 'This order is not awaiting payment.' }, 400);
+      const digital = order.format === 'digital';
       const addr = order.shipping_address as Record<string, string> | null;
       const addrOk = !!addr && addr.country === 'US' && !!addr.name?.trim() && !!addr.line1?.trim() && !!addr.city?.trim() && addr.state?.trim().length === 2 && /^\d{5}(-\d{4})?$/.test(addr.postal_code?.trim() ?? '');
-      if (!addrOk || !order.cover_path?.startsWith(`${user.id}/book-covers/`)) return json({ error: 'A personal cover and a complete US shipping address are required.' }, 400);
+      if (!digital && !addrOk) return json({ error: 'A complete US shipping address is required.' }, 400);
+      if (!order.cover_path?.startsWith(`${user.id}/book-covers/`)) return json({ error: 'Choose a personal cover first.' }, 400);
       if (!order.manuscript_path?.startsWith(`${user.id}/manuscripts/`) || !Number.isInteger(order.manuscript_pages) || order.manuscript_pages < 4) return json({ error: 'Compose and review your manuscript before paying.' }, 400);
       const manuscript = await admin.storage.from('library').download(order.manuscript_path);
       if (manuscript.error || !manuscript.data || manuscript.data.size < 1000) return json({ error: 'Your manuscript file is not available. Please compose it again.' }, 400);
@@ -69,7 +71,7 @@ Deno.serve(async (req) => {
         if (previous.status === 'open') return json({ clientSecret: previous.client_secret });
         if (previous.status === 'complete') return json({ error: 'Payment was submitted. Please wait for order confirmation.' }, 409);
       }
-      const lookup = order.edition === 'expanded' ? 'astrobook_print_expanded' : 'astrobook_print_standard';
+      const lookup = digital ? 'astrobook_digital' : order.edition === 'expanded' ? 'astrobook_print_expanded' : 'astrobook_print_standard';
       const prices = await stripe.prices.list({ lookup_keys: [lookup,'astrobook_print_extra'] });
       const base = prices.data.find(p => p.lookup_key === lookup);
       const extra = prices.data.find(p => p.lookup_key === 'astrobook_print_extra');
@@ -80,11 +82,12 @@ Deno.serve(async (req) => {
       const session = await stripe.checkout.sessions.create({
         mode: 'payment', ui_mode: 'embedded_page', return_url: returnUrl, customer: customerId,
         line_items: [{ price: base.id, quantity: 1 }, ...(extras.length && extra ? [{ price: extra.id, quantity: extras.length }] : [])],
-        automatic_tax: { enabled: true }, customer_update: { shipping: 'auto' },
-        shipping_address_collection: { allowed_countries: ['US'] },
+        automatic_tax: { enabled: true },
+        // Digital editions are a download, so only printed books collect a shipping address.
+        ...(digital ? { customer_update: { address: 'auto' } } : { customer_update: { shipping: 'auto' }, shipping_address_collection: { allowed_countries: ['US'] } }),
         payment_intent_data: { description: product.name, metadata: { userId: user.id, orderId: order.id } },
         metadata: { userId: user.id, orderId: order.id, managed_payments: 'false' },
-      }, { idempotencyKey: `book-${order.id}-${env}-${order.checkout_session_id || 'first'}` });
+      }, { idempotencyKey: `book-${order.format}-${order.id}-${env}-${order.checkout_session_id || 'first'}` });
       const saved = await admin.from('book_orders').update({ checkout_session_id:session.id,environment:env,status:'awaiting_payment',shipping_cents:0,extras_cents:extras.length * 699,updated_at:new Date().toISOString() }).eq('id',order.id);
       if (saved.error) throw saved.error;
       return json({ clientSecret:session.client_secret });

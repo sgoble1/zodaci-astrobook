@@ -11,7 +11,11 @@ export const BOOK_COSTING = [
   { edition: 'Standard · ~250 pages', print: 2400, shipping: 900, fees: 220, price: 5900 },
   { edition: 'Expanded · ~400 pages', print: 3800, shipping: 1100, fees: 310, price: 8900 },
 ];
-export const bookTotal = (edition: string, extras: number) => BOOK_PRICES[edition === 'expanded' ? 'expanded' : 'standard'] + extras * 699;
+/** Downloadable PDF edition: one price for both standard and expanded. */
+export const DIGITAL_PRICE = 1999;
+export type BookFormat = 'print' | 'digital';
+export const bookBase = (edition: string, format: BookFormat = 'print') => format === 'digital' ? DIGITAL_PRICE : BOOK_PRICES[edition === 'expanded' ? 'expanded' : 'standard'];
+export const bookTotal = (edition: string, extras: number, format: BookFormat = 'print') => bookBase(edition, format) + extras * 699;
 export const money = (cents: number) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(cents / 100);
 /** Production specs from our print partner Pixartprinting (Art Books range). Prices are quoted per job by the printer. */
 export const PRINT_SPECS = {
