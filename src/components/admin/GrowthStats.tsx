@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
 import { money } from '@/lib/books';
 
@@ -8,8 +9,10 @@ type Stats = { signups_total: number; signups_recent: number; onboarded_total: n
 export function GrowthStats() {
   const [days, setDays] = useState(30);
   const [s, setS] = useState<Stats | null>(null);
+  const [retry, setRetry] = useState(0);
+  const [loading, setLoading] = useState(true);
   const [err, setErr] = useState('');
-  useEffect(() => { setErr(''); void supabase.rpc('admin_growth_stats', { _days: days }).then(({ data, error }) => { if (error) setErr('Customer numbers could not load.'); else setS((data as Stats[])?.[0] ?? null); }); }, [days]);
+  useEffect(() => { setErr(''); setLoading(true); void supabase.rpc('admin_growth_stats', { _days: days }).then(({ data, error }) => { if (error) setErr('Customer numbers could not load.'); else setS((data as Stats[])?.[0] ?? null); setLoading(false); }); }, [days, retry]);
   const cards: [string, string, string][] = s ? [
     ['Sign-ups', String(s.signups_total), `+${s.signups_recent} in ${days} days · ${s.onboarded_total} added birth details`],
     ['Paying members', String(s.paid_total), `${s.paid_recent} new plan upgrades in ${days} days`],
@@ -24,7 +27,7 @@ export function GrowthStats() {
           {[7, 30, 90, 365].map(d => <option key={d} value={d}>Last {d} days</option>)}
         </select>
       </div>
-      {err && <p role="alert" className="text-destructive text-sm">{err}</p>}
+      {loading && <p role="status" className="text-sm text-muted-foreground">Loading customer activity…</p>}{err && <div role="alert" className="text-destructive text-sm">{err}<Button variant="outline" onClick={() => setRetry(n => n + 1)} className="ml-3">Try again</Button></div>}
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         {cards.map(([l, v, d]) => <div key={l} className="parchment p-4"><p className="text-xs text-muted-foreground">{l}</p><p className="font-display text-3xl mt-1">{v}</p><p className="text-xs text-muted-foreground mt-1">{d}</p></div>)}
       </div>

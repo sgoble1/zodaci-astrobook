@@ -23,6 +23,15 @@ export const RELATIONSHIPS_GROUP: NavGroup = { title: 'Relationships', items: [{
 
 export const MENU_SECTIONS = [NAV_GROUPS[0].title, NAV_GROUPS[1].title, SHARED_GROUP.title, RELATIONSHIPS_GROUP.title, ...NAV_GROUPS.slice(2).map(g => g.title)];
 
+/** Task-led member navigation; original groups remain intact for private editions and created-page placement. */
+export const MEMBER_SECTIONS = [
+  { title: 'Readings', groupTitles: ['Themes & Topics', 'Timing & Cycles'] },
+  { title: 'My Chart', groupTitles: ['The Natal Chart', 'Other Systems'] },
+  { title: 'Reflect', groupTitles: ['Workbook'] },
+  { title: 'Relationships', groupTitles: ['Relationships'] },
+  { title: 'My Library', groupTitles: ['Library'] },
+];
+
 /** April's original private menu, shown only to the approved April & Shane accounts. */
 export let APRIL_NAV_GROUPS: NavGroup[] = [];
 

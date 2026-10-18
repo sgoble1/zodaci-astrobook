@@ -2,7 +2,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { getStripeEnvironment } from '@/lib/stripe';
 import { toast } from 'sonner';
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useSubscription, type Tier } from '@/hooks/useSubscription';
@@ -11,7 +11,7 @@ import { CreatorStudio } from '@/components/payments/CreatorStudio';
 import { PaymentTestModeBanner } from '@/components/payments/PaymentTestModeBanner';
 
 const plans: { tier: Tier; name: string; price: string; priceId?: string; yearPrice?: string; yearId?: string; blurb: string; items: string[] }[] = [
-  { tier: 'free', name: 'Free', price: 'Free', blurb: 'Everything you need to meet your chart.', items: ['Your calculated birth chart wheel', 'Planets, houses and aspects in plain words', 'Two full readings: Your Big Three and Personality & Strengths', 'Explore & Discover and the Chart Guide', 'Save your chart to your account'] },
+  { tier: 'free', name: 'Free', price: 'Free', blurb: 'Everything you need to meet your chart.', items: ['Your calculated birth chart wheel', 'Planets, houses and aspects in plain words', 'Two full readings: Your Big Three and Personality & Strengths', 'Explore & Discover and the Chart Guide', 'First-section previews of core themes', 'Save your chart to your account'] },
   { tier: 'full', name: 'Full Access', price: '$12.99/month', priceId: 'full_access_monthly', yearPrice: '$124.99/year', yearId: 'full_access_yearly', blurb: 'The complete book written from your chart.', items: ['Every reading at full length', 'Read your own Masterbook, written from your chart', 'Timing & cycles: transits, retrogrades, life phases', 'Seven other systems: Vedic, Ba Zi, Maya and more', 'A monthly allowance of AI credits', 'Shared spaces with people you invite'] },
   { tier: 'creator', name: 'Creator', price: '$14.99/month', priceId: 'creator_monthly', yearPrice: '$143.99/year', yearId: 'creator_yearly', blurb: 'Make new things from your chart.', items: ['Everything in Full Access', 'Generate personal podcasts about your chart', 'Generate new Masterbook chapters and pages', 'A larger monthly allowance of AI credits', 'Your own Creator dashboard'] },
 ];
@@ -26,6 +26,9 @@ const faqs = [
 export default function Pricing() {
   const sub = useSubscription();
   const nav = useNavigate();
+  const [params] = useSearchParams();
+  const next = params.get('next');
+  const returnTo = next?.startsWith('/my-readings/topic/') && !next.includes('://') ? next : '/dashboard';
   const [open, setOpen] = useState<string | null>(null);
   const [yearly, setYearly] = useState(false);
   const manage = async () => {
@@ -48,7 +51,7 @@ export default function Pricing() {
       {open ? (
         <section className="parchment p-4 space-y-3" aria-label="Checkout">
           <Button variant="outline" size="sm" onClick={() => setOpen(null)}>← Back to plans</Button>
-          <StripeEmbeddedCheckout priceId={open} returnUrl={`${window.location.origin}/checkout/return?session_id={CHECKOUT_SESSION_ID}`} />
+          <StripeEmbeddedCheckout priceId={open} returnUrl={`${window.location.origin}/checkout/return?session_id={CHECKOUT_SESSION_ID}&next=${encodeURIComponent(returnTo)}`} />
         </section>
       ) : (
         <div className="grid gap-5 md:grid-cols-3">
@@ -65,7 +68,7 @@ export default function Pricing() {
                 {!p.priceId ? <Button asChild variant="outline" className="w-full"><Link to="/start">Get my free chart</Link></Button>
                   : current ? <Button disabled className="w-full">Your current plan</Button>
                   : below ? <Button disabled variant="outline" className="w-full">Included in your plan</Button>
-                  : <Button className="w-full" onClick={() => choose(pid!)}>{sub.userId ? `Subscribe — ${price}` : 'Sign in to subscribe'}</Button>}
+                  : <Button className="w-full" onClick={() => pid && choose(pid)}>{sub.userId ? `Subscribe — ${price}` : 'Sign in to subscribe'}</Button>}
               </section>
             );
           })}

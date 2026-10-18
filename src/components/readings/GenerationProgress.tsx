@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
+import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
 import { ALL_READINGS, FLAGSHIP_READINGS, FREE_READINGS, canWriteAllReadings, loadMyTopicReadings, writeTopicReading } from '@/lib/topicReadings';
 
@@ -15,15 +16,16 @@ export function GenerationProgress() {
   const [done, setDone] = useState<Set<string> | null>(null);
   const [eligible, setEligible] = useState(false);
   const [targets, setTargets] = useState<typeof ALL_READINGS>([]);
-  const [minimized, setMinimized] = useState(() => sessionStorage.getItem(MIN_KEY) === '1');
+  const [minimized, setMinimized] = useState(true);
   const [error, setError] = useState('');
   const [cancelled, setCancelled] = useState(false);
   const [runId, setRunId] = useState(0);
+  const [requested, setRequested] = useState<Set<string>>(new Set());
   const timer = useRef<number>();
 
   const refresh = async () => {
     const rows = await loadMyTopicReadings().catch(() => null);
-    if (rows) setDone(new Set(rows.map(r => r.page_key)));
+    if (rows) setDone(new Set(rows.filter(r => ['ready', 'preview'].includes(r.status)).map(r => r.page_key)));
     return rows;
   };
 
@@ -40,12 +42,12 @@ export function GenerationProgress() {
       setEligible(ok);
       if (!ok) { if (alive) setCancelled(false); return; }
       setCancelled(!!p?.generation_cancelled);
-      if (p?.generation_cancelled) return;
       const all = await canWriteAllReadings().catch(() => false);
       if (!alive) return;
       // Only the headline readings are written upfront; everything else is written when first opened.
       const list = ALL_READINGS.filter(t => (all ? FLAGSHIP_READINGS : FREE_READINGS).includes(t.slug));
       setTargets(list);
+      if (p?.generation_cancelled) { await refresh(); return; }
       const rows = await refresh();
       if (!rows || !alive) return;
       const missing = list.filter(t => !rows.some(r => r.page_key === `topic-${t.slug}`));
@@ -53,7 +55,7 @@ export function GenerationProgress() {
       const note = (e: Error) => { if (/stopped/i.test(e.message)) { sessionStorage.removeItem(STARTED_KEY); setCancelled(true); } else setError(e.message); };
       if (missing.length && !sessionStorage.getItem(STARTED_KEY)) {
         sessionStorage.setItem(STARTED_KEY, '1');
-        missing.forEach(t => writeTopicReading(t.slug).catch(e => note(e as Error)));
+        for (const t of missing) { if (!alive) break; try { await writeTopicReading(t.slug); if (alive) setRequested(old => new Set([...old, t.slug])); } catch (e) { note(e as Error); break; } }
       }
     })();
     return () => { alive = false; };
@@ -85,17 +87,17 @@ export function GenerationProgress() {
     return () => clearInterval(timer.current);
   }, [active]);
 
-  const current = targets.find(t => !done?.has(`topic-${t.slug}`));
+  const current = targets.find(t => requested.has(t.slug) && !done?.has(`topic-${t.slug}`));
   const minimize = () => { sessionStorage.setItem(MIN_KEY, '1'); setMinimized(true); if (pathname === '/start') navigate('/dashboard'); };
   const expand = () => { sessionStorage.removeItem(MIN_KEY); setMinimized(false); };
   // Lets the welcome tour wait until this full-screen view is out of the way.
   useEffect(() => { const on = active && !minimized; if (on) document.body.dataset.genOverlay = '1'; else delete document.body.dataset.genOverlay; window.dispatchEvent(new Event('zodaci-tour')); return () => { delete document.body.dataset.genOverlay; }; }, [active, minimized]);
   if (cancelled && eligible) {
     return createPortal(
-      <motion.div key="stopped" role="status" className="fixed inset-x-0 top-[64px] lg:top-0 z-[45] border-b border-border bg-card/95 backdrop-blur shadow-md" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+      <motion.div key="stopped" role="status" className="fixed bottom-4 left-4 right-4 lg:left-80 z-[45] border-b border-border bg-card/95 backdrop-blur shadow-md" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
         <div className="mx-auto flex max-w-5xl items-center gap-3 px-4 py-2 text-sm">
           <span className="min-w-0 flex-1 truncate">Writing was stopped for this chart. {done !== null && targets.length > 0 && `${targets.filter(t => done.has(`topic-${t.slug}`)).length} of ${targets.length} pages are ready.`}</span>
-          <button onClick={resume} className="shrink-0 rounded-md border border-border px-3 py-1 text-xs hover:bg-muted focus-visible:outline focus-visible:outline-2">Resume</button>
+          <Button variant="outline" onClick={resume} className="shrink-0 rounded-md border border-border px-3 py-1 text-xs hover:bg-muted focus-visible:outline focus-visible:outline-2">Resume</Button>
         </div>
       </motion.div>,
       document.body
@@ -105,7 +107,7 @@ export function GenerationProgress() {
   const pct = Math.round((count / total) * 100);
 
   const pathFor = (slug: string) => (ALL_READINGS.find(t => t.slug === slug) as { route?: string } | undefined)?.route ?? `/my-readings/topic/${slug}`;
-  const paused = error ? (/credit/i.test(error) ? 'Paused: AI writing credits have run out. Your pages continue automatically once credits are added.' : /limit/i.test(error) ? 'Paused for today: the daily writing limit was reached. Writing continues tomorrow.' : /stopped/i.test(error) ? 'Writing was stopped for this chart. Press Resume in the bar above to continue.' : `Paused: ${error}`) : '';
+  const paused = error ? (/credit/i.test(error) ? 'Paused: AI writing credits are unavailable. Retry when credits are available.' : /limit/i.test(error) ? 'Paused: the daily writing limit was reached. Retry tomorrow.' : /stopped/i.test(error) ? 'Writing was stopped for this chart. Press Resume to continue.' : `Paused: ${error}`) : '';
   return createPortal(
     <AnimatePresence>
       {!minimized ? (
@@ -113,30 +115,30 @@ export function GenerationProgress() {
           <motion.div layoutId="gen-card" role="status" aria-live="polite" className="my-auto w-full max-w-lg space-y-5 rounded-2xl border border-border bg-card p-6 sm:p-8 text-center shadow-2xl">
             <motion.div className="mx-auto h-14 w-14 rounded-full border-4 border-primary/30 border-t-primary" animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1.6, ease: 'linear' }} aria-hidden="true" />
             <h2 className="font-display text-3xl">Writing your pages</h2>
-            <p className="text-sm text-muted-foreground">Each page is written from your own chart and takes about a minute. You can keep exploring: progress stays in the bar at the top of every page, and writing continues even if you close the site.</p>
+            <p className="text-sm text-muted-foreground">Your starting readings are written from your own chart. Other readings are created when you open them. You can keep exploring and check back here.</p>
             <div className="h-2 w-full overflow-hidden rounded-full bg-muted"><motion.div className="h-full bg-primary" animate={{ width: `${pct}%` }} transition={{ duration: 0.8 }} /></div>
             <p className="text-sm font-medium">{count} of {total} pages ready{current ? ` · now writing “${current.title}”` : ''}</p>
-            {paused && <p role="alert" className="text-sm text-destructive">{paused}</p>}
+            {paused && <div role="alert" className="space-y-2 text-sm text-destructive"><p>{paused}</p><Button variant="outline" onClick={resume}>Retry</Button></div>}
             <ul className="max-h-56 overflow-y-auto rounded-lg border border-border text-left text-sm divide-y divide-border">
               {targets.map(t => { const ok = done?.has(`topic-${t.slug}`); const now = current?.slug === t.slug; return (
                 <li key={t.slug} className="flex items-center justify-between gap-3 px-3 py-2">
                   {ok ? <Link to={pathFor(t.slug)} onClick={minimize} className="text-foreground underline-offset-2 hover:underline">{t.title}</Link> : <span className="text-muted-foreground">{t.title}</span>}
-                  <span className={`shrink-0 text-xs ${ok ? 'text-primary' : 'text-muted-foreground'}`}>{ok ? 'Ready' : now ? 'Writing…' : 'Waiting'}</span>
+                  <span className={`shrink-0 text-xs ${ok ? 'text-primary' : 'text-muted-foreground'}`}>{ok ? 'Ready' : now ? 'Requested' : 'Not yet ready'}</span>
                 </li>); })}
             </ul>
             <div className="flex flex-wrap items-center justify-center gap-2">
-              <button onClick={minimize} className="rounded-md border border-border px-4 py-2 text-sm hover:bg-muted focus-visible:outline focus-visible:outline-2">Keep exploring</button>
-              <button onClick={stop} className="rounded-md border border-destructive/40 px-4 py-2 text-sm text-destructive hover:bg-destructive/10 focus-visible:outline focus-visible:outline-2">Stop writing</button>
+              <Button variant="outline" onClick={minimize} className="rounded-md border border-border px-4 py-2 text-sm hover:bg-muted focus-visible:outline focus-visible:outline-2">Keep exploring</Button>
+              <Button variant="outline" onClick={stop} className="rounded-md border border-destructive/40 px-4 py-2 text-sm text-destructive hover:bg-destructive/10 focus-visible:outline focus-visible:outline-2">Stop writing</Button>
             </div>
           </motion.div>
         </motion.div>
       ) : (
-        <motion.div key="mini" layoutId="gen-card" role="status" aria-live="polite" className="fixed inset-x-0 top-[64px] lg:top-0 z-[45] border-b border-border bg-card/95 backdrop-blur shadow-md">
+        <motion.div key="mini" layoutId="gen-card" role="status" aria-live="polite" className="fixed bottom-4 left-4 right-4 lg:left-80 z-[45] border-b border-border bg-card/95 backdrop-blur shadow-md">
           <div className="mx-auto flex max-w-5xl items-center gap-3 px-4 py-2 text-sm">
             <motion.span className="h-4 w-4 shrink-0 rounded-full border-2 border-primary/30 border-t-primary" animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1.2, ease: 'linear' }} aria-hidden="true" />
             <span className="min-w-0 flex-1 truncate">{paused ? paused : <>Writing your pages: <strong>{count} of {total}</strong> ready{current ? ` · ${current.title}` : ''}</>}</span>
             <div className="hidden sm:block h-1.5 w-28 overflow-hidden rounded-full bg-muted"><div className="h-full bg-primary" style={{ width: `${pct}%` }} /></div>
-            <button onClick={expand} className="shrink-0 rounded-md border border-border px-3 py-1 text-xs hover:bg-muted focus-visible:outline focus-visible:outline-2">Open</button>
+            <Button variant="outline" onClick={expand} className="shrink-0 rounded-md border border-border px-3 py-1 text-xs hover:bg-muted focus-visible:outline focus-visible:outline-2">Open</Button>
           </div>
         </motion.div>
       )}
