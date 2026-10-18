@@ -53,7 +53,9 @@ Deno.serve(async (req) => {
       const { data: order, error: orderError } = await admin.from('book_orders').select('*').eq('id', orderId).eq('user_id', user.id).single();
       if (orderError || !order) return json({ error: 'Order not available.' }, 404);
       if (!['draft','awaiting_payment'].includes(order.status)) return json({ error: 'This order is not awaiting payment.' }, 400);
-      if (order.shipping_address?.country !== 'US' || !order.cover_path?.startsWith(`${user.id}/book-covers/`)) return json({ error: 'A personal cover and US address are required.' }, 400);
+      const addr = order.shipping_address as Record<string, string> | null;
+      const addrOk = !!addr && addr.country === 'US' && !!addr.name?.trim() && !!addr.line1?.trim() && !!addr.city?.trim() && addr.state?.trim().length === 2 && /^\d{5}(-\d{4})?$/.test(addr.postal_code?.trim() ?? '');
+      if (!addrOk || !order.cover_path?.startsWith(`${user.id}/book-covers/`)) return json({ error: 'A personal cover and a complete US shipping address are required.' }, 400);
       if (!order.manuscript_path?.startsWith(`${user.id}/manuscripts/`) || !Number.isInteger(order.manuscript_pages) || order.manuscript_pages < 4) return json({ error: 'Compose and review your manuscript before paying.' }, 400);
       const manuscript = await admin.storage.from('library').download(order.manuscript_path);
       if (manuscript.error || !manuscript.data || manuscript.data.size < 1000) return json({ error: 'Your manuscript file is not available. Please compose it again.' }, 400);
