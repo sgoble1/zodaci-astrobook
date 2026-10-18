@@ -1,3 +1,4 @@
+import { readingJobIsCurrent } from '../_shared/reading-job-rules.ts';
 import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors';
 import { createClient } from 'npm:@supabase/supabase-js@2';
 import { z } from 'npm:zod@3';
@@ -130,7 +131,7 @@ Deno.serve(async (req) => {
       const content = (await call.result.text).trim();
       if (!content) return json({ error: 'The chapter came back empty. Please try again.' }, 502);
       const { data: current } = await admin.from('profiles').select('generation_cancelled,onboarded_at').eq('id', user.id).single();
-      if (!current || current.generation_cancelled || current.onboarded_at !== profile.onboarded_at) throw new Error('Writing stopped or birth details changed.');
+      if (!readingJobIsCurrent(current, profile.onboarded_at)) throw new Error('Writing stopped or birth details changed.');
       if (claimToken) {
         const finished = await admin.rpc('finish_topic_reading_job', { p_owner_id: user.id, p_page_key: page_key, p_token: claimToken, p_content: content, p_status: 'ready', p_birth_saved_at: profile.onboarded_at });
         if (finished.error || !finished.data) throw finished.error ?? new Error('The chapter changed while writing.');

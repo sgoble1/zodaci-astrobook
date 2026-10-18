@@ -7,10 +7,12 @@ This is the single index of active project work. It is not a task history.
 - [Approval copy](.lovable/plan.md) — the same ongoing launch plan only; keep synchronized with `launch-plan.md`. No unrelated plans or history belong in either file.
 
 ## Remaining work
-- [ ] Finish implementable incomplete launch work requested on 18 October; consolidate results and external blockers in the launch plan.
-- [ ] Validate applied access, payment, generation, cancellation and account-switch repairs through the launch plan’s acceptance checks.
+- [x] Apply available launch repairs and consolidate remaining acceptance gates and external blockers in the launch plan.
+- [x] Run regression tests, public sample/mobile and signed-in Masterbook checks; deploy payment and reading repairs.
+- [ ] Complete provider replay/concurrency and cross-account denial acceptance fixtures; production payment proof remains separate.
 - [ ] Complete public/member/Creator/admin flow, accessibility, chart-accuracy and SEO verification.
-- [ ] Finalize distinct Standard/Expanded content specifications and fresh manuscript manifests.
+- [x] Implement distinct Standard/Expanded composition, fresh manuscript manifests and completed-extra checks.
+- [ ] Review a real member’s final edition contents against product expectations. **Blocker:** approved content review and any missing writing.
 - [ ] Verify checkout → confirmed paid order → private PDF download end to end. **Blocker:** authorized payment/test account.
 - [ ] Obtain actual printer production and shipping costs. **Blocker:** supplier quote.
 - [ ] Configure and verify PDF-ready and dispatch emails. **Blocker:** branded sender/domain authorization.

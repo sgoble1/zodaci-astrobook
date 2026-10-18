@@ -4,12 +4,21 @@
 Brand & Revenue Strategist review: repair purchases, privacy and generation before acquisition. Remaining work is proposed; retail prices are unchanged. See the verification status below for repairs already applied. Preserve April/Shane boundaries, owner charts, protected sources and consent.
 
 ## Current verification status
-- 38 regression tests pass; the latest preview build reports OK.
+- 56 regression tests pass; the latest preview build reports OK.
 - Browser checks confirm Expanded print plus one extra totals $95.99 before tax; Expanded digital is $19.99 base and $26.98 with one extra. No mobile horizontal overflow or page errors occurred in that check.
 - Onboarding self-description remains visible while typing; no profile changes or AI requests were submitted during verification.
 - Applied repairs include format-aware draft prices, live-only entitlement checks, atomic reading admission, persisted failure states, bounded AI responses, session-versioned loading, payment-field guards and sandbox dispatch exclusion. These still require the deeper acceptance checks below.
 - A fresh backend security scan completed; no new actionable findings were returned. This is not a full application security certification.
-- No payment was made, campaign sent or site published during this review. Supplier quote, sender setup, paid-delivery proof and edition differentiation remain open.
+- No payment was made, campaign sent or site published during this review. Supplier quote, sender setup, paid-delivery proof remain open; edition composition now differs and uses fresh saved chapters.
+
+## Implemented launch repairs
+- Checkout serialization, provider currency/subtotal/tax reconciliation, immutable payment evidence, payment-failure retry, refund/dispute holds and blocked fulfillment/downloads during review.
+- Reading claim tokens fence stale workers; birth changes and Stop prevent publication, and active topic calls check cancellation every five seconds. Failed jobs do not chain onward.
+- Masterbook has visible loading/retry and manual missing-chapter writing; starter jobs use shared admission/fencing rather than duplicate provider calls.
+- Standard uses finished Masterbook chapters; Expanded requires additional finished topics. Manifests omit outdated chart readings, deduplicate titles and require paid extras to be finished.
+- Sample reader has keyboard controls, retry, page-text alternative and honest short-sample copy. Preview/order pages use consistent edition/format prices.
+- Public PDF sample and mobile overflow checks passed. Signed-in Masterbook opened with no page errors. Money helpers pass; no charge or new AI writing was initiated for these checks.
+- Functions deployed. Fresh backend scan returned no new actionable findings; a full deep application scan and real payment remain release gates.
 
 ## Audit baseline — 18 October 2026
 The findings below describe the initial review; applied repairs above remain subject to acceptance testing.
@@ -96,4 +105,4 @@ Test deployed authorization, sandbox/live separation, webhook/refund/session rep
 Preserve sitemap mechanism and authoritative page-specific lastmod; exclude private routes/sources. Accurate initial public content/share metadata may need a separate [latest-template SSR upgrade](https://lovable.dev/blog/building-apps-using-tanstack-start), available through “Migrate to TanStack Start” in the slash menu.
 
 ## Owner decisions / external dependencies
-Approval needed: this implementation scope; meaningful Expanded specification; actual printer quote and paid proof copy; branded sender; measured AI budget/allowances; book refund/production cancellation rules; optional rendering migration, campaigns and spend caps. No unsupported claims of “100% finished,” real supplier integration or guaranteed revenue.
+Approval needed: final edition content review; actual printer quote and paid proof copy; branded sender; measured AI budget/allowances; book refund/production cancellation rules; optional rendering migration, campaigns and spend caps. No unsupported claims of “100% finished,” real supplier integration or guaranteed revenue.

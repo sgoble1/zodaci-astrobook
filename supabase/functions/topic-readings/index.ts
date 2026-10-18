@@ -1,3 +1,4 @@
+import { readingJobIsCurrent } from '../_shared/reading-job-rules.ts';
 import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors';
 import { createClient } from 'npm:@supabase/supabase-js@2';
 import { z } from 'npm:zod@3';
@@ -143,7 +144,7 @@ Deno.serve(async req => {
     // Writing takes over a minute, so it runs in the background and the page polls for the result.
     const ensureCurrent = async () => {
       const { data: current, error } = await admin.from('profiles').select('generation_cancelled,onboarded_at').eq('id', ownerId).single();
-      if (error || current.generation_cancelled || current.onboarded_at !== profile.onboarded_at) throw new Error('Chart changed or writing stopped');
+      if (error || !readingJobIsCurrent(current, profile.onboarded_at)) throw new Error('Chart changed or writing stopped');
     };
     const controller = new AbortController();
     const cancellationCheck = setInterval(() => { void ensureCurrent().catch(() => controller.abort()); }, 5000);
