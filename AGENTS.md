@@ -1,6 +1,6 @@
 # Navigation discovery
 - Source text stays in protected-content; approved-account authentication plus password tokens are required.
-- Podcasts and source uploads use library_items and private library storage with signed URLs; owners can change private/approved-shared visibility.
+- Podcasts/uploads use library_items and private signed URLs; owners control sharing.
 - Ask the Sources uses protected-loader BM25 and ask-sources for streamed cited answers.
 - Podcast queue/speed/resume are per-device localStorage.
 
