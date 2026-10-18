@@ -21,7 +21,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { SaveWondering } from '@/components/relationships/SaveWondering';
 import { wonderingSuggestions } from '@/lib/wonderingSuggestions';
 import { useRelationships } from '@/hooks/useRelationships';
-import { useAprilSpace } from '@/hooks/useAprilSpace';
+import { useSharedSpaceMember } from '@/hooks/useSharedSpaceMember';
 import PublicWonderings from '@/pages/Wonderings';
 
 type Conversation = { id: string; title: string; kind: 'main' | 'topic'; created_by: string; created_at: string; updated_at: string };
@@ -77,9 +77,9 @@ function SharedNav({ value }: { value: string }) {
 }
 
 export default function SharedSpace({ section = 'chat' }: { section?: 'overview' | 'media' | 'recs' | 'chat' | 'posts' | 'wonderings' | 'reading' | 'notes' | 'later' | 'accounts' }) {
-  const april = useAprilSpace();
-  if (april === undefined) return <p role="status">Checking workspace access…</p>;
-  if (!april) return section === 'wonderings' ? <PublicWonderings /> : <div className="space-y-4"><h1 className="text-3xl">Your workspaces</h1><Button asChild><Link to="/workspaces">Open invited workspaces</Link></Button></div>;
+  const member = useSharedSpaceMember();
+  if (member === undefined) return <p role="status">Checking workspace access…</p>;
+  if (!member) return section === 'wonderings' ? <PublicWonderings /> : <div className="space-y-4"><h1 className="text-3xl">Your workspaces</h1><Button asChild><Link to="/workspaces">Open invited workspaces</Link></Button></div>;
   return <div className="space-y-6"><header className="space-y-2"><div className="font-smallcaps text-xs text-gold">Private · April & Shane</div><h1 className="text-4xl sm:text-5xl">Our Shared Space</h1><p className="max-w-2xl text-muted-foreground">Messages, posts, notes, files, things to revisit, and useful account references in one private place.</p></header><SharedNav value={section} /><SharedSpaceGate>{userId => section === 'overview' ? <div className="space-y-5"><SharedOverview /><Recommendations userId={userId} compact /></div> : section === 'media' ? <MediaLibrary userId={userId} /> : section === 'recs' ? <Recommendations userId={userId} /> : section === 'chat' ? <Conversations userId={userId} /> : section === 'posts' ? <Posts userId={userId} /> : section === 'wonderings' ? <Wonderings userId={userId} /> : section === 'reading' ? <SharedReading userId={userId} /> : section === 'notes' ? <Notes userId={userId} /> : section === 'later' ? <TalkLater userId={userId} /> : <Accounts userId={userId} />}</SharedSpaceGate></div>;
 }
 

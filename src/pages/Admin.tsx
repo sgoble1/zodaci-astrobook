@@ -23,6 +23,7 @@ import { MarketingPages } from '@/components/admin/MarketingPages';
 import { PrintOrders } from '@/components/admin/PrintOrders';
 import { GrowthStats } from '@/components/admin/GrowthStats';
 import { UpgradeFunnel } from '@/components/admin/UpgradeFunnel';
+import { AdminEditionSwitch } from '@/components/common/AdminEditionSwitch';
 
 export default function Admin() {
   const session = useSession();
@@ -34,7 +35,8 @@ export default function Admin() {
         <div className="font-smallcaps text-xs text-gold flex items-center gap-1"><ShieldCheck className="w-3 h-3" />Admin</div>
         <h1 className="text-4xl sm:text-5xl mt-2">{isAdmin ? 'Admin Dashboard' : 'My Workspace'}</h1>
         <p className="text-muted-foreground mt-3 max-w-2xl">Upload Masterbook documents, edit their sections with a live preview, and manage relationships — no code needed.{isAdmin ? ' As admin you can also edit everyone’s uploads and arrange the Document Index.' : ' You can edit the documents you upload; the built-in source books stay as they are.'}</p>
-        {isAdmin && <div className="flex flex-wrap gap-3 mt-4"><Button asChild variant="outline"><Link to="/orders">Manage printed book orders</Link></Button><Button asChild variant="outline"><Link to="/dispatch">Dispatch books</Link></Button><Button asChild variant="outline"><Link to="/brand-launch">Brand launch & email list</Link></Button></div>}
+        {isAdmin && <div className="flex flex-wrap items-center gap-3 mt-4"><Button asChild variant="outline"><Link to="/orders">Manage printed book orders</Link></Button><Button asChild variant="outline"><Link to="/dispatch">Dispatch books</Link></Button><Button asChild variant="outline"><Link to="/brand-launch">Brand launch & email list</Link></Button><div className="w-full sm:w-auto sm:max-w-xs"><AdminEditionSwitch /></div></div>}
+        {isAdmin && <p className="text-sm text-muted-foreground mt-3 max-w-2xl">April's original account and its full private edition open in their own tab, so your own content is never mixed with hers.</p>}
       </header>
       <AuthGate what="open your workspace">{() => (
         <div className="space-y-6">
