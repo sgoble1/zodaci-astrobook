@@ -16,7 +16,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import ReactMarkdown from 'react-markdown';
 
-type Tab = 'upload' | 'sections' | 'index' | 'relationships' | 'activity' | 'charts' | 'marketing' | 'orders';
+type Tab = 'growth' | 'upload' | 'sections' | 'index' | 'relationships' | 'activity' | 'charts' | 'marketing' | 'orders';
 import { MemberCharts } from '@/components/admin/MemberCharts';
 import { ActivityFeed } from '@/components/admin/ActivityFeed';
 import { MarketingPages } from '@/components/admin/MarketingPages';
@@ -27,7 +27,7 @@ import { UpgradeFunnel } from '@/components/admin/UpgradeFunnel';
 export default function Admin() {
   const session = useSession();
   const isAdmin = useIsAdmin(session);
-  const [tab, setTab] = useState<Tab>('upload');
+  const [tab, setTab] = useState<Tab>('orders');
   return (
     <div className="space-y-8">
       <header>
@@ -36,19 +36,18 @@ export default function Admin() {
         <p className="text-muted-foreground mt-3 max-w-2xl">Upload Masterbook documents, edit their sections with a live preview, and manage relationships — no code needed.{isAdmin ? ' As admin you can also edit everyone’s uploads and arrange the Document Index.' : ' You can edit the documents you upload; the built-in source books stay as they are.'}</p>
         {isAdmin && <div className="flex flex-wrap gap-3 mt-4"><Button asChild variant="outline"><Link to="/orders">Manage printed book orders</Link></Button><Button asChild variant="outline"><Link to="/dispatch">Dispatch books</Link></Button><Button asChild variant="outline"><Link to="/brand-launch">Brand launch & email list</Link></Button></div>}
       </header>
-      {isAdmin && <GrowthStats />}
-      {isAdmin && <UpgradeFunnel />}
       <AuthGate what="open your workspace">{() => (
         <div className="space-y-6">
-          <nav className="flex flex-wrap gap-2 text-sm">{([['upload', 'Upload documents'], ['sections', 'Edit sections'], ...(isAdmin ? [['index', 'Document Index'], ['activity', 'Usage feed'], ['charts', 'Member charts & readings'], ['marketing', 'Marketing pages & copy'], ['orders', 'Book orders']] as const : []), ['relationships', 'Relationships']] as const).map(([k, l]) => <button key={k} onClick={() => setTab(k)} className={`px-3 py-1.5 rounded-full border ${tab === k ? 'border-accent bg-accent/15' : 'border-border hover:bg-muted'}`}>{l}</button>)}</nav>
-          {tab === 'upload' && <UploadPanel userId={session!.user.id} />}
-          {tab === 'sections' && <SectionsPanel ownerId={isAdmin ? null : session!.user.id} />}
+          <nav className="flex flex-wrap gap-2 text-sm">{([['upload', 'Upload documents'], ['sections', 'Edit sections'], ...(isAdmin ? [['growth', 'Growth & upgrades'], ['index', 'Document Index'], ['activity', 'Usage feed'], ['charts', 'Member charts & readings'], ['marketing', 'Marketing pages & copy'], ['orders', 'Book orders']] as const : []), ['relationships', 'Relationships']] as const).map(([k, l]) => <Button variant={tab === k ? "secondary" : "ghost"} key={k} onClick={() => setTab(k)} className={`px-3 py-1.5 rounded-full border ${tab === k ? 'border-accent bg-accent/15' : 'border-border hover:bg-muted'}`}>{l}</Button>)}</nav>
+          {tab === 'growth' && isAdmin && <div className="space-y-8"><GrowthStats /><UpgradeFunnel /></div>}
+          {tab === 'upload' && <UploadPanel userId={session?.user.id ?? ''} />}
+          {tab === 'sections' && <SectionsPanel ownerId={isAdmin ? null : session?.user.id ?? ''} />}
           {tab === 'index' && isAdmin && <IndexPanel />}
           {tab === 'activity' && isAdmin && <ActivityFeed />}
           {tab === 'charts' && isAdmin && <MemberCharts />}
           {tab === 'marketing' && isAdmin && <MarketingPages />}
-          {tab === 'orders' && isAdmin && <PrintOrders />}
-          {tab === 'relationships' && <RelationshipsAdmin userId={session!.user.id} />}
+          {tab === 'orders' && isAdmin && <PrintOrders />}{tab === 'orders' && !isAdmin && <UploadPanel userId={session?.user.id ?? ''} />}
+          {tab === 'relationships' && <RelationshipsAdmin userId={session?.user.id ?? ''} />}
         </div>
       )}</AuthGate>
     </div>
