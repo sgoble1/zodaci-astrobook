@@ -105,6 +105,7 @@ const BrandLaunch = lazy(() => import('./pages/BrandLaunch'));
 const PublicArticle = lazy(() => import('./pages/PublicArticle'));
 const Community = lazy(() => import('./pages/Community'));
 const CommunityGuidelines = lazy(() => import('./pages/Community').then(m => ({ default: m.CommunityGuidelines })));
+const CreatorDashboard = lazy(() => import('./pages/CreatorDashboard'));
 const AstroBookPublic = lazy(() => import('./pages/PublicInfo').then(m => ({ default: m.AstroBookPublic })));
 const FaqPage = lazy(() => import('./pages/PublicInfo').then(m => ({ default: m.FaqPage })));
 const PrivacyPage = lazy(() => import('./pages/PublicInfo').then(m => ({ default: m.PrivacyPage })));
@@ -233,6 +234,7 @@ export default function App() {
             <Route path="/auth" element={<Auth />} />
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/pricing" element={<Pricing />} />
+            <Route path="/creator" element={<CreatorDashboard />} />
             <Route path="/checkout/return" element={<CheckoutReturn />} />
             <Route path="/my-masterbook" element={<MyMasterbook />} />
             <Route path="/books" element={<Books />} />

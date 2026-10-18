@@ -10,7 +10,7 @@ import { supabase } from '@/integrations/supabase/client';
 /** Account & settings live here instead of the main menu. */
 export const ACCOUNT_LINKS: [string, string][] = [
   ['/dashboard', 'My Dashboard & Bookmarks'], ['/start', 'Edit birth details'], ['/personal-context', 'Personal context'],
-  ['/workspaces', 'Shared workspaces'], ['/pricing', 'Plans & Pricing'], ['/orders', 'My book orders'], ['/instructions', 'Instructions & Help'], ['/about', 'About Zodaci'],
+  ['/workspaces', 'Shared workspaces'], ['/pricing', 'Plans & Pricing'], ['/creator', 'Creator dashboard'], ['/orders', 'My book orders'], ['/instructions', 'Instructions & Help'], ['/about', 'About Zodaci'],
 ];
 
 export function AccountButton({ compact = false }: { compact?: boolean }) {

@@ -3,7 +3,7 @@ import { createClient } from "npm:@supabase/supabase-js@2";
 import type Stripe from "https://esm.sh/stripe@22.0.2";
 import { type StripeEnv, createStripeClient } from "../_shared/stripe.ts";
 
-const ALLOWED = new Set(["full_access_monthly", "creator_monthly"]);
+const ALLOWED = new Set(["full_access_monthly", "creator_monthly", "full_access_yearly", "creator_yearly"]);
 const json = (b: unknown, status = 200) => new Response(JSON.stringify(b), { status, headers: { ...corsHeaders, "Content-Type": "application/json" } });
 
 async function resolveOrCreateCustomer(stripe: ReturnType<typeof createStripeClient>, options: { email?: string; userId?: string }): Promise<string> {

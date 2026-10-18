@@ -3,7 +3,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { getStripeEnvironment } from '@/lib/stripe';
 
 export type Tier = 'free' | 'full' | 'creator';
-const TIER: Record<string, Tier> = { full_access_monthly: 'full', creator_monthly: 'creator' };
+const TIER: Record<string, Tier> = { full_access_monthly: 'full', creator_monthly: 'creator', full_access_yearly: 'full', creator_yearly: 'creator' };
 
 export interface SubState { loading: boolean; userId: string | null; tier: Tier; status?: string; periodEnd?: string | null; cancelAtEnd?: boolean }
 
@@ -24,7 +24,7 @@ export function useSubscription(): SubState {
       if (!uid || !env) { if (alive) setS({ loading: false, userId: uid, tier: 'free' }); return; }
       const { data } = await supabase.from('billing_subscriptions').select('*').eq('user_id', uid).eq('environment', env).order('created_at', { ascending: false });
       const activeRows = (data ?? []).filter(isActive);
-      const row = activeRows.find(r => r.price_id === 'creator_monthly') || activeRows.find(r => r.price_id === 'full_access_monthly');
+      const row = activeRows.find(r => TIER[r.price_id] === 'creator') || activeRows.find(r => TIER[r.price_id] === 'full');
       if (alive) setS({ loading: false, userId: uid, tier: row ? TIER[row.price_id] ?? 'full' : 'free', status: row?.status, periodEnd: row?.current_period_end, cancelAtEnd: !!row?.cancel_at_period_end });
     };
     const bind = (uid: string | null) => {
