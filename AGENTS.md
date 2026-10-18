@@ -7,7 +7,7 @@
 - Chart math uses astronomy-engine in astro.ts with selectable houses, cross-checking source values.
 - Navigation and Instructions share one registry to keep links synchronized.
 - Topics share one renderer separating facts, interpretations and protected links to avoid exposing source text.
-- PDF viewer uses pdfjs-dist legacy (browser compatibility).
+- PDF viewer: pdfjs-dist legacy (compat).
 - Admin = user_roles table + has_role(); claim_admin() RPC grants admin to the verified owner email on sign-in (no triggers on auth schema allowed).
 - Birth Chart Book uses bcb-XX protected-content entries split on the .docx Heading2 styles; src/content/birthChartBook.ts maps chart points to chapters.
 - ChartWheel (src/components/chart) renders any computed chart; fixed-star contacts are derived by parsing Compendium star degrees.
@@ -24,7 +24,7 @@
 - Social Integration uses separate owner-only conversation tables and its own counselor function so its history never enters the shared chat or therapy history.
 - April-focused tools must never infer named relatives, ancestry, lineage or childhood events from chart symbolism; Family & Home stays limited to verified placements and home-setting guidance.
 - Private counselor chats replay the complete saved session and use one shared verified April profile; they may retain in-session corrections but must not claim hidden cross-session learning.
-- One shared app logo; printed products keep their own names.
+- One app logo; print products keep own names.
 - Generated podcast duration is a bounded request preset interpreted by make-podcast, so script length and source depth stay synchronized.
 - Relationship needs derive only from saved birth facts and chart utilities, never invented biography.
 - Usage analytics: ActivityTracker logs page time, click labels and media events to activity_events (insert-own, admin-read); never record typed text or private chat content.
