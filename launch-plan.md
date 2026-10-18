@@ -1,9 +1,18 @@
 # Zodaci: public launch, trust and sustainable revenue
 
 ## Scope
-Brand & Revenue Strategist review: repair purchases, privacy and generation before acquisition. Proposed work only; prices/payment behavior unchanged. Preserve April/Shane boundaries, owner charts, protected sources and consent.
+Brand & Revenue Strategist review: repair purchases, privacy and generation before acquisition. Remaining work is proposed; retail prices are unchanged. See the verification status below for repairs already applied. Preserve April/Shane boundaries, owner charts, protected sources and consent.
 
-## Evidence — 18 October 2026
+## Current verification status
+- 38 regression tests pass; the latest preview build reports OK.
+- Browser checks confirm Expanded print plus one extra totals $95.99 before tax; Expanded digital is $19.99 base and $26.98 with one extra. No mobile horizontal overflow or page errors occurred in that check.
+- Onboarding self-description remains visible while typing; no profile changes or AI requests were submitted during verification.
+- Applied repairs include format-aware draft prices, live-only entitlement checks, atomic reading admission, persisted failure states, bounded AI responses, session-versioned loading, payment-field guards and sandbox dispatch exclusion. These still require the deeper acceptance checks below.
+- A fresh backend security scan completed; no new actionable findings were returned. This is not a full application security certification.
+- No payment was made, campaign sent or site published during this review. Supplier quote, sender setup, paid-delivery proof and edition differentiation remain open.
+
+## Audit baseline — 18 October 2026
+The findings below describe the initial review; applied repairs above remain subject to acceptance testing.
 **Observed:** 35 tests pass; preview build OK; public pages render; books has no overflow at 390px. Sample PDF renders 14 fictional pages. Expanded/digital labels conflict; onboarding self-description disappears. Live order rules require old $45/$80 prices and US addresses; paid helper accepts sandbox OR live.
 
 SEO foundations pass but deep security is stale. Monthly analytics: 108 visits/858 pageviews, mostly Direct; not customer/conversion counts. AI call samples cost 0.16–0.79 credits/12–76 seconds, not mapped to reading jobs. Earlier per-reading estimates remain unverified.

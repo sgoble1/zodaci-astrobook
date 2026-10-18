@@ -18,16 +18,18 @@ function isActive(r: { status: string; current_period_end: string | null }) {
 export function useSubscription(): SubState {
   const [s, setS] = useState<SubState>({ loading: true, userId: null, tier: 'free' });
   useEffect(() => {
-    let alive = true; let channel: ReturnType<typeof supabase.channel> | null = null;
+    let revision = 0; let currentUid: string | null = null; let alive = true; let channel: ReturnType<typeof supabase.channel> | null = null;
     const load = async (uid: string | null) => {
+      const version = ++revision;
       const env = envOrNull();
       if (!uid || !env) { if (alive) setS({ loading: false, userId: uid, tier: 'free' }); return; }
       const { data } = await supabase.from('billing_subscriptions').select('*').eq('user_id', uid).eq('environment', env).order('created_at', { ascending: false });
       const activeRows = (data ?? []).filter(isActive);
       const row = activeRows.find(r => TIER[r.price_id] === 'creator') || activeRows.find(r => TIER[r.price_id] === 'full');
-      if (alive) setS({ loading: false, userId: uid, tier: row ? TIER[row.price_id] ?? 'full' : 'free', status: row?.status, periodEnd: row?.current_period_end, cancelAtEnd: !!row?.cancel_at_period_end });
+      if (alive && version === revision && uid === currentUid) setS({ loading: false, userId: uid, tier: row ? TIER[row.price_id] ?? 'full' : 'free', status: row?.status, periodEnd: row?.current_period_end, cancelAtEnd: !!row?.cancel_at_period_end });
     };
     const bind = (uid: string | null) => {
+      currentUid = uid; revision++; setS({ loading: true, userId: uid, tier: 'free' });
       if (channel) { void supabase.removeChannel(channel); channel = null; }
       void load(uid);
       if (uid) channel = supabase.channel(`billing-${uid}-${Math.random().toString(36).slice(2)}`)

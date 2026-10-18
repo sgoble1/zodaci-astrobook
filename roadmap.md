@@ -1,23 +1,25 @@
-# Roadmap
+# Project index
 
-- [x] Prepare evidence-backed public-success plan: launch gaps/bugs, visual theme, SEO, marketing, unit economics and clear printed/digital book pricing.
-- [ ] Implement launch-readiness plan (awaiting owner approval; payment proofs, supplier quote and branded sender remain external dependencies).
+This is the single index of active project work. It is not a task history.
 
-- [x] Create and activate Experience Architect UX skill.
-- [x] Prepare and implement approved UX plan: dashboard, task-led menu/search, editorial theme, reading recovery/resume/freshness, book readiness and admin growth.
-- [x] Verify owner dashboard/admin, digital controls, mobile menu; 35 regression tests pass.
-- [ ] Complete paid checkout/download and role-matrix verification (requires authorized test accounts/payment and available generation).
-- [ ] Complete production review (deep security results stale; HTTP, lint and metadata foundations pass; route-specific metadata and Google indexing still need verification).
+## Active launch plan
+- [Launch plan](launch-plan.md) — canonical public-launch scope, findings, customer flows, design, SEO, marketing, economics and acceptance gates.
+- [Approval copy](.lovable/plan.md) — the same ongoing launch plan only; keep synchronized with `launch-plan.md`. No unrelated plans or history belong in either file.
 
-- [x] Finalize reviewed manuscript automatically after verified payment; store an immutable private PDF per order.
-- [x] Add direct customer/admin PDF downloads and validate fulfillment safeguards (27 tests passed).
-- [ ] Verify a paid order download end to end (no book orders exist; requires a customer checkout).
-- [ ] Send PDF-ready and dispatch emails (blocked until sender domain is configured).
+## Remaining work
+- [ ] Validate applied access, payment, generation, cancellation and account-switch repairs through the launch plan’s acceptance checks.
+- [ ] Complete public/member/Creator/admin flow, accessibility, chart-accuracy and SEO verification.
+- [ ] Finalize distinct Standard/Expanded content specifications and fresh manuscript manifests.
+- [ ] Verify checkout → confirmed paid order → private PDF download end to end. **Blocker:** authorized payment/test account.
+- [ ] Obtain actual printer production and shipping costs. **Blocker:** supplier quote.
+- [ ] Configure and verify PDF-ready and dispatch emails. **Blocker:** branded sender/domain authorization.
+- [ ] Agree book refund/cancellation policy and measured AI allowances. **Blocker:** owner decisions and billing evidence.
+- [ ] Run release checks and post-release verification. **Blocker:** explicit publishing authorization after launch gates pass.
 
-- [x] 1. Sample AstroBook model + previewable sample pages on product page (random birth data)
-- [x] 2. Test suite: checkout, plan gating, free-reading limits (20 app + 3 checkout tests, all passing)
-- [x] 3. Fresh security scan (clean; only the 2 community findings the owner kept intentionally)
-- [x] 4. "Couldn't load — retry" states (chat, custom pages, shared space overview)
-- [x] 5. Merged five private-edition functions into one (payload moved to private storage)
-- [x] 6. Shipping address validation hardened (client + server checkout)
-- [x] 7. Book preview page /book-preview + look-inside section on AstroBook page
+## Evidence retained
+Read-only audit reports remain intact in Files:
+- `/mnt/documents/zodaci-audit.md`
+- `/mnt/documents/zodaci-read-only-audit.md`
+- `/mnt/documents/zodaci-public-audit.md`
+
+Completed and superseded planning documents are removed; their unfinished launch checks are consolidated above and in the launch plan. App code, source/user knowledge and audit reports are preserved. No separate unrelated active plan was identified.

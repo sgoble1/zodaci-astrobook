@@ -8,7 +8,7 @@ export function usePlan(): { plan: Plan; loading: boolean } {
   const sub = useSubscription();
   const [elevated, setElevated] = useState<boolean | null>(null);
   useEffect(() => {
-    let alive = true;
+    let alive = true; setElevated(null);
     (async () => {
       const { data } = await supabase.auth.getSession();
       const uid = data.session?.user.id;
@@ -21,6 +21,6 @@ export function usePlan(): { plan: Plan; loading: boolean } {
     })();
     return () => { alive = false; };
   }, [sub.userId]);
-  const plan: Plan = elevated ? 'creator' : (sub.tier as Plan) ?? 'free';
+  const plan: Plan = !sub.loading && elevated ? 'creator' : (sub.tier as Plan) ?? 'free';
   return { plan, loading: sub.loading || elevated === null };
 }

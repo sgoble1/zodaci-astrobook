@@ -18,7 +18,7 @@ export default function Auth() {
   const [busy, setBusy] = useState(false);
   const [params] = useSearchParams();
   const raw = params.get('next') ?? '';
-  const next = raw.startsWith('/') && !raw.startsWith('//') ? raw : '/start';
+  const next = raw.startsWith('/') && !raw.startsWith('//') && !raw.includes('\\') ? raw : '/start';
   const forgot = async () => {
     if (!email) return setMsg('Enter your email above first.');
     const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo: `${window.location.origin}/reset-password` });
@@ -40,7 +40,7 @@ export default function Auth() {
   const submit = async (e: React.FormEvent) => {
     e.preventDefault(); setBusy(true); setMsg(null);
     const res = mode === 'up'
-      ? await supabase.auth.signUp({ email, password: pw, options: { emailRedirectTo: `${window.location.origin}/start` } })
+      ? await supabase.auth.signUp({ email, password: pw, options: { emailRedirectTo: `${window.location.origin}/auth?next=${encodeURIComponent(next)}` } })
       : await supabase.auth.signInWithPassword({ email, password: pw });
     setBusy(false);
     if (res.error) return setMsg(res.error.message);
@@ -55,7 +55,7 @@ export default function Auth() {
         <p className="mt-2 text-sm text-muted-foreground">{mode === 'up' ? 'Keep your chart safe, sync it across devices and unlock your personal readings.' : 'Sign in to open your Zodaci.'}</p>
       </header>
       <Button type="button" variant="outline" className="w-full" onClick={async () => {
-        const r = await lovable.auth.signInWithOAuth('google', { redirect_uri: window.location.origin });
+        const r = await lovable.auth.signInWithOAuth('google', { redirect_uri: `${window.location.origin}/auth?next=${encodeURIComponent(next)}` });
         if (r.error) setMsg(r.error.message || 'Google sign-in failed');
       }}>Continue with Google</Button>
       <div className="text-center text-[10px] text-muted-foreground">or with email</div>

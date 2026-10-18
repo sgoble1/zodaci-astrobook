@@ -27,8 +27,10 @@ export function createResponsesCall(
     model: provider.responses(CHAT_MODEL),
     instructions: config.instructions,
     messages,
+    maxOutputTokens: 6000,
+    maxRetries: 1,
     // Background jobs must outlive the browser request that started them.
-    abortSignal: config.background ? undefined : request.signal,
+    abortSignal: config.background ? AbortSignal.timeout(180000) : AbortSignal.any([request.signal, AbortSignal.timeout(180000)]),
     providerOptions: {
       openai: {
         store: false,

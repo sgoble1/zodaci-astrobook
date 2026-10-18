@@ -118,13 +118,10 @@ Deno.serve(async req => {
     const sysSlug = slug.startsWith('sys-') ? slug.slice(4) : null;
     const { data: have } = await admin.from('generated_pages').select('id,status').eq('owner_id', ownerId).eq('page_key', page_key).maybeSingle();
     // A paid member opening an old preview gets the full reading written automatically.
-    if (have && !regenerate && !(fullAccess && have.status === 'preview')) return json({ id: have.id, status: have.status });
+    if (have && ['ready','preview'].includes(have.status) && !regenerate && !(fullAccess && have.status === 'preview')) return json({ id: have.id, status: have.status });
     const { data: profile } = await admin.from('profiles').select('*').eq('id', ownerId).maybeSingle();
     if (!profile?.birth_date || !profile.chart) return json({ error: 'Save your birth details first.' }, 400);
     if (profile.generation_cancelled) return json({ error: 'Writing was stopped for this chart. Press Resume to continue.' }, 409);
-    const since = new Date(Date.now() - 86400000).toISOString();
-    const { count } = await admin.from('ai_usage').select('id', { count: 'exact', head: true }).eq('user_id', ownerId).eq('feature', 'topic-reading').gte('created_at', since);
-    if ((count ?? 0) >= DAILY_LIMIT) return json({ error: 'Daily writing limit reached. Your remaining readings continue tomorrow.' }, 429);
     const { data: paused } = await admin.from('ai_access_pauses').select('message').eq('scope', 'workspace').maybeSingle();
     if (paused) return json({ error: paused.message }, 402);
     const { data: ctx } = await admin.from('personal_context').select('title,body').eq('owner_id', ownerId).eq('use_in_generation', true).limit(6);
@@ -147,8 +144,12 @@ Deno.serve(async req => {
         const row = { owner_id: ownerId, page_key, section: 'Topic Reading', title: topic.title, content, status: teaser ? 'preview' : have?.status === 'hidden' ? 'hidden' : 'ready', updated_at: new Date().toISOString() };
         const ins = await admin.from('generated_pages').upsert(row, { onConflict: 'owner_id,page_key' });
         if (ins.error) throw ins.error;
-        await admin.from('ai_usage').insert({ user_id: ownerId, feature: 'topic-reading' });
-      } catch (e) { console.error('topic job', slug, e); await admin.from('ai_usage').insert({ user_id: ownerId, feature: 'topic-reading' }); }
+        await admin.from('topic_reading_jobs').update({ status: 'succeeded', updated_at: new Date().toISOString() }).eq('id', claimed.job_id);
+      } catch (e) {
+        console.error('topic job', slug, e);
+        await admin.from('topic_reading_jobs').update({ status: 'failed', updated_at: new Date().toISOString() }).eq('id', claimed.job_id);
+        await admin.from('generated_pages').update({ status: 'failed', updated_at: new Date().toISOString() }).eq('owner_id', ownerId).eq('page_key', page_key).eq('updated_at', leaseTime);
+      }
       // Always move forward to the next unwritten topic (never back), so one failure can't stall or loop the queue.
       // Parallel lanes: each lane only takes topics whose index % lanes === lane, so lanes never collide.
       // A paused workspace (no credits) stops every lane.

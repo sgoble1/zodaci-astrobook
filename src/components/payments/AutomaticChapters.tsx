@@ -13,6 +13,7 @@ export function AutomaticChapters() {
   useEffect(() => {
     const uid = sub.userId;
     if (!uid || sub.loading || sub.tier === 'free') return;
+    let alive = true;
     const start = async () => {
       if (running.has(uid) || attempted.has(uid)) return;
       const { data: profile } = await supabase.from('profiles').select('birth_date,chart').eq('id', uid).maybeSingle();
@@ -21,6 +22,9 @@ export function AutomaticChapters() {
       try {
         const { data: pages } = await supabase.from('generated_pages').select('title').eq('owner_id', uid).eq('section', 'My Masterbook');
         for (const topic of STARTER_CHAPTERS) {
+          const { data: current } = await supabase.auth.getSession();
+          const { data: state } = await supabase.from('profiles').select('generation_cancelled').eq('id', uid).maybeSingle();
+          if (!alive || current.session?.user.id !== uid || state?.generation_cancelled) return;
           if (pages?.some(p => p.title === topic)) continue;
           window.dispatchEvent(new CustomEvent(STARTER_EVENT, { detail: { writing: topic } }));
           const { data, error } = await supabase.functions.invoke('creator-studio', { body: { kind: 'starter', topic, environment: getStripeEnvironment() } });
@@ -41,7 +45,7 @@ export function AutomaticChapters() {
     void start();
     const birthSaved = () => { void start(); };
     window.addEventListener('astrobook-birth-saved', birthSaved);
-    return () => window.removeEventListener('astrobook-birth-saved', birthSaved);
+    return () => { alive = false; window.removeEventListener('astrobook-birth-saved', birthSaved); };
   }, [sub.loading, sub.userId, sub.tier]);
   return null;
 }

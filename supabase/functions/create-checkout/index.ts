@@ -55,6 +55,7 @@ Deno.serve(async (req) => {
       const { data: order, error: orderError } = await admin.from('book_orders').select('*').eq('id', orderId).eq('user_id', user.id).single();
       if (orderError || !order) return json({ error: 'Order not available.' }, 404);
       if (!['draft','awaiting_payment'].includes(order.status)) return json({ error: 'This order is not awaiting payment.' }, 400);
+      if (order.checkout_session_id && order.environment !== env) return json({ error: 'This order is already tied to another payment environment.' }, 409);
       const digital = order.format === 'digital';
       const addr = order.shipping_address as Record<string, string> | null;
       const addrOk = !!addr && addr.country === 'US' && !!addr.name?.trim() && !!addr.line1?.trim() && !!addr.city?.trim() && addr.state?.trim().length === 2 && /^\d{5}(-\d{4})?$/.test(addr.postal_code?.trim() ?? '');
@@ -76,6 +77,8 @@ Deno.serve(async (req) => {
       const base = prices.data.find(p => p.lookup_key === lookup);
       const extra = prices.data.find(p => p.lookup_key === 'astrobook_print_extra');
       if (!base || (extras.length && !extra)) return json({ error: 'Book prices are not configured.' }, 404);
+      const expected = digital ? 1999 : order.edition === 'expanded' ? 8900 : 5900;
+      if (base.currency !== 'usd' || base.unit_amount !== expected || (extras.length && (extra?.currency !== 'usd' || extra.unit_amount !== 699))) return json({ error: 'Checkout prices do not match the advertised book prices. Please contact support.' }, 409);
       const productId = typeof base.product === 'string' ? base.product : base.product.id;
       const product = await stripe.products.retrieve(productId);
       const customerId = await resolveOrCreateCustomer(stripe, { email: user.email ?? undefined, userId: user.id });

@@ -36,11 +36,12 @@ export async function composeManuscript(input: ManuscriptInput) {
   write('About this manuscript',22); write(input.birthFacts); write(`Edition: ${input.edition}. Layout: 6 × 9 inches; printer approval required before production.`);
   write('Planet positions and calculations are distinct from traditional symbolic interpretation. Astrology does not establish personality, sexuality, diagnosis or future events. Personal examples are user reports, not independently verified facts.');
   write('Page count is determined by the actual saved content. This review PDF is not automatically expanded to 250 or 400 pages. No blank filler or invented biography is added to meet a target.');
+  const baseChapters = input.chapters.filter(c => !input.extras.some(e => e.toLowerCase() === c.title.toLowerCase()));
   const sections: ManuscriptChapter[] = [
     { title: BOOK_SECTIONS[0].title, content: input.chartFacts },
-    { title: BOOK_SECTIONS[1].title, content: input.chapters.filter(c => /big three|mind|communication|growth|lesson/i.test(c.title)).map(c=>`## ${c.title}\n\n${c.content}`).join('\n\n') },
-    { title: BOOK_SECTIONS[2].title, content: input.chapters.filter(c => /love|relationship|sex|attract/i.test(c.title)).map(c=>`## ${c.title}\n\n${c.content}`).join('\n\n') },
-    { title: BOOK_SECTIONS[3].title, content: input.chapters.filter(c => !/big three|mind|communication|growth|lesson|love|relationship|sex|attract/i.test(c.title)).map(c=>`## ${c.title}\n\n${c.content}`).join('\n\n') },
+    { title: BOOK_SECTIONS[1].title, content: baseChapters.filter(c => /big three|mind|communication|growth|lesson/i.test(c.title)).map(c=>`## ${c.title}\n\n${c.content}`).join('\n\n') },
+    { title: BOOK_SECTIONS[2].title, content: baseChapters.filter(c => /love|relationship|sex|attract/i.test(c.title)).map(c=>`## ${c.title}\n\n${c.content}`).join('\n\n') },
+    { title: BOOK_SECTIONS[3].title, content: baseChapters.filter(c => !/big three|mind|communication|growth|lesson|love|relationship|sex|attract/i.test(c.title)).map(c=>`## ${c.title}\n\n${c.content}`).join('\n\n') },
   ];
   for(const extra of input.extras) { const chapter = input.chapters.find(c => c.title.toLowerCase()===extra.toLowerCase()); if(!chapter) throw new Error(`Write the extra section “${extra}” in My Masterbook before adding it to print.`); sections.push({title:extra,content:chapter.content}); }
   if(sections.some(s=>!s.content.trim())) throw new Error('Your four foundations are incomplete. Finish the ready-made chapters in My Masterbook first.');
