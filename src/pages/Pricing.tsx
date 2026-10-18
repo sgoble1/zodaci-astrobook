@@ -10,10 +10,10 @@ import { StripeEmbeddedCheckout } from '@/components/payments/StripeEmbeddedChec
 import { CreatorStudio } from '@/components/payments/CreatorStudio';
 import { PaymentTestModeBanner } from '@/components/payments/PaymentTestModeBanner';
 
-const plans: { tier: Tier; name: string; price: string; priceId?: string; blurb: string; items: string[] }[] = [
+const plans: { tier: Tier; name: string; price: string; priceId?: string; yearPrice?: string; yearId?: string; blurb: string; items: string[] }[] = [
   { tier: 'free', name: 'Free', price: 'Free', blurb: 'Everything you need to meet your chart.', items: ['Your calculated birth chart wheel', 'Planets, houses and aspects in plain words', 'Two full readings: Your Big Three and Personality & Strengths', 'Explore & Discover and the Chart Guide', 'Save your chart to your account'] },
-  { tier: 'full', name: 'Full Access', price: '$12.99/month', priceId: 'full_access_monthly', blurb: 'The complete book written from your chart.', items: ['Every reading at full length', 'Read your own Masterbook, written from your chart', 'Timing & cycles: transits, retrogrades, life phases', 'Seven other systems: Vedic, Ba Zi, Maya and more', 'A monthly allowance of AI credits', 'Shared spaces with people you invite'] },
-  { tier: 'creator', name: 'Creator', price: '$14.99/month', priceId: 'creator_monthly', blurb: 'Make new things from your chart.', items: ['Everything in Full Access', 'Generate personal podcasts about your chart', 'Generate new Masterbook chapters and pages', 'A larger monthly allowance of AI credits'] },
+  { tier: 'full', name: 'Full Access', price: '$12.99/month', priceId: 'full_access_monthly', yearPrice: '$124.99/year', yearId: 'full_access_yearly', blurb: 'The complete book written from your chart.', items: ['Every reading at full length', 'Read your own Masterbook, written from your chart', 'Timing & cycles: transits, retrogrades, life phases', 'Seven other systems: Vedic, Ba Zi, Maya and more', 'A monthly allowance of AI credits', 'Shared spaces with people you invite'] },
+  { tier: 'creator', name: 'Creator', price: '$14.99/month', priceId: 'creator_monthly', yearPrice: '$143.99/year', yearId: 'creator_yearly', blurb: 'Make new things from your chart.', items: ['Everything in Full Access', 'Generate personal podcasts about your chart', 'Generate new Masterbook chapters and pages', 'A larger monthly allowance of AI credits', 'Your own Creator dashboard'] },
 ];
 const rank: Record<Tier, number> = { free: 0, full: 1, creator: 2 };
 const faqs = [
@@ -27,6 +27,7 @@ export default function Pricing() {
   const sub = useSubscription();
   const nav = useNavigate();
   const [open, setOpen] = useState<string | null>(null);
+  const [yearly, setYearly] = useState(false);
   const manage = async () => {
     const { data, error } = await supabase.functions.invoke('customer-portal', { body: { returnUrl: window.location.href, environment: (() => { try { return getStripeEnvironment(); } catch { return 'live'; } })() } });
     if (error || !data?.url) return toast.error(data?.error || 'Could not open billing right now.');
@@ -43,6 +44,7 @@ export default function Pricing() {
         <p className="mx-auto max-w-2xl text-muted-foreground">Your chart is always free. Paid plans open every reading, your own Masterbook and AI credits, all written from your own birth details.</p>
         {sub.tier !== 'free' && <div className="flex flex-col items-center gap-1 pt-2"><Button variant="outline" onClick={manage}>Manage subscription · cancel, card & invoices</Button>{sub.periodEnd && <p className="text-xs text-muted-foreground">{sub.cancelAtEnd ? 'Ends' : 'Renews'} {new Date(sub.periodEnd).toLocaleDateString()}</p>}</div>}
       </header>
+      {!open && <div role="group" aria-label="Billing period" className="mx-auto flex w-fit gap-1 rounded-full border border-border p-1">{[[false, 'Monthly'], [true, 'Yearly · save 20%']].map(([v, l]) => <button key={String(v)} onClick={() => setYearly(v as boolean)} aria-pressed={yearly === v} className={`rounded-full px-4 py-1.5 text-sm ${yearly === v ? 'bg-primary text-primary-foreground' : 'hover:bg-muted'}`}>{l as string}</button>)}</div>}
       {open ? (
         <section className="parchment p-4 space-y-3" aria-label="Checkout">
           <Button variant="outline" size="sm" onClick={() => setOpen(null)}>← Back to plans</Button>
@@ -51,23 +53,25 @@ export default function Pricing() {
       ) : (
         <div className="grid gap-5 md:grid-cols-3">
           {plans.map((p, i) => {
+            const price = yearly && p.yearPrice ? p.yearPrice : p.price; const pid = yearly && p.yearId ? p.yearId : p.priceId;
             const current = !sub.loading && sub.tier === p.tier;
             const below = rank[p.tier] < rank[sub.tier];
             return (
               <section key={p.name} className={`parchment p-6 space-y-4 flex flex-col ${i ? 'border-gold' : ''}`} aria-labelledby={`plan-${i}`}>
                 <h2 id={`plan-${i}`} className="text-2xl">{p.name}</h2>
-                <div className="font-display text-3xl">{p.price}</div>
+                <div className="font-display text-3xl">{price}</div>
                 <p className="text-sm text-muted-foreground">{p.blurb}</p>
                 <ul className="space-y-2 text-sm flex-1">{p.items.map(x => <li key={x} className="flex gap-2"><Check className="h-4 w-4 shrink-0 text-gold" aria-hidden />{x}</li>)}</ul>
                 {!p.priceId ? <Button asChild variant="outline" className="w-full"><Link to="/start">Get my free chart</Link></Button>
                   : current ? <Button disabled className="w-full">Your current plan</Button>
                   : below ? <Button disabled variant="outline" className="w-full">Included in your plan</Button>
-                  : <Button className="w-full" onClick={() => choose(p.priceId!)}>{sub.userId ? `Subscribe — ${p.price}` : 'Sign in to subscribe'}</Button>}
+                  : <Button className="w-full" onClick={() => choose(pid!)}>{sub.userId ? `Subscribe — ${price}` : 'Sign in to subscribe'}</Button>}
               </section>
             );
           })}
         </div>
       )}
+      {sub.tier === 'creator' && <p className="text-center"><Button asChild><Link to="/creator">Open your Creator dashboard</Link></Button></p>}
       {sub.tier === 'creator' && <div className="space-y-2"><CreatorStudio /><p className="text-sm text-center"><Link to="/my-masterbook" className="underline">Open My Masterbook to read and play what you've made</Link></p></div>}
       <section className="space-y-3" aria-labelledby="compare">
         <h2 id="compare" className="text-2xl">Compare plans</h2>
