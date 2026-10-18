@@ -19,6 +19,16 @@ Deno.serve(async req => {
     if (!parsed.success) return json({ error: 'Choose a cover style.' }, 400);
     const { data: pause } = await db.from('ai_access_pauses').select('message').eq('scope', 'workspace').maybeSingle();
     if (pause) return json({ error: pause.message }, 402);
+    // Personal AI cover previews are a paid feature so free accounts never burn generation credits.
+    const [{ data: paid }, { data: isAdminUser }, { data: shared }] = await Promise.all([
+      db.rpc('has_paid_plan', { _user_id: user.id }),
+      db.rpc('has_role', { _user_id: user.id, _role: 'admin' }),
+      db.rpc('is_shared_space_member'),
+    ]);
+    if (!(paid || isAdminUser || shared)) return json({ error: 'Personal cover previews are part of Full Access. Upgrade to create covers from your chart — or pick one of the free cover designs.' }, 403);
+    const since = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+    const { count: coverCount } = await db.from('ai_usage').select('id', { count: 'exact', head: true }).eq('user_id', user.id).eq('feature', 'book-cover-request').gte('created_at', since);
+    if ((coverCount ?? 0) >= 9) return json({ error: 'Daily cover-preview limit reached. Try again tomorrow.' }, 429);
     const { data: p } = await db.from('profiles').select('chart,birth_date,birth_time').eq('id', user.id).maybeSingle();
     if (!p?.birth_date || !p.chart) return json({ error: 'Save your birth details to your account first.' }, 400);
     const chart = p.chart as { bodies?: { name: string; sign: string }[] };
