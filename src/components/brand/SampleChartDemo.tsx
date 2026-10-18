@@ -18,7 +18,7 @@ export function SampleChartDemo() {
   const r = useMemo(() => computeChart({ ...s, placeSource: 'geocoded' }), [s]);
   const big3 = ['Sun', 'Moon'].map(n => r.bodies.find(b => b.name === n)).filter(Boolean) as { name: string; sign: string }[];
   return (
-    <div className="grid items-center gap-10 md:grid-cols-2">
+    <div className="grid items-center gap-10 lg:grid-cols-[2fr_3fr]">
       <div className="space-y-5">
         <h2>See a real chart, calculated live.</h2>
         <p className="text-muted-foreground leading-relaxed">This example is worked out right now from a fictional birth moment, the same way yours will be. Pick a moment to watch the sky change.</p>
@@ -26,7 +26,7 @@ export function SampleChartDemo() {
         <ul className="space-y-1 text-sm">{big3.map(b => <li key={b.name}><span className="text-accent">{b.name}</span> in {b.sign}</li>)}</ul>
         <Button asChild size="lg"><Link to="/start">Calculate mine — free<ArrowRight /></Link></Button>
       </div>
-      <div className="mx-auto w-full max-w-md"><ChartWheel r={r} /></div>
+      <div className="w-full"><ChartWheel r={r} /></div>
     </div>
   );
 }
