@@ -13,45 +13,46 @@ Use **Brand & Revenue Strategist** for coordinated design, SEO, marketing and co
 - **Observed AI samples:** Successful calls cost 0.16–0.79 credits and take 12–76 seconds. Not mapped to feature jobs; earlier per-reading estimates remain unvalidated.
 - **Blocked/unknown:** No verified Zodaci Search Console property, supplier quote, paid-delivery proof or branded sender. An unrelated verified email domain must not be silently reused. Actual fees, AI dollars, CAC and retention unavailable; empty aggregate order reads do not prove historical sales elsewhere.
 
-## Prioritized findings and remedies
-Labels: **O** = observed browser/live rule; **S** = source-supported gap/risk, production behavior not reproduced; **H** = hypothesis; **B** = blocked proof. High-confidence O/S findings precede lower-confidence H recommendations. Effort S/M/L is relative, not a delivery promise.
+## Prioritized findings
+**O** observed browser/live rule; **S** source-supported risk, not reproduced in production; **B** blocked proof; **H** hypothesis. High-confidence O/S precede H. Effort S/M/L is relative. Customer impact includes failed purchases, wrong access, lost work, cost waste and unclear offers.
 
-| Priority / domain | Evidence and customer/business impact | Action | Effort / dependency |
-|---|---|---|---|
-| P0 Purchase | O: old order policy rejects current prices/digital addresses | Align live rules with canonical format-aware prices; preserve owner/draft restrictions | S; migration + rejection tests |
-| P0 Access | O/S: sandbox entitlement qualifies for paid production readings | Server-select environment; prevent test entitlement unlocking live AI | M; role/environment matrix |
-| P0 Fulfillment | S: sandbox books mix into dispatch/PDF eligibility | Separate sandbox queue; prevent real production from test payments | M; webhook/dispatch tests |
-| P0 Trust | S: Expanded composes same chapters as Standard; 250/400-page targets unsupported | Define and implement genuinely different manuscript specifications; show actual reviewed page count. If not ready, block unsupported edition purchase | L; owner specification decision |
-| P0 Spend | S: no atomic reservation; duplicate jobs and concurrent limits can overspend | Unique jobs, atomic quota reservations, leases and actual-call reconciliation | L; concurrency tests |
-| P0 Privacy | S risk: pending private download/account switch can leave stale state | Immediate clear, versioned checks, session-bound downloads; test delayed responses | M; authorized privacy matrix |
-| P0 Payment proof | B: no completed paid checkout→PDF→receipt proof | Isolated sandbox transaction first, then explicitly authorized live proof | M; payment authorization |
-| P1 Reliability | S: failed topic work only logs; progress can wait indefinitely | Persist queued/running/failed states; bounded polling, clear retry | M; provider-failure mocks |
-| P1 Cancellation | S: starter queue ignores Stop and may continue after sign-out | Session-bound cancellation in both queues and server | M; deferred-job tests |
-| P1 Retry | S: existing failed/writing/hidden rows can block recovery | Explicit retry transitions; distinguish hidden access from failed work | M; state fixtures |
-| P1 Queue | S: tab-wide started flag is not account/chart/plan scoped | Key resumable work to owner, chart revision and entitlement | M; switch/upgrade tests |
-| P1 Account state | S risk: late birth/plan responses overwrite current account | Clear immediately and ignore superseded responses | M; account-switch tests |
-| P1 Onboarding | O: self-description field disappears | Separate selection mode from typed text; verify save/re-edit | S; input test |
-| P1 Sign-in | S: OAuth/confirmation lose intended page | Validated internal destination across all sign-in methods | M; callback tests |
-| P1 Permissions | S: admin/shared effective plan differs from raw-subscription checks | One documented entitlement policy across menu/page/function | M; role tests |
-| P1 Payment integrity | S: switching environment leaves older payable checkout sessions | Pin order environment; serialize/reconcile sessions | M; duplicate/out-of-order tests |
-| P1 Refunds | S: book refunds/disputes/async failures lack lifecycle handling | Verified idempotent transitions; halt unfulfilled production | L; owner book-return policy |
-| P1 Payment fields | S/live guard review: payment metadata/printing transitions not fully service-only | Protect payment evidence and valid state transitions server-side | M; direct-update denial tests |
-| P1 Receipts | S: history recomputes catalog price; checkout lookup amounts not validated | Snapshot line prices/currency/tax and show verified immutable paid total | M; amount matrix |
-| P1 Manuscripts | S: all ready pages included; extras can duplicate chapters | Explicit owner-approved, fresh chapter manifest; extras must be distinct | L; PDF fixtures |
-| P1 Covers | S: upload/revision may not invalidate preview; MIME assumptions | Version cover identity; decode/validate files; force re-review on changes | M; corrupt/change tests |
-| P1 Dispatch | S: readiness/date/expected-state checks differ across pages | One guarded operation with PDF/preflight/date/tracking approval | M; stale-form tests |
-| P1 Operations | S: mixed labels, misleading estimated-cost column, all-order link ignored | Format-specific desk, separate costs, honor authorized deep link | S; browser checks |
-| P1 Generation bounds | S: word prompts are not output/input/time/retry caps | Explicit bounded budgets, preserve safety through correction, validate before TTS | M; overlength/error mocks |
-| P1 Private loader | S: failed fetch/decompression can block entire app | Safe failure state, bounded retry; public pages remain usable | M; corrupt/503 fixtures |
-| P1 Security | B: deep scan stale | Fresh scan before release and after publication; resolve verified findings only | M; scanner completion |
-| P1 Email | B: branded sender and real delivery unverified | Configure approved sender; PDF-ready/dispatch emails, retry and deduplication | M; DNS/sender approval |
-| P2 Pricing clarity | O: edition/format prices visually contradict | Itemized edition-aware summary everywhere; see design below | S; price rules unchanged |
-| P2 Discovery | S: root/welcome roles, sitemap root omission and metadata persistence differ | Verify signed-out entry; align self-canonicals/sitemap and route metadata | M; preserve sitemap mechanism |
-| P2 Crawl/share | O initial HTML: generic title, empty app root | Decide public rendering upgrade; truthful per-page share/crawl support | L; migration approval |
-| P2 Marketing copy | S: launch/in-stock, automatic-writing tour and credit allowances conflict | Audit public claims against actual behavior; explain usage and book/subscription separation | M; verified allowances |
-| P2 Accessibility | O sample canvas; broader review incomplete | HTML excerpts/text alternative, keyboard/contrast/reduced-motion/mobile audit | M; rendered checks |
-| P2 Brand polish | O/S: strong book art but heavy cover title panel, repetitive purple surfaces, stale vellum copy | Refine existing identity, hierarchy and product preview, not a new rebrand | M; existing tokens |
-| P2 Growth evidence | H/B: low search share; no verified funnel/retention/cost cohorts | Validate events, Search Console and per-feature spend before channel scaling | M; owner access |
+| Priority / evidence | Gap → action | Effort / dependency |
+|---|---|---|
+| P0 O Purchase | Old prices/address rule → canonical format-aware owner/draft policy | S; migration tests |
+| P0 O/S Access | Sandbox qualifies for live AI → server-selected environment | M; entitlement matrix |
+| P0 S Fulfillment | Test payments enter dispatch/PDF queue → isolate sandbox | M; webhook tests |
+| P0 S Product | Expanded has same chapters; 250/400 pages unsupported → distinct specification/actual pages; block unsupported sale | L; owner specs |
+| P0 S Spend | Concurrent/duplicate jobs overspend → atomic quota/job reservations and reconciliation | L; concurrency tests |
+| P0 S Privacy | Pending download/session change may leave stale data → immediate clear/version guards | M; authorized race tests |
+| P0 B Payment | No paid checkout→receipt→PDF proof → sandbox then authorized live test | M; approval |
+| P1 S Recovery | Jobs fail only in logs; polling indefinite → persisted terminal states/bounded retry | M; failure mocks |
+| P1 S Stop | Starter queue ignores cancellation/sign-out → session-bound server cancellation | M; deferred tests |
+| P1 S Retry | Existing failed/writing/hidden row blocks recovery → explicit state transitions | M; state tests |
+| P1 S Queue | Tab-wide flag ignores owner/chart/upgrade → scoped persisted jobs | M; switch tests |
+| P1 S Identity | Late plan/chart response can overwrite new account → clear/version guards | M; race tests |
+| P1 O Onboarding | Description disappears after one character → separate mode/text | S; input test |
+| P1 S Sign-in | OAuth/confirmation lose destination → validated internal handoff | M; callback tests |
+| P1 S Entitlement | Admin/shared UI and server disagree → one documented policy | M; role matrix |
+| P1 S Checkout | Replaced environment leaves payable sessions → pin/serialize/reconcile | M; replay tests |
+| P1 S Refund | Refund/dispute/async failure not handled → idempotent lifecycle/halt production | L; owner policy |
+| P1 S Payment fields | Admin can bypass payment/production sequence → service-only evidence/state machine | M; denial tests |
+| P1 S Receipts | Recomputed historical totals; unvalidated lookup prices → immutable currency/tax snapshots | M; price matrix |
+| P1 S Manuscript | All ready chapters/duplicated extras → approved fresh manifest/distinct extras | L; PDF fixtures |
+| P1 S Cover | Upload changes may retain stale preview; MIME assumptions → version/decode/re-review | M; file tests |
+| P1 S Dispatch | Inconsistent readiness/date/stale-state checks → one guarded operation | M; transition tests |
+| P1 S Print desk | Mixed labels/fee column/deep link misleading → format-specific actions/costs | S; browser tests |
+| P1 S Bounds | Word prompts lack hard budgets → token/input/time/retry caps and correction safety | M; mocks |
+| P1 S Loader | Private fetch/decompression failure can block app → safe state/retry/public access | M; corrupt/503 fixtures |
+| P1 B Security | Deep scan stale → fresh pre/post-release scan; resolve verified findings | M; scanner |
+| P1 B Email | Branded delivery unverified → sender setup/deduplicated PDF and dispatch emails | M; DNS approval |
+| P2 O Pricing | Edition/format labels contradict → itemized format-aware totals | S; prices unchanged |
+| P2 S SEO | Root/welcome/sitemap/metadata differ → verified entry/self-canonicals/route metadata | M; existing mechanism |
+| P2 O Crawl/share | Initial HTML generic/empty root → evaluate public rendering support | L; migration approval |
+| P2 S Claims | Launch/in-stock/tour/allowance copy conflicts → verify every promise | M; allowance facts |
+| P2 O/S Access/design | Canvas lacks text alternative; hierarchy/cover panel/stale vellum copy → accessible excerpts and identity-preserving polish | M; rendered audit |
+| P2 H/B Growth | Search/funnel/retention/spend evidence incomplete → measure before scaling | M; access |
+
+Technical source references: `topic-readings/index.ts:105–150`, `AutomaticChapters.tsx:13–39`, `useAprilSpace.ts:18–46`, `Onboarding.tsx:80–81`, `create-checkout/index.ts:44–91`, `payments-webhook/index.ts:45–77`, `bookManuscript.ts:36–45`, `ManuscriptPreview.tsx:16–25`, `Dispatch.tsx:17–29`, `PrintOrders.tsx:24–27`, and live `book_orders` policies/`has_paid_plan`/`guard_book_delivery`. Browser evidence confirmed pricing, sample and input behavior. Current tests cover helpers, not these end-to-end behaviors.
 
 ## Clear printed and digital prices
 Keep the requested retail prices; do not silently alter them:
