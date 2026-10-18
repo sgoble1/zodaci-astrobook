@@ -7,6 +7,7 @@ This is the single index of active project work. It is not a task history.
 - [Approval copy](.lovable/plan.md) — the same ongoing launch plan only; keep synchronized with `launch-plan.md`. No unrelated plans or history belong in either file.
 
 ## Remaining work
+- [ ] Finish implementable incomplete launch work requested on 18 October; consolidate results and external blockers in the launch plan.
 - [ ] Validate applied access, payment, generation, cancellation and account-switch repairs through the launch plan’s acceptance checks.
 - [ ] Complete public/member/Creator/admin flow, accessibility, chart-accuracy and SEO verification.
 - [ ] Finalize distinct Standard/Expanded content specifications and fresh manuscript manifests.
