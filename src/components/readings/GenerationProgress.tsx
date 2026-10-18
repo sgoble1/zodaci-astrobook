@@ -22,9 +22,12 @@ export function GenerationProgress() {
   const [runId, setRunId] = useState(0);
   const [requested, setRequested] = useState<Set<string>>(new Set());
   const timer = useRef<number>();
+  const startedKey = useRef(STARTED_KEY);
+  useEffect(() => { const { data } = supabase.auth.onAuthStateChange(() => { setEligible(false); setDone(null); setRequested(new Set()); setRunId(n => n + 1); }); return () => data.subscription.unsubscribe(); }, []);
 
   const refresh = async () => {
     const rows = await loadMyTopicReadings().catch(() => null);
+    if (rows?.some(r => r.status === 'failed')) setError('A reading could not finish. Open it to retry.');
     if (rows) setDone(new Set(rows.filter(r => ['ready', 'preview'].includes(r.status)).map(r => r.page_key)));
     return rows;
   };
@@ -36,7 +39,7 @@ export function GenerationProgress() {
       const { data } = await supabase.auth.getSession();
       if (!data.session) { if (alive) setEligible(false); return; }
       const uid = data.session.user.id;
-      const { data: p } = await supabase.from('profiles').select('birth_date,chart,generation_cancelled').eq('id', uid).maybeSingle();
+      const { data: p } = await supabase.from('profiles').select('birth_date,chart,generation_cancelled,onboarded_at').eq('id', uid).maybeSingle();
       if (!alive) return;
       const ok = !!(p?.birth_date && p.chart);
       setEligible(ok);
@@ -45,16 +48,17 @@ export function GenerationProgress() {
       const all = await canWriteAllReadings().catch(() => false);
       if (!alive) return;
       // Only the headline readings are written upfront; everything else is written when first opened.
+      startedKey.current = `${STARTED_KEY}:${uid}:${p?.onboarded_at}:${all}`;
       const list = ALL_READINGS.filter(t => (all ? FLAGSHIP_READINGS : FREE_READINGS).includes(t.slug));
       setTargets(list);
       if (p?.generation_cancelled) { await refresh(); return; }
       const rows = await refresh();
       if (!rows || !alive) return;
-      const missing = list.filter(t => !rows.some(r => r.page_key === `topic-${t.slug}`));
+      const missing = list.filter(t => !rows.some(r => r.page_key === `topic-${t.slug}` && ['ready','preview','writing'].includes(r.status)));
       // A stop may land after a lane was already started; that is a quiet stop, not an error.
-      const note = (e: Error) => { if (/stopped/i.test(e.message)) { sessionStorage.removeItem(STARTED_KEY); setCancelled(true); } else setError(e.message); };
-      if (missing.length && !sessionStorage.getItem(STARTED_KEY)) {
-        sessionStorage.setItem(STARTED_KEY, '1');
+      const note = (e: Error) => { if (/stopped/i.test(e.message)) { sessionStorage.removeItem(startedKey.current); setCancelled(true); } else setError(e.message); };
+      if (missing.length && !sessionStorage.getItem(startedKey.current)) {
+        sessionStorage.setItem(startedKey.current, '1');
         for (const t of missing) { if (!alive) break; try { await writeTopicReading(t.slug); if (alive) setRequested(old => new Set([...old, t.slug])); } catch (e) { note(e as Error); break; } }
       }
     })();
@@ -65,7 +69,7 @@ export function GenerationProgress() {
     const { data } = await supabase.auth.getSession();
     if (!data.session) return;
     await supabase.from('profiles').update({ generation_cancelled: true }).eq('id', data.session.user.id);
-    sessionStorage.removeItem(STARTED_KEY);
+    sessionStorage.removeItem(startedKey.current);
     setError('');
     setCancelled(true);
   };
@@ -73,7 +77,7 @@ export function GenerationProgress() {
     const { data } = await supabase.auth.getSession();
     if (!data.session) return;
     await supabase.from('profiles').update({ generation_cancelled: false }).eq('id', data.session.user.id);
-    sessionStorage.removeItem(STARTED_KEY);
+    sessionStorage.removeItem(startedKey.current);
     setCancelled(false);
     setRunId(n => n + 1);
   };
@@ -83,7 +87,8 @@ export function GenerationProgress() {
   const active = eligible && !cancelled && done !== null && count < total;
   useEffect(() => {
     if (!active) return;
-    timer.current = window.setInterval(refresh, 20000);
+    const started = Date.now();
+    timer.current = window.setInterval(() => { if (Date.now() - started > 240000) { setError('Writing is taking longer than expected. Open the reading to check or retry.'); clearInterval(timer.current); return; } void refresh(); }, 20000);
     return () => clearInterval(timer.current);
   }, [active]);
 

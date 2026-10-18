@@ -78,19 +78,22 @@ Deno.serve(async (req) => {
     const STARTER = ['Your Big Three: Sun, Moon and Rising', 'Love and Relationships', 'Work, Purpose and Calling', 'Mind and Communication', 'Drive, Energy and Conflict', 'Growth, Challenges and Life Lessons', 'Sex & Attraction'];
     const now = Date.now();
     const active = (s: { status: string; current_period_end: string | null }) => (!s.current_period_end || +new Date(s.current_period_end) > now) && ['active', 'trialing', 'past_due', 'canceled'].includes(s.status) && (s.status !== 'canceled' || !!s.current_period_end);
+    const [{ data: adminRole }, { data: sharedRole }] = await Promise.all([admin.rpc('has_role', { _user_id: user.id, _role: 'admin' }), admin.rpc('is_shared_space_user_id', { _user_id: user.id })]);
+    const elevated = !!(adminRole || sharedRole);
     if (kind === 'starter') {
       // Ready-made chapters for any paid plan; one chapter per request, each written once.
       if (!STARTER.includes(topic)) return json({ error: 'Unknown chapter.' }, 400);
-      const { data: paid } = await admin.from('billing_subscriptions').select('status,current_period_end').eq('user_id', user.id).eq('environment', environment).in('price_id', ['full_access_monthly', 'creator_monthly', 'full_access_yearly', 'creator_yearly']);
-      if (!(paid ?? []).some(active)) return json({ error: 'Ready-made chapters need Full Access.' }, 403);
+      const { data: paid } = await admin.from('billing_subscriptions').select('status,current_period_end').eq('user_id', user.id).eq('environment', 'live').in('price_id', ['full_access_monthly', 'creator_monthly', 'full_access_yearly', 'creator_yearly']);
+      if (!elevated && !(paid ?? []).some(active)) return json({ error: 'Ready-made chapters need Full Access.' }, 403);
     }
     // Creator tools require an active Creator plan, checked here — never trusted from the browser.
-    const { data: subs } = await admin.from('billing_subscriptions').select('status,current_period_end,price_id').eq('user_id', user.id).eq('environment', environment).in('price_id', ['creator_monthly', 'creator_yearly']);
-    const ok = kind === 'starter' || (subs ?? []).some(s => (!s.current_period_end || +new Date(s.current_period_end) > now) && ['active', 'trialing', 'past_due', 'canceled'].includes(s.status) && (s.status !== 'canceled' || !!s.current_period_end));
+    const { data: subs } = await admin.from('billing_subscriptions').select('status,current_period_end,price_id').eq('user_id', user.id).eq('environment', 'live').in('price_id', ['creator_monthly', 'creator_yearly']);
+    const ok = elevated || kind === 'starter' || (subs ?? []).some(s => (!s.current_period_end || +new Date(s.current_period_end) > now) && ['active', 'trialing', 'past_due', 'canceled'].includes(s.status) && (s.status !== 'canceled' || !!s.current_period_end));
     if (!ok) return json({ error: 'Creator tools need the Creator plan.' }, 403);
 
     const { data: profile } = await admin.from('profiles').select('*').eq('id', user.id).maybeSingle();
     if (!profile?.birth_date || !profile.chart) return json({ error: 'Save your birth details to your account first.' }, 400);
+    if (profile.generation_cancelled) return json({ error: 'Writing was stopped for this chart. Resume to continue.' }, 409);
     const facts = chartFacts(profile);
     const [{data:contexts,error:contextError},{data:chapters,error:chapterError}]=await Promise.all([
       admin.from('personal_context').select('id,title,body').eq('owner_id',user.id).eq('use_in_generation',true).order('updated_at',{ascending:false}),
