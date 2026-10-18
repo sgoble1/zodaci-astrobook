@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -6,6 +6,7 @@ import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { loadMyTopicReadings, TOPIC_READINGS, CORE_THEMES, writeTopicReading, type TopicRow } from '@/lib/topicReadings';
 import { ThemeArt } from '@/components/common/ThemeArt';
+import { useOnDemandReading } from '@/hooks/useOnDemandReading';
 
 const slugify = (s: string) => s.toLowerCase().replace(/[*_`]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 
@@ -13,8 +14,7 @@ export default function MyTopicReading({ slugOverride }: { slugOverride?: string
   const params = useParams();
   const slug = slugOverride ?? params.slug;
   const meta = [...TOPIC_READINGS, ...CORE_THEMES].find(t => t.slug === slug);
-  const [row, setRow] = useState<TopicRow | null | undefined>(undefined);
-  useEffect(() => { loadMyTopicReadings().then(rs => setRow(rs.find(r => r.page_key === `topic-${slug}`) ?? null)); }, [slug]);
+  const { row, setRow, writing, error, locked } = useOnDemandReading(slug);
   const [busy, setBusy] = useState(false);
   const rewrite = async () => {
     if (!slug || !confirm('Rewrite this reading from your chart? The current text will be replaced.')) return;
@@ -52,7 +52,9 @@ export default function MyTopicReading({ slugOverride }: { slugOverride?: string
         <div className="reading-prose"><ReactMarkdown remarkPlugins={[remarkGfm]} components={{ h2: ({ children }) => { const t = String(Array.isArray(children) ? children.join('') : children).replace(/^\d+[.)]\s*/, ''); return <h2 id={slugify(t)}>{t}</h2>; } }}>{row.content}</ReactMarkdown></div>
         {sections.length > 1 && <nav aria-label="In this reading" className="order-first lg:order-none"><div className="vellum space-y-2 p-4 lg:sticky lg:top-24"><p className="font-smallcaps text-xs text-gold">In this reading</p><ol className="space-y-1.5 text-sm">{sections.map((s, i) => <li key={s}><a href={`#${slugify(s)}`} className="flex gap-2 text-muted-foreground hover:text-foreground"><span className="text-gold">{String(i + 1).padStart(2, '0')}</span><span>{s}</span></a></li>)}</ol></div></nav>}
       </div>
-        : <div className="rounded-lg border border-dashed border-border p-5 space-y-3"><p className="text-muted-foreground">This reading hasn’t been written yet. Free accounts include two full readings (Your Big Three and Personality & Strengths); Full Access writes every reading from your chart.</p><Button asChild size="sm"><Link to="/pricing">See Full Access</Link></Button></div>}
+        : writing ? <div role="status" aria-live="polite" className="vellum flex items-center gap-4 p-6"><span className="h-8 w-8 shrink-0 animate-spin rounded-full border-4 border-primary/30 border-t-primary" aria-hidden="true" /><div><p className="font-medium">Writing this reading from your chart…</p><p className="text-sm text-muted-foreground">This takes about a minute. It saves to your account, so it’s instant next time.</p></div></div>
+        : error ? <div role="alert" className="rounded-lg border border-destructive/40 p-5 text-sm text-destructive">{error}</div>
+        : locked ? <div className="rounded-lg border border-dashed border-border p-5 space-y-3"><p className="text-muted-foreground">This reading hasn’t been written yet. Free accounts include two full readings (Your Big Three and Personality & Strengths); Full Access writes every reading from your chart.</p><Button asChild size="sm"><Link to="/pricing">See Full Access</Link></Button></div> : null}
     </article>
   );
 }

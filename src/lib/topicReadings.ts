@@ -27,6 +27,9 @@ export type TopicRow = { id: string; page_key: string; title: string; content: s
 
 /** Readings the free plan writes automatically; everything else needs a paid plan. */
 export const FREE_READINGS = ['big-three', 'core-personality'];
+/** Paid plans write only these upfront; every other reading is written the first time it is opened. */
+export const FLAGSHIP_READINGS = ['big-three', 'core-personality', 'purpose', 'love', 'career'];
+
 
 /** Always scoped to the signed-in member, even for admins who can read every row. */
 export async function loadMyTopicReadings(): Promise<TopicRow[]> {

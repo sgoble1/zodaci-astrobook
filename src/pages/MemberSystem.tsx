@@ -1,23 +1,18 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { computeChart } from '@/lib/astro';
 import { toChartInput, type MyBirth } from '@/lib/myBirth';
 import { systemFacts } from '@/lib/systemFacts';
-import { loadMyTopicReadings, SYSTEM_READINGS, type TopicRow } from '@/lib/topicReadings';
+import { SYSTEM_READINGS } from '@/lib/topicReadings';
 import { BoxArt } from '@/components/common/BoxArt';
+import { useOnDemandReading } from '@/hooks/useOnDemandReading';
 
 /** One Other Systems page calculated and written for the signed-in member. */
 export function MemberSystem({ birth, slug }: { birth: MyBirth; slug: string }) {
   const facts = useMemo(() => { const c = computeChart(toChartInput(birth)); return systemFacts(slug, birth.date, c.bodies, c.bazi); }, [birth, slug]);
-  const [row, setRow] = useState<TopicRow | null | undefined>(undefined);
-  useEffect(() => {
-    let alive = true;
-    const load = () => loadMyTopicReadings().then(rs => { if (alive) setRow(rs.find(r => r.page_key === `topic-sys-${slug}`) ?? null); });
-    load(); const t = setInterval(load, 20000);
-    return () => { alive = false; clearInterval(t); };
-  }, [slug]);
+  const { row, writing, error, locked } = useOnDemandReading(`sys-${slug}`);
   if (!facts) return null;
   return (
     <article className="mx-auto max-w-3xl space-y-6">
@@ -25,7 +20,9 @@ export function MemberSystem({ birth, slug }: { birth: MyBirth; slug: string }) 
       <header className="space-y-2"><h1 className="font-display text-4xl">{facts.title}</h1><p className="text-xl">{facts.summary}</p><p className="text-sm text-muted-foreground">{facts.method}</p></header>
       <div className="overflow-x-auto rounded-lg border border-border"><table className="w-full text-sm"><tbody>{facts.rows.map(([k, v]) => <tr key={k} className="border-b border-border last:border-0"><th className="p-3 text-left font-normal text-muted-foreground">{k}</th><td className="p-3">{v}</td></tr>)}</tbody></table></div>
       {row === undefined ? <div className="h-24 animate-pulse rounded bg-muted" /> : row ? <div className="reading-prose"><ReactMarkdown remarkPlugins={[remarkGfm]}>{row.content}</ReactMarkdown></div>
-        : <p role="status" className="rounded-lg border border-dashed border-border p-4 text-sm text-muted-foreground">Your full {facts.title} reading is being written from these values — it appears here automatically.</p>}
+        : error ? <p role="alert" className="rounded-lg border border-destructive/40 p-4 text-sm text-destructive">{error}</p>
+        : locked ? <p className="rounded-lg border border-dashed border-border p-4 text-sm text-muted-foreground">The full {facts.title} reading is part of Full Access. <Link to="/pricing" className="underline">See plans</Link></p>
+        : <p role="status" className="rounded-lg border border-dashed border-border p-4 text-sm text-muted-foreground">{writing ? `Writing your ${facts.title} reading from these values — about a minute. It saves to your account.` : 'Loading…'}</p>}
     </article>
   );
 }
