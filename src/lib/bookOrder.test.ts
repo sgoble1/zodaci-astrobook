@@ -62,3 +62,9 @@ describe("digital AstroBook", () => {
     expect(validateBookOrder({ userId: "u", coverReady: true, manuscriptReady: true, extras: [], address: empty })).not.toBeNull();
   });
 });
+
+ describe("printed retail totals", () => {
+ it("standard is $59", () => expect(bookTotal("standard", 0)).toBe(5900));
+ it("expanded is $89", () => expect(bookTotal("expanded", 0)).toBe(8900));
+ it("each extra adds $6.99", () => expect(bookTotal("expanded", 1)).toBe(9599));
+ });
