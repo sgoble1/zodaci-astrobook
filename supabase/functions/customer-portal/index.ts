@@ -14,7 +14,11 @@ Deno.serve(async (req) => {
     if (!user) return json({ error: "Please sign in first." }, 401);
     const body = await req.json().catch(() => ({}));
     const env: StripeEnv = body.environment === "sandbox" ? "sandbox" : "live";
-    const returnUrl = typeof body.returnUrl === "string" && /^https?:\/\//.test(body.returnUrl) ? body.returnUrl : undefined;
+    // Only our own sites may be used as the return destination.
+    const TRUSTED = /^https:\/\/((www\.)?zodaci\.com|april\.zodaci\.com|[a-z0-9-]+\.lovable\.app)$/;
+    let returnUrl: string | undefined;
+    try { const u = new URL(String(body.returnUrl)); if (TRUSTED.test(u.origin)) returnUrl = u.origin + u.pathname; } catch { /* ignore */ }
+    returnUrl ??= "https://zodaci.com/pricing";
     const { data: sub } = await admin.from("billing_subscriptions").select("stripe_customer_id").eq("user_id", user.id).eq("environment", env).order("created_at", { ascending: false }).limit(1).maybeSingle();
     if (!sub?.stripe_customer_id) return json({ error: "No subscription found for this account yet." }, 404);
     const stripe = createStripeClient(env);
