@@ -20,12 +20,11 @@ Current-code findings, subject to live verification:
 
 ## Visual direction: a personal celestial atlas
 
-- Preserve the purple planet logo, deep-space palette, gold accents, DM Serif Display headings and Fira Sans reading/control text.
-- Use clear chapter-like hierarchy, generous reading space, fine rules, purposeful illustrations and real chart/book previews. Numbers remain small reference badges beside meaningful artwork.
-- Use glass sparingly for navigation and overlays, not every section. Remove universal gradient headings, unnecessary glows and card-within-card layouts from the redesigned member screens.
-- Give each page an obvious title, relevant context and one primary action. Use consistent heading, body, caption and control sizes; prioritize reading comfort over density.
-- Preserve extremely slow decorative cinematic motion, but never delay access to content; provide static reduced-motion states.
-- Do not change April’s archived illustrations, documents or original private-edition presentation. Keep public Work → Process → Capabilities → Team → Contact ordering intact.
+Preserve the purple planet logo, deep-space/gold palette, DM Serif Display headings and Fira Sans body. Use chapter hierarchy, fine rules, generous reading space, purposeful illustrations and real chart/book previews. Numbers become small reference badges beside meaningful art.
+
+Use brand-required glass primarily in navigation/overlays, not every section. Replace universal gradients/glows and nested cards with clear titles and one primary action. Keep cinematic decoration extremely slow, content access immediate, and reduced-motion states static.
+
+Protect April’s archived illustrations, documents and original presentation. Preserve public Work → Process → Capabilities → Team → Contact ordering.
 
 ## Navigation and dashboard
 
@@ -51,20 +50,20 @@ Adapt these sections to Free, Full and Creator; do not produce three disconnecte
 
 ### 1. Visitor → account → first result
 - Preserve sign-in before birth details. Make public discovery, sample book and plan comparison easy to reach without exposing private material.
-- Keep setup answers when moving back; show a review before saving, including name, date, time and place.
-- On completion, show the calculated chart immediately and recommend one useful starting reading. Respect existing generation-stop choices.
+- Preserve answers when going back; review birth details before saving.
+- Show the calculated chart immediately and recommend one reading; respect generation-stop choices.
 
 ### 2. Explore → generate → return
 - Keep on-demand writing, low effort and existing length targets; no bulk 38-reading generation or increased free allowances.
 - Separate not-requested, queued, writing, ready, first-section preview, stopped and failed states. Provide retry/resume and honest progress without invented completion times.
 - Preserve two full free readings and one-section core-theme previews. Paid-only topics remain paid-only; opening a core preview after upgrading expands it according to existing rules.
 - Distinguish calculated placements from interpretation; expose technical detail when wanted. Save reading position and make returning to the last page straightforward.
-- Identify readings based on older birth details; explain selective regeneration and its usage implications before starting it.
+- Label readings based on older birth details; explain selective regeneration usage first.
 
 ### 3. Preview → upgrade → paid access
-- Explain exactly what a selected plan unlocks and what remains usage-limited. Avoid suggesting that unlimited generation is included.
-- Keep an upgrade’s originating page so a completed payment returns the member to that task after verified entitlement refresh.
-- Support cancelled and pending payments without losing context. Never unlock content on a client-side success redirect alone.
+- Explain plan access and usage limits; do not imply unlimited generation.
+- Return upgrades to their originating task after verified entitlement refresh.
+- Preserve cancelled/pending context; never unlock from a success redirect alone.
 - Measure upgrade interest and verified subscription completion without collecting typed text or private messages.
 
 ### 4. Sample → configure book → payment → PDF → fulfillment
@@ -99,11 +98,11 @@ Start with Continue Reading and Book Readiness; defer extras until core journeys
 
 ## Delivery phases
 
-1. **Trust and flow:** validate current journeys; repair generation state/recovery, entitlement inconsistencies and misleading conversion labels.
-2. **Organization:** shared navigation grouping, one member starting point, role-appropriate menus and admin operations hierarchy.
-3. **Visual and reading experience:** implement the celestial-atlas design on dashboard/readings first, then chart, library, book and result pages; protect April’s edition.
-4. **Commerce and retention:** refine book configuration/status, returning-reading experience and upgrade handoff; finish emails when sender setup allows.
-5. **Release verification:** authorized account matrix, responsive/accessibility checks, focused regression tests and current security/SEO review. Publishing requires a separate explicit request.
+1. **Trust:** validate journeys; fix recovery, status/access inconsistencies and misleading funnel labels.
+2. **Organization:** shared task-based navigation, member starting point and admin operations hierarchy.
+3. **Visuals:** dashboard/readings first, then charts/library/books/results; protect April’s edition.
+4. **Commerce/retention:** configuration, statuses, reading resume and upgrade handoff; emails after sender setup.
+5. **Release checks:** authorized account matrix, accessibility, regression tests and fresh security/SEO review. Publish only on explicit request.
 
 ## Technical implementation notes
 
