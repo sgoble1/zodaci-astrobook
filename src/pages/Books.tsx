@@ -31,14 +31,25 @@ export default function Books() {
   const [edition, setEdition] = useState<'standard'|'expanded'>('standard');
   const [extras, setExtras] = useState<string[]>([]);
   const [covers, setCovers] = useState<Record<string,{ url: string; final: boolean }>>({});
-  const [selected, setSelected] = useState(''); const [busy, setBusy] = useState(''); const [error, setError] = useState('');
+  // Cover choice: 'design:<key>' for the free universal designs, 'upload' for the visitor's own image, 'ai:<style>' for chart-based previews.
+  const [choice, setChoice] = useState('');
+  const [uploaded, setUploaded] = useState<{ path: string; url: string } | null>(null);
+  const fileRef = useRef<HTMLInputElement>(null);
+  const [busy, setBusy] = useState(''); const [error, setError] = useState('');
   const [address, setAddress] = useState({ name: '', line1: '', line2: '', city: '', state: '', postal_code: '', country: 'US' });
   const [manuscript, setManuscript] = useState<{ blob: Blob; pages: number; config: string } | null>(null);
-  const config = JSON.stringify([edition, extras, selected, birth]);
+  const config = JSON.stringify([edition, extras, choice, birth]);
   const manuscriptReady = manuscript?.config === config;
+  const design = choice.startsWith('design:') ? UNIVERSAL_COVERS.find(d => d.key === choice.slice(7)) : undefined;
+  const aiStyle = choice.startsWith('ai:') ? choice.slice(3) : '';
+  const aiCover = aiStyle ? covers[aiStyle] : undefined;
+  const coverReady = !!design || (choice === 'upload' && !!uploaded) || !!aiCover?.final;
+  const coverPreviewUrl = design?.src ?? (choice === 'upload' ? uploaded?.url : aiCover?.url);
+  const canUseAiCovers = sub.tier !== 'free';
   const generate = async () => {
     setError(''); setBusy('Generating covers');
     try {
+      if (!canUseAiCovers) throw new Error('Personal cover previews are part of Full Access. Upgrade, or pick one of the free cover designs above.');
       const { data } = await supabase.auth.getSession();
       if (!data.session) throw new Error('Sign in and save your birth details before creating covers.');
       for (const style of COVER_STYLES) {
@@ -49,19 +60,46 @@ export default function Books() {
     } catch (e) { setError(e instanceof Error ? e.message : 'Cover generation failed.'); }
     finally { setBusy(''); }
   };
+  const uploadCover = async (file: File) => {
+    setError(''); setBusy('Uploading your cover…');
+    try {
+      if (!sub.userId) throw new Error('Sign in to use your own cover image.');
+      if (!file.type.startsWith('image/')) throw new Error('Please choose an image file (JPG or PNG).');
+      if (file.size > 10 * 1024 * 1024) throw new Error('Please choose an image under 10 MB.');
+      const ext = file.type === 'image/png' ? 'png' : 'jpg';
+      const path = `${sub.userId}/book-covers/upload-${crypto.randomUUID()}.${ext}`;
+      const { error: err } = await supabase.storage.from('library').upload(path, file, { contentType: file.type });
+      if (err) throw err;
+      setUploaded({ path, url: URL.createObjectURL(file) });
+      setChoice('upload');
+    } catch (e) { setError(e instanceof Error ? e.message : 'Could not upload your cover.'); }
+    finally { setBusy(''); if (fileRef.current) fileRef.current.value = ''; }
+  };
   const order = async () => {
     setBusy('Saving your book…'); setError('');
     try {
-      const cover = covers[selected];
-      if (!sub.userId || !cover?.final || !manuscript || !manuscriptReady) throw new Error('Choose a finished cover and compose your manuscript first.');
-      const id = crypto.randomUUID(); const path = `${sub.userId}/book-covers/${id}.png`;
-      const blob = await fetch(cover.url).then(r => r.blob());
-      const upload = await supabase.storage.from('library').upload(path, blob, { contentType: 'image/png' });
-      if (upload.error) throw upload.error;
+      if (!sub.userId || !coverReady || !manuscript || !manuscriptReady) throw new Error('Choose a finished cover and compose your manuscript first.');
+      const id = crypto.randomUUID();
+      let path: string; let coverStyleLabel: string;
+      if (design) {
+        path = `${sub.userId}/book-covers/${id}.png`; coverStyleLabel = design.label;
+        const blob = await fetch(design.src).then(r => r.blob());
+        const upload = await supabase.storage.from('library').upload(path, blob, { contentType: 'image/png' });
+        if (upload.error) throw upload.error;
+      } else if (choice === 'upload' && uploaded) {
+        path = uploaded.path; coverStyleLabel = 'Your own upload';
+      } else {
+        const cover = covers[aiStyle];
+        if (!cover?.final) throw new Error('Choose a finished cover first.');
+        path = `${sub.userId}/book-covers/${id}.png`; coverStyleLabel = aiStyle;
+        const blob = await fetch(cover.url).then(r => r.blob());
+        const upload = await supabase.storage.from('library').upload(path, blob, { contentType: 'image/png' });
+        if (upload.error) throw upload.error;
+      }
       const manuscriptPath = `${sub.userId}/manuscripts/${id}.pdf`;
       const uploadedPdf = await supabase.storage.from('library').upload(manuscriptPath, manuscript.blob, { contentType: 'application/pdf' });
       if (uploadedPdf.error) throw uploadedPdf.error;
-      const { error: err } = await supabase.from('book_orders').insert({ id, user_id: sub.userId, edition, base_price_cents: BOOK_PRICES[edition], extra_sections: extras.map(s => s.trim()).filter(Boolean), cover_path: path, cover_style: selected, shipping_address: address, manuscript_path: manuscriptPath, manuscript_pages: manuscript.pages });
+      const { error: err } = await supabase.from('book_orders').insert({ id, user_id: sub.userId, edition, base_price_cents: BOOK_PRICES[edition], extra_sections: extras.map(s => s.trim()).filter(Boolean), cover_path: path, cover_style: coverStyleLabel, shipping_address: address, manuscript_path: manuscriptPath, manuscript_pages: manuscript.pages });
       if (err) throw err;
       nav(`/orders?order=${id}`);
     } catch (e) { setError(e instanceof Error ? e.message : 'Could not save your order.'); }
