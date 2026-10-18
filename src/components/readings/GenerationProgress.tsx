@@ -17,6 +17,8 @@ export function GenerationProgress() {
   const [targets, setTargets] = useState<typeof ALL_READINGS>([]);
   const [minimized, setMinimized] = useState(() => sessionStorage.getItem(MIN_KEY) === '1');
   const [error, setError] = useState('');
+  const [cancelled, setCancelled] = useState(false);
+  const [runId, setRunId] = useState(0);
   const timer = useRef<number>();
 
   const refresh = async () => {
