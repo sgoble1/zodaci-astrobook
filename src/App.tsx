@@ -91,6 +91,7 @@ const CheckoutReturn = lazy(() => import('./pages/CheckoutReturn'));
 const MyMasterbook = lazy(() => import('./pages/MyMasterbook'));
 const Books = lazy(() => import('./pages/Books'));
 const Orders = lazy(() => import('./pages/Orders'));
+const Dispatch = lazy(() => import('./pages/Dispatch'));
 const Blog = lazy(() => import('./pages/Blog'));
 const PersonalContext = lazy(() => import('./pages/PersonalContext'));
 const Workspaces = lazy(() => import('./pages/Workspaces'));
@@ -241,6 +242,7 @@ export default function App() {
             <Route path="/my-masterbook" element={<MyMasterbook />} />
             <Route path="/books" element={<Books />} />
             <Route path="/orders" element={<Orders />} />
+            <Route path="/dispatch" element={<Dispatch />} />
             <Route path="/instructions" element={<Instructions />} />
             <Route path="/birth-chart" element={<BirthChart />} />
             <Route path="/chart-guide" element={<ChartGuide />} />

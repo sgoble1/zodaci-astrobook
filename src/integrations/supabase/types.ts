@@ -192,6 +192,7 @@ export type Database = {
           manuscript_path: string | null
           payment_total_cents: number | null
           pdf_ready_at: string | null
+          shipped_at: string | null
           shipping_address: Json
           shipping_cents: number | null
           status: string
@@ -217,6 +218,7 @@ export type Database = {
           manuscript_path?: string | null
           payment_total_cents?: number | null
           pdf_ready_at?: string | null
+          shipped_at?: string | null
           shipping_address?: Json
           shipping_cents?: number | null
           status?: string
@@ -242,6 +244,7 @@ export type Database = {
           manuscript_path?: string | null
           payment_total_cents?: number | null
           pdf_ready_at?: string | null
+          shipped_at?: string | null
           shipping_address?: Json
           shipping_cents?: number | null
           status?: string
@@ -1797,6 +1800,15 @@ export type Database = {
           paid_total: number
           signups_recent: number
           signups_total: number
+        }[]
+      }
+      admin_upgrade_funnel: {
+        Args: { _days?: number }
+        Returns: {
+          free_members: number
+          paid_converts: number
+          pricing_visitors: number
+          upgrade_clickers: number
         }[]
       }
       claim_admin: { Args: never; Returns: boolean }
