@@ -34,6 +34,8 @@ export default function MyTopicReading({ slugOverride }: { slugOverride?: string
     catch (e) { toast.error((e as Error).message); }
     setBusy(false);
   };
+  // Free previews show the placements table plus the first written section only, even for older full readings.
+  const shown = row && preview ? row.content.split(/^(?=##\s)/m).filter(Boolean).slice(0, 2).join('') : row?.content ?? '';
   const sections = row ? [...row.content.matchAll(/^##\s+(.+)$/gm)].map(m => m[1].replace(/[*_`]/g, '').replace(/^\d+[.)]\s*/, '').trim()) : [];
   if (row === undefined) return <div role="status" aria-label="Loading reading" className="mx-auto max-w-3xl space-y-3">{[0,1,2,3].map(i => <div key={i} className="h-6 animate-pulse rounded bg-muted" />)}</div>;
   return (
@@ -49,7 +51,7 @@ export default function MyTopicReading({ slugOverride }: { slugOverride?: string
         {row && !preview && <Button variant="outline" size="sm" onClick={rewrite} disabled={busy}>{busy ? 'Rewriting… about a minute' : 'Rewrite this reading'}</Button>}
       </header>
       {row ? <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_15rem]">
-        <div><div className="reading-prose"><ReactMarkdown remarkPlugins={[remarkGfm]} components={{ h2: ({ children }) => { const t = String(Array.isArray(children) ? children.join('') : children).replace(/^\d+[.)]\s*/, ''); return <h2 id={slugify(t)}>{t}</h2>; } }}>{row.content}</ReactMarkdown></div>
+        <div><div className="reading-prose"><ReactMarkdown remarkPlugins={[remarkGfm]} components={{ h2: ({ children }) => { const t = String(Array.isArray(children) ? children.join('') : children).replace(/^\d+[.)]\s*/, ''); return <h2 id={slugify(t)}>{t}</h2>; } }}>{shown}</ReactMarkdown></div>
         {preview && <div className="relative mt-8">
           <div aria-hidden="true" className="pointer-events-none select-none space-y-4 opacity-60 blur-sm">
             {['How this shows up in daily life', 'Strengths & watch-outs', 'Practices to try', 'Reflection questions'].map(h => <div key={h} className="space-y-2"><p className="font-display text-2xl">{h}</p><div className="h-3 w-full rounded bg-muted" /><div className="h-3 w-11/12 rounded bg-muted" /><div className="h-3 w-4/5 rounded bg-muted" /></div>)}
