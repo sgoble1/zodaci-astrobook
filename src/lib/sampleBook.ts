@@ -2,6 +2,7 @@ import { computeChart } from '@/lib/astro';
 import { toChartInput, type MyBirth } from '@/lib/myBirth';
 import { composeManuscript } from '@/lib/bookManuscript';
 import fontUrl from '@/assets/fonts/manuscript.ttf?url';
+import sampleCover from '@/assets/cover-design-midnight-stars.jpg';
 
 /** A fictional reader used for the public sample book, so visitors can see the real format. */
 export const SAMPLE_BIRTH: MyBirth = {
@@ -99,6 +100,7 @@ Take the single sentence from this chapter that felt most true and copy it somew
 export async function composeSampleBook() {
   const { chartFacts, bigThree } = chartFactsFor(SAMPLE_BIRTH);
   const fontBuffer: ArrayBuffer = await (await fetch(fontUrl)).arrayBuffer();
+  const coverBuffer: ArrayBuffer = await (await fetch(sampleCover)).arrayBuffer();
   const result = await composeManuscript({
     name: SAMPLE_BIRTH.name,
     birthFacts: `${SAMPLE_BIRTH.date} · ${SAMPLE_BIRTH.time} · ${SAMPLE_BIRTH.placeLabel} · ${SAMPLE_BIRTH.tz} · ${SAMPLE_BIRTH.houseSystem}`,
@@ -107,6 +109,7 @@ export async function composeSampleBook() {
     edition: 'standard',
     extras: [],
     fontBytes: new Uint8Array(fontBuffer),
+    cover: new Uint8Array(coverBuffer),
     bigThree,
   });
   return { blob: new Blob([result.bytes as BlobPart], { type: 'application/pdf' }), pages: result.pages };
