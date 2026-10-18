@@ -23,10 +23,18 @@ export function GenerationProgress() {
   const [requested, setRequested] = useState<Set<string>>(new Set());
   const timer = useRef<number>();
   const startedKey = useRef(STARTED_KEY);
-  useEffect(() => { const { data } = supabase.auth.onAuthStateChange(() => { setEligible(false); setDone(null); setRequested(new Set()); setRunId(n => n + 1); }); return () => data.subscription.unsubscribe(); }, []);
+  const revision = useRef(0);
+  useEffect(() => {
+    const reset = () => { revision.current++; setEligible(false); setDone(null); setError(''); setRequested(new Set()); setRunId(n => n + 1); };
+    const { data } = supabase.auth.onAuthStateChange(reset);
+    window.addEventListener('astrobook-birth-saved', reset);
+    return () => { data.subscription.unsubscribe(); window.removeEventListener('astrobook-birth-saved', reset); };
+  }, []);
 
   const refresh = async () => {
+    const version = revision.current;
     const rows = await loadMyTopicReadings().catch(() => null);
+    if (version !== revision.current) return null;
     if (rows?.some(r => r.status === 'failed')) setError('A reading could not finish. Open it to retry.');
     if (rows) setDone(new Set(rows.filter(r => ['ready', 'preview'].includes(r.status)).map(r => r.page_key)));
     return rows;
@@ -35,31 +43,33 @@ export function GenerationProgress() {
   // Re-check after navigation so a fresh birth-details save starts writing right away.
   useEffect(() => {
     let alive = true;
+    const version = revision.current;
+    const current = () => alive && version === revision.current;
     (async () => {
       const { data } = await supabase.auth.getSession();
-      if (!data.session) { if (alive) setEligible(false); return; }
+      if (!data.session) { if (current()) setEligible(false); return; }
       const uid = data.session.user.id;
       const { data: p } = await supabase.from('profiles').select('birth_date,chart,generation_cancelled,onboarded_at').eq('id', uid).maybeSingle();
-      if (!alive) return;
+      if (!current()) return;
       const ok = !!(p?.birth_date && p.chart);
       setEligible(ok);
-      if (!ok) { if (alive) setCancelled(false); return; }
+      if (!ok) { if (current()) setCancelled(false); return; }
       setCancelled(!!p?.generation_cancelled);
       const all = await canWriteAllReadings().catch(() => false);
-      if (!alive) return;
+      if (!current()) return;
       // Only the headline readings are written upfront; everything else is written when first opened.
       startedKey.current = `${STARTED_KEY}:${uid}:${p?.onboarded_at}:${all}`;
       const list = ALL_READINGS.filter(t => (all ? FLAGSHIP_READINGS : FREE_READINGS).includes(t.slug));
       setTargets(list);
       if (p?.generation_cancelled) { await refresh(); return; }
       const rows = await refresh();
-      if (!rows || !alive) return;
+      if (!rows || !current()) return;
       const missing = list.filter(t => !rows.some(r => r.page_key === `topic-${t.slug}` && ['ready','preview','writing'].includes(r.status)));
       // A stop may land after a lane was already started; that is a quiet stop, not an error.
-      const note = (e: Error) => { if (/stopped/i.test(e.message)) { sessionStorage.removeItem(startedKey.current); setCancelled(true); } else setError(e.message); };
+      const note = (e: Error) => { if (!current()) return; if (/stopped/i.test(e.message)) { sessionStorage.removeItem(startedKey.current); setCancelled(true); } else setError(e.message); };
       if (missing.length && !sessionStorage.getItem(startedKey.current)) {
         sessionStorage.setItem(startedKey.current, '1');
-        for (const t of missing) { if (!alive) break; try { await writeTopicReading(t.slug); if (alive) setRequested(old => new Set([...old, t.slug])); } catch (e) { note(e as Error); break; } }
+        for (const t of missing) { if (!current()) break; try { await writeTopicReading(t.slug); if (current()) setRequested(old => new Set([...old, t.slug])); } catch (e) { note(e as Error); break; } }
       }
     })();
     return () => { alive = false; };
