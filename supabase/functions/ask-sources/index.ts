@@ -55,7 +55,7 @@ Earlier conversation turns are context only; citation numbers always refer to th
         model: "openai/gpt-6-astra",
         instructions,
         input: [
-          ...(Array.isArray(history) ? history.slice(-12).filter(m => m && (m.role === "user" || m.role === "assistant") && typeof m.content === "string")
+          ...(Array.isArray(history) ? history.slice(-12).filter(m => m && m.role === "user" && typeof m.content === "string")
             .map(m => ({ role: m.role, content: m.content.slice(0, 4000) })) : []),
           { role: "user", content: member ? question : `Passages for this turn:\n\n${ctx}\n\nQuestion: ${question}` },
         ],
