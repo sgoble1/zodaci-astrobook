@@ -1,15 +1,9 @@
 import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors';
 import { createClient } from 'npm:@supabase/supabase-js@2';
-import { segment as seg0 } from './segments/seg-0.ts';
-import { segment as seg1 } from './segments/seg-1.ts';
-import { segment as seg2 } from './segments/seg-2.ts';
-import { segment as seg3 } from './segments/seg-3.ts';
-import { segment as seg4 } from './segments/seg-4.ts';
-import { segment as seg5 } from './segments/seg-5.ts';
 
-// The private edition's encrypted segments live beside this function as data modules,
-// so the loader logic exists in exactly one place.
-const SEGMENTS = [seg0, seg1, seg2, seg3, seg4, seg5];
+// The private edition's encrypted payload lives in the private `private-edition` storage bucket
+// (no client policies — it is only reachable through this gated function). This function's job:
+// verify the caller is an approved shared-space member, then hand back a short-lived signed URL.
 
 const json = (data: unknown, status = 200) => new Response(JSON.stringify(data), { status, headers: { ...corsHeaders, 'Content-Type': 'application/json', 'Cache-Control': 'private, no-store' } });
 
@@ -20,16 +14,17 @@ Deno.serve(async req => {
     const authorization = req.headers.get('Authorization') ?? '';
     if (!authorization.startsWith('Bearer ')) return json({ error: 'Sign in first.' }, 401);
     const url = Deno.env.get('SUPABASE_URL');
-    const key = Deno.env.get('SUPABASE_ANON_KEY');
-    if (!url || !key) return json({ error: 'Private edition unavailable.' }, 503);
-    const client = createClient(url, key, { global: { headers: { Authorization: authorization } } });
+    const anon = Deno.env.get('SUPABASE_ANON_KEY');
+    const service = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
+    if (!url || !anon || !service) return json({ error: 'Private edition unavailable.' }, 503);
+    const client = createClient(url, anon, { global: { headers: { Authorization: authorization } } });
     const user = await client.auth.getUser(authorization.slice(7));
     if (user.error || !user.data.user) return json({ error: 'Sign in first.' }, 401);
     const allowed = await client.rpc('is_shared_space_member');
     if (allowed.error || allowed.data !== true) return json({ error: 'This edition is private.' }, 403);
-    const { index } = await req.json().catch(() => ({} as { index?: unknown }));
-    if (index === undefined) return json({ segments: SEGMENTS.length });
-    if (typeof index !== 'number' || !Number.isInteger(index) || index < 0 || index >= SEGMENTS.length) return json({ error: 'Unknown segment.' }, 400);
-    return json({ segment: SEGMENTS[index] });
+    const admin = createClient(url, service);
+    const signed = await admin.storage.from('private-edition').createSignedUrl('edition.gz', 60);
+    if (signed.error || !signed.data?.signedUrl) return json({ error: 'The private edition could not load. Please try again.' }, 503);
+    return json({ url: signed.data.signedUrl });
   } catch { return json({ error: 'The private edition could not load. Please try again.' }, 503); }
 });
