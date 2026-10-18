@@ -14,7 +14,7 @@ export default function MyTopicReading({ slugOverride }: { slugOverride?: string
   const params = useParams();
   const slug = slugOverride ?? params.slug;
   const meta = [...TOPIC_READINGS, ...CORE_THEMES].find(t => t.slug === slug);
-  const { row, setRow, writing, error, locked } = useOnDemandReading(slug);
+  const { row, setRow, writing, error, locked, preview } = useOnDemandReading(slug);
   const [busy, setBusy] = useState(false);
   const rewrite = async () => {
     if (!slug || !confirm('Rewrite this reading from your chart? The current text will be replaced.')) return;
