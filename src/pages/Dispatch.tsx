@@ -15,7 +15,7 @@ export default function Dispatch() {
   const [orders, setOrders] = useState<Tables<'book_orders'>[]>([]);
   const [msg, setMsg] = useState(''); const [err, setErr] = useState('');
   const load = useCallback(async () => {
-    const { data, error } = await supabase.from('book_orders').select('*').in('status', ['paid', 'printing', 'shipped']).not('payment_total_cents', 'is', null).eq('format', 'print').eq('environment', 'live').order('created_at');
+    const { data, error } = await supabase.from('book_orders').select('*').in('status', ['paid', 'printing', 'shipped']).not('payment_total_cents', 'is', null).eq('format', 'print').eq('environment', 'live').is('payment_hold', null).order('created_at');
     if (error) setErr('Orders could not load.'); else setOrders(data ?? []);
   }, []);
   useEffect(() => { if (admin) void load(); }, [admin, load]);
@@ -26,8 +26,8 @@ export default function Dispatch() {
     const carrier = String(form.get('carrier')); const tracking = String(form.get('tracking')).trim(); const date = String(form.get('date'));
     const bad = shippingError(o.status, 'shipped', carrier, tracking) || (!date ? 'Add the dispatch date.' : date > today ? 'Dispatch date can’t be in the future.' : '');
     if (bad) { setErr(bad); return; }
-    const { error } = await supabase.from('book_orders').update({ status: 'shipped', carrier, tracking_number: tracking, shipped_at: date, updated_at: new Date().toISOString() }).eq('id', o.id).eq('status', o.status).eq('environment', 'live');
-    if (error) setErr(error.message); else { setMsg(`Order ${o.id.slice(0, 8)} marked shipped — the customer now sees tracking on their orders page.`); void load(); }
+    const { data: changed, error } = await supabase.from('book_orders').update({ status: 'shipped', carrier, tracking_number: tracking, shipped_at: date, updated_at: new Date().toISOString() }).eq('id', o.id).eq('status', o.status).eq('environment', 'live').is('payment_hold', null).select('id');
+    if (error) setErr(error.message); else if (!changed?.length) setErr('This order changed. Reload before dispatching.'); else { setMsg(`Order ${o.id.slice(0, 8)} marked shipped — the customer now sees tracking on their orders page.`); void load(); }
   };
   const waiting = orders.filter(o => o.status !== 'shipped'); const sent = orders.filter(o => o.status === 'shipped');
   return (
