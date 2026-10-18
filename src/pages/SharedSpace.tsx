@@ -5,6 +5,7 @@ import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import { useSession } from '@/hooks/useLibrary';
 import { AuthGate } from '@/components/common/AuthGate';
+import { LoadError } from '@/components/common/LoadError';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
