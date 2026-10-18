@@ -49,3 +49,7 @@
 
 - Member-only editorial styles preserve archived presentation; dashboard data/reading positions are owner-scoped.
 - Reading failures expose retries; absent readings are not writing, and freshness compares birth onboarding time.
+
+- Reading jobs are claimed atomically per owner/topic before provider calls; persisted terminal states enable safe recovery and prevent duplicate quota admission.
+- Book checkout validates advertised provider amounts and pins its payment environment; physical dispatch excludes sandbox orders to avoid accidental production.
+- Private-edition hydration is session-versioned and clears immediately on auth changes, preventing stale account data.
