@@ -6,6 +6,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useSession } from '@/hooks/useLibrary';
 import { CUSTOM_PAGES_CHANGED, type CustomPage } from '@/hooks/useCustomPages';
 import { MENU_SECTIONS } from '@/components/layout/AppShell';
+import { LoadError } from '@/components/common/LoadError';
 import { Button } from '@/components/ui/button';
 
 export default function CustomPageView() {
@@ -13,8 +14,17 @@ export default function CustomPageView() {
   const user = useSession()?.user;
   const navigate = useNavigate();
   const [page, setPage] = useState<CustomPage | null | undefined>(undefined);
-  useEffect(() => { setPage(undefined); supabase.from('custom_pages').select('*').eq('id', id!).maybeSingle().then(({ data }) => setPage((data as CustomPage) ?? null)); }, [id]);
+  const [loadFailed, setLoadFailed] = useState(false);
+  const load = () => {
+    setPage(undefined); setLoadFailed(false);
+    supabase.from('custom_pages').select('*').eq('id', id!).maybeSingle().then(({ data, error }) => {
+      if (error) { setLoadFailed(true); return; }
+      setPage((data as CustomPage) ?? null);
+    });
+  };
+  useEffect(load, [id]);
 
+  if (loadFailed) return <LoadError what="this page" onRetry={load} />;
   if (page === undefined) return <p className="text-muted-foreground" role="status">Loading…</p>;
   if (!page) return <p>This page was not found, or you need to sign in. <Link className="underline" to="/create">Create a page</Link></p>;
 
