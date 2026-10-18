@@ -23,13 +23,14 @@ export default function Onboarding() {
   const [stage, setStage] = useState('');
   const [editing, setEditing] = useState(false);
   const [sex, setSex] = useState('');
+  const [description, setDescription] = useState('');
   useEffect(() => {
     supabase.auth.getUser().then(async ({ data: u }) => {
       if (!u.user) return;
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const { data } = await (supabase as any).from('profiles').select('*').eq('id', u.user.id).maybeSingle();
       if (!data?.birth_date) return;
-      setSex(data.sex ?? ''); setEditing(true); setUnknownTime(!data.birth_time); setQ(data.place_label ?? '');
+      setSex(data.sex?.startsWith('Self-described: ') ? 'Prefer to self-describe' : data.sex ?? ''); setDescription(data.sex?.startsWith('Self-described: ') ? data.sex.slice(16) : ''); setEditing(true); setUnknownTime(!data.birth_time); setQ(data.place_label ?? '');
       setB({ name: data.display_name ?? '', date: data.birth_date, time: data.birth_time ?? '', placeLabel: data.place_label, lat: data.lat, lon: data.lon, tz: data.tz, houseSystem: data.house_system });
     });
   }, []);
@@ -57,7 +58,7 @@ export default function Onboarding() {
       if (res.error) { setErr('Your chart is saved on this device, but your account could not save it. Please try again.'); return; }
       const { data: u } = await supabase.auth.getUser();
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      if (u.user) await (supabase as any).from('profiles').update({ sex: sex.slice(0, 60) }).eq('id', u.user.id);
+      if (u.user) await (supabase as any).from('profiles').update({ sex: (sex === 'Prefer to self-describe' ? `Self-described: ${description.trim()}` : sex).slice(0, 60) }).eq('id', u.user.id);
       setStage('Starting your readings…');
       nav(res.saved === 'device' ? '/my-chart?device=1' : '/dashboard');
     } catch { setErr('Your birth details could not be calculated. Check the date, time and selected place.'); }
@@ -78,7 +79,7 @@ export default function Onboarding() {
         {step === 0 && <div className="space-y-2"><Label htmlFor="n">What should we call you?</Label><Input id="n" autoFocus value={b.name} onChange={e => setB({ ...b, name: e.target.value })} maxLength={80} />
           <fieldset className="space-y-2 pt-3"><legend className="text-sm font-medium">Your sex or gender <span className="text-muted-foreground">(optional — shapes wording in love, body and attraction readings)</span></legend>
             <div className="flex flex-wrap gap-2">{['Female', 'Male', 'Non-binary', 'Intersex', 'Transgender woman', 'Transgender man', 'Prefer to self-describe', 'Prefer not to say'].map(o => <button type="button" key={o} aria-pressed={sex === o} onClick={() => setSex(o)} className={`rounded-full border px-3 py-1.5 text-sm transition-colors ${sex === o ? 'border-primary bg-primary/15 text-foreground' : 'border-border text-muted-foreground hover:text-foreground'}`}>{o}</button>)}</div>
-            {sex === 'Prefer to self-describe' && <Input aria-label="Describe your gender" maxLength={40} onChange={e => setSex(`Self-described: ${e.target.value}`)} />}
+            {sex === 'Prefer to self-describe' && <Input aria-label="Describe your gender" maxLength={40} value={description} onChange={e => setDescription(e.target.value)} />}
           </fieldset></div>}
         {step === 1 && <div className="space-y-2"><Label htmlFor="d">Date of birth</Label><Input id="d" type="date" autoFocus value={b.date} onChange={e => setB({ ...b, date: e.target.value })} /></div>}
         {step === 2 && <div className="space-y-2">

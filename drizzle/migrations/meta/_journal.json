@@ -323,6 +323,13 @@
       "when": 1792354919259,
       "tag": "0045_book_order_digital_format",
       "breakpoints": true
+    },
+    {
+      "idx": 46,
+      "version": "7",
+      "when": 1792360346405,
+      "tag": "0046_book_prices_live_entitlements",
+      "breakpoints": true
     }
   ]
 }

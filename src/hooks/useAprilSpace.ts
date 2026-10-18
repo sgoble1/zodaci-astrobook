@@ -15,35 +15,50 @@ export function openAprilEditionTab() { window.open(`${window.location.origin}/?
 export function leaveAprilEdition() { sessionStorage.removeItem(ADMIN_EDITION_KEY); window.location.href = '/'; }
 const listeners = new Set<(v: boolean | undefined) => void>();
 
-let pending: Promise<void> | null = null;
-function check() {
-  pending ??= performCheck().finally(() => { pending = null; });
-  return pending;
-}
-async function performCheck() {
-  const { data } = await supabase.auth.getSession();
-  const uid = data.session?.user.id;
-  if (!uid) { cached = null; clearPrivateEdition(); listeners.forEach(l => l(false)); return; }
-  if (cached?.uid === uid) { listeners.forEach(l => l(cached?.ok ?? false)); return; }
-  listeners.forEach(l => l(undefined));
-  clearPrivateEdition();
-  const { data: member } = await supabase.rpc('is_shared_space_member');
-  const ok = member && !adminWantsOwn(data.session?.user.email);
-  if (ok) {
-    const response = await supabase.functions.invoke('private-edition', { body: {} });
-    if (response.error || typeof response.data?.url !== 'string') { listeners.forEach(l => l(false)); return; }
-    const blob = await (await fetch(response.data.url as string)).blob();
-    const stream = blob.stream().pipeThrough(new DecompressionStream('gzip'));
-    const edition = JSON.parse(await new Response(stream).text());
-    const current = await supabase.auth.getSession();
-    if (current.data.session?.user.id !== uid) return;
-    if (response.error || !response.data) { listeners.forEach(l => l(false)); return; }
-    hydratePrivateEdition(edition);
+let revision = 0;
+async function check() {
+  const version = ++revision;
+  const valid = () => version === revision;
+  try {
+    const { data } = await supabase.auth.getSession();
+    if (!valid()) return;
+    const uid = data.session?.user.id;
+    if (!uid) { cached = null; clearPrivateEdition(); listeners.forEach(l => l(false)); return; }
+    if (cached?.uid === uid) { listeners.forEach(l => l(cached?.ok ?? false)); return; }
+    clearPrivateEdition();
+    listeners.forEach(l => l(undefined));
+    const { data: member, error } = await supabase.rpc('is_shared_space_member');
+    if (!valid()) return;
+    const ok = !error && !!member && !adminWantsOwn(data.session?.user.email);
+    if (ok) {
+      const response = await supabase.functions.invoke('private-edition', { body: {} });
+      if (response.error || typeof response.data?.url !== 'string') throw new Error('Private edition unavailable');
+      const download = await fetch(response.data.url, { signal: AbortSignal.timeout(20000) });
+      if (!download.ok) throw new Error('Private edition download failed');
+      const blob = await download.blob();
+      const stream = blob.stream().pipeThrough(new DecompressionStream('gzip'));
+      const edition = JSON.parse(await new Response(stream).text());
+      const current = await supabase.auth.getSession();
+      if (!valid() || current.data.session?.user.id !== uid) return;
+      hydratePrivateEdition(edition);
+    }
+    if (!valid()) return;
+    cached = { uid, ok };
+    listeners.forEach(l => l(ok));
+  } catch {
+    if (!valid()) return;
+    cached = null;
+    clearPrivateEdition();
+    listeners.forEach(l => l(false));
   }
-  cached = { uid, ok: !!ok };
-  listeners.forEach(l => l(!!ok));
 }
-supabase.auth.onAuthStateChange(() => { setTimeout(check, 0); });
+supabase.auth.onAuthStateChange(() => {
+  revision++;
+  cached = null;
+  clearPrivateEdition();
+  listeners.forEach(l => l(false));
+  setTimeout(() => void check(), 0);
+});
 
 /** undefined while checking; true only for the approved April & Shane accounts (checked by the database), which see the original April edition. */
 export function useAprilSpace() {
