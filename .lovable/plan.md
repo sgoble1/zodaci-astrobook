@@ -1,9 +1,7 @@
 # Zodaci: public launch, trust and sustainable revenue
 
-## Decision and scope
-Repair purchase, privacy and generation reliability before increasing acquisition. Then clarify the offer and polish the customer journey. This is a proposed implementation plan, not a declaration that the site is finished. Prices and payment behavior remain unchanged.
-
-Use **Brand & Revenue Strategist** for coordinated design, SEO, marketing and cost decisions. Preserve April's original edition, authorized Shane access, owner-only charts, protected sources, consent and server-enforced entitlements.
+## Scope
+Brand & Revenue Strategist review: repair purchases, privacy and generation before acquisition. Proposed work only; prices/payment behavior unchanged. Preserve April/Shane boundaries, owner charts, protected sources and consent.
 
 ## Evidence — 18 October 2026
 **Observed:** 35 tests pass; preview build OK; public pages render; books has no overflow at 390px. Sample PDF renders 14 fictional pages. Expanded/digital labels conflict; onboarding self-description disappears. Live order rules require old $45/$80 prices and US addresses; paid helper accepts sandbox OR live.
@@ -51,7 +49,7 @@ SEO foundations pass but deep security is stale. Monthly analytics: 108 visits/8
 | P2 O/S Access/design | Canvas lacks text alternative; hierarchy/cover panel/stale vellum copy → accessible excerpts and identity-preserving polish | M; rendered audit |
 | P2 H/B Growth | Search/funnel/retention/spend evidence incomplete → measure before scaling | M; access |
 
-Sources: current Books/Onboarding browser checks, live order/entitlement rules, topic-reading and starter queues, private loader, checkout/webhook, manuscript and dispatch source. Existing tests mostly cover helpers, not these flows.
+Sources: browser checks, live rules, queue/private-loader/payment/manuscript/dispatch code. Tests mostly cover helpers.
 
 ## Clear printed and digital prices
 Keep the requested retail prices; do not silently alter them:
