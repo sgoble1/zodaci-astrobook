@@ -53,3 +53,5 @@
 - Reading jobs are claimed atomically per owner/topic before provider calls; persisted terminal states enable safe recovery and prevent duplicate quota admission.
 - Book checkout validates advertised provider amounts and pins its payment environment; physical dispatch excludes sandbox orders to avoid accidental production.
 - Private-edition hydration is session-versioned and clears immediately on auth changes, preventing stale account data.
+
+- Use roadmap.md as the single active-project index; launch-plan.md and .lovable/plan.md mirror only the ongoing launch plan. Keep genuinely separate active plans separate and remove superseded planning documents, never app code, audit reports or source/user knowledge; this prevents competing task sources.
