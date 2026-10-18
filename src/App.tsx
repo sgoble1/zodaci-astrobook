@@ -4,6 +4,7 @@ import { AppShell } from './components/layout/AppShell';
 import { DetailDrawerProvider, type DrawerPayload } from './components/common/DetailDrawer';
 import { CommandPalette } from './components/common/CommandPalette';
 import { ActivityTracker } from './components/common/ActivityTracker';
+import { MemberSearch } from './components/common/MemberSearch';
 import {
   SABIAN_SYMBOLS, FIXED_STARS, ASTEROIDS, SPECIAL_ASPECTS, ARABIC_PARTS,
   PROFECTION_35, PRENATAL_ECLIPSE, PROFECTION_BEATS,
@@ -187,7 +188,7 @@ function Providers({ children }: { children: ReactNode }) {
   if (april === undefined) return <div role="status" className="p-8 text-muted-foreground">Opening your library…</div>;
   return (
     <DetailDrawerProvider registry={registry}>
-      {april && <CommandPalette />}
+      {april ? <CommandPalette /> : <MemberSearch />}
       {children}
     </DetailDrawerProvider>
   );

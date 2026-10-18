@@ -20,6 +20,7 @@ export function GenerationProgress() {
   const [error, setError] = useState('');
   const [cancelled, setCancelled] = useState(false);
   const [runId, setRunId] = useState(0);
+  const [requested, setRequested] = useState<Set<string>>(new Set());
   const timer = useRef<number>();
 
   const refresh = async () => {
@@ -41,12 +42,12 @@ export function GenerationProgress() {
       setEligible(ok);
       if (!ok) { if (alive) setCancelled(false); return; }
       setCancelled(!!p?.generation_cancelled);
-      if (p?.generation_cancelled) return;
       const all = await canWriteAllReadings().catch(() => false);
       if (!alive) return;
       // Only the headline readings are written upfront; everything else is written when first opened.
       const list = ALL_READINGS.filter(t => (all ? FLAGSHIP_READINGS : FREE_READINGS).includes(t.slug));
       setTargets(list);
+      if (p?.generation_cancelled) { await refresh(); return; }
       const rows = await refresh();
       if (!rows || !alive) return;
       const missing = list.filter(t => !rows.some(r => r.page_key === `topic-${t.slug}`));
@@ -54,7 +55,7 @@ export function GenerationProgress() {
       const note = (e: Error) => { if (/stopped/i.test(e.message)) { sessionStorage.removeItem(STARTED_KEY); setCancelled(true); } else setError(e.message); };
       if (missing.length && !sessionStorage.getItem(STARTED_KEY)) {
         sessionStorage.setItem(STARTED_KEY, '1');
-        for (const t of missing) { if (!alive) break; try { await writeTopicReading(t.slug); } catch (e) { note(e as Error); break; } }
+        for (const t of missing) { if (!alive) break; try { await writeTopicReading(t.slug); if (alive) setRequested(old => new Set([...old, t.slug])); } catch (e) { note(e as Error); break; } }
       }
     })();
     return () => { alive = false; };
@@ -86,7 +87,7 @@ export function GenerationProgress() {
     return () => clearInterval(timer.current);
   }, [active]);
 
-  const current = targets.find(t => !done?.has(`topic-${t.slug}`));
+  const current = targets.find(t => requested.has(t.slug) && !done?.has(`topic-${t.slug}`));
   const minimize = () => { sessionStorage.setItem(MIN_KEY, '1'); setMinimized(true); if (pathname === '/start') navigate('/dashboard'); };
   const expand = () => { sessionStorage.removeItem(MIN_KEY); setMinimized(false); };
   // Lets the welcome tour wait until this full-screen view is out of the way.
@@ -106,7 +107,7 @@ export function GenerationProgress() {
   const pct = Math.round((count / total) * 100);
 
   const pathFor = (slug: string) => (ALL_READINGS.find(t => t.slug === slug) as { route?: string } | undefined)?.route ?? `/my-readings/topic/${slug}`;
-  const paused = error ? (/credit/i.test(error) ? 'Paused: AI writing credits are unavailable. Retry when credits are available.' : /limit/i.test(error) ? 'Paused: the daily writing limit was reached. Retry tomorrow.' : /stopped/i.test(error) ? 'Writing was stopped for this chart. Press Resume in the bar above to continue.' : `Paused: ${error}`) : '';
+  const paused = error ? (/credit/i.test(error) ? 'Paused: AI writing credits are unavailable. Retry when credits are available.' : /limit/i.test(error) ? 'Paused: the daily writing limit was reached. Retry tomorrow.' : /stopped/i.test(error) ? 'Writing was stopped for this chart. Press Resume to continue.' : `Paused: ${error}`) : '';
   return createPortal(
     <AnimatePresence>
       {!minimized ? (
