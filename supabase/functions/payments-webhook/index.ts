@@ -1,6 +1,8 @@
 import { createClient } from "npm:@supabase/supabase-js@2";
 import { type StripeEnv, verifyWebhook } from "../_shared/stripe.ts";
 
+import { finalizeBookPdf } from '../_shared/book-delivery.ts';
+
 let _supabase: ReturnType<typeof createClient> | null = null;
 function db() {
   if (!_supabase) _supabase = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
@@ -48,6 +50,9 @@ async function bookPaid(session: any, env: StripeEnv) {
   const patch = { status:'paid',payment_total_cents:session.amount_total,updated_at:new Date().toISOString(), ...(address ? { shipping_address: { ...address,name:session.collected_information?.shipping_details?.name || session.shipping_details?.name || '' } } : {}) };
   const result = await db().from('book_orders').update(patch).eq('id',orderId).eq('user_id',userId).eq('checkout_session_id',session.id).eq('environment',env).in('status',['draft','awaiting_payment']);
   if (result.error) throw result.error;
+  const {data:order,error}=await db().from('book_orders').select('*').eq('id',orderId).eq('user_id',userId).eq('checkout_session_id',session.id).eq('environment',env).single();
+  if(error) throw error;
+  if(order && ['paid','printing','shipped','delivered'].includes(order.status)) await finalizeBookPdf(db(),order);
 }
 
 async function deleted(subscription: any, env: StripeEnv) {

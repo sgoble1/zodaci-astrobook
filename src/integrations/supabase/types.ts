@@ -186,10 +186,12 @@ export type Database = {
           environment: string
           extra_sections: Json
           extras_cents: number | null
+          final_pdf_path: string | null
           id: string
           manuscript_pages: number | null
           manuscript_path: string | null
           payment_total_cents: number | null
+          pdf_ready_at: string | null
           shipping_address: Json
           shipping_cents: number | null
           status: string
@@ -209,10 +211,12 @@ export type Database = {
           environment?: string
           extra_sections?: Json
           extras_cents?: number | null
+          final_pdf_path?: string | null
           id?: string
           manuscript_pages?: number | null
           manuscript_path?: string | null
           payment_total_cents?: number | null
+          pdf_ready_at?: string | null
           shipping_address?: Json
           shipping_cents?: number | null
           status?: string
@@ -232,10 +236,12 @@ export type Database = {
           environment?: string
           extra_sections?: Json
           extras_cents?: number | null
+          final_pdf_path?: string | null
           id?: string
           manuscript_pages?: number | null
           manuscript_path?: string | null
           payment_total_cents?: number | null
+          pdf_ready_at?: string | null
           shipping_address?: Json
           shipping_cents?: number | null
           status?: string
