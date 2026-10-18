@@ -32,7 +32,7 @@ async function performCheck() {
   if (ok) {
     const response = await supabase.functions.invoke('private-edition', { body: {} });
     if (response.error || !Number.isInteger(response.data?.segments) || response.data.segments > 10) { listeners.forEach(l => l(false)); return; }
-    const segments = await Promise.all(Array.from({ length: response.data.segments }, (_, index) => supabase.functions.invoke(`private-edition-${index}`, { body: {} })));
+    const segments = await Promise.all(Array.from({ length: response.data.segments }, (_, index) => supabase.functions.invoke('private-edition', { body: { index } })));
     if (segments.some(segment => segment.error || typeof segment.data?.segment !== 'string')) { listeners.forEach(l => l(false)); return; }
     const bytes = Uint8Array.from(atob(segments.map(segment => segment.data.segment).join('')), c => c.charCodeAt(0));
     const stream = new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'));
