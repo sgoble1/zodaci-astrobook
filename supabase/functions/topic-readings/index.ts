@@ -126,7 +126,19 @@ Deno.serve(async req => {
     if (paused) return json({ error: paused.message }, 402);
     const { data: ctx } = await admin.from('personal_context').select('title,body').eq('owner_id', ownerId).eq('use_in_generation', true).limit(6);
     const apiKey = Deno.env.get('LOVABLE_API_KEY'); if (!apiKey) return json({ error: 'AI is not configured.' }, 500);
-    const authHeader = req.headers.get('Authorization')!; const apikeyHeader = req.headers.get('apikey') ?? '';
+    const { data: admission, error: admissionError } = await admin.rpc('claim_topic_reading_job', { p_owner_id: ownerId, p_page_key: page_key, p_regenerate: !!regenerate || have?.status === 'preview' || have?.status === 'hidden' });
+    if (admissionError) throw admissionError;
+    const claimed = admission?.[0];
+    if (!claimed) throw new Error('Job reservation unavailable');
+    if (claimed.quota_exceeded) return json({ error: 'Daily writing limit reached. Please return tomorrow.' }, 429);
+    if (!claimed.claimed) return json({ status: claimed.job_status });
+    const leaseTime = new Date().toISOString();
+    const pending = await admin.from('generated_pages').upsert({ owner_id: ownerId, page_key, section: 'Topic Reading', title: topic.title, content: '', status: 'writing', updated_at: leaseTime }, { onConflict: 'owner_id,page_key' });
+    if (pending.error) {
+      await admin.from('topic_reading_jobs').update({ status: 'failed', updated_at: new Date().toISOString() }).eq('id', claimed.job_id);
+      throw pending.error;
+    }
+    const authHeader = req.headers.get('Authorization') ?? ''; const apikeyHeader = req.headers.get('apikey') ?? '';
     // Writing takes over a minute, so it runs in the background and the page polls for the result.
     const job = (async () => {
       try {
