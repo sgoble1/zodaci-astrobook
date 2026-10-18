@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { canWriteAllReadings, loadMyTopicReadings, writeTopicReading, FREE_READINGS, CORE_THEMES, type TopicRow } from '@/lib/topicReadings';
 import { readingStatus } from '@/lib/readingExperience';
+import { supabase } from '@/integrations/supabase/client';
 
 /** Core themes free members may preview (opening section only). */
 export const isPreviewTheme = (slug: string) => !FREE_READINGS.includes(slug) && CORE_THEMES.some(t => t.slug === slug);
@@ -14,6 +15,12 @@ export function useOnDemandReading(slug: string | undefined) {
   const [preview, setPreview] = useState(false);
   const [attempt, setAttempt] = useState(0);
   useEffect(() => {
+    const changed = () => { setRow(undefined); setWriting(false); setAttempt(n => n + 1); };
+    const { data } = supabase.auth.onAuthStateChange(changed);
+    window.addEventListener('astrobook-birth-saved', changed);
+    return () => { data.subscription.unsubscribe(); window.removeEventListener('astrobook-birth-saved', changed); };
+  }, []);
+  useEffect(() => {
     if (!slug) return;
     let alive = true; let timer: number | undefined;
     const key = `topic-${slug}`;
@@ -21,8 +28,9 @@ export function useOnDemandReading(slug: string | undefined) {
     (async () => {
       try {
       setRow(undefined); setError(''); setWriting(false); setLocked(false); setPreview(false);
-      const [r, full] = await Promise.all([find(), canWriteAllReadings().catch(() => false)]);
+      const [r, full, auth] = await Promise.all([find(), canWriteAllReadings().catch(() => false), supabase.auth.getSession()]);
       if (!alive) return;
+      if (!auth.data.session) { setRow(null); setLocked(true); return; }
       const upgrading = !!r && r.status === 'preview' && full;
       setPreview(!full && isPreviewTheme(slug));
       setRow(upgrading ? null : r);

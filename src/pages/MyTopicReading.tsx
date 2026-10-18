@@ -43,7 +43,8 @@ export default function MyTopicReading({ slugOverride }: { slugOverride?: string
         await new Promise(r => setTimeout(r, 10000));
         const rs = await loadMyTopicReadings().catch(() => []);
         const r = rs.find(x => x.page_key === `topic-${slug}`);
-        if (r && r.updated_at !== before) fresh = r;
+        if (r?.status === 'failed') throw new Error('The rewrite could not finish. Please retry.');
+        if (r && ['ready','hidden'].includes(r.status) && r.updated_at !== before) fresh = r;
       }
       if (fresh) { setRow(fresh); toast.success('Reading rewritten'); } else toast.error('The rewrite is taking longer than expected. Check back in a few minutes.');
     }
