@@ -21,7 +21,7 @@ export function ManuscriptPreview({ birth, edition, extras, coverUrl, onReady }:
       const fontBuffer: ArrayBuffer = await (await fetch(fontUrl)).arrayBuffer();
       const coverBuffer: ArrayBuffer | undefined = coverUrl ? await (await fetch(coverUrl)).arrayBuffer() : undefined;
       const sign=(n:string)=>c.bodies.find(b=>b.name===n)?.sign;
-      const bigThree=[sign('Sun')&&`Sun in ${sign('Sun')}`,sign('Moon')&&`Moon in ${sign('Moon')}`,birth.time&&sign('Ascendant')&&`${sign('Ascendant')} Rising`].filter(Boolean).join(' · ');
+      const bigThree=[sign('Sun')&&`Sun in ${sign('Sun')}`,sign('Moon')&&`Moon in ${sign('Moon')}`,c.asc!=null&&`${['Aries','Taurus','Gemini','Cancer','Leo','Virgo','Libra','Scorpio','Sagittarius','Capricorn','Aquarius','Pisces'][Math.floor(c.asc/30)]} Rising`].filter(Boolean).join(' · ');
       const result=await composeManuscript({bigThree,name:birth.name,
       const blob=new Blob([result.bytes as BlobPart],{type:'application/pdf'});if(preview)URL.revokeObjectURL(preview.url);setPreview({url:URL.createObjectURL(blob),pages:result.pages});onReady({blob,pages:result.pages});
     }catch(e){setError(e instanceof Error?e.message:'Manuscript could not be composed.');}finally{setBusy(false);}
