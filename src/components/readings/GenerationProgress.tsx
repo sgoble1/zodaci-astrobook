@@ -48,15 +48,17 @@ export function GenerationProgress() {
       const rows = await refresh();
       if (!rows || !alive) return;
       const missing = list.filter(t => !rows.some(r => r.page_key === `topic-${t.slug}`));
+      // A stop may land after a lane was already started; that is a quiet stop, not an error.
+      const note = (e: Error) => { if (/stopped/i.test(e.message)) { sessionStorage.removeItem(STARTED_KEY); setCancelled(true); } else setError(e.message); };
       if (missing.length && !sessionStorage.getItem(STARTED_KEY)) {
         sessionStorage.setItem(STARTED_KEY, '1');
-        if (!all) { missing.forEach(t => writeTopicReading(t.slug).catch(e => setError((e as Error).message))); return; }
+        if (!all) { missing.forEach(t => writeTopicReading(t.slug).catch(e => note(e as Error))); return; }
         // Three parallel lanes; each lane writes its own share of topics in order.
         const LANES = 3;
         const order = ALL_READINGS.map(t => t.slug);
         for (let lane = 0; lane < LANES; lane++) {
           const first = missing.find(t => order.indexOf(t.slug) % LANES === lane);
-          if (first) writeTopicReading(first.slug, { chain: true, lane, lanes: LANES }).catch(e => setError((e as Error).message));
+          if (first) writeTopicReading(first.slug, { chain: true, lane, lanes: LANES }).catch(e => note(e as Error));
         }
       }
     })();
