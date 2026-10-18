@@ -3,6 +3,8 @@ import { createClient } from "npm:@supabase/supabase-js@2";
 import type Stripe from "https://esm.sh/stripe@22.0.2";
 import { type StripeEnv, createStripeClient } from "../_shared/stripe.ts";
 
+import { snapshotBookPdf } from '../_shared/book-delivery.ts';
+
 const ALLOWED = new Set(["full_access_monthly", "creator_monthly", "full_access_yearly", "creator_yearly"]);
 const json = (b: unknown, status = 200) => new Response(JSON.stringify(b), { status, headers: { ...corsHeaders, "Content-Type": "application/json" } });
 
@@ -59,6 +61,7 @@ Deno.serve(async (req) => {
       if (!order.manuscript_path?.startsWith(`${user.id}/manuscripts/`) || !Number.isInteger(order.manuscript_pages) || order.manuscript_pages < 4) return json({ error: 'Compose and review your manuscript before paying.' }, 400);
       const manuscript = await admin.storage.from('library').download(order.manuscript_path);
       if (manuscript.error || !manuscript.data || manuscript.data.size < 1000) return json({ error: 'Your manuscript file is not available. Please compose it again.' }, 400);
+      await snapshotBookPdf(admin, order);
       const extras = Array.isArray(order.extra_sections) ? order.extra_sections : [];
       if (extras.length > 2 || extras.some((s:unknown) => typeof s !== 'string' || !s.trim() || s.length > 160)) return json({ error: 'Choose up to two additional sections.' }, 400);
       if (order.checkout_session_id && order.environment === env) {

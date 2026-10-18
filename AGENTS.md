@@ -40,7 +40,7 @@
 - blog_posts permits subscriber writes and explicit publication; drafts remain private.
 - book-cover streams saved-chart artwork through authenticated requests; no April chart reuse.
 - Workspace Wonderings use separate member policies; relationship notes stay owner-only.
-- Owner PDFs stay private; book checkout charges through the shared create-checkout function and is confirmed only by the verified webhook.
+- Order PDFs freeze before checkout, finalize after verified payment in service-only storage, and use owner/admin-authorized downloads.
 - /welcome is a separate generic-art brand page; private app routes remain unchanged.
 - Newsletter requires consent, validated service-only writes and admin-only reads/deletes; signup sends no campaigns.
 - Book examples are non-orderable; landing readings use separate public editorial content, never private source text.
