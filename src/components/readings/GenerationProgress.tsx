@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { createPortal } from 'react-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { supabase } from '@/integrations/supabase/client';
 import { ALL_READINGS, FREE_READINGS, canWriteAllReadings, loadMyTopicReadings, writeTopicReading } from '@/lib/topicReadings';
@@ -74,26 +75,40 @@ export function GenerationProgress() {
   if (!active) return null;
   const pct = Math.round((count / total) * 100);
 
-  return (
+  const pathFor = (slug: string) => (ALL_READINGS.find(t => t.slug === slug) as { route?: string } | undefined)?.route ?? `/my-readings/topic/${slug}`;
+  const paused = error ? (/credit/i.test(error) ? 'Paused: AI writing credits have run out. Your pages continue automatically once credits are added.' : /limit/i.test(error) ? 'Paused for today: the daily writing limit was reached. Writing continues tomorrow.' : `Paused: ${error}`) : '';
+  return createPortal(
     <AnimatePresence>
       {!minimized ? (
-        <motion.div key="full" className="fixed inset-0 z-[60] flex items-center justify-center bg-background/95 p-6 backdrop-blur" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-          <motion.div layoutId="gen-card" role="status" aria-live="polite" className="w-full max-w-md space-y-5 rounded-2xl border border-border bg-card p-8 text-center shadow-2xl">
-            <motion.div className="mx-auto h-16 w-16 rounded-full border-4 border-primary/30 border-t-primary" animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1.6, ease: 'linear' }} aria-hidden="true" />
-            <h2 className="font-display text-3xl">Building your Zodaci</h2>
-            <p className="text-sm text-muted-foreground">We’re calculating your chart and writing every page for you: topic readings and other-system chapters. About a minute each. You can minimize this and keep exploring. Writing continues even if you close the site.</p>
+        <motion.div key="full" className="fixed inset-0 z-[60] flex items-center justify-center overflow-y-auto bg-background/95 p-4 backdrop-blur" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+          <motion.div layoutId="gen-card" role="status" aria-live="polite" className="my-auto w-full max-w-lg space-y-5 rounded-2xl border border-border bg-card p-6 sm:p-8 text-center shadow-2xl">
+            <motion.div className="mx-auto h-14 w-14 rounded-full border-4 border-primary/30 border-t-primary" animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1.6, ease: 'linear' }} aria-hidden="true" />
+            <h2 className="font-display text-3xl">Writing your pages</h2>
+            <p className="text-sm text-muted-foreground">Each page is written from your own chart and takes about a minute. You can keep exploring: progress stays in the bar at the top of every page, and writing continues even if you close the site.</p>
             <div className="h-2 w-full overflow-hidden rounded-full bg-muted"><motion.div className="h-full bg-primary" animate={{ width: `${pct}%` }} transition={{ duration: 0.8 }} /></div>
-            <p className="text-sm">{count} of {total} pages ready{current ? ` · writing “${current.title}”` : ''}</p>
-            {error && <p role="alert" className="text-sm text-destructive">Paused: {error}</p>}
-            <button onClick={minimize} className="rounded-md border border-border px-4 py-2 text-sm hover:bg-muted focus-visible:outline focus-visible:outline-2">Minimize & keep exploring</button>
+            <p className="text-sm font-medium">{count} of {total} pages ready{current ? ` · now writing “${current.title}”` : ''}</p>
+            {paused && <p role="alert" className="text-sm text-destructive">{paused}</p>}
+            <ul className="max-h-56 overflow-y-auto rounded-lg border border-border text-left text-sm divide-y divide-border">
+              {targets.map(t => { const ok = done?.has(`topic-${t.slug}`); const now = current?.slug === t.slug; return (
+                <li key={t.slug} className="flex items-center justify-between gap-3 px-3 py-2">
+                  {ok ? <Link to={pathFor(t.slug)} onClick={minimize} className="text-foreground underline-offset-2 hover:underline">{t.title}</Link> : <span className="text-muted-foreground">{t.title}</span>}
+                  <span className={`shrink-0 text-xs ${ok ? 'text-primary' : 'text-muted-foreground'}`}>{ok ? 'Ready' : now ? 'Writing…' : 'Waiting'}</span>
+                </li>); })}
+            </ul>
+            <button onClick={minimize} className="rounded-md border border-border px-4 py-2 text-sm hover:bg-muted focus-visible:outline focus-visible:outline-2">Keep exploring</button>
           </motion.div>
         </motion.div>
       ) : (
-        <motion.button key="mini" layoutId="gen-card" onClick={expand} aria-label={`Writing your pages: ${count} of ${total} ready. Open progress`} className="fixed bottom-4 right-4 z-[60] flex items-center gap-3 rounded-full border border-border bg-card px-4 py-2 text-sm shadow-xl focus-visible:outline focus-visible:outline-2">
-          <motion.span className="h-4 w-4 rounded-full border-2 border-primary/30 border-t-primary" animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1.2, ease: 'linear' }} aria-hidden="true" />
-          <span>Writing {count}/{total}</span>
-        </motion.button>
+        <motion.div key="mini" layoutId="gen-card" role="status" aria-live="polite" className="fixed inset-x-0 top-[64px] lg:top-0 z-[45] border-b border-border bg-card/95 backdrop-blur shadow-md">
+          <div className="mx-auto flex max-w-5xl items-center gap-3 px-4 py-2 text-sm">
+            <motion.span className="h-4 w-4 shrink-0 rounded-full border-2 border-primary/30 border-t-primary" animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1.2, ease: 'linear' }} aria-hidden="true" />
+            <span className="min-w-0 flex-1 truncate">{paused ? paused : <>Writing your pages: <strong>{count} of {total}</strong> ready{current ? ` · ${current.title}` : ''}</>}</span>
+            <div className="hidden sm:block h-1.5 w-28 overflow-hidden rounded-full bg-muted"><div className="h-full bg-primary" style={{ width: `${pct}%` }} /></div>
+            <button onClick={expand} className="shrink-0 rounded-md border border-border px-3 py-1 text-xs hover:bg-muted focus-visible:outline focus-visible:outline-2">Open</button>
+          </div>
+        </motion.div>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body
   );
 }

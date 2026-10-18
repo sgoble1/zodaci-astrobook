@@ -27,3 +27,17 @@ export const MENU_SECTIONS = [NAV_GROUPS[0].title, NAV_GROUPS[1].title, SHARED_G
 export let APRIL_NAV_GROUPS: NavGroup[] = [];
 
 registerPrivateValue("navigation", "APRIL_NAV_GROUPS", value => { APRIL_NAV_GROUPS = value as typeof APRIL_NAV_GROUPS; }, []);
+
+export type Plan = 'free' | 'full' | 'creator';
+const FREE_TOPIC_PATHS = ['/my-readings/topic/big-three', '/my-readings/topic/core-personality'];
+const FULL_PATHS = ['/my-masterbook', '/counselors', '/workbook/social-integration', '/workbook/companion', '/timeline', '/retrogrades', '/profection'];
+const CREATOR_PATHS = ['/podcasts', '/create', '/creator'];
+/** The plan a member page needs. Used by the menu locks and the page guard so both always agree. */
+export function requiredPlan(path: string): Plan {
+  if (path.startsWith('/my-readings/topic/')) return FREE_TOPIC_PATHS.includes(path) ? 'free' : 'full';
+  if (CREATOR_PATHS.some(p => path === p || path.startsWith(`${p}/`))) return 'creator';
+  if (FULL_PATHS.some(p => path === p || path.startsWith(`${p}/`))) return 'full';
+  return 'free';
+}
+const RANK: Record<Plan, number> = { free: 0, full: 1, creator: 2 };
+export function planAllows(have: Plan, need: Plan) { return RANK[have] >= RANK[need]; }

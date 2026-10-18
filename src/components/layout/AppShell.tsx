@@ -22,7 +22,20 @@ import { AccountButton } from '@/components/common/AccountButton';
 import { useCustomPages, NEW_PAGE_HIGHLIGHT_KEY } from '@/hooks/useCustomPages';
 import { useSharedBadges } from '@/hooks/useSharedBadges';
 import { Button } from '@/components/ui/button';
-import { APRIL_NAV_GROUPS, NAV_GROUPS, RELATIONSHIPS_GROUP, SHARED_GROUP, type NavGroup, type NavItem } from '@/content/navigation';
+import { APRIL_NAV_GROUPS, NAV_GROUPS, RELATIONSHIPS_GROUP, SHARED_GROUP, planAllows, requiredPlan, type NavGroup, type NavItem } from '@/content/navigation';
+import { usePlan } from '@/hooks/usePlan';
+import { PlanLock, PLAN_LABEL } from '@/components/common/PlanLock';
+import { Lock } from 'lucide-react';
+import type { ReactNode } from 'react';
+
+function PlanGuard({ children }: { children: ReactNode }) {
+  const { pathname } = useLocation();
+  const { plan, loading } = usePlan();
+  const need = requiredPlan(pathname);
+  if (need === 'free') return <>{children}</>;
+  if (loading) return null;
+  return planAllows(plan, need) ? <>{children}</> : <PlanLock need={need} />;
+}
 import { ZodaciLogo } from '@/components/brand/ZodaciLogo';
 import { WelcomeTour } from '@/components/common/WelcomeTour';
 
@@ -110,8 +123,9 @@ export function AppShell() {
       <main id="main-content" tabIndex={-1} className="flex-1 min-w-0 lg:pt-0 pt-[64px] relative z-10 outline-none">
         <div className="mx-auto max-w-5xl px-4 sm:px-8 py-8 sm:py-10 lg:py-14">
           <motion.div key={location.pathname} initial={{ opacity: 0, y: 24, filter: 'blur(6px)' }} animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }} transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}>
-            <PageErrorBoundary key={location.pathname}>{!april && <PublicWording />}{april === undefined && !isPublicPath(location.pathname) ? null : april || isPublicPath(location.pathname) ? <Outlet /> : <PublicChartFallback />}<VerifySources /></PageErrorBoundary>{april === false && <><GenerationProgress /><WelcomeTour /></>}
+            <PageErrorBoundary key={location.pathname}>{!april && <PublicWording />}{april === undefined && !isPublicPath(location.pathname) ? null : april ? <Outlet /> : <PlanGuard>{isPublicPath(location.pathname) ? <Outlet /> : <PublicChartFallback />}</PlanGuard>}<VerifySources /></PageErrorBoundary>
           </motion.div>
+          {april === false && <><GenerationProgress /><WelcomeTour /></>}
         </div>
         <footer className="border-t border-border mt-16">
           <div className="mx-auto max-w-5xl px-5 sm:px-8 py-10 text-sm text-muted-foreground">
@@ -135,6 +149,9 @@ function SidebarInner({ mobile = false, onNavigate }: { mobile?: boolean; onNavi
   const { items: rels } = useRelationships();
   const custom = useCustomPages();
   const badges = useSharedBadges();
+  const { plan, loading: planLoading } = usePlan();
+  const locked = (to: string) => !april && !planLoading && !planAllows(plan, requiredPlan(to));
+  const lockTag = (to: string) => locked(to) ? <span className="ml-auto inline-flex shrink-0 items-center gap-1 rounded-full border border-border px-1.5 py-0.5 text-[9px] uppercase tracking-wide"><Lock className="h-2.5 w-2.5" aria-hidden="true" />{PLAN_LABEL[requiredPlan(to)]}</span> : null;
   const navRef = useRef<HTMLElement>(null);
   const [glowId, setGlowId] = useState<string | null>(null);
   // After a page is created: scroll its new menu item into view and make it glow.
@@ -185,6 +202,7 @@ function SidebarInner({ mobile = false, onNavigate }: { mobile?: boolean; onNavi
         )}
       </div>
 
+      {!april && !planLoading && plan === 'free' && <NavLink to="/pricing" onClick={onNavigate} className="block rounded-xl border border-primary/40 bg-primary/10 p-3 text-xs"><span className="font-semibold text-foreground">Free plan</span> · 2 full readings included. Items marked <Lock className="inline h-3 w-3" aria-label="locked" /> need Full Access. <span className="text-primary underline">Upgrade →</span></NavLink>}
       <div className="pt-1 space-y-2"><CommandPaletteTrigger /><BookmarkButton /></div>
 
       <nav ref={navRef} aria-label="Site menu" className="flex flex-col gap-4 text-sm">
@@ -197,9 +215,9 @@ function SidebarInner({ mobile = false, onNavigate }: { mobile?: boolean; onNavi
                 className={({ isActive }) =>
                   `flex min-h-11 items-center justify-between gap-2 rounded border border-transparent px-3 py-2 transition-colors ${
                     isActive ? 'bg-accent/15 border-accent/30 text-foreground' : 'text-muted-foreground hover:text-foreground hover:bg-muted/60'
-                  }${n.created ? ' bg-created/20 text-foreground' : ''}${n.to === '/create' ? ' nav-create-glow' : ''}${glowId && n.to === `/p/${glowId}` ? ' nav-new-glow' : ''}`
+                  }${locked(n.to) ? ' opacity-60' : ''}${n.created ? ' bg-created/20 text-foreground' : ''}${n.to === '/create' ? ' nav-create-glow' : ''}${glowId && n.to === `/p/${glowId}` ? ' nav-new-glow' : ''}`
                 }
-              ><span>{n.label}{n.created ? <span className="sr-only"> (created page)</span> : null}{glowId && n.to === `/p/${glowId}` ? <span className="sr-only"> — just added</span> : null}</span>{n.badge ? <span className="min-w-5 rounded-full bg-primary px-1.5 text-center text-[10px] text-primary-foreground" aria-label={`${n.badge} new`}>{n.badge}</span> : null}</NavLink>
+              ><span>{n.label}{n.created ? <span className="sr-only"> (created page)</span> : null}{glowId && n.to === `/p/${glowId}` ? <span className="sr-only"> — just added</span> : null}</span>{lockTag(n.to)}{n.badge ? <span className="min-w-5 rounded-full bg-primary px-1.5 text-center text-[10px] text-primary-foreground" aria-label={`${n.badge} new`}>{n.badge}</span> : null}</NavLink>
             ))}
             {g.submenus?.map(submenu => (
                 <div key={submenu.label}>
@@ -211,14 +229,14 @@ function SidebarInner({ mobile = false, onNavigate }: { mobile?: boolean; onNavi
                         className={({ isActive }) =>
                           `flex min-h-11 items-center rounded border border-transparent px-3 py-2 text-xs transition-colors ${
                             isActive ? 'bg-accent/15 border-accent/30 text-foreground' : 'text-muted-foreground hover:text-foreground hover:bg-muted/60'
-                          }`
+                          }${locked(n.to) ? ' opacity-60' : ''}`
                         }
-                      >{n.label}</NavLink>
+                      ><span>{n.label}</span>{lockTag(n.to)}</NavLink>
                     ))}
                   </div>
                 </div>
             ))}
-            {g.footer?.map(n => <NavLink key={n.to} to={n.to} onClick={onNavigate} className="mt-1 flex min-h-11 items-center rounded border border-transparent px-3 py-2 text-muted-foreground hover:text-foreground nav-create-glow">{n.label}</NavLink>)}
+            {g.footer?.map(n => <NavLink key={n.to} to={n.to} onClick={onNavigate} className={`mt-1 flex min-h-11 items-center gap-2 rounded border border-transparent px-3 py-2 text-muted-foreground hover:text-foreground nav-create-glow${locked(n.to) ? ' opacity-60' : ''}`}><span>{n.label}</span>{lockTag(n.to)}</NavLink>)}
           </div>
         ))}
       </nav>
