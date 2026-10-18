@@ -335,3 +335,15 @@ svg.fv-shown circle, svg.fv-shown path, svg.fv-shown line { animation: fv-draw 1
 .reading-prose th { background: hsl(var(--muted)); font-weight: 600; }
 .reading-prose code { background: hsl(var(--muted)); padding: .1em .35em; border-radius: 4px; font-size: .9em; }
 @media (max-width: 639px) { .reading-prose { font-size: 1rem; } .reading-prose > p:first-child { font-size: 1.1rem; } }
+
+/* Personal celestial atlas: member-only; archived edition remains unchanged. */
+.member-experience h1 { background: none; color: hsl(var(--foreground)); font-size: 3rem; line-height: 1.12; }
+.member-experience h2 { font-size: 2rem; line-height: 1.2; }
+.member-experience .font-smallcaps { letter-spacing: 0; }
+.member-experience .vellum, .member-experience .parchment { background: transparent; backdrop-filter: none; box-shadow: none; border-color: hsl(var(--border)); }
+.member-experience .vellum:hover, .member-experience .parchment:hover { box-shadow: none; border-color: hsl(var(--border)); }
+.member-experience .reading-prose { max-width: 68ch; font-size: 1.125rem; line-height: 1.85; }
+.member-experience summary::marker { color: hsl(var(--muted-foreground)); }
+.member-experience .nav-create-glow { animation: none; box-shadow: none; }
+@media (max-width: 639px) { .member-experience h1 { font-size: 2.25rem; } .member-experience h2 { font-size: 1.75rem; } }
+@media (prefers-reduced-motion: reduce) { .member-experience *, .member-experience *::before, .member-experience *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }
