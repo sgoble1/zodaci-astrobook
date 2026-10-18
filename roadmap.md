@@ -7,6 +7,7 @@ This is the single index of active project work. It is not a task history.
 - [Approval copy](.lovable/plan.md) — the same ongoing launch plan only; keep synchronized with `launch-plan.md`. No unrelated plans or history belong in either file.
 
 ## Remaining work
+- [x] Decouple shared-space access from the April edition loader; add April's edition switch to the admin dashboard.
 - [x] Apply available launch repairs and consolidate remaining acceptance gates and external blockers in the launch plan.
 - [x] Run regression tests, public sample/mobile and signed-in Masterbook checks; deploy payment and reading repairs.
 - [ ] Complete provider replay/concurrency and cross-account denial acceptance fixtures; production payment proof remains separate.
