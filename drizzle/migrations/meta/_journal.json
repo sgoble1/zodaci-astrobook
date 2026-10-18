@@ -330,6 +330,13 @@
       "when": 1792360346405,
       "tag": "0046_book_prices_live_entitlements",
       "breakpoints": true
+    },
+    {
+      "idx": 47,
+      "version": "7",
+      "when": 1792360447824,
+      "tag": "0047_atomic_reading_jobs",
+      "breakpoints": true
     }
   ]
 }

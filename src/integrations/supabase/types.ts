@@ -1690,6 +1690,30 @@ export type Database = {
         }
         Relationships: []
       }
+      topic_reading_jobs: {
+        Row: {
+          id: string
+          owner_id: string
+          page_key: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          owner_id: string
+          page_key: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          owner_id?: string
+          page_key?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           id: string
@@ -1815,6 +1839,15 @@ export type Database = {
         }[]
       }
       claim_admin: { Args: never; Returns: boolean }
+      claim_topic_reading_job: {
+        Args: { p_owner_id: string; p_page_key: string; p_regenerate?: boolean }
+        Returns: {
+          claimed: boolean
+          job_id: string
+          job_status: string
+          quota_exceeded: boolean
+        }[]
+      }
       create_space: { Args: { _name: string }; Returns: string }
       ensure_shared_main_conversation: { Args: never; Returns: string }
       get_document_overrides: {
