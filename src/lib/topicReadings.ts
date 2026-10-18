@@ -36,7 +36,8 @@ export async function loadMyTopicReadings(): Promise<TopicRow[]> {
   const { data: s } = await supabase.auth.getSession();
   const uid = s.session?.user.id;
   if (!uid) return [];
-  const { data } = await supabase.from('generated_pages').select('id,page_key,title,content,status,updated_at').eq('section', 'Topic Reading').eq('owner_id', uid);
+  const { data, error } = await supabase.from('generated_pages').select('id,page_key,title,content,status,updated_at').eq('section', 'Topic Reading').eq('owner_id', uid);
+  if (error) throw new Error('Your readings could not load. Please try again.');
   return (data ?? []) as TopicRow[];
 }
 
@@ -66,8 +67,8 @@ export async function writeTopicReading(slug: string, opts: { regenerate?: boole
     let message = data?.error as string | undefined;
     const ctx = (error as { context?: unknown } | null)?.context;
     if (!message && ctx instanceof Response) message = (await ctx.json().catch(() => null))?.error;
-    if ((ctx as Response | undefined)?.status === 429 && !message) message = 'Daily writing limit reached. Your remaining readings continue tomorrow.';
-    if ((ctx as Response | undefined)?.status === 402) message = 'Writing is paused because the AI credits have run out. It will continue once credits are added.';
+    if ((ctx as Response | undefined)?.status === 429 && !message) message = 'Daily writing limit reached. Try again tomorrow.';
+    if ((ctx as Response | undefined)?.status === 402) message = 'Writing is paused because AI credits have run out. Retry after credits are available.';
     if ((ctx as Response | undefined)?.status === 401) message = 'Please sign in again to keep writing your readings.';
     throw new Error(message || 'This reading could not be written right now.');
   }
