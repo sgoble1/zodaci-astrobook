@@ -7,6 +7,7 @@ import {
 import { SEARCH_INDEX, type SearchDoc } from '@/content/compendium';
 import { TOPICS } from '@/content/topics';
 import { KUA_DIRECTIONS, ROOMS, CRYSTALS, TWELVE_WEEKS, STAR_INFO, DIR_NAME } from '@/content/fengshui';
+import { Button } from '@/components/ui/button';
 import { loadProtectedJson } from '@/lib/protectedContent';
 
 const FS_DOCS = [
@@ -145,19 +146,19 @@ export function CommandPalette() {
 }
 
 /** Small trigger button that mimics the ⌘K shortcut. */
-export function CommandPaletteTrigger() {
+export function CommandPaletteTrigger({ label = 'Search the compendium' }: { label?: string }) {
   const trigger = () => {
     const e = new KeyboardEvent('keydown', { key: 'k', metaKey: true });
     window.dispatchEvent(e);
   };
   return (
-    <button
+    <Button variant="outline"
       onClick={trigger}
       className="w-full flex items-center justify-between gap-3 px-3 py-2 rounded border border-border/60 bg-muted/40 hover:border-gold/60 hover:bg-muted/60 transition-colors text-left"
       aria-label="Open search (Cmd+K)"
     >
-      <span className="text-xs text-muted-foreground font-smallcaps">Search the compendium</span>
+      <span className="text-xs text-muted-foreground font-smallcaps">{label}</span>
       <kbd className="text-[10px] text-muted-foreground border border-border rounded px-1.5 py-0.5 bg-background">⌘K</kbd>
-    </button>
+    </Button>
   );
 }

@@ -208,13 +208,16 @@ function SidebarInner({ mobile = false, onNavigate }: { mobile?: boolean; onNavi
       </div>
 
       {!april && !planLoading && plan === 'free' && <NavLink to="/pricing" onClick={onNavigate} className="block rounded-xl border border-primary/40 bg-primary/10 p-3 text-xs"><span className="font-semibold text-foreground">Free plan</span> · 2 full readings and first-section core previews. Items marked <Lock className="inline h-3 w-3" aria-label="locked" /> need Full Access. <span className="text-primary underline">Upgrade →</span></NavLink>}
-      <div className="pt-1 space-y-2"><CommandPaletteTrigger /><BookmarkButton /></div>
+      <div className="pt-1 space-y-2"><CommandPaletteTrigger label={april ? "Search the compendium" : "Find pages & readings"} /><BookmarkButton /></div>
 
       {!april && <nav aria-label="Main destinations" className="grid gap-1">{[['/dashboard', 'Dashboard'], ['/my-chart', 'My Chart'], ['/my-readings', 'Readings'], ['/explore', 'Explore'], ['/my-astrobook', 'My Library'], ...(plan === 'creator' ? [['/creator', 'Creator Studio']] : []), ...(admin ? [['/admin', 'Admin']] : [])].map(([to, label]) => <Button key={to} asChild variant={location.pathname === to ? 'secondary' : 'ghost'} className="justify-start"><NavLink to={to} onClick={onNavigate}>{label}</NavLink></Button>)}</nav>}
       <nav ref={navRef} aria-label="Site menu" className="flex flex-col gap-4 text-sm">
-        {displayGroups.map((g, gi) => (
-          <details key={g.title} open={april || g.submenus?.some(sub => sub.items.some(item => item.to === location.pathname))} className={`flex flex-col gap-0.5 ${g.title === "April's Workbook" ? 'nav-workbook-section' : ''}${g.title === 'Themes & Topics' ? ' nav-topics-section' : ''}${g.title === 'Timing & Cycles' ? ' nav-timing-section' : ''}`}>
-            <summary className={`cursor-pointer font-smallcaps text-xs px-3 py-2 mb-1 rounded border-l-2 font-semibold tracking-wider ${g.title === "April's Workbook" ? 'nav-workbook-title' : ''}`} style={april && g.title !== "April's Workbook" ? { color: `hsl(var(${GROUP_COLORS[gi % GROUP_COLORS.length]}))`, borderColor: `hsl(var(${GROUP_COLORS[gi % GROUP_COLORS.length]}))`, background: `hsl(var(${GROUP_COLORS[gi % GROUP_COLORS.length]}) / 0.1)` } : undefined}>{g.title}</summary>
+        {displayGroups.map((g, gi) => {
+          const Group = april ? 'div' : 'details';
+          const Heading = april ? 'div' : 'summary';
+          return (
+          <Group key={g.title} {...(april ? {} : { open: g.submenus?.some(sub => sub.items.some(item => item.to === location.pathname)) })} className={`flex flex-col gap-0.5 ${g.title === "April's Workbook" ? 'nav-workbook-section' : ''}${g.title === 'Themes & Topics' ? ' nav-topics-section' : ''}${g.title === 'Timing & Cycles' ? ' nav-timing-section' : ''}`}>
+            <Heading className={`cursor-pointer font-smallcaps text-xs px-3 py-2 mb-1 rounded border-l-2 font-semibold tracking-wider ${g.title === "April's Workbook" ? 'nav-workbook-title' : ''}`} style={april && g.title !== "April's Workbook" ? { color: `hsl(var(${GROUP_COLORS[gi % GROUP_COLORS.length]}))`, borderColor: `hsl(var(${GROUP_COLORS[gi % GROUP_COLORS.length]}))`, background: `hsl(var(${GROUP_COLORS[gi % GROUP_COLORS.length]}) / 0.1)` } : undefined}>{g.title}</Heading>
             {g.items.map(n => (
               <NavLink
                 key={n.to} to={n.to} onClick={onNavigate} data-nav-to={n.to} end={n.to === '/' || n.to === '/masterbook' || n.to === '/relationships' || n.to === '/workbook' || n.to === '/shared'}
@@ -243,8 +246,8 @@ function SidebarInner({ mobile = false, onNavigate }: { mobile?: boolean; onNavi
                 </div>
             ))}
             {g.footer?.map(n => <NavLink key={n.to} to={n.to} onClick={onNavigate} className={`mt-1 flex min-h-11 items-center gap-2 rounded border border-transparent px-3 py-2 text-muted-foreground hover:text-foreground nav-create-glow${locked(n.to) ? ' opacity-60' : ''}`}><span>{n.label}</span>{lockTag(n.to)}</NavLink>)}
-          </details>
-        ))}
+          </Group>
+        ); })}
       </nav>
 
       <div className="mt-auto text-[11px] text-muted-foreground leading-relaxed">

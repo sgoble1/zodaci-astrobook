@@ -1,7 +1,10 @@
 # Roadmap
 
 - [x] Create and activate Experience Architect UX skill.
-- [x] Prepare dashboard, navigation, visual design, customer-flow and product enhancement plan for approval.
+- [x] Prepare and implement approved UX plan: dashboard, task-led menu/search, editorial theme, reading recovery/resume/freshness, book readiness and admin growth.
+- [x] Verify owner dashboard/admin, digital controls, mobile menu; 35 regression tests pass.
+- [ ] Complete paid checkout/download and role-matrix verification (requires authorized test accounts/payment and available generation).
+- [ ] Complete production review (deep security results stale; SEO metadata coverage unavailable; HTTP and page basics passed).
 
 - [x] Finalize reviewed manuscript automatically after verified payment; store an immutable private PDF per order.
 - [x] Add direct customer/admin PDF downloads and validate fulfillment safeguards (27 tests passed).
