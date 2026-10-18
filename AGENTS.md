@@ -46,3 +46,4 @@
 - Book examples are non-orderable; landing readings use separate public editorial content, never private source text.
 - Public community tables stay separate from private workspaces; public reads and owner-only posting prevent private-feed exposure.
 - Signed-out: AppShell shows public chrome on SIGNED_OUT_PATHS, else redirects to /auth?next= (no member menu/data).
+- Free core-theme previews are generated_pages rows with status 'preview' (opening section only); paid members opening a preview get the full reading rewritten automatically.
