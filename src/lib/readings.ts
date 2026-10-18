@@ -49,7 +49,7 @@ export function buildReadings(chart: ChartResult, timeKnown: boolean, birthDate?
   return readings;
 }
 
-export const risingLine = (chart: ChartResult) => chart.asc != null ? `Rising sign ${fmtLon(chart.asc)}` : null;
+export const risingLine = (chart: ChartResult) => chart.asc != null ? `Your Rising sign is ${fmtLon(chart.asc).text}.` : null;
 
 const ORD = (n: number) => `${n}${['th','st','nd','rd'][n % 10 > 3 || [11,12,13].includes(n % 100) ? 0 : n % 10]}`;
 const SIGNS = ['Aries','Taurus','Gemini','Cancer','Leo','Virgo','Libra','Scorpio','Sagittarius','Capricorn','Aquarius','Pisces'];
