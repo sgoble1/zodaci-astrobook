@@ -15,6 +15,12 @@ Deno.serve(async (req) => {
     const { question, passages, history } = await req.json() as { question?: string; passages?: Passage[]; history?: { role: string; content: string }[] };
     if (!question?.trim() || question.length > 4000) return json({ error: "Ask a question first." }, 400);
     const list = Array.isArray(passages) ? passages : [];
+    {
+      const t = req.headers.get("Authorization")?.replace("Bearer ", "") ?? "";
+      const a = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
+      const { data: { user: signedIn } } = t ? await a.auth.getUser(t) : { data: { user: null } };
+      if (!signedIn) return json({ error: "Please sign in to ask questions." }, 401);
+    }
     // Members (not the private edition) get answers grounded in their own saved chart.
     const token = req.headers.get("Authorization")?.replace("Bearer ", "") ?? "";
     let member: string | null = null;
