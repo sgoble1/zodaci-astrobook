@@ -24,7 +24,7 @@ export function MemberSystem({ birth, slug }: { birth: MyBirth; slug: string }) 
       <Link to="/other-systems" className="text-sm underline">← Other Systems</Link>
       <header className="space-y-2"><h1 className="font-display text-4xl">{facts.title}</h1><p className="text-xl">{facts.summary}</p><p className="text-sm text-muted-foreground">{facts.method}</p></header>
       <div className="overflow-x-auto rounded-lg border border-border"><table className="w-full text-sm"><tbody>{facts.rows.map(([k, v]) => <tr key={k} className="border-b border-border last:border-0"><th className="p-3 text-left font-normal text-muted-foreground">{k}</th><td className="p-3">{v}</td></tr>)}</tbody></table></div>
-      {row === undefined ? <div className="h-24 animate-pulse rounded bg-muted" /> : row ? <div className="prose prose-invert max-w-none [&_table]:block [&_table]:overflow-x-auto"><ReactMarkdown remarkPlugins={[remarkGfm]}>{row.content}</ReactMarkdown></div>
+      {row === undefined ? <div className="h-24 animate-pulse rounded bg-muted" /> : row ? <div className="reading-prose"><ReactMarkdown remarkPlugins={[remarkGfm]}>{row.content}</ReactMarkdown></div>
         : <p role="status" className="rounded-lg border border-dashed border-border p-4 text-sm text-muted-foreground">Your full {facts.title} reading is being written from these values — it appears here automatically.</p>}
     </article>
   );

@@ -73,7 +73,7 @@ export function PublicReader() {
       {text === '' ? <p className="mt-6">Chapter not found.</p> : <>
         {e && <div className="text-xs text-muted-foreground mt-4">{e.part}</div>}
         <h1 className="font-display text-3xl sm:text-4xl mt-2">{e?.label ?? 'Masterbook chapter'}</h1>
-        <article className="prose prose-invert max-w-none mt-4">{text === null ? <p role="status">Loading chapter…</p> : <ReactMarkdown remarkPlugins={[remarkGfm]}>{body}</ReactMarkdown>}</article>
+        <article className="reading-prose mt-4">{text === null ? <p role="status">Loading chapter…</p> : <ReactMarkdown remarkPlugins={[remarkGfm]}>{body}</ReactMarkdown>}</article>
         <div className="flex justify-between mt-10 text-sm">
           {prev ? <Link to={`/read/${prev.id}`} aria-label={`Previous chapter: ${prev.title}`} className="underline">← {prev.title}</Link> : <span />}
           {next ? <Link to={`/read/${next.id}`} aria-label={`Next chapter: ${next.title}`} className="underline">{next.title} →</Link> : <span />}
@@ -103,7 +103,7 @@ export function PublicDocument() {
         <p className="text-muted-foreground mb-6">{list.length} chapters · the complete text</p>
         <nav aria-label="Chapters" className="flex flex-wrap gap-2 mb-8 text-xs">{list.map(e => <a key={e.id} href={`#ch-${e.id}`} className="px-3 py-1 rounded-full border border-border hover:bg-muted">{e.title}</a>)}</nav>
         {!texts ? <p role="status">Loading the full document…</p> : list.map((e, i) => (
-          <article key={e.id} id={`ch-${e.id}`} className="prose prose-invert max-w-none mb-12 scroll-mt-6">
+          <article key={e.id} id={`ch-${e.id}`} className="reading-prose mb-12 scroll-mt-6">
             <ReactMarkdown remarkPlugins={[remarkGfm]}>{(texts[i] || '_This chapter could not be loaded._').replace(/<!-- page (\d+) -->/g, (_m, n) => `\n\n###### Page ${n}\n\n`)}</ReactMarkdown>
           </article>
         ))}
