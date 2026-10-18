@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { supabase } from '@/integrations/supabase/client';
 import { useSubscription } from '@/hooks/useSubscription';
+import { usePlan } from '@/hooks/usePlan';
 import { useMyBirth } from '@/lib/myBirth';
 import { streamImage } from '@/lib/streamImage';
 import { BOOK_SECTIONS, BOOK_PRICES, COVER_STYLES, bookTotal, money } from '@/lib/books';
@@ -45,7 +46,7 @@ export default function Books() {
   const aiCover = aiStyle ? covers[aiStyle] : undefined;
   const coverReady = !!design || (choice === 'upload' && !!uploaded) || !!aiCover?.final;
   const coverPreviewUrl = design?.src ?? (choice === 'upload' ? uploaded?.url : aiCover?.url);
-  const canUseAiCovers = sub.tier !== 'free';
+  const canUseAiCovers = usePlan().plan !== 'free';
   const generate = async () => {
     setError(''); setBusy('Generating covers');
     try {
