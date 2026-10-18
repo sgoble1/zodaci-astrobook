@@ -22,7 +22,20 @@ import { AccountButton } from '@/components/common/AccountButton';
 import { useCustomPages, NEW_PAGE_HIGHLIGHT_KEY } from '@/hooks/useCustomPages';
 import { useSharedBadges } from '@/hooks/useSharedBadges';
 import { Button } from '@/components/ui/button';
-import { APRIL_NAV_GROUPS, NAV_GROUPS, RELATIONSHIPS_GROUP, SHARED_GROUP, type NavGroup, type NavItem } from '@/content/navigation';
+import { APRIL_NAV_GROUPS, NAV_GROUPS, RELATIONSHIPS_GROUP, SHARED_GROUP, planAllows, requiredPlan, type NavGroup, type NavItem } from '@/content/navigation';
+import { usePlan } from '@/hooks/usePlan';
+import { PlanLock, PLAN_LABEL } from '@/components/common/PlanLock';
+import { Lock } from 'lucide-react';
+import type { ReactNode } from 'react';
+
+function PlanGuard({ children }: { children: ReactNode }) {
+  const { pathname } = useLocation();
+  const { plan, loading } = usePlan();
+  const need = requiredPlan(pathname);
+  if (need === 'free') return <>{children}</>;
+  if (loading) return null;
+  return planAllows(plan, need) ? <>{children}</> : <PlanLock need={need} />;
+}
 import { ZodaciLogo } from '@/components/brand/ZodaciLogo';
 import { WelcomeTour } from '@/components/common/WelcomeTour';
 
@@ -110,8 +123,9 @@ export function AppShell() {
       <main id="main-content" tabIndex={-1} className="flex-1 min-w-0 lg:pt-0 pt-[64px] relative z-10 outline-none">
         <div className="mx-auto max-w-5xl px-4 sm:px-8 py-8 sm:py-10 lg:py-14">
           <motion.div key={location.pathname} initial={{ opacity: 0, y: 24, filter: 'blur(6px)' }} animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }} transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}>
-            <PageErrorBoundary key={location.pathname}>{!april && <PublicWording />}{april === undefined && !isPublicPath(location.pathname) ? null : april || isPublicPath(location.pathname) ? <Outlet /> : <PublicChartFallback />}<VerifySources /></PageErrorBoundary>{april === false && <><GenerationProgress /><WelcomeTour /></>}
+            <PageErrorBoundary key={location.pathname}>{!april && <PublicWording />}{april === undefined && !isPublicPath(location.pathname) ? null : april ? <Outlet /> : <PlanGuard>{isPublicPath(location.pathname) ? <Outlet /> : <PublicChartFallback />}</PlanGuard>}<VerifySources /></PageErrorBoundary>
           </motion.div>
+          {april === false && <><GenerationProgress /><WelcomeTour /></>}
         </div>
         <footer className="border-t border-border mt-16">
           <div className="mx-auto max-w-5xl px-5 sm:px-8 py-10 text-sm text-muted-foreground">
