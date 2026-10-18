@@ -143,6 +143,9 @@ Deno.serve(async req => {
       // A paused workspace (no credits) stops every lane.
       const { data: pausedNow } = await admin.from('ai_access_pauses').select('message').eq('scope', 'workspace').maybeSingle();
       if (chain && ownerId === user.id && !pausedNow) {
+        // Re-read the stop switch: the member may cancel while this job is still writing.
+        const { data: stoppedNow } = await admin.from('profiles').select('generation_cancelled').eq('id', ownerId).maybeSingle();
+        if (stoppedNow?.generation_cancelled) return;
         const { data: done } = await admin.from('generated_pages').select('page_key').eq('owner_id', ownerId).eq('section', 'Topic Reading');
         const got = new Set((done ?? []).map(d => d.page_key));
         const keys = Object.keys(TOPICS);
