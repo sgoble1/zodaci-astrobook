@@ -13,7 +13,8 @@ export function ManuscriptPreview({ birth, edition, extras, coverUrl, onReady }:
     setBusy(true);setError('');
     try {
       const {data:user}=await supabase.auth.getUser();if(!user.user)throw new Error('Please sign in.');
-      const {data,error:err}=await supabase.from('generated_pages').select('title,content').eq('owner_id',user.user.id).eq('section','My Masterbook').eq('status','ready').order('created_at');
+      // Include every finished chart-based page (readings, timing, other systems, Masterbook) so the book is as complete as possible.
+      const {data,error:err}=await supabase.from('generated_pages').select('title,content').eq('owner_id',user.user.id).eq('status','ready').order('section').order('created_at');
       if(err)throw err;
       const c=computeChart(toChartInput(birth));
       const chartFacts=[...c.bodies.map(b=>`${b.name}: ${b.sign} ${b.deg}°${String(b.min).padStart(2,'0')}′${birth.time&&b.house?` · house ${b.house}`:''}`),...c.aspects.map(a=>`${a.a} ${a.type} ${a.b} · orb ${a.orb.toFixed(2)}°`),...c.flags.map(f=>`Limitation: ${f.topic}: ${f.note}`)].join('\n\n');
