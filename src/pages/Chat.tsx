@@ -7,6 +7,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAprilSpace } from '@/hooks/useAprilSpace';
 import { loadCorpus, rank, type Passage } from '@/lib/corpus';
 import { AuthGate } from '@/components/common/AuthGate';
+import { LoadError } from '@/components/common/LoadError';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 
