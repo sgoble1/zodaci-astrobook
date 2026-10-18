@@ -10,7 +10,7 @@ type Order = { id: string; edition: string; status: string; cover_style: string;
 /** Admin view of every printed AstroBook order with a ready-to-send print brief for Pixartprinting. */
 export function PrintOrders() {
   const [orders, setOrders] = useState<Order[] | null>(null);
-  useEffect(() => { void supabase.from('book_orders').select('id,edition,status,cover_style,manuscript_pages,payment_total_cents,extra_sections,shipping_address,created_at,tracking_number').order('created_at', { ascending: false }).limit(100).then(({ data }) => setOrders((data ?? []) as Order[])); }, []);
+  useEffect(() => { void supabase.from('book_orders').select('id,edition,status,cover_style,manuscript_pages,payment_total_cents,extra_sections,shipping_address,created_at,tracking_number').eq('format', 'print').order('created_at', { ascending: false }).limit(100).then(({ data }) => setOrders((data ?? []) as Order[])); }, []);
   if (!orders) return <div role="status" className="h-24 animate-pulse rounded bg-muted" />;
   const counts = orders.reduce<Record<string, number>>((m, o) => { m[o.status] = (m[o.status] ?? 0) + 1; return m; }, {});
   const brief = (o: Order) => {

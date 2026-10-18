@@ -47,3 +47,18 @@ describe("book order checkout validation", () => {
     expect(validateBookOrder({ ...ok, address: { ...ok.address, state: "Oregon" } })).toMatch(/state code/i);
   });
 });
+
+import { bookTotal } from "./books";
+describe("digital AstroBook", () => {
+  const empty = { name: "", line1: "", line2: "", city: "", state: "", postal_code: "", country: "US" };
+  it("costs $19.99 for both standard and expanded", () => {
+    expect(bookTotal("standard", 0, "digital")).toBe(1999);
+    expect(bookTotal("expanded", 0, "digital")).toBe(1999);
+  });
+  it("does not need a shipping address", () => {
+    expect(validateBookOrder({ userId: "u", coverReady: true, manuscriptReady: true, extras: [], address: empty, digital: true })).toBeNull();
+  });
+  it("printed books still need an address", () => {
+    expect(validateBookOrder({ userId: "u", coverReady: true, manuscriptReady: true, extras: [], address: empty })).not.toBeNull();
+  });
+});
