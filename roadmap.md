@@ -1,7 +1,8 @@
 # Roadmap
 
-- [ ] Finalize reviewed manuscript automatically after verified payment; store an immutable private PDF per order.
-- [ ] Add direct customer/admin PDF downloads and validate fulfillment safeguards.
+- [x] Finalize reviewed manuscript automatically after verified payment; store an immutable private PDF per order.
+- [x] Add direct customer/admin PDF downloads and validate fulfillment safeguards (27 tests passed).
+- [ ] Verify a paid order download end to end (no book orders exist; requires a customer checkout).
 - [ ] Send PDF-ready and dispatch emails (blocked until sender domain is configured).
 
 - [x] 1. Sample AstroBook model + previewable sample pages on product page (random birth data)
