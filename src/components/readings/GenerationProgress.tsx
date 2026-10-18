@@ -109,7 +109,7 @@ export function GenerationProgress() {
   const pct = Math.round((count / total) * 100);
 
   const pathFor = (slug: string) => (ALL_READINGS.find(t => t.slug === slug) as { route?: string } | undefined)?.route ?? `/my-readings/topic/${slug}`;
-  const paused = error ? (/credit/i.test(error) ? 'Paused: AI writing credits have run out. Your pages continue automatically once credits are added.' : /limit/i.test(error) ? 'Paused for today: the daily writing limit was reached. Writing continues tomorrow.' : `Paused: ${error}`) : '';
+  const paused = error ? (/credit/i.test(error) ? 'Paused: AI writing credits have run out. Your pages continue automatically once credits are added.' : /limit/i.test(error) ? 'Paused for today: the daily writing limit was reached. Writing continues tomorrow.' : /stopped/i.test(error) ? 'Writing was stopped for this chart. Press Resume in the bar above to continue.' : `Paused: ${error}`) : '';
   return createPortal(
     <AnimatePresence>
       {!minimized ? (
