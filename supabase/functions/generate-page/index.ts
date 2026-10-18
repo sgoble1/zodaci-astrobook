@@ -35,7 +35,7 @@ Base the page on the numbered passages from April's own Masterbook and source do
 Analyse, calculate and reason step by step where the brief asks for it, showing the working briefly. Answer every question in the brief.
 Anything not supported by a passage must be marked "(general astrological knowledge)". Never invent chart placements, dates or facts. Be warm, accurate and constructive. Do not repeat the page title as a heading and do not add a references list — the site shows the passages below the page.`;
 
-    const call = createResponsesCall(req, { apiKey, instructions, effort: 'medium' }, [
+    const call = createResponsesCall(req, { apiKey, instructions, effort: 'low' }, [
       { role: 'user', content: `Page title: ${title}\n\nWhat to research, analyse and answer:\n${brief || '(no extra brief — cover the topic thoroughly)'}\n\nSource passages:\n\n${ctx}` },
     ]);
     const text = await call.result.text;

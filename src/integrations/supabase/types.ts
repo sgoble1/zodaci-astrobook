@@ -1779,6 +1779,20 @@ export type Database = {
     }
     Functions: {
       accept_space_invite: { Args: { _token: string }; Returns: string }
+      admin_growth_stats: {
+        Args: { _days?: number }
+        Returns: {
+          book_revenue_cents: number
+          books_paid_recent: number
+          books_paid_total: number
+          books_shipped_total: number
+          onboarded_total: number
+          paid_recent: number
+          paid_total: number
+          signups_recent: number
+          signups_total: number
+        }[]
+      }
       claim_admin: { Args: never; Returns: boolean }
       create_space: { Args: { _name: string }; Returns: string }
       ensure_shared_main_conversation: { Args: never; Returns: string }
