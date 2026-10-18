@@ -31,11 +31,9 @@ async function performCheck() {
   const ok = member && !adminWantsOwn(data.session?.user.email);
   if (ok) {
     const response = await supabase.functions.invoke('private-edition', { body: {} });
-    if (response.error || !Number.isInteger(response.data?.segments) || response.data.segments > 10) { listeners.forEach(l => l(false)); return; }
-    const segments = await Promise.all(Array.from({ length: response.data.segments }, (_, index) => supabase.functions.invoke(`private-edition-${index}`, { body: {} })));
-    if (segments.some(segment => segment.error || typeof segment.data?.segment !== 'string')) { listeners.forEach(l => l(false)); return; }
-    const bytes = Uint8Array.from(atob(segments.map(segment => segment.data.segment).join('')), c => c.charCodeAt(0));
-    const stream = new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'));
+    if (response.error || typeof response.data?.url !== 'string') { listeners.forEach(l => l(false)); return; }
+    const blob = await (await fetch(response.data.url as string)).blob();
+    const stream = blob.stream().pipeThrough(new DecompressionStream('gzip'));
     const edition = JSON.parse(await new Response(stream).text());
     const current = await supabase.auth.getSession();
     if (current.data.session?.user.id !== uid) return;

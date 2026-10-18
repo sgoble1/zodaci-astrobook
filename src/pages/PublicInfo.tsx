@@ -9,6 +9,7 @@ import cover1 from '@/assets/cover-example-cosmic.jpg';
 import cover2 from '@/assets/cover-example-botanical.jpg';
 import cover3 from '@/assets/cover-example-atlas.jpg';
 import { ThemeArt } from '@/components/common/ThemeArt';
+import { SampleBook } from '@/components/books/SampleBookReader';
 
 const CHAPTERS = [
   ['Your Chart Snapshot', 'The full birth chart in one illustrated spread'],
@@ -30,7 +31,7 @@ export function AstroBookPublic() {
           <h1 className="font-display text-4xl leading-tight sm:text-5xl">The book that only you could have written.</h1>
           <p className="text-lg text-muted-foreground">AstroBook is a personalized, printed interpretation of your complete birth chart — chapters on love, purpose, timing and healing, all written from your exact placements.</p>
           <p className="text-sm text-muted-foreground">From {money(BOOK_PRICES.standard)} · free US shipping</p>
-          <div className="flex flex-wrap items-center gap-4"><Button asChild size="lg"><Link to="/auth?next=/books">Order your AstroBook</Link></Button><a href="#inside" className="text-accent">See what's inside →</a></div>
+          <div className="flex flex-wrap items-center gap-4"><Button asChild size="lg"><Link to="/auth?next=/books">Order your AstroBook</Link></Button><Link to="/book-preview" className="text-accent">Read a sample book →</Link></div>
         </div>
         <div className="grid grid-cols-3 gap-3">{[cover1, cover2, cover3].map((c, i) => <img key={i} src={c} alt="Example AstroBook cover design" loading={i ? 'lazy' : 'eager'} className="aspect-[2/3] w-full rounded object-cover shadow-xl" />)}</div>
       </section>
@@ -59,6 +60,11 @@ export function AstroBookPublic() {
           <ul className="mt-5 flex-1 space-y-2">{e.perks.map(x => <li key={x} className="flex gap-2 text-sm"><Check className="h-5 w-5 shrink-0 text-accent" aria-hidden />{x}</li>)}</ul>
           <Button asChild size="lg" variant={e.featured ? 'default' : 'outline'} className="mt-6"><Link to="/auth?next=/books">Order {e.name}<ArrowRight /></Link></Button>
         </div>)}</div>
+      </section>
+      <section id="look-inside" className="space-y-6">
+        <h2 className="font-display text-3xl">Look inside before you order.</h2>
+        <p className="text-muted-foreground">A real sample book, composed live from a fictional reader's chart — the same layout, voice and depth as your own. Turn the first pages below, or <Link to="/book-preview" className="underline text-accent">read the full sample book</Link>.</p>
+        <SampleBook maxPages={6} cta={<Button asChild variant="outline"><Link to="/book-preview">Read the full sample<ArrowRight /></Link></Button>} />
       </section>
       <section className="space-y-6">
         <h2 className="font-display text-3xl">The details.</h2>

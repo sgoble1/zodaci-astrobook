@@ -7,6 +7,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAprilSpace } from '@/hooks/useAprilSpace';
 import { loadCorpus, rank, type Passage } from '@/lib/corpus';
 import { AuthGate } from '@/components/common/AuthGate';
+import { LoadError } from '@/components/common/LoadError';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 
@@ -40,8 +41,10 @@ function ChatInner() {
   const abort = useRef<AbortController | null>(null);
   const endRef = useRef<HTMLDivElement>(null);
 
+  const [convoFailed, setConvoFailed] = useState(false);
   const loadConvos = async () => {
-    const { data } = await supabase.from('chat_conversations').select('id,title,updated_at').order('updated_at', { ascending: false });
+    const { data, error } = await supabase.from('chat_conversations').select('id,title,updated_at').order('updated_at', { ascending: false });
+    setConvoFailed(!!error);
     setConvos(data ?? []);
   };
   // Only the private edition loads source passages; members chat from their own chart.
@@ -111,7 +114,8 @@ function ChatInner() {
       <aside className="space-y-2">
         <Button className="w-full" variant="outline" onClick={() => nav('/chat')}><MessageSquarePlus className="w-4 h-4 mr-2" />New conversation</Button>
         <div className="font-smallcaps text-[10px] text-gold pt-2">History</div>
-        {convos.length === 0 && <p className="text-xs text-muted-foreground">No saved conversations yet.</p>}
+        {convoFailed && <LoadError what="your conversation history" onRetry={() => void loadConvos()} />}
+        {!convoFailed && convos.length === 0 && <p className="text-xs text-muted-foreground">No saved conversations yet.</p>}
         <ul className="space-y-1 max-h-[60vh] overflow-y-auto">
           {convos.map(c => (
             <li key={c.id} className={`group flex items-center gap-1 rounded px-2 py-1.5 text-sm ${c.id === id ? 'bg-accent/15' : 'hover:bg-muted/60'}`}>
