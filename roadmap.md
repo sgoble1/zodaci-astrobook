@@ -1,7 +1,7 @@
 # Roadmap
 
-- [ ] Create and activate Experience Architect UX skill.
-- [ ] Prepare dashboard, navigation, visual design, customer-flow and product enhancement plan for approval.
+- [x] Create and activate Experience Architect UX skill.
+- [x] Prepare dashboard, navigation, visual design, customer-flow and product enhancement plan for approval.
 
 - [x] Finalize reviewed manuscript automatically after verified payment; store an immutable private PDF per order.
 - [x] Add direct customer/admin PDF downloads and validate fulfillment safeguards (27 tests passed).
