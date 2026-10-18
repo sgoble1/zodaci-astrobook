@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
+import { BOOK_COSTING, money } from '@/lib/books';
 
 type Order = { id: string; edition: string; status: string; cover_style: string; manuscript_pages: number | null; payment_total_cents: number | null; extra_sections: unknown; shipping_address: Record<string, string> | null; created_at: string; tracking_number: string };
 
@@ -22,8 +23,8 @@ export function PrintOrders() {
       <div className="flex flex-wrap gap-2">{Object.entries(counts).map(([s, n]) => <span key={s} className="rounded-full border border-border px-3 py-1 text-sm">{s.replace(/_/g, ' ')}: {n}</span>)}{!orders.length && <p className="text-muted-foreground">No book orders yet.</p>}</div>
       <p className="text-sm text-muted-foreground">Pixartprinting does not offer automatic order sending, so each paid order has a print brief to copy into their site. Update status and tracking in <Link to="/orders?all=1" className="underline">order management</Link>.</p>
       <div className="overflow-x-auto rounded-lg border border-border"><table className="w-full min-w-[640px] text-sm">
-        <thead><tr className="border-b border-border text-left"><th className="p-3">Date</th><th className="p-3">Edition</th><th className="p-3">Pages</th><th className="p-3">Paid</th><th className="p-3">Status</th><th className="p-3">Tracking</th><th className="p-3" /></tr></thead>
-        <tbody>{orders.map(o => <tr key={o.id} className="border-b border-border last:border-0"><td className="p-3">{new Date(o.created_at).toLocaleDateString()}</td><td className="p-3">{o.edition}</td><td className="p-3">{o.manuscript_pages ?? '—'}</td><td className="p-3">{o.payment_total_cents != null ? `$${(o.payment_total_cents / 100).toFixed(2)}` : '—'}</td><td className="p-3">{o.status.replace(/_/g, ' ')}</td><td className="p-3">{o.tracking_number || '—'}</td><td className="p-3"><Button size="sm" variant="outline" onClick={() => copy(o)}>Copy print brief</Button></td></tr>)}</tbody>
+        <thead><tr className="border-b border-border text-left"><th className="p-3">Date</th><th className="p-3">Edition</th><th className="p-3">Pages</th><th className="p-3">Paid</th><th className="p-3">Est. print + ship</th><th className="p-3">Est. margin</th><th className="p-3">Status</th><th className="p-3">Tracking</th><th className="p-3" /></tr></thead>
+        <tbody>{orders.map(o => { const c = BOOK_COSTING[o.edition === 'expanded' ? 1 : 0]; const cost = c.print + c.shipping + c.fees; const paid = o.payment_total_cents; return <tr key={o.id} className="border-b border-border last:border-0"><td className="p-3">{new Date(o.created_at).toLocaleDateString()}</td><td className="p-3">{o.edition}</td><td className="p-3">{o.manuscript_pages ?? '—'}</td><td className="p-3">{paid != null ? money(paid) : '—'}</td><td className="p-3">{money(cost)}</td><td className="p-3">{paid != null ? money(paid - cost) : '—'}</td><td className="p-3">{o.status.replace(/_/g, ' ')}</td><td className="p-3">{o.tracking_number || '—'}</td><td className="p-3"><Button size="sm" variant="outline" onClick={() => copy(o)}>Copy print brief</Button></td></tr>; })}</tbody>
       </table></div>
     </section>
   );
