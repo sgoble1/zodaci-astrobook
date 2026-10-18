@@ -51,7 +51,7 @@ SEO foundations pass but deep security is stale. Monthly analytics: 108 visits/8
 | P2 O/S Access/design | Canvas lacks text alternative; hierarchy/cover panel/stale vellum copy → accessible excerpts and identity-preserving polish | M; rendered audit |
 | P2 H/B Growth | Search/funnel/retention/spend evidence incomplete → measure before scaling | M; access |
 
-Technical source references: `topic-readings/index.ts:105–150`, `AutomaticChapters.tsx:13–39`, `useAprilSpace.ts:18–46`, `Onboarding.tsx:80–81`, `create-checkout/index.ts:44–91`, `payments-webhook/index.ts:45–77`, `bookManuscript.ts:36–45`, `ManuscriptPreview.tsx:16–25`, `Dispatch.tsx:17–29`, `PrintOrders.tsx:24–27`, and live `book_orders` policies/`has_paid_plan`/`guard_book_delivery`. Browser evidence confirmed pricing, sample and input behavior. Current tests cover helpers, not these end-to-end behaviors.
+Sources: current Books/Onboarding browser checks, live order/entitlement rules, topic-reading and starter queues, private loader, checkout/webhook, manuscript and dispatch source. Existing tests mostly cover helpers, not these flows.
 
 ## Clear printed and digital prices
 Keep the requested retail prices; do not silently alter them:
@@ -70,11 +70,11 @@ Preserve logo, violet/gold/ivory tokens, DM Serif Display/Fira Sans, illustrated
 Repair public offer→intent-preserving sign-in→birth chart→included reading→upgrade; reading→progress→result/retry/Stop; book→manifest→PDF review→payment→download→approved production→tracking; Creator payment→verified access→visible allowance/cancellation.
 
 ## Economics and generation
-Standard estimate: $59 − ($24 print + $9 shipping + $2.20 fees) = **$23.80 / 40.3%**. Expanded: $89 − ($38 + $11 + $3.10) = **$36.90 / 41.5%**. These exclude AI/support/refunds/reprints/overhead: not net profit or supplier quotes. Never use tax-inclusive receipts as revenue.
+Standard estimated contribution: $59 − $35.20 costs = **$23.80 / 40.3%**. Expanded: $89 − $52.10 = **$36.90 / 41.5%**. Not quotes/net profit; excludes AI/support/refunds/reprints/overhead. Exclude tax from revenue.
 
-Measure each feature's credits/tokens/duration/retries without private message bodies. Map credits to dollars from actual billing. Keep on-demand deterministic facts and owner/chart/topic/version caching. Fix duplicate costs before reducing quality. Propose spend ceilings/transparent allowances for approval, not silently impose them.
+Measure feature credits/tokens/duration/retries without message bodies; convert using actual billing. Keep on-demand deterministic facts and owner/chart/topic/version caching. Fix duplicate costs before reducing quality. New spend ceilings/allowances require approval.
 
-Contribution = tax-exclusive revenue − fees − fulfillment − AI − delivery/storage − support/refund provision. Break-even = fixed cost ÷ positive measured contribution/order. Digital $19.99 is a lower-fulfillment hypothesis, not proven high-margin. Creator adds only $2/month over Full; benchmark heavy-user audio/cover costs before expanding perks.
+Contribution = tax-exclusive revenue minus all variable costs. Break-even = fixed costs divided by positive measured contribution. Digital margin is unproven; Creator adds only $2/month over Full, so benchmark heavy audio/cover usage before expanding perks.
 
 ## 30/60/90-day execution
 **1–30:** Resolve P0 and payment/recovery P1, price clarity, edition specs, sender/supplier proof. Validate signup→birth-saved→reading-ready→checkout→paid→PDF→dispatch aggregate funnel. No campaigns while purchase failures remain.
@@ -84,9 +84,9 @@ Contribution = tax-exclusive revenue − fees − fulfillment − AI − deliver
 **61–90:** Validate free-chart, unknown-birth-time and personalized-book/gift keyword hypotheses. Pilot partners/paid intent only with approved caps. Scale on retained cohorts/contribution, not visits. Stop for negative margin, exceeded caps, purchase/privacy failures or complaints; small samples stay inconclusive.
 
 ## Technical acceptance and release gates
-Test deployed authorization, sandbox/live separation, session/webhook replay/refunds, chapter/cover manifests, owner/admin downloads, concurrency/cancellation/retry/session races and timezone/DST/house fixtures. Mock paid providers; authorized purchase proof must read back paid status and download via UI. Recheck public/mobile/keyboard flows, build signals and fresh security before/after approved publishing.
+Test deployed authorization, sandbox/live separation, webhook/refund/session replay, manifests, owner/admin downloads, concurrency/cancellation/retry/session races and timezone/DST/house fixtures. Mock paid providers; an authorized purchase must read back paid status and download via UI. Verify public/mobile/keyboard flows, build and fresh pre/post-release security.
 
-Preserve sitemap mechanism; include only public indexable routes and authoritative page-specific lastmod. Protect private sources in samples/SEO/analytics. Route-specific metadata and initial public content may need a separately approved rendering upgrade. [Lovable's latest template supports SSR](https://lovable.dev/blog/building-apps-using-tanstack-start); ask for an upgrade or choose “Migrate to TanStack Start” from the chat slash menu.
+Preserve sitemap mechanism and authoritative page-specific lastmod; exclude private routes/sources. Accurate initial public content/share metadata may need a separate [latest-template SSR upgrade](https://lovable.dev/blog/building-apps-using-tanstack-start), available through “Migrate to TanStack Start” in the slash menu.
 
 ## Owner decisions / external dependencies
 Approval needed: this implementation scope; meaningful Expanded specification; actual printer quote and paid proof copy; branded sender; measured AI budget/allowances; book refund/production cancellation rules; optional rendering migration, campaigns and spend caps. No unsupported claims of “100% finished,” real supplier integration or guaranteed revenue.
