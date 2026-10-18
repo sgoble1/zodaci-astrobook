@@ -6,16 +6,12 @@ Repair purchase, privacy and generation reliability before increasing acquisitio
 Use **Brand & Revenue Strategist** for coordinated design, SEO, marketing and cost decisions. Preserve April's original edition, authorized Shane access, owner-only charts, protected sources, consent and server-enforced entitlements.
 
 ## Evidence baseline — 18 October 2026
-- **Observed:** 35 tests across six files pass; latest preview build reports OK. Public welcome, books, pricing, sample and sign-in pages render without captured runtime errors. Books at 390px has no horizontal overflow. These checks are not a full accessibility or device audit.
-- **Observed:** Expanded selection displays $89; choosing digital leaves the edition card showing “softcover $89” while the format choice says $19.99. The price changes, but the labels make the offer ambiguous.
-- **Observed:** Fictional Jules Harbor PDF opens and renders 14 pages. It is a sample, not proof of a complete 250/400-page purchased manuscript.
-- **Observed:** Onboarding's self-description input disappears after one typed character; no profile changes were saved during verification.
-- **Observed live rules:** Order insertion still requires $45/$80 and a US address. Current $59/$89 and address-free $19.99 digital drafts conflict with this rule. The paid-plan helper also accepts sandbox OR live subscriptions.
-- **Observed:** SEO HTTP/lint/metadata foundations pass. Deep security results are stale even though returned findings are empty; current security clearance is unverified.
-- **Observed aggregate:** Sep 19–Oct 18: 108 visits, 858 pageviews; 81 mobile and 26 desktop visits attributed; 103 Direct and 5 Search. This is not a customer count or proven conversion funnel.
-- **Observed cost samples:** Recent successful gateway calls include 0.16037 credits/11.9 seconds and 0.43197/43.1 seconds; another group ranges roughly 0.61–0.79 credits/63–76 seconds. Calls are not mapped to individual feature jobs, so earlier 0.20–0.25-credit-per-reading estimates are not validated.
-- **Blocked:** No verified Zodaci property returned from Shawn's Google Search Console. No confirmed Pixartprinting quote, real paid delivery test or Zodaci sender setup. A verified unrelated workspace email domain exists; do not silently use it for Zodaci.
-- **Unknown:** Aggregate order/subscription reads returned no records, but do not establish total historical sales elsewhere. Actual AI dollars, fees, retention, CAC and complete customer cohorts are unavailable.
+- **Observed:** 35 tests pass; latest preview build OK. Public pages render without captured runtime errors; books has no overflow at 390px. This is not full device/accessibility coverage.
+- **Observed:** Expanded says $89; selecting digital leaves its edition card saying “softcover $89” beside a $19.99 format price. Fictional PDF opens with 14 pages, not proof of 250/400-page manuscripts.
+- **Observed live rules:** Orders still require $45/$80 and US addresses, incompatible with $59/$89/$19.99 digital. Paid-plan helper accepts sandbox OR live. Onboarding self-description disappears after one character.
+- **Observed:** SEO foundations pass; deep security scan is stale. Sep 19–Oct 18: 108 visits, 858 pageviews; 81 mobile/26 desktop attributed; 103 Direct/5 Search. Not customer/conversion counts.
+- **Observed AI samples:** Successful calls cost 0.16–0.79 credits and take 12–76 seconds. Not mapped to feature jobs; earlier per-reading estimates remain unvalidated.
+- **Blocked/unknown:** No verified Zodaci Search Console property, supplier quote, paid-delivery proof or branded sender. An unrelated verified email domain must not be silently reused. Actual fees, AI dollars, CAC and retention unavailable; empty aggregate order reads do not prove historical sales elsewhere.
 
 ## Prioritized findings and remedies
 Labels: **O** = observed browser/live rule; **S** = source-supported gap/risk, production behavior not reproduced; **H** = hypothesis; **B** = blocked proof. High-confidence O/S findings precede lower-confidence H recommendations. Effort S/M/L is relative, not a delivery promise.
@@ -68,35 +64,33 @@ Choose format first, then edition. Edition cards must use the selected format's 
 
 Show actual manuscript pages before payment. Keep 250/400 pages as unfulfilled targets, not guaranteed deliverables. Explain that a book is a one-off purchase and does not silently include a subscription.
 
-## Visual direction and customer flow
-Retain the planet logo, deep-space violet/gold/ivory tokens, DM Serif Display/Fira Sans, small illustrated badges and slow cinematic motion. Unify spacing, readable line lengths and editorial hierarchy; use gold for orientation, violet for primary actions, and quieter neutral surfaces. Refine cover typography without replacing chart artwork.
+## Visual direction and flows
+Keep planet logo, violet/gold/ivory tokens, DM Serif Display/Fira Sans, illustrated badges and slow cinematic motion. Quiet surfaces, readable line lengths and consistent editorial hierarchy; improve cover title typography rather than replacing artwork. Preserve required Work → Process → Capabilities → Team → Contact order; no unapproved navigation rebrand.
 
-Preserve the explicitly required Work → Process → Capabilities → Team → Contact welcome order; do not adopt the audit's proposed replacement without approval. Align labels and destinations across public/member menus while keeping member information private.
+Repair these journeys:
+1. Public offer → intent-preserving sign-in → birth data → calculated chart → included readings/previews → upgrade.
+2. Request → visible progress → saved result or retry; return to reading; Stop prevents future work.
+3. Format/edition → approved chapter/cover manifest → actual PDF review → print address → payment → immutable download → approved print job → tracking/email.
+4. Creator payment → verified access → chart/reading management → visible allowance; cancellation/refund reflected accurately.
 
-Priority journeys:
-1. Public offer → sign-in preserving intent → birth details → immediate calculated chart → included readings/previews → clear upgrade.
-2. Reading request → visible state → saved result or recoverable failure → return to last reading; Stop really stops future jobs.
-3. Book format/edition → explicit chapter/cover manifest → review actual PDF → address only for print → verified payment → immutable owner download → reviewed print job → tracking/email.
-4. Creator purchase → verified entitlement → chart/reading management → visible remaining allowance; cancellation and refund reflected accurately.
+## Economics and generation
+Standard estimate: $59 − ($24 print + $9 shipping + $2.20 fees) = **$23.80 / 40.3%**. Expanded: $89 − ($38 + $11 + $3.10) = **$36.90 / 41.5%**. These exclude AI/support/refunds/reprints/overhead: not net profit or supplier quotes. Never use tax-inclusive receipts as revenue.
 
-## Sustainable economics and generation
-Estimated Standard contribution: $59 − ($24 print + $9 shipping + $2.20 fees) = **$23.80 / 40.3%**. Expanded: $89 − ($38 + $11 + $3.10) = **$36.90 / 41.5%**. These are estimates, NOT net profit or supplier quotes; exclude AI, support, refunds, reprints and overhead. Do not subtract costs from tax-inclusive receipts.
+Measure each feature's credits/tokens/duration/retries without private message bodies. Map credits to dollars from actual billing. Keep on-demand deterministic facts and owner/chart/topic/version caching. Fix duplicate costs before reducing quality. Propose spend ceilings/transparent allowances for approval, not silently impose them.
 
-Measure per-feature tokens/credits, duration, retries and failures without private message bodies. Benchmark full reading, teaser, counselor, cover and audio separately; credit-to-dollar conversion must come from actual billing. Retain on-demand generation and deterministic chart facts; cache by owner/chart/topic/version, not across private users. Fix duplicate costs before reducing quality. Propose per-user/workspace monthly spend budgets and transparent allowances for approval; no new limits in this plan.
+Contribution = tax-exclusive revenue − fees − fulfillment − AI − delivery/storage − support/refund provision. Break-even = fixed cost ÷ positive measured contribution/order. Digital $19.99 is a lower-fulfillment hypothesis, not proven high-margin. Creator adds only $2/month over Full; benchmark heavy-user audio/cover costs before expanding perks.
 
-Net contribution = tax-exclusive revenue − actual fees − fulfillment − AI − storage/delivery − expected support/refund cost. Break-even orders = fixed monthly costs ÷ measured contribution/order, only when positive. Digital $19.99 is a useful lower-fulfillment offer, but not proven high-margin until generation and support costs are measured. Creator is only $2/month above Full; benchmark heavy-user audio/cover usage before expanding perks or advertising unlimited use.
+## 30/60/90-day plan
+**1–30:** P0 then payment/recovery P1, clear pricing, edition specifications, sender/supplier proof. Validate aggregate signup→birth-saved→reading-ready→checkout→verified-payment→PDF-ready→dispatch events. No acquisition campaigns while purchases fail.
 
-## 30/60/90-day sequence
-**Days 1–30: earn launch trust.** Resolve P0 then payment/recovery P1; price clarity; actual edition specs; sender and supplier proof. Validate aggregate signup→birth-saved→reading-ready→checkout→verified-payment→PDF-ready→dispatch events. Release only after denied-access, concurrent-spend and paid-delivery proofs pass. No acquisition campaign during known purchase failures.
+**31–60:** Improve existing sourced guides and accessible fictional samples. Interview 5–8 consenting chart-curious/gift users. Test sample-first ordering and allowance clarity sequentially with low traffic. Measure completed charts/orders, failures and contribution, not invented uplift. Educational emails require consent/sender/unsubscribe proof.
 
-**Days 31–60: test product value.** Improve existing guides with genuine sourced fictional examples; accessible sample excerpts; interview 5–8 consenting chart-curious users/gift buyers. Test sample-first book journey and clearer allowance copy sequentially given low traffic. Success: fewer observed failures, completed charts/orders and measured contribution; do not invent uplift targets. Optional educational email requires consent, authenticated sender and unsubscribe proof before sending.
-
-**Days 61–90: scale what pays.** Validate keyword hypotheses (free birth chart, reading a birth chart, unknown birth time, personalized astrology book/gift) using actual query/SERP evidence. Pilot relevant partners and narrow paid-intent campaigns only with an approved spending cap. Compare retained paid cohorts and tax-exclusive contribution, not visits alone. Stop on negative contribution, exceeded approved budget, checkout failures, privacy concerns or complaints; inconclusive small samples do not justify scaling.
+**61–90:** Validate search hypotheses: free birth chart, reading a chart, unknown birth time, personalized astrology book/gift. Pilot partners/narrow paid intent only with approved budgets. Scale on retained cohorts and contribution, not visits. Stop for negative contribution, exceeded caps, purchase failures, privacy issues or complaints; small samples remain inconclusive.
 
 ## Technical acceptance and release gates
-Expand tests beyond helpers: live database authorization, sandbox/live isolation, webhook/session replay, refunds, chapter/cover manifests, owner/admin PDF downloads, queue concurrency/cancellation/retry, session races, and historical timezone/DST/house fixtures. Use mocks for paid providers; one authorized purchase proof verifies UI read-back and download. Re-run public/mobile flows, keyboard checks, build signals and fresh security scans before/after approved publishing.
+Test deployed authorization, sandbox/live separation, session/webhook replay/refunds, chapter/cover manifests, owner/admin downloads, concurrency/cancellation/retry/session races and timezone/DST/house fixtures. Mock paid providers; authorized purchase proof must read back paid status and download via UI. Recheck public/mobile/keyboard flows, build signals and fresh security before/after approved publishing.
 
-Preserve existing sitemap mechanism; add only public indexable routes and authoritative page-specific lastmod values. Never expose private pages/source text through SEO, samples or marketing analytics. Accurate initial public content/share metadata may require a rendering upgrade; evaluate that separately before structural migration.
+Preserve sitemap mechanism; include only public indexable routes and authoritative page-specific lastmod. Protect private sources in samples/SEO/analytics. Route-specific metadata and initial public content may need a separately approved rendering upgrade. [Lovable's latest template supports SSR](https://lovable.dev/blog/building-apps-using-tanstack-start); ask for an upgrade or choose “Migrate to TanStack Start” from the chat slash menu.
 
 ## Owner decisions / external dependencies
 Approval needed: this implementation scope; meaningful Expanded specification; actual printer quote and paid proof copy; branded sender; measured AI budget/allowances; book refund/production cancellation rules; optional rendering migration, campaigns and spend caps. No unsupported claims of “100% finished,” real supplier integration or guaranteed revenue.
