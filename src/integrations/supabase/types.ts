@@ -1692,6 +1692,7 @@ export type Database = {
       }
       topic_reading_jobs: {
         Row: {
+          claim_token: string
           id: string
           owner_id: string
           page_key: string
@@ -1699,6 +1700,7 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          claim_token?: string
           id?: string
           owner_id: string
           page_key: string
@@ -1706,6 +1708,7 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          claim_token?: string
           id?: string
           owner_id?: string
           page_key?: string
@@ -1850,6 +1853,17 @@ export type Database = {
       }
       create_space: { Args: { _name: string }; Returns: string }
       ensure_shared_main_conversation: { Args: never; Returns: string }
+      finish_topic_reading_job: {
+        Args: {
+          p_birth_saved_at: string
+          p_content: string
+          p_owner_id: string
+          p_page_key: string
+          p_status: string
+          p_token: string
+        }
+        Returns: boolean
+      }
       get_document_overrides: {
         Args: never
         Returns: {
