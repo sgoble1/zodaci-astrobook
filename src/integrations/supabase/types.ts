@@ -187,6 +187,7 @@ export type Database = {
           extra_sections: Json
           extras_cents: number | null
           final_pdf_path: string | null
+          format: string
           id: string
           manuscript_pages: number | null
           manuscript_path: string | null
@@ -213,6 +214,7 @@ export type Database = {
           extra_sections?: Json
           extras_cents?: number | null
           final_pdf_path?: string | null
+          format?: string
           id?: string
           manuscript_pages?: number | null
           manuscript_path?: string | null
@@ -239,6 +241,7 @@ export type Database = {
           extra_sections?: Json
           extras_cents?: number | null
           final_pdf_path?: string | null
+          format?: string
           id?: string
           manuscript_pages?: number | null
           manuscript_path?: string | null
