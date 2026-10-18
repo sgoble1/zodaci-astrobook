@@ -40,14 +40,34 @@ export function AstroBookPublic() {
         <ol className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{CHAPTERS.map(([t, d], i) => <li key={t} className="vellum p-5"><ThemeArt label={t} badge={i + 1} /><h3 className="mt-4 text-xl">{t}</h3><p className="mt-2 text-sm text-muted-foreground">{d}</p></li>)}</ol>
       </section>
       <section className="space-y-6">
+        <h2 className="font-display text-3xl">How it works.</h2>
+        <ol className="grid gap-4 md:grid-cols-4">{[
+          ['chart', 'Add your birth details', 'Date, time and place. We calculate your exact chart.'],
+          ['self', 'We write your book', 'Every chapter is written from your own placements.'],
+          ['sign', 'Preview and choose', 'Read the PDF, pick a cover and any extra sections.'],
+          ['year', 'Printed and shipped', 'About 3 days to print, 5–7 days to arrive (US).'],
+        ].map(([k, t, d], i) => <li key={t} className="vellum p-5"><ThemeArt kind={k as never} badge={i + 1} className="h-16 w-16" /><h3 className="mt-4 text-lg">{t}</h3><p className="mt-1 text-sm text-muted-foreground">{d}</p></li>)}</ol>
+      </section>
+      <section className="space-y-6">
+        <h2 className="font-display text-3xl">Choose your edition.</h2>
+        <div className="grid gap-5 md:grid-cols-2">{[
+          { name: 'Standard', price: BOOK_PRICES.standard, pages: '~250 pages', perks: ['All six core chapters', 'Your full chart wheel in colour', 'Softcover, 6×9 in'], featured: false },
+          { name: 'Expanded', price: BOOK_PRICES.expanded, pages: '~400 pages', perks: ['Everything in Standard', 'Longer, deeper chapters on every topic', 'Room for your extra sections'], featured: true },
+        ].map(e => <div key={e.name} className={`vellum flex flex-col p-7 ${e.featured ? 'border-primary/70 shadow-[var(--shadow-gold)]' : ''}`}>
+          <div className="flex items-start justify-between gap-3"><div><p className="font-smallcaps text-xs text-gold">{e.pages}</p><h3 className="mt-1 text-2xl">{e.name} edition</h3></div>{e.featured && <span className="rounded-full bg-primary px-3 py-1 text-xs text-primary-foreground">Most complete</span>}</div>
+          <p className="mt-4 font-display text-5xl">{money(e.price)}</p><p className="text-sm text-muted-foreground">Free US shipping · extra sections $6.99 each</p>
+          <ul className="mt-5 flex-1 space-y-2">{e.perks.map(x => <li key={x} className="flex gap-2 text-sm"><Check className="h-5 w-5 shrink-0 text-accent" aria-hidden />{x}</li>)}</ul>
+          <Button asChild size="lg" variant={e.featured ? 'default' : 'outline'} className="mt-6"><Link to="/auth?next=/books">Order {e.name}<ArrowRight /></Link></Button>
+        </div>)}</div>
+      </section>
+      <section className="space-y-6">
         <h2 className="font-display text-3xl">The details.</h2>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">{[
-          ['Editions', `Standard ~250 pages ${money(BOOK_PRICES.standard)} · Expanded ~400 pages ${money(BOOK_PRICES.expanded)}`],
           ['Binding', 'Softcover, 6×9 in. Hardcover available on request'],
           ['Interior', 'Your chart and illustrations in full colour'],
+          ['Preview first', 'Read your full book as a PDF before it prints'],
           ['Timing', 'About 3 business days to produce, 5–7 business days shipping (US)'],
-        ].map(([t, d]) => <div key={t} className="rounded-lg border border-border bg-card p-5"><h3 className="font-semibold">{t}</h3><p className="mt-2 text-sm text-muted-foreground">{d}</p></div>)}</div>
-        <ul className="space-y-2">{['Full birth chart interpretation — every planet, house and aspect', 'Written sections on love, career, healing and life direction', 'Delivered to your door — or to someone you love'].map(x => <li key={x} className="flex gap-2"><Check className="h-5 w-5 shrink-0 text-accent" aria-hidden />{x}</li>)}</ul>
+        ].map(([t, d]) => <div key={t} className="vellum p-5"><h3 className="text-xl">{t}</h3><p className="mt-2 text-sm text-muted-foreground">{d}</p></div>)}</div>
       </section>
       <section id="gift" className="rounded-xl border border-primary/30 bg-primary/10 p-10 text-center space-y-4">
         <Gift className="mx-auto h-8 w-8 text-accent" aria-hidden />
