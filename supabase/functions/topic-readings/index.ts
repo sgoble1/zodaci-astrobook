@@ -77,6 +77,12 @@ function chartFacts(p: any): string {
   for (const f of c.flags ?? []) lines.push(`Limitation: ${f.topic}: ${f.note}`);
   return `Birth: ${p.birth_date}${p.birth_time ? ` at ${p.birth_time}` : ' (time unknown — never use houses, Ascendant or Midheaven)'}, ${p.place_label}. House system: ${p.house_system}. Current year: ${new Date().getFullYear()}.${p.sex ? ` Reader's stated sex/gender: ${p.sex} (use only for respectful wording; never assume orientation).` : ''}\n${lines.join('\n')}`;
 }
+// deno-lint-ignore no-explicit-any
+const placementsTable = (p: any) => {
+  // deno-lint-ignore no-explicit-any
+  const rows = (p.chart?.bodies ?? []).map((b: any) => `| ${b.name} | ${b.sign} ${b.deg}°${String(b.min).padStart(2, '0')}′${b.retro ? ' (retrograde)' : ''} | ${p.birth_time && b.house ? `House ${b.house}` : '—'} |`);
+  return `## Placements behind this reading\n\n| Placement | Position | House |\n| --- | --- | --- |\n${rows.join('\n')}`;
+};
 const RULES = 'Use ONLY the placements listed. Never invent placements, aspects, relatives, events or biography. Explain each technical term in everyday words right after using it. Present meanings as reflective interpretation, not prediction. For sex and attraction, focus on consent, boundaries, communication and non-graphic adult reflection; never infer orientation, history, trauma or consent from a chart. Never sexualize minors. Every claim must name the exact placement it comes from. Do not write generic sun-sign content: combine sign + house + aspects + rulers so the reading could only belong to this chart.';
 
 Deno.serve(async req => {
@@ -123,7 +129,7 @@ Deno.serve(async req => {
     // Writing takes over a minute, so it runs in the background and the page polls for the result.
     const job = (async () => {
       try {
-        const call = createResponsesCall(req, { apiKey, background: true, effort: 'medium', instructions: `You are a master astrologer, psychologist and plain-language writer creating one chapter of a personal astrology book for ${profile.display_name || 'the reader'}, addressed as "you". The depth must match a professional printed natal report.\nTheir calculated chart:\n${chartFacts(profile)}\n${RULES}\nUser-reported life examples (optional, never override chart facts):\n${(ctx ?? []).map(c => `- ${c.title}: ${c.body}`).join('\n') || 'none'}\n\nTopic focus: ${topic.focus}.${sysSlug ? `\nSystem facts (calculated, authoritative):\n${(() => { const f = systemFacts(sysSlug, profile.birth_date, profile.chart?.bodies ?? [], profile.chart?.bazi ?? []); return f ? `${f.summary}\nMethod: ${f.method}\n${f.rows.map(r => `${r[0]}: ${r[1]}`).join('\n')}` : 'none'; })()}` : ''}\nWrite 1,600–2,200 focused words in Markdown (depth over padding; no repetition):\n1. A short opening overview in plain words.\n2. A "Placements behind this reading" table (placement | where it is | what it means in everyday words).\n3. 5–7 substantial sections, each analysing a specific placement or combination in depth (sign, house, ruler, aspects), each ending with a one-line "In plain words:" summary.\n4. "How this shows up in daily life" with concrete examples.\n5. "Strengths" and "Watch-outs" bullet lists.\n6. "Practices to try" (3–5).\n7. "Reflection questions" (4–6).\n8. A one-line note on what astrology can and cannot tell you.\nDo not start with a level-1 heading.` }, [{ role: 'user', content: `Write the "${topic.title}" chapter.` }]);
+        const call = createResponsesCall(req, { apiKey, background: true, effort: 'low', instructions: `You are a master astrologer, psychologist and plain-language writer creating one chapter of a personal astrology book for ${profile.display_name || 'the reader'}, addressed as "you". The depth must match a professional printed natal report.\nTheir calculated chart:\n${chartFacts(profile)}\n${RULES}\nUser-reported life examples (optional, never override chart facts):\n${(ctx ?? []).map(c => `- ${c.title}: ${c.body}`).join('\n') || 'none'}\n\nTopic focus: ${topic.focus}.${sysSlug ? `\nSystem facts (calculated, authoritative):\n${(() => { const f = systemFacts(sysSlug, profile.birth_date, profile.chart?.bodies ?? [], profile.chart?.bazi ?? []); return f ? `${f.summary}\nMethod: ${f.method}\n${f.rows.map(r => `${r[0]}: ${r[1]}`).join('\n')}` : 'none'; })()}` : ''}\nWrite 900–1,200 dense, specific words in Markdown (depth over padding; no repetition, no generic filler). A placements table is added automatically, so do not write one:\n1. A short opening overview in plain words.\n2. 4–5 substantial sections, each analysing a specific placement or combination (sign, house, ruler, aspects), each ending with a one-line "In plain words:" summary.\n3. "How this shows up in daily life" with concrete examples.\n4. "Strengths" and "Watch-outs" bullet lists.\n5. "Practices to try" (3).\n6. "Reflection questions" (3–4).\n7. A one-line note on what astrology can and cannot tell you.\nDo not start with a level-1 heading.` }, [{ role: 'user', content: `Write the "${topic.title}" chapter.` }]);
         let content = (await call.result.text).trim();
         let wrong = wrongPlacements(content, profile.chart);
         if (wrong.length) {
@@ -133,6 +139,7 @@ Deno.serve(async req => {
           if (wrong.length) throw new Error(`wrong placements ${wrong.join(', ')}`);
         }
         if (content.length < 400) throw new Error('too short');
+        content = `${placementsTable(profile)}\n\n${content}`;
         const row = { owner_id: ownerId, page_key, section: 'Topic Reading', title: topic.title, content, status: have?.status === 'hidden' ? 'hidden' : 'ready', updated_at: new Date().toISOString() };
         const ins = await admin.from('generated_pages').upsert(row, { onConflict: 'owner_id,page_key' });
         if (ins.error) throw ins.error;
