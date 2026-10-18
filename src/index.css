@@ -1,6 +1,7 @@
-@import '@fontsource/inter/400.css';
-@import '@fontsource/inter/500.css';
-@import '@fontsource/inter/600.css';
+@import '@fontsource/dm-serif-display/400.css';
+@import '@fontsource/fira-sans/400.css';
+@import '@fontsource/fira-sans/500.css';
+@import '@fontsource/fira-sans/600.css';
 
 @tailwind base;
 @tailwind components;
@@ -14,40 +15,40 @@
 :root {
   --font-size: 16px;
   /* Cosmic glass theme — deep night, violet + teal glow (Zodaci showcase style) */
-  --background: 228 15% 7%;
-  --foreground: 220 20% 92%;
-  --card: 228 18% 10%;
-  --card-foreground: 220 20% 92%;
-  --popover: 228 18% 10%;
-  --popover-foreground: 220 20% 92%;
-  --primary: 263 70% 58%;
+  --background: 254 47% 10%;
+  --foreground: 252 100% 97%;
+  --card: 254 40% 14%;
+  --card-foreground: 252 100% 97%;
+  --popover: 254 40% 14%;
+  --popover-foreground: 252 100% 97%;
+  --primary: 256 100% 65%;
   --primary-foreground: 0 0% 100%;
-  --secondary: 228 18% 16%;
-  --secondary-foreground: 220 20% 92%;
-  --muted: 228 15% 14%;
-  --muted-foreground: 220 10% 62%;
-  --accent: 175 80% 45%;
-  --accent-foreground: 228 15% 7%;
+  --secondary: 254 35% 20%;
+  --secondary-foreground: 252 100% 97%;
+  --muted: 254 30% 17%;
+  --muted-foreground: 252 20% 72%;
+  --accent: 44 90% 61%;
+  --accent-foreground: 254 47% 10%;
   --destructive: 0 84% 60%;
   --destructive-foreground: 210 40% 98%;
-  --border: 228 15% 20%;
-  --input: 228 15% 18%;
-  --input-background: 228 18% 10%;
+  --border: 254 30% 25%;
+  --input: 254 30% 22%;
+  --input-background: 254 40% 14%;
   --switch-background: 228 15% 22%;
-  --ring: 263 70% 58%;
+  --ring: 256 100% 65%;
 
   /* Legacy names remapped to the new palette */
-  --ink: 220 20% 92%;
-  --vellum: 228 15% 7%;
-  --gold: 270 80% 70%;
-  --gold-bright: 185 90% 55%;
+  --ink: 252 100% 97%;
+  --vellum: 254 47% 10%;
+  --gold: 44 90% 61%;
+  --gold-bright: 48 100% 70%;
   --oxblood: 340 82% 62%;
   --created: 50 95% 55%;
-  --candle: 38 92% 55%;
-  --starlight: 175 80% 55%;
-  --midnight: 230 30% 5%;
-  --glow-violet: 263 70% 58%;
-  --glow-teal: 175 80% 45%;
+  --candle: 44 90% 61%;
+  --starlight: 252 100% 92%;
+  --midnight: 254 50% 6%;
+  --glow-violet: 256 100% 65%;
+  --glow-teal: 44 90% 61%;
 
   --radius: 0.5rem;
   --shadow-ink: 0 20px 50px -25px hsl(263 70% 30% / 0.6);
@@ -110,17 +111,17 @@
       radial-gradient(ellipse at 90% 90%, hsl(var(--glow-teal) / 0.12), transparent 55%),
       hsl(var(--background));
     background-attachment: fixed;
-    font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+    font-family: 'Fira Sans', ui-sans-serif, system-ui, sans-serif;
     font-feature-settings: "ss01", "cv02", "cv11";
     overflow-x: hidden;
   }
   h1, h2, h3, h4, .font-display {
-    font-family: 'Space Grotesk', ui-sans-serif, sans-serif;
-    font-weight: 600;
+    font-family: 'DM Serif Display', Georgia, serif;
+    font-weight: 400;
     letter-spacing: 0;
   }
   .font-smallcaps {
-    font-family: 'Space Grotesk', ui-sans-serif, sans-serif;
+    font-family: 'Fira Sans', ui-sans-serif, sans-serif;
     font-weight: 500;
     letter-spacing: 0.16em;
     text-transform: uppercase;
