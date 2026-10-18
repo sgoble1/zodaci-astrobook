@@ -25,9 +25,29 @@ export const CORE_THEMES: { slug: string; title: string }[] = [{ slug: 'core-per
 export const ALL_READINGS = [...TOPIC_READINGS, ...SYSTEM_READINGS, ...CORE_THEMES];
 export type TopicRow = { id: string; page_key: string; title: string; content: string; status: string; updated_at: string };
 
+/** Readings the free plan writes automatically; everything else needs a paid plan. */
+export const FREE_READINGS = ['big-three', 'core-personality'];
+
+/** Always scoped to the signed-in member, even for admins who can read every row. */
 export async function loadMyTopicReadings(): Promise<TopicRow[]> {
-  const { data } = await supabase.from('generated_pages').select('id,page_key,title,content,status,updated_at').eq('section', 'Topic Reading');
+  const { data: s } = await supabase.auth.getSession();
+  const uid = s.session?.user.id;
+  if (!uid) return [];
+  const { data } = await supabase.from('generated_pages').select('id,page_key,title,content,status,updated_at').eq('section', 'Topic Reading').eq('owner_id', uid);
   return (data ?? []) as TopicRow[];
+}
+
+/** True when the member may have every reading written (paid plan, admin or private shared space). */
+export async function canWriteAllReadings(): Promise<boolean> {
+  const { data: s } = await supabase.auth.getSession();
+  const uid = s.session?.user.id;
+  if (!uid) return false;
+  const [paid, admin, shared] = await Promise.all([
+    supabase.rpc('has_paid_plan', { _user_id: uid }),
+    supabase.rpc('has_role', { _user_id: uid, _role: 'admin' }),
+    supabase.rpc('is_shared_space_member'),
+  ]);
+  return !!(paid.data || admin.data || shared.data);
 }
 export async function writeTopicReading(slug: string, opts: { regenerate?: boolean; targetUserId?: string; chain?: boolean; lane?: number; lanes?: number } = {}): Promise<void> {
   let res;

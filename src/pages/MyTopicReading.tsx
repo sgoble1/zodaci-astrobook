@@ -37,7 +37,7 @@ export default function MyTopicReading({ slugOverride }: { slugOverride?: string
       <Link to="/my-readings" className="text-sm underline">← My readings</Link>
       <div className="flex flex-wrap items-center justify-between gap-3"><h1 className="font-display text-4xl">{meta?.title ?? 'Reading'}</h1>{row && <Button variant="outline" size="sm" onClick={rewrite} disabled={busy}>{busy ? 'Rewriting… about a minute' : 'Rewrite this reading'}</Button>}</div>
       {row ? <div className="prose prose-invert max-w-none [&_table]:block [&_table]:overflow-x-auto"><ReactMarkdown remarkPlugins={[remarkGfm]}>{row.content}</ReactMarkdown></div>
-        : <p className="text-muted-foreground">This reading hasn’t been written yet. Open My readings and it will be written automatically.</p>}
+        : <div className="rounded-lg border border-dashed border-border p-5 space-y-3"><p className="text-muted-foreground">This reading hasn’t been written yet. Free accounts include two full readings (Your Big Three and Personality & Strengths); Full Access writes every reading from your chart.</p><Button asChild size="sm"><Link to="/pricing">See Full Access</Link></Button></div>}
     </article>
   );
 }

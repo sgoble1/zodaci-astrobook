@@ -105,6 +105,10 @@ const BrandLaunch = lazy(() => import('./pages/BrandLaunch'));
 const PublicArticle = lazy(() => import('./pages/PublicArticle'));
 const Community = lazy(() => import('./pages/Community'));
 const CommunityGuidelines = lazy(() => import('./pages/Community').then(m => ({ default: m.CommunityGuidelines })));
+const AstroBookPublic = lazy(() => import('./pages/PublicInfo').then(m => ({ default: m.AstroBookPublic })));
+const FaqPage = lazy(() => import('./pages/PublicInfo').then(m => ({ default: m.FaqPage })));
+const PrivacyPage = lazy(() => import('./pages/PublicInfo').then(m => ({ default: m.PrivacyPage })));
+const TermsPage = lazy(() => import('./pages/PublicInfo').then(m => ({ default: m.TermsPage })));
 
 
 /** Build a single registry of every drawer-openable Compendium item. Used so
@@ -204,6 +208,10 @@ export default function App() {
             <Route path="/community" element={<Community />} />
             <Route path="/community/guidelines" element={<CommunityGuidelines />} />
             <Route path="/community/:id" element={<Community />} />
+            <Route path="/astrobook" element={<AstroBookPublic />} />
+            <Route path="/faq" element={<FaqPage />} />
+            <Route path="/privacy" element={<PrivacyPage />} />
+            <Route path="/terms" element={<TermsPage />} />
           </Route>
           <Route path="/brand-launch" element={<div className="max-w-5xl mx-auto p-5 sm:p-10"><BrandLaunch /></div>} />
           <Route path="/contents" element={<MasterbookContents />} />

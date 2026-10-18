@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { supabase } from '@/integrations/supabase/client';
-import { ALL_READINGS, loadMyTopicReadings, writeTopicReading } from '@/lib/topicReadings';
+import { ALL_READINGS, FREE_READINGS, canWriteAllReadings, loadMyTopicReadings, writeTopicReading } from '@/lib/topicReadings';
 
 const MIN_KEY = 'zodaci-gen-minimized';
 const STARTED_KEY = 'zodaci-gen-started';
@@ -13,6 +13,7 @@ export function GenerationProgress() {
   const navigate = useNavigate();
   const [done, setDone] = useState<Set<string> | null>(null);
   const [eligible, setEligible] = useState(false);
+  const [targets, setTargets] = useState<typeof ALL_READINGS>([]);
   const [minimized, setMinimized] = useState(() => sessionStorage.getItem(MIN_KEY) === '1');
   const [error, setError] = useState('');
   const timer = useRef<number>();
@@ -34,11 +35,16 @@ export function GenerationProgress() {
       const ok = !!(p?.birth_date && p.chart);
       setEligible(ok);
       if (!ok) return;
+      const all = await canWriteAllReadings().catch(() => false);
+      if (!alive) return;
+      const list = all ? ALL_READINGS : ALL_READINGS.filter(t => FREE_READINGS.includes(t.slug));
+      setTargets(list);
       const rows = await refresh();
       if (!rows || !alive) return;
-      const missing = ALL_READINGS.filter(t => !rows.some(r => r.page_key === `topic-${t.slug}`));
+      const missing = list.filter(t => !rows.some(r => r.page_key === `topic-${t.slug}`));
       if (missing.length && !sessionStorage.getItem(STARTED_KEY)) {
         sessionStorage.setItem(STARTED_KEY, '1');
+        if (!all) { missing.forEach(t => writeTopicReading(t.slug).catch(e => setError((e as Error).message))); return; }
         // Three parallel lanes; each lane writes its own share of topics in order.
         const LANES = 3;
         const order = ALL_READINGS.map(t => t.slug);
@@ -51,8 +57,8 @@ export function GenerationProgress() {
     return () => { alive = false; };
   }, [pathname === '/my-readings' || pathname === '/start']); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const total = ALL_READINGS.length;
-  const count = done ? ALL_READINGS.filter(t => done.has(`topic-${t.slug}`)).length : 0;
+  const total = targets.length;
+  const count = done ? targets.filter(t => done.has(`topic-${t.slug}`)).length : 0;
   const active = eligible && done !== null && count < total;
   useEffect(() => {
     if (!active) return;
@@ -60,7 +66,7 @@ export function GenerationProgress() {
     return () => clearInterval(timer.current);
   }, [active]);
 
-  const current = ALL_READINGS.find(t => !done?.has(`topic-${t.slug}`));
+  const current = targets.find(t => !done?.has(`topic-${t.slug}`));
   const minimize = () => { sessionStorage.setItem(MIN_KEY, '1'); setMinimized(true); if (pathname === '/start') navigate('/dashboard'); };
   const expand = () => { sessionStorage.removeItem(MIN_KEY); setMinimized(false); };
   // Lets the welcome tour wait until this full-screen view is out of the way.

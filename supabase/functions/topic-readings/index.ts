@@ -46,6 +46,7 @@ for (const k of SYSTEM_SLUGS) TOPICS[`sys-${k}`] = { title: SYS_TITLES[k], focus
 Object.assign(TOPICS, CORE_TOPICS);
 const Body = z.object({ slug: z.string().refine(s => s in TOPICS), regenerate: z.boolean().optional(), targetUserId: z.string().uuid().optional(), chain: z.boolean().optional(), lane: z.number().int().min(0).max(3).optional(), lanes: z.number().int().min(1).max(4).optional() });
 const DAILY_LIMIT = 50;
+const FREE_READINGS = ['big-three', 'core-personality'];
 
 /** Finds "Planet in Sign" claims that contradict the saved chart. */
 // deno-lint-ignore no-explicit-any
@@ -95,6 +96,14 @@ Deno.serve(async req => {
       if (!isAdmin) return json({ error: 'Only an admin can rewrite another member\'s reading.' }, 403);
       ownerId = targetUserId;
     }
+    // Free plan: only the spotlight readings are written, so free sign-ups cost very few AI credits.
+    const [{ data: paid }, { data: isAdminUser }, { data: shared }] = await Promise.all([
+      admin.rpc('has_paid_plan', { _user_id: ownerId }),
+      admin.rpc('has_role', { _user_id: user.id, _role: 'admin' }),
+      admin.rpc('is_shared_space_user_id', { _user_id: ownerId }),
+    ]);
+    const fullAccess = !!(paid || isAdminUser || shared);
+    if (!fullAccess && !FREE_READINGS.includes(slug)) return json({ error: 'This reading is part of Full Access. Upgrade to have it written from your chart.' }, 403);
     const topic = TOPICS[slug];
     const page_key = `topic-${slug}`;
     const sysSlug = slug.startsWith('sys-') ? slug.slice(4) : null;
