@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { supabase } from '@/integrations/supabase/client';
-import { ALL_READINGS, FREE_READINGS, canWriteAllReadings, loadMyTopicReadings, writeTopicReading } from '@/lib/topicReadings';
+import { ALL_READINGS, FLAGSHIP_READINGS, FREE_READINGS, canWriteAllReadings, loadMyTopicReadings, writeTopicReading } from '@/lib/topicReadings';
 
 const MIN_KEY = 'zodaci-gen-minimized';
 const STARTED_KEY = 'zodaci-gen-started';
@@ -43,7 +43,8 @@ export function GenerationProgress() {
       if (p?.generation_cancelled) return;
       const all = await canWriteAllReadings().catch(() => false);
       if (!alive) return;
-      const list = all ? ALL_READINGS : ALL_READINGS.filter(t => FREE_READINGS.includes(t.slug));
+      // Only the headline readings are written upfront; everything else is written when first opened.
+      const list = ALL_READINGS.filter(t => (all ? FLAGSHIP_READINGS : FREE_READINGS).includes(t.slug));
       setTargets(list);
       const rows = await refresh();
       if (!rows || !alive) return;
@@ -52,14 +53,7 @@ export function GenerationProgress() {
       const note = (e: Error) => { if (/stopped/i.test(e.message)) { sessionStorage.removeItem(STARTED_KEY); setCancelled(true); } else setError(e.message); };
       if (missing.length && !sessionStorage.getItem(STARTED_KEY)) {
         sessionStorage.setItem(STARTED_KEY, '1');
-        if (!all) { missing.forEach(t => writeTopicReading(t.slug).catch(e => note(e as Error))); return; }
-        // Three parallel lanes; each lane writes its own share of topics in order.
-        const LANES = 3;
-        const order = ALL_READINGS.map(t => t.slug);
-        for (let lane = 0; lane < LANES; lane++) {
-          const first = missing.find(t => order.indexOf(t.slug) % LANES === lane);
-          if (first) writeTopicReading(first.slug, { chain: true, lane, lanes: LANES }).catch(e => note(e as Error));
-        }
+        missing.forEach(t => writeTopicReading(t.slug).catch(e => note(e as Error)));
       }
     })();
     return () => { alive = false; };
