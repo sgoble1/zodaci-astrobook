@@ -8,6 +8,7 @@ import { BOOK_PRICES, money } from '@/lib/books';
 import cover1 from '@/assets/cover-example-cosmic.jpg';
 import cover2 from '@/assets/cover-example-botanical.jpg';
 import cover3 from '@/assets/cover-example-atlas.jpg';
+import { ThemeArt } from '@/components/common/ThemeArt';
 
 const CHAPTERS = [
   ['Your Chart Snapshot', 'The full birth chart in one illustrated spread'],
@@ -36,7 +37,7 @@ export function AstroBookPublic() {
       <section id="inside" className="space-y-6">
         <h2 className="font-display text-3xl">A complete reading, between two covers.</h2>
         <p className="text-muted-foreground">Every AstroBook includes these six chapters. You can add extra sections when you order.</p>
-        <ol className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{CHAPTERS.map(([t, d], i) => <li key={t} className="rounded-lg border border-border bg-card p-5"><p className="text-sm text-accent">0{i + 1}</p><h3 className="mt-2 text-lg font-semibold">{t}</h3><p className="mt-2 text-sm text-muted-foreground">{d}</p></li>)}</ol>
+        <ol className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{CHAPTERS.map(([t, d], i) => <li key={t} className="vellum p-5"><ThemeArt label={t} badge={i + 1} /><h3 className="mt-4 text-xl">{t}</h3><p className="mt-2 text-sm text-muted-foreground">{d}</p></li>)}</ol>
       </section>
       <section className="space-y-6">
         <h2 className="font-display text-3xl">The details.</h2>
