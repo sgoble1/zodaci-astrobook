@@ -4,6 +4,7 @@ import { z } from "npm:zod@3";
 import { createResponsesCall, gatewayError } from "../_shared/responses.ts";
 import { SAFETY, SITE_PAGES } from "../_shared/april-profile.ts";
 import { counselorContext } from "../_shared/member-profile.ts";
+import { hasFullAccess, latestUserText, savedHistory } from "../_shared/chat-guard.ts";
 
 const cors = {
   "Access-Control-Allow-Origin": "*",
@@ -43,6 +44,7 @@ Deno.serve(async (req) => {
     const { data: u } = await sb.auth.getUser();
     if (!u?.user) return json({ error: "Please sign in to talk with the companion." }, 401);
         const admin = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
+    if (!(await hasFullAccess(admin, u.user.id))) return json({ error: "Private counselor chats are part of Full Access. Upgrade to continue." }, 403);
     const ctx0 = await counselorContext(sb, admin, u.user.id, u.user.email ?? "");
     if (!ctx0.ok) return json({ error: ctx0.error }, 400);
     const INSTRUCTIONS = buildInstructions(ctx0.context);
@@ -51,13 +53,12 @@ Deno.serve(async (req) => {
     const parsed = Body.safeParse(await req.json());
     if (!parsed.success) return json({ error: "Invalid request." }, 400);
     const { sessionId, passages } = parsed.data;
-    const messages = parsed.data.messages as UIMessage[];
+    const incoming = latestUserText(parsed.data.messages); if (!incoming) return json({ error: "Please type a message." }, 400);
 
     const { data: session } = await sb.from("therapy_sessions").select("id,title").eq("id", sessionId).maybeSingle();
     if (!session) return json({ error: "That session was not found." }, 404);
 
-    const last = messages[messages.length - 1];
-    if (last?.role === "user") {
+        { const last = { id: incoming.id, parts: [{ type: "text", text: incoming.text }] };
       const { error } = await sb.from("therapy_messages").insert({ session_id: sessionId, owner_id: u.user.id, ui_id: last.id ?? "", role: "user", parts: last.parts ?? [] });
       if (error) return json({ error: "Your message could not be saved." }, 500);
       const firstText = (last.parts ?? []).find((p: { type: string }) => p.type === "text") as { text?: string } | undefined;
@@ -66,6 +67,7 @@ Deno.serve(async (req) => {
       await sb.from("therapy_sessions").update(patch).eq("id", sessionId);
     }
 
+    const messages = await savedHistory(sb, "therapy_messages", sessionId);
     const model = await convertToModelMessages(messages);
     if (passages.length) {
       const ctx = passages.map(p => `[${p.n}] (${p.source} — ${p.loc})\n${p.text.slice(0, 1500)}`).join("\n\n");
