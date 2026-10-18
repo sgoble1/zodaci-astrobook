@@ -51,7 +51,13 @@ export async function canWriteAllReadings(): Promise<boolean> {
 }
 export async function writeTopicReading(slug: string, opts: { regenerate?: boolean; targetUserId?: string; chain?: boolean; lane?: number; lanes?: number } = {}): Promise<void> {
   let res;
-  try { res = await supabase.functions.invoke('topic-readings', { body: { slug, ...opts } }); } catch { throw new Error('This reading could not be written right now.'); }
+  try { res = await supabase.functions.invoke('topic-readings', { body: { slug, ...opts } }); }
+  catch (e) {
+    // The client surfaces non-2xx responses by throwing; recover the real message (e.g. "writing stopped") from the body.
+    const ctx = (e as { context?: unknown }).context;
+    const body = ctx instanceof Response ? await ctx.json().catch(() => null) as { error?: string } | null : null;
+    throw new Error(body?.error || 'This reading could not be written right now.');
+  }
   const { data, error } = res;
   if (error || data?.error) {
     let message = data?.error as string | undefined;
