@@ -99,7 +99,7 @@ export function GenerationProgress() {
           </motion.div>
         </motion.div>
       ) : (
-        <motion.div key="mini" layoutId="gen-card" role="status" aria-live="polite" className="fixed inset-x-0 top-0 z-[60] border-b border-border bg-card/95 backdrop-blur shadow-md">
+        <motion.div key="mini" layoutId="gen-card" role="status" aria-live="polite" className="fixed inset-x-0 top-[64px] lg:top-0 z-[45] border-b border-border bg-card/95 backdrop-blur shadow-md">
           <div className="mx-auto flex max-w-5xl items-center gap-3 px-4 py-2 text-sm">
             <motion.span className="h-4 w-4 shrink-0 rounded-full border-2 border-primary/30 border-t-primary" animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1.2, ease: 'linear' }} aria-hidden="true" />
             <span className="min-w-0 flex-1 truncate">{paused ? paused : <>Writing your pages: <strong>{count} of {total}</strong> ready{current ? ` · ${current.title}` : ''}</>}</span>
