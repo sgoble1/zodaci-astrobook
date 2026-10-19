@@ -43,8 +43,8 @@
 
 ## Commerce and operations
 - book_orders has owner reads/admin fulfillment/verified webhooks; clients cannot confirm payment.
-- book_costing (admin-only) holds per-edition print/delivery/fee costs; margins read it, falling back to BOOK_COSTING estimates.
-- /shared is allow-listed in PublicChartFallback because SharedSpace enforces membership via is_shared_space_member.
+- book_costing (admin-only) stores real print costs; margins fall back to BOOK_COSTING.
+- /shared bypasses PublicChartFallback; SharedSpace checks membership server-side.
 - Checkout validates advertised provider amounts and pins environment; dispatch excludes sandbox to prevent accidental production.
 - PDFs use fresh edition manifests; freeze before checkout, finalize privately after verified payment, and authorize owner/admin downloads.
 - Checkout leases serialize orders; provider amount reconciliation and refund/dispute holds protect fulfillment.
