@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { computeChart, SIGN_KEYWORDS, type BodyPos } from '@/lib/astro';
 import { toChartInput, type MyBirth } from '@/lib/myBirth';
+import { MemberAnswer } from '@/components/workbook/MemberAnswer';
+import { FounderSourcePanel } from '@/components/readings/FounderSourcePanel';
 
 const ELEMENT: Record<string, string> = { Aries: 'Fire', Leo: 'Fire', Sagittarius: 'Fire', Taurus: 'Earth', Virgo: 'Earth', Capricorn: 'Earth', Gemini: 'Air', Libra: 'Air', Aquarius: 'Air', Cancer: 'Water', Scorpio: 'Water', Pisces: 'Water' };
 const ELEMENT_PRACTICE: Record<string, string> = {
@@ -51,10 +53,12 @@ export default function MemberWorkbook({ birth, focus }: { birth: MyBirth; focus
             <h2 className="font-display text-xl">{m.title}</h2>
             <p className="text-sm text-muted-foreground">{m.why}</p>
             <ol className="list-decimal pl-5 space-y-1.5 text-sm">{m.steps.map(s => <li key={s}>{s}</li>)}</ol>
+            <MemberAnswer module={m.id} question={m.steps.join('\n')} />
           </motion.section>
         ))}
       </div>
       <p className="text-sm text-muted-foreground">Want to talk any of this through? <Link className="text-primary underline" to="/chat">Open SmartChat</Link>.</p>
+      <FounderSourcePanel theme={focus === 'check-in' ? 'core-emotions' : focus === 'reframe' ? 'mind' : 'practices'} />
     </article>
   );
 }

@@ -13,6 +13,9 @@ const CHART_FOCUS: Record<string, ChartFocus> = { '/planets': 'planets', '/house
 import { LIBRARY_TOPICS } from '@/content/libraryTopics';
 import { FounderSourcePanel } from '@/components/readings/FounderSourcePanel';
 import { Fragment } from 'react';
+import FounderTopics from '@/pages/FounderTopics';
+import { useShaneAccount } from '@/hooks/useShaneAccount';
+import ShaneEdition from '@/pages/ShaneEdition';
 
 const TIMING = { '/transits': 'transits', '/retrogrades': 'retrogrades', '/timeline': 'timeline', '/profection': 'profection' } as const;
 const TOPIC_ROUTES: Record<string, string> = { '/numerology': 'numerology', '/purpose': 'purpose', '/family-home': 'family-home', '/love': 'love', '/career': 'career', '/health': 'health' };
@@ -28,6 +31,7 @@ const CHART = ['/birth-chart', '/planets', '/houses', '/aspects', '/star-map', '
 export function PublicChartFallback() {
   const { pathname } = useLocation();
   const birth = useMyBirth();
+  const shane = useShaneAccount();
   if (birth === undefined) return null;
   if (!birth) return (
     <article className="mx-auto max-w-xl space-y-4 py-12 text-center">
@@ -40,6 +44,8 @@ export function PublicChartFallback() {
     </article>
   );
   const timing = TIMING[pathname as keyof typeof TIMING];
+  if (shane && pathname === '/topics') return <FounderTopics />;
+  if (shane && (pathname === '/masterbook' || pathname === '/reading' || pathname === '/compendium')) return <ShaneEdition />;
   if (timing) return <><PersonalTiming birth={birth} focus={timing} /><FounderSourcePanel theme="timing" /></>;
   if (pathname === '/other-systems') return <MemberSystemsDashboard birth={birth} />;
   if (pathname === '/chinese') return <MemberSystem birth={birth} slug="chinese" />;

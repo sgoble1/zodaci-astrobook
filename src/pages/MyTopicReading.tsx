@@ -10,6 +10,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useSession } from '@/hooks/useLibrary';
 import { readingIsOlder, readingVisitKey } from '@/lib/readingExperience';
 import { useOnDemandReading } from '@/hooks/useOnDemandReading';
+import { FounderSourcePanel } from '@/components/readings/FounderSourcePanel';
 
 const slugify = (s: string) => s.toLowerCase().replace(/[*_`]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 
@@ -88,6 +89,7 @@ export default function MyTopicReading({ slugOverride }: { slugOverride?: string
         : writing ? <div role="status" aria-live="polite" className="vellum flex items-center gap-4 p-6"><span className="h-8 w-8 shrink-0 animate-spin rounded-full border-4 border-primary/30 border-t-primary" aria-hidden="true" /><div><p className="font-medium">Writing this reading from your chart…</p><p className="text-sm text-muted-foreground">You can keep exploring. The finished reading saves to your account.</p></div></div>
         : error ? <div role="alert" className="rounded-lg border border-destructive/40 p-5 text-sm text-destructive">{error}<Button variant="outline" className="ml-3" onClick={retry}>Try again</Button></div>
         : locked ? <div className="rounded-lg border border-dashed border-border p-5 space-y-3"><p className="text-muted-foreground">This reading hasn’t been written yet. Free accounts include two full readings (Your Big Three and Personality & Strengths); Full Access writes every reading from your chart.</p><Button asChild size="sm"><Link to={`/pricing?next=${encodeURIComponent(`/my-readings/topic/${slug}`)}`}>See Full Access</Link></Button></div> : null}
+      {slug && <FounderSourcePanel theme={slug} />}
     </article>
   );
 }

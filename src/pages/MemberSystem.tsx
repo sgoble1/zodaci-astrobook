@@ -8,6 +8,7 @@ import { systemFacts } from '@/lib/systemFacts';
 import { SYSTEM_READINGS } from '@/lib/topicReadings';
 import { BoxArt } from '@/components/common/BoxArt';
 import { useOnDemandReading } from '@/hooks/useOnDemandReading';
+import { FounderSourcePanel } from '@/components/readings/FounderSourcePanel';
 
 /** One Other Systems page calculated and written for the signed-in member. */
 export function MemberSystem({ birth, slug }: { birth: MyBirth; slug: string }) {
@@ -23,6 +24,7 @@ export function MemberSystem({ birth, slug }: { birth: MyBirth; slug: string }) 
         : error ? <p role="alert" className="rounded-lg border border-destructive/40 p-4 text-sm text-destructive">{error}</p>
         : locked ? <p className="rounded-lg border border-dashed border-border p-4 text-sm text-muted-foreground">The full {facts.title} reading is part of Full Access. <Link to="/pricing" className="underline">See plans</Link></p>
         : <p role="status" className="rounded-lg border border-dashed border-border p-4 text-sm text-muted-foreground">{writing ? `Writing your ${facts.title} reading from these values — about a minute. It saves to your account.` : 'Loading…'}</p>}
+      <FounderSourcePanel theme={`sys-${slug}`} />
     </article>
   );
 }
