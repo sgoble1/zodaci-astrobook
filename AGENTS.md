@@ -39,7 +39,7 @@
 - Shared recommendations/media use shared_recommendations/shared_media plus generic shared_item_comments/shared_item_reactions keyed by item_type/item_id.
 - Box grids use BoxArt(seed,label). One app logo; print products keep their names.
 - /welcome is a separate generic-art brand page; private routes stay unchanged.
-- Book examples are non-orderable; landing readings use public editorial content, never private sources.
+- Book examples are non-orderable; landing readings use only public editorial content.
 
 ## Commerce and operations
 - book_orders has owner reads/admin fulfillment/verified webhooks; clients cannot confirm payment.
