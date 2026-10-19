@@ -1,6 +1,7 @@
 # Zodaci — Active Project Index
 
 ## In progress (current request)
+- [ ] Expand Shane’s own archive into chart, theme, system and workbook sections; cross-check source claims against calculated placements without borrowing April’s content.
 - [x] Restored late-loaded April archive content; verified her 9 workbook chapters, 45 questions, 46 saved entries, 16 topics and Compendium in her own account; 4 privacy/hydration tests pass.
 - [x] Failed lazy imports now show recovery instead of blanking; interrupted demo download, retry, and fresh welcome verified; 3 regression tests pass.
 - [x] Requested homepage/demo publication; verified WebM playback and matching reduced-motion fallback; removed decorative numeric eyebrows. Final update requested after verification; deployment completion is not confirmed.
