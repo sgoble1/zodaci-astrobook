@@ -8,7 +8,7 @@ export default function Numerology() {
   return (
     <article className="space-y-14">
       <header>
-        <div className="font-smallcaps text-[11px] text-gold">Section · Pythagorean Numerology</div>
+        <div className="font-smallcaps text-[11px] text-gold">17</div>
         <h1 className="font-display mt-2">Numerology, derived.</h1>
         <div className="gold-rule my-5 max-w-xs" />
         <p className="max-w-2xl text-lg text-foreground/85 leading-relaxed">
