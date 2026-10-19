@@ -1,3 +1,5 @@
+import { CinematicVideo } from '@/components/fx/CinematicVideo';
+import heroPoster from '@/assets/zodaci-brand-hero.jpg';
 import { Link } from 'react-router-dom';
 import { Check, ArrowRight, Gift } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -26,7 +28,8 @@ export function AstroBookPublic() {
   useJsonLd('product-schema', { '@type': 'Product', name: 'AstroBook', brand: { '@type': 'Brand', name: 'Zodaci' }, description: 'A printed book written from your own birth chart.', offers: [{ '@type': 'Offer', name: 'Standard softcover', price: (BOOK_PRICES.standard / 100).toFixed(2), priceCurrency: 'USD', availability: 'https://schema.org/InStock', url: 'https://zodaci.com/astrobook' }, { '@type': 'Offer', name: 'Expanded softcover', price: (BOOK_PRICES.expanded / 100).toFixed(2), priceCurrency: 'USD', availability: 'https://schema.org/InStock', url: 'https://zodaci.com/astrobook' }] });
   return (
     <article className="space-y-20">
-      <section className="grid items-center gap-10 md:grid-cols-2">
+      <section className="relative isolate grid items-center gap-10 overflow-hidden rounded p-6 sm:p-10 md:grid-cols-2">
+        <CinematicVideo poster={heroPoster} /><div className="absolute inset-0 -z-10 bg-background/70" />
         <div className="space-y-5">
           <p className="text-xs font-medium tracking-[0.12em] text-accent">A PHYSICAL PRODUCT</p>
           <h1 className="font-display text-4xl leading-tight sm:text-5xl">The book that only you could have written.</h1>
