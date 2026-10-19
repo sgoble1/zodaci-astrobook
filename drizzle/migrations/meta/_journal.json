@@ -372,6 +372,13 @@
       "when": 1792443410991,
       "tag": "0052_founder_chart_shares",
       "breakpoints": true
+    },
+    {
+      "idx": 53,
+      "version": "7",
+      "when": 1792443427188,
+      "tag": "0053_founder_reading_quota",
+      "breakpoints": true
     }
   ]
 }
