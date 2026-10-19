@@ -1,0 +1,104 @@
+import { useEffect, useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
+import { Switch } from '@/components/ui/switch';
+import { usePageMeta } from '@/hooks/usePageMeta';
+import { Book3D } from '@/components/books/Book3D';
+
+/** Fictional sample profile — no real member data is used on this page. */
+const SAMPLE = { name: 'Jules Harbor', facts: 'Sun Virgo · Moon Pisces · Rising Scorpio' };
+
+const SECTIONS = [
+  { title: 'The shape of your emotional weather', body: 'With the Moon in Pisces, feelings arrive like tides rather than headlines. You often know what a room feels before anyone speaks, and you absorb moods long before you can name them. This is a gift for empathy and a challenge for boundaries: the work is learning which feelings are yours to carry.' },
+  { title: 'How you protect what matters', body: 'Scorpio rising gives a guarded first impression. You test trust quietly and reveal yourself in layers. People who earn your confidence find a loyalty that is fierce and lasting.' },
+  { title: 'Where the Virgo Sun steadies you', body: 'Your Virgo Sun turns sensitivity into service. Routines, lists and small acts of care are how you metabolize big emotions. When life feels overwhelming, tending to something concrete brings you back to yourself.' },
+  { title: 'Patterns under pressure', body: 'Under stress you may withdraw, overanalyze, or try to fix everyone else first. Noticing this early — a tight jaw, a too-long to-do list — is the cue to rest rather than push.' },
+  { title: 'Practices for this chart', body: 'Weekly water-side walks, a written "whose feeling is this?" check-in, and one boundary per week said out loud. Small, repeatable, and matched to your placements.' },
+];
+
+const SCRIPT = `Welcome to your Zodaci podcast. Today, ${SAMPLE.name}, we're exploring your emotional world. Your Moon in Pisces means you feel the tide of a room before anyone speaks. Your Scorpio rising guards that softness, and your Virgo Sun turns it into steady, practical care.`;
+
+function PodcastSimulator() {
+  const [voice, setVoice] = useState(0);
+  const [playing, setPlaying] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const timer = useRef<number>();
+  const voices = ['Warm narrator', 'Calm guide', 'Conversational host', 'Deep storyteller'];
+  const supported = typeof window !== 'undefined' && 'speechSynthesis' in window;
+
+  useEffect(() => () => { window.clearInterval(timer.current); if (supported) speechSynthesis.cancel(); }, [supported]);
+
+  const toggle = () => {
+    if (playing) { speechSynthesis.cancel(); window.clearInterval(timer.current); setPlaying(false); return; }
+    const u = new SpeechSynthesisUtterance(SCRIPT);
+    const sys = speechSynthesis.getVoices().filter(v => v.lang.startsWith('en'));
+    if (sys.length) u.voice = sys[voice % sys.length];
+    u.rate = [0.95, 0.9, 1.05, 0.85][voice]; u.pitch = [1, 1.05, 1.1, 0.8][voice];
+    u.onend = () => { setPlaying(false); setProgress(100); window.clearInterval(timer.current); };
+    setProgress(0); setPlaying(true); speechSynthesis.speak(u);
+    timer.current = window.setInterval(() => setProgress(p => Math.min(99, p + 2.5)), 500);
+  };
+
+  return (
+    <div className="glass rounded-lg p-6 space-y-4">
+      <div className="flex flex-wrap gap-2" role="radiogroup" aria-label="Voice">
+        {voices.map((v, i) => <button key={v} type="button" role="radio" aria-checked={voice === i} onClick={() => setVoice(i)} className={`rounded-full border px-3 py-1 text-sm ${voice === i ? 'border-primary bg-primary/15' : 'border-border hover:border-primary/60'}`}>{v}</button>)}
+      </div>
+      <div className="flex h-16 items-end gap-1" aria-hidden>
+        {Array.from({ length: 48 }, (_, i) => <span key={i} className={`flex-1 rounded-sm ${i / 48 * 100 < progress ? 'bg-primary' : 'bg-muted'}`} style={{ height: `${20 + Math.abs(Math.sin(i * 1.7)) * 80}%` }} />)}
+      </div>
+      <div className="flex items-center gap-3">
+        <Button onClick={toggle} disabled={!supported}>{playing ? 'Stop' : 'Play sample episode'}</Button>
+        <span className="text-sm text-muted-foreground">{supported ? 'Demo uses your device voice. Members get studio-quality voices and saved episodes.' : 'Audio preview is not available in this browser.'}</span>
+      </div>
+      <details className="text-sm"><summary className="cursor-pointer text-primary">Read the script</summary><p className="mt-2 text-muted-foreground">{SCRIPT}</p></details>
+    </div>
+  );
+}
+
+export default function Demo() {
+  usePageMeta('Try Zodaci Full Access — Interactive Demo | Zodaci', 'Explore a full-length sample reading, compare Free and Full Access depth, listen to a sample podcast and turn a 3D AstroBook — no sign-up needed.');
+  const [full, setFull] = useState(true);
+  const shown = full ? SECTIONS : SECTIONS.slice(0, 1);
+  const words = shown.reduce((n, s) => n + s.body.split(/\s+/).length + s.title.split(/\s+/).length, 0);
+
+  return (
+    <main className="mx-auto max-w-5xl space-y-16 px-5 py-12">
+      <header className="space-y-3">
+        <div className="font-smallcaps text-xs text-gold">Interactive demo · fictional sample chart</div>
+        <h1 className="text-4xl md:text-5xl">See everything Full Access unlocks</h1>
+        <p className="max-w-2xl text-muted-foreground">This demo uses a made-up person, {SAMPLE.name} ({SAMPLE.facts}). Your own readings are written from your exact birth time and place.</p>
+        <div className="flex flex-wrap gap-2"><Button asChild><Link to="/auth">Start free with your chart</Link></Button><Button asChild variant="outline"><Link to="/pricing">Compare plans</Link></Button></div>
+      </header>
+
+      <section className="space-y-5" aria-labelledby="reading-h">
+        <div className="flex flex-wrap items-end justify-between gap-4">
+          <div><div className="font-smallcaps text-xs text-gold">Core theme reading</div><h2 id="reading-h" className="text-3xl">Emotional World</h2></div>
+          <label className="flex items-center gap-3 text-sm"><span className={!full ? 'text-foreground' : 'text-muted-foreground'}>Free preview</span><Switch checked={full} onCheckedChange={setFull} aria-label="Toggle Full Access view" /><span className={full ? 'text-foreground' : 'text-muted-foreground'}>Full Access</span></label>
+        </div>
+        <div className="grid gap-6 md:grid-cols-[200px_1fr]">
+          <nav aria-label="Sections" className="space-y-2 text-sm">
+            <div className="text-muted-foreground">{shown.length} of {SECTIONS.length} sections · {words} words shown</div>
+            <ol className="space-y-1">{SECTIONS.map((s, i) => <li key={s.title} className={i < shown.length ? '' : 'text-muted-foreground line-through'}>{i + 1}. {s.title}</li>)}</ol>
+            <p className="text-xs text-muted-foreground">Real member readings run about 900–1,200 words, with placement tables.</p>
+          </nav>
+          <article className="space-y-6">
+            {shown.map(s => <div key={s.title} className="space-y-2"><h3 className="text-xl">{s.title}</h3><p className="leading-relaxed text-muted-foreground">{s.body}</p></div>)}
+            {!full && <div className="rounded-lg border border-primary/40 bg-primary/5 p-5"><p className="font-medium">Four more sections are locked on Free.</p><p className="text-sm text-muted-foreground">Full Access writes the complete reading for every core theme.</p><Button asChild size="sm" className="mt-3"><Link to="/pricing">Unlock Full Access</Link></Button></div>}
+          </article>
+        </div>
+      </section>
+
+      <section className="space-y-5" aria-labelledby="pod-h">
+        <div><div className="font-smallcaps text-xs text-gold">Creator plan</div><h2 id="pod-h" className="text-3xl">Podcast studio</h2><p className="text-muted-foreground">Turn any reading into a narrated episode saved to your library.</p></div>
+        <PodcastSimulator />
+      </section>
+
+      <section className="space-y-5" aria-labelledby="book-h">
+        <div><div className="font-smallcaps text-xs text-gold">Printed AstroBook</div><h2 id="book-h" className="text-3xl">Hold your chart in your hands</h2></div>
+        <Book3D />
+        <div className="flex justify-center gap-2"><Button asChild variant="outline"><Link to="/book-preview">Flip through sample pages</Link></Button><Button asChild><Link to="/astrobook">See editions & prices</Link></Button></div>
+      </section>
+    </main>
+  );
+}
