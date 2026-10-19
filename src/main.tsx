@@ -1,22 +1,16 @@
 import { createRoot } from "react-dom/client";
-import App from "./App.tsx";
+import { lazy, Suspense } from 'react';
+import { PageErrorBoundary } from '@/components/common/PageErrorBoundary';
+import { recoverChunkLoad } from '@/lib/chunkRecovery';
 import "./index.css";
 
 // Recover from stale module chunks (after redeploys or dep re-optimization) with one reload.
-const RELOAD_KEY = "zodaci-chunk-reload";
-const isChunkError = (msg: unknown) =>
-  /Importing a module script failed|Failed to fetch dynamically imported module|error loading dynamically imported module/i.test(String(msg ?? ""));
-const reloadOnce = () => {
-  const last = Number(sessionStorage.getItem(RELOAD_KEY) || 0);
-  if (Date.now() - last < 10_000) return;
-  sessionStorage.setItem(RELOAD_KEY, String(Date.now()));
-  window.location.reload();
-};
-window.addEventListener("vite:preloadError", (e) => { e.preventDefault(); reloadOnce(); });
-window.addEventListener("unhandledrejection", (e) => {
-  if (isChunkError((e.reason as Error)?.message ?? e.reason)) reloadOnce();
+window.addEventListener("vite:preloadError", (e) => {
+  if (recoverChunkLoad((e as Event & { payload?: unknown }).payload)) e.preventDefault();
 });
-window.addEventListener("error", (e) => { if (isChunkError(e.message)) reloadOnce(); });
+window.addEventListener("unhandledrejection", (e) => { recoverChunkLoad(e.reason); });
+window.addEventListener("error", (e) => { recoverChunkLoad(e.error ?? e.message); });
+const App = lazy(() => import('./App.tsx'));
 
 // Set defaults in the head for SEO — real title & description.
 document.title = "Zodaci · Your Chart, Readings & Printed AstroBook";
@@ -26,4 +20,8 @@ if (desc) desc.setAttribute("content",
 );
 
 const root = document.getElementById('root');
-if (root) createRoot(root).render(<App />);
+if (root) createRoot(root).render(
+  <PageErrorBoundary>
+    <Suspense fallback={<div role="status" className="p-6 text-muted-foreground">Opening Zodaci…</div>}><App /></Suspense>
+  </PageErrorBoundary>
+);
