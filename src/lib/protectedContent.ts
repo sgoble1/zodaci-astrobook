@@ -15,7 +15,7 @@ export const getContentToken = () => window.localStorage.getItem(CONTENT_TOKEN_K
 const cache = new Map<string, Promise<string>>();
 supabase.auth.onAuthStateChange(() => cache.clear());
 
-export function loadProtectedText(area: 'masterbook' | 'library', file: string): Promise<string> {
+export function loadProtectedText(area: 'masterbook' | 'library' | 'shane', file: string): Promise<string> {
   const key = `${area}/${file}`;
   const hit = cache.get(key);
   if (hit) return hit;
@@ -25,7 +25,7 @@ export function loadProtectedText(area: 'masterbook' | 'library', file: string):
   return p;
 }
 
-async function fetchProtectedText(area: 'masterbook' | 'library', file: string): Promise<string> {
+async function fetchProtectedText(area: 'masterbook' | 'library' | 'shane', file: string): Promise<string> {
   const token = getContentToken();
   if (!token) throw new ContentLockedError();
   const { data, error } = await supabase.functions.invoke('protected-content', { body: { token, area, file } });
@@ -40,6 +40,6 @@ async function fetchProtectedText(area: 'masterbook' | 'library', file: string):
   return data.content as string;
 }
 
-export async function loadProtectedJson<T>(area: 'masterbook' | 'library', file: string): Promise<T> {
+export async function loadProtectedJson<T>(area: 'masterbook' | 'library' | 'shane', file: string): Promise<T> {
   return JSON.parse(await loadProtectedText(area, file)) as T;
 }

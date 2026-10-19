@@ -20,3 +20,9 @@
 ## Known external blockers
 - Real Pixartprinting quote (no published prices/API) — printed delivery cost stays an editable estimate
 - AI credits top-up (owner action)
+
+## Founder editions (April & Shane)
+- [x] Founder access + higher reading limits; Shane Masterbook (63 chapters) at /shane; share-with-April switch
+- [ ] Side-by-side "Our two charts" page
+- [ ] Map Shane chapters into topic pages; pre-fill all readings for both accounts
+- [ ] Walk through with a signed-in April account

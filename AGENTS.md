@@ -47,7 +47,6 @@
 - /shared bypasses PublicChartFallback; SharedSpace checks membership server-side.
 - Checkout validates advertised provider amounts and pins environment; dispatch excludes sandbox to prevent accidental production.
 - PDFs use fresh edition manifests; freeze before checkout, finalize privately after verified payment, and authorize owner/admin downloads.
-- Checkout leases serialize orders; provider amount reconciliation and refund/dispute holds protect fulfillment.
-- book-cover streams saved-chart artwork through authenticated requests; never reuse April’s chart.
-- Newsletter requires consent/validated service-only writes/admin-only reads and deletes; signup sends no campaigns.
 - ActivityTracker records page time/click labels/media events in activity_events (insert-own/admin-read), never typed text/private chat.
+- Shane's edition: private storage via protected-content area 'shane', gated by can_read_shane_edition()/chart_shares.
+- supabase/functions has its own AGENTS.md; read it first.

@@ -359,6 +359,27 @@ export type Database = {
         }
         Relationships: []
       }
+      chart_shares: {
+        Row: {
+          enabled: boolean
+          owner_id: string
+          updated_at: string
+          viewer_email: string
+        }
+        Insert: {
+          enabled?: boolean
+          owner_id: string
+          updated_at?: string
+          viewer_email: string
+        }
+        Update: {
+          enabled?: boolean
+          owner_id?: string
+          updated_at?: string
+          viewer_email?: string
+        }
+        Relationships: []
+      }
       chat_conversations: {
         Row: {
           created_at: string
@@ -1889,6 +1910,7 @@ export type Database = {
           upgrade_clickers: number
         }[]
       }
+      can_read_shane_edition: { Args: never; Returns: boolean }
       claim_admin: { Args: never; Returns: boolean }
       claim_topic_reading_job: {
         Args: { p_owner_id: string; p_page_key: string; p_regenerate?: boolean }
