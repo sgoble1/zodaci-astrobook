@@ -4,7 +4,7 @@ import { ZodaciLogo } from './ZodaciLogo';
 const COLUMNS: { heading: string; links: [string, string][] }[] = [
   { heading: 'Zodaci', links: [['/auth', 'Free chart'], ['/pricing', 'Full Access'], ['/pricing', 'Creator'], ['/pricing', 'Pricing'], ['/astrobook', 'AstroBook']] },
   { heading: 'Reading Room', links: [['/blog/learn/reading-your-birth-chart', 'Reading your birth chart'], ['/blog/learn/moon-phases-explained', 'Moon phases'], ['/blog/learn/reflection-not-prediction', 'Reflection practice'], ['/blog', 'All articles']] },
-  { heading: 'Company', links: [['/about', 'About'], ['/faq', 'FAQ'], ['/community', 'Community'], ['/privacy', 'Privacy Policy'], ['/terms', 'Terms of Service']] },
+  { heading: 'Company', links: [['/about', 'About'], ['/faq', 'FAQ'], ['/demo', 'Interactive demo'], ['/themes', 'Core themes'], ['/community', 'Community'], ['/privacy', 'Privacy Policy'], ['/terms', 'Terms of Service']] },
 ];
 
 /** One footer for every public page: crawlable links, brand line and the reflection disclaimer. */
