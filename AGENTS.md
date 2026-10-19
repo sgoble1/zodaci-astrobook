@@ -5,7 +5,7 @@
 
 ## Privacy and access
 - protected-content requires approved-account authentication and password tokens. Public bundles contain no archived payload.
-- private-edition loads authorized data/plates; session-versioned hydration clears immediately on auth changes to prevent stale-account exposure.
+- private-edition retains authorized data for lazy registrations; clear retained data and setters on auth changes to prevent stale-account exposure.
 - Admin uses user_roles + has_role(); claim_admin() grants the verified owner on sign-in. No auth-schema triggers.
 - Database/storage enforce Shane/April shared access, never client-only. SharedChatFeed is hidden when signed out/unapproved, including dashboards.
 - April pages use aprilOnly(): Shane chart/family/home appears only in Relationships. Never infer family/ancestry/childhood from symbolism; use verified placements/home guidance.
