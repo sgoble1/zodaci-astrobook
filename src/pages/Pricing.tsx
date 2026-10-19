@@ -44,7 +44,7 @@ export default function Pricing() {
       <header className="text-center space-y-3">
         <div className="font-smallcaps text-[11px] text-gold">Plans & pricing</div>
         <h1 className="font-display text-4xl">Start free. Unlock the whole book.</h1>
-        <p className="mx-auto max-w-2xl text-muted-foreground">Your chart is always free. Paid plans open every reading, your own Masterbook and AI credits, all written from your own birth details.</p>
+        <p className="mx-auto max-w-2xl text-muted-foreground">Your chart is always free. Paid plans open every reading, your own Masterbook and AI credits, all written from your own birth details. <Link to="/demo" className="text-primary underline">Try the interactive demo</Link>.</p>
         {sub.tier !== 'free' && <div className="flex flex-col items-center gap-1 pt-2"><Button variant="outline" onClick={manage}>Manage subscription · cancel, card & invoices</Button>{sub.periodEnd && <p className="text-xs text-muted-foreground">{sub.cancelAtEnd ? 'Ends' : 'Renews'} {new Date(sub.periodEnd).toLocaleDateString()}</p>}</div>}
       </header>
       {!open && <div role="group" aria-label="Billing period" className="mx-auto flex w-fit gap-1 rounded-full border border-border p-1">{[[false, 'Monthly'], [true, 'Yearly · save 20%']].map(([v, l]) => <button key={String(v)} onClick={() => setYearly(v as boolean)} aria-pressed={yearly === v} className={`rounded-full px-4 py-1.5 text-sm ${yearly === v ? 'bg-primary text-primary-foreground' : 'hover:bg-muted'}`}>{l as string}</button>)}</div>}

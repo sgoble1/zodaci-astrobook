@@ -349,3 +349,11 @@ svg.fv-shown circle, svg.fv-shown path, svg.fv-shown line { animation: fv-draw 1
 @media (prefers-reduced-motion: reduce) { .member-experience *, .member-experience *::before, .member-experience *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }
 
 body:has(#mobile-menu) [data-generation-notice] { display: none; }
+
+/* Affordance: clickable cards lift and show a pointer; keyboard focus is visible. */
+@layer components {
+  a.group, [role="button"], button[aria-haspopup], .clickable { cursor: pointer; }
+  a.group:focus-visible, .clickable:focus-visible { outline: 2px solid hsl(var(--primary)); outline-offset: 2px; }
+  .clickable { transition: transform .3s ease, border-color .3s ease; }
+  .clickable:hover { transform: translateY(-2px); border-color: hsl(var(--primary) / .6); }
+}
