@@ -11,6 +11,8 @@ import MemberWorkbook from '@/pages/MemberWorkbook';
 import MemberChartSection, { type ChartFocus } from '@/pages/MemberChartSection';
 const CHART_FOCUS: Record<string, ChartFocus> = { '/planets': 'planets', '/houses': 'houses', '/aspects': 'aspects', '/chart-elements': 'elements', '/chart-calculator': 'calculator' };
 import { LIBRARY_TOPICS } from '@/content/libraryTopics';
+import { FounderSourcePanel } from '@/components/readings/FounderSourcePanel';
+import { Fragment } from 'react';
 
 const TIMING = { '/transits': 'transits', '/retrogrades': 'retrogrades', '/timeline': 'timeline', '/profection': 'profection' } as const;
 const TOPIC_ROUTES: Record<string, string> = { '/numerology': 'numerology', '/purpose': 'purpose', '/family-home': 'family-home', '/love': 'love', '/career': 'career', '/health': 'health' };
@@ -18,7 +20,7 @@ const WORKBOOK: Record<string, string> = { '/workbook': '', '/workbook/check-in'
 // Library topic slugs that map onto a member's own in-depth reading.
 const LIB_TO_READING: Record<string, string> = { love: 'love', career: 'career', money: 'money', health: 'health', mind: 'mind', 'family-home': 'family-home', shadow: 'shadow-work', karma: 'past-lives', spirituality: 'spiritual-gifts', purpose: 'purpose' };
 
-const PUBLIC = ['/admin', '/shared', '/dispatch', '/creator', '/', '/explore', '/start', '/my-chart', '/my-readings', '/my-astrobook', '/auth', '/instructions', '/pricing', '/checkout', '/my-masterbook', '/podcasts', '/dashboard', '/books', '/orders', '/blog', '/personal-context', '/workspaces', '/wonderings', '/shared/wonderings', '/chat', '/create', '/verify', '/relationships', '/p', '/about', '/counselors', '/workbook/companion', '/workbook/social-integration'];
+const PUBLIC = ['/shane', '/admin', '/shared', '/dispatch', '/creator', '/', '/explore', '/start', '/my-chart', '/my-readings', '/my-astrobook', '/auth', '/instructions', '/pricing', '/checkout', '/my-masterbook', '/podcasts', '/dashboard', '/books', '/orders', '/blog', '/personal-context', '/workspaces', '/wonderings', '/shared/wonderings', '/chat', '/create', '/verify', '/relationships', '/p', '/about', '/counselors', '/workbook/companion', '/workbook/social-integration'];
 export const isPublicPath = (p: string) => PUBLIC.some(x => p === x || (x !== '/' && p.startsWith(`${x}/`)));
 const CHART = ['/birth-chart', '/planets', '/houses', '/aspects', '/star-map', '/chart-elements', '/reading', '/compendium', '/chart-guide', '/chart-calculator'];
 
@@ -38,7 +40,7 @@ export function PublicChartFallback() {
     </article>
   );
   const timing = TIMING[pathname as keyof typeof TIMING];
-  if (timing) return <PersonalTiming birth={birth} focus={timing} />;
+  if (timing) return <><PersonalTiming birth={birth} focus={timing} /><FounderSourcePanel theme="timing" /></>;
   if (pathname === '/other-systems') return <MemberSystemsDashboard birth={birth} />;
   if (pathname === '/chinese') return <MemberSystem birth={birth} slug="chinese" />;
   const sys = pathname.match(/^\/other-systems\/([\w-]+)$/)?.[1];
@@ -48,7 +50,7 @@ export function PublicChartFallback() {
   const lib = pathname.match(/^\/topics\/([\w-]+)$/)?.[1];
   if (lib) { const t = LIBRARY_TOPICS.find(x => x.slug === lib); const guess = LIB_TO_READING[lib] ?? (t ? Object.entries(LIB_TO_READING).find(([k]) => t.slug.includes(k))?.[1] : undefined); return <MyTopicReading slugOverride={guess ?? 'recurring-themes'} />; }
   const cf = CHART_FOCUS[pathname] ?? (pathname.startsWith('/planets/') ? 'planets' : pathname.startsWith('/houses/') ? 'houses' : undefined);
-  if (cf) return <MemberChartSection birth={birth} focus={cf} />;
+  if (cf) return <Fragment><MemberChartSection birth={birth} focus={cf} /><FounderSourcePanel theme={cf} /></Fragment>;
   if (TOPIC_ROUTES[pathname]) return <MyTopicReading slugOverride={TOPIC_ROUTES[pathname]} />;
   return CHART.some(c => pathname === c || pathname.startsWith(`${c}/`)) ? <MyChart /> : <MyReadings />;
 }

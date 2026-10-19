@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { clearPrivateEdition, hydratePrivateEdition } from '@/lib/privateEditionStore';
+import { originalAprilView } from '@/lib/founderEdition';
 
 let cached: { uid: string; ok: boolean } | null = null;
 export const ADMIN_EDITION_KEY = 'zodaci-admin-edition';
@@ -9,7 +10,7 @@ if (typeof window !== 'undefined' && new URLSearchParams(window.location.search)
   sessionStorage.setItem(ADMIN_EDITION_KEY, 'april');
 }
 /** The admin sees his own edition by default; April's edition only in a tab he opened for it. */
-const adminWantsOwn = (email?: string) => email?.toLowerCase() === ADMIN_EMAIL && sessionStorage.getItem(ADMIN_EDITION_KEY) !== 'april';
+const adminWantsOwn = (email?: string) => !originalAprilView(email, sessionStorage.getItem(ADMIN_EDITION_KEY));
 export const isAdminEmail = (email?: string | null) => email?.toLowerCase() === ADMIN_EMAIL;
 export function openAprilEditionTab() { window.open(`${window.location.origin}/?edition=april`, '_blank', 'noopener'); }
 export function viewAprilEditionInApp() { sessionStorage.setItem(ADMIN_EDITION_KEY, 'april'); window.location.href = '/'; }

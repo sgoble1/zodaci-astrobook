@@ -12,6 +12,7 @@ import { Menu, X } from 'lucide-react';
 import { GenerationProgress } from '@/components/readings/GenerationProgress';
 import { useMyBirth } from '@/lib/myBirth';
 import { useAprilSpace } from '@/hooks/useAprilSpace';
+import { useShaneAccount } from '@/hooks/useShaneAccount';
 import { PublicWording } from '@/components/common/PublicWording';
 import { PublicChartFallback, isPublicPath } from '@/components/common/PublicChartFallback';
 import { useRelationships } from '@/hooks/useRelationships';
@@ -149,6 +150,7 @@ function SidebarInner({ mobile = false, onNavigate }: { mobile?: boolean; onNavi
   const admin = useIsAdmin(session);
   const myBirth = useMyBirth();
   const april = useAprilSpace();
+  const shane = useShaneAccount();
   const { items: rels } = useRelationships();
   const custom = useCustomPages();
   const badges = useSharedBadges();
@@ -211,6 +213,7 @@ function SidebarInner({ mobile = false, onNavigate }: { mobile?: boolean; onNavi
       <div className="pt-1 space-y-2"><CommandPaletteTrigger label={april ? "Search the compendium" : "Find pages & readings"} /><BookmarkButton /></div>
 
       {!april && <nav aria-label="Main destinations" className="grid gap-1">{[['/dashboard', 'Dashboard'], ['/my-chart', 'My Chart'], ['/my-readings', 'Readings'], ['/explore', 'Explore'], ['/my-astrobook', 'My Library'], ...(plan === 'creator' ? [['/creator', 'Creator Studio']] : []), ...(admin ? [['/admin', 'Admin']] : [])].map(([to, label]) => <Button key={to} asChild variant={location.pathname === to ? 'secondary' : 'ghost'} className="justify-start"><NavLink to={to} onClick={onNavigate}>{label}</NavLink></Button>)}</nav>}
+      {shane && <nav aria-label="Shane’s private edition" className="grid gap-1" data-keep-wording>{[['/shane', 'Shane’s Full Masterbook'], ['/topics', 'All Themes & Topics'], ['/workbook', 'My Guided Workbook'], ['/shared', 'Our Shared Space']].map(([to, label]) => <Button key={to} asChild variant="outline" className="justify-start"><Link to={to} onClick={onNavigate}>{label}</Link></Button>)}</nav>}
       <nav ref={navRef} aria-label="Site menu" className="flex flex-col gap-4 text-sm">
         {displayGroups.map((g, gi) => {
           const Group = april ? 'div' : 'details';
