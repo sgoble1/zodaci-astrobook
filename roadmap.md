@@ -1,6 +1,7 @@
 # Zodaci — Active Project Index
 
 ## In progress (current request)
+- [x] Failed lazy imports now show recovery instead of blanking; interrupted demo download, retry, and fresh welcome verified; 3 regression tests pass.
 - [x] Requested homepage/demo publication; verified WebM playback and matching reduced-motion fallback; removed decorative numeric eyebrows. Final update requested after verification; deployment completion is not confirmed.
 - [x] Admin walkthrough as shanegoble@gmail.com: April's edition opens in admin view; shared space opens without bouncing
 - [x] April client page at /april (password link, no account needed)
