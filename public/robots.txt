@@ -1,4 +1,5 @@
 User-agent: *
+Disallow: /april
 Allow: /
 Disallow: /admin
 Disallow: /my-

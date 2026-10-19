@@ -38,14 +38,14 @@ export function ThemeDetail() {
   const theme = CORE_THEMES.find(t => t.slug === slug);
   const copy = COPY[slug];
   usePageMeta(theme ? `${theme.title} — Your Birth Chart Reading | Zodaci` : 'Core themes | Zodaci', copy?.desc ?? '');
-  useJsonLd(theme ? { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [{ '@type': 'ListItem', position: 1, name: 'Core themes', item: 'https://zodaci.com/themes' }, { '@type': 'ListItem', position: 2, name: theme.title, item: `https://zodaci.com/themes/${slug}` }] } : null);
+  useJsonLd('theme-crumbs', theme ? { '@type': 'BreadcrumbList', itemListElement: [{ '@type': 'ListItem', position: 1, name: 'Core themes', item: 'https://zodaci.com/themes' }, { '@type': 'ListItem', position: 2, name: theme.title, item: `https://zodaci.com/themes/${slug}` }] } : null);
   if (!theme || !copy) return <Navigate to="/themes" replace />;
   return (
     <main className="mx-auto max-w-3xl space-y-8 px-5 py-12">
       <Link to="/themes" className="text-sm text-primary">← All core themes</Link>
       <header className="space-y-3"><ThemeArt label={theme.title} className="h-16 w-16" /><h1 className="text-4xl md:text-5xl">{theme.title}</h1><p className="text-lg text-muted-foreground">{copy.desc}</p></header>
       <section className="space-y-2"><h2 className="text-2xl">What your reading covers</h2><ul className="list-disc space-y-1 pl-5 text-muted-foreground">{copy.reads.map(r => <li key={r}>{r}</li>)}</ul></section>
-      <div className="flex flex-wrap gap-2"><Button asChild><Link to={`/auth?next=${encodeURIComponent(`/my/topics/${slug}`)}`}>Read mine free</Link></Button><Button asChild variant="outline"><Link to="/demo">See a full sample</Link></Button></div>
+      <div className="flex flex-wrap gap-2"><Button asChild><Link to={`/auth?next=${encodeURIComponent(`/my-readings/topic/${slug}`)}`}>Read mine free</Link></Button><Button asChild variant="outline"><Link to="/demo">See a full sample</Link></Button></div>
     </main>
   );
 }
