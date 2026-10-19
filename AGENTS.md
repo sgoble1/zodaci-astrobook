@@ -39,7 +39,7 @@
 - Shared recommendations/media use shared_recommendations/shared_media plus generic shared_item_comments/shared_item_reactions keyed by item_type/item_id.
 - Box grids use BoxArt(seed,label). One logo; print products keep names.
 - /welcome stays separate/private routes unchanged. CinematicVideo: WebM/MP4, matching frame for accessibility/errors.
-- Samples cannot be ordered; landing text is public. Root boundary catches lazy failures with bounded reloads before App loads.
+- Samples cannot be ordered; landing text is public. Root boundary catches lazy failures; bounded reloads precede App.
 
 ## Commerce and operations
 - book_orders has owner reads/admin fulfillment/verified webhooks; clients cannot confirm payment.
