@@ -28,8 +28,8 @@ export function Book3D({ pages = 250 }: { pages?: number }) {
           style={{ width: w, height: h, transformStyle: 'preserve-3d', transform: `rotateY(${angle}deg) rotateX(4deg)` }}
         >
           <img src={cover.src} alt="" className="absolute inset-0 h-full w-full rounded-r-sm object-cover shadow-2xl" style={{ transform: `translateZ(${spinePx / 2}px)` }} />
-          <div className="absolute inset-y-0 left-0 bg-muted" style={{ width: spinePx, transform: `rotateY(-90deg) translateZ(${spinePx / 2}px)`, transformOrigin: 'left', backgroundImage: `url(${cover.src})`, backgroundSize: 'cover', filter: 'brightness(0.6)' }} />
-          <div className="absolute inset-y-1 right-0 bg-card" style={{ width: spinePx, transform: `rotateY(90deg) translateZ(${w - spinePx / 2}px)`, transformOrigin: 'left', backgroundImage: 'repeating-linear-gradient(90deg, hsl(var(--foreground) / 0.08) 0 1px, transparent 1px 3px)' }} />
+          <div className="absolute inset-y-0 bg-muted" style={{ left: -spinePx / 2, width: spinePx, transform: 'rotateY(-90deg)', backgroundImage: `url(${cover.src})`, backgroundSize: 'cover', filter: 'brightness(0.6)' }} />
+          <div className="absolute inset-y-1 bg-card" style={{ left: w - spinePx / 2 - 2, width: spinePx, transform: 'rotateY(90deg)', backgroundImage: 'repeating-linear-gradient(90deg, hsl(var(--foreground) / 0.08) 0 1px, transparent 1px 3px)' }} />
           <div className="absolute inset-0 rounded-r-sm bg-card" style={{ transform: `translateZ(-${spinePx / 2}px)` }} />
         </div>
       </div>
