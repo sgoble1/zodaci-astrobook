@@ -51,3 +51,4 @@
 - book-cover streams saved-chart artwork through authenticated requests; never reuse April’s chart.
 - Newsletter requires consent/validated service-only writes/admin-only reads and deletes; signup sends no campaigns.
 - ActivityTracker records page time/click labels/media events in activity_events (insert-own/admin-read), never typed text/private chat.
+- Shane's edition lives in private storage, served by protected-content area 'shane'; access via can_read_shane_edition() and owner-managed chart_shares (server-enforced sharing).
