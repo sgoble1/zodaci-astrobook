@@ -35,14 +35,16 @@
 ## Media and presentation
 - Podcasts/uploads use library_items/private signed URLs with owner-controlled sharing. Public podcast sharing requires workspace membership/authorized audio URLs.
 - make-podcast saves script→TTS WAV in private library storage/library_items; bounded duration presets synchronize script length/source depth.
-- Queue/speed/resume live in per-device localStorage. PDF viewer uses pdfjs-dist legacy compatibility.
+- Queue/speed/resume use per-device localStorage; PDF viewer uses pdfjs-dist legacy.
 - Shared recommendations/media use shared_recommendations/shared_media plus generic shared_item_comments/shared_item_reactions keyed by item_type/item_id.
-- Box grids use BoxArt(seed,label). One app logo; print products keep their names.
+- Box grids use BoxArt(seed,label). One logo; print products keep names.
 - /welcome is a separate generic-art brand page; private routes stay unchanged.
-- Book examples are non-orderable; landing readings use public editorial content, never private sources.
+- Book examples are non-orderable; landing readings use only public editorial content.
 
 ## Commerce and operations
 - book_orders has owner reads/admin fulfillment/verified webhooks; clients cannot confirm payment.
+- book_costing (admin-only) stores real print costs; margins fall back to BOOK_COSTING.
+- /shared bypasses PublicChartFallback; SharedSpace checks membership server-side.
 - Checkout validates advertised provider amounts and pins environment; dispatch excludes sandbox to prevent accidental production.
 - PDFs use fresh edition manifests; freeze before checkout, finalize privately after verified payment, and authorize owner/admin downloads.
 - Checkout leases serialize orders; provider amount reconciliation and refund/dispute holds protect fulfillment.

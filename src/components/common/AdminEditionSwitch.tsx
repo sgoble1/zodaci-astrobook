@@ -10,14 +10,14 @@ export function AdminEditionSwitch() {
   if (!isAdminEmail(session?.user.email)) return null;
   if (april) {
     return (
-      <div className="space-y-2">
+      <div className="space-y-2" data-keep-wording>
         <p className="text-xs text-gold">You are viewing April's original edition.</p>
         <Button variant="outline" size="sm" className="w-full justify-start" onClick={leaveAprilEdition}><ArrowLeftRight className="h-4 w-4" />Back to my own content</Button>
       </div>
     );
   }
   return (
-    <div className="space-y-2">
+    <div className="space-y-2" data-keep-wording>
       <Button variant="outline" size="sm" className="w-full justify-start" onClick={viewAprilEditionInApp}><Eye className="h-4 w-4" />View April's content here</Button>
       <Button variant="ghost" size="sm" className="w-full justify-start" onClick={openAprilEditionTab}><ExternalLink className="h-4 w-4" />Open in a new tab</Button>
     </div>

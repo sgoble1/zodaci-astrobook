@@ -1,13 +1,15 @@
 # Zodaci — Active Project Index
 
 ## In progress (current request)
-- [ ] Sign in as admin, walk April's content in admin view; confirm shared workspace shows her full edition without bouncing
-- [ ] Public April edition page with her full original readings (shareable, no admin view)
-- [ ] Verify AstroBook digital/print payment verification wiring end to end
-- [ ] Printed book real delivery cost + margin in admin orders table
-- [ ] SEO: real meta titles, descriptions, social links (og:*, twitter) in index.html
-- [ ] Confirm Shane & April private accounts keep all original expanded content; workspace features functional
-- [ ] Chat results: accurate topic-related images/graphics
+- [x] Admin walkthrough as shanegoble@gmail.com: April's edition opens in admin view; shared space opens without bouncing
+- [x] April client page at /april (password link, no account needed)
+- [x] Editable print/delivery/fee cost + margin table on Book orders
+- [x] Interactive demo (/demo): full vs free reading, podcast sample, 3D AstroBook
+- [x] 3D AstroBook mockup on AstroBook order page
+- [x] Public core-theme pages (/themes) with titles, descriptions, sitemap entries
+- [x] Clearer clickable-card styling
+- [ ] Marketing video — needs owner approval for video generation cost
+- [ ] Remaining Deep Implementation Guide items (testimonials need real customer quotes; social proof needs real numbers)
 
 ## Launch plan
 - .lovable/plan.md (mirrors launch-plan.md) — ongoing launch plan only
