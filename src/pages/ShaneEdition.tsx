@@ -8,6 +8,10 @@ import { Switch } from '@/components/ui/switch';
 import { supabase } from '@/integrations/supabase/client';
 import { loadProtectedJson, loadProtectedText, ContentLockedError } from '@/lib/protectedContent';
 import { CATEGORIES, catsFor, type MbEntry } from './Masterbook';
+import { SitePasswordGate } from '@/components/common/SitePasswordGate';
+import { FounderAccuracy } from '@/components/readings/FounderAccuracy';
+import { useSession } from '@/hooks/useLibrary';
+import { Button } from '@/components/ui/button';
 
 const APRIL_EMAIL = 'babybluepuppet@gmail.com';
 const SHANE_EMAILS = ['shanegoble@gmail.com', 'shanealecompte@gmail.com'];
@@ -44,15 +48,17 @@ function ShareSwitch() {
   );
 }
 
-export default function ShaneEdition() {
+export default function ShaneEdition() { return <SitePasswordGate><ShaneEditionInner /></SitePasswordGate>; }
+function ShaneEditionInner() {
+  const session = useSession();
   const { id } = useParams();
   const [entries, setEntries] = useState<MbEntry[] | null>(null);
   const [err, setErr] = useState('');
   const [q, setQ] = useState('');
   const [cat, setCat] = useState<string | null>(null);
   const [text, setText] = useState<string | null>(null);
-  useEffect(() => { loadIndex().then(setEntries).catch(e => setErr(e instanceof ContentLockedError ? 'Unlock the private edition with the site password first.' : 'Shane hasn’t shared his edition with you, or it couldn’t be opened.')); }, []);
-  useEffect(() => { if (!id) return; setText(null); loadProtectedText('shane', `${id}.md`).then(setText).catch(() => setText('')); window.scrollTo(0, 0); }, [id]);
+  useEffect(() => { let active = true; setEntries(null); setText(null); setErr(''); if (session) void loadIndex().then(e => { if (active) setEntries(e); }).catch(e => { if (active) setErr(e instanceof ContentLockedError ? 'Unlock the private edition with the site password first.' : 'Shane hasn’t shared his edition with you, or it couldn’t be opened.'); }); return () => { active = false; }; }, [session?.user.id]);
+  useEffect(() => { let active = true; setText(null); if (id && session) void loadProtectedText('shane', `${id}.md`).then(t => { if (active) setText(t); }).catch(() => { if (active) setText(''); }); window.scrollTo(0, 0); return () => { active = false; }; }, [id, session?.user.id]);
   const list = useMemo(() => (entries ?? []).filter(e => (!cat || catsFor(e).includes(cat)) && (e.title + e.sections.join(' ')).toLowerCase().includes(q.toLowerCase())), [entries, q, cat]);
 
   if (err) return <div className="space-y-4"><h1 className="text-4xl">Shane’s Masterbook</h1><p className="text-muted-foreground">{err}</p></div>;
@@ -66,6 +72,7 @@ export default function ShaneEdition() {
           <Link to="/shane" className="text-xs font-smallcaps text-muted-foreground hover:text-foreground">← Shane’s Masterbook</Link>
           {e && <><div className="font-smallcaps text-xs text-gold mt-4">{e.part} · {e.label}</div><h1 className="text-3xl sm:text-4xl mt-2">{e.title}</h1></>}
           <div className="gold-rule my-6" />
+          <p role="note" className="mb-6 border-l-2 border-accent pl-4 text-sm text-muted-foreground">Original uploaded text, preserved unchanged. Some source placements conflict with Shane’s calculated chart; this chapter is not a verified report. Medical, family-history and past-life claims are not established by astrology.</p>
           {text === null ? <p className="text-muted-foreground">Opening the chapter…</p> : text === '' ? <p>This chapter couldn’t be opened.</p> : (
             <div className="mb-prose"><ReactMarkdown remarkPlugins={[remarkGfm]} components={{ h3: ({ children }) => <h3 id={slug(String(children))} className="scroll-mt-24">{children}</h3> }}>{text}</ReactMarkdown></div>
           )}
@@ -90,10 +97,11 @@ export default function ShaneEdition() {
         <ShareSwitch />
         <Input placeholder="Search chapters and sections…" value={q} onChange={e => setQ(e.target.value)} className="max-w-md mt-5" />
         <div className="flex flex-wrap gap-2 mt-3 text-xs">
-          <button onClick={() => setCat(null)} className={`px-3 py-1 rounded-full border ${!cat ? 'border-accent bg-accent/15' : 'border-border hover:bg-muted'}`}>All</button>
-          {CATEGORIES.map(([c]) => { const n = (entries ?? []).filter(e => catsFor(e).includes(c)).length; return n ? <button key={c} onClick={() => setCat(cat === c ? null : c)} className={`px-3 py-1 rounded-full border ${cat === c ? 'border-accent bg-accent/15' : 'border-border hover:bg-muted'}`}>{c} <span className="text-muted-foreground">{n}</span></button> : null; })}
+          <Button size="sm" variant={!cat ? 'secondary' : 'outline'} onClick={() => setCat(null)}>All</Button>
+          {CATEGORIES.map(([c]) => { const n = (entries ?? []).filter(e => catsFor(e).includes(c)).length; return n ? <Button key={c} size="sm" variant={cat === c ? 'secondary' : 'outline'} onClick={() => setCat(cat === c ? null : c)}>{c} <span className="text-muted-foreground">{n}</span></Button> : null; })}
         </div>
       </header>
+      <FounderAccuracy />
       {!entries && <p className="text-muted-foreground">Opening Shane’s edition…</p>}
       {parts.map(p => (
         <section key={p}>
