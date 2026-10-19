@@ -12,6 +12,7 @@ if (typeof window !== 'undefined' && new URLSearchParams(window.location.search)
 const adminWantsOwn = (email?: string) => email?.toLowerCase() === ADMIN_EMAIL && sessionStorage.getItem(ADMIN_EDITION_KEY) !== 'april';
 export const isAdminEmail = (email?: string | null) => email?.toLowerCase() === ADMIN_EMAIL;
 export function openAprilEditionTab() { window.open(`${window.location.origin}/?edition=april`, '_blank', 'noopener'); }
+export function viewAprilEditionInApp() { sessionStorage.setItem(ADMIN_EDITION_KEY, 'april'); window.location.href = '/'; }
 export function leaveAprilEdition() { sessionStorage.removeItem(ADMIN_EDITION_KEY); window.location.href = '/'; }
 const listeners = new Set<(v: boolean | undefined) => void>();
 
