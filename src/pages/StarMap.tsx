@@ -20,7 +20,7 @@ export default function StarMap() {
   return (
     <div className="space-y-10">
       <header>
-        <div className="font-smallcaps text-[11px] text-gold">Section 15 · Interactive Sky</div>
+        <div className="font-smallcaps text-[11px] text-gold">15</div>
         <h1 className="font-display mt-2">The fixed-star sky.</h1>
         <div className="gold-rule my-5 max-w-xs" />
         <p className="max-w-2xl text-lg text-foreground/85 leading-relaxed">

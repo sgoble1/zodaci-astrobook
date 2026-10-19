@@ -8,7 +8,6 @@ export default function Chinese() {
   return (
     <article className="space-y-14">
       <header>
-        <div className="font-smallcaps text-[11px] text-gold">Section · Chinese Astrology · Ba Zi</div>
         <h1 className="font-display mt-2">Four Pillars of Destiny.</h1>
         <div className="gold-rule my-5 max-w-xs" />
         <p className="max-w-2xl text-lg text-foreground/85 leading-relaxed">
