@@ -1,7 +1,7 @@
 # Project rules
 
 ## Planning
-- roadmap.md is the sole active index. launch-plan.md and .lovable/plan.md mirror only the launch plan. Keep other plans separate; delete superseded plans, never code/audits/source knowledge.
+- roadmap.md is the sole index. launch-plan.md/.lovable/plan.md mirror launch only. Keep other plans separate; delete superseded plans, never code/audits/source knowledge.
 
 ## Privacy and access
 - protected-content requires approved-account authentication and password tokens. Public bundles contain no archived payload.
