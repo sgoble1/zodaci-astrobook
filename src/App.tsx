@@ -110,6 +110,10 @@ const CommunityGuidelines = lazy(() => import('./pages/Community').then(m => ({ 
 const CreatorDashboard = lazy(() => import('./pages/CreatorDashboard'));
 const AstroBookPublic = lazy(() => import('./pages/PublicInfo').then(m => ({ default: m.AstroBookPublic })));
 const BookPreview = lazy(() => import('./pages/BookPreview'));
+const Demo = lazy(() => import('./pages/Demo'));
+const AprilEdition = lazy(() => import('./pages/AprilEdition'));
+const ThemesIndex = lazy(() => import('./pages/PublicThemes').then(m => ({ default: m.ThemesIndex })));
+const ThemeDetail = lazy(() => import('./pages/PublicThemes').then(m => ({ default: m.ThemeDetail })));
 const FaqPage = lazy(() => import('./pages/PublicInfo').then(m => ({ default: m.FaqPage })));
 const PrivacyPage = lazy(() => import('./pages/PublicInfo').then(m => ({ default: m.PrivacyPage })));
 const TermsPage = lazy(() => import('./pages/PublicInfo').then(m => ({ default: m.TermsPage })));
@@ -204,6 +208,7 @@ export default function App() {
         <Suspense fallback={<div role="status" aria-label="Loading page" className="mx-auto mt-10 h-40 max-w-3xl animate-pulse rounded-lg bg-muted" />}>
         <Routes>
           <Route path="/welcome" element={<BrandLanding />} />
+          <Route path="/april" element={<AprilEdition />} />
           <Route element={<PublicSiteLayout />}>
             <Route path="/about" element={<About />} />
             <Route path="/lp/:slug" element={<LandingPage />} />
@@ -214,6 +219,9 @@ export default function App() {
             <Route path="/community/:id" element={<Community />} />
             <Route path="/astrobook" element={<AstroBookPublic />} />
             <Route path="/book-preview" element={<BookPreview />} />
+            <Route path="/demo" element={<Demo />} />
+            <Route path="/themes" element={<ThemesIndex />} />
+            <Route path="/themes/:slug" element={<ThemeDetail />} />
             <Route path="/faq" element={<FaqPage />} />
             <Route path="/privacy" element={<PrivacyPage />} />
             <Route path="/terms" element={<TermsPage />} />
