@@ -1,3 +1,4 @@
+import { CinematicVideo } from '@/components/fx/CinematicVideo';
 import { Navigate, Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { BoxArt } from '@/components/common/BoxArt';
@@ -40,7 +41,7 @@ export default function Home() {
     <div className="space-y-16">
       {/* Hero */}
       <section className="relative isolate overflow-hidden rounded min-h-[540px] gentle-fade">
-        <img src={heroImg} alt="Printed AstroBook and an open chart book" width={1536} height={1024} className="absolute inset-0 -z-20 h-full w-full object-cover" />
+        <CinematicVideo poster={heroImg} />
         <div className="absolute inset-0 -z-10 bg-background/65" />
         <div className="max-w-2xl p-6 sm:p-10">
           <div className="font-smallcaps text-[11px] text-gold mb-4">Zodaci · A Personal Chart Library</div>
@@ -52,6 +53,7 @@ export default function Home() {
             Explore your calculated birth chart and personal readings. Paid plans add six foundational chapters; Creator adds custom chapters and podcasts, informed by life examples you choose to share.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
+            <Button asChild variant="outline"><Link to="/demo" className="font-smallcaps text-xs">Try the interactive demo</Link></Button>
             {myBirth ? (
               <>
                 <Button asChild><Link to="/my-chart" className="font-smallcaps text-xs">Open my chart</Link></Button>

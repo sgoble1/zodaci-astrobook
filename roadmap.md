@@ -8,7 +8,8 @@
 - [x] 3D AstroBook mockup on AstroBook order page
 - [x] Public core-theme pages (/themes) with titles, descriptions, sitemap entries
 - [x] Clearer clickable-card styling
-- [ ] Marketing video — needs owner approval for video generation cost
+- [x] Cinematic marketing video on homepage, welcome, and AstroBook banners (grain + projector light)
+- [x] Demo: Jules Harbor full 7-section reading, linked from Pricing and homepage hero
 - [ ] Remaining Deep Implementation Guide items (testimonials need real customer quotes; social proof needs real numbers)
 
 ## Launch plan
