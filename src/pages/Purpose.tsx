@@ -5,7 +5,6 @@ export default function Purpose() {
   return (
     <div className="space-y-10 max-w-3xl">
       <header>
-        <div className="font-smallcaps text-[11px] text-gold">06 · 17</div>
         <h1 className="font-display mt-2">The numerical harmonics of the chart.</h1>
         <div className="gold-rule my-5 max-w-xs" />
         <p className="text-lg text-foreground/85 leading-relaxed">
