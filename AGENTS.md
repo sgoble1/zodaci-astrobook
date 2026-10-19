@@ -1,7 +1,7 @@
 # Project rules
 
 ## Planning
-- roadmap.md is the sole active-project index. launch-plan.md and .lovable/plan.md mirror only the ongoing launch plan. Keep other active plans separate; remove superseded plans, never code, audits or source/user knowledge, to avoid competing task sources.
+- roadmap.md is the sole active index. launch-plan.md and .lovable/plan.md mirror only the launch plan. Keep other plans separate; delete superseded plans, never code/audits/source knowledge.
 
 ## Privacy and access
 - protected-content requires approved-account authentication and password tokens. Public bundles contain no archived payload.
@@ -38,7 +38,7 @@
 - Queue/speed/resume use per-device localStorage; PDF viewer uses pdfjs-dist legacy.
 - Shared recommendations/media use shared_recommendations/shared_media plus generic shared_item_comments/shared_item_reactions keyed by item_type/item_id.
 - Box grids use BoxArt(seed,label). One logo; print products keep names.
-- /welcome is a separate generic-art brand page; private routes stay unchanged.
+- /welcome is separate; private routes unchanged. CinematicVideo tries WebM/MP4 with a matching-frame fallback for accessibility/codec failures.
 - Book examples are non-orderable; landing readings use only public editorial content.
 
 ## Commerce and operations

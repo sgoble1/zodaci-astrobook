@@ -1,7 +1,7 @@
 # Zodaci — Active Project Index
 
 ## In progress (current request)
-- [ ] Publish homepage video and demo; repair video compatibility fallback; remove decorative numeric eyebrows
+- [x] Requested homepage/demo publication; verified WebM playback and matching reduced-motion fallback; removed decorative numeric eyebrows. Final update requested after verification; deployment completion is not confirmed.
 - [x] Admin walkthrough as shanegoble@gmail.com: April's edition opens in admin view; shared space opens without bouncing
 - [x] April client page at /april (password link, no account needed)
 - [x] Editable print/delivery/fee cost + margin table on Book orders

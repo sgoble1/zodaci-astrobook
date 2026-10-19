@@ -24,7 +24,6 @@ export default function Bagua() {
   return (
     <div className="space-y-12">
       <header>
-        <div className="font-smallcaps text-xs text-gold">18</div>
         <h1 className="text-4xl sm:text-5xl mt-2">The Bagua & Home Guide</h1>
         <p className="text-muted-foreground mt-3 max-w-2xl">{KUA_FOUNDATION.text}<Cite source={KUA_FOUNDATION.source} /></p>
         <div className="flex flex-wrap gap-4 text-sm mt-3"><Link to="/feng-shui/flying-stars" className="underline">Flying Stars by year →</Link><Link to="/feng-shui" className="underline">Feng Shui overview</Link><Link to={`/masterbook/pdf/${FS_DOC_ID}?page=114`} className="underline">Read Section 18 in the PDF</Link></div>

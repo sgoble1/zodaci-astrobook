@@ -17,7 +17,6 @@ export default function FengShui() {
   return (
     <div className="space-y-10">
       <header>
-        <div className="font-smallcaps text-[11px] text-gold">18</div>
         <h1 className="font-display mt-2">Kua {KUA_INFO.number} · Water · East Group.</h1>
         <div className="gold-rule my-5 max-w-xs" />
         <p className="max-w-2xl text-lg text-foreground/85 leading-relaxed">
