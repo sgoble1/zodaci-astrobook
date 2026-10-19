@@ -4,6 +4,16 @@ import { createClient } from 'npm:@supabase/supabase-js@2';
 
 type Archive = { masterbook: Record<string, string>; library: Record<string, string> };
 let archivePromise: Promise<Archive> | null = null;
+let shanePromise: Promise<Record<string, string>> | null = null;
+function loadShane() {
+  shanePromise ??= (async () => {
+    const admin = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!);
+    const { data, error } = await admin.storage.from('private-content').download('shane/edition.json');
+    if (error || !data) throw new Error('Shane edition unavailable.');
+    return JSON.parse(await data.text()) as Record<string, string>;
+  })().catch(e => { shanePromise = null; throw e; });
+  return shanePromise;
+}
 
 const json = (body: unknown, status = 200) => new Response(JSON.stringify(body), {
   status,
@@ -43,17 +53,18 @@ Deno.serve(async (req) => {
     const client = createClient(url, key, { global: { headers: { Authorization: auth } } });
     const { data: user, error: authError } = await client.auth.getUser(auth.slice(7));
     if (authError || !user.user) return json({ error: 'Sign in to your private edition.', code: 'LOCKED' }, 401);
-    const { data: allowed, error: accessError } = await client.rpc('is_shared_space_member');
+    const peek = await req.clone().json().catch(() => ({}));
+    const isShane = peek?.area === 'shane';
+    const { data: allowed, error: accessError } = await client.rpc(isShane ? 'can_read_shane_edition' : 'is_shared_space_member');
     if (accessError || allowed !== true) return json({ error: 'This document belongs to the private edition.' }, 403);
     const secret = Deno.env.get('CONTENT_UNLOCK_SECRET') ?? '';
     const body = await req.json();
     const token = typeof body?.token === 'string' ? body.token : '';
-    const area = body?.area === 'masterbook' || body?.area === 'library' ? body.area : '';
+    const area = body?.area === 'masterbook' || body?.area === 'library' || body?.area === 'shane' ? body.area : '';
     const file = typeof body?.file === 'string' && /^[a-zA-Z0-9._-]+$/.test(body.file) ? body.file : '';
     if (!secret || !(await validToken(token, secret))) return json({ error: 'Unlock required.', code: 'LOCKED' }, 401);
     if (!area || !file) return json({ error: 'Invalid document request.' }, 400);
-    const archive = await loadArchive();
-    const content = archive[area][file];
+    const content = area === 'shane' ? (await loadShane())[file] : (await loadArchive())[area as 'masterbook' | 'library'][file];
     if (typeof content !== 'string') return json({ error: 'Document not found.' }, 404);
     return json({ content });
   } catch (error) {
