@@ -173,6 +173,33 @@ export type Database = {
         }
         Relationships: []
       }
+      book_costing: {
+        Row: {
+          delivery_cents: number
+          edition: string
+          fees_cents: number
+          print_cents: number
+          quote_source: string
+          updated_at: string
+        }
+        Insert: {
+          delivery_cents?: number
+          edition: string
+          fees_cents?: number
+          print_cents?: number
+          quote_source?: string
+          updated_at?: string
+        }
+        Update: {
+          delivery_cents?: number
+          edition?: string
+          fees_cents?: number
+          print_cents?: number
+          quote_source?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       book_orders: {
         Row: {
           admin_note: string
