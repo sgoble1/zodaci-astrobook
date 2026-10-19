@@ -71,7 +71,7 @@ function useDirectory() {
 function SharedNav({ value }: { value: string }) {
   const links = [
     ['overview', '/shared', 'Dashboard', Users], ['chat', '/shared/conversations', 'Conversations', MessageCircle], ['posts', '/shared/posts', 'Posts', FileText], ['notes', '/shared/notes', 'Notes', StickyNote],
-    ['wonderings', '/shared/wonderings', 'Wonderings', Heart], ['reading', '/shared/reading', 'Reading Together', BookOpen], ['media', '/shared/media', 'Media Library', ImageIcon], ['recs', '/shared/recommendations', 'Recommendations', Clapperboard], ['later', '/shared/later', 'Talk Later', Archive], ['accounts', '/shared/accounts', 'Accounts', Link2],
+    ['wonderings', '/shared/wonderings', 'Wonderings', Heart], ['reading', '/shared/reading', 'Reading Together', BookOpen], ['media', '/shared/media', 'Media Library', ImageIcon], ['recs', '/shared/recommendations', 'Recommendations', Clapperboard], ['later', '/shared/later', 'Talk Later', Archive], ['accounts', '/shared/accounts', 'Accounts', Link2], ['shane', '/shane', 'Shane’s Masterbook', BookOpen], ['april', '/masterbook', 'April’s Masterbook', BookOpen],
   ] as const;
   return <nav className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap" aria-label="Shared space sections">{links.map(([id, to, label, Icon]) => <Button key={id} asChild variant={value === id ? 'default' : 'outline'} size="sm"><Link to={to} aria-current={value === id ? 'page' : undefined}><Icon className="h-4 w-4" />{label}</Link></Button>)}</nav>;
 }
