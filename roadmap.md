@@ -1,7 +1,7 @@
 # Zodaci — Active Project Index
 
 ## In progress (current request)
-- [ ] Restore April’s original workbook and archived topic content; verify account isolation and signed-in access.
+- [x] Restored late-loaded April archive content; verified her 9 workbook chapters, 45 questions, 46 saved entries, 16 topics and Compendium in her own account; 4 privacy/hydration tests pass.
 - [x] Failed lazy imports now show recovery instead of blanking; interrupted demo download, retry, and fresh welcome verified; 3 regression tests pass.
 - [x] Requested homepage/demo publication; verified WebM playback and matching reduced-motion fallback; removed decorative numeric eyebrows. Final update requested after verification; deployment completion is not confirmed.
 - [x] Admin walkthrough as shanegoble@gmail.com: April's edition opens in admin view; shared space opens without bouncing
@@ -26,4 +26,4 @@
 - [x] Founder access + higher reading limits; Shane Masterbook (63 chapters) at /shane; share-with-April switch
 - [ ] Side-by-side "Our two charts" page
 - [ ] Map Shane chapters into topic pages; pre-fill all readings for both accounts
-- [ ] Walk through with a signed-in April account
+- [x] Signed-in April walkthrough: original workbook, saved-entry count, guided questions, topics and Compendium verified without runtime errors.
