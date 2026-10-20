@@ -1,6 +1,11 @@
 # Zodaci — Active Project Index
 
-## In progress (current request)
+## In progress (current request: finish all remaining implementation)
+- [ ] Dependency advisories: router, lodash (via charts) and spreadsheet import library upgraded; dependency scan clean.
+- [ ] Lulu Print API integration (Phase 5): admin connection status, live quote per order, submit verified-paid orders, status/tracking sync and signed webhook. Goes live once Lulu keys are added.
+- [ ] Admin launch-readiness checklist (Phase 7 "global control checklist") from real system signals.
+
+## Earlier current-request items
 - [x] Complete interrupted marketing audit: prices/FAQ verification, route metadata, invitation sharing, honest public claims and mobile/desktop checks; evidence and external limits: docs/marketing-audit-2026-10-20.md.
 - [x] Experience Architect audit and repairs; evidence, coverage limits and release gates: docs/experience-audit-2026-10-20.md.
 - [x] Chapter readers use consistent navigation, h2/h3 anchors, account-remounted protected room, stale-load cancellation and retry. Founder content walkthrough requires authorized session/password.
