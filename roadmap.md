@@ -28,8 +28,8 @@
 - [x] B2 AstroBook page: comparison, What's Inside, chapter tabs, 10-question FAQ, gift option, Olivia Chen sample; Lulu print brief
 - [x] B3 Book order fulfillment stages (paid → print brief sent → printing → quality check → shipped → delivered) with stage history, customer progress line and CSV
 - [ ] C1 AstroComic: product page, checkout (monthly/yearly/single), webhook lifecycle, character bible art, chart+transit 24-page issue plan, subscriber archive/address/pause/skip, admin print queue + manifest CSV
-- [ ] A1 Admin: grouped tabs (Content / Operations / Platform) with ?tab= persistence, Ctrl+K admin search, audit log viewer, platform settings (feature flags, maintenance, admin list), Activity filters + subscription column
-- [ ] A2 Admin: Stripe overview via admin-verified function, April activity monitor (activity only, never private text), newsletter drafts/segments (sending waits on email domain), member grants (plan days / bonus credits)
+- [x] A1 Admin: grouped tabs (Content / Operations / Platform) with ?tab= persistence, Ctrl+K admin search, audit log viewer, platform settings (feature flags, maintenance, admin list), Activity filters + subscription column
+- [x] A2 Admin: Stripe overview via admin-verified function, April activity monitor (activity only, never private text), newsletter drafts/segments (sending waits on email domain), member grants (plan days / bonus credits)
 - [ ] G1 Referrals page (ZOD- codes, ?ref= links, friend gets 7 days Pro, referrer gets 30 days Pro on friend's first payment), signup bonus claim; installable app (done: manifest/icons)
 - [x] R1 Rename leftover "Creator Studio" labels to Cosmic Studio
 - [ ] D1 Remaining Debug Report / site-audit items (check against document)
@@ -67,5 +67,5 @@
 - [ ] Phase 5: AstroBook 5 versions + Lulu (blocked: Lulu account/API keys)
 - [ ] Phase 6: AstroComic subscription (printing blocked: printer account)
 - [x] Phase 7a: AI credit use tab
-- [ ] Phase 7b: Newsletter, April monitor, audit log, settings, Stripe tabs
+- [x] Phase 7b: Newsletter, April monitor, audit log, settings, Stripe tabs (newsletter delivery blocked: email sender domain)
 - [ ] Phase 8: PWA, referrals, digests (blocked: email sender domain), Academy
