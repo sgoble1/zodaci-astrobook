@@ -10,7 +10,7 @@ export function CinematicVideo({ className = '' }: { poster?: string; className?
   useEffect(() => { const m = window.matchMedia('(prefers-reduced-motion: reduce)'); setReduced(m.matches); const f = () => setReduced(m.matches); m.addEventListener('change', f); return () => m.removeEventListener('change', f); }, []);
   return (
     <div aria-hidden className={`absolute inset-0 -z-20 overflow-hidden ${className}`}>
-      {reduced || failed ? <img src={videoPoster.url} alt="" className="h-full w-full object-cover" /> : (
+      {reduced || failed ? <img src={videoPoster.url} alt="" className="h-full w-full object-cover" onError={e => { e.currentTarget.style.visibility = 'hidden'; }} /> : (
         <video poster={videoPoster.url} autoPlay muted loop playsInline preload="auto" onError={() => setFailed(true)} className="cine-video h-full w-full object-cover">
           <source src={heroWebm.url} type="video/webm" />
           <source src={heroVideo.url} type="video/mp4" />
