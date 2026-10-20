@@ -1,3 +1,4 @@
+import { usePageMeta } from '@/hooks/usePageMeta';
 import { useState } from 'react';
 import { useNavigate, Link, useSearchParams, Navigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
@@ -10,6 +11,7 @@ import { internalDestination } from '@/lib/internalDestination';
 
 /** Public sign-in and sign-up. */
 export default function Auth() {
+  usePageMeta('Sign in · Zodaci', 'Sign in or create your Zodaci account to calculate your birth chart and open your readings.');
   const session = useSession();
   const nav = useNavigate();
   const [params] = useSearchParams();
