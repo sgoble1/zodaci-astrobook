@@ -66,7 +66,7 @@ export default function BrandLanding() {
         </div>
       </section>
 
-      <section aria-label="Zodaci at a glance" className="border-b border-border bg-card/40"><dl className="mx-auto flex max-w-7xl flex-wrap justify-center gap-x-12 gap-y-5 px-5 py-7 sm:px-10">{FACTS.map(([n, l]) => <div key={l} className="flex items-baseline gap-2"><dt className="sr-only">{l}</dt><dd className="font-display text-3xl">{n}</dd><dd className="text-sm text-muted-foreground">{l}</dd></div>)}</dl></section>
+      <section aria-label="Zodaci at a glance" className="border-b border-border bg-card/40"><dl className="mx-auto flex max-w-7xl flex-wrap justify-center gap-x-12 gap-y-5 px-5 py-7 sm:px-10">{FACTS.map(([n, l]) => <div key={l} className="flex items-baseline gap-2"><dt className="sr-only">{l}</dt><dd className="font-display text-3xl">{n}</dd><dd aria-hidden className="text-sm text-muted-foreground">{l}</dd></div>)}</dl></section>
 
       <section aria-labelledby="pillars-h" className="brand-band border-b border-border">
         <h2 id="pillars-h" className="sr-only">Why Zodaci</h2>
