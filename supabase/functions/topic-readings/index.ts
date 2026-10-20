@@ -117,7 +117,9 @@ Deno.serve(async req => {
     const topic = TOPICS[slug];
     const page_key = `topic-${slug}`;
     const sysSlug = slug.startsWith('sys-') ? slug.slice(4) : null;
-    const { data: have } = await admin.from('generated_pages').select('id,status,updated_at').eq('owner_id', ownerId).eq('page_key', page_key).maybeSingle();
+    const { data: have } = await admin.from('generated_pages').select('id,status,updated_at,content').eq('owner_id', ownerId).eq('page_key', page_key).maybeSingle();
+    // A failed rewrite must never destroy the previous saved text.
+    const prior = have?.content && ['ready', 'preview', 'hidden'].includes(have.status) ? { content: have.content as string, status: have.status as string } : null;
     // A paid member opening an old preview gets the full reading written automatically.
     const { data: profile } = await admin.from('profiles').select('*').eq('id', ownerId).maybeSingle();
     if (!profile?.birth_date || !profile.chart) return json({ error: 'Save your birth details first.' }, 400);
@@ -135,7 +137,7 @@ Deno.serve(async req => {
     if (claimed.quota_exceeded) return json({ error: 'Daily writing limit reached. Please return tomorrow.' }, 429);
     if (!claimed.claimed) return json({ status: claimed.job_status });
     const leaseTime = new Date().toISOString();
-    const pending = await admin.from('generated_pages').upsert({ owner_id: ownerId, page_key, section: 'Topic Reading', title: topic.title, content: '', status: 'writing', updated_at: leaseTime }, { onConflict: 'owner_id,page_key' });
+    const pending = await admin.from('generated_pages').upsert({ owner_id: ownerId, page_key, section: 'Topic Reading', title: topic.title, content: prior?.content ?? '', status: 'writing', updated_at: leaseTime }, { onConflict: 'owner_id,page_key' });
     if (pending.error) {
       await admin.from('topic_reading_jobs').update({ status: 'failed', updated_at: new Date().toISOString() }).eq('claim_token', claimed.job_id);
       throw pending.error;
@@ -169,7 +171,7 @@ Deno.serve(async req => {
         if (!finished.data) return;
       } catch (e) {
         console.error('topic job', slug, e);
-        await admin.rpc('finish_topic_reading_job', { p_owner_id: ownerId, p_page_key: page_key, p_token: claimed.job_id, p_content: '', p_status: 'failed', p_birth_saved_at: profile.onboarded_at });
+        await admin.rpc('finish_topic_reading_job', { p_owner_id: ownerId, p_page_key: page_key, p_token: claimed.job_id, p_content: prior?.content ?? '', p_status: prior?.status ?? 'failed', p_birth_saved_at: profile.onboarded_at });
         return;
       } finally { clearInterval(cancellationCheck); }
       // Always move forward to the next unwritten topic (never back), so one failure can't stall or loop the queue.
