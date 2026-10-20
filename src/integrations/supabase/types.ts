@@ -1922,6 +1922,16 @@ export type Database = {
         }[]
       }
       create_space: { Args: { _name: string }; Returns: string }
+      credit_cost: { Args: { _feature: string }; Returns: number }
+      credit_status: {
+        Args: { _user_id: string }
+        Returns: {
+          allowance: number
+          tier: string
+          unlimited: boolean
+          used: number
+        }[]
+      }
       ensure_shared_main_conversation: { Args: never; Returns: string }
       finish_topic_reading_job: {
         Args: {

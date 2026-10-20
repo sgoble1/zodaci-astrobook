@@ -379,6 +379,13 @@
       "when": 1792443427188,
       "tag": "0053_founder_reading_quota",
       "breakpoints": true
+    },
+    {
+      "idx": 54,
+      "version": "7",
+      "when": 1792470198096,
+      "tag": "0054_credit_status",
+      "breakpoints": true
     }
   ]
 }
