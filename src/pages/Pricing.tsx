@@ -44,10 +44,12 @@ export default function Pricing() {
   const [yearly, setYearly] = useState(params.get('period') === 'year');
   const intent = params.get('plan');
   const priceFor = (tier: Exclude<Tier, 'free'>, y: boolean) => y ? PLAN_PRICE[tier].yearId : PLAN_PRICE[tier].monthId;
+  // Records which plan checkout opened for (label only; never payment details).
+  const startCheckout = (pid: string) => { logActivity({ kind: 'checkout_started', path: '/pricing', label: pid, detail: { product: pid } }); setOpen(pid); };
   useEffect(() => {
     if (sub.loading || !sub.userId || open) return;
     const tier = intent === 'pro' ? 'full' : intent === 'cosmic' ? 'creator' : null;
-    if (tier && rank[tier] > rank[sub.tier]) setOpen(priceFor(tier, params.get('period') === 'year'));
+    if (tier && rank[tier] > rank[sub.tier]) startCheckout(priceFor(tier, params.get('period') === 'year'));
   }, [sub.loading, sub.userId, sub.tier, intent]); // eslint-disable-line react-hooks/exhaustive-deps
   const manage = async () => {
     const { data, error } = await supabase.functions.invoke('customer-portal', { body: { returnUrl: window.location.href, environment: (() => { try { return getStripeEnvironment(); } catch { return 'live'; } })() } });
@@ -56,8 +58,9 @@ export default function Pricing() {
   };
   const signupLink = (slug: string) => `/auth?mode=signup&next=${encodeURIComponent(slug === 'free' ? '/start' : `/pricing?plan=${slug}&period=${yearly ? 'year' : 'month'}&next=${encodeURIComponent(returnTo)}`)}`;
   const close = () => { setOpen(null); if (intent) { const n = new URLSearchParams(params); n.delete('plan'); n.delete('period'); setParams(n, { replace: true }); } };
-  const cheapestPrint = Math.min(...BOOK_VERSIONS.filter(v => v.format === 'print').map(v => v.price));
-  const cheapest = Math.min(...BOOK_VERSIONS.map(v => v.price));
+  const prints = BOOK_VERSIONS.filter(v => v.format === 'print').sort((a, b) => a.price - b.price);
+  const digital = BOOK_VERSIONS.find(v => v.format === 'digital');
+  const firstPrint = prints[0]; const topPrint = prints[prints.length - 1];
 
   return (
     <article className="mx-auto max-w-5xl space-y-14">
@@ -75,14 +78,15 @@ export default function Pricing() {
         </section>
       ) : (<>
         <div role="radiogroup" aria-label="Billing period" className="mx-auto flex w-fit items-center gap-1 rounded-full border border-border p-1">
-          {[[false, 'Monthly'], [true, 'Annual']].map(([v, l]) => <button type="button" role="radio" key={String(v)} onClick={() => setYearly(v as boolean)} aria-checked={yearly === v} className={`rounded-full px-5 py-2 text-sm transition-colors duration-500 ${yearly === v ? 'bg-primary text-primary-foreground' : 'hover:bg-muted'}`}>{l as string}{v && <span className="ml-2 rounded-full bg-gold/20 px-2 py-0.5 text-xs text-gold">Save up to 21%</span>}</button>)}
+          {[[false, 'Monthly'], [true, 'Annual']].map(([v, l]) => <button type="button" role="radio" key={String(v)} onClick={() => setYearly(v as boolean)} aria-checked={yearly === v} className={`rounded-full px-5 py-2 text-sm transition-colors duration-500 ${yearly === v ? 'bg-primary text-primary-foreground' : 'hover:bg-muted'}`}>{l as string}{v && <span className="ml-2 rounded-full bg-gold/20 px-2 py-0.5 text-xs text-gold">Save up to {maxYearlySavingPct()}%</span>}</button>)}
         </div>
         <div className="grid gap-5 md:grid-cols-3">
           {CARDS.map((p, i) => {
             const paid = p.tier !== 'free';
-            const price = !paid ? '$0' : yearly ? `$${YEARLY[p.tier as 'full']}` : `$${MONTHLY[p.tier as 'full']}`;
+            const amount = paid ? PLAN_AMOUNT[p.tier as Exclude<Tier, 'free'>] : null;
+            const price = !amount ? '$0' : `$${yearly ? amount.year : amount.month}`;
             const per = !paid ? 'forever' : yearly ? 'per year' : 'per month';
-            const saving = paid && yearly ? MONTHLY[p.tier as 'full'] * 12 - YEARLY[p.tier as 'full'] : 0;
+            const saving = paid && yearly ? yearlySaving(p.tier as Exclude<Tier, 'free'>) : 0;
             const pid = paid ? priceFor(p.tier as Exclude<Tier, 'free'>, yearly) : null;
             const current = !sub.loading && sub.userId && sub.tier === p.tier;
             const below = rank[p.tier] < rank[sub.tier];
@@ -95,12 +99,13 @@ export default function Pricing() {
                 {!paid ? (sub.userId ? <Button asChild variant="outline" className="w-full"><Link to="/start">Open my free chart</Link></Button> : <Button asChild variant="outline" className="w-full"><Link to={signupLink('free')}>{p.cta}</Link></Button>)
                   : current ? <Button disabled className="w-full">Your current plan</Button>
                   : below ? <Button disabled variant="outline" className="w-full">Included in your plan</Button>
-                  : sub.userId ? <Button className="w-full" onClick={() => pid && setOpen(pid)}>{p.cta} — {price}</Button>
+                  : sub.userId ? <Button className="w-full" onClick={() => pid && startCheckout(pid)}>{p.cta} — {price}</Button>
                   : <Button asChild className="w-full"><Link to={signupLink(p.slug)}>{p.cta}</Link></Button>}
               </section>
             );
           })}
         </div>
+        <p className="mx-auto max-w-2xl text-center text-sm text-muted-foreground">Prices in US dollars; any sales tax is calculated at checkout. Cancel anytime and keep access until the period ends. Changed your mind? Ask within {REFUND_WINDOW_DAYS} days of your first subscription payment for a full refund.</p>
       </>)}
       {sub.tier === 'creator' && <p className="text-center"><Button asChild><Link to="/creator">Open your Cosmic dashboard</Link></Button></p>}
       {sub.tier === 'creator' && <div className="space-y-2"><CreatorStudio /><p className="text-center text-sm"><Link to="/my-masterbook" className="underline">Open My Masterbook to read and play what you’ve made</Link></p></div>}
