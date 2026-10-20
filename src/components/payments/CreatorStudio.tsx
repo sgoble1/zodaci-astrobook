@@ -5,13 +5,14 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { supabase } from '@/integrations/supabase/client';
 import { getStripeEnvironment } from '@/lib/stripe';
-import { useSubscription } from '@/hooks/useSubscription';
+import { usePlan } from '@/hooks/usePlan';
 import { useWorkspaces } from '@/hooks/useWorkspaces';
 import { useMyBirth } from '@/lib/myBirth';
 
 /** Cosmic plan tools: new Masterbook chapters and podcasts written from the member's own saved chart. */
 export function CreatorStudio({ onMade }: { onMade?: () => void }) {
-  const sub = useSubscription();
+  // Same access rule as the server: Cosmic plan or grant, admins, and the founders' shared space.
+  const access = usePlan();
   const [params] = useSearchParams();
   const spaces = useWorkspaces();
   const birth = useMyBirth();
@@ -21,8 +22,8 @@ export function CreatorStudio({ onMade }: { onMade?: () => void }) {
   const [busy, setBusy] = useState<null | 'chapter' | 'podcast'>(null);
   const [msg, setMsg] = useState('');
 
-  if (sub.loading) return null;
-  if (sub.tier !== 'creator') return (
+  if (access.loading) return null;
+  if (access.plan !== 'creator') return (
     <section className="parchment p-5 space-y-2" aria-labelledby="studio-h">
       <h2 id="studio-h" className="text-xl">Cosmic Studio</h2>
       <p className="text-sm text-muted-foreground">Make podcasts and new Masterbook chapters written from your own chart. Included with the Cosmic plan ($19/month).</p>

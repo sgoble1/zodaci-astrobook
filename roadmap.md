@@ -42,7 +42,9 @@
 ## Ready next
 - [x] Walked every admin tab and founder pages as Shane; fixed Document Index lock crash, names rewritten to "you" on admin/shared pages, payment mode label, audit empty state.
 - [x] Shared podcasts: Whose filter with counts and assign menu work in Shane's own view (were April-view only); verified assign and restore; delete/rename/share report real failures.
-- [ ] AstroComic production pipeline: per-panel artwork via admin-triggered AI, proof and print PDF (5.5x8.5 + 0.125 bleed, embedded font, DPI preflight), illustrated subscriber reader and PDF download.
+- [x] AstroComic production pipeline: per-panel artwork via admin-triggered AI, proof and print PDF (5.5x8.5 + 0.125 bleed, embedded font, 300 DPI preflight), Mark printing requires the print file, illustrated subscriber reader and PDF download. Verified with one real cover (310 DPI) on a removed test issue.
+- [x] Cosmic Studio opens for admins and the founders (matched the server rule; it showed an upgrade prompt).
+- [x] AstroComic QR panel draws the real scannable code on screen as well as in print.
 - [x] Section navigator on protected library chapters and Shane's edition chapters; shared reader exercised with an existing member reading, protected payload still gated.
 - [ ] AstroComic physical printing (blocked: printer account; CMYK/PDF-X conversion happens in the printer's preflight).
 
@@ -50,7 +52,7 @@
 - .lovable/plan.md (mirrors launch-plan.md) — ongoing launch plan only
 
 - [x] P1 Site settings: maintenance banner + feature switches read through public settings reader (security fix applied)
-- [x] V1 Deployed checkout/webhook/admin payments; AstroComic prices created; tests + browser checks on new public/member pages (admin tabs not browser-checked: test session is not an admin)
+- [x] V1 Deployed checkout/webhook/admin payments; AstroComic prices created; tests + browser checks on public/member pages and every admin tab (197 tests passing)
 
 ## Known external blockers
 - Email sender domain — newsletter sending, digests
