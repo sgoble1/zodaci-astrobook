@@ -14,7 +14,7 @@ const STARTER = STARTER_CHAPTERS;
 type Chapter = { id: string; title: string; content: string; created_at: string };
 type Episode = { id: string; title: string; file_path: string; created_at: string; url?: string };
 
-/** The member's own Masterbook: readable on Pro or Cosmic (enforced by the database), written by Creator Studio. */
+/** The member's own Masterbook: readable on Pro or Cosmic (enforced by the database), written by Cosmic Studio. */
 export default function MyMasterbook() {
   const sub = useSubscription();
   const effective = usePlan();

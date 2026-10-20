@@ -1,6 +1,7 @@
 import { createClient } from "npm:@supabase/supabase-js@2";
 import { type StripeEnv, verifyWebhook, createStripeClient } from "../_shared/stripe.ts";
 import { verifiedBookAmount } from '../_shared/book-payment-rules.ts';
+import { isPaidBook } from '../_shared/book-delivery-rules.ts';
 
 import { finalizeBookPdf } from '../_shared/book-delivery.ts';
 
@@ -98,7 +99,7 @@ async function bookPaid(session: any, env: StripeEnv) {
   if (result.error) throw result.error;
   const {data:order,error}=await db().from('book_orders').select('*').eq('id',orderId).eq('user_id',userId).eq('checkout_session_id',session.id).eq('environment',env).single();
   if(error) throw error;
-  if(order && ['paid','printing','shipped','delivered'].includes(order.status)) await finalizeBookPdf(db(),order);
+  if(order && isPaidBook(order)) await finalizeBookPdf(db(),order);
 }
 
 async function deleted(subscription: any, env: StripeEnv) {

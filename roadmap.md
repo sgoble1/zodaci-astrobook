@@ -22,21 +22,24 @@
 - [x] E3 RetroGOOD page: Explorer, tone saved to profile, affirmations carousel, transit overlay, numerology cross-reference
 - [ ] E4 Report section navigator (MOD-008) on long readings: sticky section list, reading progress, section bookmarks
 - [x] S1 Public pricing: monthly/annual, plan intent through signup, FAQ, comparison table, AstroBook cross-sell
-- [ ] S2 Public homepage (/welcome): verbatim hero, four value pillars, AstroBook callout, plans teaser, Weekly Sky Notes copy, integrity note in footer
-- [ ] S3 Academy learning hub (/academy) and public compatibility page (/compatibility) with Master Build score formula; sitemap/meta/FAQ schema
+- [ ] S2 Public homepage (/welcome): rebuilt; verify in browser + footer integrity note
+- [x] S3 Academy learning hub (/academy) and public compatibility page (/compatibility) with Master Build score formula; sitemap/meta/FAQ schema
 - [x] B1 AstroBook five versions in pricing, checkout, orders, costs
 - [x] B2 AstroBook page: comparison, What's Inside, chapter tabs, 10-question FAQ, gift option, Olivia Chen sample; Lulu print brief
-- [ ] B3 Book order fulfillment stages (paid → print brief sent → printing → quality check → shipped → delivered) with audit trail and CSV
+- [x] B3 Book order fulfillment stages (paid → print brief sent → printing → quality check → shipped → delivered) with stage history, customer progress line and CSV
 - [ ] C1 AstroComic: product page, checkout (monthly/yearly/single), webhook lifecycle, character bible art, chart+transit 24-page issue plan, subscriber archive/address/pause/skip, admin print queue + manifest CSV
 - [ ] A1 Admin: grouped tabs (Content / Operations / Platform) with ?tab= persistence, Ctrl+K admin search, audit log viewer, platform settings (feature flags, maintenance, admin list), Activity filters + subscription column
 - [ ] A2 Admin: Stripe overview via admin-verified function, April activity monitor (activity only, never private text), newsletter drafts/segments (sending waits on email domain), member grants (plan days / bonus credits)
 - [ ] G1 Referrals page (ZOD- codes, ?ref= links, friend gets 7 days Pro, referrer gets 30 days Pro on friend's first payment), signup bonus claim; installable app (done: manifest/icons)
-- [ ] R1 Rename leftover "Creator Studio" labels to Cosmic Studio
+- [x] R1 Rename leftover "Creator Studio" labels to Cosmic Studio
 - [ ] D1 Remaining Debug Report / site-audit items (check against document)
 - [ ] Sabian symbols: needs a licensed source text (not invented)
 
 ## Launch plan
 - .lovable/plan.md (mirrors launch-plan.md) — ongoing launch plan only
+
+- [x] P1 Site settings: maintenance banner + feature switches read through public settings reader (security fix applied)
+- [ ] V1 Deploy checkout/webhook, create AstroComic prices, run tests + browser checks on new pages
 
 ## Known external blockers
 - Real Pixartprinting quote (no published prices/API) — printed delivery cost stays an editable estimate

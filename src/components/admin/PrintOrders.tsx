@@ -4,9 +4,10 @@ import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { BOOK_COSTING, BOOK_VERSIONS, bookBase, editionName, money, versionOf, type AnyEdition } from '@/lib/books';
+import { BOOK_COSTING, BOOK_VERSIONS, bookBase, editionName, money, versionOf, type AnyEdition, type BookFormat } from '@/lib/books';
+import { downloadText, nextStage, ordersCsv, stageError, statusLabel } from '@/lib/bookFulfillment';
 
-type Order = { id: string; edition: string; format: string; status: string; payment_hold: string | null; cover_style: string; manuscript_pages: number | null; payment_total_cents: number | null; extra_sections: unknown; shipping_address: Record<string, string> | null; created_at: string; tracking_number: string; lulu_reference: string; gift: boolean; gift_message: string };
+type Order = { id: string; edition: string; format: string; status: string; payment_hold: string | null; cover_style: string; manuscript_pages: number | null; payment_total_cents: number | null; payment_tax_cents: number | null; extra_sections: unknown; shipping_address: Record<string, string> | null; created_at: string; tracking_number: string; carrier: string; shipped_at: string | null; lulu_reference: string; gift: boolean; gift_message: string };
 type Cost = { edition: AnyEdition; print_cents: number; delivery_cents: number; fees_cents: number; quote_source: string; updated_at?: string };
 
 const EDITIONS: AnyEdition[] = ['digital', 'pocket', 'classic', 'signature', 'linen'];
@@ -28,7 +29,7 @@ export function PrintOrders() {
   const load = async () => {
     setError('');
     const [o, c] = await Promise.all([
-      supabase.from('book_orders').select('id,edition,format,status,payment_hold,cover_style,manuscript_pages,payment_total_cents,extra_sections,shipping_address,created_at,tracking_number,lulu_reference,gift,gift_message').eq('format', 'print').eq('environment', 'live').order('created_at', { ascending: false }).limit(100),
+      supabase.from('book_orders').select('id,edition,format,status,payment_hold,cover_style,manuscript_pages,payment_total_cents,payment_tax_cents,extra_sections,shipping_address,created_at,tracking_number,carrier,shipped_at,lulu_reference,gift,gift_message').eq('format', 'print').eq('environment', 'live').order('created_at', { ascending: false }).limit(100),
       supabase.from('book_costing').select('*'),
     ]);
     if (o.error) { setError('Print orders could not be loaded.'); setOrders([]); return; }
@@ -56,6 +57,15 @@ export function PrintOrders() {
     if (err) { toast.error("Couldn't save the print job reference"); return; }
     toast.success('Print job reference saved'); void load();
   };
+
+  const advance = async (o: Order, next: string) => {
+    const bad = stageError(o.status, next, o.format, { carrier: o.carrier, tracking: o.tracking_number });
+    if (bad) { toast.error(bad); return; }
+    const { data, error: err } = await supabase.from('book_orders').update({ status: next, updated_at: new Date().toISOString() }).eq('id', o.id).eq('status', o.status).select('id');
+    if (err || !data?.length) { toast.error(err?.message || 'This order changed — reload and try again'); return; }
+    toast.success(`Order ${o.id.slice(0, 8)} moved to ${statusLabel(next)}`); void load();
+  };
+  const exportCsv = () => downloadText(`astrobook-print-orders-${new Date().toISOString().slice(0, 10)}.csv`, ordersCsv(orders ?? [], (e, f) => editionName(e, f as BookFormat)));
 
   if (!orders) return <div role="status" aria-label="Loading print orders" className="h-24 animate-pulse rounded bg-muted" />;
   const counts = orders.reduce<Record<string, number>>((m, o) => { m[o.status] = (m[o.status] ?? 0) + 1; return m; }, {});
@@ -89,17 +99,17 @@ export function PrintOrders() {
 
       <div className="rounded-lg border border-border p-4"><h3 className="font-display text-xl">Lulu specification per version</h3><ul className="mt-2 grid gap-1 text-sm sm:grid-cols-2">{BOOK_VERSIONS.filter(v => v.lulu).map(v => <li key={v.id}><span className="text-gold">{v.name}:</span> {v.lulu}</li>)}</ul></div>
 
-      <div className="flex flex-wrap gap-2">{Object.entries(counts).map(([s, n]) => <span key={s} className="rounded-full border border-border px-3 py-1 text-sm">{s.replace(/_/g, ' ')}: {n}</span>)}{!orders.length && <p className="text-muted-foreground">No live printed book orders yet.</p>}</div>
+      <div className="flex flex-wrap gap-2">{Object.entries(counts).map(([s, n]) => <span key={s} className="rounded-full border border-border px-3 py-1 text-sm">{statusLabel(s)}: {n}</span>)}{orders.length > 0 && <Button size="sm" variant="outline" onClick={exportCsv}>Export CSV</Button>}{!orders.length && <p className="text-muted-foreground">No live printed book orders yet.</p>}</div>
       {error && <p role="alert" className="text-destructive text-sm">{error} <Button variant="link" className="h-auto p-0" onClick={() => void load()}>Retry</Button></p>}
-      <p className="text-sm text-muted-foreground">Until Lulu account keys are connected, each paid order is sent by hand: download the final PDF from <Link to="/orders?all=1" className="underline">order management</Link>, copy the brief into a Lulu print job, then save Lulu’s job reference here. Update status and tracking in order management.</p>
+      <p className="text-sm text-muted-foreground">Until Lulu account keys are connected, each paid order is sent by hand: download the final PDF from <Link to="/orders?all=1" className="underline">order management</Link>, copy the brief into a Lulu print job, then save Lulu’s job reference and mark it sent to the printer. Move it through printing and quality check here, then add tracking on the Dispatch desk. Every stage change is recorded in the order’s history.</p>
       <div className="overflow-x-auto rounded-lg border border-border"><table className="w-full min-w-[900px] text-sm">
         <thead><tr className="border-b border-border text-left"><th className="p-3">Date</th><th className="p-3">Version</th><th className="p-3">Pages</th><th className="p-3">Paid</th><th className="p-3">Cost</th><th className="p-3">Margin</th><th className="p-3">Status</th><th className="p-3">Lulu job</th><th className="p-3">Tracking</th><th className="p-3" /></tr></thead>
         <tbody>{orders.map(o => { const cost = totalCost(costs[o.edition] ?? costs.standard); const paid = o.payment_total_cents; return <tr key={o.id} className="border-b border-border last:border-0">
           <td className="p-3">{new Date(o.created_at).toLocaleDateString()}</td><td className="p-3">{editionName(o.edition, 'print')}{o.gift ? ' · gift' : ''}</td><td className="p-3">{o.manuscript_pages ?? '—'}</td><td className="p-3">{paid != null ? money(paid) : '—'}</td><td className="p-3">{money(cost)}</td><td className="p-3">{paid != null ? money(paid - cost) : '—'}</td>
-          <td className="p-3">{o.payment_hold ? <span className="text-destructive">Payment review</span> : o.status.replace(/_/g, ' ')}</td>
+          <td className="p-3">{o.payment_hold ? <span className="text-destructive">Payment review</span> : statusLabel(o.status)}</td>
           <td className="p-3"><div className="flex gap-1"><Input aria-label={`Lulu job reference for order ${o.id.slice(0, 8)}`} className="h-8 w-28" maxLength={120} value={refs[o.id] ?? o.lulu_reference} onChange={e => setRefs(r => ({ ...r, [o.id]: e.target.value }))} /><Button size="sm" variant="ghost" onClick={() => void saveRef(o)} disabled={(refs[o.id] ?? o.lulu_reference) === o.lulu_reference}>Save</Button></div></td>
           <td className="p-3">{o.tracking_number || '—'}</td>
-          <td className="p-3"><Button size="sm" variant="outline" onClick={() => void copy(o)} disabled={!!o.payment_hold}>Copy print brief</Button></td>
+          <td className="p-3"><div className="flex flex-col gap-1"><Button size="sm" variant="outline" onClick={() => void copy(o)} disabled={!!o.payment_hold}>Copy print brief</Button>{(() => { const next = nextStage(o.status, o.format); return next && next !== 'shipped' && !o.payment_hold ? <Button size="sm" variant="ghost" onClick={() => void advance(o, next)}>Mark {statusLabel(next).toLowerCase()}</Button> : next === 'shipped' ? <Button asChild size="sm" variant="ghost"><Link to="/dispatch">Ship</Link></Button> : null; })()}</div></td>
         </tr>; })}</tbody>
       </table></div>
     </section>

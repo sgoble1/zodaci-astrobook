@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { computeChart } from './astro';
-import { buildComicIssue, COMIC_PLANS, firstIssueMonth, lunarCalendar, manifestCsv, monthKey, nextIssueMonth, shipBy } from './comic';
+import { buildComicIssue, COMIC_PLANS, comicDueFor, firstIssueMonth, lunarCalendar, manifestCsv, monthKey, nextIssueMonth, shipBy } from './comic';
 
 const olivia = computeChart({ date: '1992-03-14', time: '07:23', lat: 45.5152, lon: -122.6784, tz: 'America/Los_Angeles', placeLabel: 'Portland, OR', placeSource: 'geocoded', houseSystem: 'placidus' });
 const sub = (over: Partial<Parameters<typeof nextIssueMonth>[0]> = {}) => ({ plan: 'monthly' as const, status: 'active', created_at: '2026-10-15T10:00:00Z', paused_until: null, skip_months: [], ...over });
@@ -66,5 +66,30 @@ describe('24-page issue plan', () => {
   it('escapes manifest CSV fields', () => {
     const csv = manifestCsv([{ name: 'Lee, "J"', email: 'a@b.c', sun: 'Leo', plan: 'monthly', status: 'active', address: { line1: '1 Main' }, issue: '2026-11-01', issueStatus: 'approved' }]);
     expect(csv.split('\n')[1].startsWith('"Lee, ""J"""')).toBe(true);
+  });
+});
+
+describe('AstroComic print queue', () => {
+  const nov = new Date(Date.UTC(2026, 10, 1)); const dec = new Date(Date.UTC(2026, 11, 1)); const oct = new Date(Date.UTC(2026, 9, 1));
+  it('prints for an active subscriber from the month after joining', () => {
+    expect(comicDueFor(sub(), nov).due).toBe(true);
+    expect(comicDueFor(sub(), oct).due).toBe(false);
+  });
+  it('skips a month the member skipped', () => expect(comicDueFor(sub({ skip_months: ['2026-11-01'] }), nov).due).toBe(false));
+  it('skips while paused through the 8th', () => {
+    expect(comicDueFor(sub({ paused_until: '2026-11-08' }), nov).due).toBe(false);
+    expect(comicDueFor(sub({ paused_until: '2026-11-07' }), nov).due).toBe(true);
+  });
+  it('holds failed payments and never prints unpaid or ended plans', () => {
+    for (const status of ['past_due', 'pending', 'canceled']) expect(comicDueFor(sub({ status }), nov).due).toBe(false);
+  });
+  it('prints a single issue once, for the following month', () => {
+    expect(comicDueFor(sub({ plan: 'single' }), nov).due).toBe(true);
+    expect(comicDueFor(sub({ plan: 'single' }), dec).due).toBe(false);
+  });
+  it('stops after a cancellation takes effect', () => expect(comicDueFor(sub({ cancel_at_period_end: true, current_period_end: '2026-11-15T00:00:00Z' }), dec).due).toBe(false));
+  it('neutralizes spreadsheet formulas in the manifest', () => {
+    const csv = manifestCsv([{ name: '=cmd()', email: 'a@b.c', sun: 'Leo', plan: 'monthly', status: 'active', address: {}, issue: 'x', issueStatus: 'draft' }]);
+    expect(csv.split('\r\n')[1].startsWith(`"'=cmd()"`)).toBe(true);
   });
 });
