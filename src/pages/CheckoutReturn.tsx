@@ -12,7 +12,7 @@ export default function CheckoutReturn() {
   useEffect(() => { const timer = window.setTimeout(() => setWaiting(true), 60000); return () => clearTimeout(timer); }, []);
   const next = params.get('next');
   const returnTo = next?.startsWith('/my-readings/topic/') && !next.includes('://') ? next : '/dashboard';
-  const name = sub.tier === 'creator' ? 'Creator' : 'Full Access';
+  const name = sub.tier === 'creator' ? 'Cosmic' : 'Pro';
   if (!params.get('session_id')) return <article className="mx-auto max-w-xl py-12 text-center space-y-4"><h1 className="font-display text-3xl">No payment found</h1><Button asChild><Link to="/pricing">See plans</Link></Button></article>;
   return (
     <article className="mx-auto max-w-xl py-12 text-center space-y-5" aria-live="polite">

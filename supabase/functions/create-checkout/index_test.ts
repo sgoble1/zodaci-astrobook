@@ -7,7 +7,7 @@ const FN = `${SUPABASE_URL}/functions/v1/create-checkout`;
 
 /** The money-flow guardrails that must hold no matter what the client sends. */
 Deno.test("create-checkout rejects a request with no sign-in", async () => {
-  const res = await fetch(FN, { method: "POST", headers: { "Content-Type": "application/json", apikey: SUPABASE_ANON_KEY }, body: JSON.stringify({ priceId: "full_access_monthly", environment: "sandbox", returnUrl: "https://zodaci.com/checkout/return" }) });
+  const res = await fetch(FN, { method: "POST", headers: { "Content-Type": "application/json", apikey: SUPABASE_ANON_KEY }, body: JSON.stringify({ priceId: "pro_monthly", environment: "sandbox", returnUrl: "https://zodaci.com/checkout/return" }) });
   await res.text();
   assertEquals(res.status, 401);
 });

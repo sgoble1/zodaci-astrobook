@@ -3,7 +3,7 @@ import { Lock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import type { Plan } from '@/content/navigation';
 
-export const PLAN_LABEL: Record<Plan, string> = { free: 'Free', full: 'Full Access', creator: 'Creator' };
+export const PLAN_LABEL: Record<Plan, string> = { free: 'Free', full: 'Pro', creator: 'Cosmic' };
 
 /** Shown instead of a page the member's plan doesn't include. */
 export function PlanLock({ need }: { need: Plan }) {

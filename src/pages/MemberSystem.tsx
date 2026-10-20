@@ -22,7 +22,7 @@ export function MemberSystem({ birth, slug }: { birth: MyBirth; slug: string }) 
       <div className="overflow-x-auto rounded-lg border border-border"><table className="w-full text-sm"><tbody>{facts.rows.map(([k, v]) => <tr key={k} className="border-b border-border last:border-0"><th className="p-3 text-left font-normal text-muted-foreground">{k}</th><td className="p-3">{v}</td></tr>)}</tbody></table></div>
       {row === undefined ? <div className="h-24 animate-pulse rounded bg-muted" /> : row ? <div className="reading-prose"><ReactMarkdown remarkPlugins={[remarkGfm]}>{row.content}</ReactMarkdown></div>
         : error ? <p role="alert" className="rounded-lg border border-destructive/40 p-4 text-sm text-destructive">{error}</p>
-        : locked ? <p className="rounded-lg border border-dashed border-border p-4 text-sm text-muted-foreground">The full {facts.title} reading is part of Full Access. <Link to="/pricing" className="underline">See plans</Link></p>
+        : locked ? <p className="rounded-lg border border-dashed border-border p-4 text-sm text-muted-foreground">The full {facts.title} reading is part of Pro. <Link to="/pricing" className="underline">See plans</Link></p>
         : <p role="status" className="rounded-lg border border-dashed border-border p-4 text-sm text-muted-foreground">{writing ? `Writing your ${facts.title} reading from these values — about a minute. It saves to your account.` : 'Loading…'}</p>}
       <FounderSourcePanel theme={`sys-${slug}`} />
     </article>

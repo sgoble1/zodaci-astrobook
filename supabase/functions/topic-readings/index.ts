@@ -112,8 +112,8 @@ Deno.serve(async req => {
     const fullAccess = !!(paid || isAdminUser || shared);
     // Free members get a short opening-section preview of every core theme; the full reading needs a paid plan.
     const teaser = !fullAccess && !FREE_READINGS.includes(slug) && slug in CORE_TOPICS;
-    if (!fullAccess && !FREE_READINGS.includes(slug) && !teaser) return json({ error: 'This reading is part of Full Access. Upgrade to have it written from your chart.' }, 403);
-    if (teaser && regenerate) return json({ error: 'Upgrade to Full Access to have the full reading written.' }, 403);
+    if (!fullAccess && !FREE_READINGS.includes(slug) && !teaser) return json({ error: 'This reading is part of Pro. Upgrade to have it written from your chart.' }, 403);
+    if (teaser && regenerate) return json({ error: 'Upgrade to Pro to have the full reading written.' }, 403);
     const topic = TOPICS[slug];
     const page_key = `topic-${slug}`;
     const sysSlug = slug.startsWith('sys-') ? slug.slice(4) : null;

@@ -32,10 +32,13 @@
 ## Upgrade build (12 documents) — see .lovable/plan/zodaci-upgrade-one-combined-build-from-all-12-documents-2026-10-20.md
 - [x] Phase 1a: admin default tab by role, non-admin upload panel removed, styled confirmation dialog replaces browser popups sitewide (retry/filter/subscription bugs were already fixed)
 - [x] Phase 2a: Digital Sanctuary palette applied sitewide
-- [ ] Phase 1b: Debug Report items + chart anomaly detection; 15 site-audit issues
+- [x] Phase 1b-i: chart anomaly detection (full moon, 29°, stelliums, bucket/handle, grand trine, T-square, grand cross) on My Chart
+- [ ] Phase 1b-ii: remaining Debug Report items; 15 site-audit issues
 - [ ] Phase 2b: single-row nav, homepage order, pricing page rebuild
-- [ ] Phase 3: Pro $9 / Cosmic $19 products + grandfathering, credit ledger, deduction engine, TierGate results page
-- [ ] Phase 4: RetroGOOD + Perception Engine + Shane×April synastry
+- [x] Phase 3a: Pro $9 / Cosmic $19 (annual $89 / $179) checkout, legacy subscribers grandfathered, renamed sitewide
+- [ ] Phase 3b: credit ledger, deduction engine, TierGate results page
+- [x] Phase 4a: RetroGOOD tier rating on My Chart
+- [ ] Phase 4b: RetroGOOD page, Perception Engine + Shane×April synastry
 - [ ] Phase 5: AstroBook 5 versions + Lulu (blocked: Lulu account/API keys)
 - [ ] Phase 6: AstroComic subscription (printing blocked: printer account)
 - [ ] Phase 7: Admin new tabs (Newsletter, April monitor, credit ledger, audit log, settings, Stripe)

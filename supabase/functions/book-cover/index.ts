@@ -25,7 +25,7 @@ Deno.serve(async req => {
       db.rpc('has_role', { _user_id: user.id, _role: 'admin' }),
       db.rpc('is_shared_space_member'),
     ]);
-    if (!(paid || isAdminUser || shared)) return json({ error: 'Personal cover previews are part of Full Access. Upgrade to create covers from your chart — or pick one of the free cover designs.' }, 403);
+    if (!(paid || isAdminUser || shared)) return json({ error: 'Personal cover previews are part of Pro. Upgrade to create covers from your chart — or pick one of the free cover designs.' }, 403);
     const since = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
     const { count: coverCount } = await db.from('ai_usage').select('id', { count: 'exact', head: true }).eq('user_id', user.id).eq('feature', 'book-cover-request').gte('created_at', since);
     if ((coverCount ?? 0) >= 9) return json({ error: 'Daily cover-preview limit reached. Try again tomorrow.' }, 429);

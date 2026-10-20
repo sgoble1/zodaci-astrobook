@@ -12,8 +12,8 @@ import { PaymentTestModeBanner } from '@/components/payments/PaymentTestModeBann
 
 const plans: { tier: Tier; name: string; price: string; priceId?: string; yearPrice?: string; yearId?: string; blurb: string; items: string[] }[] = [
   { tier: 'free', name: 'Free', price: 'Free', blurb: 'Everything you need to meet your chart.', items: ['Your calculated birth chart wheel', 'Planets, houses and aspects in plain words', 'Two full readings: Your Big Three and Personality & Strengths', 'Explore & Discover and the Chart Guide', 'First-section previews of core themes', 'Save your chart to your account'] },
-  { tier: 'full', name: 'Full Access', price: '$12.99/month', priceId: 'full_access_monthly', yearPrice: '$124.99/year', yearId: 'full_access_yearly', blurb: 'The complete book written from your chart.', items: ['Every reading at full length', 'Read your own Masterbook, written from your chart', 'Timing & cycles: transits, retrogrades, life phases', 'Seven other systems: Vedic, Ba Zi, Maya and more', 'A monthly allowance of AI credits', 'Shared spaces with people you invite'] },
-  { tier: 'creator', name: 'Creator', price: '$14.99/month', priceId: 'creator_monthly', yearPrice: '$143.99/year', yearId: 'creator_yearly', blurb: 'Make new things from your chart.', items: ['Everything in Full Access', 'Generate personal podcasts about your chart', 'Generate new Masterbook chapters and pages', 'A larger monthly allowance of AI credits', 'Your own Creator dashboard'] },
+  { tier: 'full', name: 'Pro', price: '$9/month', priceId: 'pro_monthly', yearPrice: '$89/year', yearId: 'pro_yearly', blurb: 'The complete book written from your chart.', items: ['Every reading at full length', 'Read your own Masterbook, written from your chart', 'Timing & cycles: transits, retrogrades, life phases', 'Seven other systems: Vedic, Ba Zi, Maya and more', 'A monthly allowance of AI credits', 'Shared spaces with people you invite'] },
+  { tier: 'creator', name: 'Cosmic', price: '$19/month', priceId: 'cosmic_monthly', yearPrice: '$179/year', yearId: 'cosmic_yearly', blurb: 'Make new things from your chart.', items: ['Everything in Pro', 'Generate personal podcasts about your chart', 'Generate new Masterbook chapters and pages', 'A larger monthly allowance of AI credits', 'Your own Cosmic dashboard'] },
 ];
 const rank: Record<Tier, number> = { free: 0, full: 1, creator: 2 };
 const faqs = [
@@ -74,15 +74,15 @@ export default function Pricing() {
           })}
         </div>
       )}
-      {sub.tier === 'creator' && <p className="text-center"><Button asChild><Link to="/creator">Open your Creator dashboard</Link></Button></p>}
-      <section aria-labelledby="guarantee" className="rounded border border-border bg-card p-5 text-center"><h2 id="guarantee" className="text-xl">7-day refund</h2><p className="text-sm text-muted-foreground mt-2">Not for you? Ask for a refund within 7 days of your first Full Access or Creator payment and we'll return it in full. Contact us from your account email.</p></section>
-      <section aria-labelledby="creator-perks" className="rounded border border-border bg-card p-5"><h2 id="creator-perks" className="text-xl">Creator perks</h2><ul className="mt-3 grid sm:grid-cols-2 gap-2 text-sm"><li>Your own Creator dashboard</li><li>Personal podcasts written and voiced from your chart</li><li>New Masterbook chapters on any topic you choose</li><li>Every Full Access reading, timing page and other system</li></ul></section>
+      {sub.tier === 'creator' && <p className="text-center"><Button asChild><Link to="/creator">Open your Cosmic dashboard</Link></Button></p>}
+      <section aria-labelledby="guarantee" className="rounded border border-border bg-card p-5 text-center"><h2 id="guarantee" className="text-xl">7-day refund</h2><p className="text-sm text-muted-foreground mt-2">Not for you? Ask for a refund within 7 days of your first Pro or Cosmic payment and we'll return it in full. Contact us from your account email.</p></section>
+      <section aria-labelledby="creator-perks" className="rounded border border-border bg-card p-5"><h2 id="creator-perks" className="text-xl">Cosmic perks</h2><ul className="mt-3 grid sm:grid-cols-2 gap-2 text-sm"><li>Your own Cosmic dashboard</li><li>Personal podcasts written and voiced from your chart</li><li>New Masterbook chapters on any topic you choose</li><li>Every Pro reading, timing page and other system</li></ul></section>
       {sub.tier === 'creator' && <div className="space-y-2"><CreatorStudio /><p className="text-sm text-center"><Link to="/my-masterbook" className="underline">Open My Masterbook to read and play what you've made</Link></p></div>}
       <section className="space-y-3" aria-labelledby="compare">
         <h2 id="compare" className="text-2xl">Compare plans</h2>
         <div className="overflow-x-auto rounded-lg border border-border">
           <table className="w-full min-w-[520px] text-sm">
-            <thead><tr className="border-b border-border text-left"><th className="p-3 font-medium">Feature</th><th className="p-3 font-medium">Free</th><th className="p-3 font-medium">Full Access</th><th className="p-3 font-medium">Creator</th></tr></thead>
+            <thead><tr className="border-b border-border text-left"><th className="p-3 font-medium">Feature</th><th className="p-3 font-medium">Free</th><th className="p-3 font-medium">Pro</th><th className="p-3 font-medium">Cosmic</th></tr></thead>
             <tbody>{([
               ['Birth chart wheel, planets, houses & aspects', '✓', '✓', '✓'],
               ['Full written readings from your chart', '2', 'All 38', 'All 38'],

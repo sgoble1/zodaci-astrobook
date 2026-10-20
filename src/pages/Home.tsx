@@ -22,7 +22,7 @@ const features = [
   { seed: 'podcast', to: '/podcasts', title: 'Personal Podcasts', desc: 'Turn your readings into audio episodes you can listen to anywhere, saved to your library.' },
   { seed: 'shared', to: '/workspaces', title: 'Shared Spaces', desc: 'Create a workspace, invite someone with an email-bound link, and share selected podcasts.' },
   { seed: 'relationships', to: '/relationships', title: 'Relationships', desc: 'Add anyone’s birth details and see how your charts meet — shared placements and real synastry.' },
-  { seed: 'create', to: '/my-masterbook', title: 'Create Your Own Chapters', desc: 'Creator members can request a detailed chart-based chapter, organized in their personal library.' },
+  { seed: 'create', to: '/my-masterbook', title: 'Create Your Own Chapters', desc: 'Cosmic members can request a detailed chart-based chapter, organized in their personal library.' },
 ];
 
 const faqs = [
@@ -50,7 +50,7 @@ export default function Home() {
           </h1>
           <div className="gold-rule my-6 max-w-md" />
           <p className="text-lg leading-relaxed text-foreground/85 max-w-xl">
-            Explore your calculated birth chart and personal readings. Paid plans add six foundational chapters; Creator adds custom chapters and podcasts, informed by life examples you choose to share.
+            Explore your calculated birth chart and personal readings. Paid plans add six foundational chapters; Cosmic adds custom chapters and podcasts, informed by life examples you choose to share.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             <Button asChild variant="outline"><Link to="/demo" className="font-smallcaps text-xs">Try the interactive demo</Link></Button>

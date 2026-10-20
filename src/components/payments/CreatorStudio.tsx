@@ -9,7 +9,7 @@ import { useSubscription } from '@/hooks/useSubscription';
 import { useWorkspaces } from '@/hooks/useWorkspaces';
 import { useMyBirth } from '@/lib/myBirth';
 
-/** Creator plan tools: new Masterbook chapters and podcasts written from the member's own saved chart. */
+/** Cosmic plan tools: new Masterbook chapters and podcasts written from the member's own saved chart. */
 export function CreatorStudio({ onMade }: { onMade?: () => void }) {
   const sub = useSubscription();
   const [params] = useSearchParams();
@@ -25,8 +25,8 @@ export function CreatorStudio({ onMade }: { onMade?: () => void }) {
   if (sub.tier !== 'creator') return (
     <section className="parchment p-5 space-y-2" aria-labelledby="studio-h">
       <h2 id="studio-h" className="text-xl">Creator Studio</h2>
-      <p className="text-sm text-muted-foreground">Make podcasts and new Masterbook chapters written from your own chart. Included with the Creator plan ($14.99/month).</p>
-      <Button asChild size="sm"><Link to="/pricing">See the Creator plan</Link></Button>
+      <p className="text-sm text-muted-foreground">Make podcasts and new Masterbook chapters written from your own chart. Included with the Cosmic plan ($19/month).</p>
+      <Button asChild size="sm"><Link to="/pricing">See the Cosmic plan</Link></Button>
     </section>
   );
 

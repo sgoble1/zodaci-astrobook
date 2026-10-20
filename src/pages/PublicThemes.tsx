@@ -25,7 +25,7 @@ export function ThemesIndex() {
   usePageMeta('12 Core Astrology Themes Written From Your Birth Chart | Zodaci', 'Personality, emotions, creativity, work, leadership, self-worth and more — twelve chart-specific readings. Start free with one section of every theme.');
   return (
     <main className="mx-auto max-w-5xl space-y-10 px-5 py-12">
-      <header className="space-y-3"><div className="font-smallcaps text-xs text-gold">Core themes</div><h1 className="text-4xl md:text-5xl">Twelve themes, written from your chart</h1><p className="max-w-2xl text-muted-foreground">Every member can open all twelve. Free shows the first section of each; Full Access writes every theme in full.</p></header>
+      <header className="space-y-3"><div className="font-smallcaps text-xs text-gold">Core themes</div><h1 className="text-4xl md:text-5xl">Twelve themes, written from your chart</h1><p className="max-w-2xl text-muted-foreground">Every member can open all twelve. Free shows the first section of each; Pro writes every theme in full.</p></header>
       <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {CORE_THEMES.map(t => <li key={t.slug}><Link to={`/themes/${t.slug}`} className="group flex h-full flex-col gap-3 rounded-lg border border-border p-5 transition hover:-translate-y-0.5 hover:border-primary/60"><ThemeArt label={t.title} className="h-12 w-12" /><h2 className="text-xl">{t.title}</h2><p className="text-sm text-muted-foreground">{COPY[t.slug]?.desc}</p><span className="mt-auto text-sm text-primary">Explore theme →</span></Link></li>)}
       </ul>

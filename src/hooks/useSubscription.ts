@@ -1,9 +1,10 @@
+import { PRICE_TIER } from '@/lib/plans';
 import { useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { getStripeEnvironment } from '@/lib/stripe';
 
 export type Tier = 'free' | 'full' | 'creator';
-const TIER: Record<string, Tier> = { full_access_monthly: 'full', creator_monthly: 'creator', full_access_yearly: 'full', creator_yearly: 'creator' };
+const TIER: Record<string, Tier> = PRICE_TIER;
 
 export interface SubState { loading: boolean; userId: string | null; tier: Tier; status?: string; periodEnd?: string | null; cancelAtEnd?: boolean }
 
