@@ -22,7 +22,7 @@ const features = [
   { seed: 'podcast', to: '/podcasts', title: 'Personal Podcasts', desc: 'Turn your readings into audio episodes you can listen to anywhere, saved to your library.' },
   { seed: 'shared', to: '/workspaces', title: 'Shared Spaces', desc: 'Create a workspace, invite someone with an email-bound link, and share selected podcasts.' },
   { seed: 'relationships', to: '/relationships', title: 'Relationships', desc: 'Add anyone’s birth details and see how your charts meet — shared placements and real synastry.' },
-  { seed: 'create', to: '/my-masterbook', title: 'Create Your Own Chapters', desc: 'Creator members can request a detailed chart-based chapter, organized in their personal library.' },
+  { seed: 'create', to: '/my-masterbook', title: 'Create Your Own Chapters', desc: 'Cosmic members can request a detailed chart-based chapter, organized in their personal library.' },
 ];
 
 const faqs = [
