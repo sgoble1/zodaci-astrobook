@@ -11,9 +11,10 @@ import { CreatorStudio } from '@/components/payments/CreatorStudio';
 import { PaymentTestModeBanner } from '@/components/payments/PaymentTestModeBanner';
 import { Faq, PRICING_FAQ } from '@/components/brand/Faq';
 import { usePageMeta } from '@/hooks/usePageMeta';
-import { CREDIT_ALLOWANCE, PLAN_NAME, PLAN_PRICE } from '@/lib/plans';
+import { CREDIT_ALLOWANCE, PLAN_AMOUNT, PLAN_NAME, PLAN_PRICE, maxYearlySavingPct, yearlySaving } from '@/lib/plans';
 import { BOOK_VERSIONS, money } from '@/lib/books';
 import { internalDestination } from '@/lib/internalDestination';
+import { logActivity } from '@/components/common/ActivityTracker';
 
 type Card = { tier: Tier; slug: 'free' | 'pro' | 'cosmic'; cta: string; blurb: string; items: string[] };
 const CARDS: Card[] = [
@@ -21,8 +22,6 @@ const CARDS: Card[] = [
   { tier: 'full', slug: 'pro', cta: 'Get Pro', blurb: 'Every reading, written from your chart.', items: ['All 38 readings at full length', 'Every planet, house explorer and aspect grid', 'Timing: transits, retrogrades and a 90-day timeline', 'Numerology, Ba Zi and Feng Shui in depth', 'Your own Masterbook', `${CREDIT_ALLOWANCE.full} AI credits every month`] },
   { tier: 'creator', slug: 'cosmic', cta: 'Become Cosmic', blurb: 'Make new things from your chart.', items: ['Everything in Pro', 'Personal podcasts voiced from your chart', 'New Masterbook chapters on topics you choose', 'Hermetic lots, profections and bridge numbers', 'Your Cosmic dashboard', `${CREDIT_ALLOWANCE.creator} AI credits every month`] },
 ];
-const MONTHLY = { full: 9, creator: 19 } as const;
-const YEARLY = { full: 89, creator: 179 } as const;
 const rank: Record<Tier, number> = { free: 0, full: 1, creator: 2 };
 const Y = true, N = false;
 const COMPARE: { group: string; rows: [string, boolean | string, boolean | string, boolean | string][] }[] = [
@@ -36,7 +35,7 @@ const cell = (v: boolean | string) => typeof v === 'string' ? v : v ? <Check cla
 
 /** Public pricing: works signed out; a chosen plan is kept through sign-up and opens checkout on return. */
 export default function Pricing() {
-  usePageMeta('Pricing — Zodaci', 'Simple, honest pricing. Start free with your calculated chart. Pro $9/month or Cosmic $19/month, with annual savings.');
+  usePageMeta(`Pricing — Free, ${PLAN_NAME.full} ${PLAN_PRICE.full.month} and ${PLAN_NAME.creator} ${PLAN_PRICE.creator.month} | Zodaci`, `Start free with your calculated birth chart. ${PLAN_NAME.full} ${PLAN_PRICE.full.month} or ${PLAN_PRICE.full.year}; ${PLAN_NAME.creator} ${PLAN_PRICE.creator.month} or ${PLAN_PRICE.creator.year}. Cancel anytime, 7-day refund on your first payment.`);
   const sub = useSubscription();
   const [params, setParams] = useSearchParams();
   const next = params.get('next');
