@@ -17,19 +17,22 @@
 - [ ] Remaining Deep Implementation Guide items (testimonials need real customer quotes; social proof needs real numbers)
 
 ## Full document build (Goal run, from checklists in the 12 documents)
-- [x] E1 Chart engine: 15 new deductions (shape, focal planet, unaspected, T-square, grand trine, yod, mutual reception, out-of-bounds, Part of Fortune, profection, personal year, void Moon, polarity, interceptions, sect)
-- [ ] E2 Results page (/results): six tabs Blueprint / Placements (+ House Explorer) / Aspects & Patterns / Systems / Deep Dive / AI Readings, rank-based TierGate with blurred locked cards; Systems: Chinese pillars, numerology (Expression, Soul Urge, Personality, Personal Year, Pinnacles, Challenges, Cosmic Bridge numbers), Feng Shui directions; Deep Dive: fixed stars ≤1°, sensitive points, Arabic Parts + profections (Cosmic). Fix: Feng Shui never showed because saved sex wasn't loaded.
-- [ ] E3 RetroGOOD page: Explorer (tier filter/counts, score bars, accordion, share), Oracle/Educational/Professional tone saved to profile, affirmations carousel with saved affirmations, transit overlay (date picker, Rx badges, 90-day timeline, double-Rx windows), numerology cross-reference (MOD-010)
+- [x] E1 Chart engine: 15 new deductions
+- [x] E2 Results page (/results): six tabs with rank-based TierGate, Systems, Deep Dive, AI Readings
+- [x] E3 RetroGOOD page: Explorer, tone saved to profile, affirmations carousel, transit overlay, numerology cross-reference
 - [ ] E4 Report section navigator (MOD-008) on long readings: sticky section list, reading progress, section bookmarks
-- [ ] S1 Public pricing: marketing layout, Monthly/Annual "Save 20%", signup keeps chosen plan, six FAQ answers, grouped comparison table, AstroBook cross-sell
-- [ ] S2 Public homepage (/welcome): verbatim hero, four value pillars, AstroBook callout, plans teaser, Weekly Sky Notes newsletter copy, integrity note in footer, public /astrobook for signed-out visitors
-- [ ] S3 Academy learning hub (/academy) and public compatibility explainer (/compatibility) with score formula; sitemap/meta/FAQ schema
-- [ ] B1 AstroBook five versions (Digital $24.99, Pocket $34.99, Classic $59.99, Signature $97, Collector's Linen $149) in pricing, checkout, orders, costs
-- [ ] B2 AstroBook page: version comparison, What's Inside, chapter tabs, 10-question FAQ, gift option, Olivia Chen sample; manual Lulu print queue
-- [ ] C1 AstroComic: products/checkout, product page, character bible art, chart+transit issue builder, subscriber archive/address/pause, admin print queue + manifest CSV
-- [ ] A1 Admin: grouped tabs (Content / Operations / Platform) with ?tab= persistence, Ctrl+K admin search, immutable audit log, platform settings (feature flags, maintenance, admin list), Activity filters + subscription column fixes
-- [ ] A2 Admin: Stripe overview via admin-verified function (MRR/ARR, subscriptions by price, failed payments, disputes), April activity monitor (activity only, never private text), newsletter drafts/segments (sending waits on email domain)
-- [ ] G1 Referrals (ZOD- codes, ?ref= links, referrer gets 30 days Pro on the friend's first payment), signup bonus credits, plan grants used by entitlement checks; installable app (done: manifest/icons)
+- [x] S1 Public pricing: monthly/annual, plan intent through signup, FAQ, comparison table, AstroBook cross-sell
+- [ ] S2 Public homepage (/welcome): verbatim hero, four value pillars, AstroBook callout, plans teaser, Weekly Sky Notes copy, integrity note in footer
+- [ ] S3 Academy learning hub (/academy) and public compatibility page (/compatibility) with Master Build score formula; sitemap/meta/FAQ schema
+- [x] B1 AstroBook five versions in pricing, checkout, orders, costs
+- [x] B2 AstroBook page: comparison, What's Inside, chapter tabs, 10-question FAQ, gift option, Olivia Chen sample; Lulu print brief
+- [ ] B3 Book order fulfillment stages (paid → print brief sent → printing → quality check → shipped → delivered) with audit trail and CSV
+- [ ] C1 AstroComic: product page, checkout (monthly/yearly/single), webhook lifecycle, character bible art, chart+transit 24-page issue plan, subscriber archive/address/pause/skip, admin print queue + manifest CSV
+- [ ] A1 Admin: grouped tabs (Content / Operations / Platform) with ?tab= persistence, Ctrl+K admin search, audit log viewer, platform settings (feature flags, maintenance, admin list), Activity filters + subscription column
+- [ ] A2 Admin: Stripe overview via admin-verified function, April activity monitor (activity only, never private text), newsletter drafts/segments (sending waits on email domain), member grants (plan days / bonus credits)
+- [ ] G1 Referrals page (ZOD- codes, ?ref= links, friend gets 7 days Pro, referrer gets 30 days Pro on friend's first payment), signup bonus claim; installable app (done: manifest/icons)
+- [ ] R1 Rename leftover "Creator Studio" labels to Cosmic Studio
+- [ ] D1 Remaining Debug Report / site-audit items (check against document)
 - [ ] Sabian symbols: needs a licensed source text (not invented)
 
 ## Launch plan

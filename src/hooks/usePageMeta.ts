@@ -17,8 +17,8 @@ export function usePageMeta(title: string, description: string) {
     set('meta[name="twitter:description"]', 'name', 'twitter:description', description);
     set('meta[property="og:type"]', 'property', 'og:type', 'website');
     set('meta[name="twitter:card"]', 'name', 'twitter:card', 'summary');
-    const publicPaths = ['/welcome', '/about', '/astrobook', '/book-preview', '/pricing', '/blog', '/faq', '/privacy', '/terms', '/demo', '/themes'];
-    const isPublic = publicPaths.includes(window.location.pathname) || window.location.pathname.startsWith('/themes/');
+    const publicPaths = ['/welcome', '/about', '/astrobook', '/astrocomic', '/academy', '/compatibility', '/book-preview', '/pricing', '/blog', '/faq', '/privacy', '/terms', '/demo', '/themes'];
+    const isPublic = publicPaths.includes(window.location.pathname) || window.location.pathname.startsWith('/themes/') || window.location.pathname.startsWith('/academy/');
     if (isPublic) {
       let canonical = document.head.querySelector<HTMLLinkElement>('link[rel="canonical"]');
       if (!canonical) { canonical = document.createElement('link'); canonical.rel = 'canonical'; document.head.appendChild(canonical); }
