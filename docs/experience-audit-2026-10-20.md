@@ -29,7 +29,7 @@ Direction: preserve Zodaci’s cinematic Digital Sanctuary and editorial reading
 | Medium | Non-admin upload panel contradicted approved document plan | Upload tab admin-only, member defaults to Edit sections | Admin-tab regression; live member URL check |
 | Low | Archive script called itself digital comic copy | Rename action Read issue plan | Source checked; illustrated PDF not claimed complete |
 | Low | Community guidelines bypassed its availability switch | Same feature gate as community index | Source checked, not a security boundary |
-| Low | Failed cinematic poster disappeared despite supplied fallback | Keep matching poster first, use supplied local image when unavailable | Fallback change requires final browser check |
+| Low | Failed cinematic poster disappeared despite supplied fallback | Keep matching poster first, use supplied local image when unavailable | Live reduced-motion image loaded at 1536px; screenshot checked, no page errors |
 
 ## Validation scope
 
