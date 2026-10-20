@@ -1,4 +1,7 @@
+import { useMemo } from 'react';
+import QRCode from 'qrcode';
 import type { ComicPage, ComicPanel } from '@/lib/comic';
+import { QR_URL, isQrPanel } from '@/lib/comicPrint';
 import cover from '@/assets/astrocomic-cover.jpg';
 
 const SHAPE: Record<ComicPanel['shape'], string> = {
@@ -45,7 +48,7 @@ export function ComicPageView({ page, compact = false, art }: { page: ComicPage;
               return (
                 <div key={i} className={`comic-panel relative flex flex-col justify-between overflow-hidden border-2 border-foreground/80 bg-card/70 p-2 ${SHAPE[panel.shape]}`}>
                   {src && <img src={src} alt={panel.scene} loading="lazy" className="absolute inset-0 h-full w-full object-cover" />}
-                  {!src && <p className="italic text-muted-foreground leading-snug">{panel.scene}</p>}
+                  {!src && (isQrPanel(panel) ? <QrMark /> : <p className="italic text-muted-foreground leading-snug">{panel.scene}</p>)}
                   <div className="relative space-y-1">
                     {panel.caption && <p className="border border-gold/60 bg-background/90 px-1.5 py-0.5 leading-snug">{panel.caption}</p>}
                     {panel.balloons?.map((b, j) => <p key={j} className={`w-fit max-w-[85%] rounded-2xl border border-foreground/60 bg-foreground px-2 py-1 text-background leading-snug ${j % 2 ? 'ml-auto' : ''}`}><span className="font-semibold">{b.who}:</span> {b.text}</p>)}
@@ -58,5 +61,23 @@ export function ComicPageView({ page, compact = false, art }: { page: ComicPage;
         </div>
       )}
     </figure>
+  );
+}
+
+/** The same scannable code printed on the "About Zodaci" page. */
+function QrMark() {
+  const { size, cells } = useMemo(() => {
+    const m = QRCode.create(QR_URL, { errorCorrectionLevel: 'M' }).modules;
+    const out: [number, number][] = [];
+    for (let r = 0; r < m.size; r++) for (let c = 0; c < m.size; c++) if (m.get(r, c)) out.push([c, r]);
+    return { size: m.size, cells: out };
+  }, []);
+  return (
+    <div className="flex items-center gap-2">
+      <svg viewBox={`-2 -2 ${size + 4} ${size + 4}`} role="img" aria-label="QR code for zodaci.com/my-chart" className="h-16 w-16 shrink-0 rounded-sm bg-foreground fill-background">
+        {cells.map(([x, y]) => <rect key={`${x}-${y}`} x={x} y={y} width={1.02} height={1.02} />)}
+      </svg>
+      <span className="leading-snug">Scan to open your chart · zodaci.com/my-chart</span>
+    </div>
   );
 }
