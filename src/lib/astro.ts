@@ -214,6 +214,11 @@ export function computeChart(input: ChartInput): ChartResult {
 
   let asc: number | null = null, mc: number | null = null, cusps: number[] | null = null, vertex: number | null = null;
   if (timeKnown) { const a = angles(utc, input.lat, input.lon); ({ asc, mc, vertex } = a); cusps = cuspsFor(input.houseSystem ?? 'placidus', a, input.lat); }
+  // Angles move ~1° per 4 minutes of clock time; near a sign edge a small recording error changes the sign.
+  if (asc != null && mc != null) for (const [topic, lon, mins] of [['Ascendant', asc, 4], ['Midheaven', mc, 4]] as const) {
+    const edge = Math.min(norm(lon) % 30, 30 - (norm(lon) % 30));
+    if (edge < 1) flags.push({ level: 'approximate', topic, note: `${fmtLon(lon).text} is within ${edge.toFixed(1)}° of a sign change — a birth time off by about ${Math.max(1, Math.round(edge * mins))} minutes would move it into the neighbouring sign.` });
+  }
 
   const bodies: BodyPos[] = BODIES.map(([key, name, glyph, b]) => {
     const lon = eclLon(b, utc);
