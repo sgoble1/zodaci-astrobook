@@ -192,9 +192,10 @@ function SidebarInner({ mobile = false, onNavigate }: { mobile?: boolean; onNavi
     const t = window.setTimeout(() => {
       if (document.documentElement.dataset.metaPath === path) return;
       const items = allGroups.flatMap(g => [...g.items, ...(g.footer ?? []), ...(g.submenus ?? []).flatMap(s => s.items)]);
-      const label = items.find(i => i.to === path)?.label;
+      const heading = document.querySelector('main h1, h1')?.textContent?.trim().replace(/\s+/g, ' ').slice(0, 60);
+      const label = items.find(i => i.to === path)?.label ?? heading;
       document.title = label ? `${label} · Zodaci` : 'Zodaci · Your sky, your story';
-    }, 0);
+    }, 400);
     return () => window.clearTimeout(t);
   }, [location.pathname, allGroups]);
   return (
