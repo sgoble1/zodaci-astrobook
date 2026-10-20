@@ -1,0 +1,2 @@
+ALTER TABLE public.library_items ADD COLUMN IF NOT EXISTS belongs_to text NOT NULL DEFAULT '' CHECK (belongs_to IN ('', 'april', 'shane', 'both'));
+COMMENT ON COLUMN public.library_items.belongs_to IS 'Whose episode this is in the shared April/Shane library: april, shane, both, or unassigned.';

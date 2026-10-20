@@ -17,6 +17,8 @@ import { useAprilSpace } from '@/hooks/useAprilSpace';
 import { useWorkspaces } from '@/hooks/useWorkspaces';
 import { supabase } from '@/integrations/supabase/client';
 
+const PERSON_LABEL: Record<string, string> = { april: "April's", shane: "Shane's", both: 'Both of ours' };
+
 export default function Podcasts() {
   const lib = useLibrary('podcast');
   const april=useAprilSpace();
@@ -28,11 +30,13 @@ export default function Podcasts() {
   const [q, setQ] = useState('');
   const [library, setLibrary] = useState<'shared' | 'private'>('private');
   const [sort, setSort] = useState<'newest' | 'oldest' | 'title' | 'series'>('newest');
+  const [person, setPerson] = useState<'all' | 'april' | 'shane' | 'both' | 'unassigned'>('all');
   useEffect(() => { setCatalog(lib.items); }, [lib.items, setCatalog]);
   const byId = (id: string) => lib.items.find(i => i.id === id);
   const fmt = (t: number) => `${Math.floor(t / 60)}:${String(Math.floor(t % 60)).padStart(2, '0')}`;
   const shown = lib.items
     .filter(i => library === 'shared' ? (april && i.shared_with_space) || spaces.some(s => s.id === i.workspace_id) : !i.shared_with_space && !i.workspace_id && i.owner_id === session?.user.id)
+    .filter(i => library !== 'shared' || person === 'all' || (person === 'unassigned' ? !i.belongs_to : i.belongs_to === person))
     .filter(i => (i.title + ' ' + (i.description ?? '') + ' ' + (i.category ?? '')).toLowerCase().includes(q.toLowerCase()))
     .sort((a, b) => sort === 'title' ? a.title.localeCompare(b.title) : sort === 'series' ? (a.category ?? '').localeCompare(b.category ?? '') || a.title.localeCompare(b.title) : sort === 'oldest' ? +new Date(a.created_at) - +new Date(b.created_at) : +new Date(b.created_at) - +new Date(a.created_at));
 
@@ -82,6 +86,7 @@ export default function Podcasts() {
           <Button variant={library === 'private' ? 'default' : 'outline'} aria-pressed={library === 'private'} onClick={() => setLibrary('private')}><Lock />My Private Library</Button>
         </div>
         <p className="text-sm text-muted-foreground">{library === 'shared' ? 'Episodes shared with members of your workspaces.' : 'Episodes only you can open. Share one whenever you are ready.'}</p>
+        {library === 'shared' && april && <div className="flex flex-wrap gap-2" role="group" aria-label="Show whose episodes">{(['all','april','shane','both','unassigned'] as const).map(p => <Button key={p} size="sm" variant={person === p ? 'default' : 'outline'} aria-pressed={person === p} onClick={() => setPerson(p)}>{p === 'all' ? 'Everyone' : p === 'unassigned' ? 'Not assigned yet' : PERSON_LABEL[p]}</Button>)}</div>}
         <div className="flex flex-wrap gap-3">
           <Input aria-label="Search podcast episodes" placeholder="Search episodes…" value={q} onChange={e => setQ(e.target.value)} className="max-w-sm" />
           <label className="flex items-center gap-2 text-sm"><span>Sort by</span><select value={sort} onChange={e => setSort(e.target.value as typeof sort)} className="h-10 rounded-md border border-input bg-background px-3"><option value="newest">Newest first</option><option value="oldest">Oldest first</option><option value="title">Title A–Z</option><option value="series">Series / topic</option></select></label>
@@ -97,7 +102,10 @@ export default function Podcasts() {
                 <div className="flex-1 min-w-0">
                   <button onClick={() => play(ep)} className="font-display text-lg text-left hover:underline">{ep.title}</button>
                   <div className="text-xs text-muted-foreground">{ep.category && <>{ep.category} · </>}{new Date(ep.created_at).toLocaleDateString()} · <EpisodeLength ep={ep} /> · {fmtSize(ep.size_bytes)}{positions[ep.id] > 5 && <> · <span className="text-gold">resume at {fmt(positions[ep.id])}</span></>}</div>
-                  <div className="mt-1 inline-flex items-center gap-1 text-xs text-muted-foreground">{ep.workspace_id || ep.shared_with_space ? <><Users className="h-3.5 w-3.5"/>Shared workspace</> : <><Lock className="h-3.5 w-3.5"/>Private to you</>}</div>
+                  <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-muted-foreground"><span className="inline-flex items-center gap-1">{ep.workspace_id || ep.shared_with_space ? <><Users className="h-3.5 w-3.5"/>Shared workspace</> : <><Lock className="h-3.5 w-3.5"/>Private to you</>}</span>
+                    {ep.belongs_to && <span className={`rounded-full px-2 py-0.5 font-semibold ${ep.belongs_to === 'april' ? 'bg-accent/15 text-accent' : ep.belongs_to === 'shane' ? 'bg-primary/15 text-primary' : 'bg-muted text-foreground'}`}>{PERSON_LABEL[ep.belongs_to]}</span>}
+                    {april && (isAdmin || session?.user.id === ep.owner_id) && <select aria-label={`Whose episode is ${ep.title}`} value={ep.belongs_to ?? ''} className="h-8 border border-input rounded bg-background px-2" onChange={async e=>{const r=await supabase.from('library_items').update({belongs_to:e.target.value}).eq('id',ep.id);if(r.error)toast.error(r.error.message);else{toast.success('Episode assigned');void lib.reload();}}}><option value="">Assign to…</option><option value="april">April's</option><option value="shane">Shane's</option><option value="both">Both of ours</option></select>}
+                  </div>
                   {session?.user.id === ep.owner_id && <select aria-label={`Visibility of ${ep.title}`} value={ep.workspace_id ?? ''} className="mt-3 h-10 max-w-full border border-input rounded bg-background px-2 text-sm" onChange={async e=>{const r=await supabase.from('library_items').update({workspace_id:e.target.value||null,shared_with_space:false}).eq('id',ep.id);if(r.error)toast.error(r.error.message);else void lib.reload();}}><option value="">Private</option>{spaces.map(s=><option key={s.id} value={s.id}>{s.name}</option>)}</select>}
                   {ep.description && <p className="text-sm mt-1">{ep.description}</p>}
                   {Array.isArray(ep.sections) && ep.sections.length > 0 && <EpisodeSources episode={ep} />}

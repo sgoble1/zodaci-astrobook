@@ -5,7 +5,7 @@ import { supabase } from '@/integrations/supabase/client';
 export type LibraryItem = {
   id: string; kind: string; title: string; description: string | null; category: string | null;
   file_path: string; file_name: string; mime_type: string | null; size_bytes: number | null;
-  owner_id: string; created_at: string; url?: string; cover_path?: string | null; cover_url?: string; shared_with_space?: boolean; workspace_id?: string | null; sections?: unknown;
+  owner_id: string; created_at: string; url?: string; cover_path?: string | null; cover_url?: string; shared_with_space?: boolean; workspace_id?: string | null; sections?: unknown; belongs_to?: string;
 };
 
 export function useSession() {

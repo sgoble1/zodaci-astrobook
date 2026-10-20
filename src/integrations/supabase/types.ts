@@ -918,6 +918,7 @@ export type Database = {
       }
       library_items: {
         Row: {
+          belongs_to: string
           category: string | null
           cover_path: string | null
           created_at: string
@@ -935,6 +936,7 @@ export type Database = {
           workspace_id: string | null
         }
         Insert: {
+          belongs_to?: string
           category?: string | null
           cover_path?: string | null
           created_at?: string
@@ -952,6 +954,7 @@ export type Database = {
           workspace_id?: string | null
         }
         Update: {
+          belongs_to?: string
           category?: string | null
           cover_path?: string | null
           created_at?: string
