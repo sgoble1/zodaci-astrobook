@@ -80,7 +80,7 @@ export default function AstroComic() {
           )}
           {session && <p className="mt-4 text-sm"><Link to="/my-comic" className="text-primary underline underline-offset-4">Already subscribed? Open My AstroComic</Link></p>}
         </div>
-        <img src={cover} alt="AstroComic cover illustration: Sovereign the Sun with a lion and Dreamer the Moon with an owl beneath a golden constellation" width={1024} height={1584} className="mx-auto w-full max-w-sm rounded-sm border-2 border-foreground/80 shadow-2xl" />
+        <img loading="lazy" decoding="async" src={cover} alt="AstroComic cover illustration: Sovereign the Sun with a lion and Dreamer the Moon with an owl beneath a golden constellation" width={1024} height={1584} className="mx-auto w-full max-w-sm rounded-sm border-2 border-foreground/80 shadow-2xl" />
       </section>
 
       <section id="preview" aria-labelledby="preview-h" className="scroll-mt-6">

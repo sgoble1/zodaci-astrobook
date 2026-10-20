@@ -1,3 +1,4 @@
+import { usePageMeta } from '@/hooks/usePageMeta';
 import { confirmAction } from '@/components/common/ConfirmHost';
 import { useEffect, useState } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
@@ -12,6 +13,7 @@ type Geo = { name: string; admin1?: string; country?: string; latitude: number; 
 const STEPS = ['Your name', 'Birth date', 'Birth time', 'Birthplace', 'Review'];
 
 export default function Onboarding() {
+  usePageMeta('Enter your birth details · Zodaci', 'Add your birth date, time and place so Zodaci can calculate your chart.');
   const nav = useNavigate();
   const [step, setStep] = useState(0);
   const [b, setB] = useState<MyBirth>({ name: '', date: '', time: '', placeLabel: '', lat: 0, lon: 0, tz: '', houseSystem: 'placidus' });

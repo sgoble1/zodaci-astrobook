@@ -111,7 +111,7 @@ export default function Podcasts() {
             {shown.map(ep => (
               <li key={ep.id} className={`parchment p-4 flex gap-4 items-start ${current?.id === ep.id ? 'ring-1 ring-accent' : ''}`}>
                 <button onClick={() => play(ep)} aria-label={`Play ${ep.title}`} className="relative shrink-0 w-20 h-20 overflow-hidden rounded border border-accent/50 grid place-items-center hover:bg-accent/15">
-                  {ep.cover_url ? <img src={ep.cover_url} alt="" className="absolute inset-0 h-full w-full object-cover"/> : <Headphones className="w-6 h-6" />}
+                  {ep.cover_url ? <img loading="lazy" decoding="async" src={ep.cover_url} alt="" className="absolute inset-0 h-full w-full object-cover"/> : <Headphones className="w-6 h-6" />}
                 </button>
                 <div className="flex-1 min-w-0">
                   <button onClick={() => play(ep)} className="font-display text-lg text-left hover:underline">{ep.title}</button>

@@ -11,7 +11,7 @@ export function CinematicVideo({ poster, className = '' }: { poster?: string; cl
   useEffect(() => { const m = window.matchMedia('(prefers-reduced-motion: reduce)'); setReduced(m.matches); const f = () => setReduced(m.matches); m.addEventListener('change', f); return () => m.removeEventListener('change', f); }, []);
   return (
     <div aria-hidden className={`absolute inset-0 -z-20 overflow-hidden ${className}`}>
-      {reduced || failed ? <img src={posterFailed && poster ? poster : videoPoster.url} alt="" className="h-full w-full object-cover" onError={() => setPosterFailed(true)} /> : (
+      {reduced || failed ? <img loading="lazy" decoding="async" src={posterFailed && poster ? poster : videoPoster.url} alt="" className="h-full w-full object-cover" onError={() => setPosterFailed(true)} /> : (
         <video poster={videoPoster.url} autoPlay muted loop playsInline preload="auto" onError={() => setFailed(true)} className="cine-video h-full w-full object-cover">
           <source src={heroWebm.url} type="video/webm" />
           <source src={heroVideo.url} type="video/mp4" />

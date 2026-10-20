@@ -14,7 +14,7 @@ window.addEventListener("error", (e) => { recoverChunkLoad(e.error ?? e.message)
 const App = lazy(() => import('./App.tsx'));
 
 // Set defaults in the head for SEO — real title & description.
-document.title = "Zodaci · Your Chart, Readings & Printed AstroBook";
+document.title = "Zodaci · Your sky, your story";
 const desc = document.querySelector('meta[name="description"]');
 if (desc) desc.setAttribute("content",
   "Explore your own calculated birth chart, personal readings and private library, and create a printed AstroBook with Zodaci."

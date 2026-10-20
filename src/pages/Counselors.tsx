@@ -79,7 +79,7 @@ export function CounselorProfile() {
     <AuthGate what="your counselor sessions">{() => (
       <article className="mx-auto max-w-4xl space-y-6">
         <header className="flex items-center gap-4">
-          {c.image && <img src={c.image} alt="" className="h-20 w-20 rounded-full object-cover" />}
+          {c.image && <img loading="lazy" decoding="async" src={c.image} alt="" className="h-20 w-20 rounded-full object-cover" />}
           <div><h1 className="font-display text-3xl">{c.name}</h1><p className="text-muted-foreground">{c.role}</p></div>
         </header>
         <section aria-labelledby="bio"><h2 id="bio" className="font-display text-xl">About</h2><p className="mt-2">{c.bio}</p><p className="mt-2 text-sm text-muted-foreground"><strong>In plain words:</strong> {c.plain}</p></section>

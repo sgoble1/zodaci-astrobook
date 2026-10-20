@@ -10,6 +10,7 @@ const set = (sel: string, attr: 'name' | 'property', key: string, value: string)
 export function usePageMeta(title: string, description: string) {
   useEffect(() => {
     document.title = title;
+    document.documentElement.dataset.metaPath = window.location.pathname;
     set('meta[name="description"]', 'name', 'description', description);
     set('meta[property="og:title"]', 'property', 'og:title', title);
     set('meta[property="og:description"]', 'property', 'og:description', description);
@@ -17,10 +18,12 @@ export function usePageMeta(title: string, description: string) {
     set('meta[name="twitter:description"]', 'name', 'twitter:description', description);
     set('meta[property="og:type"]', 'property', 'og:type', 'website');
     set('meta[name="twitter:card"]', 'name', 'twitter:card', 'summary');
-    const publicPaths = ['/welcome', '/about', '/astrobook', '/astrocomic', '/academy', '/compatibility', '/book-preview', '/pricing', '/blog', '/faq', '/privacy', '/terms', '/demo', '/themes'];
-    const isPublic = publicPaths.includes(window.location.pathname) || window.location.pathname.startsWith('/themes/') || window.location.pathname.startsWith('/academy/');
+    const publicPaths = ['/welcome', '/about', '/astrobook', '/astrocomic', '/academy', '/compatibility', '/book-preview', '/pricing', '/blog', '/faq', '/privacy', '/terms', '/demo', '/themes', '/community'];
+    const isPublic = publicPaths.includes(window.location.pathname) || window.location.pathname.startsWith('/themes/') || window.location.pathname.startsWith('/academy/') || window.location.pathname.startsWith('/blog/');
+    let canonical = document.head.querySelector<HTMLLinkElement>('link[rel="canonical"]');
+    // Private pages must not keep the previous public page's canonical after client-side navigation.
+    if (!isPublic) canonical?.remove();
     if (isPublic) {
-      let canonical = document.head.querySelector<HTMLLinkElement>('link[rel="canonical"]');
       if (!canonical) { canonical = document.createElement('link'); canonical.rel = 'canonical'; document.head.appendChild(canonical); }
       canonical.href = `https://zodaci.com${window.location.pathname}`;
     }

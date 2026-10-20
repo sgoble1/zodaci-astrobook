@@ -112,7 +112,7 @@ export default function ExploreDiscover() {
           </div>
           <span className="text-xs text-muted-foreground">{visibleItems.length} places to explore</span>
         </div>
-        {april && ART[active] && <img src={privateImage(ART[active].src)} alt={ART[active].alt} width={1152} height={640} className="mt-5 aspect-[16/7] w-full rounded border border-border object-cover gentle-fade" />}
+        {april && ART[active] && <img loading="lazy" decoding="async" src={privateImage(ART[active].src)} alt={ART[active].alt} width={1152} height={640} className="mt-5 aspect-[16/7] w-full rounded border border-border object-cover gentle-fade" />}
         <div className="mt-5 grid gap-4 sm:grid-cols-2">
           {visibleItems.map(item => (
             <article key={`${item.category}-${item.to}`} className="overflow-hidden rounded border border-border bg-card/60 p-5">

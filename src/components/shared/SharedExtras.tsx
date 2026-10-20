@@ -197,7 +197,7 @@ export function MediaLibrary({ userId }: { userId: string }) {
       <Dialog open={!!view} onOpenChange={o => !o && setView(null)}>
         <DialogContent className="max-h-[92vh] max-w-4xl overflow-y-auto">
           {view && <><DialogHeader><DialogTitle>{view.caption || view.file_name}</DialogTitle></DialogHeader>
-            {isVideo(view) ? <video src={view.url} controls autoPlay className="max-h-[60vh] w-full rounded" /> : <img src={view.url} alt={view.caption || view.file_name} className="max-h-[60vh] w-full rounded object-contain" />}
+            {isVideo(view) ? <video src={view.url} controls autoPlay className="max-h-[60vh] w-full rounded" /> : <img loading="lazy" decoding="async" src={view.url} alt={view.caption || view.file_name} className="max-h-[60vh] w-full rounded object-contain" />}
             <div className="grid gap-2 sm:grid-cols-[1fr_auto_auto] sm:items-center">
               <Input value={editCaption} onChange={e => setEditCaption(e.target.value)} aria-label="Edit caption" placeholder="Caption" />
               <Button size="sm" variant="outline" onClick={() => saveCaption(view)} disabled={editCaption === view.caption}>Save caption</Button>
