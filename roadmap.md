@@ -37,7 +37,7 @@
 - [ ] Phase 2b: single-row nav, homepage order, pricing page rebuild
 - [x] Phase 3a: Pro $9 / Cosmic $19 (annual $89 / $179) checkout, legacy subscribers grandfathered, renamed sitewide
 - [x] Phase 3b-i: monthly AI credits (Free 5 / Pro 60 / Cosmic 150), server-checked in counselors and cover previews, balance on dashboard
-- [ ] Phase 3b-ii: deduction engine, TierGate results page
+- [x] Phase 3b-ii: deduction engine + Key Findings page (/findings) with locked previews for Free
 - [x] Phase 4a: RetroGOOD tier rating on My Chart
 - [x] Phase 4b-i: RetroGOOD page (/retrogood) + Perception Engine (ranking, narrative, tone)
 - [x] Phase 4b-ii: Shane×April synastry page (/our-charts, shared-space only)
