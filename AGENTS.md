@@ -50,3 +50,4 @@
 - ActivityTracker records page time/click labels/media events in activity_events (insert-own/admin-read), never typed text/private chat.
 - Shane's edition: private storage via protected-content area 'shane', gated by can_read_shane_edition()/chart_shares.
 - supabase/functions has its own AGENTS.md; read it first.
+- Plan names, prices, checkout IDs and price→tier mapping live only in src/lib/plans.ts (server functions mirror its ID lists); one place to change pricing.
