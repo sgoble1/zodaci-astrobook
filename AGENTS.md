@@ -31,6 +31,7 @@
 - Starters use one sequential per-visit queue after paid entitlement/saved birth data; stop on failure.
 - blog_posts permits subscriber writes/explicit publication; drafts stay private.
 - Member editorial styles preserve archives; dashboard data/reading positions are owner-scoped.
+- Long markdown readings render through NavigatedProse/ReadingNavigator (h2 ids, progress, section bookmarks) for one consistent reader.
 
 ## Media and presentation
 - Podcasts/uploads use library_items/private signed URLs with owner-controlled sharing. Public podcast sharing requires workspace membership/authorized audio URLs.
@@ -51,3 +52,7 @@
 - Shane's edition: private storage via protected-content area 'shane', gated by can_read_shane_edition()/chart_shares.
 - supabase/functions has its own AGENTS.md; read it first.
 - Plan names, prices, checkout IDs and price→tier mapping live only in src/lib/plans.ts (server functions mirror its ID lists); one place to change pricing.
+- AstroBook stage order/labels live in src/lib/bookFulfillment.ts; DB guards and _shared/book-delivery-rules.ts mirror PAID_STAGES so client and server agree.
+- AstroComic scheduling (comicDueFor/nextIssueMonth) and issue scripts live in src/lib/comic.ts; the admin queue drafts deterministically, without AI spend.
+- platform_settings is admin-only; public pages read allowlisted keys through public_site_settings() so private settings never leak.
+- Admin tabs are registered in src/lib/adminTabs.ts (grouped, ?tab= persisted); admin data comes only from has_role-checked RPCs/functions.
