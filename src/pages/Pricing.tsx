@@ -11,7 +11,7 @@ import { CreatorStudio } from '@/components/payments/CreatorStudio';
 import { PaymentTestModeBanner } from '@/components/payments/PaymentTestModeBanner';
 import { Faq, PRICING_FAQ } from '@/components/brand/Faq';
 import { usePageMeta } from '@/hooks/usePageMeta';
-import { CREDIT_ALLOWANCE, PLAN_AMOUNT, PLAN_NAME, PLAN_PRICE, maxYearlySavingPct, yearlySaving } from '@/lib/plans';
+import { CREDIT_ALLOWANCE, PLAN_AMOUNT, PLAN_NAME, PLAN_PRICE, REFUND_WINDOW_DAYS, maxYearlySavingPct, yearlySaving } from '@/lib/plans';
 import { BOOK_VERSIONS, money } from '@/lib/books';
 import { internalDestination } from '@/lib/internalDestination';
 import { logActivity } from '@/components/common/ActivityTracker';
@@ -123,7 +123,7 @@ export default function Pricing() {
         </div>
       </section>
       <section aria-labelledby="astrobook-xsell" className="flex flex-wrap items-center justify-between gap-4 rounded-lg border border-gold/40 bg-card p-6">
-        <div><h2 id="astrobook-xsell" className="font-display text-2xl">Looking for the printed book?</h2><p className="text-sm text-muted-foreground">AstroBook turns your readings into a book: Digital PDF from {money(cheapest)}, printed from {money(cheapestPrint)}.</p></div>
+        <div><h2 id="astrobook-xsell" className="font-display text-2xl">Looking for the printed book?</h2><p className="text-sm text-muted-foreground">AstroBook turns your readings into a book, sold separately from plans. {digital && <>{digital.name} {money(digital.price)} · </>}{firstPrint && <>{firstPrint.name} paperback {money(firstPrint.price)}</>}{topPrint && topPrint !== firstPrint && <> up to {topPrint.name} {money(topPrint.price)}</>}. Printed versions ship free in the US.</p></div>
         <Button asChild variant="outline"><Link to="/astrobook">Shop AstroBook →</Link></Button>
       </section>
     </article>
