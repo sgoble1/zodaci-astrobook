@@ -83,7 +83,7 @@ describe('Lulu status to order stage', () => {
 describe('Lulu print files', () => {
   const book = async (pages: number, size: [number, number]) => {
     const pdf = await PDFDocument.create();
-    for (let i = 0; i < pages; i++) pdf.addPage(size);
+    for (let i = 0; i < pages; i++) pdf.addPage(size).drawRectangle({ x: 10, y: 10, width: 20, height: 20 });
     return pdf.save();
   };
   it('builds an even interior without the cover page', async () => {
