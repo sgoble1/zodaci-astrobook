@@ -28,3 +28,15 @@
 - [ ] Side-by-side "Our two charts" page
 - [x] Map Shane chapters into topic pages; readings generate on demand from his calculated chart (generation resumed)
 - [x] Signed-in April walkthrough: original workbook, saved-entry count, guided questions, topics and Compendium verified without runtime errors.
+
+## Upgrade build (12 documents) — see .lovable/plan/zodaci-upgrade-one-combined-build-from-all-12-documents-2026-10-20.md
+- [x] Phase 1a: admin default tab by role, non-admin upload panel removed, styled confirmation dialog replaces browser popups sitewide (retry/filter/subscription bugs were already fixed)
+- [x] Phase 2a: Digital Sanctuary palette applied sitewide
+- [ ] Phase 1b: Debug Report items + chart anomaly detection; 15 site-audit issues
+- [ ] Phase 2b: single-row nav, homepage order, pricing page rebuild
+- [ ] Phase 3: Pro $9 / Cosmic $19 products + grandfathering, credit ledger, deduction engine, TierGate results page
+- [ ] Phase 4: RetroGOOD + Perception Engine + Shane×April synastry
+- [ ] Phase 5: AstroBook 5 versions + Lulu (blocked: Lulu account/API keys)
+- [ ] Phase 6: AstroComic subscription (printing blocked: printer account)
+- [ ] Phase 7: Admin new tabs (Newsletter, April monitor, credit ledger, audit log, settings, Stripe)
+- [ ] Phase 8: PWA, referrals, digests (blocked: email sender domain), Academy
