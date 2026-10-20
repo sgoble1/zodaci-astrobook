@@ -8,3 +8,9 @@ verify_jwt = false
 
 [functions.admin-stripe-overview]
 verify_jwt = false
+
+[functions.lulu-print]
+verify_jwt = false
+
+[functions.lulu-webhook]
+verify_jwt = false

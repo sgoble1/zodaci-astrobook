@@ -34,8 +34,9 @@ function printable(order: Order): PrintEdition {
   if (!isPrintEdition(order.edition)) throw new LuluError(409, 'Earlier Standard/Expanded editions were specified for another printer. Send this one by hand.');
   return order.edition;
 }
-function readyToPrint(order: Order) {
-  if (order.environment !== 'live') throw new LuluError(409, 'This is a test-payment order, so it is never sent for printing.');
+/** Real printing (Lulu production) takes live-paid orders only; the Lulu sandbox also accepts test-payment orders for dry runs. */
+function readyToPrint(order: Order, env: 'sandbox' | 'production') {
+  if (env === 'production' && order.environment !== 'live') throw new LuluError(409, 'This is a test-payment order, so it is never sent for real printing.');
   if (!isPaidBook(order)) throw new LuluError(409, 'Payment for this order has not been confirmed.');
   if (order.payment_hold) throw new LuluError(409, 'This order is on payment review. Resolve it before printing.');
   if (!['paid', 'print_brief_sent'].includes(order.status)) throw new LuluError(409, 'This order is already past the printing step.');
@@ -103,7 +104,7 @@ Deno.serve(async req => {
       const { data: hook } = await db.from('platform_settings').select('value').eq('key', SETTINGS_KEY).maybeSingle();
       const base = { configured: luluConfigured(), environment: env, shippingLevel: luluShippingLevel(), contactEmail: Deno.env.get('LULU_CONTACT_EMAIL')?.trim() || user.email || '', webhook: hook?.value ?? null };
       if (!base.configured) return json({ ...base, connected: false });
-      try { await lulu('/print-jobs/statistics/'); return json({ ...base, connected: true }); }
+      try { await lulu('/print-jobs/?page_size=1'); return json({ ...base, connected: true }); }
       catch (e) { return json({ ...base, connected: false, problem: e instanceof LuluError ? e.message : 'Lulu could not be reached.' }); }
     }
     if (!luluConfigured()) return json({ error: 'Lulu is not connected yet. Add the Lulu client key and secret first.' }, 503);
@@ -134,7 +135,7 @@ Deno.serve(async req => {
 
     if (body.action === 'proof') {
       const order = await loadOrder(db, body.orderId);
-      const edition = printable(order); readyToPrint(order);
+      const edition = printable(order); readyToPrint(order, env);
       const files = await prepareFiles(db, order, edition, 'proof');
       const [interiorUrl, coverUrl] = await Promise.all([signed(db, files.interiorPath, 600, `AstroBook-${order.id.slice(0, 8)}-interior.pdf`), signed(db, files.coverPath, 600, `AstroBook-${order.id.slice(0, 8)}-cover.pdf`)]);
       return json({ interiorUrl, coverUrl, pages: files.pages, pod: files.pod, cover: files.dims, spinePt: Math.round(files.spine * 10) / 10 });
@@ -142,7 +143,7 @@ Deno.serve(async req => {
 
     if (body.action === 'submit') {
       const order = await loadOrder(db, body.orderId);
-      const edition = printable(order); readyToPrint(order);
+      const edition = printable(order); readyToPrint(order, env);
       const ship = luluAddress(order.shipping_address);
       if (ship.error) return json({ error: ship.error }, 409);
       // Release a claim left by an attempt that crashed mid-way, then claim this order (one active job per order).
