@@ -1,9 +1,10 @@
 # Zodaci — Active Project Index
 
 ## In progress (current request)
-- [ ] Experience Architect audit: verify connected public/member/shared/admin journeys and document evidence separately from external blockers.
-- [ ] Complete remaining chapter readers with consistent section navigation, account-safe loading and retry states.
-- [ ] Repair bookmark account isolation and failed-save feedback; run regression and browser checks.
+- [x] Experience Architect audit and repairs; evidence, coverage limits and release gates: docs/experience-audit-2026-10-20.md.
+- [x] Chapter readers use consistent navigation, h2/h3 anchors, account-remounted protected room, stale-load cancellation and retry. Founder content walkthrough requires authorized session/password.
+- [x] Bookmark account isolation and failed-save feedback; 185 tests pass; actual saved member reading bookmark/reload/remove and phone navigation verified.
+- [x] Preserve original upgrade destination through signup/checkout, fix /index welcome redirect, restore non-admin upload exclusion and label comic archive as issue plans.
 - [x] Expand Shane’s own archive into chart, theme, system and workbook sections; cross-check source claims against calculated placements without borrowing April’s content.
 - [x] Restored late-loaded April archive content; verified her 9 workbook chapters, 45 questions, 46 saved entries, 16 topics and Compendium in her own account; 4 privacy/hydration tests pass.
 - [x] Failed lazy imports now show recovery instead of blanking; interrupted demo download, retry, and fresh welcome verified; 3 regression tests pass.
@@ -39,9 +40,9 @@
 - [ ] Sabian symbols: needs a licensed source text (not invented)
 
 ## Ready next
-- [ ] Walk through every admin tab signed in as an admin account (the test session is a regular member)
-- [ ] Section navigator on public library chapters and Shane's edition chapters
-- [ ] AstroComic printer-ready PDF per issue (illustrated pages) for the monthly print run
+- [ ] Walk through every admin tab and approved founder chapter (blocked: current injected and requester sessions are regular member; founder password unavailable).
+- [x] Section navigator on protected library chapters and Shane's edition chapters; shared reader exercised with an existing member reading, protected payload still gated.
+- [ ] AstroComic illustrated printer-ready PDFs (blocked: funded per-issue artwork and printer specifications; private production/export pipeline must follow the pilot, scripts are not finished art).
 
 ## Launch plan
 - .lovable/plan.md (mirrors launch-plan.md) — ongoing launch plan only

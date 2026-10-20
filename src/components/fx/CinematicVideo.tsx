@@ -4,13 +4,14 @@ import heroWebm from '@/assets/videos/zodaci-hero.webm.asset.json';
 import videoPoster from '@/assets/videos/zodaci-video-poster.jpg.asset.json';
 
 /** Cinematic background loop with grain + projector light. Falls back to the poster when motion is reduced. */
-export function CinematicVideo({ className = '' }: { poster?: string; className?: string }) {
+export function CinematicVideo({ poster, className = '' }: { poster?: string; className?: string }) {
   const [reduced, setReduced] = useState(() => window.matchMedia('(prefers-reduced-motion: reduce)').matches);
   const [failed, setFailed] = useState(false);
+  const [posterFailed, setPosterFailed] = useState(false);
   useEffect(() => { const m = window.matchMedia('(prefers-reduced-motion: reduce)'); setReduced(m.matches); const f = () => setReduced(m.matches); m.addEventListener('change', f); return () => m.removeEventListener('change', f); }, []);
   return (
     <div aria-hidden className={`absolute inset-0 -z-20 overflow-hidden ${className}`}>
-      {reduced || failed ? <img src={videoPoster.url} alt="" className="h-full w-full object-cover" onError={e => { e.currentTarget.style.visibility = 'hidden'; }} /> : (
+      {reduced || failed ? <img src={posterFailed && poster ? poster : videoPoster.url} alt="" className="h-full w-full object-cover" onError={() => setPosterFailed(true)} /> : (
         <video poster={videoPoster.url} autoPlay muted loop playsInline preload="auto" onError={() => setFailed(true)} className="cine-video h-full w-full object-cover">
           <source src={heroWebm.url} type="video/webm" />
           <source src={heroVideo.url} type="video/mp4" />

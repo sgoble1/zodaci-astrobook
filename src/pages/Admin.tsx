@@ -119,7 +119,7 @@ function SectionsPanel({ ownerId }: { ownerId: string | null }) {
   const items = ownerId ? lib.items.filter(i => i.owner_id === ownerId) : lib.items;
   const [openId, setOpenId] = useState<string | null>(null);
   if (loading) return <p className="text-sm text-muted-foreground">Loading…</p>;
-  if (!items.length) return <p className="text-sm text-muted-foreground">No uploaded documents yet. Built-in source documents are fixed; you can rename, reorder or hide them under “Document Index”.</p>;
+  if (!items.length) return <p className="text-sm text-muted-foreground">{ownerId ? 'No saved documents yet.' : 'No uploaded documents yet. Built-in source documents are fixed; manage their labels under Document Index.'}</p>;
   return (
     <div className="space-y-3">
       {items.map(it => openId === it.id ? <SectionEditor key={it.id} item={it} onDone={() => { setOpenId(null); reload(); }} /> : (
