@@ -29,7 +29,9 @@ import { AdminEditionSwitch } from '@/components/common/AdminEditionSwitch';
 export default function Admin() {
   const session = useSession();
   const isAdmin = useIsAdmin(session);
-  const [tab, setTab] = useState<Tab>('orders');
+  const [tab, setTab] = useState<Tab>('upload');
+  // Admins land on Growth once their role is confirmed; members stay on their own uploads.
+  useEffect(() => { if (isAdmin) setTab(t => t === 'upload' ? 'growth' : t); }, [isAdmin]);
   return (
     <div className="space-y-8">
       <header>
@@ -49,7 +51,7 @@ export default function Admin() {
           {tab === 'activity' && isAdmin && <ActivityFeed />}
           {tab === 'charts' && isAdmin && <MemberCharts />}
           {tab === 'marketing' && isAdmin && <MarketingPages />}
-          {tab === 'orders' && isAdmin && <PrintOrders />}{tab === 'orders' && !isAdmin && <UploadPanel userId={session?.user.id ?? ''} />}
+          {tab === 'orders' && isAdmin && <PrintOrders />}
           {tab === 'relationships' && <RelationshipsAdmin userId={session?.user.id ?? ''} />}
         </div>
       )}</AuthGate>
