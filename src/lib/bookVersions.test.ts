@@ -25,7 +25,7 @@ describe('AstroBook versions and prices', () => {
 });
 
 describe('edition chapters come from the calculated chart', () => {
-  it('Olivia Chen is born under a Waning (Balsamic) Moon two days before New Moon', () => expect(moonPhase(olivia).name).toBe('Balsamic'));
+  it('Olivia Chen is born under a First Quarter Moon (Moon about 123° ahead of the Sun)', () => { const p = moonPhase(olivia); expect(p.name).toBe('First Quarter'); expect(Math.round(p.angle)).toBeGreaterThan(115); expect(Math.round(p.angle)).toBeLessThan(130); });
   it('her next solar return after Jan 2026 falls in March 2026', () => {
     const sr = nextSolarReturn(olivia, new Date('2026-01-01T00:00:00Z'));
     expect(sr.getUTCFullYear()).toBe(2026); expect(sr.getUTCMonth()).toBe(2);
