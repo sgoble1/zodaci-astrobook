@@ -15,6 +15,17 @@ import { COMIC_PLANS } from '@/lib/comic';
 import hero from '@/assets/zodaci-brand-hero.jpg';
 import bookCover from '@/assets/cover-design-midnight-stars.jpg';
 import comicCover from '@/assets/astrocomic-cover.jpg';
+import { ALL_READINGS } from '@/lib/topicReadings';
+import { ACADEMY } from '@/content/academy';
+import { HOUSE_SYSTEMS } from '@/lib/astro';
+
+/** Product facts only — counted from the app itself, never invented usage numbers. */
+const FACTS: [string, string][] = [
+  [String(ALL_READINGS.length), 'readings written from your chart'],
+  [String(HOUSE_SYSTEMS.length), 'house systems to compare'],
+  [String(ACADEMY.reduce((n, p) => n + p.lessons.length, 0)), 'free Academy lessons'],
+  ['Free', 'to begin — no trial clock'],
+];
 
 /** Section anchors, in the required order. */
 const navigation = ['Work', 'Process', 'Capabilities', 'Team', 'Contact'];
@@ -37,7 +48,7 @@ export default function BrandLanding() {
   const fromBook = Math.min(...BOOK_VERSIONS.map(v => v.price));
   const plans = [
     { key: 'free' as const, price: '$0', note: 'Free forever', points: ['Your full calculated chart', 'Two complete readings', `${CREDIT_ALLOWANCE.free} AI credits a month`] },
-    { key: 'full' as const, price: PLAN_PRICE.full.month, note: `or ${PLAN_PRICE.full.year}`, points: ['All 38 chapter readings', 'Timing, numerology, Ba Zi and Feng Shui', `${CREDIT_ALLOWANCE.full} AI credits a month`] },
+    { key: 'full' as const, price: PLAN_PRICE.full.month, note: `or ${PLAN_PRICE.full.year}`, points: [`All ${ALL_READINGS.length} chapter readings`, 'Timing, numerology, Ba Zi and Feng Shui', `${CREDIT_ALLOWANCE.full} AI credits a month`] },
     { key: 'creator' as const, price: PLAN_PRICE.creator.month, note: `or ${PLAN_PRICE.creator.year}`, points: ['Everything in Pro', 'Personal podcasts and new chapters', `${CREDIT_ALLOWANCE.creator} AI credits a month`] },
   ];
   return <div className="brand-site min-h-screen bg-background text-foreground">
@@ -54,6 +65,8 @@ export default function BrandLanding() {
           <p className="mt-6 text-sm text-muted-foreground">Free to begin · Personal by design · Private by default</p>
         </div>
       </section>
+
+      <section aria-label="Zodaci at a glance" className="border-b border-border bg-card/40"><dl className="mx-auto flex max-w-7xl flex-wrap justify-center gap-x-12 gap-y-5 px-5 py-7 sm:px-10">{FACTS.map(([n, l]) => <div key={l} className="flex items-baseline gap-2"><dt className="sr-only">{l}</dt><dd className="font-display text-3xl">{n}</dd><dd aria-hidden className="text-sm text-muted-foreground">{l}</dd></div>)}</dl></section>
 
       <section aria-labelledby="pillars-h" className="brand-band border-b border-border">
         <h2 id="pillars-h" className="sr-only">Why Zodaci</h2>

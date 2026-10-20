@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
-import ReactMarkdown from 'react-markdown';
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
+import { NavigatedProse } from '@/components/readings/NavigatedProse';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import { useSession } from '@/hooks/useLibrary';
@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button';
 
 export default function CustomPageView() {
   const { id } = useParams();
+  const location = useLocation();
   const user = useSession()?.user;
   const navigate = useNavigate();
   const [page, setPage] = useState<CustomPage | null | undefined>(undefined);
@@ -46,7 +47,7 @@ export default function CustomPageView() {
         <h1 className="text-4xl sm:text-5xl">{page.title}</h1>
         {page.brief && <p className="max-w-2xl text-sm text-muted-foreground">{page.brief}</p>}
       </header>
-      {page.status === 'ready' ? <div className="reading-prose"><ReactMarkdown>{page.content}</ReactMarkdown></div>
+      {page.status === 'ready' ? <NavigatedProse content={page.content} path={location.pathname} title={page.title} />
         : <p className="parchment p-4">{page.status === 'failed' ? 'This page could not be written. Delete it and try again.' : 'This page is still being written…'}</p>}
       {user && (
         <footer className="flex flex-wrap items-center gap-3 border-t border-border pt-4">

@@ -17,9 +17,8 @@
 - Signed-out AppShell shows public chrome only on SIGNED_OUT_PATHS, otherwise /auth?next=; no member menu/data.
 
 ## Charts and content
-- astronomy-engine in astro.ts computes charts with selectable houses/source cross-checks; personal pages use profiles with device fallback.
 - ChartWheel renders computed charts; fixed-star contacts parse Compendium star degrees.
-- Relationships use owner-only relationships RLS, synastry.ts and kua.ts; keep math outside pages. Needs use saved birth facts/utilities, never invented biography.
+- Relationships use owner-only RLS; Needs use saved birth facts, never invented biography.
 - April Kua remains source-reported 1 versus formula 8; show the discrepancy.
 - Birth Chart Book uses bcb-XX protected entries split on DOCX Heading2; birthChartBook.ts maps chart points to chapters.
 - Navigation, member search and Instructions share a registry; search never loads private text. Topics share a renderer separating facts, interpretations and protected links.
@@ -31,12 +30,13 @@
 - Starters use one sequential per-visit queue after paid entitlement/saved birth data; stop on failure.
 - blog_posts permits subscriber writes/explicit publication; drafts stay private.
 - Member editorial styles preserve archives; dashboard data/reading positions are owner-scoped.
+- Long markdown readings use NavigatedProse/ReadingNavigator for one consistent reader.
 
 ## Media and presentation
-- Podcasts/uploads use library_items/private signed URLs with owner-controlled sharing. Public podcast sharing requires workspace membership/authorized audio URLs.
+- Podcasts/uploads use library_items/private signed URLs; sharing requires workspace membership/authorized audio URLs.
 - make-podcast saves script→TTS WAV in private library storage/library_items; bounded duration presets synchronize script length/source depth.
 - Queue/speed/resume use per-device localStorage; PDF viewer uses pdfjs-dist legacy.
-- Shared recommendations/media use shared_recommendations/shared_media plus generic shared_item_comments/shared_item_reactions keyed by item_type/item_id.
+- Shared recommendations/media use generic shared_item_comments/reactions keyed by item_type/item_id.
 - Box grids use BoxArt(seed,label). One logo; print products keep names.
 - /welcome stays separate/private routes unchanged. CinematicVideo: WebM/MP4, matching frame for accessibility/errors.
 - Samples cannot be ordered; landing text is public. Root boundary catches lazy failures; bounded reloads precede App.
@@ -49,5 +49,6 @@
 - PDFs use fresh edition manifests; freeze before checkout, finalize privately after verified payment, and authorize owner/admin downloads.
 - ActivityTracker records page time/click labels/media events in activity_events (insert-own/admin-read), never typed text/private chat.
 - Shane's edition: private storage via protected-content area 'shane', gated by can_read_shane_edition()/chart_shares.
-- supabase/functions has its own AGENTS.md; read it first.
-- Plan names, prices, checkout IDs and price→tier mapping live only in src/lib/plans.ts (server functions mirror its ID lists); one place to change pricing.
+- src/lib and supabase/functions have their own AGENTS.md; read them before changing files there.
+- platform_settings is admin-only; public pages read allowlisted keys via public_site_settings().
+- Admin data comes only from has_role-checked RPCs/functions.

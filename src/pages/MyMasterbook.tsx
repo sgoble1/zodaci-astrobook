@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import ReactMarkdown from 'react-markdown';
+import { NavigatedProse } from '@/components/readings/NavigatedProse';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
 import { useSubscription } from '@/hooks/useSubscription';
@@ -100,7 +100,7 @@ export default function MyMasterbook() {
         <section className="parchment p-6 space-y-4">
           <Button variant="outline" size="sm" onClick={() => setOpen(null)}>← All chapters</Button>
           <h2 className="text-3xl">{current.title}</h2>
-          <div className="reading-prose"><ReactMarkdown>{current.content}</ReactMarkdown></div>
+          <NavigatedProse content={current.content} path="/my-masterbook" title={current.title} />
         </section>
       ) : (
         <section aria-labelledby="ch-h" className="space-y-3">

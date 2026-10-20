@@ -1,3 +1,4 @@
 - Checkout leases serialize orders; provider amount reconciliation and refund/dispute holds protect fulfillment.
 - book-cover streams saved-chart artwork through authenticated requests; never reuse April’s chart.
 - Newsletter requires consent/validated service-only writes/admin-only reads and deletes; signup sends no campaigns.
+- admin-stripe-overview is read-only and has_role-checked; payment-changing actions (refunds, cancellations) stay in the provider dashboard.

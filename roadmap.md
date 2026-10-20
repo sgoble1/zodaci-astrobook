@@ -14,34 +14,43 @@
 - [x] Clearer clickable-card styling
 - [x] Cinematic marketing video on homepage, welcome, and AstroBook banners (grain + projector light)
 - [x] Demo: Jules Harbor full 7-section reading, linked from Pricing and homepage hero
-- [ ] Remaining Deep Implementation Guide items (testimonials need real customer quotes; social proof needs real numbers)
+- [ ] Testimonials and user-count social proof (blocked: real customer quotes and numbers from the owner)
 
 ## Full document build (Goal run, from checklists in the 12 documents)
 - [x] E1 Chart engine: 15 new deductions
 - [x] E2 Results page (/results): six tabs with rank-based TierGate, Systems, Deep Dive, AI Readings
 - [x] E3 RetroGOOD page: Explorer, tone saved to profile, affirmations carousel, transit overlay, numerology cross-reference
-- [ ] E4 Report section navigator (MOD-008) on long readings: sticky section list, reading progress, section bookmarks
+- [x] E4 Report section navigator (MOD-008) on long readings: sticky section list, reading progress, section bookmarks
 - [x] S1 Public pricing: monthly/annual, plan intent through signup, FAQ, comparison table, AstroBook cross-sell
-- [ ] S2 Public homepage (/welcome): rebuilt; verify in browser + footer integrity note
+- [x] S2 Public homepage (/welcome): rebuilt, verified in browser; footer integrity note; facts strip with real product counts
 - [x] S3 Academy learning hub (/academy) and public compatibility page (/compatibility) with Master Build score formula; sitemap/meta/FAQ schema
 - [x] B1 AstroBook five versions in pricing, checkout, orders, costs
 - [x] B2 AstroBook page: comparison, What's Inside, chapter tabs, 10-question FAQ, gift option, Olivia Chen sample; Lulu print brief
 - [x] B3 Book order fulfillment stages (paid → print brief sent → printing → quality check → shipped → delivered) with stage history, customer progress line and CSV
-- [ ] C1 AstroComic: product page, checkout (monthly/yearly/single), webhook lifecycle, character bible art, chart+transit 24-page issue plan, subscriber archive/address/pause/skip, admin print queue + manifest CSV
-- [ ] A1 Admin: grouped tabs (Content / Operations / Platform) with ?tab= persistence, Ctrl+K admin search, audit log viewer, platform settings (feature flags, maintenance, admin list), Activity filters + subscription column
-- [ ] A2 Admin: Stripe overview via admin-verified function, April activity monitor (activity only, never private text), newsletter drafts/segments (sending waits on email domain), member grants (plan days / bonus credits)
-- [ ] G1 Referrals page (ZOD- codes, ?ref= links, friend gets 7 days Pro, referrer gets 30 days Pro on friend's first payment), signup bonus claim; installable app (done: manifest/icons)
+- [x] C1 AstroComic: product page, checkout (monthly/yearly/single), webhook lifecycle, character bible art, chart+transit 24-page issue plan, subscriber archive/address/pause/skip, admin print queue + manifest CSV (physical printing waits on a printer account)
+- [x] A1 Admin: grouped tabs (Content / Operations / Platform) with ?tab= persistence, Ctrl+K admin search, audit log viewer, platform settings (feature flags, maintenance, admin list), Activity filters + subscription column
+- [x] A2 Admin: Stripe overview via admin-verified function, April activity monitor (activity only, never private text), newsletter drafts/segments (sending waits on email domain), member grants (plan days / bonus credits)
+- [x] G1 Referrals page (ZOD- codes, ?ref= links, friend gets 7 days Pro, referrer gets 30 days Pro on friend's first payment), signup bonus claim; installable app (done: manifest/icons)
 - [x] R1 Rename leftover "Creator Studio" labels to Cosmic Studio
-- [ ] D1 Remaining Debug Report / site-audit items (check against document)
+- [x] D1 Debug Report / site-audit items checked; open only where real-world input is needed: testimonials/user counts, social media accounts
 - [ ] Sabian symbols: needs a licensed source text (not invented)
+
+## Ready next
+- [ ] Walk through every admin tab signed in as an admin account (the test session is a regular member)
+- [ ] Section navigator on public library chapters and Shane's edition chapters
+- [ ] AstroComic printer-ready PDF per issue (illustrated pages) for the monthly print run
 
 ## Launch plan
 - .lovable/plan.md (mirrors launch-plan.md) — ongoing launch plan only
 
 - [x] P1 Site settings: maintenance banner + feature switches read through public settings reader (security fix applied)
-- [ ] V1 Deploy checkout/webhook, create AstroComic prices, run tests + browser checks on new pages
+- [x] V1 Deployed checkout/webhook/admin payments; AstroComic prices created; tests + browser checks on new public/member pages (admin tabs not browser-checked: test session is not an admin)
 
 ## Known external blockers
+- Email sender domain — newsletter sending, digests
+- Lulu account/API keys — automatic AstroBook print orders
+- AstroComic printer account — physical comic printing
+- Social media accounts — footer links
 - Real Pixartprinting quote (no published prices/API) — printed delivery cost stays an editable estimate
 - AI credits top-up (owner action)
 
@@ -55,9 +64,9 @@
 - [x] Phase 1a: admin default tab by role, non-admin upload panel removed, styled confirmation dialog replaces browser popups sitewide (retry/filter/subscription bugs were already fixed)
 - [x] Phase 2a: Digital Sanctuary palette applied sitewide
 - [x] Phase 1b-i: chart anomaly detection (full moon, 29°, stelliums, bucket/handle, grand trine, T-square, grand cross) on My Chart
-- [ ] Phase 1b-ii: remaining Debug Report items; 15 site-audit issues
+- [x] Phase 1b-ii: Debug Report items; 15 site-audit issues (social proof and social links need real data)
 - [x] Phase 2b-i: single-row welcome menu (About/Blog/Community moved to footer), credit amounts on Pricing
-- [ ] Phase 2b-ii: homepage section order
+- [x] Phase 2b-ii: homepage section order (hero, facts strip, pillars, sample chart, reading room, process, plans + AstroBook/AstroComic, method, email)
 - [x] Phase 3a: Pro $9 / Cosmic $19 (annual $89 / $179) checkout, legacy subscribers grandfathered, renamed sitewide
 - [x] Phase 3b-i: monthly AI credits (Free 5 / Pro 60 / Cosmic 150), server-checked in counselors and cover previews, balance on dashboard
 - [x] Phase 3b-ii: deduction engine + Key Findings page (/findings) with locked previews for Free
@@ -65,7 +74,7 @@
 - [x] Phase 4b-i: RetroGOOD page (/retrogood) + Perception Engine (ranking, narrative, tone)
 - [x] Phase 4b-ii: Shane×April synastry page (/our-charts, shared-space only)
 - [ ] Phase 5: AstroBook 5 versions + Lulu (blocked: Lulu account/API keys)
-- [ ] Phase 6: AstroComic subscription (printing blocked: printer account)
+- [x] Phase 6: AstroComic subscription, checkout and print queue (physical printing blocked: printer account)
 - [x] Phase 7a: AI credit use tab
-- [ ] Phase 7b: Newsletter, April monitor, audit log, settings, Stripe tabs
-- [ ] Phase 8: PWA, referrals, digests (blocked: email sender domain), Academy
+- [x] Phase 7b: Newsletter, April monitor, audit log, settings, Stripe tabs (newsletter delivery blocked: email sender domain)
+- [x] Phase 8: PWA, referrals, Academy (email digests blocked: email sender domain)

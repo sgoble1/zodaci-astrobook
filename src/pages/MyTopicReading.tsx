@@ -1,5 +1,5 @@
 import { confirmAction } from '@/components/common/ConfirmHost';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -12,6 +12,7 @@ import { useSession } from '@/hooks/useLibrary';
 import { readingIsOlder, readingVisitKey } from '@/lib/readingExperience';
 import { useOnDemandReading } from '@/hooks/useOnDemandReading';
 import { FounderSourcePanel } from '@/components/readings/FounderSourcePanel';
+import { ReadingNavigator } from '@/components/readings/ReadingNavigator';
 
 const slugify = (s: string) => s.toLowerCase().replace(/[*_`]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 
@@ -34,6 +35,7 @@ export default function MyTopicReading({ slugOverride }: { slugOverride?: string
     return () => window.removeEventListener('scroll', save);
   }, [session?.user.id, row, slug]);
   const [busy, setBusy] = useState(false);
+  const proseRef = useRef<HTMLDivElement>(null);
   const rewrite = async () => {
     if (!slug || !await confirmAction('Rewrite this reading from your chart? The current text will be replaced.')) return;
     setBusy(true);
@@ -71,7 +73,7 @@ export default function MyTopicReading({ slugOverride }: { slugOverride?: string
       </header>
       {row && !preview && readingIsOlder(row.updated_at, birthSavedAt) && <aside className="border-l-2 border-accent pl-4 text-sm text-muted-foreground">Your birth details changed after this reading was saved. Rewrite it to use your current chart; generation limits apply.</aside>}
       {row ? <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_15rem]">
-        <div><div className="reading-prose"><ReactMarkdown remarkPlugins={[remarkGfm]} components={{ h2: ({ children }) => { const t = String(Array.isArray(children) ? children.join('') : children).replace(/^\d+[.)]\s*/, ''); return <h2 id={slugify(t)}>{t}</h2>; } }}>{shown}</ReactMarkdown></div>
+        <div>{!preview && sections.length > 1 && <ReadingNavigator variant="bar" sections={sections.map(t => ({ id: slugify(t), title: t }))} contentRef={proseRef} path={`/my-readings/topic/${slug}`} readingTitle={meta?.title ?? row.title} />}<div ref={proseRef} className="reading-prose"><ReactMarkdown remarkPlugins={[remarkGfm]} components={{ h2: ({ children }) => { const t = String(Array.isArray(children) ? children.join('') : children).replace(/^\d+[.)]\s*/, ''); return <h2 id={slugify(t)}>{t}</h2>; } }}>{shown}</ReactMarkdown></div>
         {preview && <div className="relative mt-8">
           <div aria-hidden="true" className="pointer-events-none select-none space-y-4 opacity-60 blur-sm">
             {['How this shows up in daily life', 'Strengths & watch-outs', 'Practices to try', 'Reflection questions'].map(h => <div key={h} className="space-y-2"><p className="font-display text-2xl">{h}</p><div className="h-3 w-full rounded bg-muted" /><div className="h-3 w-11/12 rounded bg-muted" /><div className="h-3 w-4/5 rounded bg-muted" /></div>)}
@@ -85,7 +87,7 @@ export default function MyTopicReading({ slugOverride }: { slugOverride?: string
             </div>
           </div>
         </div>}</div>
-        {!preview && sections.length > 1 && <nav aria-label="In this reading" className="order-first lg:order-none"><div className="vellum space-y-2 p-4 lg:sticky lg:top-24"><p className="font-smallcaps text-xs text-gold">In this reading</p><ol className="space-y-1.5 text-sm">{sections.map((s, i) => <li key={s}><a href={`#${slugify(s)}`} className="flex gap-2 text-muted-foreground hover:text-foreground"><span className="text-gold">{String(i + 1).padStart(2, '0')}</span><span>{s}</span></a></li>)}</ol></div></nav>}
+        {!preview && sections.length > 1 && <ReadingNavigator variant="side" sections={sections.map(t => ({ id: slugify(t), title: t }))} contentRef={proseRef} path={`/my-readings/topic/${slug}`} readingTitle={meta?.title ?? row.title} />}
       </div>
         : writing ? <div role="status" aria-live="polite" className="vellum flex items-center gap-4 p-6"><span className="h-8 w-8 shrink-0 animate-spin rounded-full border-4 border-primary/30 border-t-primary" aria-hidden="true" /><div><p className="font-medium">Writing this reading from your chart…</p><p className="text-sm text-muted-foreground">You can keep exploring. The finished reading saves to your account.</p></div></div>
         : error ? <div role="alert" className="rounded-lg border border-destructive/40 p-5 text-sm text-destructive">{error}<Button variant="outline" className="ml-3" onClick={retry}>Try again</Button></div>
