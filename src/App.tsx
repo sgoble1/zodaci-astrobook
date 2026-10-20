@@ -84,6 +84,7 @@ const ResetPassword = lazy(() => import('./pages/ResetPassword'));
 const MyTopicReading = lazy(() => import('./pages/MyTopicReading'));
 const MyChart = lazy(() => import('./pages/MyChart'));
 const RetroGood = lazy(() => import('./pages/RetroGood'));
+const OurCharts = lazy(() => import('./pages/OurCharts'));
 const LandingPage = lazy(() => import('./pages/LandingPage'));
 const About = lazy(() => import('./pages/About'));
 const MyReadings = lazy(() => import('./pages/MyReadings'));
@@ -243,6 +244,7 @@ export default function App() {
             <Route path="/start" element={<Onboarding />} />
             <Route path="/my-chart" element={<MyChart />} />
             <Route path="/retrogood" element={<RetroGood />} />
+            <Route path="/our-charts" element={<OurCharts />} />
             <Route path="/my-readings" element={<MyReadings />} />
             <Route path="/my-readings/topic/:slug" element={<MyTopicReading />} />
             <Route path="/my-astrobook" element={<MyLibrary />} />
