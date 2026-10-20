@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { ArrowRight, Check, Package, CalendarDays, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -33,8 +33,10 @@ export default function AstroComic() {
   const birth = useMyBirth();
   const initial = params.get('plan');
   const [plan, setPlan] = useState<ComicPlan>(isComicPlan(initial) ? initial : 'monthly');
-  const [checkout, setCheckout] = useState(!!session && isComicPlan(initial) && params.get('buy') === '1');
+  const [checkout, setCheckout] = useState(false);
   const [error, setError] = useState('');
+  // Returning from sign-up with a chosen plan opens checkout straight away.
+  useEffect(() => { if (session && isComicPlan(initial) && params.get('buy') === '1') setCheckout(true); }, [session?.user.id]); // eslint-disable-line react-hooks/exhaustive-deps
   const first = firstIssueMonth(new Date());
   const personal = !!birth;
   const preview = useMemo(() => {
