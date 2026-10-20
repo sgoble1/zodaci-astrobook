@@ -14,6 +14,12 @@ const BOOK_VERSION: Record<string, { lookup: string; price: number; format: 'pri
   signature: { lookup: 'astrobook_signature', price: 9700, format: 'print' },
   linen: { lookup: 'astrobook_linen', price: 14900, format: 'print' },
 };
+/** Mirrors COMIC_PLANS in src/lib/comic.ts. AstroComic never grants a Zodaci plan tier. */
+const COMIC: Record<string, { lookup: string; price: number; mode: 'subscription' | 'payment' }> = {
+  monthly: { lookup: 'comic_monthly', price: 1499, mode: 'subscription' },
+  yearly: { lookup: 'comic_yearly', price: 14999, mode: 'subscription' },
+  single: { lookup: 'comic_single', price: 1899, mode: 'payment' },
+};
 const json = (b: unknown, status = 200) => new Response(JSON.stringify(b), { status, headers: { ...corsHeaders, "Content-Type": "application/json" } });
 
 async function resolveOrCreateCustomer(stripe: ReturnType<typeof createStripeClient>, options: { email?: string; userId?: string }): Promise<string> {
@@ -49,8 +55,8 @@ Deno.serve(async (req) => {
     const { data: { user } } = await admin.auth.getUser(token);
     if (!user) return json({ error: "Please sign in first." }, 401);
 
-    const { priceId, orderId, returnUrl, environment } = await req.json();
-    if (!orderId && !ALLOWED.has(priceId)) return json({ error: "Unknown plan" }, 400);
+    const { priceId, orderId, comicPlan, returnUrl, environment } = await req.json();
+    if (!orderId && !comicPlan && !ALLOWED.has(priceId)) return json({ error: "Unknown plan" }, 400);
     if (environment !== "sandbox" && environment !== "live") return json({ error: "Invalid environment" }, 400);
     if (typeof returnUrl !== "string" || !/^https?:\/\//.test(returnUrl)) return json({ error: "Invalid return URL" }, 400);
     const origin = req.headers.get('Origin');
@@ -58,6 +64,41 @@ Deno.serve(async (req) => {
     const env = environment as StripeEnv;
 
     const stripe = createStripeClient(env);
+    if (comicPlan) {
+      const plan = COMIC[comicPlan as string];
+      if (!plan) return json({ error: 'Unknown AstroComic plan' }, 400);
+      const { data: existing, error: existingError } = await admin.from('comic_subscriptions').select('id,plan,status,checkout_session_id').eq('user_id', user.id).eq('environment', env);
+      if (existingError) throw existingError;
+      if (comicPlan !== 'single' && (existing ?? []).some(r => r.plan !== 'single' && ['active', 'paused', 'past_due'].includes(r.status))) return json({ error: 'You already have an AstroComic subscription. Manage it from My AstroComic.' }, 409);
+      const prices = await stripe.prices.list({ lookup_keys: [plan.lookup] });
+      const price = prices.data[0];
+      if (!price) return json({ error: 'AstroComic prices are not configured.' }, 404);
+      if (price.currency !== 'usd' || price.unit_amount !== plan.price) return json({ error: 'Checkout prices do not match the advertised AstroComic prices. Please contact support.' }, 409);
+      let row = (existing ?? []).find(r => r.plan === comicPlan && r.status === 'pending');
+      if (row?.checkout_session_id) {
+        const previous = await stripe.checkout.sessions.retrieve(row.checkout_session_id);
+        if (previous.status === 'open') return json({ clientSecret: previous.client_secret });
+        if (previous.status === 'complete') return json({ error: 'Payment was submitted. Please wait for confirmation.' }, 409);
+      }
+      if (!row) {
+        const inserted = await admin.from('comic_subscriptions').insert({ user_id: user.id, plan: comicPlan, environment: env, status: 'pending' }).select('id,plan,status,checkout_session_id').single();
+        if (inserted.error) throw inserted.error;
+        row = inserted.data;
+      }
+      const customerId = await resolveOrCreateCustomer(stripe, { email: user.email ?? undefined, userId: user.id });
+      const meta = { userId: user.id, kind: 'comic', comicId: row!.id, comicPlan, managed_payments: 'false' };
+      const session = await stripe.checkout.sessions.create({
+        mode: plan.mode, ui_mode: 'embedded_page', return_url: returnUrl, customer: customerId,
+        line_items: [{ price: price.id, quantity: 1 }],
+        automatic_tax: { enabled: true },
+        customer_update: { shipping: 'auto', address: 'auto' }, shipping_address_collection: { allowed_countries: ['US'] },
+        metadata: meta,
+        ...(plan.mode === 'subscription' ? { subscription_data: { metadata: meta } } : { payment_intent_data: { description: 'AstroComic single issue', metadata: meta } }),
+      } as Stripe.Checkout.SessionCreateParams, { idempotencyKey: `comic-${row!.id}-${env}-${row!.checkout_session_id || 'first'}` });
+      const saved = await admin.from('comic_subscriptions').update({ checkout_session_id: session.id }).eq('id', row!.id).eq('status', 'pending');
+      if (saved.error) throw saved.error;
+      return json({ clientSecret: session.client_secret });
+    }
     if (orderId) {
       if (typeof orderId !== 'string' || !/^[a-f0-9-]{36}$/.test(orderId)) return json({ error: 'Invalid order' }, 400);
       const { data: order, error: orderError } = await admin.from('book_orders').select('*').eq('id', orderId).eq('user_id', user.id).single();
