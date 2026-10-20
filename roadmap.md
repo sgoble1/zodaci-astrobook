@@ -34,7 +34,8 @@
 - [x] Phase 2a: Digital Sanctuary palette applied sitewide
 - [x] Phase 1b-i: chart anomaly detection (full moon, 29°, stelliums, bucket/handle, grand trine, T-square, grand cross) on My Chart
 - [ ] Phase 1b-ii: remaining Debug Report items; 15 site-audit issues
-- [ ] Phase 2b: single-row nav, homepage order, pricing page rebuild
+- [x] Phase 2b-i: single-row welcome menu (About/Blog/Community moved to footer), credit amounts on Pricing
+- [ ] Phase 2b-ii: homepage section order
 - [x] Phase 3a: Pro $9 / Cosmic $19 (annual $89 / $179) checkout, legacy subscribers grandfathered, renamed sitewide
 - [x] Phase 3b-i: monthly AI credits (Free 5 / Pro 60 / Cosmic 150), server-checked in counselors and cover previews, balance on dashboard
 - [x] Phase 3b-ii: deduction engine + Key Findings page (/findings) with locked previews for Free
@@ -43,5 +44,6 @@
 - [x] Phase 4b-ii: Shane×April synastry page (/our-charts, shared-space only)
 - [ ] Phase 5: AstroBook 5 versions + Lulu (blocked: Lulu account/API keys)
 - [ ] Phase 6: AstroComic subscription (printing blocked: printer account)
-- [ ] Phase 7: Admin new tabs (Newsletter, April monitor, credit ledger, audit log, settings, Stripe)
+- [x] Phase 7a: AI credit use tab
+- [ ] Phase 7b: Newsletter, April monitor, audit log, settings, Stripe tabs
 - [ ] Phase 8: PWA, referrals, digests (blocked: email sender domain), Academy

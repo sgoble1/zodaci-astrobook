@@ -1,3 +1,4 @@
+import { CreditLedger } from '@/components/admin/CreditLedger';
 import { confirmAction } from '@/components/common/ConfirmHost';
 import { SectionEditor } from '@/components/admin/SectionEditor';
 import { RelationshipsAdmin } from '@/components/relationships/RelationshipsAdmin';
@@ -17,7 +18,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import ReactMarkdown from 'react-markdown';
 
-type Tab = 'growth' | 'upload' | 'sections' | 'index' | 'relationships' | 'activity' | 'charts' | 'marketing' | 'orders';
+type Tab = 'growth' | 'upload' | 'sections' | 'index' | 'relationships' | 'activity' | 'charts' | 'marketing' | 'orders' | 'credits';
 import { MemberCharts } from '@/components/admin/MemberCharts';
 import { ActivityFeed } from '@/components/admin/ActivityFeed';
 import { MarketingPages } from '@/components/admin/MarketingPages';
@@ -43,7 +44,7 @@ export default function Admin() {
       </header>
       <AuthGate what="open your workspace">{() => (
         <div className="space-y-6">
-          <nav className="flex flex-wrap gap-2 text-sm">{([['upload', 'Upload documents'], ['sections', 'Edit sections'], ...(isAdmin ? [['growth', 'Growth & upgrades'], ['index', 'Document Index'], ['activity', 'Usage feed'], ['charts', 'Member charts & readings'], ['marketing', 'Marketing pages & copy'], ['orders', 'Book orders']] as const : []), ['relationships', 'Relationships']] as const).map(([k, l]) => <Button variant={tab === k ? "secondary" : "ghost"} key={k} onClick={() => setTab(k)} className={`px-3 py-1.5 rounded-full border ${tab === k ? 'border-accent bg-accent/15' : 'border-border hover:bg-muted'}`}>{l}</Button>)}</nav>
+          <nav className="flex flex-wrap gap-2 text-sm">{([['upload', 'Upload documents'], ['sections', 'Edit sections'], ...(isAdmin ? [['growth', 'Growth & upgrades'], ['index', 'Document Index'], ['activity', 'Usage feed'], ['charts', 'Member charts & readings'], ['marketing', 'Marketing pages & copy'], ['orders', 'Book orders'], ['credits', 'AI credit use']] as const : []), ['relationships', 'Relationships']] as const).map(([k, l]) => <Button variant={tab === k ? "secondary" : "ghost"} key={k} onClick={() => setTab(k)} className={`px-3 py-1.5 rounded-full border ${tab === k ? 'border-accent bg-accent/15' : 'border-border hover:bg-muted'}`}>{l}</Button>)}</nav>
           {tab === 'growth' && isAdmin && <div className="space-y-8"><GrowthStats /><UpgradeFunnel /></div>}
           {tab === 'upload' && <UploadPanel userId={session?.user.id ?? ''} />}
           {tab === 'sections' && <SectionsPanel ownerId={isAdmin ? null : session?.user.id ?? ''} />}
@@ -52,6 +53,7 @@ export default function Admin() {
           {tab === 'charts' && isAdmin && <MemberCharts />}
           {tab === 'marketing' && isAdmin && <MarketingPages />}
           {tab === 'orders' && isAdmin && <PrintOrders />}
+          {tab === 'credits' && isAdmin && <CreditLedger />}
           {tab === 'relationships' && <RelationshipsAdmin userId={session?.user.id ?? ''} />}
         </div>
       )}</AuthGate>

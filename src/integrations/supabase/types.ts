@@ -1887,6 +1887,16 @@ export type Database = {
     }
     Functions: {
       accept_space_invite: { Args: { _token: string }; Returns: string }
+      admin_credit_usage: {
+        Args: never
+        Returns: {
+          credits: number
+          display_name: string
+          feature: string
+          user_id: string
+          uses: number
+        }[]
+      }
       admin_growth_stats: {
         Args: { _days?: number }
         Returns: {
