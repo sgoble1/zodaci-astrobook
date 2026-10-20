@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
-import { ComicPageView } from '@/components/comic/ComicPageView';
+import { ComicProduction } from '@/components/admin/ComicProduction';
 import { confirmAction } from '@/components/common/ConfirmHost';
 import { computeChart, type HouseSystem } from '@/lib/astro';
 import { buildComicIssue, COMIC_PLANS, comicDueFor, manifestCsv, monthKey, monthLabel, shipBy, type ComicIssue, type ComicPlan } from '@/lib/comic';
@@ -72,6 +72,7 @@ export function ComicQueue() {
   };
   const setStatus = async (i: Issue, status: string, extra: Partial<Issue> = {}) => {
     if (status === 'printing' && i.status !== 'approved') { toast.error('Approve the issue before printing.'); return; }
+    if (status === 'printing' && !i.print_pdf_path) { toast.error('Build the print file under Production before sending this issue to print.'); return; }
     if (status === 'skipped' && !(await confirmAction('Skip this member’s issue for this month? It will not be printed.', 'Skip issue'))) return;
     const { data, error } = await supabase.from('comic_issues').update({ status, ...extra, updated_at: new Date().toISOString() }).eq('id', i.id).eq('status', i.status).select('id');
     if (error || !data?.length) { toast.error('This issue changed — refresh and try again.'); return; }
@@ -107,7 +108,7 @@ export function ComicQueue() {
   return (
     <div className="space-y-8">
       <div className="flex flex-wrap items-end justify-between gap-4">
-        <div><h2 className="font-display text-2xl">AstroComic queue</h2><p className="text-sm text-muted-foreground">Issues ship by the 8th. Drafts are planned from each subscriber’s saved chart and that month’s sky — no AI credits used.</p></div>
+        <div><h2 className="font-display text-2xl">AstroComic queue</h2><p className="text-sm text-muted-foreground">Issues ship by the 8th. Drafts are planned from each subscriber’s saved chart and that month’s sky without AI. Artwork is drawn only when you start it under Production.</p></div>
         <div className="flex items-center gap-2"><Button variant="outline" size="sm" onClick={() => shift(-1)} aria-label="Previous month">←</Button><p className="min-w-40 text-center font-display text-xl">{monthLabel(month)}</p><Button variant="outline" size="sm" onClick={() => shift(1)} aria-label="Next month">→</Button><Button variant="ghost" size="sm" onClick={() => void load()} aria-label="Refresh"><RefreshCw className="h-4 w-4" /></Button></div>
       </div>
       {err && <p role="alert" className="text-sm text-destructive">{err}</p>}
@@ -131,7 +132,7 @@ export function ComicQueue() {
               <td className="p-3"><p className="font-medium">{r.s.display_name || a.name || 'Member'}</p><p className="text-xs text-muted-foreground">{r.s.email}{r.s.environment === 'sandbox' ? ' · test' : ''}</p>{!r.birthOk && <p className="mt-1 text-xs text-destructive">Needs saved birth details</p>}</td>
               <td className="p-3">{COMIC_PLANS[r.s.plan as ComicPlan]?.name ?? r.s.plan}<p className="text-xs text-muted-foreground">No. {r.number}</p></td>
               <td className="p-3">{r.addrOk ? <span className="text-xs">{a.name}<br />{[a.line1, a.line2].filter(Boolean).join(', ')}<br />{a.city}, {a.state} {a.postal_code}</span> : <span className="text-xs text-destructive">Incomplete address</span>}</td>
-              <td className="p-3">{i ? <><p>{i.title || sc?.title}</p><p className="text-xs text-muted-foreground">{sc?.signs ? `${sc.signs.sun} Sun${sc.signs.moon ? ` · ${sc.signs.moon} Moon` : ''}${sc.signs.rising ? ` · ${sc.signs.rising} Rising` : ''}` : ''}</p>{sc?.pages?.length ? <Button size="sm" variant="ghost" className="mt-1 h-7 px-2" onClick={() => setPreview(preview === i.id ? null : i.id)}><BookOpen className="h-3.5 w-3.5" />{preview === i.id ? 'Close' : 'Preview'}</Button> : null}</> : <span className="text-xs text-muted-foreground">{r.birthOk ? 'Not drafted yet' : '—'}</span>}</td>
+              <td className="p-3">{i ? <><p>{i.title || sc?.title}</p><p className="text-xs text-muted-foreground">{sc?.signs ? `${sc.signs.sun} Sun${sc.signs.moon ? ` · ${sc.signs.moon} Moon` : ''}${sc.signs.rising ? ` · ${sc.signs.rising} Rising` : ''}` : ''}</p>{sc?.pages?.length ? <Button size="sm" variant="ghost" className="mt-1 h-7 px-2" onClick={() => setPreview(preview === i.id ? null : i.id)}><BookOpen className="h-3.5 w-3.5" />{preview === i.id ? 'Close' : 'Production'}</Button>{i.print_pdf_path && <p className="text-xs text-gold">Print file ready</p>} : null}</> : <span className="text-xs text-muted-foreground">{r.birthOk ? 'Not drafted yet' : '—'}</span>}</td>
               <td className="p-3 capitalize">{i ? <span className={i.status === 'skipped' ? 'text-muted-foreground' : 'text-gold'}>{i.status}</span> : <span className="text-muted-foreground">due</span>}{i?.status === 'shipped' && i.tracking_number && <p className="text-xs normal-case">{i.carrier} {(() => { const u = trackingUrl(i.carrier, i.tracking_number); return u ? <a href={u} target="_blank" rel="noopener noreferrer" className="underline">{i.tracking_number}</a> : i.tracking_number; })()}</p>}</td>
               <td className="p-3">{!i ? null : i.status === 'draft' ? <div className="flex flex-wrap gap-1"><Button size="sm" disabled={!r.addrOk} onClick={() => void setStatus(i, 'approved')}>Approve</Button><Button size="sm" variant="ghost" onClick={() => void setStatus(i, 'skipped')}>Skip</Button></div>
                 : i.status === 'approved' ? <div className="flex flex-wrap gap-1"><Button size="sm" variant="outline" onClick={() => void setStatus(i, 'printing')}><Printer className="h-3.5 w-3.5" />Mark printing</Button><Button size="sm" variant="ghost" onClick={() => void setStatus(i, 'draft')}>Back to draft</Button></div>
@@ -141,7 +142,7 @@ export function ComicQueue() {
           ); })}</tbody>
         </table></div>
       )}
-      {preview && (() => { const i = issues.find(x => x.id === preview); const sc = i?.script as unknown as ComicIssue | undefined; return sc?.pages ? <section aria-label="Issue preview" className="space-y-3"><h3 className="text-lg">{sc.title} · {sc.reader}</h3><div className="grid grid-cols-2 gap-3 sm:grid-cols-4">{sc.pages.map(p => <ComicPageView key={p.n} page={p} compact />)}</div></section> : null; })()}
+      {preview && (() => { const i = issues.find(x => x.id === preview); return i ? <ComicProduction key={i.id} issue={i} onChanged={() => void load()} /> : null; })()}
 
       <form key={run?.id ?? key} className="vellum grid gap-3 p-5 sm:grid-cols-4" onSubmit={e => { e.preventDefault(); void saveRun(new FormData(e.currentTarget)); }} aria-labelledby="run-h">
         <div className="sm:col-span-4"><h3 id="run-h" className="text-lg">Print run · {monthLabel(month)}</h3><p className="text-xs text-muted-foreground">{approvedCount} approved issue{approvedCount === 1 ? '' : 's'} this month. Record the printer’s quote and order so costs stay visible.</p></div>
@@ -158,7 +159,7 @@ export function ComicQueue() {
       </form>
 
       {notDue.length > 0 && <details className="text-sm"><summary className="cursor-pointer text-muted-foreground">Not due this month ({notDue.length})</summary><ul className="mt-2 space-y-1">{notDue.map(r => <li key={r.s.subscription_id}>{r.s.display_name || r.s.email} · {COMIC_PLANS[r.s.plan as ComicPlan]?.name ?? r.s.plan} · <span className="text-muted-foreground">{r.due.reason}</span></li>)}</ul></details>}
-      <p className="text-xs text-muted-foreground">The manifest contains names and delivery addresses for printing and mailing only. Printed issues are fully illustrated from these script plans; until a printer account is connected, send the manifest and print files by hand.</p>
+      <p className="text-xs text-muted-foreground">The manifest contains names and delivery addresses for printing and mailing only. Each issue’s print file is built under Production once every panel is illustrated. Until a printer account is connected, send the manifest and print files to the printer by hand.</p>
     </div>
   );
 }
