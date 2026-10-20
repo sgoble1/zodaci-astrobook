@@ -393,6 +393,13 @@
       "when": 1792470469612,
       "tag": "0055_admin_credit_usage",
       "breakpoints": true
+    },
+    {
+      "idx": 56,
+      "version": "7",
+      "when": 1792476826654,
+      "tag": "0056_upgrade_platform_features",
+      "breakpoints": true
     }
   ]
 }
