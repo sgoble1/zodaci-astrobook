@@ -8,6 +8,7 @@ import { useSession, useIsAdmin } from '@/hooks/useLibrary';
 import { supabase } from '@/integrations/supabase/client';
 import planet from '@/assets/astrobook-planet.png';
 import hero from '@/assets/zodaci-brand-hero.jpg';
+import { usePageMeta } from '@/hooks/usePageMeta';
 
 const profiles = [
   { platform: 'Instagram', bio: 'Your sky. Your story. Personal birth charts, thoughtful readings & AstroBook — your sky, in print. Explore your chart with Zodaci.' },
@@ -17,6 +18,7 @@ const profiles = [
 const firstPost = 'Meet Zodaci. Your birth chart is a starting point for curiosity — not a script for your life. Explore your measured sky, build a personal reading library, and discover AstroBook, your sky in print. Free to begin.';
 type Subscriber = { id: string; email: string; consent_at: string };
 export default function BrandLaunch() {
+  usePageMeta('Brand launch kit · Zodaci', 'Manage Zodaci brand drafts, artwork and consented email signups. Admin access required.');
   const session = useSession(); const admin = useIsAdmin(session);
   const [rows, setRows] = useState<Subscriber[]>([]); const [error, setError] = useState(''); const [busy, setBusy] = useState(false);
   const load = async () => {

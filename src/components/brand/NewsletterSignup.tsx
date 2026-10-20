@@ -25,11 +25,11 @@ export function NewsletterSignup({ source = 'welcome', button = 'Keep me in the 
       setState('done'); setEmail('');
     } catch (err) { setError(err instanceof Error ? err.message : 'Please try again.'); setState('idle'); }
   }}>
-    {state === 'done' ? <p role="status" className="flex items-center gap-2 text-accent"><Check />{skyNotes ? 'You’re on the list for Weekly Sky Notes.' : 'You’re on the Zodaci update list.'}</p> : <>
+    {state === 'done' ? <p role="status" className="flex items-center gap-2 text-accent"><Check />{skyNotes ? 'You’re on the interest list. We’ll email when Sky Notes launches.' : 'You’re on the Zodaci update list.'}</p> : <>
       <label htmlFor={`brand-email-${source}`} className="text-sm">Email address</label>
       <div className="flex flex-col sm:flex-row gap-3"><Input id={`brand-email-${source}`} type="email" autoComplete="email" maxLength={254} required value={email} onChange={e => setEmail(e.target.value)} placeholder="you@example.com" className="h-12" /><Button type="submit" size="lg" disabled={state === 'busy' || !consent}>{state === 'busy' ? 'Saving…' : button}<ArrowRight /></Button></div>
       <div className="hidden" aria-hidden="true"><label htmlFor={`brand-website-${source}`}>Website</label><input id={`brand-website-${source}`} tabIndex={-1} autoComplete="off" value={website} onChange={e => setWebsite(e.target.value)} /></div>
-      <label className="flex items-start gap-3 text-sm text-muted-foreground"><Checkbox checked={consent} onCheckedChange={v => setConsent(v === true)} className="mt-0.5" />{consentLabel ?? (skyNotes ? 'Send me Weekly Sky Notes by email.' : 'I agree to receive Zodaci launch news, new readings and product updates by email.')}</label>
+      <label className="flex items-start gap-3 text-sm text-muted-foreground"><Checkbox checked={consent} onCheckedChange={v => setConsent(v === true)} className="mt-0.5" />{consentLabel ?? (skyNotes ? 'Email me when Sky Notes launches, and send me future notes.' : 'I agree to receive Zodaci launch news, new readings and product updates by email.')}</label>
       {skyNotes
         ? <p className="text-xs text-muted-foreground">By signing up you agree to our <Link to="/privacy" className="underline underline-offset-2">Privacy Policy</Link>. Unsubscribe anytime.</p>
         : <p className="text-xs text-muted-foreground">Optional. Your email is kept private and is not shared with workspace members. No account is created.</p>}
