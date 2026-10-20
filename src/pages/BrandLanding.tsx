@@ -1,6 +1,6 @@
 import { CinematicVideo } from '@/components/fx/CinematicVideo';
 import { Link } from 'react-router-dom';
-import { ArrowUpRight, ArrowRight, BookOpen, AudioLines, Orbit, ShieldCheck } from 'lucide-react';
+import { ArrowUpRight, ArrowRight, Orbit, PenLine, Scale, ShieldCheck, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ZodaciLogo } from '@/components/brand/ZodaciLogo';
 import { SampleChartDemo } from '@/components/brand/SampleChartDemo';
@@ -8,31 +8,76 @@ import { GlobalFooter } from '@/components/brand/GlobalFooter';
 import { NewsletterSignup } from '@/components/brand/NewsletterSignup';
 import { PUBLIC_ARTICLES } from '@/content/publicArticles';
 import { ThemeArt } from '@/components/common/ThemeArt';
+import { usePageMeta } from '@/hooks/usePageMeta';
+import { PLAN_NAME, PLAN_PRICE, CREDIT_ALLOWANCE } from '@/lib/plans';
+import { BOOK_VERSIONS, money } from '@/lib/books';
+import { COMIC_PLANS } from '@/lib/comic';
 import hero from '@/assets/zodaci-brand-hero.jpg';
+import bookCover from '@/assets/cover-design-midnight-stars.jpg';
+import comicCover from '@/assets/astrocomic-cover.jpg';
 
+/** Section anchors, in the required order. */
 const navigation = ['Work', 'Process', 'Capabilities', 'Team', 'Contact'];
-const capabilities = [
-  { icon: Orbit, title: 'Your chart, calculated.', text: 'Explore planets, houses and aspects from your own birth details. Compare house systems and see where a missing birth time changes the picture.' },
-  { icon: BookOpen, title: 'A library that is yours.', text: 'Plain-language readings sit alongside the chart details. Paid plans add personal chapters; Cosmic adds custom chapters and audio.' },
-  { icon: AudioLines, title: 'Read. Listen. Reflect.', text: 'Turn a reading into a podcast, keep your life examples private, and choose what to share with people you invite.' },
+
+const PILLARS = [
+  { icon: Orbit, title: 'Calculated, not guessed', text: 'Every planet, house and angle comes from astronomical data for your exact birth moment, time and place — never a sun-sign template.' },
+  { icon: PenLine, title: 'Written for one person', text: 'Readings combine your sign, house, aspects and rulers, and name the placement behind every sentence — so they could only be about you.' },
+  { icon: Scale, title: 'Honest about limits', text: 'No birth time? We show exactly what changes. Measured positions, interpretations and your own notes always stay clearly separate.' },
+  { icon: ShieldCheck, title: 'Private by design', text: 'Your chart, readings and conversations belong to your account. Nothing is shared unless you invite someone in.' },
 ];
+
+const STEPS = [
+  ['Save your birth details', 'Date, time and place. If the time is unknown, Zodaci keeps that uncertainty visible instead of guessing.'],
+  ['Explore the measured sky', 'Your chart is calculated live: planets, houses, aspects and patterns, each explained twice — technically and in everyday words.'],
+  ['Go deeper when you’re ready', 'Read full chapters, compare charts with people you love, turn readings into audio, or have your sky printed as an AstroBook.'],
+];
+
 export default function BrandLanding() {
+  usePageMeta('Zodaci — Your sky. Your story.', 'Zodaci calculates your birth chart with astronomical precision, then translates every symbol into plain language. Free to begin, private by default.');
+  const fromBook = Math.min(...BOOK_VERSIONS.map(v => v.price));
+  const plans = [
+    { key: 'free' as const, price: '$0', note: 'Free forever', points: ['Your full calculated chart', 'Two complete readings', `${CREDIT_ALLOWANCE.free} AI credits a month`] },
+    { key: 'full' as const, price: PLAN_PRICE.full.month, note: `or ${PLAN_PRICE.full.year}`, points: ['All 38 chapter readings', 'Timing, numerology, Ba Zi and Feng Shui', `${CREDIT_ALLOWANCE.full} AI credits a month`] },
+    { key: 'creator' as const, price: PLAN_PRICE.creator.month, note: `or ${PLAN_PRICE.creator.year}`, points: ['Everything in Pro', 'Personal podcasts and new chapters', `${CREDIT_ALLOWANCE.creator} AI credits a month`] },
+  ];
   return <div className="brand-site min-h-screen bg-background text-foreground">
     <a href="#brand-main" className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:bg-background focus:p-3">Skip to content</a>
     <header className="border-b border-border bg-background/90"><div className="mx-auto max-w-7xl px-5 sm:px-10 py-5 flex flex-wrap items-center justify-between gap-5"><Link to="/welcome" aria-label="Zodaci home"><ZodaciLogo /></Link><nav aria-label="Brand navigation" className="order-3 lg:order-none w-full lg:w-auto flex flex-wrap lg:flex-nowrap gap-1">{navigation.map(item => <Button key={item} asChild variant="ghost" size="sm"><a href={`#${item.toLowerCase()}`}>{item}</a></Button>)}<span aria-hidden="true" className="mx-1 self-center h-5 w-px bg-border" />{[['/astrobook', 'AstroBook'], ['/pricing', 'Pricing']].map(([to, label]) => <Button key={to} asChild variant="ghost" size="sm"><Link to={to}>{label}</Link></Button>)}</nav><Button asChild variant="outline"><Link to="/auth">Enter Zodaci<ArrowUpRight /></Link></Button></div></header>
     <main id="brand-main">
-      <section className="relative isolate min-h-[560px] overflow-hidden flex items-center border-b border-border">
+      <section className="relative isolate min-h-[600px] overflow-hidden flex items-center border-b border-border">
         <CinematicVideo poster={hero} />
-        <div className="absolute inset-0 -z-10 bg-background/35" />
-        <div className="mx-auto w-full max-w-7xl px-5 sm:px-10 py-20"><p className="text-accent text-sm mb-5">Your sky. Your story.</p><h1 className="brand-wordmark text-6xl sm:text-8xl">Zodaci</h1><p className="mt-6 text-xl leading-relaxed max-w-md">A personal chart library.<br />A little more perspective on you.</p><p className="mt-4 text-muted-foreground max-w-md leading-relaxed">Calculated birth charts, thoughtful readings and AstroBook — your sky, in print.</p><div className="mt-8 flex flex-wrap gap-3"><Button asChild size="lg"><Link to="/start">Explore your chart<ArrowRight /></Link></Button><Button asChild variant="outline" size="lg"><Link to="/demo">Try the interactive demo</Link></Button></div><p className="mt-5 text-xs text-muted-foreground">Free chart plus two full readings · Personal by design</p></div>
+        <div className="absolute inset-0 -z-10 bg-background/45" />
+        <div className="mx-auto w-full max-w-7xl px-5 sm:px-10 py-20">
+          <h1 className="brand-wordmark text-6xl sm:text-8xl leading-[0.95]">Your sky.<br />Your story.</h1>
+          <p className="mt-7 text-xl leading-relaxed max-w-xl">Zodaci calculates your birth chart with astronomical precision, then translates every symbol into language that actually feels like you.</p>
+          <div className="mt-9 flex flex-wrap gap-3"><Button asChild size="lg"><Link to="/start">Explore your chart<ArrowRight /></Link></Button><Button asChild variant="outline" size="lg"><Link to="/demo">See what’s inside</Link></Button></div>
+          <p className="mt-6 text-sm text-muted-foreground">Free to begin · Personal by design · Private by default</p>
+        </div>
       </section>
-      <section aria-label="Why Zodaci" className="brand-band border-b border-border"><div className="grid gap-8 md:grid-cols-3">{[['Calculated, not copied', 'Every position comes from astronomical data for your exact birth moment, time and place.'], ['Written in plain words', 'Each placement is explained twice: the technical detail and what it means in everyday life.'], ['Private by design', 'Your chart, readings and chats belong to your account. You choose what to share.']].map(([t, d]) => <div key={t} className="border-t border-border pt-5"><h3 className="text-xl">{t}</h3><p className="mt-2 text-muted-foreground leading-relaxed">{d}</p></div>)}</div></section>
+
+      <section aria-labelledby="pillars-h" className="brand-band border-b border-border">
+        <h2 id="pillars-h" className="sr-only">Why Zodaci</h2>
+        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">{PILLARS.map(({ icon: Icon, title, text }) => <div key={title} className="border-t border-border pt-5"><Icon aria-hidden="true" className="h-6 w-6 text-candle" /><h3 className="mt-4 text-xl">{title}</h3><p className="mt-2 text-muted-foreground leading-relaxed">{text}</p></div>)}</div>
+      </section>
+
       <section aria-label="Sample chart" className="brand-band border-b border-border bg-card/30"><SampleChartDemo /></section>
-      <section id="work" className="brand-band"><div className="flex flex-wrap justify-between items-end gap-5 mb-8"><div><h2>The Zodaci reading room</h2><p className="text-muted-foreground mt-3 max-w-xl">Understand the measured sky, then make space for your own questions.</p></div><Button asChild variant="outline"><Link to="/blog">Read the blog<ArrowUpRight /></Link></Button></div><div className="grid sm:grid-cols-3 gap-6">{PUBLIC_ARTICLES.map(article => <Link key={article.slug} to={`/blog/learn/${article.slug}`} className="vellum overflow-hidden"><img src={article.image} alt={`${article.category} editorial illustration`} width={1024} height={768} loading="lazy" className="w-full aspect-[4/3] object-cover" /><div className="p-5"><p className="font-smallcaps text-xs text-gold">{article.category}</p><h3 className="text-xl mt-3">{article.title}</h3><p className="text-sm text-muted-foreground mt-3 leading-relaxed">{article.summary}</p><p className="text-sm text-gold mt-5 flex items-center gap-2">Read the guide<ArrowUpRight className="w-4 h-4" /></p></div></Link>)}</div><div className="mt-8 flex flex-wrap gap-3"><Button asChild variant="outline"><Link to="/community">Join the community<ArrowUpRight /></Link></Button><Button asChild variant="ghost"><Link to="/astrobook">Explore printed AstroBooks</Link></Button></div></section>
-      <section id="process" className="brand-band border-y border-border bg-card/30"><h2>From a birth moment<br />to a fresh perspective.</h2><ol className="grid md:grid-cols-3 gap-8 mt-10">{[['Save your birth details', 'Date, time and place. If the time is unknown, Zodaci keeps that uncertainty visible.'], ['Explore the measured sky', 'Your chart comes from astronomical calculations, not someone else’s placements.'], ['Build your personal library', 'Read your chart, add your own context and choose the chapters or podcasts you want to create.']].map(([title,text],i) => <li key={title} className="vellum p-6"><ThemeArt kind={(['chart','planet','self'] as const)[i]} badge={i+1} /><h3 className="mt-5 text-2xl">{title}</h3><p className="mt-3 text-muted-foreground leading-relaxed">{text}</p></li>)}</ol></section>
-      <section id="capabilities" className="brand-band"><h2>Make room for curiosity.</h2><div className="grid md:grid-cols-3 gap-8 mt-10">{capabilities.map(({icon: Icon,title,text}) => <div key={title} className="vellum p-6"><div className="mb-5 flex h-12 w-12 items-center justify-center rounded-full bg-primary/20 ring-1 ring-candle/40"><Icon className="text-candle w-6 h-6" /></div><h3 className="text-2xl">{title}</h3><p className="mt-3 text-muted-foreground leading-relaxed">{text}</p></div>)}</div><div className="mt-10 pt-6 border-t border-border flex flex-wrap justify-between gap-4"><p className="text-sm text-muted-foreground">Free chart · Pro $9/month · Cosmic $19/month</p><Button asChild variant="link"><Link to="/pricing">Compare plans<ArrowRight /></Link></Button></div></section>
-      <section id="team" className="brand-band border-y border-border bg-card/30"><div className="grid md:grid-cols-2 gap-8"><h2>A considered approach<br />to a personal subject.</h2><div className="vellum space-y-5 p-7 text-muted-foreground leading-relaxed"><p>Zodaci brings astronomical calculation, symbolic traditions and personal reflection together. Measured positions and interpretations stay clearly distinct.</p><p>Astrology is not a scientifically validated way to predict personality or events. AI-written reflections are prompts to consider, not a diagnosis or a claim about your past.</p><p className="flex gap-3 text-foreground"><ShieldCheck className="shrink-0 text-candle" />Your personal library stays separate from anyone else’s.</p></div></div></section>
-      <section id="contact" className="brand-band"><div className="grid md:grid-cols-2 gap-10"><div><h2>Stay in our orbit.</h2><p className="mt-4 text-muted-foreground max-w-md">Occasional Zodaci news, new reading topics and updates on the printed AstroBook launch.</p><p className="mt-6 text-sm text-muted-foreground">Zodaci is open now: create your free chart today, and upgrade any time for full readings, podcasts and Cosmic tools.</p></div><NewsletterSignup /></div></section>
+
+      <section id="work" className="brand-band"><div className="flex flex-wrap justify-between items-end gap-5 mb-8"><div><h2>The Zodaci reading room</h2><p className="text-muted-foreground mt-3 max-w-xl">Understand the measured sky first, then make space for your own questions.</p></div><div className="flex flex-wrap gap-2"><Button asChild variant="outline"><Link to="/academy">Open the Academy<ArrowUpRight /></Link></Button><Button asChild variant="ghost"><Link to="/blog">All articles</Link></Button></div></div><div className="grid sm:grid-cols-3 gap-6">{PUBLIC_ARTICLES.map(article => <Link key={article.slug} to={`/blog/learn/${article.slug}`} className="vellum overflow-hidden"><img src={article.image} alt={`${article.category} editorial illustration`} width={1024} height={768} loading="lazy" className="w-full aspect-[4/3] object-cover" /><div className="p-5"><p className="font-smallcaps text-xs text-gold">{article.category}</p><h3 className="text-xl mt-3">{article.title}</h3><p className="text-sm text-muted-foreground mt-3 leading-relaxed">{article.summary}</p><p className="text-sm text-gold mt-5 flex items-center gap-2">Read the guide<ArrowUpRight className="w-4 h-4" /></p></div></Link>)}</div></section>
+
+      <section id="process" className="brand-band border-y border-border bg-card/30"><h2>From a birth moment<br />to a fresh perspective.</h2><ol className="grid md:grid-cols-3 gap-8 mt-10">{STEPS.map(([title, text], i) => <li key={title} className="vellum p-6"><ThemeArt kind={(['chart', 'planet', 'self'] as const)[i]} badge={i + 1} /><h3 className="mt-5 text-2xl">{title}</h3><p className="mt-3 text-muted-foreground leading-relaxed">{text}</p></li>)}</ol></section>
+
+      <section id="capabilities" className="brand-band">
+        <div className="flex flex-wrap items-end justify-between gap-4"><div><h2>Start free. Go deeper when you’re ready.</h2><p className="mt-3 text-muted-foreground max-w-xl">One chart, three ways to explore it. No time-limited trial — the Free plan stays free.</p></div><Button asChild variant="outline"><Link to="/pricing">Compare plans<ArrowRight /></Link></Button></div>
+        <div className="grid gap-6 md:grid-cols-3 mt-10">{plans.map(p => <div key={p.key} className={`vellum p-6 flex flex-col ${p.key === 'full' ? 'ring-1 ring-candle/50' : ''}`}><h3 className="text-2xl">{PLAN_NAME[p.key]}</h3><p className="mt-3"><span className="text-3xl font-display">{p.price.replace('/month', '')}</span>{p.key !== 'free' && <span className="text-muted-foreground"> /month</span>}</p><p className="text-xs text-muted-foreground">{p.note}</p><ul className="mt-5 space-y-2 text-sm flex-1">{p.points.map(t => <li key={t} className="flex gap-2"><Check aria-hidden="true" className="h-4 w-4 shrink-0 text-candle mt-0.5" />{t}</li>)}</ul><Button asChild className="mt-6" variant={p.key === 'full' ? 'default' : 'outline'}><Link to={p.key === 'free' ? '/start' : `/pricing?plan=${p.key === 'full' ? 'pro' : 'cosmic'}`}>{p.key === 'free' ? 'Start for free' : `Choose ${PLAN_NAME[p.key]}`}</Link></Button></div>)}</div>
+        <div className="grid gap-6 lg:grid-cols-2 mt-12">
+          <Link to="/astrobook" className="vellum group grid grid-cols-[110px_1fr] sm:grid-cols-[140px_1fr] gap-5 p-5 items-center"><img src={bookCover} alt="AstroBook cover design, Midnight Stars" width={280} height={420} loading="lazy" className="rounded shadow-lg aspect-[2/3] object-cover" /><div><p className="font-smallcaps text-xs text-gold">AstroBook</p><h3 className="text-2xl mt-2">Your sky, in print.</h3><p className="mt-2 text-sm text-muted-foreground leading-relaxed">A book calculated from your chart and written for you alone. Five versions, from a {money(fromBook)} PDF to a linen-bound collector’s edition.</p><p className="mt-4 text-sm text-gold flex items-center gap-2">Explore AstroBook<ArrowUpRight className="h-4 w-4" /></p></div></Link>
+          <Link to="/astrocomic" className="vellum group grid grid-cols-[110px_1fr] sm:grid-cols-[140px_1fr] gap-5 p-5 items-center"><img src={comicCover} alt="AstroComic cover illustration: the Sun and Moon characters under a constellation" width={280} height={433} loading="lazy" className="rounded shadow-lg aspect-[2/3] object-cover" /><div><p className="font-smallcaps text-xs text-gold">AstroComic</p><h3 className="text-2xl mt-2">Your month, as a comic.</h3><p className="mt-2 text-sm text-muted-foreground leading-relaxed">A printed 24-page digest each month, starring the planets in your chart and the transits that touch it. {COMIC_PLANS.monthly.label} or a single issue for {COMIC_PLANS.single.label}.</p><p className="mt-4 text-sm text-gold flex items-center gap-2">Meet the cast<ArrowUpRight className="h-4 w-4" /></p></div></Link>
+        </div>
+      </section>
+
+      <section id="team" className="brand-band border-y border-border bg-card/30"><div className="grid md:grid-cols-2 gap-8"><div><h2>How we make<br />every reading.</h2><p className="mt-4 text-muted-foreground max-w-md">The people behind Zodaci hold every page to three working rules.</p></div><ul className="vellum space-y-5 p-7 leading-relaxed">{[['Check the sky twice.', 'Positions come from an astronomy engine and are cross-checked against a second calculation before they reach your chart.'], ['Name the source.', 'Every interpretation points to the placement it came from, so you can see why a sentence is there.'], ['Never invent a life.', 'Readings never claim facts about your family, past or future. Your own notes stay yours, and you decide when they count.']].map(([t, d]) => <li key={t}><p className="text-foreground font-semibold">{t}</p><p className="text-muted-foreground mt-1">{d}</p></li>)}</ul></div></section>
+
+      <section id="contact" className="brand-band"><div className="grid md:grid-cols-2 gap-10"><div><p className="font-smallcaps text-xs text-gold">Weekly Sky Notes</p><h2 className="mt-3">Your placements, delivered weekly.</h2><p className="mt-4 text-muted-foreground max-w-md leading-relaxed">A short, personal email each week — transits that matter to your chart, reflections from the reading room, and the occasional prompt to look up.</p><p className="mt-4 text-sm text-muted-foreground">Free subscribers welcome. No chart required to sign up.</p><p className="mt-6 text-sm text-muted-foreground">Questions? Write to <a href="mailto:hello@zodaci.com" className="underline underline-offset-2">hello@zodaci.com</a>.</p></div><NewsletterSignup source="sky-notes" button="Send me sky notes" /></div></section>
     </main><GlobalFooter />
   </div>;
 }
