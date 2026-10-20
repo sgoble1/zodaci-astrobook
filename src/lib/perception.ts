@@ -4,7 +4,13 @@ import { elementOf } from '@/lib/synastry';
 
 /** Perception Engine: ranks deterministic chart findings and assembles a plain-language narrative. No AI. */
 export type Insight = { id: string; title: string; text: string; weight: number; source: 'pattern' | 'retro' | 'element' | 'angle' };
-export type Tone = 'gentle' | 'direct';
+export type Tone = 'oracle' | 'educational' | 'professional';
+export const TONES: { id: Tone; label: string; note: string }[] = [
+  { id: 'oracle', label: 'Oracle', note: 'Warm, second-person and reflective.' },
+  { id: 'educational', label: 'Educational', note: 'Explains the astrology behind each point.' },
+  { id: 'professional', label: 'Professional', note: 'Concise, third-person summary for practitioners.' },
+];
+export const isTone = (t: unknown): t is Tone => t === 'oracle' || t === 'educational' || t === 'professional';
 
 const RETRO_MEANING: Record<string, string> = {
   Mercury: 'You tend to think things through twice; first answers are drafts, and reflection brings the real insight.',
@@ -34,10 +40,12 @@ export function perceive(chart: Pick<ChartResult, 'bodies' | 'asc' | 'cusps'>, t
   return out.sort((a, b) => b.weight - a.weight);
 }
 
-/** Narrative assembly with tone calibration. */
+/** Narrative assembly with tone calibration (Oracle / Educational / Professional). */
 export function narrative(insights: Insight[], tone: Tone, limit = 3) {
   const top = insights.slice(0, limit);
-  if (!top.length) return 'Your chart is balanced, with no single pattern dominating; its story is in the individual placements.';
-  const lead = tone === 'gentle' ? 'The patterns that stand out most in your chart are' : 'Your chart is defined by';
-  return `${lead} ${top.map(i => i.title.toLowerCase()).join(', ').replace(/, ([^,]*)$/, ' and $1')}. ${top[0].text}`;
+  if (!top.length) return tone === 'professional' ? 'Balanced chart; no dominant configuration. Interpretation rests on individual placements.' : 'Your chart is balanced, with no single pattern dominating; its story is in the individual placements.';
+  const names = top.map(i => i.title.toLowerCase()).join(', ').replace(/, ([^,]*)$/, ' and $1');
+  if (tone === 'professional') return `Dominant signatures: ${names}. Primary: ${top[0].text.replace(/\byour\b/gi, 'the native\u2019s').replace(/\byou\b/gi, 'the native')}`;
+  if (tone === 'educational') return `The strongest signatures in this chart are ${names} [ranked by how many planets are involved, how tight the angles are and whether personal planets take part]. ${top[0].text} [Source: ${top[0].source === 'pattern' ? 'aspect pattern' : top[0].source === 'retro' ? 'retrograde count' : top[0].source === 'element' ? 'element balance' : 'angles'}.]`;
+  return `The patterns that stand out most in your chart are ${names}. ${top[0].text}`;
 }

@@ -14,8 +14,11 @@ describe('perception engine', () => {
     expect(ins.some(i => i.id === 'el-missing-Water')).toBe(true);
     expect(ins.find(i => i.id === 'retro')?.text).toContain('Mercury');
   });
-  it('changes lead wording with tone', () => {
+  it('writes three distinct tones', () => {
     const ins = perceive(chart, false);
-    expect(narrative(ins, 'gentle')).not.toEqual(narrative(ins, 'direct'));
+    const [o, e, p] = (['oracle', 'educational', 'professional'] as const).map(t => narrative(ins, t));
+    expect(new Set([o, e, p]).size).toBe(3);
+    expect(e).toContain('[');
+    expect(p).toMatch(/^Dominant signatures/);
   });
 });
