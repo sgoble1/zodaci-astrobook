@@ -1,7 +1,8 @@
-import { useEffect, useMemo, useState, type RefObject } from 'react';
+import { useEffect, useId, useMemo, useState, type RefObject } from 'react';
 import { Bookmark, BookmarkCheck, ChevronDown, List } from 'lucide-react';
 import { toast } from 'sonner';
 import { useBookmarks } from '@/hooks/useBookmarks';
+import { Button } from '@/components/ui/button';
 
 export type NavSection = { id: string; title: string };
 
@@ -17,6 +18,7 @@ export function ReadingNavigator({ sections, contentRef, path, readingTitle, var
   const [active, setActive] = useState(sections[0]?.id ?? '');
   const [progress, setProgress] = useState(0);
   const [open, setOpen] = useState(false);
+  const mobileId = useId();
   const { items, signedIn, add, remove } = useBookmarks();
   const marked = useMemo(() => new Map(items.filter(b => b.path.startsWith(`${path}#`)).map(b => [b.path.slice(path.length + 1), b.id])), [items, path]);
 
@@ -31,6 +33,8 @@ export function ReadingNavigator({ sections, contentRef, path, readingTitle, var
       setActive(current);
     };
     onScroll();
+    const hash = decodeURIComponent(window.location.hash.slice(1));
+    if (sections.some(section => section.id === hash)) document.getElementById(hash)?.scrollIntoView({ block: 'start' });
     window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('resize', onScroll);
     return () => { window.removeEventListener('scroll', onScroll); window.removeEventListener('resize', onScroll); };
@@ -63,10 +67,10 @@ export function ReadingNavigator({ sections, contentRef, path, readingTitle, var
             <span className="leading-snug">{s.title}</span>
             {isMarked && <span className="sr-only"> (bookmarked)</span>}
           </a>
-          <button type="button" onClick={() => void toggle(s)} aria-label={isMarked ? `Remove bookmark: ${s.title}` : `Bookmark section: ${s.title}`} aria-pressed={isMarked}
+          <Button variant="ghost" size="icon" type="button" disabled={!signedIn} title={signedIn ? `Bookmark ${s.title}` : 'Sign in to bookmark sections'} onClick={() => void toggle(s)} aria-label={isMarked ? `Remove bookmark: ${s.title}` : `Bookmark section: ${s.title}`} aria-pressed={isMarked}
             className={`grid h-8 w-8 shrink-0 place-items-center rounded transition-opacity duration-300 hover:bg-muted ${isMarked ? 'text-gold' : 'text-muted-foreground opacity-60 group-hover:opacity-100 focus-visible:opacity-100'}`}>
             {isMarked ? <BookmarkCheck className="h-4 w-4" /> : <Bookmark className="h-4 w-4" />}
-          </button>
+          </Button>
         </li>
       ); })}
     </ol>
@@ -76,17 +80,17 @@ export function ReadingNavigator({ sections, contentRef, path, readingTitle, var
   if (variant === 'bar') return (
       <div className="sticky top-[calc(4rem+env(safe-area-inset-top))] z-30 -mx-2 mb-6 lg:hidden">
         <div className="vellum bg-background/95 px-3 py-2 backdrop-blur-xl">
-          <button type="button" onClick={() => setOpen(o => !o)} aria-expanded={open} aria-controls="reading-nav-mobile" className="flex w-full items-center gap-2 text-left text-sm">
+          <Button variant="ghost" type="button" onClick={() => setOpen(o => !o)} aria-expanded={open} aria-controls={mobileId} className="flex w-full items-center gap-2 px-0 text-left text-sm">
             <List aria-hidden className="h-4 w-4 shrink-0 text-gold" /><span className="min-w-0 flex-1 truncate">{activeTitle}</span><span className="tabular-nums text-xs text-muted-foreground">{progress}%</span><ChevronDown aria-hidden className={`h-4 w-4 transition-transform duration-300 ${open ? 'rotate-180' : ''}`} />
-          </button>
+          </Button>
           <div className="mt-2 h-0.5 rounded-full bg-muted" aria-hidden><div className="h-0.5 rounded-full bg-primary transition-[width] duration-300" style={{ width: `${progress}%` }} /></div>
-          {open && <nav id="reading-nav-mobile" aria-label="Sections in this reading" className="mt-2 max-h-[60vh] overflow-y-auto">{list}</nav>}
+          {open && <nav id={mobileId} aria-label="Sections in this reading" onKeyDown={e => { if (e.key === 'Escape') { setOpen(false); document.querySelector<HTMLButtonElement>(`[aria-controls="${mobileId}"]`)?.focus(); } }} className="mt-2 max-h-[60vh] overflow-y-auto">{list}</nav>}
         </div>
       </div>
   );
   return (
       <nav aria-label="Sections in this reading" className="hidden h-full lg:block">
-        <div className="vellum sticky top-24 flex gap-3 p-4">
+        <div className="vellum sticky top-24 flex max-h-[calc(100dvh-7rem)] gap-3 overflow-y-auto p-4">
           <div className="relative w-0.5 shrink-0 rounded-full bg-muted" role="progressbar" aria-label="Reading progress" aria-valuenow={progress} aria-valuemin={0} aria-valuemax={100}>
             <div className="absolute inset-x-0 top-0 rounded-full bg-primary transition-[height] duration-300" style={{ height: `${progress}%` }} />
           </div>
