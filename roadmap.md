@@ -1,6 +1,9 @@
 # Zodaci — Active Project Index
 
 ## In progress (current request)
+- [ ] Experience Architect audit: verify connected public/member/shared/admin journeys and document evidence separately from external blockers.
+- [ ] Complete remaining chapter readers with consistent section navigation, account-safe loading and retry states.
+- [ ] Repair bookmark account isolation and failed-save feedback; run regression and browser checks.
 - [x] Expand Shane’s own archive into chart, theme, system and workbook sections; cross-check source claims against calculated placements without borrowing April’s content.
 - [x] Restored late-loaded April archive content; verified her 9 workbook chapters, 45 questions, 46 saved entries, 16 topics and Compendium in her own account; 4 privacy/hydration tests pass.
 - [x] Failed lazy imports now show recovery instead of blanking; interrupted demo download, retry, and fresh welcome verified; 3 regression tests pass.
