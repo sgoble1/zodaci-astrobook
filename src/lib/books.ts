@@ -56,6 +56,20 @@ export const BOOK_COSTING: { edition: AnyEdition; print: number; shipping: numbe
   { edition: 'standard', print: 2400, shipping: 900, fees: 220, price: 5900 },
   { edition: 'expanded', print: 3800, shipping: 1100, fees: 310, price: 8900 },
 ];
+/**
+ * Lulu product codes and spec-sheet list print prices (US cents: base + per interior page, before shipping, fulfillment fee and tax).
+ * Mirrors supabase/functions/_shared/lulu-rules.ts; src/lib/lulu.test.ts keeps both equal.
+ */
+export const LULU_PRINT: Record<'pocket' | 'classic' | 'signature' | 'linen', { sku: string; base: number; perPage: number; minPages: number }> = {
+  pocket: { sku: '0425X0687.FC.STD.PB.060UW444.GXX', base: 199, perPage: 4.42, minPages: 32 },
+  classic: { sku: '0600X0900.FC.PRE.PB.080CW444.MXX', base: 199, perPage: 13.89, minPages: 32 },
+  signature: { sku: '0850X0850.FC.PRE.CW.080CW444.MXX', base: 1098, perPage: 21.48, minPages: 24 },
+  linen: { sku: '0850X1100.FC.PRE.LW.080CW444.MNG', base: 1528, perPage: 21.48, minPages: 24 },
+};
+export const luluListCents = (edition: string, pages: number): number | null => {
+  const p = LULU_PRINT[edition as keyof typeof LULU_PRINT];
+  return p ? Math.round(p.base + p.perPage * pages) : null;
+};
 export const marginPct = (price: number, cost: number) => price > 0 ? Math.round(((price - cost) / price) * 100) : 0;
 
 export const BOOK_SECTIONS = [

@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { PDFDocument } from 'pdf-lib';
-import { BOOK_VERSIONS } from '@/lib/books';
-import { POD_PACKAGES, TRIM_PT, carrierFrom, coverLayout, foilText, interiorPageCount, listPriceCents, luluAddress, luluErrorText, orderPatches, pageLimitError, spineWidthPt } from '../../supabase/functions/_shared/lulu-rules';
+import { BOOK_VERSIONS, LULU_PRINT, luluListCents } from '@/lib/books';
+import { LIST_PRICE, PAGE_LIMITS, POD_PACKAGES, TRIM_PT, carrierFrom, coverLayout, foilText, interiorPageCount, listPriceCents, luluAddress, luluErrorText, orderPatches, pageLimitError, spineWidthPt } from '../../supabase/functions/_shared/lulu-rules';
 import { buildCoverWrap, buildInterior } from '../../supabase/functions/_shared/lulu-files';
 
 const today = '2026-10-20';
@@ -15,6 +15,16 @@ describe('Lulu products', () => {
       expect(TRIM_PT[id]).toEqual(v.trimPt);
     }
     expect(POD_PACKAGES.linen).toBe('0850X1100.FC.PRE.LW.080CW444.MNG');
+  });
+  it('keeps the admin price list in step with the print function', () => {
+    for (const [id, p] of Object.entries(LULU_PRINT)) {
+      const k = id as keyof typeof POD_PACKAGES;
+      expect(p.sku).toBe(POD_PACKAGES[k]);
+      expect([p.base, p.perPage]).toEqual([LIST_PRICE[k].base, LIST_PRICE[k].perPage]);
+      expect(p.minPages).toBe(PAGE_LIMITS[k][0]);
+      expect(luluListCents(id, 100)).toBe(listPriceCents(k, 100));
+    }
+    expect(luluListCents('digital', 100)).toBeNull();
   });
   it('uses the published spec-sheet list price per copy', () => {
     expect(listPriceCents('classic', 136)).toBe(199 + Math.round(13.89 * 136));
