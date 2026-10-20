@@ -17,12 +17,12 @@ import { ThemeArt } from '@/components/common/ThemeArt';
 import { SampleBook } from '@/components/books/SampleBookReader';
 
 const CHAPTERS = [
-  ['Your Chart Snapshot', 'The full birth chart in one illustrated spread'],
+  ['Your Chart Snapshot', 'Every planet, sign, house and aspect, calculated to the minute'],
   ['Who You Are', 'Sun, Moon, Rising and dominant element interpreted'],
   ['Love & Connection', 'Venus, Mars, the 7th house and relationship patterns'],
   ['Purpose & Work', 'Midheaven, Saturn, the 10th house and life direction'],
   ['Healing & Growth', 'Chiron, the 12th house and the places that shape you'],
-  ['The Year Ahead', 'Current transits and how they meet your chart'],
+  ['Moon Phase & Rulers', 'Your birth Moon phase and where each house ruler leads'],
 ];
 
 export function AstroBookPublic() {
