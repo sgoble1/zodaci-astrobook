@@ -31,8 +31,8 @@ export default function CreatorDashboard() {
   if (access.plan !== 'creator') return (
     <article className="mx-auto max-w-xl space-y-4 text-center">
       <h1 className="font-display text-4xl">Creator dashboard</h1>
-      <p className="text-muted-foreground">The Creator plan lets you manage several charts, write new chapters and make podcasts from your readings.</p>
-      <Button asChild><Link to="/pricing">See the Creator plan</Link></Button>
+      <p className="text-muted-foreground">The Cosmic plan lets you manage several charts, write new chapters and make podcasts from your readings.</p>
+      <Button asChild><Link to="/pricing">See the Cosmic plan</Link></Button>
     </article>
   );
   if (error) return <LoadError what="your readings" onRetry={() => setRetry(n => n + 1)} />;

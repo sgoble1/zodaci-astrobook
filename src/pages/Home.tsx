@@ -50,7 +50,7 @@ export default function Home() {
           </h1>
           <div className="gold-rule my-6 max-w-md" />
           <p className="text-lg leading-relaxed text-foreground/85 max-w-xl">
-            Explore your calculated birth chart and personal readings. Paid plans add six foundational chapters; Creator adds custom chapters and podcasts, informed by life examples you choose to share.
+            Explore your calculated birth chart and personal readings. Paid plans add six foundational chapters; Cosmic adds custom chapters and podcasts, informed by life examples you choose to share.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             <Button asChild variant="outline"><Link to="/demo" className="font-smallcaps text-xs">Try the interactive demo</Link></Button>

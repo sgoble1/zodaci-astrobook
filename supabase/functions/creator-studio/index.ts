@@ -84,13 +84,13 @@ Deno.serve(async (req) => {
     if (kind === 'starter') {
       // Ready-made chapters for any paid plan; one chapter per request, each written once.
       if (!STARTER.includes(topic)) return json({ error: 'Unknown chapter.' }, 400);
-      const { data: paid } = await admin.from('billing_subscriptions').select('status,current_period_end').eq('user_id', user.id).eq('environment', 'live').in('price_id', ['full_access_monthly', 'creator_monthly', 'full_access_yearly', 'creator_yearly']);
-      if (!elevated && !(paid ?? []).some(active)) return json({ error: 'Ready-made chapters need Full Access.' }, 403);
+      const { data: paid } = await admin.from('billing_subscriptions').select('status,current_period_end').eq('user_id', user.id).eq('environment', 'live').in('price_id', ['pro_monthly','pro_yearly','cosmic_monthly','cosmic_yearly','full_access_monthly', 'creator_monthly', 'full_access_yearly', 'creator_yearly']);
+      if (!elevated && !(paid ?? []).some(active)) return json({ error: 'Ready-made chapters need Pro.' }, 403);
     }
-    // Creator tools require an active Creator plan, checked here — never trusted from the browser.
-    const { data: subs } = await admin.from('billing_subscriptions').select('status,current_period_end,price_id').eq('user_id', user.id).eq('environment', 'live').in('price_id', ['creator_monthly', 'creator_yearly']);
+    // Cosmic tools require an active Cosmic plan, checked here — never trusted from the browser.
+    const { data: subs } = await admin.from('billing_subscriptions').select('status,current_period_end,price_id').eq('user_id', user.id).eq('environment', 'live').in('price_id', ['cosmic_monthly','cosmic_yearly','creator_monthly', 'creator_yearly']);
     const ok = elevated || kind === 'starter' || (subs ?? []).some(s => (!s.current_period_end || +new Date(s.current_period_end) > now) && ['active', 'trialing', 'past_due', 'canceled'].includes(s.status) && (s.status !== 'canceled' || !!s.current_period_end));
-    if (!ok) return json({ error: 'Creator tools need the Creator plan.' }, 403);
+    if (!ok) return json({ error: 'Cosmic tools need the Cosmic plan.' }, 403);
 
     const { data: profile } = await admin.from('profiles').select('*').eq('id', user.id).maybeSingle();
     if (!profile?.birth_date || !profile.chart) return json({ error: 'Save your birth details to your account first.' }, 400);

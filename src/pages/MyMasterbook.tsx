@@ -14,7 +14,7 @@ const STARTER = STARTER_CHAPTERS;
 type Chapter = { id: string; title: string; content: string; created_at: string };
 type Episode = { id: string; title: string; file_path: string; created_at: string; url?: string };
 
-/** The member's own Masterbook: readable on Full Access or Creator (enforced by the database), written by Creator Studio. */
+/** The member's own Masterbook: readable on Pro or Cosmic (enforced by the database), written by Creator Studio. */
 export default function MyMasterbook() {
   const sub = useSubscription();
   const effective = usePlan();
@@ -78,7 +78,7 @@ export default function MyMasterbook() {
   if (!sub.userId || effective.plan === 'free') return (
     <article className="mx-auto max-w-xl space-y-4 py-12 text-center">
       <h1 className="font-display text-3xl">Your Masterbook</h1>
-      <p className="text-muted-foreground">A full book written from your own chart. It unlocks with Full Access ($12.99/month); the Creator plan ($14.99/month) also lets you write new chapters and podcasts.</p>
+      <p className="text-muted-foreground">A full book written from your own chart. It unlocks with Pro ($9/month); the Cosmic plan ($19/month) also lets you write new chapters and podcasts.</p>
       <Button asChild><Link to={sub.userId ? '/pricing' : '/auth'}>{sub.userId ? 'See plans' : 'Sign in'}</Link></Button>
     </article>
   );

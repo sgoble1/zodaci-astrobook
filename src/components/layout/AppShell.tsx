@@ -209,7 +209,7 @@ function SidebarInner({ mobile = false, onNavigate }: { mobile?: boolean; onNavi
         )}
       </div>
 
-      {!april && !planLoading && plan === 'free' && <NavLink to="/pricing" onClick={onNavigate} className="block rounded-xl border border-primary/40 bg-primary/10 p-3 text-xs"><span className="font-semibold text-foreground">Free plan</span> · 2 full readings and first-section core previews. Items marked <Lock className="inline h-3 w-3" aria-label="locked" /> need Full Access. <span className="text-primary underline">Upgrade →</span></NavLink>}
+      {!april && !planLoading && plan === 'free' && <NavLink to="/pricing" onClick={onNavigate} className="block rounded-xl border border-primary/40 bg-primary/10 p-3 text-xs"><span className="font-semibold text-foreground">Free plan</span> · 2 full readings and first-section core previews. Items marked <Lock className="inline h-3 w-3" aria-label="locked" /> need Pro. <span className="text-primary underline">Upgrade →</span></NavLink>}
       <div className="pt-1 space-y-2"><CommandPaletteTrigger label={april ? "Search the compendium" : "Find pages & readings"} /><BookmarkButton /></div>
 
       {!april && <nav aria-label="Main destinations" className="grid gap-1">{[['/dashboard', 'Dashboard'], ['/my-chart', 'My Chart'], ['/my-readings', 'Readings'], ['/explore', 'Explore'], ['/my-astrobook', 'My Library'], ...(plan === 'creator' ? [['/creator', 'Creator Studio']] : []), ...(admin ? [['/admin', 'Admin']] : [])].map(([to, label]) => <Button key={to} asChild variant={location.pathname === to ? 'secondary' : 'ghost'} className="justify-start"><NavLink to={to} onClick={onNavigate}>{label}</NavLink></Button>)}</nav>}

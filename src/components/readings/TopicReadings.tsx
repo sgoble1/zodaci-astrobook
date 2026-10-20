@@ -35,11 +35,11 @@ export function TopicReadings({ seed }: { seed: string }) {
       <h2 id="deep-h" className="font-display text-3xl">In-depth topic readings</h2>
       <p className="max-w-2xl text-sm text-muted-foreground">Long chapters written from your own calculated chart: each one looks at the signs, houses, links between planets and their rulers that apply to that topic.</p>
       {writing && <p role="status" className="text-sm">Pages still being written are tracked in the progress bar at the top of the screen.</p>}
-      {plan === 'free' && <p className="text-sm">Your free plan includes <strong>Your Big Three</strong> and <strong>Personality & Strengths</strong>. Readings marked with a lock unlock with <Link to="/pricing" className="text-primary underline">Full Access</Link>.</p>}
+      {plan === 'free' && <p className="text-sm">Your free plan includes <strong>Your Big Three</strong> and <strong>Personality & Strengths</strong>. Readings marked with a lock unlock with <Link to="/pricing" className="text-primary underline">Pro</Link>.</p>}
       {error && <p role="alert" className="text-sm text-destructive">Paused: {error}</p>}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {ordered.map(t => { const r = done(t.slug); if (isLocked(t.slug)) return (
-          <Link key={t.slug} to="/pricing" className="flex flex-col gap-1 rounded-lg border border-dashed border-border p-4 text-sm text-muted-foreground opacity-70 hover:opacity-100"><h3 className="font-display text-lg text-foreground">{t.title}</h3><span className="inline-flex items-center gap-1"><Lock className="h-3 w-3" aria-hidden="true" /> Unlock with Full Access</span></Link>
+          <Link key={t.slug} to="/pricing" className="flex flex-col gap-1 rounded-lg border border-dashed border-border p-4 text-sm text-muted-foreground opacity-70 hover:opacity-100"><h3 className="font-display text-lg text-foreground">{t.title}</h3><span className="inline-flex items-center gap-1"><Lock className="h-3 w-3" aria-hidden="true" /> Unlock with Pro</span></Link>
         ); return r ? (
           <Link key={t.slug} to={`/my-readings/topic/${t.slug}`} className="block overflow-hidden rounded-lg border border-border bg-card hover:border-primary focus-visible:outline focus-visible:outline-2">
             <BoxArt seed={`${seed}-${t.slug}`} label={t.title} className="aspect-[16/9] w-full" />

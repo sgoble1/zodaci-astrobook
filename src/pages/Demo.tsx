@@ -59,7 +59,7 @@ function PodcastSimulator() {
 }
 
 export default function Demo() {
-  usePageMeta('Try Zodaci Full Access — Interactive Demo | Zodaci', 'Explore a full-length sample reading, compare Free and Full Access depth, listen to a sample podcast and turn a 3D AstroBook — no sign-up needed.');
+  usePageMeta('Try Zodaci Pro — Interactive Demo | Zodaci', 'Explore a full-length sample reading, compare Free and Pro depth, listen to a sample podcast and turn a 3D AstroBook — no sign-up needed.');
   const [full, setFull] = useState(true);
   const shown = full ? SECTIONS : SECTIONS.slice(0, 1);
   const words = shown.reduce((n, s) => n + s.body.split(/\s+/).length + s.title.split(/\s+/).length, 0);
@@ -68,7 +68,7 @@ export default function Demo() {
     <main className="mx-auto max-w-5xl space-y-16 px-5 py-12">
       <header className="space-y-3">
         <div className="font-smallcaps text-xs text-gold">Interactive demo · fictional sample chart</div>
-        <h1 className="text-4xl md:text-5xl">See everything Full Access unlocks</h1>
+        <h1 className="text-4xl md:text-5xl">See everything Pro unlocks</h1>
         <p className="max-w-2xl text-muted-foreground">This demo uses a made-up person, {SAMPLE.name} ({SAMPLE.facts}). Your own readings are written from your exact birth time and place.</p>
         <div className="flex flex-wrap gap-2"><Button asChild><Link to="/auth">Start free with your chart</Link></Button><Button asChild variant="outline"><Link to="/pricing">Compare plans</Link></Button></div>
       </header>
@@ -76,7 +76,7 @@ export default function Demo() {
       <section className="space-y-5" aria-labelledby="reading-h">
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div><div className="font-smallcaps text-xs text-gold">Core theme reading</div><h2 id="reading-h" className="text-3xl">Emotional World</h2></div>
-          <label className="flex items-center gap-3 text-sm"><span className={!full ? 'text-foreground' : 'text-muted-foreground'}>Free preview</span><Switch checked={full} onCheckedChange={setFull} aria-label="Toggle Full Access view" /><span className={full ? 'text-foreground' : 'text-muted-foreground'}>Full Access</span></label>
+          <label className="flex items-center gap-3 text-sm"><span className={!full ? 'text-foreground' : 'text-muted-foreground'}>Free preview</span><Switch checked={full} onCheckedChange={setFull} aria-label="Toggle Pro view" /><span className={full ? 'text-foreground' : 'text-muted-foreground'}>Pro</span></label>
         </div>
         <div className="grid gap-6 md:grid-cols-[200px_1fr]">
           <nav aria-label="Sections" className="space-y-2 text-sm">
@@ -86,13 +86,13 @@ export default function Demo() {
           </nav>
           <article className="space-y-6">
             {shown.map(s => <div key={s.title} className="space-y-2"><h3 className="text-xl">{s.title}</h3><p className="leading-relaxed text-muted-foreground">{s.body}</p></div>)}
-            {!full && <div className="rounded-lg border border-primary/40 bg-primary/5 p-5"><p className="font-medium">Six more sections are locked on Free.</p><p className="text-sm text-muted-foreground">Full Access writes the complete reading for every core theme.</p><Button asChild size="sm" className="mt-3"><Link to="/pricing">Unlock Full Access</Link></Button></div>}
+            {!full && <div className="rounded-lg border border-primary/40 bg-primary/5 p-5"><p className="font-medium">Six more sections are locked on Free.</p><p className="text-sm text-muted-foreground">Pro writes the complete reading for every core theme.</p><Button asChild size="sm" className="mt-3"><Link to="/pricing">Unlock Pro</Link></Button></div>}
           </article>
         </div>
       </section>
 
       <section className="space-y-5" aria-labelledby="pod-h">
-        <div><div className="font-smallcaps text-xs text-gold">Creator plan</div><h2 id="pod-h" className="text-3xl">Podcast studio</h2><p className="text-muted-foreground">Turn any reading into a narrated episode saved to your library.</p></div>
+        <div><div className="font-smallcaps text-xs text-gold">Cosmic plan</div><h2 id="pod-h" className="text-3xl">Podcast studio</h2><p className="text-muted-foreground">Turn any reading into a narrated episode saved to your library.</p></div>
         <PodcastSimulator />
       </section>
 

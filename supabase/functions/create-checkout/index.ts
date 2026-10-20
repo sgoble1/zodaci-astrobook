@@ -5,7 +5,7 @@ import { type StripeEnv, createStripeClient } from "../_shared/stripe.ts";
 
 import { snapshotBookPdf } from '../_shared/book-delivery.ts';
 
-const ALLOWED = new Set(["full_access_monthly", "creator_monthly", "full_access_yearly", "creator_yearly"]);
+const ALLOWED = new Set(["pro_monthly", "pro_yearly", "cosmic_monthly", "cosmic_yearly"]);
 const json = (b: unknown, status = 200) => new Response(JSON.stringify(b), { status, headers: { ...corsHeaders, "Content-Type": "application/json" } });
 
 async function resolveOrCreateCustomer(stripe: ReturnType<typeof createStripeClient>, options: { email?: string; userId?: string }): Promise<string> {

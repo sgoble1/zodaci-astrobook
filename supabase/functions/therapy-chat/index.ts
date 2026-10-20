@@ -44,7 +44,7 @@ Deno.serve(async (req) => {
     const { data: u } = await sb.auth.getUser();
     if (!u?.user) return json({ error: "Please sign in to talk with the companion." }, 401);
         const admin = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
-    if (!(await hasFullAccess(admin, u.user.id))) return json({ error: "Private counselor chats are part of Full Access. Upgrade to continue." }, 403);
+    if (!(await hasFullAccess(admin, u.user.id))) return json({ error: "Private counselor chats are part of Pro. Upgrade to continue." }, 403);
     const ctx0 = await counselorContext(sb, admin, u.user.id, u.user.email ?? "");
     if (!ctx0.ok) return json({ error: ctx0.error }, 400);
     const INSTRUCTIONS = buildInstructions(ctx0.context);
