@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { Toaster } from '@/components/ui/sonner';
 import { lazy, Suspense, useMemo, type ReactNode } from 'react';
 import { AppShell } from './components/layout/AppShell';
 import { DetailDrawerProvider, type DrawerPayload } from './components/common/DetailDrawer';
@@ -345,6 +346,7 @@ export default function App() {
         </Routes>
         </Suspense>
       </Providers>
+      <Toaster theme="dark" position="bottom-right" />
     </>
     </BrowserRouter>
   );
