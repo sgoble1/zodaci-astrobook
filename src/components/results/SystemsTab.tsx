@@ -72,7 +72,7 @@ export function SystemsTab({ chart, date, name, sex, plan, loading }: { chart: C
           <p className="rounded-lg border border-border bg-card p-4"><span className="font-medium">Kua {kua.kua} · {groupOf(kua.kua)} group · {KUA_ELEMENT[kua.kua]}</span><span className="block text-sm text-muted-foreground">Calculated from solar year {kua.solarYear}.</span></p>
           <TierGate plan={plan} loading={loading} need="full" title="Your eight directions">
             <ul className="grid gap-2 sm:grid-cols-2">{dirsFor(kua.kua).map(d => <li key={d.mansion} className={`rounded border p-3 text-sm ${d.good ? 'border-gold/50 bg-card' : 'border-border bg-muted/30'}`}><span className="font-medium">{d.dir} · {d.mansion}</span><span className="block text-muted-foreground">{d.meaning}. {d.use}</span></li>)}</ul>
-            <p className="mt-3 text-sm"><Link className="text-primary underline" to="/flying-stars">See this year’s Flying Stars</Link> and <Link className="text-primary underline" to="/bagua-wheel">map your home</Link>.</p>
+            <p className="mt-3 text-sm"><Link className="text-primary underline" to="/feng-shui/flying-stars">See this year’s Flying Stars</Link> and <Link className="text-primary underline" to="/feng-shui">map your home</Link>.</p>
           </TierGate>
         </>}
       </section>
