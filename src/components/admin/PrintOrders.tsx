@@ -47,7 +47,7 @@ export function PrintOrders() {
   const setField = (ed: string, key: string, v: string) => setDraft(d => ({ ...d, [ed]: { ...d[ed], [key]: v } }));
   const rows = showLegacy ? [...EDITIONS, ...LEGACY] : EDITIONS;
 
-  const useQuote = (edition: string, printCents: number, deliveryCents: number, source: string) => {
+  const applyQuote = (edition: string, printCents: number, deliveryCents: number, source: string) => {
     setDraft(d => ({ ...d, [edition]: { ...d[edition], print_cents: (printCents / 100).toFixed(2), delivery_cents: (deliveryCents / 100).toFixed(2), quote_source: source.slice(0, 200) } }));
   };
   const save = async () => {
@@ -85,7 +85,7 @@ export function PrintOrders() {
 
   return (
     <section className="space-y-6">
-      <LuluConnection status={lulu.status} statusError={lulu.statusError} onChanged={() => void lulu.reload()} onUseQuote={useQuote} />
+      <LuluConnection status={lulu.status} statusError={lulu.statusError} onChanged={() => void lulu.reload()} onUseQuote={applyQuote} />
       <div className="rounded-lg border border-border p-4 space-y-3">
         <div><h3 className="font-display text-xl">Print costs & margin</h3><p className="text-sm text-muted-foreground">Enter the real Lulu print cost, shipping and payment fees per copy{automated ? ', or fill them from a live Lulu quote above' : ''}. Margins here and on every order use these numbers. Target margin is about 40%. “Lulu list print” is Lulu’s published price sheet for comparison only.</p></div>
         <div className="overflow-x-auto"><table className="w-full min-w-[920px] text-sm">
