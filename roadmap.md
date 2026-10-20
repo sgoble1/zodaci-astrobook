@@ -1,7 +1,7 @@
 # Zodaci — Active Project Index
 
 ## In progress (current request)
-- [ ] Complete interrupted marketing audit: prices/FAQ verification, route metadata, invitation sharing, honest public claims and mobile/desktop checks.
+- [x] Complete interrupted marketing audit: prices/FAQ verification, route metadata, invitation sharing, honest public claims and mobile/desktop checks; evidence and external limits: docs/marketing-audit-2026-10-20.md.
 - [x] Experience Architect audit and repairs; evidence, coverage limits and release gates: docs/experience-audit-2026-10-20.md.
 - [x] Chapter readers use consistent navigation, h2/h3 anchors, account-remounted protected room, stale-load cancellation and retry. Founder content walkthrough requires authorized session/password.
 - [x] Bookmark account isolation and failed-save feedback; 185 tests pass; actual saved member reading bookmark/reload/remove and phone navigation verified.
