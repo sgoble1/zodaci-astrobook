@@ -13,7 +13,7 @@ export function readProgress(top: number, height: number, viewport: number): num
 }
 
 /** Sticky section list for long readings: highlights the section in view, shows reading progress and lets members bookmark sections. */
-export function ReadingNavigator({ sections, contentRef, path, readingTitle }: { sections: NavSection[]; contentRef: RefObject<HTMLElement>; path: string; readingTitle: string }) {
+export function ReadingNavigator({ sections, contentRef, path, readingTitle, variant }: { sections: NavSection[]; contentRef: RefObject<HTMLElement>; path: string; readingTitle: string; variant: 'bar' | 'side' }) {
   const [active, setActive] = useState(sections[0]?.id ?? '');
   const [progress, setProgress] = useState(0);
   const [open, setOpen] = useState(false);
@@ -72,10 +72,9 @@ export function ReadingNavigator({ sections, contentRef, path, readingTitle }: {
     </ol>
   );
 
-  return (
-    <>
-      {/* Small screens: a slim sticky bar with the current section and progress. */}
-      <div className="sticky top-0 z-20 -mx-2 lg:hidden">
+  // Place 'bar' inside the tall content column (small screens) and 'side' in the side column (large screens), so each can stick.
+  if (variant === 'bar') return (
+      <div className="sticky top-0 z-20 -mx-2 mb-6 lg:hidden">
         <div className="vellum px-3 py-2">
           <button type="button" onClick={() => setOpen(o => !o)} aria-expanded={open} aria-controls="reading-nav-mobile" className="flex w-full items-center gap-2 text-left text-sm">
             <List aria-hidden className="h-4 w-4 shrink-0 text-gold" /><span className="min-w-0 flex-1 truncate">{activeTitle}</span><span className="tabular-nums text-xs text-muted-foreground">{progress}%</span><ChevronDown aria-hidden className={`h-4 w-4 transition-transform duration-300 ${open ? 'rotate-180' : ''}`} />
@@ -84,8 +83,9 @@ export function ReadingNavigator({ sections, contentRef, path, readingTitle }: {
           {open && <nav id="reading-nav-mobile" aria-label="Sections in this reading" className="mt-2 max-h-[60vh] overflow-y-auto">{list}</nav>}
         </div>
       </div>
-      {/* Large screens: sticky side list with a vertical progress bar. */}
-      <nav aria-label="Sections in this reading" className="hidden lg:block">
+  );
+  return (
+      <nav aria-label="Sections in this reading" className="hidden h-full lg:block">
         <div className="vellum sticky top-24 flex gap-3 p-4">
           <div className="relative w-0.5 shrink-0 rounded-full bg-muted" role="progressbar" aria-label="Reading progress" aria-valuenow={progress} aria-valuemin={0} aria-valuemax={100}>
             <div className="absolute inset-x-0 top-0 rounded-full bg-primary transition-[height] duration-300" style={{ height: `${progress}%` }} />
@@ -97,6 +97,5 @@ export function ReadingNavigator({ sections, contentRef, path, readingTitle }: {
           </div>
         </div>
       </nav>
-    </>
   );
 }
