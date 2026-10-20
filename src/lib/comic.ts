@@ -250,9 +250,24 @@ function readingRoom(aspect: string) {
   }[aspect] ?? '';
 }
 
-/** Manifest row for the print queue CSV. */
-export function manifestCsv(rows: { name: string; email: string; sun: string; plan: string; status: string; address: Record<string, string>; issue: string; issueStatus: string }[]) {
-  const head = ['Name', 'Email', 'Sun sign', 'Plan', 'Subscription status', 'Address line 1', 'Address line 2', 'City', 'State', 'ZIP', 'Country', 'Issue', 'Issue status'];
-  const esc = (v: string) => /[",\n]/.test(v) ? `"${v.replace(/"/g, '""')}"` : v;
-  return [head, ...rows.map(r => [r.name, r.email, r.sun, r.plan, r.status, r.address.line1 ?? '', r.address.line2 ?? '', r.address.city ?? '', r.address.state ?? '', r.address.postal_code ?? '', r.address.country ?? '', r.issue, r.issueStatus])].map(r => r.map(v => esc(String(v))).join(',')).join('\n');
+/** Manifest rows for the print queue CSV (spreadsheet-safe cells). */
+export function manifestCsv(rows: { name: string; email: string; sun: string; moon?: string; rising?: string; plan: string; status: string; address: Record<string, string>; issue: string; issueNumber?: number | string; issueStatus: string }[]) {
+  const head = ['Recipient', 'Email', 'Sun sign', 'Moon sign', 'Rising sign', 'Plan', 'Subscription status', 'Address line 1', 'Address line 2', 'City', 'State', 'ZIP', 'Country', 'Issue no.', 'Issue', 'Issue status'];
+  const cell = (v: unknown) => { let s = v == null ? '' : String(v); if (/^[=+\-@\t\r]/.test(s)) s = `'${s}`; return `"${s.replace(/"/g, '""')}"`; };
+  return [head, ...rows.map(r => [r.address.name || r.name, r.email, r.sun, r.moon ?? '', r.rising ?? '', r.plan, r.status, r.address.line1 ?? '', r.address.line2 ?? '', r.address.city ?? '', r.address.state ?? '', r.address.postal_code ?? '', r.address.country ?? '', r.issueNumber ?? '', r.issue, r.issueStatus])].map(r => r.map(cell).join(',')).join('\r\n');
+}
+
+/** Whether a subscription gets the issue for `month` (first of month, UTC), and why not when it doesn't. */
+export function comicDueFor(sub: { plan: ComicPlan; status: string; created_at: string; paused_until: string | null; skip_months: string[]; current_period_end?: string | null; cancel_at_period_end?: boolean }, month: Date, hasIssueForEarlierMonth = false): { due: boolean; reason: string } {
+  const key = monthKey(month);
+  if (sub.status === 'pending') return { due: false, reason: 'Payment not confirmed' };
+  if (sub.status === 'canceled' || sub.status === 'completed') return { due: false, reason: 'Subscription ended' };
+  if (sub.status === 'past_due') return { due: false, reason: 'Payment failed — on hold' };
+  const first = firstIssueMonth(new Date(sub.created_at));
+  if (month < first) return { due: false, reason: `Starts ${monthLabel(first)}` };
+  if (sub.plan === 'single') return month.getTime() === first.getTime() && !hasIssueForEarlierMonth ? { due: true, reason: 'Single issue' } : { due: false, reason: 'Single issue already scheduled' };
+  if (sub.skip_months.includes(key)) return { due: false, reason: 'Member skipped this month' };
+  if (sub.paused_until && shipBy(month) <= new Date(sub.paused_until + 'T00:00:00Z')) return { due: false, reason: `Paused until ${sub.paused_until}` };
+  if (sub.cancel_at_period_end && sub.current_period_end && shipBy(month) > new Date(sub.current_period_end)) return { due: false, reason: 'Ends before this issue ships' };
+  return { due: true, reason: sub.status === 'paused' ? 'Paused status but pause has ended' : 'Active' };
 }

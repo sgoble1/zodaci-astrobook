@@ -13,6 +13,9 @@ import {
 import { useAprilSpace } from './hooks/useAprilSpace';
 import { AutomaticChapters } from './components/payments/AutomaticChapters';
 import { PublicSiteLayout } from './components/brand/PublicSiteLayout';
+import { ReferralCapture } from './components/common/ReferralCapture';
+import { SiteNotice } from './components/common/SiteNotice';
+import { FeatureGate } from './components/common/FeatureGate';
 const Dashboard = lazy(() => import('./pages/Dashboard'));
 const MasterbookSources = lazy(() => import('./pages/MasterbookSources'));
 const MyUploads = lazy(() => import('./pages/MyUploads'));
@@ -123,6 +126,12 @@ const ThemeDetail = lazy(() => import('./pages/PublicThemes').then(m => ({ defau
 const FaqPage = lazy(() => import('./pages/PublicInfo').then(m => ({ default: m.FaqPage })));
 const PrivacyPage = lazy(() => import('./pages/PublicInfo').then(m => ({ default: m.PrivacyPage })));
 const TermsPage = lazy(() => import('./pages/PublicInfo').then(m => ({ default: m.TermsPage })));
+const AstroComic = lazy(() => import('./pages/AstroComic'));
+const MyComic = lazy(() => import('./pages/MyComic'));
+const AcademyHome = lazy(() => import('./pages/Academy').then(m => ({ default: m.AcademyHome })));
+const AcademyLesson = lazy(() => import('./pages/Academy').then(m => ({ default: m.AcademyLesson })));
+const Compatibility = lazy(() => import('./pages/Compatibility'));
+const Referrals = lazy(() => import('./pages/Referrals'));
 
 
 /** Build a single registry of every drawer-openable Compendium item. Used so
@@ -210,6 +219,8 @@ export default function App() {
     <>
       <Providers>
         <ActivityTracker />
+        <ReferralCapture />
+        <SiteNotice />
         <AutomaticChapters />
         <Suspense fallback={<div role="status" aria-label="Loading page" className="mx-auto mt-10 h-40 max-w-3xl animate-pulse rounded-lg bg-muted" />}>
         <Routes>
@@ -220,9 +231,9 @@ export default function App() {
             <Route path="/lp/:slug" element={<LandingPage />} />
             <Route path="/blog" element={<Blog />} />
             <Route path="/blog/learn/:slug" element={<PublicArticle />} />
-            <Route path="/community" element={<Community />} />
+            <Route path="/community" element={<FeatureGate flag="community"><Community /></FeatureGate>} />
             <Route path="/community/guidelines" element={<CommunityGuidelines />} />
-            <Route path="/community/:id" element={<Community />} />
+            <Route path="/community/:id" element={<FeatureGate flag="community"><Community /></FeatureGate>} />
             <Route path="/astrobook" element={<AstroBookPublic />} />
             <Route path="/book-preview" element={<BookPreview />} />
             <Route path="/demo" element={<Demo />} />
@@ -231,6 +242,10 @@ export default function App() {
             <Route path="/faq" element={<FaqPage />} />
             <Route path="/privacy" element={<PrivacyPage />} />
             <Route path="/terms" element={<TermsPage />} />
+            <Route path="/astrocomic" element={<FeatureGate flag="astrocomic"><AstroComic /></FeatureGate>} />
+            <Route path="/academy" element={<FeatureGate flag="academy"><AcademyHome /></FeatureGate>} />
+            <Route path="/academy/:slug" element={<FeatureGate flag="academy"><AcademyLesson /></FeatureGate>} />
+            <Route path="/compatibility" element={<FeatureGate flag="compatibility"><Compatibility /></FeatureGate>} />
           </Route>
           <Route path="/brand-launch" element={<div className="max-w-5xl mx-auto p-5 sm:p-10"><BrandLaunch /></div>} />
           <Route path="/contents" element={<MasterbookContents />} />
@@ -257,6 +272,8 @@ export default function App() {
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/pricing" element={<Pricing />} />
             <Route path="/creator" element={<CreatorDashboard />} />
+            <Route path="/my-comic" element={<FeatureGate flag="astrocomic"><MyComic /></FeatureGate>} />
+            <Route path="/referrals" element={<FeatureGate flag="referrals"><Referrals /></FeatureGate>} />
             <Route path="/checkout/return" element={<CheckoutReturn />} />
             <Route path="/my-masterbook" element={<MyMasterbook />} />
             <Route path="/books" element={<Books />} />

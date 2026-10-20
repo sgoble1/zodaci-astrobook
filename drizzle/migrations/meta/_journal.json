@@ -421,6 +421,13 @@
       "when": 1792480250950,
       "tag": "0059_admin_platform_tools",
       "breakpoints": true
+    },
+    {
+      "idx": 60,
+      "version": "7",
+      "when": 1792508553385,
+      "tag": "0060_fulfillment_stages_and_settings_privacy",
+      "breakpoints": true
     }
   ]
 }

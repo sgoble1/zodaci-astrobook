@@ -24,7 +24,7 @@ export function CreatorStudio({ onMade }: { onMade?: () => void }) {
   if (sub.loading) return null;
   if (sub.tier !== 'creator') return (
     <section className="parchment p-5 space-y-2" aria-labelledby="studio-h">
-      <h2 id="studio-h" className="text-xl">Creator Studio</h2>
+      <h2 id="studio-h" className="text-xl">Cosmic Studio</h2>
       <p className="text-sm text-muted-foreground">Make podcasts and new Masterbook chapters written from your own chart. Included with the Cosmic plan ($19/month).</p>
       <Button asChild size="sm"><Link to="/pricing">See the Cosmic plan</Link></Button>
     </section>
@@ -43,7 +43,7 @@ export function CreatorStudio({ onMade }: { onMade?: () => void }) {
 
   return (
     <section className="parchment p-5 space-y-3" aria-labelledby="studio-h">
-      <h2 id="studio-h" className="text-xl">Creator Studio</h2>
+      <h2 id="studio-h" className="text-xl">Cosmic Studio</h2>
       <p className="text-sm text-muted-foreground">Everything is written only from your saved chart — no invented placements.</p>
       <label className="block text-sm" htmlFor="studio-topic">Topic</label>
       <Input id="studio-topic" value={topic} onChange={e => setTopic(e.target.value)} placeholder="e.g. How I handle money, My Moon and feelings" maxLength={200} />

@@ -61,3 +61,8 @@ export function signsFromChart(c: ChartResult): CompatSigns {
   const signs = ['Aries', 'Taurus', 'Gemini', 'Cancer', 'Leo', 'Virgo', 'Libra', 'Scorpio', 'Sagittarius', 'Capricorn', 'Aquarius', 'Pisces'];
   return { sun: s('sun'), moon: timed ? s('moon') : null, venus: s('venus'), mars: s('mars'), rising: timed && c.asc != null ? signs[Math.floor((((c.asc % 360) + 360) % 360) / 30)] : null };
 }
+
+/** Master Build gauge bands: 0–40 caution, 41–70 moderate, 71–100 harmonious. */
+export type ScoreBand = 'caution' | 'moderate' | 'harmonious';
+export const scoreBand = (score: number): ScoreBand => score <= 40 ? 'caution' : score <= 70 ? 'moderate' : 'harmonious';
+export const BAND_LABEL: Record<ScoreBand, string> = { caution: 'Take care', moderate: 'Workable', harmonious: 'Harmonious' };

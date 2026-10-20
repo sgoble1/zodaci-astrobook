@@ -2,8 +2,8 @@ import { Link } from 'react-router-dom';
 import { ZodaciLogo } from './ZodaciLogo';
 
 const COLUMNS: { heading: string; links: [string, string][] }[] = [
-  { heading: 'Zodaci', links: [['/auth', 'Free chart'], ['/pricing', 'Pro'], ['/pricing', 'Cosmic'], ['/pricing', 'Pricing'], ['/astrobook', 'AstroBook']] },
-  { heading: 'Reading Room', links: [['/blog/learn/reading-your-birth-chart', 'Reading your birth chart'], ['/blog/learn/moon-phases-explained', 'Moon phases'], ['/blog/learn/reflection-not-prediction', 'Reflection practice'], ['/blog', 'All articles']] },
+  { heading: 'Zodaci', links: [['/auth', 'Free chart'], ['/pricing', 'Pricing'], ['/compatibility', 'Compatibility'], ['/astrobook', 'AstroBook'], ['/astrocomic', 'AstroComic'], ['/referrals', 'Invite a friend']] },
+  { heading: 'Learn', links: [['/academy', 'Zodaci Academy'], ['/blog/learn/reading-your-birth-chart', 'Reading your birth chart'], ['/blog/learn/moon-phases-explained', 'Moon phases'], ['/blog/learn/reflection-not-prediction', 'Reflection practice'], ['/blog', 'Blog']] },
   { heading: 'Company', links: [['/about', 'About'], ['/faq', 'FAQ'], ['/demo', 'Interactive demo'], ['/themes', 'Core themes'], ['/community', 'Community'], ['/privacy', 'Privacy Policy'], ['/terms', 'Terms of Service']] },
 ];
 
@@ -30,9 +30,9 @@ export function GlobalFooter() {
       <div className="border-t border-border">
         <div className="mx-auto flex max-w-7xl flex-wrap justify-between gap-3 px-5 py-5 text-xs text-muted-foreground sm:px-10">
           <p>© {new Date().getFullYear()} Zodaci. All rights reserved.</p>
-          <p>Astrology is a tool for reflection, not prediction.</p>
           <p>Made with care for curious people.</p>
         </div>
+        <p className="mx-auto max-w-7xl px-5 pb-6 text-xs italic leading-relaxed text-muted-foreground sm:px-10">Zodaci presents astrology as a tool for reflection and personal insight — not prediction or diagnosis. Your chart is a starting point for curiosity, not a verdict. AI-written reflections are prompts for exploration, not claims about your past.</p>
       </div>
     </footer>
   );

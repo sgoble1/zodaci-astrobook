@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { compatibility, elementScore, modalityScore } from './compatibility';
+import { compatibility, elementScore, modalityScore, scoreBand } from './compatibility';
 
 describe('Master Build compatibility formula', () => {
   it('uses the element table out of 25', () => {
@@ -26,4 +26,10 @@ describe('Master Build compatibility formula', () => {
     const s = { sun: 'Leo', moon: 'Leo', venus: 'Leo', mars: 'Leo', rising: 'Leo' };
     expect(compatibility(s, s).score).toBe(88);
   });
+});
+
+describe('compatibility gauge bands', () => {
+  it('0–40 is caution', () => { expect(scoreBand(0)).toBe('caution'); expect(scoreBand(40)).toBe('caution'); });
+  it('41–70 is moderate', () => { expect(scoreBand(41)).toBe('moderate'); expect(scoreBand(70)).toBe('moderate'); });
+  it('71–100 is harmonious', () => { expect(scoreBand(71)).toBe('harmonious'); expect(scoreBand(100)).toBe('harmonious'); });
 });

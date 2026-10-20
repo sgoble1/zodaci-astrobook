@@ -6,7 +6,7 @@ describe('paid PDF delivery',()=>{
     expect(isPaidBook({status:'paid',payment_total_cents:null})).toBe(false);
   });
   it('allows verified paid orders throughout fulfillment',()=>{
-    for(const status of ['paid','printing','shipped','delivered']) expect(isPaidBook({status,payment_total_cents:5900})).toBe(true);
+    for(const status of ['paid','print_brief_sent','printing','quality_check','shipped','delivered']) expect(isPaidBook({status,payment_total_cents:5900})).toBe(true);
     expect(isPaidBook({status:'canceled',payment_total_cents:5900})).toBe(false);
   });
   it('isolates order snapshots from final files',()=>{

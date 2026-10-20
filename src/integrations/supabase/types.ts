@@ -236,6 +236,47 @@ export type Database = {
         }
         Relationships: []
       }
+      book_order_events: {
+        Row: {
+          actor: string
+          created_at: string
+          id: string
+          note: string
+          order_id: string
+          previous_status: string | null
+          status: string
+          user_id: string
+        }
+        Insert: {
+          actor: string
+          created_at?: string
+          id?: string
+          note?: string
+          order_id: string
+          previous_status?: string | null
+          status: string
+          user_id: string
+        }
+        Update: {
+          actor?: string
+          created_at?: string
+          id?: string
+          note?: string
+          order_id?: string
+          previous_status?: string | null
+          status?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "book_order_events_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "book_orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       book_orders: {
         Row: {
           admin_note: string
@@ -2423,6 +2464,13 @@ export type Database = {
           id: string
         }[]
       }
+      admin_member_plans: {
+        Args: { _ids: string[] }
+        Returns: {
+          id: string
+          tier: string
+        }[]
+      }
       admin_newsletter_audience: { Args: { _segment: string }; Returns: number }
       admin_search: {
         Args: { _q: string }
@@ -2511,6 +2559,13 @@ export type Database = {
       monitored_account_id: { Args: never; Returns: string }
       my_referral_code: { Args: never; Returns: string }
       plan_tier: { Args: { _user_id: string }; Returns: string }
+      public_site_settings: {
+        Args: never
+        Returns: {
+          key: string
+          value: Json
+        }[]
+      }
       recent_library_items: {
         Args: never
         Returns: {
