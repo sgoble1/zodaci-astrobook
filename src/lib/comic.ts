@@ -166,7 +166,7 @@ export function buildComicIssue(natal: ChartResult, opts: { reader: string; mont
   const days = new Date(Date.UTC(month.getUTCFullYear(), month.getUTCMonth() + 1, 0)).getUTCDate();
   const sun = signOf(natal, 'sun')!;
   const timed = !!natal.input.time;
-  const moon = timed ? signOf(natal, 'moon') : signOf(natal, 'moon');
+  const moon = timed ? signOf(natal, 'moon') : null; // the Moon can change sign within a day, so it needs a birth time
   const rising = natal.asc != null && timed ? fmtLon(natal.asc).sign : null;
   const events = upcomingEvents(natal, month, days).filter(e => e.date.getUTCMonth() === month.getUTCMonth());
   const exact = events.filter(e => e.kind === 'exact').sort((a, b) => b.weight - a.weight);
