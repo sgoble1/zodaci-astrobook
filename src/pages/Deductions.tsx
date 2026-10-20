@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { Lock } from 'lucide-react';
 import { computeChart } from '@/lib/astro';
-import { toChartInput, useMyBirth } from '@/lib/myBirth';
+import { kuaSex, toChartInput, useMyBirth } from '@/lib/myBirth';
 import { deduce, type System } from '@/lib/deductions';
 import { usePlan } from '@/hooks/usePlan';
 import { Button } from '@/components/ui/button';
@@ -17,7 +17,7 @@ export default function Deductions() {
   const chart = useMemo(() => birth ? computeChart(toChartInput(birth)) : null, [birth]);
   if (birth === undefined || loading) return <p role="status">Loading…</p>;
   if (!birth || !chart) return <p>Add your birth details first. <Link className="underline" to="/start">Get started</Link></p>;
-  const sex = (birth as { sex?: 'male' | 'female' | 'unspecified' }).sex;
+  const sex = kuaSex(birth.sex);
   const all = deduce(chart, { date: birth.date, timeKnown: !!birth.time, sex });
   const locked = plan === 'free';
   return (
@@ -32,7 +32,7 @@ export default function Deductions() {
             : <li key={d.id} className="rounded border border-border bg-card p-4"><p className="font-medium">{d.title}</p><p className="mt-1 text-sm">{d.text}</p><p className="mt-2 text-xs text-muted-foreground">Based on: {d.basis}</p></li>)}</ul></section>;
       })}
       {locked && <div className="rounded border border-gold/40 bg-card p-5 text-center"><p>{all.length - FREE_COUNT} more findings are included with Pro.</p><Button asChild className="mt-3"><Link to="/pricing">See Pro</Link></Button></div>}
-      {!sex && <p className="text-sm text-muted-foreground">Feng Shui Kua needs your sex at birth in your birth details.</p>}
+      {sex === 'unspecified' && <p className="text-sm text-muted-foreground">Feng Shui Kua needs your sex at birth (female or male) in your birth details.</p>}
     </article>
   );
 }
