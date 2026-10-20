@@ -40,8 +40,8 @@ export default function OurCharts() {
         {[['Easy flow', s.harmony], ['Growth friction', s.tension], ['Fusion', s.fusion]].map(([l, v]) => <div key={l as string} className="rounded border border-border bg-card p-4 text-center"><p className="text-sm text-muted-foreground">{l}</p><p className="font-display text-3xl">{v}</p></div>)}
       </section>
       <section><h2 className="font-display text-2xl">Sun and Moon</h2>
-        <p className="mt-2">Suns: {sun(A)} and {sun(B)}. {signPair(sun(A), sun(B))}</p>
-        <p className="mt-2">Moons: {moon(A)} and {moon(B)}. {signPair(moon(A), moon(B))}</p></section>
+        <p className="mt-2">Suns: {signPair(sun(A), sun(B))}</p>
+        <p className="mt-2">Moons: {signPair(moon(A), moon(B))}</p></section>
       <section><h2 className="font-display text-2xl">Strongest contacts</h2>
         <ul className="mt-3 space-y-2">{ia.slice().sort((a, b) => b.weight - a.weight).slice(0, 12).map((x, i) => <li key={i} className="rounded border border-border bg-card p-3 text-sm"><span className="font-medium">{x.aName} {x.symbol} {x.bName}</span> · orb {x.orb.toFixed(1)}° — {x.text}</li>)}</ul></section>
       <section><h2 className="font-display text-2xl">Composite chart</h2>

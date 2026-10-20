@@ -25,7 +25,7 @@
 
 ## Founder editions (April & Shane)
 - [x] Founder access + higher reading limits; Shane Masterbook (63 chapters) at /shane; share-with-April switch
-- [ ] Side-by-side "Our two charts" page
+- [x] Side-by-side "Our two charts" page
 - [x] Map Shane chapters into topic pages; readings generate on demand from his calculated chart (generation resumed)
 - [x] Signed-in April walkthrough: original workbook, saved-entry count, guided questions, topics and Compendium verified without runtime errors.
 
@@ -39,7 +39,7 @@
 - [ ] Phase 3b: credit ledger, deduction engine, TierGate results page
 - [x] Phase 4a: RetroGOOD tier rating on My Chart
 - [x] Phase 4b-i: RetroGOOD page (/retrogood) + Perception Engine (ranking, narrative, tone)
-- [ ] Phase 4b-ii: Shane×April synastry page
+- [x] Phase 4b-ii: Shane×April synastry page (/our-charts, shared-space only)
 - [ ] Phase 5: AstroBook 5 versions + Lulu (blocked: Lulu account/API keys)
 - [ ] Phase 6: AstroComic subscription (printing blocked: printer account)
 - [ ] Phase 7: Admin new tabs (Newsletter, April monitor, credit ledger, audit log, settings, Stripe)
