@@ -104,7 +104,7 @@
 
 @layer base {
   * { @apply border-border; }
-  html { font-size: var(--font-size); scroll-behavior: smooth; }
+  html { font-size: var(--font-size); scroll-behavior: smooth; scroll-padding-top: 5.5rem; }
   body {
     @apply text-foreground;
     background:
