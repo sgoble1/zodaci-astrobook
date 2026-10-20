@@ -35,6 +35,11 @@
 - [x] D1 Debug Report / site-audit items checked; open only where real-world input is needed: testimonials/user counts, social media accounts
 - [ ] Sabian symbols: needs a licensed source text (not invented)
 
+## Ready next
+- [ ] Walk through every admin tab signed in as an admin account (the test session is a regular member)
+- [ ] Section navigator on public library chapters and Shane's edition chapters
+- [ ] AstroComic printer-ready PDF per issue (illustrated pages) for the monthly print run
+
 ## Launch plan
 - .lovable/plan.md (mirrors launch-plan.md) — ongoing launch plan only
 
