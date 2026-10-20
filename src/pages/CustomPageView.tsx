@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
-import ReactMarkdown from 'react-markdown';
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
+import { NavigatedProse } from '@/components/readings/NavigatedProse';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import { useSession } from '@/hooks/useLibrary';
@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button';
 
 export default function CustomPageView() {
   const { id } = useParams();
+  const location = useLocation();
   const user = useSession()?.user;
   const navigate = useNavigate();
   const [page, setPage] = useState<CustomPage | null | undefined>(undefined);
