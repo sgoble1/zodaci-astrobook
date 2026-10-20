@@ -55,12 +55,12 @@ async function created(subscription: any, env: StripeEnv) {
 async function comicSubscription(subscription: any, env: StripeEnv, f: ReturnType<typeof fields>) {
   const status = ['active', 'trialing'].includes(f.status) ? 'active' : ['past_due', 'unpaid', 'incomplete'].includes(f.status) ? 'past_due' : ['canceled', 'incomplete_expired'].includes(f.status) ? 'canceled' : null;
   const patch: Record<string, unknown> = { stripe_subscription_id: subscription.id, stripe_customer_id: subscription.customer, current_period_end: f.current_period_end, cancel_at_period_end: f.cancel_at_period_end };
-  if (status) patch.status = status;
   const comicId = subscription.metadata?.comicId;
-  let q = db().from('comic_subscriptions').update(patch).eq('environment', env);
-  q = comicId ? q.eq('id', comicId).eq('user_id', subscription.metadata?.userId ?? '') : q.eq('stripe_subscription_id', subscription.id);
-  const result = await q;
+  const scoped = (body: Record<string, unknown>) => { const q = db().from('comic_subscriptions').update(body).eq('environment', env); return comicId ? q.eq('id', comicId).eq('user_id', subscription.metadata?.userId ?? '') : q.eq('stripe_subscription_id', subscription.id); };
+  const result = await scoped(patch);
   if (result.error) throw result.error;
+  // Activation happens only after the verified checkout (comicPaid); later renewals and failures update status here.
+  if (status) { const s = status === 'active' ? await scoped({ status }).neq('status', 'pending') : await scoped({ status }); if (s.error) throw s.error; }
 }
 
 /** Checkout finished for an AstroComic plan: verify the amount, save the delivery address and activate. */
