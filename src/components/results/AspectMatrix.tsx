@@ -18,9 +18,9 @@ export function AspectMatrix({ chart }: { chart: ChartResult }) {
     <div className="space-y-4">
       <div className="overflow-x-auto">
         <table className="border-collapse text-center text-xs" aria-label="Aspect grid">
-          <thead><tr><th className="p-1" />{points.slice(0, -1).map(p => <th key={p.name} scope="col" className={`w-11 p-1 font-normal ${hover?.includes(p.name) ? 'text-gold' : 'text-muted-foreground'}`} title={p.name}>{p.glyph}</th>)}</tr></thead>
+          <thead><tr><th className="p-1" />{points.slice(0, -1).map(p => <th key={p.name} scope="col" className={`w-11 p-1 text-base font-normal ${hover?.includes(p.name) ? 'text-gold' : 'text-muted-foreground'}`} title={p.name}>{p.glyph}</th>)}</tr></thead>
           <tbody>{points.slice(1).map((row, ri) => (
-            <tr key={row.name}><th scope="row" className={`p-1 pr-2 text-right font-normal ${hover?.includes(row.name) ? 'text-gold' : 'text-muted-foreground'}`} title={row.name}>{row.glyph}</th>
+            <tr key={row.name}><th scope="row" className={`p-1 pr-2 text-right text-base font-normal ${hover?.includes(row.name) ? 'text-gold' : 'text-muted-foreground'}`} title={row.name}>{row.glyph}</th>
               {points.slice(0, -1).map((col, ci) => {
                 if (ci > ri) return <td key={col.name} />;
                 const hit = find(row.name, col.name);

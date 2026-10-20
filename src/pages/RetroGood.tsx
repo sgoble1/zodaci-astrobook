@@ -12,7 +12,7 @@ import { usePlan } from '@/hooks/usePlan';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { Button } from '@/components/ui/button';
 import { ToneSwitcher } from '@/components/results/ToneSwitcher';
-import { TierGate } from '@/components/common/TierGate';
+import { TierGate, meetsPlan } from '@/components/common/TierGate';
 import { RetroExplorer, RetroBadge, TIER_STYLE } from '@/components/retrogood/RetroExplorer';
 import { AffirmationsCarousel } from '@/components/retrogood/AffirmationsCarousel';
 import { TransitOverlay } from '@/components/retrogood/TransitOverlay';
@@ -56,7 +56,7 @@ export default function RetroGood() {
         <section id="rg-explorer" aria-labelledby="rg-explorer-h" className="scroll-mt-6">
           <h2 id="rg-explorer-h" className="font-display text-2xl">RetroGOOD Explorer</h2>
           <p className="mt-1 text-sm text-muted-foreground">Sorted by score. Open a planet for its gift, shadow, integration path and affirmation.</p>
-          <div className="mt-4">{planets.length <= 1 ? <RetroExplorer planets={planets} tone={tone} /> : <><RetroExplorer planets={planets.slice(0, 1)} tone={tone} />
+          <div className="mt-4">{planets.length <= 1 || (!loading && meetsPlan(plan, 'full')) ? <RetroExplorer planets={planets} tone={tone} /> : <><RetroExplorer planets={planets.slice(0, 1)} tone={tone} />
             <div className="mt-3"><TierGate plan={plan} loading={loading} need="full" title={`${planets.length - 1} more retrograde planet${planets.length > 2 ? 's' : ''}`}><RetroExplorer planets={planets.slice(1)} tone={tone} /></TierGate></div></>}</div>
         </section>
         <section id="rg-patterns" aria-labelledby="rg-patterns-h" className="scroll-mt-6">
