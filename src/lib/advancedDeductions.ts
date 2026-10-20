@@ -75,20 +75,17 @@ export function voidOfCourseMoon(c: Pick<ChartResult, 'utc' | 'bodies'>) {
   const others = TEN.filter(k => k !== 'moon');
   const angles = [0, 60, 90, 120, 180];
   const sepFor = (k: string, d: Date) => norm(eclLon(ASTRO_BODY.moon, d) - eclLon(ASTRO_BODY[k], d));
-  let prev = new Date(c.utc.getTime());
-  const prevSeps = Object.fromEntries(others.map(k => [k, sepFor(k, prev)]));
+  const off = (sep: number, target: number) => norm(sep - target + 180) - 180;
+  const targets = angles.flatMap(a => a === 0 || a === 180 ? [a] : [a, 360 - a]);
+  const prevSeps: Record<string, number> = Object.fromEntries(others.map(k => [k, sepFor(k, c.utc)]));
   for (let h = 1; h <= 72; h++) {
     const d = new Date(c.utc.getTime() + h * 3600000);
     if (signIdx(eclLon(ASTRO_BODY.moon, d)) !== startSign) return { void: true, ingressHours: h, next: null as string | null };
     for (const k of others) {
       const now = sepFor(k, d), was = prevSeps[k];
-      for (const a of angles) for (const target of a === 0 || a === 180 ? [a] : [a, 360 - a]) {
-        const crossed = was <= now ? (target > was && target <= now) : (target > was || target <= now) && Math.abs(now - was) > 180;
-        if (crossed) return { void: false, ingressHours: null, next: `${NAME[k]} (${a}°)` };
-      }
+      for (const t of targets) { const a = off(was, t), b = off(now, t); if (Math.abs(a) < 20 && Math.abs(b) < 20 && (a === 0 || Math.sign(a) !== Math.sign(b))) return { void: false, ingressHours: null, next: `${NAME[k]} (${t > 180 ? 360 - t : t}°)` }; }
       prevSeps[k] = now;
     }
-    prev = d;
   }
   return { void: false, ingressHours: null, next: null };
 }
