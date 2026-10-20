@@ -1,6 +1,6 @@
 import { PDFDocument, rgb, degrees, type PDFFont, type PDFPage } from 'pdf-lib';
 import fontkit from '@pdf-lib/fontkit';
-import { BOOK_SECTIONS, contentDepth, versionOf } from '@/lib/books';
+import { BOOK_SECTIONS, versionOf } from '@/lib/books';
 import { SIGN_GLYPH, type ChartResult } from '@/lib/astro';
 import type { BookChapter } from '@/lib/bookExtras';
 
@@ -62,9 +62,8 @@ export async function composeManuscript(input: ManuscriptInput) {
     { title: BOOK_SECTIONS[2].title, content: pick(/love|relationship|sex|attract/i) },
     { title: BOOK_SECTIONS[3].title, content: baseChapters.filter(c => !/big three|mind|communication|growth|lesson|love|relationship|sex|attract/i.test(c.title)).map(c => `## ${c.title}\n\n${c.content}`).join('\n\n') },
   ];
-  if (contentDepth(input.edition) === 'standard' && !sections[3].content.trim()) sections[3].content = 'Your purpose and everyday-life chapters appear here once they are written in My Masterbook.';
   for (const extra of input.extras) { const chapter = input.chapters.find(c => c.title.toLowerCase() === extra.toLowerCase()); if (!chapter) throw new Error(`Write the extra section “${extra}” in My Masterbook before adding it to print.`); sections.push({ title: extra, content: chapter.content }); }
-  if (sections.slice(0, 3).some(s => !s.content.trim())) throw new Error('Your four foundations are incomplete. Finish the ready-made chapters in My Masterbook first.');
+  if (sections.some(s => !s.content.trim())) throw new Error('Your four foundations are incomplete. Finish the ready-made chapters in My Masterbook first.');
   sections.push(...(input.editionChapters ?? []));
   const journal = version?.journal ?? 0;
   const entries = [...sections.map(s => s.title), ...(journal ? [`Journal · ${journal} page${journal > 1 ? 's' : ''}`] : [])];
