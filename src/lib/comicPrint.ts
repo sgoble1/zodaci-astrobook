@@ -45,21 +45,23 @@ export function wrapText(text: string, width: number, size: number, measure: Mea
   return lines;
 }
 
-function layoutBody(body: string[], width: number, maxH: number, measure: Measure): Omit<BodyBlock, 'rect'> & { height: number } {
+/** Largest comfortable lettering that fits: prefer at most 45% of the page for text, fall back to the hard limit. */
+function layoutBody(body: string[], width: number, comfortable: number, hard: number, measure: Measure): Omit<BodyBlock, 'rect'> & { height: number } {
   const twoCol = body.length >= 6 && body.every(t => t.length <= 48);
   const colGap = 14;
-  let last: Omit<BodyBlock, 'rect'> & { height: number } | null = null;
-  for (const size of [9.5, 8.75, 8, 7.25]) {
+  const columns: 1 | 2 = twoCol ? 2 : 1;
+  const colW = columns === 2 ? (width - colGap) / 2 : width;
+  const at = (size: number) => {
     const leading = size * 1.32; const paraGap = size * 0.45;
-    const columns: 1 | 2 = twoCol ? 2 : 1;
-    const colW = columns === 2 ? (width - colGap) / 2 : width;
     const paragraphs = body.map(t => wrapText(t, colW, size, measure));
     const heightOf = (ps: string[][]) => ps.reduce((h, p) => h + p.length * leading, 0) + Math.max(0, ps.length - 1) * paraGap;
-    const height = columns === 2 ? Math.max(heightOf(paragraphs.slice(0, Math.ceil(paragraphs.length / 2))), heightOf(paragraphs.slice(Math.ceil(paragraphs.length / 2)))) : heightOf(paragraphs);
-    last = { size, leading, columns, colGap, paragraphs, overflow: height > maxH, height };
-    if (height <= maxH) return last;
-  }
-  return last!;
+    const split = Math.ceil(paragraphs.length / 2);
+    const height = columns === 2 ? Math.max(heightOf(paragraphs.slice(0, split)), heightOf(paragraphs.slice(split))) : heightOf(paragraphs);
+    return { size, leading, columns, colGap, paragraphs, height, overflow: height > hard };
+  };
+  const sizes = [10.5, 9.75, 9, 8.25, 7.5];
+  for (const limit of [comfortable, hard]) for (const size of sizes) { const b = at(size); if (b.height <= limit) return b; }
+  return at(sizes[sizes.length - 1]);
 }
 
 type Row = { kind: 'full' | 'pair'; items: number[] };
@@ -90,19 +92,30 @@ export function layoutPage(page: ComicPage, measure: Measure): PageLayout {
   let body: BodyBlock | null = null;
   let panelsBottom = bottom;
   if (page.body?.length) {
-    const maxH = Math.max(60, bottom - top - minPanels - BODY_GAP);
-    const b = layoutBody(page.body, LIVE.w, maxH, measure);
-    const h = Math.min(b.height, maxH);
+    const hard = Math.max(60, bottom - top - minPanels - BODY_GAP);
+    const b = layoutBody(page.body, LIVE.w, Math.min(hard, (bottom - top) * 0.45), hard, measure);
+    const h = Math.min(b.height, hard);
     body = { rect: { x: LIVE.x, y: bottom - h, w: LIVE.w, h }, size: b.size, leading: b.leading, columns: b.columns, colGap: b.colGap, paragraphs: b.paragraphs, overflow: b.overflow };
     panelsBottom = bottom - h - BODY_GAP;
   }
   const weights = rows.map(r => (r.kind === 'pair' ? (r.items.some(i => page.panels[i].shape === 'tall') ? 1.45 : 1.15) : 1));
+  // Ovals stay oval and the QR panel stays compact; their spare height goes to the other rows, or centres the group.
+  const caps = rows.map(r => { const p = page.panels[r.items[0]]; return r.kind === 'full' ? (isQrPanel(p) ? 170 : p.shape === 'oval' ? Math.round(LIVE.w * 0.8) : Infinity) : Infinity; });
   const free = Math.max(rows.length * MIN_ROW_H, panelsBottom - top - Math.max(0, rows.length - 1) * GUTTER);
-  const sum = weights.reduce((a, b) => a + b, 0);
+  const heights = rows.map(() => 0);
+  let open = rows.map((_, i) => i); let left = free;
+  while (open.length) {
+    const sum = open.reduce((a, i) => a + weights[i], 0);
+    const over = open.filter(i => (left * weights[i]) / sum > caps[i]);
+    if (!over.length) { open.forEach(i => { heights[i] = Math.floor(((left * weights[i]) / sum) * 100) / 100; }); break; }
+    over.forEach(i => { heights[i] = caps[i]; left -= caps[i]; });
+    open = open.filter(i => !over.includes(i));
+  }
+  const used = heights.reduce((a, b) => a + b, 0);
   const panels: PanelBox[] = [];
-  let y = top;
+  let y = top + Math.max(0, (free - used) / 2);
   rows.forEach((r, ri) => {
-    const h = Math.round((free * weights[ri]) / sum * 100) / 100;
+    const h = heights[ri];
     if (r.kind === 'full') {
       const i = r.items[0]; const p = page.panels[i];
       const rect = p.shape === 'bleed' ? { x: 0, y, w: MEDIA.w, h } : { x: LIVE.x, y, w: LIVE.w, h };
