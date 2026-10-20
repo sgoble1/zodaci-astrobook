@@ -84,7 +84,6 @@ const ResetPassword = lazy(() => import('./pages/ResetPassword'));
 const MyTopicReading = lazy(() => import('./pages/MyTopicReading'));
 const MyChart = lazy(() => import('./pages/MyChart'));
 const RetroGood = lazy(() => import('./pages/RetroGood'));
-const RetroGood = lazy(() => import('./pages/RetroGood'));
 const LandingPage = lazy(() => import('./pages/LandingPage'));
 const About = lazy(() => import('./pages/About'));
 const MyReadings = lazy(() => import('./pages/MyReadings'));
