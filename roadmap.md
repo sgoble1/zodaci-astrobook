@@ -38,7 +38,8 @@
 - [x] Phase 3a: Pro $9 / Cosmic $19 (annual $89 / $179) checkout, legacy subscribers grandfathered, renamed sitewide
 - [ ] Phase 3b: credit ledger, deduction engine, TierGate results page
 - [x] Phase 4a: RetroGOOD tier rating on My Chart
-- [ ] Phase 4b: RetroGOOD page, Perception Engine + Shane×April synastry
+- [x] Phase 4b-i: RetroGOOD page (/retrogood) + Perception Engine (ranking, narrative, tone)
+- [ ] Phase 4b-ii: Shane×April synastry page
 - [ ] Phase 5: AstroBook 5 versions + Lulu (blocked: Lulu account/API keys)
 - [ ] Phase 6: AstroComic subscription (printing blocked: printer account)
 - [ ] Phase 7: Admin new tabs (Newsletter, April monitor, credit ledger, audit log, settings, Stripe)
