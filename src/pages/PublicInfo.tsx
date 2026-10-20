@@ -5,8 +5,9 @@ import { Check, ArrowRight, Gift } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { useJsonLd } from '@/hooks/useJsonLd';
-import { Faq, ASTROBOOK_FAQ, GENERAL_FAQ } from '@/components/brand/Faq';
+import { Faq, ASTROBOOK_FAQ, GENERAL_FAQ, ALL_GENERAL_FAQ, useFaqSchema } from '@/components/brand/Faq';
 import { BOOK_VERSIONS, EXTRA_SECTION_PRICE, money } from '@/lib/books';
+import { PLAN_NAME, REFUND_WINDOW_DAYS } from '@/lib/plans';
 import { VersionCompare } from '@/components/books/VersionCompare';
 import { CoverCustomizer } from '@/components/books/CoverCustomizer';
 import { CosmicTeaser } from '@/components/books/CosmicTeaser';
@@ -37,7 +38,7 @@ export function AstroBookPublic() {
           <p className="text-xs font-medium tracking-[0.12em] text-accent">YOUR CHART, IN PRINT</p>
           <h1 className="font-display text-4xl leading-tight sm:text-5xl">The book that only you could have written.</h1>
           <p className="text-lg text-muted-foreground">AstroBook is a personalized interpretation of your complete birth chart: chapters on who you are, love, purpose and timing, all written from your exact placements.</p>
-          <p className="text-sm text-muted-foreground">Digital from {money(BOOK_VERSIONS[0].price)} · printed from {money(BOOK_VERSIONS[1].price)} · free US shipping</p>
+          <p className="text-sm text-muted-foreground">{BOOK_VERSIONS.filter(v => v.id === 'digital' || v.id === 'pocket' || v.id === 'linen').map(v => `${v.name} ${money(v.price)}`).join(' · ')} · free US shipping on printed versions</p>
           <div className="flex flex-wrap items-center gap-4"><Button asChild size="lg"><Link to={order()}>Order your AstroBook</Link></Button><Link to="/book-preview" className="text-accent">Read a sample book →</Link><Link to="/demo" className="text-accent">Try the interactive demo →</Link></div>
         </div>
         <div className="vellum p-6"><h2 className="mb-4 font-display text-2xl">See your cover</h2><CoverCustomizer /></div>
@@ -93,14 +94,14 @@ export function AstroBookPublic() {
 }
 
 export function FaqPage() {
-  usePageMeta('FAQ — Zodaci Astrology Platform', 'Answers to common questions about Zodaci, your birth chart, AstroBook, pricing, privacy and more.');
-  const all = GENERAL_FAQ.flatMap(c => c.items);
+  usePageMeta('FAQ — Zodaci Astrology Platform', 'Answers to common questions about Zodaci, your birth chart, AstroBook, pricing, refunds, shipping, privacy and more.');
+  useFaqSchema(ALL_GENERAL_FAQ, 'faq-page-schema');
   return (
     <article className="mx-auto max-w-3xl space-y-10">
       <header className="space-y-3"><h1 className="font-display text-4xl">Questions, answered.</h1><p className="text-muted-foreground">Everything you might want to know before you begin.</p></header>
-      {GENERAL_FAQ.map((c, i) => <section key={c.category} className="space-y-3"><h2 className="text-xl font-semibold">{c.category}</h2><Faq items={c.items} id={`faq-${i}`} /></section>)}
-      <FaqSchemaNote count={all.length} />
-      <Button asChild><Link to="/auth">Start for free <ArrowRight /></Link></Button>
+      {GENERAL_FAQ.map(c => <section key={c.category} className="space-y-3"><h2 className="text-xl font-semibold">{c.category}</h2><Faq items={c.items} schema={false} /></section>)}
+      <FaqSchemaNote count={ALL_GENERAL_FAQ.length} />
+      <div className="flex flex-wrap gap-3"><Button asChild><Link to="/auth?mode=signup&next=%2Fstart">Create my free chart <ArrowRight /></Link></Button><Button asChild variant="outline"><Link to="/pricing">Compare plans</Link></Button></div>
     </article>
   );
 }
@@ -121,12 +122,13 @@ export function PrivacyPage() {
   ]} />;
 }
 export function TermsPage() {
-  usePageMeta('Terms of Service | Zodaci', 'The terms for using Zodaci, its subscriptions and the printed AstroBook.');
+  usePageMeta('Terms of Service | Zodaci', 'The terms for using Zodaci, its subscriptions, refunds and the printed AstroBook.');
   return <Legal title="Terms of Service" sections={[
     ['For reflection, not prediction', 'Zodaci offers astrology for entertainment, reflection and self-inquiry. It is not medical, psychological, legal or financial advice and does not predict events. Counselor features are not therapy; in a crisis, contact local emergency services.'],
     ['Your account', 'You are responsible for your sign-in details and for the accuracy of the birth details you enter.'],
-    ['Subscriptions', 'Paid plans renew monthly until cancelled. You can cancel any time and keep access until the end of the paid period.'],
-    ['AstroBook orders', 'Printed books are made to order from your readings. Production and shipping times are estimates. Contact us if a book arrives damaged.'],
+    ['Subscriptions', `${PLAN_NAME.full} and ${PLAN_NAME.creator} renew each month or each year, depending on the billing period you choose, until cancelled. You can cancel any time and keep access until the end of the paid period.`],
+    ['Refunds', `If you ask within ${REFUND_WINDOW_DAYS} days of your first subscription payment, we refund that payment in full. Later renewals are not refunded, but cancelling stops the next one.`],
+    ['AstroBook orders', 'Books are made to order from your readings. Printed versions ship within the US only; production and shipping times are estimates. Damaged or misprinted books are reprinted at no charge; because each book is personal, we do not accept change-of-mind returns.'],
     ['Community', 'Be kind, keep other people’s private information private and follow the community guidelines. We may remove content that breaks them.'],
     ['Contact', 'hello@zodaci.com'],
   ]} />;
