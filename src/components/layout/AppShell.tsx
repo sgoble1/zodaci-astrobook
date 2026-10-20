@@ -188,7 +188,6 @@ function SidebarInner({ mobile = false, onNavigate }: { mobile?: boolean; onNavi
   const displayGroups = april ? allGroups : memberGroups;
   // Pages without their own usePageMeta get a title from their menu label instead of keeping the previous page's title.
   useEffect(() => {
-    if (mobile) return;
     const path = location.pathname;
     const t = window.setTimeout(() => {
       if (document.documentElement.dataset.metaPath === path) return;
@@ -197,7 +196,7 @@ function SidebarInner({ mobile = false, onNavigate }: { mobile?: boolean; onNavi
       document.title = label ? `${label} · Zodaci` : 'Zodaci · Your sky, your story';
     }, 0);
     return () => window.clearTimeout(t);
-  }, [location.pathname, mobile, allGroups]);
+  }, [location.pathname, allGroups]);
   return (
     <div className={`flex min-h-full flex-col gap-6 overflow-x-hidden ${mobile ? 'px-4 pb-8 pt-4' : 'h-full overflow-y-auto p-6'}`}>
       <div>
