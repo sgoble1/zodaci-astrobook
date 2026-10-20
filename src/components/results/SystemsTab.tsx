@@ -15,7 +15,7 @@ export function SystemsTab({ chart, date, name, sex, plan, loading }: { chart: C
   const [fullName, setFullName] = useState(name);
   const [openNum, setOpenNum] = useState<string | null>(null);
   const year = chart.bazi.find(p => /year/i.test(p.label));
-  const lp = lifePath(date);
+  const lp = lifePath(date).n;
   const day = Number(date.slice(8, 10));
   const tiles = useMemo(() => numerologyCross(chart, date, fullName.trim() || name), [chart, date, fullName, name]);
   const pins = pinnacles(date), chal = challenges(date);

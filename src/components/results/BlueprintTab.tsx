@@ -17,7 +17,7 @@ export function BlueprintTab({ chart, date, timeKnown, tone }: { chart: ChartRes
   const sun = chart.bodies.find(b => b.key === 'sun')!, moon = chart.bodies.find(b => b.key === 'moon')!;
   const rising = chart.asc != null ? fmtLon(chart.asc) : null;
   const year = chart.bazi.find(p => /year/i.test(p.label));
-  const lp = lifePath(date);
+  const lp = lifePath(date).n;
   const rg = retroGood(chart);
   const big3 = [
     { label: 'Sun', value: `${sun.sign} ${sun.deg}°${String(sun.min).padStart(2, '0')}′`, note: 'who you are becoming' },

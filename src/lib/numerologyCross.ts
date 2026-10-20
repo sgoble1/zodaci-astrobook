@@ -47,7 +47,7 @@ export function numerologyCross(c: ChartResult, birthDate: string, fullName: str
     else parts.push('Add an exact birth time to cross-reference your chart ruler.');
     return parts.join(' ');
   };
-  const lp = lifePath(birthDate);
+  const lp = lifePath(birthDate).n;
   const tiles: NumberTile[] = [{ id: 'lifePath', label: 'Life Path', value: lp, keyword: NUM_KEYWORD[lp] ?? '', element: NUM_ELEMENT[lp] ?? '', basis: `From your birth date ${birthDate}.`, text: `Your life's main lesson is ${MEANING[lp]}.`, cross: cross(lp) }];
   const add = (id: NumberTile['id'], label: string, v: number | null, basis: string, lead: string) => { if (v) tiles.push({ id, label, value: v, keyword: NUM_KEYWORD[v], element: NUM_ELEMENT[v], basis, text: `${lead} ${MEANING[v]}.`, cross: cross(v) }); };
   add('expression', 'Destiny (Expression)', expression(fullName), `From every letter of “${fullName}”.`, 'Your natural talents point toward');

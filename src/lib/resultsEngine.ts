@@ -68,7 +68,7 @@ export function pinnacles(date: string) {
   const [y, m, d] = date.split('-').map(Number);
   const M = reduce(m), D = reduce(d), Y = reduce(digits(y));
   const p1 = reduce(M + D), p2 = reduce(D + Y), p3 = reduce(p1 + p2), p4 = reduce(M + Y);
-  const end1 = 36 - single(lifePath(date));
+  const end1 = 36 - single(lifePath(date).n);
   return [{ n: p1, from: 0, to: end1 }, { n: p2, from: end1 + 1, to: end1 + 9 }, { n: p3, from: end1 + 10, to: end1 + 18 }, { n: p4, from: end1 + 19, to: null as number | null }];
 }
 export function challenges(date: string) {

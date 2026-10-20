@@ -39,7 +39,7 @@ export function chartAffirmations(c: ChartResult, birthDate: string): Affirmatio
   if (venus) out.push({ text: VENUS[EL[venus.sign]], source: `Venus in ${venus.sign}` });
   if (mars) out.push({ text: MARS[EL[mars.sign]], source: `Mars in ${mars.sign}` });
   if (node) out.push({ text: NODE[node.sign], source: `North Node in ${node.sign}` });
-  const lp = lifePath(birthDate);
+  const lp = lifePath(birthDate).n;
   if (LP[lp]) out.push({ text: LP[lp], source: `Life Path ${lp}` });
   if (moon && !c.input.time) out.push({ text: MOON[moon.sign], source: `Moon in ${moon.sign} (approximate without birth time)` });
   const seen = new Set<string>();
