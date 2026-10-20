@@ -88,7 +88,7 @@ export default function Pricing() {
             const below = rank[p.tier] < rank[sub.tier];
             return (
               <section key={p.slug} className={`parchment flex flex-col space-y-4 p-6 ${p.tier === 'full' ? 'border-gold ring-1 ring-gold/40' : ''}`} aria-labelledby={`plan-${i}`}>
-                <div className="flex items-center justify-between"><h2 id={`plan-${i}`} className="text-2xl">{PLAN_NAME[p.tier]}</h2>{p.tier === 'full' && <span className="rounded-full bg-gold/15 px-2 py-0.5 text-xs text-gold">Most chosen</span>}</div>
+                <div className="flex items-center justify-between"><h2 id={`plan-${i}`} className="text-2xl">{PLAN_NAME[p.tier]}</h2>{p.tier === 'full' && <span className="rounded-full bg-gold/15 px-2 py-0.5 text-xs text-gold">Recommended</span>}</div>
                 <div><span className="font-display text-4xl">{price}</span> <span className="text-sm text-muted-foreground">{per}</span>{saving > 0 && <p className="text-xs text-gold">You save ${saving} a year</p>}</div>
                 <p className="text-sm text-muted-foreground">{p.blurb}</p>
                 <ul className="flex-1 space-y-2 text-sm">{p.items.map(x => <li key={x} className="flex gap-2"><Check className="h-4 w-4 shrink-0 text-gold" aria-hidden />{x}</li>)}</ul>
