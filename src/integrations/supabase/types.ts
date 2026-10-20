@@ -1037,6 +1037,86 @@ export type Database = {
           },
         ]
       }
+      lulu_print_jobs: {
+        Row: {
+          arrival_max: string | null
+          arrival_min: string | null
+          carrier_name: string
+          cover_path: string | null
+          created_at: string
+          created_by: string | null
+          currency: string | null
+          environment: string
+          id: string
+          interior_path: string | null
+          lulu_job_id: number | null
+          order_id: string
+          page_count: number
+          pod_package_id: string
+          shipping_level: string
+          status: string
+          status_message: string
+          total_cost_cents: number | null
+          tracking_id: string
+          tracking_url: string
+          updated_at: string
+        }
+        Insert: {
+          arrival_max?: string | null
+          arrival_min?: string | null
+          carrier_name?: string
+          cover_path?: string | null
+          created_at?: string
+          created_by?: string | null
+          currency?: string | null
+          environment: string
+          id?: string
+          interior_path?: string | null
+          lulu_job_id?: number | null
+          order_id: string
+          page_count: number
+          pod_package_id: string
+          shipping_level: string
+          status?: string
+          status_message?: string
+          total_cost_cents?: number | null
+          tracking_id?: string
+          tracking_url?: string
+          updated_at?: string
+        }
+        Update: {
+          arrival_max?: string | null
+          arrival_min?: string | null
+          carrier_name?: string
+          cover_path?: string | null
+          created_at?: string
+          created_by?: string | null
+          currency?: string | null
+          environment?: string
+          id?: string
+          interior_path?: string | null
+          lulu_job_id?: number | null
+          order_id?: string
+          page_count?: number
+          pod_package_id?: string
+          shipping_level?: string
+          status?: string
+          status_message?: string
+          total_cost_cents?: number | null
+          tracking_id?: string
+          tracking_url?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lulu_print_jobs_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "book_orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       marketing_pages: {
         Row: {
           body: string

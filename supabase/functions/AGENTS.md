@@ -3,3 +3,4 @@
 - Newsletter requires consent/validated service-only writes/admin-only reads and deletes; signup sends no campaigns.
 - admin-stripe-overview is read-only and has_role-checked; payment-changing actions (refunds, cancellations) stay in the provider dashboard.
 - comic-art: only admins start artwork (one panel per call, daily cap, workspace pause on 402/403); art and print PDFs stay in private comic-art storage and subscribers get short-lived links for their own released issues only.
+- lulu-print (admin, has_role-checked) and lulu-webhook (HMAC-verified) drive Lulu printing: environment pinned by LULU_ENVIRONMENT (sandbox default), production takes live-paid orders only, one active job per order, files cut from the frozen final PDF, and order stages only move forward (rejection returns Sent to printer to Paid). Product codes/limits live in _shared/lulu-rules.ts and are mirrored in src/lib/books.ts LULU_PRINT.
