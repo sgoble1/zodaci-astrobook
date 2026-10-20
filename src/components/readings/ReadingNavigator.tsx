@@ -75,7 +75,7 @@ export function ReadingNavigator({ sections, contentRef, path, readingTitle, var
   // Place 'bar' inside the tall content column (small screens) and 'side' in the side column (large screens), so each can stick.
   if (variant === 'bar') return (
       <div className="sticky top-[calc(4rem+env(safe-area-inset-top))] z-30 -mx-2 mb-6 lg:hidden">
-        <div className="vellum px-3 py-2">
+        <div className="vellum bg-background/95 px-3 py-2 backdrop-blur-xl">
           <button type="button" onClick={() => setOpen(o => !o)} aria-expanded={open} aria-controls="reading-nav-mobile" className="flex w-full items-center gap-2 text-left text-sm">
             <List aria-hidden className="h-4 w-4 shrink-0 text-gold" /><span className="min-w-0 flex-1 truncate">{activeTitle}</span><span className="tabular-nums text-xs text-muted-foreground">{progress}%</span><ChevronDown aria-hidden className={`h-4 w-4 transition-transform duration-300 ${open ? 'rotate-180' : ''}`} />
           </button>
