@@ -79,17 +79,17 @@ Deno.serve(async (req) => {
     const STARTER = ['Your Big Three: Sun, Moon and Rising', 'Love and Relationships', 'Work, Purpose and Calling', 'Mind and Communication', 'Drive, Energy and Conflict', 'Growth, Challenges and Life Lessons', 'Sex & Attraction'];
     const now = Date.now();
     const active = (s: { status: string; current_period_end: string | null }) => (!s.current_period_end || +new Date(s.current_period_end) > now) && ['active', 'trialing', 'past_due', 'canceled'].includes(s.status) && (s.status !== 'canceled' || !!s.current_period_end);
-    const [{ data: adminRole }, { data: sharedRole }] = await Promise.all([admin.rpc('has_role', { _user_id: user.id, _role: 'admin' }), admin.rpc('is_shared_space_user_id', { _user_id: user.id })]);
+    const [{ data: adminRole }, { data: sharedRole }, { data: grantTier }] = await Promise.all([admin.rpc('has_role', { _user_id: user.id, _role: 'admin' }), admin.rpc('is_shared_space_user_id', { _user_id: user.id }), admin.rpc('active_grant_tier', { _user_id: user.id })]);
     const elevated = !!(adminRole || sharedRole);
     if (kind === 'starter') {
       // Ready-made chapters for any paid plan; one chapter per request, each written once.
       if (!STARTER.includes(topic)) return json({ error: 'Unknown chapter.' }, 400);
       const { data: paid } = await admin.from('billing_subscriptions').select('status,current_period_end').eq('user_id', user.id).eq('environment', 'live').in('price_id', ['pro_monthly','pro_yearly','cosmic_monthly','cosmic_yearly','full_access_monthly', 'creator_monthly', 'full_access_yearly', 'creator_yearly']);
-      if (!elevated && !(paid ?? []).some(active)) return json({ error: 'Ready-made chapters need Pro.' }, 403);
+      if (!elevated && !grantTier && !(paid ?? []).some(active)) return json({ error: 'Ready-made chapters need Pro.' }, 403);
     }
     // Cosmic tools require an active Cosmic plan, checked here — never trusted from the browser.
     const { data: subs } = await admin.from('billing_subscriptions').select('status,current_period_end,price_id').eq('user_id', user.id).eq('environment', 'live').in('price_id', ['cosmic_monthly','cosmic_yearly','creator_monthly', 'creator_yearly']);
-    const ok = elevated || kind === 'starter' || (subs ?? []).some(s => (!s.current_period_end || +new Date(s.current_period_end) > now) && ['active', 'trialing', 'past_due', 'canceled'].includes(s.status) && (s.status !== 'canceled' || !!s.current_period_end));
+    const ok = elevated || kind === 'starter' || grantTier === 'creator' || (subs ?? []).some(s => (!s.current_period_end || +new Date(s.current_period_end) > now) && ['active', 'trialing', 'past_due', 'canceled'].includes(s.status) && (s.status !== 'canceled' || !!s.current_period_end));
     if (!ok) return json({ error: 'Cosmic tools need the Cosmic plan.' }, 403);
 
     const { data: profile } = await admin.from('profiles').select('*').eq('id', user.id).maybeSingle();
