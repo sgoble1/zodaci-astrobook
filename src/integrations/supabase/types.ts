@@ -2424,6 +2424,7 @@ export type Database = {
       is_space_member: { Args: { _space_id: string }; Returns: boolean }
       is_space_owner: { Args: { _space_id: string }; Returns: boolean }
       my_referral_code: { Args: never; Returns: string }
+      plan_tier: { Args: { _user_id: string }; Returns: string }
       recent_library_items: {
         Args: never
         Returns: {
