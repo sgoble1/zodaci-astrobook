@@ -10,6 +10,7 @@ const set = (sel: string, attr: 'name' | 'property', key: string, value: string)
 export function usePageMeta(title: string, description: string) {
   useEffect(() => {
     document.title = title;
+    document.documentElement.dataset.metaPath = window.location.pathname;
     set('meta[name="description"]', 'name', 'description', description);
     set('meta[property="og:title"]', 'property', 'og:title', title);
     set('meta[property="og:description"]', 'property', 'og:description', description);

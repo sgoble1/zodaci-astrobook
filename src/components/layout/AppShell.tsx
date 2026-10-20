@@ -186,6 +186,18 @@ function SidebarInner({ mobile = false, onNavigate }: { mobile?: boolean; onNavi
   const allGroups = baseGroups.map(g => ({ ...g, items: [...g.items, ...custom.filter(c => c.menu_group === g.title).map(c => ({ to: `/p/${c.id}`, label: c.status === 'generating' ? `${c.title} · writing…` : c.title, created: true } as NavItem))] }));
   const memberGroups = MEMBER_SECTIONS.map(section => ({ title: section.title, items: section.title === 'Readings' ? [{ to: '/my-readings', label: 'All readings' }, { to: '/wonderings', label: 'Wonderings' }] : [], submenus: allGroups.filter(g => section.groupTitles.includes(g.title)).flatMap(g => [{ label: g.title, items: [...g.items, ...(g.footer ?? [])] }, ...(g.submenus ?? [])]) }));
   const displayGroups = april ? allGroups : memberGroups;
+  // Pages without their own usePageMeta get a title from their menu label instead of keeping the previous page's title.
+  useEffect(() => {
+    if (mobile) return;
+    const path = location.pathname;
+    const t = window.setTimeout(() => {
+      if (document.documentElement.dataset.metaPath === path) return;
+      const items = allGroups.flatMap(g => [...g.items, ...(g.footer ?? []), ...(g.submenus ?? []).flatMap(s => s.items)]);
+      const label = items.find(i => i.to === path)?.label;
+      document.title = label ? `${label} · Zodaci` : 'Zodaci · Your sky, your story';
+    }, 0);
+    return () => window.clearTimeout(t);
+  }, [location.pathname, mobile, allGroups]);
   return (
     <div className={`flex min-h-full flex-col gap-6 overflow-x-hidden ${mobile ? 'px-4 pb-8 pt-4' : 'h-full overflow-y-auto p-6'}`}>
       <div>
