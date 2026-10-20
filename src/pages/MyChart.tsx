@@ -1,3 +1,4 @@
+import { ChartSignatures } from '@/components/chart/ChartSignatures';
 import { useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { Printer } from 'lucide-react';
@@ -55,6 +56,7 @@ export default function MyChart() {
       </header>
       <ChartWheel r={chart} />
       <HouseRulers chart={chart} />
+      <ChartSignatures chart={chart} timeKnown={!!birth.time} />
       <section aria-labelledby="pl"><h2 id="pl" className="font-display text-2xl">Your placements</h2>
         <ul className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{chart.bodies.map(b => (
           <li key={b.key}><button type="button" onClick={() => setSel(b)} aria-label={`More about ${b.name} in ${b.sign}`} className="block h-full w-full overflow-hidden rounded border border-border bg-card text-left transition-all duration-500 hover:-translate-y-0.5 hover:border-primary/60 focus-visible:outline focus-visible:outline-2">
