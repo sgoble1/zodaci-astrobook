@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Navigate, Routes, Route } from 'react-router-dom';
 import { Toaster } from '@/components/ui/sonner';
 import { lazy, Suspense, useMemo, type ReactNode } from 'react';
 import { AppShell } from './components/layout/AppShell';
@@ -224,6 +224,7 @@ export default function App() {
         <AutomaticChapters />
         <Suspense fallback={<div role="status" aria-label="Loading page" className="mx-auto mt-10 h-40 max-w-3xl animate-pulse rounded-lg bg-muted" />}>
         <Routes>
+          <Route path="/index" element={<Navigate to="/welcome" replace />} />
           <Route path="/welcome" element={<BrandLanding />} />
           <Route path="/april" element={<AprilEdition />} />
           <Route element={<PublicSiteLayout />}>
@@ -232,7 +233,7 @@ export default function App() {
             <Route path="/blog" element={<Blog />} />
             <Route path="/blog/learn/:slug" element={<PublicArticle />} />
             <Route path="/community" element={<FeatureGate flag="community"><Community /></FeatureGate>} />
-            <Route path="/community/guidelines" element={<CommunityGuidelines />} />
+            <Route path="/community/guidelines" element={<FeatureGate flag="community"><CommunityGuidelines /></FeatureGate>} />
             <Route path="/community/:id" element={<FeatureGate flag="community"><Community /></FeatureGate>} />
             <Route path="/astrobook" element={<AstroBookPublic />} />
             <Route path="/book-preview" element={<BookPreview />} />

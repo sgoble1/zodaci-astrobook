@@ -65,7 +65,7 @@ function MyComicInner() {
     <article className="mx-auto max-w-5xl space-y-12">
       <header><p className="font-smallcaps text-xs text-gold">AstroComic</p><h1 className="mt-2 font-display text-4xl sm:text-5xl">My AstroComic</h1></header>
       {returning && !current && <p role="status" className="parchment flex items-center gap-3 p-4">{waited > 20 ? 'Confirmation is taking longer than expected. Please don’t pay again — check back in a few minutes.' : <><Loader2 aria-hidden className="h-4 w-4 animate-spin" />Confirming your payment…</>}</p>}
-      {current ? <SubscriptionPanel sub={current} issues={issues} onChange={load} /> : !returning && (
+      {current ? <SubscriptionPanel key={current.id} sub={current} issues={issues} onChange={load} /> : !returning && (
         <section className="vellum p-6 sm:p-8"><h2 className="font-display text-2xl">No AstroComic yet</h2><p className="mt-2 text-muted-foreground">A personalized 24-page comic each month, printed and mailed to you.</p><Button asChild className="mt-5"><Link to="/astrocomic">See plans</Link></Button></section>
       )}
       <Archive issues={issues} />
@@ -137,13 +137,13 @@ function SubscriptionPanel({ sub, issues, onChange }: { sub: Sub; issues: Issue[
 
 function Archive({ issues }: { issues: Issue[] }) {
   const [open, setOpen] = useState<string | null>(null);
-  if (!issues.length) return <section aria-labelledby="arch-h"><h2 id="arch-h" className="font-display text-2xl">Issue archive</h2><p className="mt-2 text-sm text-muted-foreground">Your issues appear here once they are approved for printing, with a digital copy and tracking.</p></section>;
+  if (!issues.length) return <section aria-labelledby="arch-h"><h2 id="arch-h" className="font-display text-2xl">Issue archive</h2><p className="mt-2 text-sm text-muted-foreground">Approved issue plans and shipment tracking appear here.</p></section>;
   return (
     <section aria-labelledby="arch-h" className="space-y-4">
       <h2 id="arch-h" className="font-display text-2xl">Issue archive</h2>
       <ul className="divide-y divide-border border-y border-border">{issues.map(i => { const url = i.tracking_number ? trackingUrl(i.carrier, i.tracking_number) : null; const script = i.script as unknown as ComicIssue; return (
         <li key={i.id} className="py-4">
-          <div className="flex flex-wrap items-center justify-between gap-3"><div><p className="font-semibold">Issue {i.issue_number} · {monthLabel(new Date(i.issue_month + 'T00:00:00Z'))}</p><p className="text-sm text-muted-foreground">{i.title || script?.title}</p></div><div className="flex flex-wrap items-center gap-2"><span className="text-xs capitalize text-gold">{i.status}</span>{script?.pages?.length ? <Button size="sm" variant="outline" onClick={() => setOpen(open === i.id ? null : i.id)}><BookOpen className="h-4 w-4" />{open === i.id ? 'Close' : 'Read digital copy'}</Button> : null}</div></div>
+          <div className="flex flex-wrap items-center justify-between gap-3"><div><p className="font-semibold">Issue {i.issue_number} · {monthLabel(new Date(i.issue_month + 'T00:00:00Z'))}</p><p className="text-sm text-muted-foreground">{i.title || script?.title}</p></div><div className="flex flex-wrap items-center gap-2"><span className="text-xs capitalize text-gold">{i.status}</span>{script?.pages?.length ? <Button size="sm" variant="outline" onClick={() => setOpen(open === i.id ? null : i.id)}><BookOpen className="h-4 w-4" />{open === i.id ? 'Close' : 'Read issue plan'}</Button> : null}</div></div>
           {i.status === 'shipped' && i.tracking_number && <p className="mt-2 flex items-center gap-2 text-sm"><Truck aria-hidden className="h-4 w-4" />{i.carrier || 'Carrier'} · {url ? <a href={url} target="_blank" rel="noopener noreferrer" className="underline">{i.tracking_number}</a> : i.tracking_number}{i.shipped_at && ` · shipped ${fmt(i.shipped_at + 'T12:00:00Z')}`}</p>}
           {open === i.id && <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">{script.pages.map(p => <ComicPageView key={p.n} page={p} compact />)}</div>}
         </li>

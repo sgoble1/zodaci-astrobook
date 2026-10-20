@@ -4,7 +4,7 @@ export type AdminTabGroup = { label: string; tabs: { id: AdminTab; label: string
 
 export const ADMIN_TAB_GROUPS: AdminTabGroup[] = [
   { label: 'Content', tabs: [
-    { id: 'upload', label: 'Upload documents' }, { id: 'sections', label: 'Edit sections' }, { id: 'index', label: 'Document Index', adminOnly: true },
+    { id: 'upload', label: 'Upload documents', adminOnly: true }, { id: 'sections', label: 'Edit sections' }, { id: 'index', label: 'Document Index', adminOnly: true },
     { id: 'relationships', label: 'Relationships' }, { id: 'marketing', label: 'Marketing pages', adminOnly: true },
   ] },
   { label: 'Operations', tabs: [
@@ -19,9 +19,9 @@ export const ADMIN_TAB_GROUPS: AdminTabGroup[] = [
 
 const ALL = ADMIN_TAB_GROUPS.flatMap(g => g.tabs);
 
-/** The tab to show: the URL's tab if this person may open it, otherwise Growth for admins and Upload for members. */
+/** Open the URL's permitted tab, otherwise Growth for admins and Edit sections for members. */
 export function resolveAdminTab(requested: string | null, isAdmin: boolean): AdminTab {
   const t = ALL.find(x => x.id === requested);
   if (t && (!t.adminOnly || isAdmin)) return t.id;
-  return isAdmin ? 'growth' : 'upload';
+  return isAdmin ? 'growth' : 'sections';
 }

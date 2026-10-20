@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
+import { markdownSections, NavigatedProse } from '@/components/readings/NavigatedProse';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
@@ -15,7 +14,6 @@ import { Button } from '@/components/ui/button';
 
 const APRIL_EMAIL = 'babybluepuppet@gmail.com';
 const SHANE_EMAILS = ['shanegoble@gmail.com', 'shanealecompte@gmail.com'];
-const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 60);
 
 let cache: Promise<MbEntry[]> | null = null;
 const loadIndex = () => (cache ??= loadProtectedJson<MbEntry[]>('shane', 'index.json').catch(e => { cache = null; throw e; }));
@@ -57,24 +55,25 @@ function ShaneEditionInner() {
   const [q, setQ] = useState('');
   const [cat, setCat] = useState<string | null>(null);
   const [text, setText] = useState<string | null>(null);
-  useEffect(() => { let active = true; setEntries(null); setText(null); setErr(''); if (session) void loadIndex().then(e => { if (active) setEntries(e); }).catch(e => { if (active) setErr(e instanceof ContentLockedError ? 'Unlock the private edition with the site password first.' : 'Shane hasn’t shared his edition with you, or it couldn’t be opened.'); }); return () => { active = false; }; }, [session?.user.id]);
-  useEffect(() => { let active = true; setText(null); if (id && session) void loadProtectedText('shane', `${id}.md`).then(t => { if (active) setText(t); }).catch(() => { if (active) setText(''); }); window.scrollTo(0, 0); return () => { active = false; }; }, [id, session?.user.id]);
+  const [retry, setRetry] = useState(0);
+  useEffect(() => { let active = true; setEntries(null); setText(null); setErr(''); if (session) void loadIndex().then(e => { if (active) setEntries(e); }).catch(e => { if (active) setErr(e instanceof ContentLockedError ? 'Unlock the private edition with the site password first.' : 'Shane hasn’t shared his edition with you, or it couldn’t be opened.'); }); return () => { active = false; }; }, [session?.user.id, retry]);
+  useEffect(() => { let active = true; setText(null); if (id && session) void loadProtectedText('shane', `${id}.md`).then(t => { if (active) setText(t); }).catch(() => { if (active) setText(''); }); if (!window.location.hash) window.scrollTo(0, 0); return () => { active = false; }; }, [id, session?.user.id, retry]);
   const list = useMemo(() => (entries ?? []).filter(e => (!cat || catsFor(e).includes(cat)) && (e.title + e.sections.join(' ')).toLowerCase().includes(q.toLowerCase())), [entries, q, cat]);
 
-  if (err) return <div className="space-y-4"><h1 className="text-4xl">Shane’s Masterbook</h1><p className="text-muted-foreground">{err}</p></div>;
+  if (err) return <div className="space-y-4"><h1 className="text-4xl">Shane’s Masterbook</h1><p role="alert" className="text-muted-foreground">{err}</p><Button variant="outline" onClick={() => setRetry(v => v + 1)}>Try again</Button></div>;
 
   if (id) {
     const i = (entries ?? []).findIndex(e => e.id === id); const e = entries?.[i]; const prev = entries?.[i - 1]; const next = entries?.[i + 1];
-    const toc = (text ?? '').split('\n').filter(l => l.startsWith('### ')).map(l => l.slice(4));
+    const headingLevel = markdownSections(text ?? '', 3).length > 1 ? 3 : 2;
     return (
-      <div className="grid xl:grid-cols-[1fr_220px] gap-10">
-        <article>
+      <div>
+        <article className="min-w-0">
           <Link to="/shane" className="text-xs font-smallcaps text-muted-foreground hover:text-foreground">← Shane’s Masterbook</Link>
           {e && <><div className="font-smallcaps text-xs text-gold mt-4">{e.part} · {e.label}</div><h1 className="text-3xl sm:text-4xl mt-2">{e.title}</h1></>}
           <div className="gold-rule my-6" />
           <p role="note" className="mb-6 border-l-2 border-accent pl-4 text-sm text-muted-foreground">Original uploaded text, preserved unchanged. Some source placements conflict with Shane’s calculated chart; this chapter is not a verified report. Medical, family-history and past-life claims are not established by astrology.</p>
-          {text === null ? <p className="text-muted-foreground">Opening the chapter…</p> : text === '' ? <p>This chapter couldn’t be opened.</p> : (
-            <div className="mb-prose"><ReactMarkdown remarkPlugins={[remarkGfm]} components={{ h3: ({ children }) => <h3 id={slug(String(children))} className="scroll-mt-24">{children}</h3> }}>{text}</ReactMarkdown></div>
+          {text === null ? <p role="status" className="text-muted-foreground">Opening the chapter…</p> : text === '' ? <div className="space-y-3"><p role="alert">This chapter couldn’t be opened.</p><Button variant="outline" onClick={() => setRetry(v => v + 1)}>Try again</Button></div> : (
+            <NavigatedProse content={text} path={`/shane/${id}`} title={e?.title ?? 'Shane’s Masterbook chapter'} headingLevel={headingLevel} />
           )}
           <p className="parchment p-4 mt-10 text-xs text-muted-foreground"><span className="font-smallcaps text-gold">Source</span> · Shane’s Astrological Masterbook — transcribed in full.</p>
           <nav className="flex justify-between gap-4 mt-8">
@@ -82,7 +81,6 @@ function ShaneEditionInner() {
             {next && <Link to={`/shane/${next.id}`} className="parchment p-3 flex items-center gap-2 text-sm max-w-[48%] text-right"><span className="truncate">{next.title}</span><ChevronRight className="w-4 h-4 shrink-0" /></Link>}
           </nav>
         </article>
-        {toc.length > 1 && <aside className="hidden xl:block"><div className="sticky top-6 max-h-[85vh] overflow-y-auto text-xs space-y-1"><div className="font-smallcaps text-[10px] text-gold mb-2">On this page</div>{toc.map(t => <a key={t} href={`#${slug(t)}`} className="block text-muted-foreground hover:text-foreground py-0.5">{t}</a>)}</div></aside>}
       </div>
     );
   }

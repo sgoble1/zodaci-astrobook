@@ -13,6 +13,7 @@ import { Faq, PRICING_FAQ } from '@/components/brand/Faq';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { CREDIT_ALLOWANCE, PLAN_NAME, PLAN_PRICE } from '@/lib/plans';
 import { BOOK_VERSIONS, money } from '@/lib/books';
+import { internalDestination } from '@/lib/internalDestination';
 
 type Card = { tier: Tier; slug: 'free' | 'pro' | 'cosmic'; cta: string; blurb: string; items: string[] };
 const CARDS: Card[] = [
@@ -39,7 +40,7 @@ export default function Pricing() {
   const sub = useSubscription();
   const [params, setParams] = useSearchParams();
   const next = params.get('next');
-  const returnTo = next?.startsWith('/my-readings/topic/') && !next.includes('://') ? next : '/dashboard';
+  const returnTo = internalDestination(next);
   const [open, setOpen] = useState<string | null>(null);
   const [yearly, setYearly] = useState(params.get('period') === 'year');
   const intent = params.get('plan');
@@ -54,7 +55,7 @@ export default function Pricing() {
     if (error || !data?.url) return toast.error(data?.error || 'Could not open billing right now.');
     window.location.href = data.url;
   };
-  const signupLink = (slug: string) => `/auth?mode=signup&next=${encodeURIComponent(slug === 'free' ? '/start' : `/pricing?plan=${slug}&period=${yearly ? 'year' : 'month'}`)}`;
+  const signupLink = (slug: string) => `/auth?mode=signup&next=${encodeURIComponent(slug === 'free' ? '/start' : `/pricing?plan=${slug}&period=${yearly ? 'year' : 'month'}&next=${encodeURIComponent(returnTo)}`)}`;
   const close = () => { setOpen(null); if (intent) { const n = new URLSearchParams(params); n.delete('plan'); n.delete('period'); setParams(n, { replace: true }); } };
   const cheapestPrint = Math.min(...BOOK_VERSIONS.filter(v => v.format === 'print').map(v => v.price));
   const cheapest = Math.min(...BOOK_VERSIONS.map(v => v.price));

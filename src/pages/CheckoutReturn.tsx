@@ -3,6 +3,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { CheckCircle2, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useSubscription } from '@/hooks/useSubscription';
+import { internalDestination } from '@/lib/internalDestination';
 
 export default function CheckoutReturn() {
   const [params] = useSearchParams();
@@ -11,7 +12,7 @@ export default function CheckoutReturn() {
   const [waiting, setWaiting] = useState(false);
   useEffect(() => { const timer = window.setTimeout(() => setWaiting(true), 60000); return () => clearTimeout(timer); }, []);
   const next = params.get('next');
-  const returnTo = next?.startsWith('/my-readings/topic/') && !next.includes('://') ? next : '/dashboard';
+  const returnTo = internalDestination(next);
   const name = sub.tier === 'creator' ? 'Cosmic' : 'Pro';
   if (!params.get('session_id')) return <article className="mx-auto max-w-xl py-12 text-center space-y-4"><h1 className="font-display text-3xl">No payment found</h1><Button asChild><Link to="/pricing">See plans</Link></Button></article>;
   return (

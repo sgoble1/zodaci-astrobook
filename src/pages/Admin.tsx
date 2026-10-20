@@ -43,9 +43,9 @@ export default function Admin() {
   return (
     <div className="space-y-8">
       <header className="space-y-3">
-        <div className="font-smallcaps text-xs text-gold flex items-center gap-1"><ShieldCheck className="w-3 h-3" />Admin</div>
+        <div className="font-smallcaps text-xs text-gold flex items-center gap-1"><ShieldCheck className="w-3 h-3" />{isAdmin ? 'Admin' : 'Workspace'}</div>
         <div className="flex flex-wrap items-end justify-between gap-4"><h1 className="text-4xl sm:text-5xl">{isAdmin ? 'Admin Dashboard' : 'My Workspace'}</h1>{isAdmin && <AdminSearch onOpen={go} />}</div>
-        <p className="text-muted-foreground max-w-2xl">{isAdmin ? 'Run Zodaci from one place: content, orders and payments, members, and platform settings. Every admin change is written to the audit log.' : 'Upload Masterbook documents, edit their sections with a live preview, and manage relationships. You can edit the documents you upload; the built-in source books stay as they are.'}</p>
+        <p className="text-muted-foreground max-w-2xl">{isAdmin ? 'Run Zodaci from one place: content, orders and payments, members, and platform settings. Every admin change is written to the audit log.' : 'Your saved documents and relationships. Built-in source books remain unchanged.'}</p>
         {isAdmin && <div className="flex flex-wrap items-center gap-3"><Button asChild variant="outline"><Link to="/orders?all=1">Book order management</Link></Button><Button asChild variant="outline"><Link to="/dispatch">Dispatch books</Link></Button><Button asChild variant="outline"><Link to="/brand-launch">Brand launch & email list</Link></Button><div className="w-full sm:w-auto sm:max-w-xs"><AdminEditionSwitch /></div></div>}
         {isAdmin && <p className="text-sm text-muted-foreground max-w-2xl">April's original account and its full private edition open in their own tab, so your own content is never mixed with hers.</p>}
       </header>
@@ -61,7 +61,7 @@ export default function Admin() {
               ))}
             </div>
           </nav>
-          {tab === 'upload' && <UploadPanel userId={session?.user.id ?? ''} />}
+          {isAdmin && tab === 'upload' && <UploadPanel userId={session?.user.id ?? ''} />}
           {tab === 'sections' && <SectionsPanel ownerId={isAdmin ? null : session?.user.id ?? ''} />}
           {tab === 'relationships' && <RelationshipsAdmin userId={session?.user.id ?? ''} />}
           {isAdmin && <>
@@ -119,7 +119,7 @@ function SectionsPanel({ ownerId }: { ownerId: string | null }) {
   const items = ownerId ? lib.items.filter(i => i.owner_id === ownerId) : lib.items;
   const [openId, setOpenId] = useState<string | null>(null);
   if (loading) return <p className="text-sm text-muted-foreground">Loading…</p>;
-  if (!items.length) return <p className="text-sm text-muted-foreground">No uploaded documents yet. Built-in source documents are fixed; you can rename, reorder or hide them under “Document Index”.</p>;
+  if (!items.length) return <p className="text-sm text-muted-foreground">{ownerId ? 'No saved documents yet.' : 'No uploaded documents yet. Built-in source documents are fixed; manage their labels under Document Index.'}</p>;
   return (
     <div className="space-y-3">
       {items.map(it => openId === it.id ? <SectionEditor key={it.id} item={it} onDone={() => { setOpenId(null); reload(); }} /> : (

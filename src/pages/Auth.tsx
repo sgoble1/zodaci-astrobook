@@ -6,19 +6,20 @@ import { useSession } from '@/hooks/useLibrary';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { internalDestination } from '@/lib/internalDestination';
 
 /** Public sign-in and sign-up. */
 export default function Auth() {
   const session = useSession();
   const nav = useNavigate();
-  const [mode, setMode] = useState<'in' | 'up'>('up');
+  const [params] = useSearchParams();
+  const [mode, setMode] = useState<'in' | 'up'>(() => params.get('mode') === 'signup' ? 'up' : 'in');
   const [email, setEmail] = useState('');
   const [pw, setPw] = useState('');
   const [msg, setMsg] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
-  const [params] = useSearchParams();
   const raw = params.get('next') ?? '';
-  const next = raw.startsWith('/') && !raw.startsWith('//') && !raw.includes('\\') ? raw : '/start';
+  const next = internalDestination(raw, '/start');
   const forgot = async () => {
     if (!email) return setMsg('Enter your email above first.');
     const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo: `${window.location.origin}/reset-password` });
