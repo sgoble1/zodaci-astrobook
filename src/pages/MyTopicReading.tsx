@@ -1,3 +1,4 @@
+import { confirmAction } from '@/components/common/ConfirmHost';
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
@@ -34,7 +35,7 @@ export default function MyTopicReading({ slugOverride }: { slugOverride?: string
   }, [session?.user.id, row, slug]);
   const [busy, setBusy] = useState(false);
   const rewrite = async () => {
-    if (!slug || !confirm('Rewrite this reading from your chart? The current text will be replaced.')) return;
+    if (!slug || !await confirmAction('Rewrite this reading from your chart? The current text will be replaced.')) return;
     setBusy(true);
     try {
       const before = row?.updated_at;

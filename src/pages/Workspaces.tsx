@@ -1,3 +1,4 @@
+import { confirmAction } from '@/components/common/ConfirmHost';
 import { useCallback, useEffect, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
@@ -184,7 +185,7 @@ function Members({ spaceId, me }: { spaceId: string; me?: string }) {
   useEffect(() => { void load(); }, [load]);
   const iOwn = rows.some(r => r.user_id === me && r.role === 'owner');
   const remove = async (uid: string) => {
-    if (!confirm(uid === me ? 'Leave this workspace?' : 'Remove this member?')) return;
+    if (!await confirmAction(uid === me ? 'Leave this workspace?' : 'Remove this member?')) return;
     await supabase.from('space_members').delete().eq('space_id', spaceId).eq('user_id', uid);
     void load();
   };

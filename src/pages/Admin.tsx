@@ -1,3 +1,4 @@
+import { confirmAction } from '@/components/common/ConfirmHost';
 import { SectionEditor } from '@/components/admin/SectionEditor';
 import { RelationshipsAdmin } from '@/components/relationships/RelationshipsAdmin';
 import { useEffect, useState } from 'react';
@@ -98,7 +99,7 @@ function SectionsPanel({ ownerId }: { ownerId: string | null }) {
           <div className="flex-1 min-w-0"><div className="font-display text-lg">{it.title}</div><div className="text-xs text-muted-foreground">{it.category} · {it.file_name} · {fmtSize(it.size_bytes)} · {((it.sections as DocSection[] | null) ?? []).length} sections</div></div>
           <Link to={`/masterbook/u/${it.id}`} className="text-xs underline">View</Link>
           <Button size="sm" variant="outline" onClick={() => setOpenId(it.id)}>Edit</Button>
-          <Button size="sm" variant="ghost" className="text-destructive" onClick={() => { if (confirm(`Delete “${it.title}”?`)) remove(it); }}><Trash2 className="w-4 h-4" /></Button>
+          <Button size="sm" variant="ghost" className="text-destructive" onClick={async async () => { if (await confirmAction(`Delete “${it.title}”?`)) remove(it); }}><Trash2 className="w-4 h-4" /></Button>
         </div>
       ))}
     </div>

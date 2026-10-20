@@ -1,3 +1,4 @@
+import { confirmAction } from '@/components/common/ConfirmHost';
 import { useEffect, useState } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
@@ -46,7 +47,7 @@ export default function Onboarding() {
   const ok = [b.name.trim().length > 0, /^\d{4}-\d{2}-\d{2}$/.test(b.date), unknownTime || /^\d{2}:\d{2}$/.test(b.time ?? ''), !!b.tz, !!b.tz && !!b.name && !!b.date][step];
 
   const finish = async () => {
-    if (editing && !confirm('Save these changed birth details? Your chart is recalculated. Open each reading afterwards and use “Rewrite this reading” to update it.')) return;
+    if (editing && !await confirmAction('Save these changed birth details? Your chart is recalculated. Open each reading afterwards and use “Rewrite this reading” to update it.')) return;
     setBusy(true);
     setErr('');
     try {

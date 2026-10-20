@@ -1,3 +1,4 @@
+import { confirmAction } from '@/components/common/ConfirmHost';
 import { useEffect, useRef, useState } from 'react';
 import { Link, useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
@@ -104,7 +105,7 @@ function ChatInner() {
   };
 
   const del = async (cid: string) => {
-    if (!confirm('Delete this conversation?')) return;
+    if (!await confirmAction('Delete this conversation?')) return;
     await supabase.from('chat_conversations').delete().eq('id', cid);
     if (cid === id) nav('/chat'); loadConvos();
   };
