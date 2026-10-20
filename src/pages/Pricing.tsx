@@ -78,7 +78,7 @@ export default function Pricing() {
         </section>
       ) : (<>
         <div role="radiogroup" aria-label="Billing period" className="mx-auto flex w-fit items-center gap-1 rounded-full border border-border p-1">
-          {[[false, 'Monthly'], [true, 'Annual']].map(([v, l]) => <button type="button" role="radio" key={String(v)} onClick={() => setYearly(v as boolean)} aria-checked={yearly === v} className={`rounded-full px-5 py-2 text-sm transition-colors duration-500 ${yearly === v ? 'bg-primary text-primary-foreground' : 'hover:bg-muted'}`}>{l as string}{v && <span className="ml-2 rounded-full bg-gold/20 px-2 py-0.5 text-xs text-gold">Save up to {maxYearlySavingPct()}%</span>}</button>)}
+          {[[false, 'Monthly'], [true, 'Annual']].map(([v, l]) => <Button type="button" variant={yearly === v ? 'default' : 'ghost'} role="radio" key={String(v)} onClick={() => setYearly(v as boolean)} aria-checked={yearly === v} className="rounded-full px-3 sm:px-5">{l as string}{v && <span className="ml-1 rounded-full bg-gold/20 px-2 py-0.5 text-xs text-gold">Save up to {maxYearlySavingPct()}%</span>}</Button>)}
         </div>
         <div className="grid gap-5 md:grid-cols-3">
           {CARDS.map((p, i) => {

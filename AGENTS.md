@@ -53,3 +53,6 @@
 - src/lib and supabase/functions have their own AGENTS.md; read them before changing files there.
 - platform_settings is admin-only; public pages read allowlisted keys via public_site_settings().
 - Admin data comes only from has_role-checked RPCs/functions.
+
+## Page metadata
+- usePageMeta owns route-aware titles, descriptions, self-referencing social URLs/canonicals and indexing boundaries; member discussions remain noindex and private-subdomain exclusions are preserved. Static head remains the social-crawler fallback.

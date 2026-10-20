@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import ReactMarkdown from 'react-markdown';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
+import { usePageMeta } from '@/hooks/usePageMeta';
 
 type Page = { title: string; headline: string; subheadline: string; body: string; cta_label: string; cta_link: string };
 
@@ -11,7 +12,13 @@ type Page = { title: string; headline: string; subheadline: string; body: string
 export default function LandingPage() {
   const { slug } = useParams();
   const [p, setP] = useState<Page | null | undefined>(undefined);
-  useEffect(() => { supabase.from('marketing_pages').select('*').eq('slug', slug ?? '').maybeSingle().then(({ data }) => { setP(data as Page | null); if (data) document.title = `${data.title || data.headline} · Zodaci`; }); }, [slug]);
+  usePageMeta(`${p?.title || p?.headline || 'Explore your chart'} · Zodaci`, p?.subheadline || 'Explore your calculated birth chart and personal, plain-language readings with Zodaci.');
+  useEffect(() => {
+    let active = true;
+    setP(undefined);
+    supabase.from('marketing_pages').select('*').eq('slug', slug ?? '').maybeSingle().then(({ data }) => { if (active) setP(data as Page | null); });
+    return () => { active = false; };
+  }, [slug]);
   if (p === undefined) return <p role="status" className="text-muted-foreground">Loading…</p>;
   if (!p) return <p className="text-center text-muted-foreground py-20">This page isn’t available.</p>;
   const cta = <Button asChild size="lg"><Link to={p.cta_link.startsWith('/') ? p.cta_link : '/auth'}>{p.cta_label}</Link></Button>;

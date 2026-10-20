@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { ChevronDown } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import { BOOK_VERSIONS, money } from '@/lib/books';
 import { CREDIT_ALLOWANCE, PLAN_NAME, REFUND_WINDOW_DAYS, SIGNUP_BONUS_CREDITS } from '@/lib/plans';
 
@@ -25,10 +26,10 @@ export function Faq({ items, id = 'faq-schema', schema = true }: { items: QA[]; 
     <div className="divide-y divide-border border-y border-border">
       {items.map((it, i) => (
         <div key={it.q}>
-          <button type="button" aria-expanded={open === i} onClick={() => setOpen(open === i ? null : i)} className="flex w-full items-center justify-between gap-4 py-4 text-left font-medium">
+          <Button type="button" variant="ghost" aria-expanded={open === i} aria-controls={`${id}-answer-${i}`} onClick={() => setOpen(open === i ? null : i)} className="h-auto w-full justify-between gap-4 whitespace-normal px-0 py-4 text-left font-medium">
             {it.q}<ChevronDown className={`h-4 w-4 shrink-0 transition-transform duration-300 ${open === i ? 'rotate-180' : ''}`} aria-hidden />
-          </button>
-          <div className={`grid transition-all duration-500 ${open === i ? 'grid-rows-[1fr] pb-4' : 'grid-rows-[0fr]'}`}><p className="overflow-hidden text-muted-foreground leading-relaxed">{it.a}</p></div>
+          </Button>
+          <div id={`${id}-answer-${i}`} aria-hidden={open !== i} className={`grid transition-all duration-500 motion-reduce:transition-none ${open === i ? 'grid-rows-[1fr] pb-4' : 'grid-rows-[0fr]'}`}><p className="overflow-hidden text-muted-foreground leading-relaxed">{it.a}</p></div>
         </div>
       ))}
     </div>
