@@ -6,7 +6,7 @@ import { getStripeEnvironment } from '@/lib/stripe';
 export type Tier = 'free' | 'full' | 'creator';
 const TIER: Record<string, Tier> = PRICE_TIER;
 
-export interface SubState { loading: boolean; userId: string | null; tier: Tier; status?: string; periodEnd?: string | null; cancelAtEnd?: boolean }
+export interface SubState { loading: boolean; userId: string | null; tier: Tier; status?: string; periodEnd?: string | null; cancelAtEnd?: boolean; grantReason?: string }
 
 function envOrNull() { try { return getStripeEnvironment(); } catch { return null; } }
 
@@ -24,10 +24,20 @@ export function useSubscription(): SubState {
       const version = ++revision;
       const env = envOrNull();
       if (!uid || !env) { if (alive) setS({ loading: false, userId: uid, tier: 'free' }); return; }
-      const { data } = await supabase.from('billing_subscriptions').select('*').eq('user_id', uid).eq('environment', env).order('created_at', { ascending: false });
-      const activeRows = (data ?? []).filter(isActive);
+      const nowIso = new Date().toISOString();
+      const [{ data }, { data: grants }] = await Promise.all([
+        supabase.from('billing_subscriptions').select('*').eq('user_id', uid).eq('environment', env).order('created_at', { ascending: false }),
+        supabase.from('plan_grants').select('tier,expires_at,reason').eq('user_id', uid).lte('starts_at', nowIso).gt('expires_at', nowIso),
+      ]);
+      // Only plan prices grant a tier; AstroComic and book payments never do.
+      const activeRows = (data ?? []).filter(r => !!TIER[r.price_id] && isActive(r));
       const row = activeRows.find(r => TIER[r.price_id] === 'creator') || activeRows.find(r => TIER[r.price_id] === 'full');
-      if (alive && version === revision && uid === currentUid) setS({ loading: false, userId: uid, tier: row ? TIER[row.price_id] ?? 'full' : 'free', status: row?.status, periodEnd: row?.current_period_end, cancelAtEnd: !!row?.cancel_at_period_end });
+      const subTier: Tier = row ? TIER[row.price_id] : 'free';
+      const grant = (grants ?? []).sort((a, b) => (b.tier === 'creator' ? 1 : 0) - (a.tier === 'creator' ? 1 : 0))[0];
+      const grantTier: Tier = grant ? (grant.tier as Tier) : 'free';
+      const rank = { free: 0, full: 1, creator: 2 } as const;
+      const useGrant = rank[grantTier] > rank[subTier];
+      if (alive && version === revision && uid === currentUid) setS({ loading: false, userId: uid, tier: useGrant ? grantTier : subTier, status: useGrant ? 'granted' : row?.status, periodEnd: useGrant ? grant!.expires_at : row?.current_period_end, cancelAtEnd: useGrant ? false : !!row?.cancel_at_period_end, grantReason: useGrant ? grant!.reason : undefined });
     };
     const bind = (uid: string | null) => {
       currentUid = uid; revision++; setS({ loading: true, userId: uid, tier: 'free' });

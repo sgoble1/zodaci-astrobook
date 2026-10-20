@@ -92,6 +92,42 @@ export type Database = {
         }
         Relationships: []
       }
+      audit_log: {
+        Row: {
+          action: string
+          admin_id: string
+          after: Json | null
+          before: Json | null
+          created_at: string
+          id: string
+          summary: string
+          target_id: string
+          target_table: string
+        }
+        Insert: {
+          action: string
+          admin_id: string
+          after?: Json | null
+          before?: Json | null
+          created_at?: string
+          id?: string
+          summary?: string
+          target_id?: string
+          target_table?: string
+        }
+        Update: {
+          action?: string
+          admin_id?: string
+          after?: Json | null
+          before?: Json | null
+          created_at?: string
+          id?: string
+          summary?: string
+          target_id?: string
+          target_table?: string
+        }
+        Relationships: []
+      }
       billing_subscriptions: {
         Row: {
           cancel_at_period_end: boolean | null
@@ -217,7 +253,10 @@ export type Database = {
           extras_cents: number | null
           final_pdf_path: string | null
           format: string
+          gift: boolean
+          gift_message: string
           id: string
+          lulu_reference: string
           manuscript_pages: number | null
           manuscript_path: string | null
           payment_currency: string | null
@@ -251,7 +290,10 @@ export type Database = {
           extras_cents?: number | null
           final_pdf_path?: string | null
           format?: string
+          gift?: boolean
+          gift_message?: string
           id?: string
+          lulu_reference?: string
           manuscript_pages?: number | null
           manuscript_path?: string | null
           payment_currency?: string | null
@@ -285,7 +327,10 @@ export type Database = {
           extras_cents?: number | null
           final_pdf_path?: string | null
           format?: string
+          gift?: boolean
+          gift_message?: string
           id?: string
+          lulu_reference?: string
           manuscript_pages?: number | null
           manuscript_path?: string | null
           payment_currency?: string | null
@@ -442,6 +487,170 @@ export type Database = {
           },
         ]
       }
+      comic_issues: {
+        Row: {
+          admin_note: string
+          carrier: string
+          cover_path: string | null
+          created_at: string
+          id: string
+          issue_month: string
+          issue_number: number
+          script: Json
+          shipped_at: string | null
+          status: string
+          subscription_id: string
+          title: string
+          tracking_number: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          admin_note?: string
+          carrier?: string
+          cover_path?: string | null
+          created_at?: string
+          id?: string
+          issue_month: string
+          issue_number?: number
+          script?: Json
+          shipped_at?: string | null
+          status?: string
+          subscription_id: string
+          title?: string
+          tracking_number?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          admin_note?: string
+          carrier?: string
+          cover_path?: string | null
+          created_at?: string
+          id?: string
+          issue_month?: string
+          issue_number?: number
+          script?: Json
+          shipped_at?: string | null
+          status?: string
+          subscription_id?: string
+          title?: string
+          tracking_number?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "comic_issues_subscription_id_fkey"
+            columns: ["subscription_id"]
+            isOneToOne: false
+            referencedRelation: "comic_subscriptions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      comic_print_runs: {
+        Row: {
+          actual_cents: number | null
+          created_at: string
+          due_date: string | null
+          id: string
+          issue_month: string
+          notes: string
+          order_ref: string
+          printer: string
+          quantity: number
+          quote_cents: number | null
+          status: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          actual_cents?: number | null
+          created_at?: string
+          due_date?: string | null
+          id?: string
+          issue_month: string
+          notes?: string
+          order_ref?: string
+          printer?: string
+          quantity?: number
+          quote_cents?: number | null
+          status?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          actual_cents?: number | null
+          created_at?: string
+          due_date?: string | null
+          id?: string
+          issue_month?: string
+          notes?: string
+          order_ref?: string
+          printer?: string
+          quantity?: number
+          quote_cents?: number | null
+          status?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: []
+      }
+      comic_subscriptions: {
+        Row: {
+          cancel_at_period_end: boolean
+          checkout_session_id: string | null
+          created_at: string
+          current_period_end: string | null
+          environment: string
+          id: string
+          paused_until: string | null
+          plan: string
+          shipping_address: Json
+          skip_months: string[]
+          status: string
+          stripe_customer_id: string | null
+          stripe_subscription_id: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          cancel_at_period_end?: boolean
+          checkout_session_id?: string | null
+          created_at?: string
+          current_period_end?: string | null
+          environment: string
+          id?: string
+          paused_until?: string | null
+          plan: string
+          shipping_address?: Json
+          skip_months?: string[]
+          status?: string
+          stripe_customer_id?: string | null
+          stripe_subscription_id?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          cancel_at_period_end?: boolean
+          checkout_session_id?: string | null
+          created_at?: string
+          current_period_end?: string | null
+          environment?: string
+          id?: string
+          paused_until?: string | null
+          plan?: string
+          shipping_address?: Json
+          skip_months?: string[]
+          status?: string
+          stripe_customer_id?: string | null
+          stripe_subscription_id?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       community_posts: {
         Row: {
           author_id: string
@@ -522,6 +731,39 @@ export type Database = {
           content?: string
           key?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      credit_grants: {
+        Row: {
+          amount: number
+          created_at: string
+          created_by: string | null
+          expires_at: string
+          id: string
+          note: string
+          reason: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          created_by?: string | null
+          expires_at: string
+          id?: string
+          note?: string
+          reason: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          created_by?: string | null
+          expires_at?: string
+          id?: string
+          note?: string
+          reason?: string
+          user_id?: string
         }
         Relationships: []
       }
@@ -737,6 +979,51 @@ export type Database = {
         }
         Relationships: []
       }
+      newsletter_campaigns: {
+        Row: {
+          body_md: string
+          created_at: string
+          created_by: string
+          id: string
+          preview_text: string
+          scheduled_at: string | null
+          segment: string
+          sent_at: string | null
+          status: string
+          subject: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          body_md?: string
+          created_at?: string
+          created_by: string
+          id?: string
+          preview_text?: string
+          scheduled_at?: string | null
+          segment?: string
+          sent_at?: string | null
+          status?: string
+          subject?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          body_md?: string
+          created_at?: string
+          created_by?: string
+          id?: string
+          preview_text?: string
+          scheduled_at?: string | null
+          segment?: string
+          sent_at?: string | null
+          status?: string
+          subject?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       personal_context: {
         Row: {
           body: string
@@ -767,6 +1054,63 @@ export type Database = {
         }
         Relationships: []
       }
+      plan_grants: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          expires_at: string
+          id: string
+          note: string
+          reason: string
+          starts_at: string
+          tier: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          expires_at: string
+          id?: string
+          note?: string
+          reason: string
+          starts_at?: string
+          tier: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          expires_at?: string
+          id?: string
+          note?: string
+          reason?: string
+          starts_at?: string
+          tier?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      platform_settings: {
+        Row: {
+          key: string
+          updated_at: string
+          updated_by: string | null
+          value: Json
+        }
+        Insert: {
+          key: string
+          updated_at?: string
+          updated_by?: string | null
+          value: Json
+        }
+        Update: {
+          key?: string
+          updated_at?: string
+          updated_by?: string | null
+          value?: Json
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           birth_date: string | null
@@ -781,6 +1125,7 @@ export type Database = {
           lon: number | null
           onboarded_at: string | null
           place_label: string
+          reading_tone: string
           sex: string
           tz: string
           updated_at: string
@@ -798,6 +1143,7 @@ export type Database = {
           lon?: number | null
           onboarded_at?: string | null
           place_label?: string
+          reading_tone?: string
           sex?: string
           tz?: string
           updated_at?: string
@@ -815,9 +1161,58 @@ export type Database = {
           lon?: number | null
           onboarded_at?: string | null
           place_label?: string
+          reading_tone?: string
           sex?: string
           tz?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      referral_codes: {
+        Row: {
+          code: string
+          created_at: string
+          user_id: string
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          user_id: string
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      referrals: {
+        Row: {
+          code: string
+          converted_at: string | null
+          created_at: string
+          id: string
+          referred_id: string
+          referrer_id: string
+          status: string
+        }
+        Insert: {
+          code: string
+          converted_at?: string | null
+          created_at?: string
+          id?: string
+          referred_id: string
+          referrer_id: string
+          status?: string
+        }
+        Update: {
+          code?: string
+          converted_at?: string | null
+          created_at?: string
+          id?: string
+          referred_id?: string
+          referrer_id?: string
+          status?: string
         }
         Relationships: []
       }
@@ -869,6 +1264,30 @@ export type Database = {
           sex?: string
           tz?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      saved_affirmations: {
+        Row: {
+          created_at: string
+          id: string
+          owner_id: string
+          source: string
+          text: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          owner_id: string
+          source?: string
+          text: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          owner_id?: string
+          source?: string
+          text?: string
         }
         Relationships: []
       }
@@ -1887,6 +2306,7 @@ export type Database = {
     }
     Functions: {
       accept_space_invite: { Args: { _token: string }; Returns: string }
+      active_grant_tier: { Args: { _user_id: string }; Returns: string }
       admin_credit_usage: {
         Args: never
         Returns: {
@@ -1896,6 +2316,17 @@ export type Database = {
           user_id: string
           uses: number
         }[]
+      }
+      admin_grant: {
+        Args: {
+          _credits: number
+          _days: number
+          _kind: string
+          _note: string
+          _tier: string
+          _user_id: string
+        }
+        Returns: string
       }
       admin_growth_stats: {
         Args: { _days?: number }
@@ -1911,6 +2342,16 @@ export type Database = {
           signups_total: number
         }[]
       }
+      admin_newsletter_audience: { Args: { _segment: string }; Returns: number }
+      admin_search: {
+        Args: { _q: string }
+        Returns: {
+          detail: string
+          id: string
+          kind: string
+          label: string
+        }[]
+      }
       admin_upgrade_funnel: {
         Args: { _days?: number }
         Returns: {
@@ -1922,6 +2363,8 @@ export type Database = {
       }
       can_read_shane_edition: { Args: never; Returns: boolean }
       claim_admin: { Args: never; Returns: boolean }
+      claim_referral: { Args: { _code: string }; Returns: string }
+      claim_signup_bonus: { Args: never; Returns: number }
       claim_topic_reading_job: {
         Args: { p_owner_id: string; p_page_key: string; p_regenerate?: boolean }
         Returns: {
@@ -1980,6 +2423,8 @@ export type Database = {
       is_shared_space_user_id: { Args: { _user_id: string }; Returns: boolean }
       is_space_member: { Args: { _space_id: string }; Returns: boolean }
       is_space_owner: { Args: { _space_id: string }; Returns: boolean }
+      my_referral_code: { Args: never; Returns: string }
+      plan_tier: { Args: { _user_id: string }; Returns: string }
       recent_library_items: {
         Args: never
         Returns: {
@@ -1995,6 +2440,7 @@ export type Database = {
         Args: { p_order: string; p_owner: string }
         Returns: string
       }
+      reward_referral: { Args: { _referred: string }; Returns: boolean }
       shared_member_directory: {
         Args: never
         Returns: {

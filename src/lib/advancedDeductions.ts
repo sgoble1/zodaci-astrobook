@@ -26,7 +26,7 @@ const planets = (c: Pick<ChartResult, 'bodies'>): P[] => TEN.map(k => c.bodies.f
 const list = (xs: string[]) => xs.length <= 1 ? xs.join('') : `${xs.slice(0, -1).join(', ')} and ${xs[xs.length - 1]}`;
 
 // 1. Chart shape (Marc Edmund Jones patterns)
-const SHAPE_TEXT: Record<string, string> = {
+export const SHAPE_TEXT: Record<string, string> = {
   Bundle: 'All ten planets sit within a third of the zodiac. Your energy is concentrated and specialised; you go deep rather than wide.',
   Bowl: 'Your planets fill one half of the chart. You carry a strong sense of purpose and tend to pour yourself into what you care about, while the empty half shows what you seek from others.',
   Bucket: 'Nine planets gather in one half with a single planet, the handle, on the other side. That handle planet is where your energy is directed and released.',
