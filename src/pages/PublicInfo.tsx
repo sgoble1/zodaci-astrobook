@@ -58,7 +58,7 @@ export function AstroBookPublic() {
           ['chart', 'Add your birth details', 'Date, time and place. We calculate your exact chart.'],
           ['self', 'Your readings are written', 'Every chapter comes from your own placements.'],
           ['sign', 'Preview and choose', 'Read the real PDF, pick a version, cover and extras.'],
-          ['year', 'Printed and shipped', 'Printed on demand by Lulu and shipped free in the US.'],
+          ['year', 'Printed and shipped', 'Free US shipping on printed versions. Lulu fulfillment is being prepared; delivery estimates are confirmed before production.'],
         ].map(([k, t, d], i) => <li key={t} className="vellum p-5"><ThemeArt kind={k as never} badge={i + 1} className="h-16 w-16" /><h3 className="mt-4 text-lg">{t}</h3><p className="mt-1 text-sm text-muted-foreground">{d}</p></li>)}</ol>
       </section>
       <section id="versions" className="space-y-6">
@@ -75,7 +75,7 @@ export function AstroBookPublic() {
       </section>
       <section id="look-inside" className="space-y-6">
         <h2 className="font-display text-3xl">Look inside before you order.</h2>
-        <p className="text-muted-foreground">A real sample book, composed live from a fictional reader’s chart: Olivia Chen, born March 14, 1992 in Portland. Same layout, voice and depth as your own. Turn the first pages below, or <Link to="/book-preview" className="underline text-accent">read the full sample book</Link>.</p>
+        <p className="text-muted-foreground">A short fictional sample for Olivia Chen, born March 14, 1992 in Portland, with calculated chart facts and illustrative passages. Your own book uses your finished readings and the page count shown before payment. Turn the first pages below, or <Link to="/book-preview" className="underline text-accent">read the full sample book</Link>.</p>
         <SampleBook maxPages={6} cta={<Button asChild variant="outline"><Link to="/book-preview">Read the full sample<ArrowRight /></Link></Button>} />
       </section>
       <section id="teaser" className="grid gap-8 rounded-xl border border-gold/30 bg-card p-8 md:grid-cols-2">
@@ -99,7 +99,7 @@ export function FaqPage() {
   return (
     <article className="mx-auto max-w-3xl space-y-10">
       <header className="space-y-3"><h1 className="font-display text-4xl">Questions, answered.</h1><p className="text-muted-foreground">Everything you might want to know before you begin.</p></header>
-      {GENERAL_FAQ.map(c => <section key={c.category} className="space-y-3"><h2 className="text-xl font-semibold">{c.category}</h2><Faq items={c.items} schema={false} /></section>)}
+      {GENERAL_FAQ.map(c => <section key={c.category} className="space-y-3"><h2 className="text-xl font-semibold">{c.category}</h2><Faq items={c.items} id={`faq-${c.category.toLowerCase().replace(/[^a-z]+/g, '-')}`} schema={false} /></section>)}
       <FaqSchemaNote count={ALL_GENERAL_FAQ.length} />
       <div className="flex flex-wrap gap-3"><Button asChild><Link to="/auth?mode=signup&next=%2Fstart">Create my free chart <ArrowRight /></Link></Button><Button asChild variant="outline"><Link to="/pricing">Compare plans</Link></Button></div>
     </article>
