@@ -26,16 +26,56 @@ function fields(subscription: any) {
   };
 }
 
+/** Mirrors PRICE_TIER in src/lib/plans.ts: only these prices are Zodaci plans (and can earn a referral reward). */
+const PLAN_PRICES = new Set(['pro_monthly', 'pro_yearly', 'cosmic_monthly', 'cosmic_yearly', 'full_access_monthly', 'full_access_yearly', 'creator_monthly', 'creator_yearly']);
+/** Mirrors COMIC_PLANS in src/lib/comic.ts. */
+const COMIC_CENTS: Record<string, number> = { monthly: 1499, yearly: 14999, single: 1899 };
+
 async function created(subscription: any, env: StripeEnv) {
   const userId = subscription.metadata?.userId;
   if (!userId) { console.error("No userId in subscription metadata"); return; }
+  const f = fields(subscription);
   const result = await db().from("billing_subscriptions").upsert({
     user_id: userId,
     stripe_subscription_id: subscription.id,
     stripe_customer_id: subscription.customer,
     environment: env,
-    ...fields(subscription),
+    ...f,
   }, { onConflict: "stripe_subscription_id" });
+  if (result.error) throw result.error;
+  if (subscription.metadata?.kind === 'comic' || String(f.price_id).startsWith('comic_')) await comicSubscription(subscription, env, f);
+  // A referred member's first paid plan rewards the friend who invited them (live payments only).
+  if (env === 'live' && PLAN_PRICES.has(f.price_id) && ['active', 'trialing'].includes(f.status)) {
+    const reward = await db().rpc('reward_referral', { _referred: userId });
+    if (reward.error) console.error('Referral reward failed', reward.error);
+  }
+}
+
+/** Keep the AstroComic subscription in step with the payment provider. Member pause/skip settings are never overwritten. */
+async function comicSubscription(subscription: any, env: StripeEnv, f: ReturnType<typeof fields>) {
+  const status = ['active', 'trialing'].includes(f.status) ? 'active' : ['past_due', 'unpaid', 'incomplete'].includes(f.status) ? 'past_due' : ['canceled', 'incomplete_expired'].includes(f.status) ? 'canceled' : null;
+  const patch: Record<string, unknown> = { stripe_subscription_id: subscription.id, stripe_customer_id: subscription.customer, current_period_end: f.current_period_end, cancel_at_period_end: f.cancel_at_period_end };
+  if (status) patch.status = status;
+  const comicId = subscription.metadata?.comicId;
+  let q = db().from('comic_subscriptions').update(patch).eq('environment', env);
+  q = comicId ? q.eq('id', comicId).eq('user_id', subscription.metadata?.userId ?? '') : q.eq('stripe_subscription_id', subscription.id);
+  const result = await q;
+  if (result.error) throw result.error;
+}
+
+/** Checkout finished for an AstroComic plan: verify the amount, save the delivery address and activate. */
+async function comicPaid(session: any, env: StripeEnv) {
+  const comicId = session.metadata?.comicId; const userId = session.metadata?.userId; const plan = session.metadata?.comicPlan;
+  if (!comicId || !userId || !COMIC_CENTS[plan]) return;
+  if (session.payment_status !== 'paid' && session.payment_status !== 'no_payment_required') return;
+  if (session.amount_subtotal !== COMIC_CENTS[plan] || session.currency !== 'usd') throw new Error('AstroComic payment amount does not match the plan');
+  const ship = session.collected_information?.shipping_details || session.shipping_details;
+  const address = ship?.address;
+  if (address && address.country !== 'US') throw new Error('Non-US shipping address');
+  const patch: Record<string, unknown> = { status: 'active', stripe_customer_id: typeof session.customer === 'string' ? session.customer : session.customer?.id ?? null };
+  if (typeof session.subscription === 'string') patch.stripe_subscription_id = session.subscription;
+  if (address) patch.shipping_address = { name: ship?.name ?? '', line1: address.line1 ?? '', line2: address.line2 ?? '', city: address.city ?? '', state: address.state ?? '', postal_code: address.postal_code ?? '', country: address.country };
+  const result = await db().from('comic_subscriptions').update(patch).eq('id', comicId).eq('user_id', userId).eq('environment', env).eq('checkout_session_id', session.id).in('status', ['pending', 'active']);
   if (result.error) throw result.error;
 }
 
@@ -64,6 +104,8 @@ async function bookPaid(session: any, env: StripeEnv) {
 async function deleted(subscription: any, env: StripeEnv) {
   const result = await db().from("billing_subscriptions").update({ status: "canceled", updated_at: new Date().toISOString() }).eq("stripe_subscription_id", subscription.id).eq("environment", env);
   if (result.error) throw result.error;
+  const comic = await db().from('comic_subscriptions').update({ status: 'canceled' }).eq('stripe_subscription_id', subscription.id).eq('environment', env);
+  if (comic.error) throw comic.error;
 }
 
 async function retrySession(session: any, env: StripeEnv) {
@@ -99,7 +141,7 @@ Deno.serve(async (req) => {
     const event = await verifyWebhook(req, env);
     switch (event.type) {
       case 'checkout.session.completed':
-      case 'checkout.session.async_payment_succeeded': await bookPaid(event.data.object,env); break;
+      case 'checkout.session.async_payment_succeeded': if (event.data.object.metadata?.kind === 'comic') await comicPaid(event.data.object, env); else await bookPaid(event.data.object,env); break;
       case 'checkout.session.async_payment_failed':
       case 'checkout.session.expired': await retrySession(event.data.object, env); break;
       case 'charge.refunded':
