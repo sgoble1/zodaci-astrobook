@@ -53,7 +53,7 @@ export default function AprilHome() {
           </dl>
         </div>
         <div className="deckle p-2 bg-vellum">
-          <img src={heroImg} alt="A woman viewed from behind stands at the threshold of a great celestial doorway; above her a natal chart in antique gold." width={1600} height={1024} className="w-full h-auto" />
+          <img loading="lazy" decoding="async" src={heroImg} alt="A woman viewed from behind stands at the threshold of a great celestial doorway; above her a natal chart in antique gold." width={1600} height={1024} className="w-full h-auto" />
         </div>
       </section>
 

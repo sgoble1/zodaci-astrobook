@@ -194,7 +194,7 @@ export function ComicProduction({ issue, onChanged }: { issue: Issue; onChanged:
       {lines.length > 0 && <ul role="status" className="space-y-1 text-sm">{lines.map(l => <li key={l}>{l}</li>)}</ul>}
       {progress && (
         <div role="status" className="flex flex-wrap items-center gap-4 rounded-lg border border-border p-3">
-          <div className="h-24 w-24 overflow-hidden rounded bg-muted">{live && <img src={live.url} alt="Artwork in progress" className={`h-full w-full object-cover transition-[filter] ${live.final ? '' : 'blur-md'}`} />}</div>
+          <div className="h-24 w-24 overflow-hidden rounded bg-muted">{live && <img loading="lazy" decoding="async" src={live.url} alt="Artwork in progress" className={`h-full w-full object-cover transition-[filter] ${live.final ? '' : 'blur-md'}`} />}</div>
           <div className="text-sm"><p className="font-medium">Drawing page {progress.key.split('-')[0]}, panel {Number(progress.key.split('-')[1]) + 1}</p><p className="text-muted-foreground">{progress.done} of {progress.total} done · large panels can take a minute or two.</p></div>
         </div>
       )}
@@ -208,7 +208,7 @@ export function ComicProduction({ issue, onChanged }: { issue: Issue; onChanged:
           <thead><tr className="border-b border-border text-left text-xs text-muted-foreground"><th className="p-2">Art</th><th className="p-2">Page</th><th className="p-2">Scene</th><th className="p-2">Status</th><th className="p-2" /></tr></thead>
           <tbody>{plan.map(s => { const st = stateOf(s); const a = byKey.get(s.key); return (
             <tr key={s.key} className="border-b border-border align-top last:border-0">
-              <td className="p-2"><div className="h-12 w-12 overflow-hidden rounded bg-muted">{urls[s.key] && <img src={urls[s.key]} alt="" className="h-full w-full object-cover" />}</div></td>
+              <td className="p-2"><div className="h-12 w-12 overflow-hidden rounded bg-muted">{urls[s.key] && <img loading="lazy" decoding="async" src={urls[s.key]} alt="" className="h-full w-full object-cover" />}</div></td>
               <td className="p-2 whitespace-nowrap">p.{s.page} · {s.panel + 1}<p className="text-xs text-muted-foreground">{s.section}</p></td>
               <td className="p-2"><p className="line-clamp-2 max-w-md">{s.scene}</p><p className="text-xs text-muted-foreground">{s.width}×{s.height}px</p></td>
               <td className="p-2 whitespace-nowrap"><span className={st === 'ready' ? 'text-gold' : st === 'missing' ? 'text-muted-foreground' : 'text-destructive'}>{STATE_LABEL[st]}</span>{a && <p className="text-xs text-muted-foreground">{effectiveDpi(a.width, a.height, s.rect)} DPI</p>}</td>

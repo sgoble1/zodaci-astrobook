@@ -69,7 +69,7 @@ function Feedback({ entry, prefix }: { entry: WorkbookEntry; prefix: string }) {
   const passages = ((entry.data?.passages as CitedPassage[] | undefined) ?? []);
   return (
     <div className="mt-4 rounded-lg border border-gold/30 bg-card/60 p-4">
-      <div className="mb-2 flex items-center gap-2 font-smallcaps text-[10px] text-gold"><img src={oracle} alt="" width={20} height={20} className="h-5 w-5" />Guidance from your chart</div>
+      <div className="mb-2 flex items-center gap-2 font-smallcaps text-[10px] text-gold"><img loading="lazy" decoding="async" src={oracle} alt="" width={20} height={20} className="h-5 w-5" />Guidance from your chart</div>
       <GuideMarkdown text={entry.feedback} idPrefix={prefix} />
       <PassageList passages={passages} text={entry.feedback} idPrefix={prefix} />
     </div>

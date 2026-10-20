@@ -112,7 +112,7 @@ export function SharedReading({ userId }: { userId: string }) {
             </div>
           </div>
           {url && (isPdf ? <iframe title={selected.title} src={url} className="h-[60vh] w-full rounded border border-border bg-card" />
-            : isImage ? <img src={url} alt={selected.title} className="max-h-[60vh] w-full rounded object-contain" />
+            : isImage ? <img loading="lazy" decoding="async" src={url} alt={selected.title} className="max-h-[60vh] w-full rounded object-contain" />
             : <p className="text-sm text-muted-foreground">This file type opens in a new tab — use “Open file”.</p>)}
           <div className="parchment space-y-3 p-4">
             <h3 className="text-lg">Notes on this document</h3>

@@ -37,7 +37,7 @@ export function CoverCustomizer() {
     </form>
     <figure className="mx-auto w-56" aria-live="polite">
       <div className="relative aspect-[2/3] overflow-hidden rounded shadow-2xl">
-        <img src={COVERS[cover][1]} alt={`${COVERS[cover][0]} cover preview`} className="h-full w-full object-cover" />
+        <img loading="lazy" decoding="async" src={COVERS[cover][1]} alt={`${COVERS[cover][0]} cover preview`} className="h-full w-full object-cover" />
         <div className="absolute inset-x-3 top-6 space-y-1 bg-background/70 p-3 text-center">
           <p className="font-display text-xl leading-tight">{name.trim() ? `${name.trim()}’s` : 'Your'} AstroBook</p>
           {pretty && <p className="text-xs text-muted-foreground">{pretty}</p>}
