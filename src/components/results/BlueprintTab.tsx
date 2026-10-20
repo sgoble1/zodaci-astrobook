@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { fmtLon, type ChartResult } from '@/lib/astro';
 import { ChartWheel } from '@/components/chart/ChartWheel';
 import { balance } from '@/lib/resultsEngine';
-import { chartShape } from '@/lib/advancedDeductions';
+import { chartShape, SHAPE_TEXT } from '@/lib/advancedDeductions';
 import { lifePath, LP_MEANING } from '@/lib/synastry';
 import { retroGood } from '@/lib/chartPatterns';
 import { narrative, perceive, type Tone } from '@/lib/perception';
@@ -12,7 +12,7 @@ const EL_CLS: Record<string, string> = { Fire: 'bg-candle', Earth: 'bg-gold', Ai
 /** Blueprint: wheel, Big Three degrees, element/modality balance, shape, year animal, Life Path and the top-ranked story. Free for everyone. */
 export function BlueprintTab({ chart, date, timeKnown, tone }: { chart: ChartResult; date: string; timeKnown: boolean; tone: Tone }) {
   const bal = useMemo(() => balance(chart), [chart]);
-  const shape = useMemo(() => timeKnown ? chartShape(chart.bodies.filter(b => ['sun', 'moon', 'mercury', 'venus', 'mars', 'jupiter', 'saturn', 'uranus', 'neptune', 'pluto'].includes(b.key)).map(b => b.lon)) : null, [chart, timeKnown]);
+  const shape = useMemo(() => chartShape(chart.bodies.filter(b => ['sun', 'moon', 'mercury', 'venus', 'mars', 'jupiter', 'saturn', 'uranus', 'neptune', 'pluto'].includes(b.key)).map(b => b.lon)), [chart]);
   const insights = useMemo(() => perceive(chart, timeKnown), [chart, timeKnown]);
   const sun = chart.bodies.find(b => b.key === 'sun')!, moon = chart.bodies.find(b => b.key === 'moon')!;
   const rising = chart.asc != null ? fmtLon(chart.asc) : null;
@@ -45,7 +45,7 @@ export function BlueprintTab({ chart, date, timeKnown, tone }: { chart: ChartRes
         </section>
       </div>
       <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        <li className="rounded-lg border border-border bg-card p-4"><p className="font-smallcaps text-xs text-gold">Chart shape</p><p className="font-display text-xl">{shape ? shape.shape : 'Needs birth time'}</p>{shape && <p className="text-sm text-muted-foreground">{shape.text}</p>}</li>
+        <li className="rounded-lg border border-border bg-card p-4"><p className="font-smallcaps text-xs text-gold">Chart shape</p><p className="font-display text-xl">{shape.shape}</p><p className="text-sm text-muted-foreground">{SHAPE_TEXT[shape.shape]}</p></li>
         <li className="rounded-lg border border-border bg-card p-4"><p className="font-smallcaps text-xs text-gold">Chinese year</p><p className="font-display text-xl">{year ? `${year.stemElement} ${year.animal}` : '—'}</p><p className="text-sm text-muted-foreground">From the solar-term year, not 1 January.</p></li>
         <li className="rounded-lg border border-border bg-card p-4"><p className="font-smallcaps text-xs text-gold">Life Path</p><p className="font-display text-xl">{lp}</p><p className="text-sm text-muted-foreground">{LP_MEANING[lp] ?? ''}</p></li>
         <li className="rounded-lg border border-border bg-card p-4"><p className="font-smallcaps text-xs text-gold">RetroGOOD</p><p className="font-display text-xl capitalize">{rg.tier}</p><p className="text-sm text-muted-foreground">{rg.planets.length} retrograde planet{rg.planets.length === 1 ? '' : 's'}</p></li>
