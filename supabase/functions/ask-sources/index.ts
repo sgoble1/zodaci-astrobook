@@ -107,7 +107,8 @@ Earlier conversation turns are context only; citation numbers always refer to th
     return new Response(out, { headers: h });
   } catch (e) {
     if (req.signal.aborted) return new Response(null, { status: 499, headers: cors });
-    return json({ error: (e as Error).message }, 500);
+    console.error("ask-sources failed", e);
+    return json({ error: "The sources could not answer right now. Please try again." }, 500);
   }
 });
 

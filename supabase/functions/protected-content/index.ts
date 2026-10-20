@@ -68,6 +68,7 @@ Deno.serve(async (req) => {
     if (typeof content !== 'string') return json({ error: 'Document not found.' }, 404);
     return json({ content });
   } catch (error) {
-    return json({ error: error instanceof Error ? error.message : 'Document could not be opened.' }, 500);
+    console.error('protected-content failed', error);
+    return json({ error: 'Document could not be opened.' }, 500);
   }
 });
