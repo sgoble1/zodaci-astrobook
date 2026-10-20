@@ -41,7 +41,8 @@ export default function Admin() {
   const groups = useMemo(() => ADMIN_TAB_GROUPS.map(g => ({ ...g, tabs: g.tabs.filter(t => !t.adminOnly || isAdmin) })).filter(g => g.tabs.length), [isAdmin]);
   useEffect(() => { document.getElementById(`admin-tab-${tab}`)?.scrollIntoView({ block: 'nearest', inline: 'nearest' }); }, [tab]);
   return (
-    <div className="space-y-8">
+    // Admin tools name April and Shane exactly; the public "you" wording never applies here.
+    <div className="space-y-8" data-keep-wording>
       <header className="space-y-3">
         <div className="font-smallcaps text-xs text-gold flex items-center gap-1"><ShieldCheck className="w-3 h-3" />{isAdmin ? 'Admin' : 'Workspace'}</div>
         <div className="flex flex-wrap items-end justify-between gap-4"><h1 className="text-4xl sm:text-5xl">{isAdmin ? 'Admin Dashboard' : 'My Workspace'}</h1>{isAdmin && <AdminSearch onOpen={go} />}</div>
@@ -127,7 +128,7 @@ function SectionsPanel({ ownerId }: { ownerId: string | null }) {
           <div className="flex-1 min-w-0"><div className="font-display text-lg">{it.title}</div><div className="text-xs text-muted-foreground">{it.category} · {it.file_name} · {fmtSize(it.size_bytes)} · {((it.sections as DocSection[] | null) ?? []).length} sections</div></div>
           <Link to={`/masterbook/u/${it.id}`} className="text-xs underline">View</Link>
           <Button size="sm" variant="outline" onClick={() => setOpenId(it.id)}>Edit</Button>
-          <Button size="sm" variant="ghost" className="text-destructive" aria-label={`Delete ${it.title}`} onClick={async () => { if (await confirmAction(`Delete “${it.title}”?`, 'Delete')) remove(it); }}><Trash2 className="w-4 h-4" /></Button>
+          <Button size="sm" variant="ghost" className="text-destructive" aria-label={`Delete ${it.title}`} onClick={async () => { if (await confirmAction(`Delete “${it.title}”?`, 'Delete')) { try { await remove(it); toast.success('Deleted'); } catch (e) { toast.error((e as Error).message); } } }}><Trash2 className="w-4 h-4" /></Button>
         </div>
       ))}
     </div>
@@ -137,22 +138,34 @@ function SectionsPanel({ ownerId }: { ownerId: string | null }) {
 function IndexPanel() {
   const { map, save } = useDocOverrides();
   const uploads = useLibrary('masterbook');
-  const [docs, setDocs] = useState<{ key: string; title: string; kind: string }[]>([]);
+  const [builtIn, setBuiltIn] = useState<{ key: string; title: string; kind: string }[] | null>(null);
+  const [locked, setLocked] = useState(false);
+  const [attempt, setAttempt] = useState(0);
   const [draft, setDraft] = useState<Record<string, DocOverride>>({});
   useEffect(() => {
+    let live = true;
+    const mb = BUILT_IN_SOURCES.find(s => /Masterbook/.test(s.fileName));
+    const head = { key: 'masterbook', title: mb?.title ?? 'Masterbook', kind: 'Built-in' };
+    setLocked(false);
     loadLibraryIndex().then(ix => {
-      const mb = BUILT_IN_SOURCES.find(s => /Masterbook/.test(s.fileName));
-      setDocs([{ key: 'masterbook', title: mb?.title ?? 'Masterbook', kind: 'Built-in' },
-        ...ix.map(d => ({ key: 'lib:' + d.id, title: BUILT_IN_SOURCES.find(s => s.fileName === d.fileName)?.title ?? d.fileName, kind: 'Built-in' })),
-        ...uploads.items.map(u => ({ key: 'up:' + u.id, title: u.title, kind: 'Upload' }))]);
-    });
-  }, [uploads.items]);
+      if (live) setBuiltIn([head, ...ix.map(d => ({ key: 'lib:' + d.id, title: BUILT_IN_SOURCES.find(s => s.fileName === d.fileName)?.title ?? d.fileName, kind: 'Built-in' }))]);
+    }).catch(() => { if (live) { setBuiltIn([head]); setLocked(true); } });
+    return () => { live = false; };
+  }, [attempt]);
+  useEffect(() => {
+    const retry = () => setAttempt(a => a + 1);
+    window.addEventListener('private-content-unlocked', retry);
+    return () => window.removeEventListener('private-content-unlocked', retry);
+  }, []);
+  const docs = useMemo(() => [...(builtIn ?? []), ...uploads.items.map(u => ({ key: 'up:' + u.id, title: u.title, kind: 'Upload' }))], [builtIn, uploads.items]);
   const get = (k: string): DocOverride => draft[k] ?? map[k] ?? { doc_key: k, title: null, note: null, hidden: false, sort_order: null };
   const upd = (k: string, p: Partial<DocOverride>) => setDraft(d => ({ ...d, [k]: { ...get(k), ...p } }));
   const commit = async (k: string) => { try { await save(get(k)); setDraft(d => { const n = { ...d }; delete n[k]; return n; }); toast.success('Saved'); } catch (e) { toast.error((e as Error).message); } };
+  if (!builtIn) return <div role="status" aria-label="Loading the document list" className="h-32 animate-pulse rounded bg-muted" />;
   return (
     <div className="space-y-2">
       <p className="text-sm text-muted-foreground">Rename a document, add a short note under its title, set its position (lower numbers first) or hide it from the <Link to="/masterbook/index" className="underline">Document Index</Link>.</p>
+      {locked && <p role="status" className="parchment p-3 text-sm">The built-in source books stay locked until the private library is unlocked in this browser. <Link to="/read" className="underline">Unlock the library</Link>, then <button type="button" className="underline" onClick={() => setAttempt(a => a + 1)}>reload this list</button>. Uploaded documents are listed below either way.</p>}
       {docs.map(d => { const o = get(d.key); return (
         <div key={d.key} className={`parchment p-3 grid md:grid-cols-[1fr_1fr_90px_auto_auto] gap-2 items-center ${o.hidden ? 'opacity-60' : ''}`}>
           <Input value={o.title ?? ''} placeholder={d.title} onChange={e => upd(d.key, { title: e.target.value || null })} />

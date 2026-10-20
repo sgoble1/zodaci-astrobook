@@ -13,6 +13,7 @@ import { GenerationProgress } from '@/components/readings/GenerationProgress';
 import { useMyBirth } from '@/lib/myBirth';
 import { useAprilSpace } from '@/hooks/useAprilSpace';
 import { useShaneAccount } from '@/hooks/useShaneAccount';
+import { useSharedSpaceMember } from '@/hooks/useSharedSpaceMember';
 import { PublicWording } from '@/components/common/PublicWording';
 import { PublicChartFallback, isPublicPath } from '@/components/common/PublicChartFallback';
 import { useRelationships } from '@/hooks/useRelationships';
@@ -39,6 +40,8 @@ function PlanGuard({ children }: { children: ReactNode }) {
   return planAllows(plan, need) ? <>{children}</> : <PlanLock need={need} />;
 }
 import { ZodaciLogo } from '@/components/brand/ZodaciLogo';
+
+const KEEP_NAME_PATHS = ['/shared', '/our-charts', '/podcasts', '/shane', '/admin'];
 import { WelcomeTour } from '@/components/common/WelcomeTour';
 
 const SIGNED_OUT_PATHS = ['/auth', '/pricing', '/books', '/reset-password'];
@@ -47,6 +50,10 @@ const GROUP_COLORS = ['--primary', '--oxblood', '--accent', '--candle', '--gold-
 export function AppShell() {
   const location = useLocation();
   const april = useAprilSpace();
+  // April and Shane's joint pages and admin tools keep real names; elsewhere April-written copy reads as "you".
+  const founderState = useSharedSpaceMember();
+  // Wait for the membership answer so names are never rewritten before it arrives.
+  const keepNames = founderState !== false && KEEP_NAME_PATHS.some(p => location.pathname === p || location.pathname.startsWith(`${p}/`));
   const [open, setOpen] = useState(false);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const mobileMenuRef = useRef<HTMLDivElement>(null);
@@ -125,7 +132,7 @@ export function AppShell() {
       <main id="main-content" tabIndex={-1} className="flex-1 min-w-0 lg:pt-0 pt-[64px] relative z-10 outline-none">
         <div className="mx-auto max-w-5xl px-4 sm:px-8 py-8 sm:py-10 lg:py-14">
           <motion.div key={location.pathname} initial={{ opacity: 0, y: 24, filter: 'blur(6px)' }} animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }} transition={{ duration: 0 }}>
-            <PageErrorBoundary key={location.pathname}>{!april && <PublicWording />}{april === undefined && !isPublicPath(location.pathname) ? null : april ? <Outlet /> : <PlanGuard>{isPublicPath(location.pathname) ? <Outlet /> : <PublicChartFallback />}</PlanGuard>}<VerifySources /></PageErrorBoundary>
+            <PageErrorBoundary key={location.pathname}>{!april && !keepNames && <PublicWording />}{april === undefined && !isPublicPath(location.pathname) ? null : april ? <Outlet /> : <PlanGuard>{isPublicPath(location.pathname) ? <Outlet /> : <PublicChartFallback />}</PlanGuard>}<VerifySources /></PageErrorBoundary>
           </motion.div>
           {april === false && <><GenerationProgress /><WelcomeTour /></>}
         </div>

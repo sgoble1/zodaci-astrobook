@@ -40,9 +40,11 @@
 - [ ] Sabian symbols: needs a licensed source text (not invented)
 
 ## Ready next
-- [ ] Walk through every admin tab and approved founder chapter (blocked: current injected and requester sessions are regular member; founder password unavailable).
+- [x] Walked every admin tab and founder pages as Shane; fixed Document Index lock crash, names rewritten to "you" on admin/shared pages, payment mode label, audit empty state.
+- [x] Shared podcasts: Whose filter with counts and assign menu work in Shane's own view (were April-view only); verified assign and restore; delete/rename/share report real failures.
+- [ ] AstroComic production pipeline: per-panel artwork via admin-triggered AI, proof and print PDF (5.5x8.5 + 0.125 bleed, embedded font, DPI preflight), illustrated subscriber reader and PDF download.
 - [x] Section navigator on protected library chapters and Shane's edition chapters; shared reader exercised with an existing member reading, protected payload still gated.
-- [ ] AstroComic illustrated printer-ready PDFs (blocked: funded per-issue artwork and printer specifications; private production/export pipeline must follow the pilot, scripts are not finished art).
+- [ ] AstroComic physical printing (blocked: printer account; CMYK/PDF-X conversion happens in the printer's preflight).
 
 ## Launch plan
 - .lovable/plan.md (mirrors launch-plan.md) — ongoing launch plan only

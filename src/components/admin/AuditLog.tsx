@@ -53,7 +53,7 @@ export function AuditLog() {
         <div><Label htmlFor="au-text">Contains</Label><Input id="au-text" value={f.text} onChange={e => setF({ ...f, text: e.target.value })} placeholder="Summary or id" /></div>
       </div>
       <p className="text-xs text-muted-foreground">{shown.length} of {rows.length} entries{rows.length === 1000 ? ' (latest 1,000)' : ''}</p>
-      {!shown.length ? <p className="text-muted-foreground">No entries match.</p> : (
+      {!shown.length ? <p className="text-muted-foreground">{rows.length ? 'No entries match these filters.' : 'No admin changes recorded yet. Changes to orders, costs, AstroComic issues, newsletters, settings, pages, grants and admin access will appear here.'}</p> : (
         <div className="overflow-x-auto rounded-lg border border-border"><table className="w-full min-w-[820px] text-sm">
           <thead><tr className="border-b border-border text-left"><th className="w-8 p-2" /><th className="p-2">When</th><th className="p-2">Admin</th><th className="p-2">Action</th><th className="p-2">Record</th><th className="p-2">Summary</th></tr></thead>
           <tbody>{shown.map(r => { const isOpen = open === r.id; const d = isOpen ? diffRows(r.before as Record<string, unknown> | null, r.after as Record<string, unknown> | null) : []; return (

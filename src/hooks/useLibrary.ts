@@ -58,18 +58,22 @@ export function useLibrary(kind: 'podcast' | 'source' | 'masterbook') {
     if (ins.error) throw ins.error;
     await reload();
   };
+  // Writes confirm a row actually changed: a policy refusal returns no rows rather than an error.
   const remove = async (item: LibraryItem) => {
+    const { data, error } = await supabase.from('library_items').delete().eq('id', item.id).select('id');
+    if (error || !data?.length) throw new Error('This item could not be deleted.');
+    // The record goes first so a failed file cleanup never leaves a listed item without its file.
     await supabase.storage.from('library').remove([item.file_path, ...(item.cover_path ? [item.cover_path] : [])]);
-    await supabase.from('library_items').delete().eq('id', item.id);
     await reload();
   };
   const rename = async (item: LibraryItem, patch: Partial<Pick<LibraryItem, 'title' | 'description' | 'category'>>) => {
-    await supabase.from('library_items').update(patch).eq('id', item.id);
+    const { data, error } = await supabase.from('library_items').update(patch).eq('id', item.id).select('id');
+    if (error || !data?.length) throw new Error('This change could not be saved.');
     await reload();
   };
   const setShared = async (item: LibraryItem, shared_with_space: boolean) => {
-    const { error } = await supabase.from('library_items').update({ shared_with_space }).eq('id', item.id);
-    if (error) throw error;
+    const { data, error } = await supabase.from('library_items').update({ shared_with_space }).eq('id', item.id).select('id');
+    if (error || !data?.length) throw new Error('Sharing could not be changed for this item.');
     await reload();
   };
   return { items, loading, upload, remove, rename, setShared, reload };
