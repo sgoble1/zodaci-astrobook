@@ -1,3 +1,4 @@
+import { creditShortfall } from "../_shared/credits.ts";
 import { createClient } from "npm:@supabase/supabase-js@2";
 import { convertToModelMessages, type UIMessage } from "npm:ai@7.0.127";
 import { z } from "npm:zod@3";
@@ -41,6 +42,7 @@ Deno.serve(async request => {
     const ctx0 = await counselorContext(sb, admin, auth.user.id, auth.user.email ?? "");
     if (!ctx0.ok) return json({ error: ctx0.error }, 400);
     const INSTRUCTIONS = buildInstructions(ctx0.context);
+    { const short = await creditShortfall(admin, auth.user.id, "social-counselor"); if (short) return json({ error: short }, 402); }
     await admin.from("ai_usage").insert({ user_id: auth.user.id, feature: "social-counselor" });
     const parsed = Body.safeParse(await request.json()); if (!parsed.success) return json({ error: "Invalid request." }, 400);
     const { sessionId, passages } = parsed.data; const incoming = latestUserText(parsed.data.messages); if (!incoming) return json({ error: "Please type a message." }, 400);

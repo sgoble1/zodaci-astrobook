@@ -13,6 +13,7 @@ import { SYSTEM_READINGS, loadMyTopicReadings, type TopicRow } from '@/lib/topic
 import { readingVisitKey, type ReadingVisit } from '@/lib/readingExperience';
 import { SharedChatFeed } from '@/components/shared/SharedChatFeed';
 import { supabase } from '@/integrations/supabase/client';
+import { CreditBalance } from '@/components/common/CreditBalance';
 
 type OrderSummary = { id: string; status: string; edition: string; format: string };
 
@@ -45,6 +46,7 @@ export function MemberDashboard() {
   const destination = !birth ? '/start' : visit?.path.startsWith('/my-readings/topic/') ? `${visit.path}${visit.section ? `#${visit.section}` : ''}` : '/my-readings/topic/big-three';
   return <article className="space-y-12">
     <header className="flex flex-wrap items-end justify-between gap-4 border-b border-border pb-6"><div className="space-y-2"><p className="text-xs text-gold">Your personal atlas · {access.plan === 'free' ? 'Free' : access.plan === 'creator' ? 'Cosmic' : 'Pro'}</p><h1>{birth ? `${birth.name}’s dashboard` : 'Your dashboard'}</h1></div><Button asChild variant="outline"><Link to="/start">{birth ? 'Birth details' : 'Set up my chart'}</Link></Button></header>
+    <CreditBalance />
     <section className="grid items-center gap-6 sm:grid-cols-[7rem_minmax(0,1fr)]"><ThemeArt label={visit?.title ?? 'Your Big Three'} className="h-28 w-28" /><div className="space-y-4"><p className="text-xs text-gold">{!birth ? 'Begin here' : visit ? 'Continue reading' : 'Your chart is ready'}</p><h2>{!birth ? 'Meet your sky' : visit?.title ?? 'Your Big Three'}</h2>{!birth ? <p className="text-muted-foreground">Your birth date, time and place create your personal chart.</p> : visit ? <p className="text-muted-foreground">Return to your saved place.</p> : <p className="text-muted-foreground">Sun, Moon and Rising: a starting point for your personal readings.</p>}<Button asChild><Link to={destination}>{!birth ? 'Create my chart' : visit ? 'Continue reading' : 'Open my first reading'}<ArrowRight className="h-4 w-4" /></Link></Button></div></section>
     {chart && <section className="border-y border-border py-6"><div className="mb-5 flex items-center justify-between gap-3"><h2 className="text-2xl">Chart snapshot</h2><Button asChild variant="ghost"><Link to="/my-chart"><Orbit className="h-4 w-4" />My Chart</Link></Button></div><dl className="grid gap-4 sm:grid-cols-3">{placements.map(([label, value]) => <div key={label} className="border-l-2 border-primary pl-4"><dt className="text-xs text-muted-foreground">{label}</dt><dd className="mt-1 font-display text-2xl">{value}</dd></div>)}</dl>{!birth?.time && <p className="mt-4 text-sm text-muted-foreground">Birth time is unknown. Rising sign and houses are not shown.</p>}</section>}
     {loading ? <p role="status" className="text-muted-foreground">Loading your saved items…</p> : error ? <LoadError what="your dashboard" onRetry={() => setRetry(n => n + 1)} /> : <>
