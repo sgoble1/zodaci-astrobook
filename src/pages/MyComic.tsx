@@ -142,13 +142,15 @@ function Archive({ issues }: { issues: Issue[] }) {
   const [open, setOpen] = useState<string | null>(null);
   const [art, setArt] = useState<Record<string, IssueArt | 'loading' | 'failed'>>({});
   // Illustrated pages and the PDF come as short-lived private links, only for this member's released issues.
-  const openIssue = async (i: Issue) => {
-    if (open === i.id) { setOpen(null); return; }
-    setOpen(i.id);
-    if (!RELEASED.includes(i.status) || (art[i.id] && art[i.id] !== 'failed')) return;
+  const fetchArt = async (i: Issue) => {
     setArt(a => ({ ...a, [i.id]: 'loading' }));
     const { data, error } = await supabase.functions.invoke('comic-art', { body: { action: 'reader', issueId: i.id } });
     setArt(a => ({ ...a, [i.id]: error || !data?.panels ? 'failed' : { panels: data.panels, pdf: data.pdf ?? null } }));
+  };
+  const openIssue = (i: Issue) => {
+    if (open === i.id) { setOpen(null); return; }
+    setOpen(i.id);
+    if (RELEASED.includes(i.status) && (!art[i.id] || art[i.id] === 'failed')) void fetchArt(i);
   };
   if (!issues.length) return <section aria-labelledby="arch-h"><h2 id="arch-h" className="font-display text-2xl">Issue archive</h2><p className="mt-2 text-sm text-muted-foreground">Approved issues and shipment tracking appear here.</p></section>;
   return (
@@ -156,11 +158,11 @@ function Archive({ issues }: { issues: Issue[] }) {
       <h2 id="arch-h" className="font-display text-2xl">Issue archive</h2>
       <ul className="divide-y divide-border border-y border-border">{issues.map(i => { const url = i.tracking_number ? trackingUrl(i.carrier, i.tracking_number) : null; const script = i.script as unknown as ComicIssue; const a = art[i.id]; const ready = a && typeof a === 'object' ? a : null; const illustrated = ready ? Object.keys(ready.panels).length > 0 : false; return (
         <li key={i.id} className="py-4">
-          <div className="flex flex-wrap items-center justify-between gap-3"><div><p className="font-semibold">Issue {i.issue_number} · {monthLabel(new Date(i.issue_month + 'T00:00:00Z'))}</p><p className="text-sm text-muted-foreground">{i.title || script?.title}</p></div><div className="flex flex-wrap items-center gap-2"><span className="text-xs capitalize text-gold">{i.status}</span>{script?.pages?.length ? <Button size="sm" variant="outline" aria-expanded={open === i.id} onClick={() => void openIssue(i)}><BookOpen className="h-4 w-4" />{open === i.id ? 'Close' : 'Read issue'}</Button> : null}{open === i.id && ready?.pdf && <Button size="sm" variant="ghost" asChild><a href={ready.pdf}><Download className="h-4 w-4" />Digital copy (PDF)</a></Button>}</div></div>
+          <div className="flex flex-wrap items-center justify-between gap-3"><div><p className="font-semibold">Issue {i.issue_number} · {monthLabel(new Date(i.issue_month + 'T00:00:00Z'))}</p><p className="text-sm text-muted-foreground">{i.title || script?.title}</p></div><div className="flex flex-wrap items-center gap-2"><span className="text-xs capitalize text-gold">{i.status}</span>{script?.pages?.length ? <Button size="sm" variant="outline" aria-expanded={open === i.id} onClick={() => openIssue(i)}><BookOpen className="h-4 w-4" />{open === i.id ? 'Close' : 'Read issue'}</Button> : null}{open === i.id && ready?.pdf && <Button size="sm" variant="ghost" asChild><a href={ready.pdf}><Download className="h-4 w-4" />Digital copy (PDF)</a></Button>}</div></div>
           {i.status === 'shipped' && i.tracking_number && <p className="mt-2 flex items-center gap-2 text-sm"><Truck aria-hidden className="h-4 w-4" />{i.carrier || 'Carrier'} · {url ? <a href={url} target="_blank" rel="noopener noreferrer" className="underline">{i.tracking_number}</a> : i.tracking_number}{i.shipped_at && ` · shipped ${fmt(i.shipped_at + 'T12:00:00Z')}`}</p>}
           {open === i.id && <div className="mt-4 space-y-3">
             {a === 'loading' && <p role="status" className="flex items-center gap-2 text-sm text-muted-foreground"><Loader2 className="h-4 w-4 animate-spin" />Opening your issue…</p>}
-            {a === 'failed' && <p role="alert" className="text-sm text-destructive">The illustrated pages could not be opened. <button type="button" className="underline" onClick={() => { setOpen(null); setArt(x => ({ ...x, [i.id]: 'failed' })); void openIssue({ ...i }); }}>Try again</button></p>}
+            {a === 'failed' && <p role="alert" className="text-sm text-destructive">The illustrated pages could not be opened. <button type="button" className="underline" onClick={() => void fetchArt(i)}>Try again</button></p>}
             {ready && !illustrated && <p className="text-sm text-muted-foreground">The artwork for this issue is still being drawn — here is its page plan.</p>}
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">{script.pages.map(p => <ComicPageView key={p.n} page={p} compact art={ready?.panels} />)}</div>
           </div>}
