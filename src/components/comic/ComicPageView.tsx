@@ -73,11 +73,11 @@ function QrMark() {
     return { size: m.size, cells: out };
   }, []);
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex flex-col items-start gap-1">
       <svg viewBox={`-2 -2 ${size + 4} ${size + 4}`} role="img" aria-label="QR code for zodaci.com/my-chart" className="h-16 w-16 shrink-0 rounded-sm bg-foreground fill-background">
         {cells.map(([x, y]) => <rect key={`${x}-${y}`} x={x} y={y} width={1.02} height={1.02} />)}
       </svg>
-      <span className="leading-snug">Scan to open your chart · zodaci.com/my-chart</span>
+      <span className="break-words leading-snug">zodaci.com/my-chart</span>
     </div>
   );
 }
