@@ -1,6 +1,7 @@
 import { createRoot } from "react-dom/client";
 import { lazy, Suspense } from 'react';
 import { PageErrorBoundary } from '@/components/common/PageErrorBoundary';
+import { ConfirmHost } from '@/components/common/ConfirmHost';
 import { recoverChunkLoad } from '@/lib/chunkRecovery';
 import "./index.css";
 
@@ -23,5 +24,6 @@ const root = document.getElementById('root');
 if (root) createRoot(root).render(
   <PageErrorBoundary>
     <Suspense fallback={<div role="status" className="p-6 text-muted-foreground">Opening Zodaci…</div>}><App /></Suspense>
+    <ConfirmHost />
   </PageErrorBoundary>
 );

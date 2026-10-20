@@ -1,3 +1,4 @@
+import { confirmAction } from '@/components/common/ConfirmHost';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Copy, Download, RefreshCw, Trash2 } from 'lucide-react';
@@ -35,6 +36,6 @@ export default function BrandLaunch() {
       const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv' })); const a = document.createElement('a'); a.href = url; a.download = 'zodaci-consented-email-list.csv'; a.click(); URL.revokeObjectURL(url);
     }}><Download />Export CSV</Button></div></div><p className="text-sm text-muted-foreground mt-3">Only explicit opt-ins appear here. Email campaigns are not sent by this form; configure a verified sender before sending. Remove anyone who requests to leave.</p>
       {busy && <p role="status" className="mt-4">Loading email list…</p>}{error && <p role="alert" className="text-destructive mt-4">{error}</p>}
-      <ul className="mt-5 divide-y divide-border">{rows.map(r => <li key={r.id} className="py-3 flex items-center justify-between gap-3"><div className="min-w-0"><p className="break-all text-sm">{r.email}</p><p className="text-xs text-muted-foreground mt-1">Consent: {new Date(r.consent_at).toLocaleString()}</p></div><Button size="icon" variant="ghost" aria-label={`Remove ${r.email} from list`} onClick={async () => { if (!confirm('Remove this email from the list?')) return; const { error: failure } = await supabase.from('brand_email_subscribers').delete().eq('id', r.id); if (failure) toast.error('Could not remove email.'); else void load(); }}><Trash2 /></Button></li>)}</ul>{!busy && !rows.length && <p className="mt-4 text-muted-foreground">No email signups yet.</p>}
+      <ul className="mt-5 divide-y divide-border">{rows.map(r => <li key={r.id} className="py-3 flex items-center justify-between gap-3"><div className="min-w-0"><p className="break-all text-sm">{r.email}</p><p className="text-xs text-muted-foreground mt-1">Consent: {new Date(r.consent_at).toLocaleString()}</p></div><Button size="icon" variant="ghost" aria-label={`Remove ${r.email} from list`} onClick={async () => { if (!await confirmAction('Remove this email from the list?')) return; const { error: failure } = await supabase.from('brand_email_subscribers').delete().eq('id', r.id); if (failure) toast.error('Could not remove email.'); else void load(); }}><Trash2 /></Button></li>)}</ul>{!busy && !rows.length && <p className="mt-4 text-muted-foreground">No email signups yet.</p>}
     </section></article>;
 }
