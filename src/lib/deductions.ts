@@ -1,6 +1,7 @@
 import type { ChartResult } from '@/lib/astro';
 import { elementOf, lifePath, LP_MEANING } from '@/lib/synastry';
 import { kuaNumber, groupOf, KUA_ELEMENT } from '@/lib/kua';
+import { advancedDeductions } from '@/lib/advancedDeductions';
 
 /** Deterministic deductions across Western, Chinese, Numerology and Feng Shui. No AI; every line traces to a calculation. */
 export type System = 'Western' | 'Chinese' | 'Numerology' | 'Feng Shui';
@@ -11,7 +12,7 @@ const RULER: Record<string, string> = { Aries: 'Mars', Taurus: 'Venus', Gemini: 
 const MODE: Record<string, string> = { Aries: 'Cardinal', Cancer: 'Cardinal', Libra: 'Cardinal', Capricorn: 'Cardinal', Taurus: 'Fixed', Leo: 'Fixed', Scorpio: 'Fixed', Aquarius: 'Fixed', Gemini: 'Mutable', Virgo: 'Mutable', Sagittarius: 'Mutable', Pisces: 'Mutable' };
 const MODE_TEXT: Record<string, string> = { Cardinal: 'You start things; momentum comes from initiating.', Fixed: 'You sustain things; your strength is staying power.', Mutable: 'You adapt; your strength is flexibility and range.' };
 
-export function deduce(c: ChartResult, opts: { date: string; timeKnown: boolean; sex?: 'male' | 'female' | 'unspecified' }): Deduction[] {
+export function deduce(c: ChartResult, opts: { date: string; timeKnown: boolean; sex?: 'male' | 'female' | 'unspecified'; today?: Date }): Deduction[] {
   const out: Deduction[] = [];
   const sun = get(c, 'sun'), moon = get(c, 'moon'), venus = get(c, 'venus'), mars = get(c, 'mars'), saturn = get(c, 'saturn');
   if (sun && moon) {
@@ -51,5 +52,7 @@ export function deduce(c: ChartResult, opts: { date: string; timeKnown: boolean;
     const k = kuaNumber(opts.date, opts.sex);
     if (k) out.push({ id: 'kua', system: 'Feng Shui', title: `Kua ${k.kua} · ${groupOf(k.kua)} group`, text: `Your Kua element is ${KUA_ELEMENT[k.kua]}. Facing your ${groupOf(k.kua)}-group directions at your desk and bed is the classic first step.`, basis: k.steps.join('; ') });
   }
-  return out;
+  const extra = advancedDeductions(c, opts);
+  const order: System[] = ['Western', 'Chinese', 'Numerology', 'Feng Shui'];
+  return [...out, ...extra].sort((a, b) => order.indexOf(a.system) - order.indexOf(b.system));
 }

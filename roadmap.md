@@ -16,6 +16,20 @@
 - [x] Demo: Jules Harbor full 7-section reading, linked from Pricing and homepage hero
 - [ ] Remaining Deep Implementation Guide items (testimonials need real customer quotes; social proof needs real numbers)
 
+## Full document build (Goal run, from checklists in the 12 documents)
+- [ ] E1 Chart engine: 15 new deductions (shape, focal planet, unaspected, T-square, grand trine, yod, mutual reception, out-of-bounds, Part of Fortune, profection, personal year, void Moon, polarity, interceptions, sect)
+- [ ] E2 Results page: tabbed Blueprint / Placements / Aspects & Patterns / Houses / Systems / RetroGOOD with TierGate teasers and upgrade nudges
+- [ ] E3 RetroGOOD tiers (Amplified/Internalized/Refined/Karmic), sign-specific Rx narratives, aspect matrix, house explorer, transit overlay (90 days), numerology cross-reference, affirmations
+- [ ] S1 Public pricing (no sign-in), plan intent kept through signup, full FAQ, comparison table
+- [ ] S2 Homepage: AstroBook feature, plans snapshot, honest trust bar, integrity section, concrete newsletter offer, canonical root
+- [ ] S3 Academy learning hub; compatibility explainer; sitemap/meta for new public pages
+- [ ] B1 AstroBook five versions (Digital $24.99, Pocket $34.99, Classic $59.99, Signature $97, Collector's Linen $149) in pricing, checkout, orders, costs
+- [ ] B2 AstroBook page: version comparison, What's Inside, chapter tabs, 10-question FAQ, gift option, Olivia Chen sample; manual Lulu print queue
+- [ ] C1 AstroComic: products/checkout, product page, character bible art, chart+transit issue builder, subscriber archive/address/pause, admin print queue + manifest CSV
+- [ ] A1 Admin: grouped tabs with URL persistence, audit log, platform settings, admin search
+- [ ] A2 Admin: Stripe overview, April activity monitor (no private text), newsletter drafts/segments (sending waits on email domain)
+- [ ] G1 Referrals with credit rewards; signup bonus credits; installable app (done: manifest/icons)
+
 ## Launch plan
 - .lovable/plan.md (mirrors launch-plan.md) — ongoing launch plan only
 
