@@ -145,8 +145,8 @@ Deno.serve(async (req) => {
         mode: 'payment', ui_mode: 'embedded_page', return_url: returnUrl, customer: customerId,
         line_items: [{ price: base.id, quantity: 1 }, ...(extras.length && extra ? [{ price: extra.id, quantity: extras.length }] : [])],
         automatic_tax: { enabled: true },
-        // Digital editions are a download, so only printed books collect a shipping address.
-        ...(digital ? { customer_update: { address: 'auto' } } : { customer_update: { shipping: 'auto' }, shipping_address_collection: { allowed_countries: ['US'] } }),
+        // Digital editions are a download, so only printed books collect a shipping address (and a phone number the carrier needs).
+        ...(digital ? { customer_update: { address: 'auto' } } : { customer_update: { shipping: 'auto' }, shipping_address_collection: { allowed_countries: ['US'] }, phone_number_collection: { enabled: true } }),
         payment_intent_data: { description: product.name, metadata: { userId: user.id, orderId: order.id } },
         metadata: { userId: user.id, orderId: order.id, managed_payments: 'false' },
       }, { idempotencyKey: `book-${order.format}-${order.id}-${env}-${order.checkout_session_id || 'first'}` });

@@ -94,7 +94,7 @@ async function bookPaid(session: any, env: StripeEnv) {
   if (existing.payment_hold) return;
   const address = session.collected_information?.shipping_details?.address || session.shipping_details?.address;
   if (address && address.country !== 'US') throw new Error('Non-US shipping address');
-  const patch = { status:'paid',payment_total_cents:session.amount_total,payment_currency:session.currency,payment_tax_cents:session.total_details?.amount_tax ?? 0,payment_intent_id:typeof session.payment_intent === 'string' ? session.payment_intent : session.payment_intent?.id,updated_at:new Date().toISOString(), ...(address ? { shipping_address: { ...address,name:session.collected_information?.shipping_details?.name || session.shipping_details?.name || '' } } : {}) };
+  const patch = { status:'paid',payment_total_cents:session.amount_total,payment_currency:session.currency,payment_tax_cents:session.total_details?.amount_tax ?? 0,payment_intent_id:typeof session.payment_intent === 'string' ? session.payment_intent : session.payment_intent?.id,updated_at:new Date().toISOString(), ...(address ? { shipping_address: { ...address,name:session.collected_information?.shipping_details?.name || session.shipping_details?.name || '',phone:String(session.customer_details?.phone ?? '').slice(0,25) } } : {}) };
   const result = await db().from('book_orders').update(patch).eq('id',orderId).eq('user_id',userId).eq('checkout_session_id',session.id).eq('environment',env).in('status',['draft','awaiting_payment']);
   if (result.error) throw result.error;
   const {data:order,error}=await db().from('book_orders').select('*').eq('id',orderId).eq('user_id',userId).eq('checkout_session_id',session.id).eq('environment',env).single();
