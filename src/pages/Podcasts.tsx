@@ -109,7 +109,7 @@ export default function Podcasts() {
                   </button>
                   {ep.url && <a href={ep.url} download={ep.file_name} className="p-2 rounded hover:bg-muted" aria-label="Download"><Download className="w-4 h-4" /></a>}
                   {april && (isAdmin || session?.user.id === ep.owner_id) && (
-                    <><Button variant="ghost" size="sm" onClick={async () => { try { await lib.setShared(ep, !ep.shared_with_space); toast.success(ep.shared_with_space ? 'Episode is now private' : 'Episode shared with April & Shane'); } catch (error) { toast.error((error as Error).message); } }}>{ep.shared_with_space ? <Lock className="h-4 w-4"/> : <Users className="h-4 w-4"/>}{ep.shared_with_space ? 'Make private' : 'Share'}</Button><button className="p-2 rounded hover:bg-muted" aria-label="Delete" onClick={async async () => { if (await confirmAction('Delete this episode?')) { await lib.remove(ep); if (current?.id === ep.id) setCurrent(null); } }}><Trash2 className="w-4 h-4" /></button></>
+                    <><Button variant="ghost" size="sm" onClick={async () => { try { await lib.setShared(ep, !ep.shared_with_space); toast.success(ep.shared_with_space ? 'Episode is now private' : 'Episode shared with April & Shane'); } catch (error) { toast.error((error as Error).message); } }}>{ep.shared_with_space ? <Lock className="h-4 w-4"/> : <Users className="h-4 w-4"/>}{ep.shared_with_space ? 'Make private' : 'Share'}</Button><button className="p-2 rounded hover:bg-muted" aria-label="Delete" onClick={async () => { if (await confirmAction('Delete this episode?')) { await lib.remove(ep); if (current?.id === ep.id) setCurrent(null); } }}><Trash2 className="w-4 h-4" /></button></>
                   )}
                 </div>
               </li>

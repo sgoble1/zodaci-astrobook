@@ -104,7 +104,7 @@ function Detail({ rel }: { rel: Relationship }) {
           <Button size="sm" variant="outline" asChild><Link to={`/relationships/${rel.id}/timeline`}>Timeline</Link></Button>
           <Button size="sm" variant="outline" asChild><Link to="/guides/relationships">Relationship sources</Link></Button>
           <Button size="sm" variant="outline" asChild><Link to={`/reading?${toParams(toInput(rel))}`}>{N}’s full reading</Link></Button>
-          <Button size="sm" variant="ghost" onClick={async async () => { if (await confirmAction(`Delete ${N}?`)) { await deleteRelationship(rel.id); nav('/relationships'); } }}>Delete</Button></div>
+          <Button size="sm" variant="ghost" onClick={async () => { if (await confirmAction(`Delete ${N}?`)) { await deleteRelationship(rel.id); nav('/relationships'); } }}>Delete</Button></div>
       </header>
 
       <Sec id="chart" n="I" title={`${N}’s natal chart`} level={lvl} note="Calculated with the same ephemeris as the Chart Calculator.">
