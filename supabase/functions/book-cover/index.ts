@@ -1,3 +1,4 @@
+import { creditShortfall } from "../_shared/credits.ts";
 import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors';
 import { createClient } from 'npm:@supabase/supabase-js@2';
 import { z } from 'npm:zod@3';
@@ -29,6 +30,7 @@ Deno.serve(async req => {
     const since = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
     const { count: coverCount } = await db.from('ai_usage').select('id', { count: 'exact', head: true }).eq('user_id', user.id).eq('feature', 'book-cover-request').gte('created_at', since);
     if ((coverCount ?? 0) >= 9) return json({ error: 'Daily cover-preview limit reached. Try again tomorrow.' }, 429);
+    { const short = await creditShortfall(db, user.id, 'book-cover-request'); if (short) return json({ error: short }, 402); }
     const { data: p } = await db.from('profiles').select('chart,birth_date,birth_time').eq('id', user.id).maybeSingle();
     if (!p?.birth_date || !p.chart) return json({ error: 'Save your birth details to your account first.' }, 400);
     const chart = p.chart as { bodies?: { name: string; sign: string }[] };
