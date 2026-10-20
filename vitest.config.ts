@@ -8,6 +8,10 @@ export default defineConfig({
     include: ["src/**/*.{test,spec}.{ts,tsx}"],
   },
   resolve: {
-    alias: { "@": path.resolve(__dirname, "./src") },
+    alias: [
+      { find: "@", replacement: path.resolve(__dirname, "./src") },
+      // Backend functions import npm packages with Deno's "npm:" specifier; tests resolve them from node_modules.
+      { find: /^npm:(pdf-lib)@[\d.]+$/, replacement: "$1" },
+    ],
   },
 });
