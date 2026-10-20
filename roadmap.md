@@ -20,7 +20,7 @@
 - [x] E1 Chart engine: 15 new deductions
 - [x] E2 Results page (/results): six tabs with rank-based TierGate, Systems, Deep Dive, AI Readings
 - [x] E3 RetroGOOD page: Explorer, tone saved to profile, affirmations carousel, transit overlay, numerology cross-reference
-- [ ] E4 Report section navigator (MOD-008) on long readings: sticky section list, reading progress, section bookmarks
+- [x] E4 Report section navigator (MOD-008) on long readings: sticky section list, reading progress, section bookmarks
 - [x] S1 Public pricing: monthly/annual, plan intent through signup, FAQ, comparison table, AstroBook cross-sell
 - [ ] S2 Public homepage (/welcome): rebuilt; verify in browser + footer integrity note
 - [x] S3 Academy learning hub (/academy) and public compatibility page (/compatibility) with Master Build score formula; sitemap/meta/FAQ schema
