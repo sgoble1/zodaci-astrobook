@@ -95,7 +95,7 @@ export function SampleBook({ maxPages, cta }: { maxPages?: number; cta?: React.R
   return (
     <div className="space-y-4">
       <Reader blob={blob} maxPages={maxPages} />
-      <p className="text-xs text-muted-foreground">Sample book · fictional reader "Jules Harbor" · your AstroBook is written from your own chart.</p>
+      <p className="text-xs text-muted-foreground">Sample book · fictional reader "Olivia Chen" · Classic version · your AstroBook is written from your own chart.</p>
       {cta}
     </div>
   );

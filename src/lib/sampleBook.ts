@@ -1,14 +1,15 @@
 import { computeChart } from '@/lib/astro';
 import { toChartInput, type MyBirth } from '@/lib/myBirth';
 import { composeManuscript } from '@/lib/bookManuscript';
+import { editionExtras } from '@/lib/bookExtras';
 import fontUrl from '@/assets/fonts/manuscript.ttf?url';
 import sampleCover from '@/assets/cover-design-midnight-stars.jpg';
 
 /** A fictional reader used for the public sample book, so visitors can see the real format. */
 export const SAMPLE_BIRTH: MyBirth = {
-  name: 'Jules Harbor',
-  date: '1992-06-12',
-  time: '16:30',
+  name: 'Olivia Chen',
+  date: '1992-03-14',
+  time: '07:23',
   placeLabel: 'Portland, Oregon, USA',
   lat: 45.5152,
   lon: -122.6784,
@@ -27,7 +28,7 @@ function chartFactsFor(birth: MyBirth) {
   const sign = (n: string) => c.bodies.find(b => b.name === n)?.sign;
   const rising = c.asc != null ? `${SIGN_NAMES[Math.floor(c.asc / 30)]} Rising` : '';
   const bigThree = [sign('Sun') && `Sun in ${sign('Sun')}`, sign('Moon') && `Moon in ${sign('Moon')}`, rising].filter(Boolean).join(' · ');
-  return { chartFacts, bigThree };
+  return { chartFacts, bigThree, chart: c };
 }
 
 /** Sample chapters written for the fictional reader — a real sample of the AstroBook's voice, depth and layout. */
@@ -35,7 +36,7 @@ const SAMPLE_CHAPTERS = [
   {
     title: 'Your Big Three',
     content: `## A sample from a real AstroBook
-This is a genuine AstroBook, written for a fictional reader ("Jules Harbor") so you can see exactly how your book is laid out, formatted and written. Your own book will be written entirely from your chart.
+This is a genuine AstroBook, written for a fictional reader ("Olivia Chen", born March 14, 1992 at 7:23 am in Portland, Oregon) so you can see exactly how your book is laid out, formatted and written. Your own book will be written entirely from your chart.
 
 ## The Sun: your core self
 The Sun describes the center of the chart: the self that grows more visible over a lifetime. In this sample chart, the Sun's sign colors everything else — the ambitions, the way love is given, even the way rest is taken. Read the Sun as a promise rather than a task: it is what a person is becoming, and the chart's other placements show the tools they have for the journey.
@@ -98,7 +99,7 @@ Take the single sentence from this chapter that felt most true and copy it somew
 
 /** Compose the sample AstroBook PDF (a real book from the fictional chart above). */
 export async function composeSampleBook() {
-  const { chartFacts, bigThree } = chartFactsFor(SAMPLE_BIRTH);
+  const { chartFacts, bigThree, chart } = chartFactsFor(SAMPLE_BIRTH);
   const fontBuffer: ArrayBuffer = await (await fetch(fontUrl)).arrayBuffer();
   const coverBuffer: ArrayBuffer = await (await fetch(sampleCover)).arrayBuffer();
   const result = await composeManuscript({
@@ -106,7 +107,9 @@ export async function composeSampleBook() {
     birthFacts: `${SAMPLE_BIRTH.date} · ${SAMPLE_BIRTH.time} · ${SAMPLE_BIRTH.placeLabel} · ${SAMPLE_BIRTH.tz} · ${SAMPLE_BIRTH.houseSystem}`,
     chartFacts,
     chapters: SAMPLE_CHAPTERS,
-    edition: 'standard',
+    edition: 'classic',
+    editionChapters: editionExtras('classic', chart, SAMPLE_BIRTH.name, { today: new Date('2026-01-01T00:00:00Z') }),
+    chart,
     extras: [],
     fontBytes: new Uint8Array(fontBuffer),
     cover: new Uint8Array(coverBuffer),

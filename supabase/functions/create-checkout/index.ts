@@ -6,6 +6,14 @@ import { type StripeEnv, createStripeClient } from "../_shared/stripe.ts";
 import { snapshotBookPdf } from '../_shared/book-delivery.ts';
 
 const ALLOWED = new Set(["pro_monthly", "pro_yearly", "cosmic_monthly", "cosmic_yearly"]);
+/** Mirrors BOOK_VERSIONS in src/lib/books.ts (price in cents, lookup key, format). */
+const BOOK_VERSION: Record<string, { lookup: string; price: number; format: 'print' | 'digital' }> = {
+  digital: { lookup: 'astrobook_digital_v2', price: 2499, format: 'digital' },
+  pocket: { lookup: 'astrobook_pocket', price: 3499, format: 'print' },
+  classic: { lookup: 'astrobook_classic', price: 5999, format: 'print' },
+  signature: { lookup: 'astrobook_signature', price: 9700, format: 'print' },
+  linen: { lookup: 'astrobook_linen', price: 14900, format: 'print' },
+};
 const json = (b: unknown, status = 200) => new Response(JSON.stringify(b), { status, headers: { ...corsHeaders, "Content-Type": "application/json" } });
 
 async function resolveOrCreateCustomer(stripe: ReturnType<typeof createStripeClient>, options: { email?: string; userId?: string }): Promise<string> {
@@ -73,12 +81,16 @@ Deno.serve(async (req) => {
         if (previous.status === 'open') return json({ clientSecret: previous.client_secret });
         if (previous.status === 'complete') return json({ error: 'Payment was submitted. Please wait for order confirmation.' }, 409);
       }
-      const lookup = digital ? 'astrobook_digital' : order.edition === 'expanded' ? 'astrobook_print_expanded' : 'astrobook_print_standard';
+      const version = BOOK_VERSION[order.edition];
+      const legacy = !version;
+      if (version && (version.format === 'digital') !== digital) return json({ error: 'This edition and format do not match.' }, 400);
+      const lookup = version ? version.lookup : digital ? 'astrobook_digital' : order.edition === 'expanded' ? 'astrobook_print_expanded' : 'astrobook_print_standard';
       const prices = await stripe.prices.list({ lookup_keys: [lookup,'astrobook_print_extra'] });
       const base = prices.data.find(p => p.lookup_key === lookup);
       const extra = prices.data.find(p => p.lookup_key === 'astrobook_print_extra');
       if (!base || (extras.length && !extra)) return json({ error: 'Book prices are not configured.' }, 404);
-      const expected = digital ? 1999 : order.edition === 'expanded' ? 8900 : 5900;
+      const expected = version ? version.price : digital ? 1999 : order.edition === 'expanded' ? 8900 : 5900;
+      if (legacy && order.status === 'draft' && !order.checkout_session_id) return json({ error: 'This earlier edition is no longer sold. Please start a new AstroBook order.' }, 409);
       if (base.currency !== 'usd' || base.unit_amount !== expected || (extras.length && (extra?.currency !== 'usd' || extra.unit_amount !== 699))) return json({ error: 'Checkout prices do not match the advertised book prices. Please contact support.' }, 409);
       const productId = typeof base.product === 'string' ? base.product : base.product.id;
       const product = await stripe.products.retrieve(productId);
@@ -97,7 +109,7 @@ Deno.serve(async (req) => {
         payment_intent_data: { description: product.name, metadata: { userId: user.id, orderId: order.id } },
         metadata: { userId: user.id, orderId: order.id, managed_payments: 'false' },
       }, { idempotencyKey: `book-${order.format}-${order.id}-${env}-${order.checkout_session_id || 'first'}` });
-      const saved = await admin.from('book_orders').update({ checkout_session_id:session.id,environment:env,status:'awaiting_payment',shipping_cents:0,extras_cents:extras.length * 699,updated_at:new Date().toISOString() }).eq('id',order.id).eq('checkout_lease', lease).in('status', ['draft','awaiting_payment']).select('id');
+      const saved = await admin.from('book_orders').update({ checkout_session_id:session.id,environment:env,status:'awaiting_payment',shipping_cents:0,base_price_cents:expected,extras_cents:extras.length * 699,updated_at:new Date().toISOString() }).eq('id',order.id).eq('checkout_lease', lease).in('status', ['draft','awaiting_payment']).select('id');
       if (saved.error || !saved.data?.length) throw saved.error ?? new Error('Order changed while checkout was opening');
       return json({ clientSecret:session.client_secret });
       } finally {
