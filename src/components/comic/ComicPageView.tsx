@@ -22,11 +22,11 @@ export function ComicPageView({ page, compact = false, art }: { page: ComicPage;
           {page.section === 'Cover' ? (
             <div className="absolute inset-x-0 top-0 bg-gradient-to-b from-background/90 to-transparent p-3 sm:p-4">
               <p className="font-smallcaps text-[10px] text-gold">AstroComic</p>
-              <p className="font-display text-lg leading-tight sm:text-2xl">{page.title}</p>
+              <p className={`font-display leading-tight ${compact ? 'text-sm' : 'text-lg sm:text-2xl'}`}>{page.title}</p>
             </div>
           ) : (
             <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-background/95 to-transparent p-3 sm:p-4">
-              <p className="font-display text-base leading-tight sm:text-lg">{page.body?.[0] ?? 'AstroComic by Zodaci'}</p>
+              <p className={`font-display leading-tight ${compact ? 'text-xs' : 'text-base sm:text-lg'}`}>{page.body?.[0] ?? 'AstroComic by Zodaci'}</p>
               <p className="text-[10px] text-muted-foreground">{page.title}</p>
             </div>
           )}
@@ -38,7 +38,7 @@ export function ComicPageView({ page, compact = false, art }: { page: ComicPage;
             <span className="font-smallcaps text-[9px] text-gold">{page.section}</span>
             <span className="text-[9px] text-muted-foreground">{page.n}</span>
           </div>
-          <p className="font-display leading-tight text-base sm:text-lg">{page.title}</p>
+          <p className={`font-display leading-tight ${compact ? 'text-xs' : 'text-base sm:text-lg'}`}>{page.title}</p>
           <div className="grid flex-1 auto-rows-min grid-cols-2 gap-1.5">
             {page.panels.map((panel, i) => {
               const src = art?.[`${page.n}-${i}`];
