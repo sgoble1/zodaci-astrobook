@@ -189,13 +189,16 @@ function SidebarInner({ mobile = false, onNavigate }: { mobile?: boolean; onNavi
   // Pages without their own usePageMeta get a title from their menu label instead of keeping the previous page's title.
   useEffect(() => {
     const path = location.pathname;
-    const t = window.setTimeout(() => {
+    let tries = 0; let t = 0;
+    const apply = () => {
       if (document.documentElement.dataset.metaPath === path) return;
       const items = allGroups.flatMap(g => [...g.items, ...(g.footer ?? []), ...(g.submenus ?? []).flatMap(s => s.items)]);
       const heading = document.querySelector('main h1, h1')?.textContent?.trim().replace(/\s+/g, ' ').slice(0, 60);
       const label = items.find(i => i.to === path)?.label ?? heading;
+      if (!label && ++tries < 8) { t = window.setTimeout(apply, 400); return; }
       document.title = label ? `${label} · Zodaci` : 'Zodaci · Your sky, your story';
-    }, 400);
+    };
+    t = window.setTimeout(apply, 400);
     return () => window.clearTimeout(t);
   }, [location.pathname, allGroups]);
   return (
