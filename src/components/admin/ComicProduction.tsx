@@ -200,7 +200,7 @@ export function ComicProduction({ issue, onChanged }: { issue: Issue; onChanged:
       )}
       <p className="text-xs text-muted-foreground">Print file: 5.5 × 8.5 in with 0.125 in bleed, trim and bleed boxes set, font embedded, every panel checked for {MIN_DPI} DPI. Colour is RGB — the printer converts to CMYK in their preflight.</p>
 
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-6">{script.pages.map(p => <ComicPageView key={p.n} page={p} compact art={urls} />)}</div>
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">{script.pages.map(p => <ComicPageView key={p.n} page={p} compact art={urls} />)}</div>
 
       <details className="text-sm">
         <summary className="cursor-pointer text-muted-foreground">Panels ({plan.length})</summary>
