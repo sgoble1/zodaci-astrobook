@@ -31,6 +31,7 @@
 - blog_posts permits subscriber writes/explicit publication; drafts stay private.
 - Member editorial styles preserve archives; dashboard data/reading positions are owner-scoped.
 - Long markdown readings use NavigatedProse/ReadingNavigator for one consistent reader.
+- Bookmark caches are owner-keyed/auth-invalidated; throw mutation errors to prevent stale exposure and false saves.
 
 ## Media and presentation
 - Podcasts/uploads use library_items/private signed URLs; sharing requires workspace membership/authorized audio URLs.
