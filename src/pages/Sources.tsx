@@ -1,3 +1,4 @@
+import { toast } from 'sonner';
 import { confirmAction } from '@/components/common/ConfirmHost';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -80,7 +81,7 @@ export default function Sources() {
             {lib.items.filter(i => match(i.title + i.file_name + (i.category ?? ''))).map(i => (
               <Row key={i.id} title={i.title} ext={i.file_name.split('.').pop()!.toLowerCase()} url={i.url}
                 sub={`${i.category ? i.category + ' · ' : ''}${i.file_name} · ${fmtSize(i.size_bytes)} · ${new Date(i.created_at).toLocaleDateString()}${i.description ? ' · ' + i.description : ''}`}
-                onDelete={(isAdmin || session?.user.id === i.owner_id) ? async () => { if (await confirmAction('Delete this file?')) lib.remove(i); } : undefined} />
+                onDelete={(isAdmin || session?.user.id === i.owner_id) ? async () => { if (await confirmAction('Delete this file?')) { try { await lib.remove(i); toast.success('File deleted'); } catch (e) { toast.error((e as Error).message); } } } : undefined} />
             ))}
           </ul>}
       </section>

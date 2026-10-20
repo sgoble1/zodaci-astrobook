@@ -39,7 +39,7 @@ function ShareSwitch() {
     setBusy(false);
   };
   return (
-    <label className="glass-card flex items-center justify-between gap-4 p-4 max-w-xl mt-5 cursor-pointer">
+    <label className="glass-card flex items-center justify-between gap-4 p-4 max-w-xl mt-5 cursor-pointer" data-keep-wording>
       <span><span className="block font-medium">Share my chart with April</span><span className="text-sm text-muted-foreground">{on ? 'April can read every chapter of your edition.' : 'Only you can read your edition.'}</span></span>
       <Switch checked={on} disabled={busy} onCheckedChange={toggle} aria-label="Share my chart with April" />
     </label>
@@ -91,7 +91,7 @@ function ShaneEditionInner() {
     <div className="space-y-10">
       <header>
         <h1 className="text-4xl sm:text-5xl">Shane’s Astrological Masterbook</h1>
-        <p className="text-muted-foreground mt-3 max-w-2xl">The complete book — {entries?.length ?? '…'} chapters, about {Math.round(total / 1000)}k words — from natal foundations and houses to Vedic, karmic, relationship and timing volumes.</p>
+        <p className="text-muted-foreground mt-3 max-w-2xl">The complete book{entries ? ` — ${entries.length} chapters, about ${Math.round(total / 1000)}k words —` : ''} from natal foundations and houses to Vedic, karmic, relationship and timing volumes.</p>
         <ShareSwitch />
         <Input placeholder="Search chapters and sections…" value={q} onChange={e => setQ(e.target.value)} className="max-w-md mt-5" />
         <div className="flex flex-wrap gap-2 mt-3 text-xs">

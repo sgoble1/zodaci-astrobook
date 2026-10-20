@@ -528,6 +528,53 @@ export type Database = {
           },
         ]
       }
+      comic_issue_art: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          height: number
+          issue_id: string
+          page_n: number
+          panel_i: number
+          path: string
+          scene: string
+          updated_at: string
+          width: number
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          height: number
+          issue_id: string
+          page_n: number
+          panel_i: number
+          path: string
+          scene?: string
+          updated_at?: string
+          width: number
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          height?: number
+          issue_id?: string
+          page_n?: number
+          panel_i?: number
+          path?: string
+          scene?: string
+          updated_at?: string
+          width?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "comic_issue_art_issue_id_fkey"
+            columns: ["issue_id"]
+            isOneToOne: false
+            referencedRelation: "comic_issues"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       comic_issues: {
         Row: {
           admin_note: string
@@ -537,6 +584,9 @@ export type Database = {
           id: string
           issue_month: string
           issue_number: number
+          print_pdf_at: string | null
+          print_pdf_path: string | null
+          print_report: Json | null
           script: Json
           shipped_at: string | null
           status: string
@@ -554,6 +604,9 @@ export type Database = {
           id?: string
           issue_month: string
           issue_number?: number
+          print_pdf_at?: string | null
+          print_pdf_path?: string | null
+          print_report?: Json | null
           script?: Json
           shipped_at?: string | null
           status?: string
@@ -571,6 +624,9 @@ export type Database = {
           id?: string
           issue_month?: string
           issue_number?: number
+          print_pdf_at?: string | null
+          print_pdf_path?: string | null
+          print_report?: Json | null
           script?: Json
           shipped_at?: string | null
           status?: string

@@ -1,3 +1,4 @@
+import { confirmAction } from '@/components/common/ConfirmHost';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FileUp, Trash2 } from 'lucide-react';
@@ -66,7 +67,7 @@ export default function MyUploads() {
                     <Link to={`/masterbook/u/${it.id}`} className="underline">Read</Link>
                     {it.url && <a href={it.url} target="_blank" rel="noreferrer" className="underline">Open original</a>}
                     <Link to={`/ask?doc=up:${it.id}`} className="underline">Ask about it</Link>
-                    {(isAdmin || session?.user.id === it.owner_id) && <button onClick={() => remove(it)} className="ml-auto text-destructive flex items-center gap-1"><Trash2 className="w-3 h-3" />Remove</button>}
+                    {(isAdmin || session?.user.id === it.owner_id) && <button onClick={async () => { if (!(await confirmAction(`Delete “${it.title}”?`, 'Delete'))) return; try { await remove(it); toast.success('Deleted'); } catch (e) { toast.error((e as Error).message); } }} className="ml-auto text-destructive flex items-center gap-1"><Trash2 className="w-3 h-3" />Remove</button>}
                   </div>
                 </div>
               );
