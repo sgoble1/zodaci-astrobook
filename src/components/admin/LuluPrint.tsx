@@ -132,6 +132,7 @@ type OrderLite = { id: string; edition: string; status: string; payment_hold: st
 /** Per-order Lulu actions: preview the print files, send, refresh and cancel. */
 export function LuluOrderActions({ order, status, jobs, onChanged }: { order: OrderLite; status: LuluStatus | null; jobs: LuluJob[]; onChanged: () => void }) {
   const [busy, setBusy] = useState('');
+  const [files, setFiles] = useState<{ interiorUrl: string; coverUrl: string; pages: number; spinePt: number } | null>(null);
   const mine = jobs.filter(j => j.order_id === order.id && (!status || j.environment === status.environment));
   const active = mine.find(j => !FAILED.includes(j.status));
   const lastFailed = !active ? mine.find(j => FAILED.includes(j.status)) : undefined;
@@ -141,8 +142,7 @@ export function LuluOrderActions({ order, status, jobs, onChanged }: { order: Or
   const run = async (label: string, fn: () => Promise<void>) => { setBusy(label); try { await fn(); } catch (e) { toast.error((e as Error).message); } finally { setBusy(''); onChanged(); } };
   const proof = () => run('proof', async () => {
     const r = await callLulu<{ interiorUrl: string; coverUrl: string; pages: number; spinePt: number }>({ action: 'proof', orderId: order.id });
-    window.open(r.coverUrl, '_blank', 'noopener'); window.open(r.interiorUrl, '_blank', 'noopener');
-    toast.success(`Print files ready: ${r.pages}-page interior and full cover (spine ${(r.spinePt / 72).toFixed(2)} in). If a tab was blocked, allow pop-ups and retry.`);
+    setFiles(r);
   });
   const submit = () => run('submit', async () => {
     const real = status?.environment === 'production';
@@ -153,7 +153,7 @@ export function LuluOrderActions({ order, status, jobs, onChanged }: { order: Or
   });
   const sync = (job: LuluJob) => run('sync', async () => { const r = await callLulu<{ status: string; note?: string }>({ action: 'sync', jobId: job.id }); toast.success(`Lulu: ${luluStatusText(r.status)}${r.note ? ` — ${r.note}` : ''}`); });
   const cancel = (job: LuluJob) => run('cancel', async () => {
-    if (!(await confirmAction(`Cancel Lulu job ${job.lulu_job_id}? The order goes back to Paid so it can be sent again.`, 'Cancel print job'))) return;
+    if (!(await confirmAction(`Cancel Lulu job ${job.lulu_job_id}?${job.environment === 'production' ? ' The order goes back to Paid so it can be sent again.' : ''}`, 'Cancel print job'))) return;
     await callLulu({ action: 'cancel', jobId: job.id }); toast.success('Lulu job cancelled');
   });
 
@@ -167,6 +167,7 @@ export function LuluOrderActions({ order, status, jobs, onChanged }: { order: Or
           {active.tracking_url && <a className="text-primary underline underline-offset-4" href={active.tracking_url} target="_blank" rel="noopener noreferrer">Track {active.carrier_name || 'parcel'}</a>}
         </div>
       )}
+      {files && !active && <p className="text-xs">Print files ({files.pages}-page interior, spine {(files.spinePt / 72).toFixed(2)} in): <a className="text-primary underline underline-offset-4" href={files.coverUrl} target="_blank" rel="noopener noreferrer">cover</a> · <a className="text-primary underline underline-offset-4" href={files.interiorUrl} target="_blank" rel="noopener noreferrer">interior</a> <span className="text-muted-foreground">(links expire in 10 minutes)</span></p>}
       {lastFailed && <p className="text-xs text-destructive">Last attempt: {luluStatusText(lastFailed.status)}{lastFailed.status_message ? ` — ${lastFailed.status_message}` : ''}</p>}
       {ready && (
         <div className="flex flex-wrap gap-1">
