@@ -21,8 +21,8 @@ export default function BookPreview() {
         <ul aria-label="AstroBook versions and prices" className="mx-auto flex max-w-2xl flex-wrap justify-center gap-x-4 gap-y-1 text-sm">{BOOK_VERSIONS.map(v => <li key={v.id}><span className="text-foreground">{v.name}</span> <span className="text-muted-foreground">{money(v.price)}</span></li>)}</ul>
         <p className="mx-auto max-w-xl text-sm text-muted-foreground">Optional extra sections {money(EXTRA_SECTION_PRICE)} each; any tax is calculated at checkout. Printed versions ship free within the US.</p>
         <div className="flex flex-wrap justify-center gap-3">
-          <Button asChild size="lg"><Link to="/astrobook">See editions and order<ArrowRight /></Link></Button>
-          <Button asChild size="lg" variant="outline"><Link to="/auth?next=/books">Get started</Link></Button>
+          <Button asChild size="lg"><Link to="/auth?next=%2Fbooks">Start my AstroBook<ArrowRight /></Link></Button>
+          <Button asChild size="lg" variant="outline"><Link to="/astrobook#versions">Compare the five versions</Link></Button>
         </div>
       </section>
     </article>
