@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { Toaster } from '@/components/ui/sonner';
 import { lazy, Suspense, useMemo, type ReactNode } from 'react';
 import { AppShell } from './components/layout/AppShell';
 import { DetailDrawerProvider, type DrawerPayload } from './components/common/DetailDrawer';
@@ -86,6 +87,7 @@ const MyChart = lazy(() => import('./pages/MyChart'));
 const RetroGood = lazy(() => import('./pages/RetroGood'));
 const OurCharts = lazy(() => import('./pages/OurCharts'));
 const Deductions = lazy(() => import('./pages/Deductions'));
+const Results = lazy(() => import('./pages/Results'));
 const LandingPage = lazy(() => import('./pages/LandingPage'));
 const About = lazy(() => import('./pages/About'));
 const MyReadings = lazy(() => import('./pages/MyReadings'));
@@ -247,6 +249,7 @@ export default function App() {
             <Route path="/retrogood" element={<RetroGood />} />
             <Route path="/our-charts" element={<OurCharts />} />
             <Route path="/findings" element={<Deductions />} />
+            <Route path="/results" element={<Results />} />
             <Route path="/my-readings" element={<MyReadings />} />
             <Route path="/my-readings/topic/:slug" element={<MyTopicReading />} />
             <Route path="/my-astrobook" element={<MyLibrary />} />
@@ -343,6 +346,7 @@ export default function App() {
         </Routes>
         </Suspense>
       </Providers>
+      <Toaster theme="dark" position="bottom-right" />
     </>
     </BrowserRouter>
   );

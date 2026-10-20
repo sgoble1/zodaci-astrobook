@@ -24,7 +24,7 @@ type TabId = typeof RESULT_TABS[number]['id'];
 
 /** Results: the member's whole chart in six tabs, calculated on the device from saved birth details. Paid depth uses rank-based gates. */
 export default function Results() {
-  usePageMeta({ title: 'Your results — Zodaci', description: 'Your birth chart blueprint, placements, aspects, systems and deep-dive points, calculated from your exact birth details.' });
+  usePageMeta('Your results — Zodaci', 'Your birth chart blueprint, placements, aspects, systems and deep-dive points, calculated from your exact birth details.');
   const birth = useMyBirth();
   const { plan, loading } = usePlan();
   const [tone, setTone] = useReadingTone();

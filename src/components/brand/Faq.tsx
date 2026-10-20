@@ -28,18 +28,25 @@ export function Faq({ items, id = 'faq-schema' }: { items: QA[]; id?: string }) 
 }
 
 export const PRICING_FAQ: QA[] = [
-  { q: 'Is there a time-limited trial?', a: 'No. The Free plan is free forever — your calculated chart and short readings stay yours. You only upgrade when you want more.' },
-  { q: 'Can I cancel anytime?', a: 'Yes. Cancel from Manage subscription on the pricing page. You keep access until the end of your billing period, then return to Free.' },
-  { q: 'Is my birth data private?', a: 'Yes. Your birth details, chart and readings are visible only to you unless you choose to share them in a space you created. We never sell your data.' },
-  { q: "What's the difference between Zodaci and AstroBook?", a: 'Zodaci is the digital platform — your chart, readings and community live here. AstroBook is a printed book made from your Zodaci readings.' },
-  { q: 'What are AI credits?', a: 'Counselor replies, podcasts and newly written pages are created live by AI. Paid plans include a monthly allowance.' },
-  { q: 'Can I gift a subscription?', a: 'Gift subscriptions are coming soon. For now, an AstroBook makes a personal, physical gift.' },
+  { q: 'What happens when my free trial ends?', a: "Zodaci doesn't have a time-limited trial — the Free plan is free forever. You only upgrade when you're ready for more." },
+  { q: 'Can I cancel anytime?', a: 'Yes. Open Manage subscription on the pricing page and cancel in a couple of clicks. You keep access until the end of your billing period.' },
+  { q: 'Is my birth data private?', a: 'Absolutely. Your birth details, chart, and readings are never shared or sold. You can ask us to delete your data at any time by emailing hello@zodaci.com from your account address.' },
+  { q: "What's the difference between Zodaci and AstroBook?", a: 'Zodaci is the digital platform — your chart, readings, and community all live here. AstroBook is a physical printed book we make for you, based on your Zodaci readings. You can order one anytime after creating your chart.' },
+  { q: 'Do you offer refunds?', a: "Yes. If you're not satisfied within the first seven days of a paid subscription, contact us for a full refund — no questions asked." },
+  { q: 'Can I gift a subscription?', a: "Gifting is coming soon. For now, AstroBook makes an excellent gift — it's personalized and physical." },
+  { q: 'What are AI credits?', a: 'Counselor replies, podcasts, covers and newly written pages are created live by AI and use credits: Free 5, Pro 60 and Cosmic 150 each month. New members also get a 10-credit welcome bonus. Saved readings never use credits to reopen.' },
 ];
 export const ASTROBOOK_FAQ: QA[] = [
-  { q: 'Do I need a Zodaci account?', a: 'Yes — a free account lets you enter birth details and preview the chapters before ordering.' },
-  { q: 'How long does it take?', a: 'About three business days to produce, then five to seven business days for standard US shipping.' },
-  { q: 'Can I preview it before ordering?', a: 'Yes. Your Zodaci readings become the chapters of your book, so you can read them in your account first.' },
-  { q: 'What if my birth time is unknown?', a: 'We can still make the book. Sections that depend on an exact time — Rising sign and houses — are clearly marked as uncertain.' },
+  { q: 'What exactly will my AstroBook contain?', a: 'A fully personalized natal chart reading: birth chart wheel, all planet/sign/house interpretations, aspect grid, Chiron, North Node, birth sky map, Moon phase, journal prompts, and more. Specific contents vary by version — see the version comparison table.' },
+  { q: 'How long does it take to receive?', a: "PDFs are ready as soon as payment is confirmed. Pocket and Classic editions ship in 5–7 business days (US). Signature Hardcover: 7–10 days. Collector's Linen: 10–14 days. We currently ship printed books within the US." },
+  { q: 'Is this truly personalized or is it generic content?', a: 'Every chapter in your AstroBook is built from your exact birth data — date, time, and location. No two AstroBooks are alike. Your planetary positions, house placements, and aspects are mathematically unique to your birth moment.' },
+  { q: "What if I don't know my exact birth time?", a: "You can still receive a meaningful AstroBook — we'll calculate with a noon birth time and note the limitation. For Rising Sign, houses, and time-sensitive placements, knowing your birth time gives the most accurate reading. Check your birth certificate or ask a parent." },
+  { q: 'Can I order as a gift?', a: "Yes — it is one of the most personal gifts you can give. Mark your order as a gift, add a personal message, and ship it straight to them. Each book is written from the birth details saved in the ordering account, so to give someone a book about their own chart, they create a free account with their birth details. Collector's Linen arrives in its gift box." },
+  { q: "What's the difference between the versions?", a: 'Size, format, content depth, and physical finish. See the full version comparison table above for a side-by-side breakdown.' },
+  { q: 'Can I order more than one?', a: 'Yes — each book is unique to the birth data entered. You can order another copy or another version at any time from your account.' },
+  { q: 'Is there a digital version?', a: 'Yes — the Digital PDF AstroBook is $24.99 as a one-time purchase. It is full color, downloads from your orders page, and can be printed at home.' },
+  { q: 'What printer do you use?', a: 'Lulu — one of the leading professional print-on-demand publishers. Every printed book uses a color interior and professional binding matched to its version.' },
+  { q: 'What is your return / reprint policy?', a: 'If your book arrives damaged or with a print defect, we will reprint it at no charge. Because each book is personalized to your birth data, we do not accept returns for change of mind — but we stand behind the quality of every print.' },
 ];
 export const GENERAL_FAQ: { category: string; items: QA[] }[] = [
   { category: 'Getting started', items: [
