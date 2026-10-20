@@ -109,7 +109,7 @@ Deno.serve(async (req) => {
         payment_intent_data: { description: product.name, metadata: { userId: user.id, orderId: order.id } },
         metadata: { userId: user.id, orderId: order.id, managed_payments: 'false' },
       }, { idempotencyKey: `book-${order.format}-${order.id}-${env}-${order.checkout_session_id || 'first'}` });
-      const saved = await admin.from('book_orders').update({ checkout_session_id:session.id,environment:env,status:'awaiting_payment',shipping_cents:0,extras_cents:extras.length * 699,updated_at:new Date().toISOString() }).eq('id',order.id).eq('checkout_lease', lease).in('status', ['draft','awaiting_payment']).select('id');
+      const saved = await admin.from('book_orders').update({ checkout_session_id:session.id,environment:env,status:'awaiting_payment',shipping_cents:0,base_price_cents:expected,extras_cents:extras.length * 699,updated_at:new Date().toISOString() }).eq('id',order.id).eq('checkout_lease', lease).in('status', ['draft','awaiting_payment']).select('id');
       if (saved.error || !saved.data?.length) throw saved.error ?? new Error('Order changed while checkout was opening');
       return json({ clientSecret:session.client_secret });
       } finally {
