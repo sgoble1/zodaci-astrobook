@@ -1,101 +1,125 @@
 import { supabase } from '@/integrations/supabase/client';
 import { getStripeEnvironment } from '@/lib/stripe';
 import { toast } from 'sonner';
-import { useState } from 'react';
-import { Link, useNavigate, useSearchParams } from 'react-router-dom';
-import { Check } from 'lucide-react';
+import { Fragment, useEffect, useState } from 'react';
+import { Link, useSearchParams } from 'react-router-dom';
+import { Check, Minus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useSubscription, type Tier } from '@/hooks/useSubscription';
 import { StripeEmbeddedCheckout } from '@/components/payments/StripeEmbeddedCheckout';
 import { CreatorStudio } from '@/components/payments/CreatorStudio';
 import { PaymentTestModeBanner } from '@/components/payments/PaymentTestModeBanner';
+import { Faq, PRICING_FAQ } from '@/components/brand/Faq';
+import { usePageMeta } from '@/hooks/usePageMeta';
+import { CREDIT_ALLOWANCE, PLAN_NAME, PLAN_PRICE } from '@/lib/plans';
+import { BOOK_VERSIONS, money } from '@/lib/books';
 
-const plans: { tier: Tier; name: string; price: string; priceId?: string; yearPrice?: string; yearId?: string; blurb: string; items: string[] }[] = [
-  { tier: 'free', name: 'Free', price: 'Free', blurb: 'Everything you need to meet your chart.', items: ['Your calculated birth chart wheel', 'Planets, houses and aspects in plain words', 'Two full readings: Your Big Three and Personality & Strengths', 'Explore & Discover and the Chart Guide', 'First-section previews of core themes', 'Save your chart to your account', '5 AI credits every month'] },
-  { tier: 'full', name: 'Pro', price: '$9/month', priceId: 'pro_monthly', yearPrice: '$89/year', yearId: 'pro_yearly', blurb: 'The complete book written from your chart.', items: ['Every reading at full length', 'Read your own Masterbook, written from your chart', 'Timing & cycles: transits, retrogrades, life phases', 'Seven other systems: Vedic, Ba Zi, Maya and more', '60 AI credits every month', 'Shared spaces with people you invite'] },
-  { tier: 'creator', name: 'Cosmic', price: '$19/month', priceId: 'cosmic_monthly', yearPrice: '$179/year', yearId: 'cosmic_yearly', blurb: 'Make new things from your chart.', items: ['Everything in Pro', 'Generate personal podcasts about your chart', 'Generate new Masterbook chapters and pages', '150 AI credits every month', 'Your own Cosmic dashboard'] },
+type Card = { tier: Tier; slug: 'free' | 'pro' | 'cosmic'; cta: string; blurb: string; items: string[] };
+const CARDS: Card[] = [
+  { tier: 'free', slug: 'free', cta: 'Start for free', blurb: 'Everything you need to meet your chart.', items: ['Your calculated birth chart wheel', 'Sun, Moon and Rising with exact degrees', 'Two full readings: Your Big Three and Personality & Strengths', 'A preview section of all 12 core themes', 'RetroGOOD rating and your Blueprint', `${CREDIT_ALLOWANCE.free} AI credits every month`] },
+  { tier: 'full', slug: 'pro', cta: 'Get Pro', blurb: 'Every reading, written from your chart.', items: ['All 38 readings at full length', 'Every planet, house explorer and aspect grid', 'Timing: transits, retrogrades and a 90-day timeline', 'Numerology, Ba Zi and Feng Shui in depth', 'Your own Masterbook', `${CREDIT_ALLOWANCE.full} AI credits every month`] },
+  { tier: 'creator', slug: 'cosmic', cta: 'Become Cosmic', blurb: 'Make new things from your chart.', items: ['Everything in Pro', 'Personal podcasts voiced from your chart', 'New Masterbook chapters on topics you choose', 'Hermetic lots, profections and bridge numbers', 'Your Cosmic dashboard', `${CREDIT_ALLOWANCE.creator} AI credits every month`] },
 ];
+const MONTHLY = { full: 9, creator: 19 } as const;
+const YEARLY = { full: 89, creator: 179 } as const;
 const rank: Record<Tier, number> = { free: 0, full: 1, creator: 2 };
-const faqs = [
-  { q: 'What are AI credits?', a: 'Counselor replies, podcasts and newly written pages are created live by AI. Each one uses a small amount of credit. Paid plans include a monthly allowance.' },
-  { q: 'What happens to my chart if I stay on Free?', a: 'Nothing changes. Your chart, birth details and short readings stay in your account for free.' },
-  { q: 'How do I unlock full content?', a: 'Create a free account, enter your birth details, then choose a plan. Everything unlocks right away and is written from your own chart.' },
-  { q: 'Can I cancel?', a: 'Yes, any time. You keep your plan until the end of the period you paid for, then return to Free.' },
+const Y = true, N = false;
+const COMPARE: { group: string; rows: [string, boolean | string, boolean | string, boolean | string][] }[] = [
+  { group: 'Your chart', rows: [['Full birth chart wheel, calculated from your exact birth moment', Y, Y, Y], ['Sun, Moon and Rising with degrees', Y, Y, Y], ['Every planet, Chiron and the North Node explained', N, Y, Y], ['House Explorer and aspect grid', N, Y, Y], ['Fixed stars and sensitive points', N, Y, Y], ['Hermetic lots and annual profections', N, N, Y]] },
+  { group: 'Readings', rows: [['Full written readings', '2', 'All 38', 'All 38'], ['Core themes', 'First section', 'Full', 'Full'], ['Other systems (Vedic, Ba Zi, Maya and more)', 'Key values', Y, Y], ['Numerology name numbers, pinnacles and challenges', N, Y, Y], ['Feng Shui eight directions', 'Kua number', Y, Y]] },
+  { group: 'Timing', rows: [['RetroGOOD rating and top planet', Y, Y, Y], ['Transit overlay and 90-day timeline', N, Y, Y], ['Personal timeline and retrograde calendar', N, Y, Y]] },
+  { group: 'Create & keep', rows: [['AI credits each month', String(CREDIT_ALLOWANCE.free), String(CREDIT_ALLOWANCE.full), String(CREDIT_ALLOWANCE.creator)], ['Counselor and SmartChat conversations', 'Uses credits', 'Uses credits', 'Uses credits'], ['Saved relationship charts and compatibility', Y, Y, Y], ['Personal podcasts (audio narration)', N, N, Y], ['New Masterbook chapters', N, N, Y], ['Print or save any chart page', Y, Y, Y]] },
+  { group: 'Community & AstroBook', rows: [['Read and reply to community posts', Y, Y, Y], ['Reading Room articles and Academy', Y, Y, Y], ['Order an AstroBook (sold separately)', Y, Y, Y]] },
 ];
+const cell = (v: boolean | string) => typeof v === 'string' ? v : v ? <Check className="mx-auto h-4 w-4 text-gold" aria-label="Included" /> : <Minus className="mx-auto h-4 w-4 text-muted-foreground" aria-label="Not included" />;
 
+/** Public pricing: works signed out; a chosen plan is kept through sign-up and opens checkout on return. */
 export default function Pricing() {
+  usePageMeta('Pricing — Zodaci', 'Simple, honest pricing. Start free with your calculated chart. Pro $9/month or Cosmic $19/month, with annual savings.');
   const sub = useSubscription();
-  const nav = useNavigate();
-  const [params] = useSearchParams();
+  const [params, setParams] = useSearchParams();
   const next = params.get('next');
   const returnTo = next?.startsWith('/my-readings/topic/') && !next.includes('://') ? next : '/dashboard';
   const [open, setOpen] = useState<string | null>(null);
-  const [yearly, setYearly] = useState(false);
+  const [yearly, setYearly] = useState(params.get('period') === 'year');
+  const intent = params.get('plan');
+  const priceFor = (tier: Exclude<Tier, 'free'>, y: boolean) => y ? PLAN_PRICE[tier].yearId : PLAN_PRICE[tier].monthId;
+  useEffect(() => {
+    if (sub.loading || !sub.userId || open) return;
+    const tier = intent === 'pro' ? 'full' : intent === 'cosmic' ? 'creator' : null;
+    if (tier && rank[tier] > rank[sub.tier]) setOpen(priceFor(tier, params.get('period') === 'year'));
+  }, [sub.loading, sub.userId, sub.tier, intent]); // eslint-disable-line react-hooks/exhaustive-deps
   const manage = async () => {
     const { data, error } = await supabase.functions.invoke('customer-portal', { body: { returnUrl: window.location.href, environment: (() => { try { return getStripeEnvironment(); } catch { return 'live'; } })() } });
     if (error || !data?.url) return toast.error(data?.error || 'Could not open billing right now.');
     window.location.href = data.url;
   };
-  const choose = (priceId: string) => { if (!sub.userId) return nav('/auth'); setOpen(priceId); };
+  const signupLink = (slug: string) => `/auth?mode=signup&next=${encodeURIComponent(slug === 'free' ? '/start' : `/pricing?plan=${slug}&period=${yearly ? 'year' : 'month'}`)}`;
+  const close = () => { setOpen(null); if (intent) { const n = new URLSearchParams(params); n.delete('plan'); n.delete('period'); setParams(n, { replace: true }); } };
+  const cheapestPrint = Math.min(...BOOK_VERSIONS.filter(v => v.format === 'print').map(v => v.price));
+  const cheapest = Math.min(...BOOK_VERSIONS.map(v => v.price));
 
   return (
-    <article className="mx-auto max-w-5xl space-y-10">
+    <article className="mx-auto max-w-5xl space-y-14">
       <PaymentTestModeBanner />
-      <header className="text-center space-y-3">
-        <div className="font-smallcaps text-[11px] text-gold">Plans & pricing</div>
-        <h1 className="font-display text-4xl">Start free. Unlock the whole book.</h1>
-        <p className="mx-auto max-w-2xl text-muted-foreground">Your chart is always free. Paid plans open every reading, your own Masterbook and AI credits, all written from your own birth details. <Link to="/demo" className="text-primary underline">Try the interactive demo</Link>.</p>
-        {sub.tier !== 'free' && <div className="flex flex-col items-center gap-1 pt-2"><Button variant="outline" onClick={manage}>Manage subscription · cancel, card & invoices</Button>{sub.periodEnd && <p className="text-xs text-muted-foreground">{sub.cancelAtEnd ? 'Ends' : 'Renews'} {new Date(sub.periodEnd).toLocaleDateString()}</p>}</div>}
+      <header className="space-y-3 text-center">
+        <h1 className="font-display text-4xl sm:text-5xl">Simple, honest pricing.</h1>
+        <p className="mx-auto max-w-2xl text-lg text-muted-foreground">Start free. Go deeper when you’re ready. No surprises.</p>
+        <p className="text-sm"><Link to="/demo" className="text-primary underline underline-offset-4">Try the interactive demo first</Link></p>
+        {sub.tier !== 'free' && <div className="flex flex-col items-center gap-1 pt-2"><Button variant="outline" onClick={manage}>Manage subscription · cancel, card & invoices</Button>{sub.periodEnd && <p className="text-xs text-muted-foreground">{sub.status === 'granted' ? `${PLAN_NAME[sub.tier]} access granted until` : sub.cancelAtEnd ? 'Ends' : 'Renews'} {new Date(sub.periodEnd).toLocaleDateString()}</p>}</div>}
       </header>
-      {!open && <div role="group" aria-label="Billing period" className="mx-auto flex w-fit gap-1 rounded-full border border-border p-1">{[[false, 'Monthly'], [true, 'Yearly · save 20%']].map(([v, l]) => <button key={String(v)} onClick={() => setYearly(v as boolean)} aria-pressed={yearly === v} className={`rounded-full px-4 py-1.5 text-sm ${yearly === v ? 'bg-primary text-primary-foreground' : 'hover:bg-muted'}`}>{l as string}</button>)}</div>}
       {open ? (
-        <section className="parchment p-4 space-y-3" aria-label="Checkout">
-          <Button variant="outline" size="sm" onClick={() => setOpen(null)}>← Back to plans</Button>
+        <section className="parchment space-y-3 p-4" aria-label="Checkout">
+          <Button variant="outline" size="sm" onClick={close}>← Back to plans</Button>
           <StripeEmbeddedCheckout priceId={open} returnUrl={`${window.location.origin}/checkout/return?session_id={CHECKOUT_SESSION_ID}&next=${encodeURIComponent(returnTo)}`} />
         </section>
-      ) : (
+      ) : (<>
+        <div role="radiogroup" aria-label="Billing period" className="mx-auto flex w-fit items-center gap-1 rounded-full border border-border p-1">
+          {[[false, 'Monthly'], [true, 'Annual']].map(([v, l]) => <button type="button" role="radio" key={String(v)} onClick={() => setYearly(v as boolean)} aria-checked={yearly === v} className={`rounded-full px-5 py-2 text-sm transition-colors duration-500 ${yearly === v ? 'bg-primary text-primary-foreground' : 'hover:bg-muted'}`}>{l as string}{v && <span className="ml-2 rounded-full bg-gold/20 px-2 py-0.5 text-xs text-gold">Save up to 21%</span>}</button>)}
+        </div>
         <div className="grid gap-5 md:grid-cols-3">
-          {plans.map((p, i) => {
-            const price = yearly && p.yearPrice ? p.yearPrice : p.price; const pid = yearly && p.yearId ? p.yearId : p.priceId;
-            const current = !sub.loading && sub.tier === p.tier;
+          {CARDS.map((p, i) => {
+            const paid = p.tier !== 'free';
+            const price = !paid ? '$0' : yearly ? `$${YEARLY[p.tier as 'full']}` : `$${MONTHLY[p.tier as 'full']}`;
+            const per = !paid ? 'forever' : yearly ? 'per year' : 'per month';
+            const saving = paid && yearly ? MONTHLY[p.tier as 'full'] * 12 - YEARLY[p.tier as 'full'] : 0;
+            const pid = paid ? priceFor(p.tier as Exclude<Tier, 'free'>, yearly) : null;
+            const current = !sub.loading && sub.userId && sub.tier === p.tier;
             const below = rank[p.tier] < rank[sub.tier];
             return (
-              <section key={p.name} className={`parchment p-6 space-y-4 flex flex-col ${i ? 'border-gold' : ''}`} aria-labelledby={`plan-${i}`}>
-                <h2 id={`plan-${i}`} className="text-2xl">{p.name}</h2>
-                <div className="font-display text-3xl">{price}</div>
+              <section key={p.slug} className={`parchment flex flex-col space-y-4 p-6 ${p.tier === 'full' ? 'border-gold ring-1 ring-gold/40' : ''}`} aria-labelledby={`plan-${i}`}>
+                <div className="flex items-center justify-between"><h2 id={`plan-${i}`} className="text-2xl">{PLAN_NAME[p.tier]}</h2>{p.tier === 'full' && <span className="rounded-full bg-gold/15 px-2 py-0.5 text-xs text-gold">Most chosen</span>}</div>
+                <div><span className="font-display text-4xl">{price}</span> <span className="text-sm text-muted-foreground">{per}</span>{saving > 0 && <p className="text-xs text-gold">You save ${saving} a year</p>}</div>
                 <p className="text-sm text-muted-foreground">{p.blurb}</p>
-                <ul className="space-y-2 text-sm flex-1">{p.items.map(x => <li key={x} className="flex gap-2"><Check className="h-4 w-4 shrink-0 text-gold" aria-hidden />{x}</li>)}</ul>
-                {!p.priceId ? <Button asChild variant="outline" className="w-full"><Link to="/start">Get my free chart</Link></Button>
+                <ul className="flex-1 space-y-2 text-sm">{p.items.map(x => <li key={x} className="flex gap-2"><Check className="h-4 w-4 shrink-0 text-gold" aria-hidden />{x}</li>)}</ul>
+                {!paid ? (sub.userId ? <Button asChild variant="outline" className="w-full"><Link to="/start">Open my free chart</Link></Button> : <Button asChild variant="outline" className="w-full"><Link to={signupLink('free')}>{p.cta}</Link></Button>)
                   : current ? <Button disabled className="w-full">Your current plan</Button>
                   : below ? <Button disabled variant="outline" className="w-full">Included in your plan</Button>
-                  : <Button className="w-full" onClick={() => pid && choose(pid)}>{sub.userId ? `Subscribe — ${price}` : 'Sign in to subscribe'}</Button>}
+                  : sub.userId ? <Button className="w-full" onClick={() => pid && setOpen(pid)}>{p.cta} — {price}</Button>
+                  : <Button asChild className="w-full"><Link to={signupLink(p.slug)}>{p.cta}</Link></Button>}
               </section>
             );
           })}
         </div>
-      )}
+      </>)}
       {sub.tier === 'creator' && <p className="text-center"><Button asChild><Link to="/creator">Open your Cosmic dashboard</Link></Button></p>}
-      <section aria-labelledby="guarantee" className="rounded border border-border bg-card p-5 text-center"><h2 id="guarantee" className="text-xl">7-day refund</h2><p className="text-sm text-muted-foreground mt-2">Not for you? Ask for a refund within 7 days of your first Pro or Cosmic payment and we'll return it in full. Contact us from your account email.</p></section>
-      <section aria-labelledby="creator-perks" className="rounded border border-border bg-card p-5"><h2 id="creator-perks" className="text-xl">Cosmic perks</h2><ul className="mt-3 grid sm:grid-cols-2 gap-2 text-sm"><li>Your own Cosmic dashboard</li><li>Personal podcasts written and voiced from your chart</li><li>New Masterbook chapters on any topic you choose</li><li>Every Pro reading, timing page and other system</li></ul></section>
-      {sub.tier === 'creator' && <div className="space-y-2"><CreatorStudio /><p className="text-sm text-center"><Link to="/my-masterbook" className="underline">Open My Masterbook to read and play what you've made</Link></p></div>}
+      {sub.tier === 'creator' && <div className="space-y-2"><CreatorStudio /><p className="text-center text-sm"><Link to="/my-masterbook" className="underline">Open My Masterbook to read and play what you’ve made</Link></p></div>}
+      <section className="space-y-4" aria-labelledby="pricing-faq"><h2 id="pricing-faq" className="font-display text-3xl">Questions</h2><Faq items={PRICING_FAQ} id="pricing-faq-schema" /></section>
       <section className="space-y-3" aria-labelledby="compare">
-        <h2 id="compare" className="text-2xl">Compare plans</h2>
+        <h2 id="compare" className="font-display text-3xl">Compare plans</h2>
         <div className="overflow-x-auto rounded-lg border border-border">
-          <table className="w-full min-w-[520px] text-sm">
-            <thead><tr className="border-b border-border text-left"><th className="p-3 font-medium">Feature</th><th className="p-3 font-medium">Free</th><th className="p-3 font-medium">Pro</th><th className="p-3 font-medium">Cosmic</th></tr></thead>
-            <tbody>{([
-              ['Birth chart wheel, planets, houses & aspects', '✓', '✓', '✓'],
-              ['Full written readings from your chart', '2', 'All 38', 'All 38'],
-              ['Other Systems readings (Vedic, Ba Zi, Maya…)', 'Values only', '✓', '✓'],
-              ['Timing, transits & retrogrades', 'Basic', '✓', '✓'],
-              ['AI counselors & SmartChat', 'Limited', '✓', '✓'],
-              ['Personal podcasts & new chapters', '—', '—', '✓'],
-            ] as const).map(r => <tr key={r[0]} className="border-b border-border last:border-0">{r.map((c, i) => <td key={i} className={`p-3 ${i ? 'text-center' : ''}`}>{c}</td>)}</tr>)}</tbody>
+          <table className="w-full min-w-[560px] text-sm">
+            <thead><tr className="border-b border-border text-left"><th scope="col" className="p-3 font-medium">Feature</th>{(['free', 'full', 'creator'] as Tier[]).map(t => <th key={t} scope="col" className="p-3 text-center font-medium">{PLAN_NAME[t]}</th>)}</tr></thead>
+            <tbody>{COMPARE.map(g => <Fragment key={g.group}>
+              <tr className="bg-muted/40"><th scope="rowgroup" colSpan={4} className="p-3 text-left font-smallcaps text-xs text-gold">{g.group}</th></tr>
+              {g.rows.map(r => <tr key={r[0]} className="border-b border-border last:border-0"><th scope="row" className="p-3 text-left font-normal">{r[0]}</th>{r.slice(1).map((c, i) => <td key={i} className="p-3 text-center">{cell(c)}</td>)}</tr>)}
+            </Fragment>)}</tbody>
           </table>
         </div>
       </section>
-      <section className="space-y-4" aria-labelledby="pricing-faq"><h2 id="pricing-faq" className="text-2xl">Questions</h2>
-        <dl className="grid gap-4 sm:grid-cols-2">{faqs.map(f => <div key={f.q} className="parchment p-4"><dt className="font-medium">{f.q}</dt><dd className="mt-1 text-sm text-muted-foreground">{f.a}</dd></div>)}</dl>
+      <section aria-labelledby="astrobook-xsell" className="flex flex-wrap items-center justify-between gap-4 rounded-lg border border-gold/40 bg-card p-6">
+        <div><h2 id="astrobook-xsell" className="font-display text-2xl">Looking for the printed book?</h2><p className="text-sm text-muted-foreground">AstroBook turns your readings into a book: Digital PDF from {money(cheapest)}, printed from {money(cheapestPrint)}.</p></div>
+        <Button asChild variant="outline"><Link to="/astrobook">Shop AstroBook →</Link></Button>
       </section>
     </article>
   );
