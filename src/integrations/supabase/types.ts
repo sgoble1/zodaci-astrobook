@@ -2307,6 +2307,71 @@ export type Database = {
     Functions: {
       accept_space_invite: { Args: { _token: string }; Returns: string }
       active_grant_tier: { Args: { _user_id: string }; Returns: string }
+      admin_april_events: {
+        Args: { _kind?: string; _limit?: number }
+        Returns: {
+          created_at: string
+          device: string
+          duration_seconds: number
+          kind: string
+          label: string
+          path: string
+          visit_id: string
+        }[]
+      }
+      admin_april_overview: {
+        Args: never
+        Returns: {
+          ai_uses_month: number
+          clicks_30d: number
+          counselor_sessions: number
+          display_name: string
+          found: boolean
+          joined: string
+          last_seen: string
+          media_30d: number
+          minutes_30d: number
+          page_views_30d: number
+          readings_ready: number
+          readings_writing: number
+          social_sessions: number
+          visits_30d: number
+          workbook_entries: number
+        }[]
+      }
+      admin_april_usage: {
+        Args: never
+        Returns: {
+          credits: number
+          feature: string
+          uses: number
+        }[]
+      }
+      admin_comic_manifest: {
+        Args: never
+        Returns: {
+          birth_date: string
+          birth_time: string
+          cancel_at_period_end: boolean
+          created_at: string
+          current_period_end: string
+          display_name: string
+          email: string
+          environment: string
+          house_system: string
+          lat: number
+          lon: number
+          paused_until: string
+          place_label: string
+          plan: string
+          shipping_address: Json
+          skip_months: string[]
+          status: string
+          subscription_id: string
+          tz: string
+          user_id: string
+        }[]
+      }
       admin_credit_usage: {
         Args: never
         Returns: {
@@ -2342,6 +2407,22 @@ export type Database = {
           signups_total: number
         }[]
       }
+      admin_list_admins: {
+        Args: never
+        Returns: {
+          display_name: string
+          email: string
+          joined: string
+          user_id: string
+        }[]
+      }
+      admin_member_emails: {
+        Args: { _ids: string[] }
+        Returns: {
+          email: string
+          id: string
+        }[]
+      }
       admin_newsletter_audience: { Args: { _segment: string }; Returns: number }
       admin_search: {
         Args: { _q: string }
@@ -2351,6 +2432,10 @@ export type Database = {
           kind: string
           label: string
         }[]
+      }
+      admin_set_admin: {
+        Args: { _email: string; _grant: boolean; _note?: string }
+        Returns: string
       }
       admin_upgrade_funnel: {
         Args: { _days?: number }
@@ -2423,6 +2508,7 @@ export type Database = {
       is_shared_space_user_id: { Args: { _user_id: string }; Returns: boolean }
       is_space_member: { Args: { _space_id: string }; Returns: boolean }
       is_space_owner: { Args: { _space_id: string }; Returns: boolean }
+      monitored_account_id: { Args: never; Returns: string }
       my_referral_code: { Args: never; Returns: string }
       plan_tier: { Args: { _user_id: string }; Returns: string }
       recent_library_items: {

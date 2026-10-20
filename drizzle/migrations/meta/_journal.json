@@ -414,6 +414,13 @@
       "when": 1792477985331,
       "tag": "0058_astrobook_five_versions_insert_policy",
       "breakpoints": true
+    },
+    {
+      "idx": 59,
+      "version": "7",
+      "when": 1792480250950,
+      "tag": "0059_admin_platform_tools",
+      "breakpoints": true
     }
   ]
 }
