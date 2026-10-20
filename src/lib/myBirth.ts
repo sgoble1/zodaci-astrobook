@@ -2,7 +2,9 @@ import { useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import type { ChartInput, HouseSystem } from '@/lib/astro';
 
-export type MyBirth = { name: string; date: string; time: string | null; placeLabel: string; lat: number; lon: number; tz: string; houseSystem: HouseSystem };
+export type MyBirth = { name: string; date: string; time: string | null; placeLabel: string; lat: number; lon: number; tz: string; houseSystem: HouseSystem; sex?: string | null };
+/** Feng Shui Kua uses birth sex; other answers leave it unspecified. */
+export const kuaSex = (sex?: string | null): 'male' | 'female' | 'unspecified' => sex === 'Female' ? 'female' : sex === 'Male' ? 'male' : 'unspecified';
 const LOCAL = 'astrobook-my-birth-v1';
 
 export const toChartInput = (b: MyBirth): ChartInput => ({ date: b.date, time: b.time, lat: b.lat, lon: b.lon, tz: b.tz, placeLabel: b.placeLabel, placeSource: 'geocoded', houseSystem: b.houseSystem });
@@ -32,7 +34,7 @@ export function useMyBirth() {
       if (u.user) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const { data } = await (supabase as any).from('profiles').select('*').eq('id', u.user.id).maybeSingle();
-        if (data?.birth_date && active && version === revision) return setBirth({ name: data.display_name, date: data.birth_date, time: data.birth_time, placeLabel: data.place_label, lat: data.lat, lon: data.lon, tz: data.tz, houseSystem: data.house_system });
+        if (data?.birth_date && active && version === revision) return setBirth({ name: data.display_name, date: data.birth_date, time: data.birth_time, placeLabel: data.place_label, lat: data.lat, lon: data.lon, tz: data.tz, houseSystem: data.house_system, sex: data.sex || null });
         if (active && version === revision) setBirth(null);
         return;
       }

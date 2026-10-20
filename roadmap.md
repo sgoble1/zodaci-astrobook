@@ -17,18 +17,20 @@
 - [ ] Remaining Deep Implementation Guide items (testimonials need real customer quotes; social proof needs real numbers)
 
 ## Full document build (Goal run, from checklists in the 12 documents)
-- [ ] E1 Chart engine: 15 new deductions (shape, focal planet, unaspected, T-square, grand trine, yod, mutual reception, out-of-bounds, Part of Fortune, profection, personal year, void Moon, polarity, interceptions, sect)
-- [ ] E2 Results page: tabbed Blueprint / Placements / Aspects & Patterns / Houses / Systems / RetroGOOD with TierGate teasers and upgrade nudges
-- [ ] E3 RetroGOOD tiers (Amplified/Internalized/Refined/Karmic), sign-specific Rx narratives, aspect matrix, house explorer, transit overlay (90 days), numerology cross-reference, affirmations
-- [ ] S1 Public pricing (no sign-in), plan intent kept through signup, full FAQ, comparison table
-- [ ] S2 Homepage: AstroBook feature, plans snapshot, honest trust bar, integrity section, concrete newsletter offer, canonical root
-- [ ] S3 Academy learning hub; compatibility explainer; sitemap/meta for new public pages
+- [x] E1 Chart engine: 15 new deductions (shape, focal planet, unaspected, T-square, grand trine, yod, mutual reception, out-of-bounds, Part of Fortune, profection, personal year, void Moon, polarity, interceptions, sect)
+- [ ] E2 Results page (/results): six tabs Blueprint / Placements (+ House Explorer) / Aspects & Patterns / Systems / Deep Dive / AI Readings, rank-based TierGate with blurred locked cards; Systems: Chinese pillars, numerology (Expression, Soul Urge, Personality, Personal Year, Pinnacles, Challenges, Cosmic Bridge numbers), Feng Shui directions; Deep Dive: fixed stars ≤1°, sensitive points, Arabic Parts + profections (Cosmic). Fix: Feng Shui never showed because saved sex wasn't loaded.
+- [ ] E3 RetroGOOD page: Explorer (tier filter/counts, score bars, accordion, share), Oracle/Educational/Professional tone saved to profile, affirmations carousel with saved affirmations, transit overlay (date picker, Rx badges, 90-day timeline, double-Rx windows), numerology cross-reference (MOD-010)
+- [ ] E4 Report section navigator (MOD-008) on long readings: sticky section list, reading progress, section bookmarks
+- [ ] S1 Public pricing: marketing layout, Monthly/Annual "Save 20%", signup keeps chosen plan, six FAQ answers, grouped comparison table, AstroBook cross-sell
+- [ ] S2 Public homepage (/welcome): verbatim hero, four value pillars, AstroBook callout, plans teaser, Weekly Sky Notes newsletter copy, integrity note in footer, public /astrobook for signed-out visitors
+- [ ] S3 Academy learning hub (/academy) and public compatibility explainer (/compatibility) with score formula; sitemap/meta/FAQ schema
 - [ ] B1 AstroBook five versions (Digital $24.99, Pocket $34.99, Classic $59.99, Signature $97, Collector's Linen $149) in pricing, checkout, orders, costs
 - [ ] B2 AstroBook page: version comparison, What's Inside, chapter tabs, 10-question FAQ, gift option, Olivia Chen sample; manual Lulu print queue
 - [ ] C1 AstroComic: products/checkout, product page, character bible art, chart+transit issue builder, subscriber archive/address/pause, admin print queue + manifest CSV
-- [ ] A1 Admin: grouped tabs with URL persistence, audit log, platform settings, admin search
-- [ ] A2 Admin: Stripe overview, April activity monitor (no private text), newsletter drafts/segments (sending waits on email domain)
-- [ ] G1 Referrals with credit rewards; signup bonus credits; installable app (done: manifest/icons)
+- [ ] A1 Admin: grouped tabs (Content / Operations / Platform) with ?tab= persistence, Ctrl+K admin search, immutable audit log, platform settings (feature flags, maintenance, admin list), Activity filters + subscription column fixes
+- [ ] A2 Admin: Stripe overview via admin-verified function (MRR/ARR, subscriptions by price, failed payments, disputes), April activity monitor (activity only, never private text), newsletter drafts/segments (sending waits on email domain)
+- [ ] G1 Referrals (ZOD- codes, ?ref= links, referrer gets 30 days Pro on the friend's first payment), signup bonus credits, plan grants used by entitlement checks; installable app (done: manifest/icons)
+- [ ] Sabian symbols: needs a licensed source text (not invented)
 
 ## Launch plan
 - .lovable/plan.md (mirrors launch-plan.md) — ongoing launch plan only
