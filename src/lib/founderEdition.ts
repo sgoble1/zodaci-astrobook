@@ -38,3 +38,14 @@ export function orderFounderGroups<T extends { title: string }>(groups: T[]): T[
   return groups.map((g, i) => ({ g, i, r: rank(g.title) })).sort((a, b) => a.r - b.r || a.i - b.i).map(x => x.g);
 }
 
+
+/** Where a page sits in April's own menu: its section, the section's first page, and the next pages to read. */
+export function founderPlace(groups: { title: string; items: { to: string; label: string }[] }[], path: string) {
+  for (const g of groups) {
+    const i = g.items.findIndex(it => it.to === path);
+    if (i < 0) continue;
+    const ring = [...g.items.slice(i + 1), ...g.items.slice(0, i)].filter(it => it.to !== path);
+    return { section: g.title, home: g.items[0], label: g.items[i].label, next: ring.slice(0, 3) };
+  }
+  return null;
+}

@@ -73,3 +73,16 @@ export async function writeTopicReading(slug: string, opts: { regenerate?: boole
     throw new Error(message || 'This reading could not be written right now.');
   }
 }
+
+/** Reading filters on My Readings: every topic and core theme belongs to at least one; nothing is hidden by default. */
+export const READING_FILTERS = ['Personal', 'Relationships', 'Timing', 'Career', 'Spiritual'] as const;
+export type ReadingFilter = typeof READING_FILTERS[number];
+const FILTER_OF: Record<string, ReadingFilter[]> = {
+  'big-three': ['Personal'], 'chart-shape': ['Personal'], purpose: ['Spiritual', 'Career'], love: ['Relationships'], career: ['Career'], money: ['Career'],
+  mind: ['Personal'], health: ['Personal'], 'family-home': ['Relationships'], 'recurring-themes': ['Personal'], obstacles: ['Personal'], 'shadow-work': ['Spiritual'],
+  'past-lives': ['Spiritual'], 'spiritual-gifts': ['Spiritual'], practices: ['Spiritual'], numerology: ['Spiritual'], timing: ['Timing'], 'sex-attraction': ['Relationships'],
+  'core-personality': ['Personal'], 'core-emotions': ['Personal'], 'core-friendship': ['Relationships'], 'core-creativity': ['Personal'], 'core-work-style': ['Career'],
+  'core-leadership': ['Career'], 'core-self-worth': ['Personal'], 'core-resilience': ['Personal'], 'core-learning': ['Spiritual'], 'core-beliefs-travel': ['Spiritual'],
+  'core-freedom-change': ['Timing', 'Personal'], 'core-legacy': ['Career', 'Spiritual'],
+};
+export const readingMatches = (slug: string, filter: ReadingFilter | null) => !filter || (FILTER_OF[slug] ?? ['Personal']).includes(filter);

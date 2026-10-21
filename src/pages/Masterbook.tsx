@@ -1,3 +1,4 @@
+import { LoadFailed } from '@/components/common/LoadFailed';
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Input } from '@/components/ui/input';
@@ -30,7 +31,9 @@ export default function Masterbook() {
   const [q, setQ] = useState('');
   const [cat, setCat] = useState<string | null>(null);
   const [view, setView] = useState<'parts' | 'topics'>('parts');
-  useEffect(() => { loadIndex().then(setEntries).catch(() => setEntries([])); }, []);
+  const [failed, setFailed] = useState(false);
+  const [attempt, setAttempt] = useState(0);
+  useEffect(() => { setFailed(false); loadIndex().then(setEntries).catch(() => setFailed(true)); }, [attempt]);
   const parts = useMemo(() => {
     const m = new Map<string, MbEntry[]>();
     entries.filter(e => (!cat || catsFor(e).includes(cat)) && (e.title + e.label + e.sections.join(' ') + e.excerpt).toLowerCase().includes(q.toLowerCase()))
@@ -57,9 +60,11 @@ export default function Masterbook() {
           {CATEGORIES.map(([c]) => <button key={c} onClick={() => setCat(cat === c ? null : c)} className={`px-3 py-1 rounded-full border ${cat === c ? 'border-accent bg-accent/15' : 'border-border hover:bg-muted'}`}>{c} <span className="text-muted-foreground">{entries.filter(e => catsFor(e).includes(c)).length}</span></button>)}
         </div>
       </header>
-      {parts.map(([part, list]) => (
-        <section key={part}>
-          <h2 className="text-2xl mb-1">{part} <span className="text-sm text-muted-foreground font-sans">· {list.length}</span></h2>
+      {failed && <LoadFailed what="The Masterbook contents" onRetry={() => setAttempt(a => a + 1)} />}
+      {!failed && entries.length > 0 && parts.length === 0 && <p className="text-sm text-muted-foreground">No sections match. Clear the search or choose another topic.</p>}
+      {parts.map(([part, list], idx) => (
+        <details key={part} open={idx === 0 || !!q || !!cat} className="group">
+          <summary className="cursor-pointer list-none rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"><h2 className="text-2xl mb-1 inline-flex items-baseline gap-2"><span aria-hidden="true" className="text-gold text-base transition-transform group-open:rotate-90">›</span>{part} <span className="text-sm text-muted-foreground font-sans">· {list.length}</span></h2></summary>
           <div className="gold-rule mb-4" />
           <div className="grid sm:grid-cols-2 gap-3">
             {list.map(e => (
@@ -71,7 +76,7 @@ export default function Masterbook() {
               </Link>
             ))}
           </div>
-        </section>
+        </details>
       ))}
       {uploads.items.length > 0 && !cat && (
         <section>

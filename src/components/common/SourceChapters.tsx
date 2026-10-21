@@ -1,3 +1,4 @@
+import { LoadFailed } from '@/components/common/LoadFailed';
 import { withPlates } from '@/content/plates';
 import { BookmarkButton } from '@/components/common/BookmarkButton';
 import { loadProtectedJson, loadProtectedText } from '@/lib/protectedContent';
@@ -12,7 +13,7 @@ let indexCache: Promise<Entry[]> | null = null;
 const loadIndex = () => (indexCache ??= loadProtectedJson<Entry[]>('masterbook', 'index.json').catch(e => { indexCache = null; throw e; }));
 const textCache = new Map<string, Promise<string>>();
 const loadText = (id: string) => {
-  if (!textCache.has(id)) textCache.set(id, loadProtectedText('masterbook', `${id}.md`).then(withPlates).catch(() => ''));
+  if (!textCache.has(id)) textCache.set(id, loadProtectedText('masterbook', `${id}.md`).then(withPlates).catch(e => { textCache.delete(id); throw e; }));
   return textCache.get(id) ?? Promise.resolve('');
 };
 
@@ -22,18 +23,21 @@ const loadText = (id: string) => {
  */
 export function SourceChapters({ match, ids = [], title = 'The full text from the sources', exclude, limit = 40 }: { match?: RegExp; ids?: string[]; title?: string; exclude?: RegExp; limit?: number }) {
   const [items, setItems] = useState<(Entry & { text: string })[] | null>(null);
+  const [failed, setFailed] = useState(false);
+  const [attempt, setAttempt] = useState(0);
   useEffect(() => {
-    let live = true;
+    let live = true; setFailed(false); setItems(null);
     loadIndex().then(async idx => {
       const selected = new Set(ids);
       const hits = idx.filter(e => (selected.has(e.id) || (match?.test(e.title) ?? false)) && !(exclude && exclude.test(e.title))).slice(0, limit);
       const texts = await Promise.all(hits.map(h => loadText(h.id)));
       if (live) setItems(hits.map((h, i) => ({ ...h, text: texts[i].replace(/^#\s.*\n/, '') })));
-    }).catch(() => { if (live) setItems([]); });
+    }).catch(() => { if (live) setFailed(true); });
     return () => { live = false; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [match?.source, ids.join('|'), exclude?.source]);
+  }, [match?.source, ids.join('|'), exclude?.source, limit, attempt]);
 
+  if (failed) return <LoadFailed what="The source chapters" onRetry={() => setAttempt(a => a + 1)} />;
   if (!items) return <p className="text-sm text-muted-foreground">Loading the source chapters…</p>;
   if (!items.length) return null;
   return (

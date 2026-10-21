@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { readingMatches, type ReadingFilter } from '@/lib/topicReadings';
 import { Link } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { BoxArt } from '@/components/common/BoxArt';
@@ -7,7 +8,8 @@ import { usePlan } from '@/hooks/usePlan';
 import { Lock } from 'lucide-react';
 
 /** Writes each in-depth reading once, one at a time, and stops on the first failure. */
-export function TopicReadings({ seed }: { seed: string }) {
+export function TopicReadings({ seed, filter = null }: { seed: string; filter?: ReadingFilter | null }) {
+  const [all, setAll] = useState(false);
   const [rows, setRows] = useState<TopicRow[] | null>(null);
   const [writing, setWriting] = useState<string | null>(null);
   const [error, setError] = useState('');
@@ -38,7 +40,7 @@ export function TopicReadings({ seed }: { seed: string }) {
       {plan === 'free' && <p className="text-sm">Your free plan includes <strong>Your Big Three</strong> and <strong>Personality & Strengths</strong>. Readings marked with a lock unlock with <Link to="/pricing" className="text-primary underline">Pro</Link>.</p>}
       {error && <p role="alert" className="text-sm text-destructive">Paused: {error}</p>}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {ordered.map(t => { const r = done(t.slug); if (isLocked(t.slug)) return (
+        {ordered.filter(t => readingMatches(t.slug, filter)).slice(0, all || filter ? undefined : 8).map(t => { const r = done(t.slug); if (isLocked(t.slug)) return (
           <Link key={t.slug} to="/pricing" className="flex flex-col gap-1 rounded-lg border border-dashed border-border p-4 text-sm text-muted-foreground opacity-70 hover:opacity-100"><h3 className="font-display text-lg text-foreground">{t.title}</h3><span className="inline-flex items-center gap-1"><Lock className="h-3 w-3" aria-hidden="true" /> Unlock with Pro</span></Link>
         ); return r ? (
           <Link key={t.slug} to={`/my-readings/topic/${t.slug}`} className="block overflow-hidden rounded-lg border border-border bg-card hover:border-primary focus-visible:outline focus-visible:outline-2">
@@ -49,6 +51,7 @@ export function TopicReadings({ seed }: { seed: string }) {
           <div key={t.slug} className="rounded-lg border border-dashed border-border p-4 text-sm text-muted-foreground"><h3 className="font-display text-lg text-foreground">{t.title}</h3>{writing === t.title ? 'Writing now…' : 'Waiting to be written'}</div>
         ); })}
       </div>
+      {!all && !filter && ordered.length > 8 && <button type="button" onClick={() => setAll(true)} className="text-sm text-primary underline underline-offset-2">Show all {ordered.length} topics</button>}
     </section>
   );
 }

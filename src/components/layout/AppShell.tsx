@@ -10,8 +10,31 @@ import { FirstViewReveal } from '@/components/fx/FirstViewReveal';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Menu, X } from 'lucide-react';
 import { GenerationProgress } from '@/components/readings/GenerationProgress';
-import { orderFounderGroups } from '@/lib/founderEdition';
+import { founderPlace, orderFounderGroups } from '@/lib/founderEdition';
 import { useAprilSpace, useClassicView, setClassicView } from '@/hooks/useAprilSpace';
+
+/** April's breadcrumb (section › page) from her own menu; hidden on the first page of a section. */
+function FounderTrail() {
+  const { pathname } = useLocation();
+  const place = founderPlace(APRIL_NAV_GROUPS, pathname);
+  if (!place || place.home.to === pathname) return null;
+  return <nav aria-label="Breadcrumb" className="mb-6 text-xs text-muted-foreground"><Link to={place.home.to} className="hover:text-foreground underline-offset-2 hover:underline">{place.section}</Link><span aria-hidden="true" className="mx-2">›</span><span className="text-foreground">{place.label}</span></nav>;
+}
+
+/** "Continue in this section": the next pages in April's own menu, so no page is a dead end. */
+function FounderNext() {
+  const { pathname } = useLocation();
+  const place = founderPlace(APRIL_NAV_GROUPS, pathname);
+  if (!place || !place.next.length) return null;
+  return (
+    <nav aria-labelledby="founder-next" className="mt-16 border-t border-border pt-8 print:hidden">
+      <h2 id="founder-next" className="font-display text-2xl">Continue in {place.section}</h2>
+      <ul className="mt-5 grid gap-3 sm:grid-cols-3">
+        {place.next.map(n => <li key={n.to}><Link to={n.to} className="flex h-full items-center justify-between gap-2 rounded-xl border border-border bg-card/60 p-4 text-sm hover:border-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"><span>{n.label}</span><span aria-hidden="true">→</span></Link></li>)}
+      </ul>
+    </nav>
+  );
+}
 
 /** Shown in classic view for founders: one click back to the full private edition. */
 function ClassicViewBanner() {
@@ -86,7 +109,7 @@ export function AppShell() {
   const keepNames = founderState !== false && KEEP_NAME_PATHS.some(p => location.pathname === p || location.pathname.startsWith(`${p}/`));
   const [signedIn, setSignedIn] = useState<boolean | null>(null);
   useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => setSignedIn(!!data.session));
+    supabase.auth.getSession().then(({ data }) => setSignedIn(!!data.session)).catch(() => setSignedIn(false));
     const { data } = supabase.auth.onAuthStateChange((_e, s) => setSignedIn(!!s));
     return () => data.subscription.unsubscribe();
   }, []);
@@ -192,7 +215,7 @@ function AprilShell({ children }: { children: ReactNode }) {
         <SidebarInner />
       </aside>
       <div className="lg:hidden fixed top-0 inset-x-0 z-50 flex min-h-[64px] items-center justify-between gap-2 border-b border-border bg-background/95 px-3 py-2 backdrop-blur-xl pt-[max(0.5rem,env(safe-area-inset-top))]">
-        <NavLink to="/" className="min-w-0 rounded focus-visible:outline-none"><ZodaciLogo compact /></NavLink>
+        <NavLink to="/" className="min-w-0 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"><ZodaciLogo compact /></NavLink>
         <div className="flex items-center gap-2"><AccountButton compact /><Button ref={menuButtonRef} type="button" size="icon" variant="ghost" onClick={() => setOpen(v => !v)} aria-label={open ? 'Close menu' : 'Open menu'} aria-expanded={open} aria-controls="mobile-menu" className="min-h-11 min-w-11">
           {open ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
         </Button></div>
@@ -205,7 +228,9 @@ function AprilShell({ children }: { children: ReactNode }) {
       <main id="main-content" tabIndex={-1} className="flex-1 min-w-0 lg:pt-0 pt-[64px] relative z-10 outline-none">
         <div className="mx-auto max-w-5xl px-4 sm:px-8 py-8 sm:py-10 lg:py-14">
           <motion.div key={location.pathname} initial={{ opacity: 0, y: 24, filter: 'blur(6px)' }} animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }} transition={{ duration: 0 }}>
+            <FounderTrail />
             {children}
+            <FounderNext />
           </motion.div>
         </div>
         <footer className="border-t border-border mt-16">
@@ -252,7 +277,7 @@ function SidebarInner({ mobile = false, onNavigate }: { mobile?: boolean; onNavi
   }, [aprilGroups, badges.chat, badges.wonderings, rels, custom]);
   useMenuTitleFallback(useMemo(() => allGroups.flatMap(g => [...g.items, ...(g.footer ?? []), ...(g.submenus ?? []).flatMap(s => s.items)]), [allGroups]));
   return (
-    <div className={`flex min-h-full flex-col gap-6 overflow-x-hidden ${mobile ? 'px-4 pb-8 pt-4' : 'h-full overflow-y-auto p-6'}`}>
+    <div className={`founder-sidebar flex min-h-full flex-col gap-6 overflow-x-hidden ${mobile ? 'px-4 pb-8 pt-4' : 'h-full overflow-y-auto p-6'}`}>
       <div>
         <div className="flex items-center justify-between gap-2"><ZodaciLogo />{!mobile && <AccountButton compact />}</div>
         <div className="mt-3"><AdminEditionSwitch /></div>

@@ -63,7 +63,7 @@ export default function Timeline() {
 
       {/* Selected phase */}
       <div className="p-8 border border-gold/40 rounded bg-card gentle-fade" key={selected.id}>
-        <div className="font-smallcaps text-[11px] text-gold">Phase {selected.number} · {selected.years} · {selected.ages}{selected.current && ' · CURRENT WINDOW'}</div>
+        <div className="font-smallcaps text-[11px] text-gold">{selected.years} · {selected.ages}{selected.current && ' · CURRENT WINDOW'}</div>
         <h2 className="font-display mt-2">{selected.title}</h2>
         <div className="gold-rule my-4 w-16" />
         <p className="text-lg italic text-foreground/85">{selected.summary}</p>

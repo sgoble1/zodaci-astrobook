@@ -105,3 +105,9 @@
 - [x] Phase 7a: AI credit use tab
 - [x] Phase 7b: Newsletter, April monitor, audit log, settings, Stripe tabs (newsletter delivery blocked: email sender domain)
 - [x] Phase 8: PWA, referrals, Academy (email digests blocked: email sender domain)
+
+## Navigation & April finish pass (Oct 21)
+- [x] April edition: retry on failed loads, section trail + next page, focus rings, folding Masterbook parts
+- [x] Member: get-started banner without chart, Recommended for you on hubs, reading filters + Show all
+- [ ] April signed-in browser check (needs April's session)
+- [ ] External: Lulu credentials, email sender domain, licensed Sabian text, real testimonials

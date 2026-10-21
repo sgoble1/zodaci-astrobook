@@ -1,3 +1,4 @@
+import { LoadFailed } from '@/components/common/LoadFailed';
 import { toast } from 'sonner';
 import { confirmAction } from '@/components/common/ConfirmHost';
 import { useEffect, useState } from 'react';
@@ -20,7 +21,9 @@ export default function Sources() {
   const [view, setView] = useState<Viewable | null>(null);
   const [q, setQ] = useState('');
   const [readIds, setReadIds] = useState<Record<string, string>>({});
-  useEffect(() => { loadLibraryIndex().then(ix => setReadIds(Object.fromEntries(ix.map(d => [d.fileName, d.id])))); }, []);
+  const [indexFailed, setIndexFailed] = useState(false);
+  const [attempt, setAttempt] = useState(0);
+  useEffect(() => { setIndexFailed(false); loadLibraryIndex().then(ix => setReadIds(Object.fromEntries(ix.map(d => [d.fileName, d.id])))).catch(() => setIndexFailed(true)); }, [attempt]);
   const match = (s: string) => s.toLowerCase().includes(q.toLowerCase());
   const abs = (u: string) => new URL(u, window.location.origin).href;
 
@@ -63,6 +66,7 @@ export default function Sources() {
         <p className="text-muted-foreground mt-3 max-w-2xl">Every original document this site was built from. Open one to read it, or download it to verify any passage.</p>
         <Input placeholder="Filter files…" value={q} onChange={e => setQ(e.target.value)} className="max-w-sm mt-4" />
       </header>
+      {indexFailed && <LoadFailed what="The reading view list" onRetry={() => setAttempt(a => a + 1)} />}
 
       <section>
         <p className="text-sm text-muted-foreground mb-3">The Masterbook is readable chapter by chapter in <Link to="/masterbook" className="underline">The Masterbook</Link>. Every other document has a “Read” view with its full text, page by page. Have a question? <Link to="/ask" className="underline">Ask the Sources</Link>.</p>

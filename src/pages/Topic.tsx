@@ -1,3 +1,4 @@
+import { LoadFailed } from '@/components/common/LoadFailed';
 import { BIRTH } from '@/content/april';
 import { SourceChapters } from '@/components/common/SourceChapters';
 import { useEffect, useMemo, useState } from 'react';
@@ -36,10 +37,13 @@ export default function Topic() {
   const [index, setIndex] = useState<Entry[]>([]);
   const [passages, setPassages] = useState<Passage[] | null>(null);
   const [n, setN] = useState(12);
+  const [loadFailed, setLoadFailed] = useState(false);
+  const [attempt, setAttempt] = useState(0);
+  const retry = () => { setLoadFailed(false); setAttempt(a => a + 1); };
   const [sum, setSum] = useState(''); const [busy, setBusy] = useState(false); const [err, setErr] = useState<string | null>(null);
 
-  useEffect(() => { loadProtectedJson<Entry[]>('masterbook', 'index.json').then(setIndex).catch(() => setIndex([])); }, []);
-  useEffect(() => { setPassages(null); setN(12); setSum(''); setErr(null); loadCorpus().then(ps => setPassages(aprilOnly(ps))).catch(() => setPassages([])); }, [slug]);
+  useEffect(() => { loadProtectedJson<Entry[]>('masterbook', 'index.json').then(setIndex).catch(() => setLoadFailed(true)); }, [attempt]);
+  useEffect(() => { setPassages(null); setN(12); setSum(''); setErr(null); loadCorpus().then(ps => setPassages(aprilOnly(ps))).catch(() => { setPassages([]); setLoadFailed(true); }); }, [slug, attempt]);
 
   const chapters = useMemo(() => topic ? index.filter(e => !SHANE_RE.test(e.title) && !/relationship/i.test(e.title)).filter(e => topic.chapters.test(e.title) || topic.sourceIds?.includes(e.id)) : [], [index, topic]);
   const hits = useMemo(() => topic && passages ? rank(passages, topic.query, 40) : [], [passages, topic]);
@@ -112,10 +116,11 @@ export default function Topic() {
         )}
       </section>
 
+      {loadFailed && <LoadFailed what="Some of this theme's sources" onRetry={retry} />}
       <section className="border border-border rounded-lg p-5 bg-card">
         <div className="flex items-center justify-between gap-3 mb-2">
           <h2 className="font-display text-2xl">Theme summary</h2>
-          <Button onClick={summarize} disabled={busy || !passages} size="sm">{busy ? 'Writing…' : sum ? 'Rewrite' : 'Summarise from the sources'}</Button>
+          <Button onClick={summarize} disabled={busy || !passages || !hits.length} title={passages && !hits.length ? 'No source passages to summarise for this theme yet.' : undefined} size="sm">{busy ? 'Writing…' : sum ? 'Rewrite' : 'Summarise from the sources'}</Button>
         </div>
         {!sum && !err && <p className="text-sm text-muted-foreground">A cited overview written only from the passages below. Numbers like [3] match passage 3.</p>}
         {err && <p className="text-sm text-destructive">{err}</p>}
