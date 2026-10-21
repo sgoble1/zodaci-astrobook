@@ -1,3 +1,4 @@
+import { LoadFailed } from '@/components/common/LoadFailed';
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronDown, ExternalLink } from 'lucide-react';
@@ -20,7 +21,9 @@ export default function MasterbookSources() {
   const [q, setQ] = useState('');
   const uploads = useLibrary('masterbook');
   const ov = useDocOverrides().map;
-  useEffect(() => { loadIndex().then(setMb).catch(() => setMb([])); loadLibraryIndex().then(setLib).catch(() => setLib([])); }, []);
+  const [failed, setFailed] = useState(false);
+  const [attempt, setAttempt] = useState(0);
+  useEffect(() => { setFailed(false); Promise.all([loadIndex().then(setMb), loadLibraryIndex().then(setLib)]).catch(() => setFailed(true)); }, [attempt]);
 
   useEffect(() => {
     if (!expanded?.startsWith('lib:')) return;

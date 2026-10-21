@@ -1,3 +1,4 @@
+import { LoadFailed } from '@/components/common/LoadFailed';
 import { toast } from 'sonner';
 import { confirmAction } from '@/components/common/ConfirmHost';
 import { useEffect, useState } from 'react';
@@ -20,7 +21,9 @@ export default function Sources() {
   const [view, setView] = useState<Viewable | null>(null);
   const [q, setQ] = useState('');
   const [readIds, setReadIds] = useState<Record<string, string>>({});
-  useEffect(() => { loadLibraryIndex().then(ix => setReadIds(Object.fromEntries(ix.map(d => [d.fileName, d.id])))); }, []);
+  const [indexFailed, setIndexFailed] = useState(false);
+  const [attempt, setAttempt] = useState(0);
+  useEffect(() => { setIndexFailed(false); loadLibraryIndex().then(ix => setReadIds(Object.fromEntries(ix.map(d => [d.fileName, d.id])))).catch(() => setIndexFailed(true)); }, [attempt]);
   const match = (s: string) => s.toLowerCase().includes(q.toLowerCase());
   const abs = (u: string) => new URL(u, window.location.origin).href;
 
