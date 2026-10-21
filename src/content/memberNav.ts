@@ -36,7 +36,7 @@ export const MEMBER_DOMAINS: MemberDomain[] = [
   {
     id: 'chart', label: 'Chart', hub: '/my-chart', hubLabel: 'Open my chart', icon: Orbit,
     description: 'Everything calculated from your own birth details.',
-    tabs: ['/my-chart', '/planets', '/houses', '/aspects', '/star-map', '/results', '/findings', '/chart-elements'],
+    tabs: ['/my-chart', '/planets', '/houses', '/aspects', '/star-map', '/results', '/findings', '/chart-elements', '/chart-calculator'],
     prefixes: ['/birth-chart', '/chart-guide'],
     columns: [
       { title: 'Your chart', items: [

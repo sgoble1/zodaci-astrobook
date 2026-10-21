@@ -32,7 +32,6 @@ export default function MemberChartSection({ birth, focus }: { birth: MyBirth; f
         <p className="font-smallcaps text-xs text-gold">{birth.date}{birth.time ? ` · ${birth.time}` : ' · time unknown'} · {birth.placeLabel}</p>
         <h1 className="font-display mt-1 text-4xl">{title}</h1>
         <p className="mt-2 max-w-2xl text-muted-foreground">{intro}</p>
-        <div className="mt-4 flex flex-wrap gap-2 text-sm">{(Object.keys(TITLES) as ChartFocus[]).map(k => <Link key={k} to={k === 'calculator' ? '/chart-calculator' : k === 'elements' ? '/chart-elements' : `/${k}`} className={`rounded-full border px-3 py-1 ${k === focus ? 'border-primary bg-primary/10' : 'border-border hover:bg-muted'}`}>{TITLES[k][0].replace('Your ', '')}</Link>)}<Link to="/my-chart" className="rounded-full border border-border px-3 py-1 hover:bg-muted">Full chart</Link></div>
       </header>
 
       {focus === 'planets' && <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{chart.bodies.map(b => (
