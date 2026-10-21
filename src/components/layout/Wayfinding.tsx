@@ -71,7 +71,20 @@ function PageBreadcrumbs({ path }: { path: string }) {
 export function WayfindingTop() {
   const { pathname } = useLocation();
   const crumbs = breadcrumbsFor(pathname);
-  return crumbs ? <PageBreadcrumbs path={pathname} /> : <DomainTabs path={pathname} />;
+  return <>{<NeedsChartBanner path={pathname} />}{crumbs ? <PageBreadcrumbs path={pathname} /> : <DomainTabs path={pathname} />}</>;
+}
+
+/** New members without saved birth details get one clear first step instead of empty chart pages. */
+const NO_BANNER = ['/start', '/onboarding', '/pricing', '/checkout/return', '/instructions', '/faq', '/about'];
+function NeedsChartBanner({ path }: { path: string }) {
+  const s = useNavState();
+  if (s.birth !== null || NO_BANNER.includes(path) || path.startsWith('/admin')) return null;
+  return (
+    <div role="status" className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-primary/40 bg-primary/10 px-4 py-3 text-sm">
+      <span>Add your birth details to get started — your chart, readings and book are all built from them.</span>
+      <Link to="/start" className="inline-flex min-h-10 items-center gap-1 rounded-full bg-primary px-4 text-primary-foreground hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">Add birth details<ArrowRight className="h-4 w-4" aria-hidden="true" /></Link>
+    </div>
+  );
 }
 
 /** Bottom of every member page: three "Continue exploring" steps, the first personalised when possible. */
