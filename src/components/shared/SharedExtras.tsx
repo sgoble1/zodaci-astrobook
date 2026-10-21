@@ -21,7 +21,7 @@ type Reaction = { id: string; user_id: string; emoji: string };
 
 function useDirectory() {
   const [d, setD] = useState<Record<string, string>>({});
-  useEffect(() => { supabase.rpc('shared_member_directory').then(({ data }) => setD(Object.fromEntries((data ?? []).map(r => [r.user_id, r.display_name])))); }, []);
+  useEffect(() => { supabase.rpc('shared_member_directory').then(({ data }) => setD(Object.fromEntries((data ?? []).map(r => [r.user_id, r.display_name])))).catch(() => undefined); }, []);
   return d;
 }
 
@@ -100,7 +100,7 @@ export function Recommendations({ userId, compact = false }: { userId: string; c
       {items === null ? <p role="status" className="text-sm text-muted-foreground">Loading…</p> : !shown.length ? <p className="text-sm text-muted-foreground">No recommendations yet{compact ? '' : ' — share the first one above'}.</p> :
         <ul className="grid gap-3 sm:grid-cols-2">{shown.map(r => <li key={r.id} className="rounded-lg border border-border p-4 space-y-2">
           <div className="flex items-start justify-between gap-2"><div><span className="text-[10px] uppercase tracking-wider text-accent">{r.category}</span><h3 className="text-lg leading-tight">{r.link ? <a href={r.link} target="_blank" rel="noreferrer" className="underline">{r.title}</a> : r.title}</h3><p className="text-xs text-muted-foreground">from {dir[r.author_id] ?? 'Member'} · {stamp(r.created_at)}</p></div>
-            {r.author_id === userId && !compact && <Button variant="ghost" size="icon" aria-label={`Delete ${r.title}`} onClick={() => db('shared_recommendations').delete().eq('id', r.id).then(load)}><Trash2 className="h-4 w-4" /></Button>}</div>
+            {r.author_id === userId && !compact && <Button variant="ghost" size="icon" aria-label={`Delete ${r.title}`} onClick={() => db('shared_recommendations').delete().eq('id', r.id).then(({ error }: { error: unknown }) => { if (error) toast.error('Could not delete — please try again.'); load(); })}><Trash2 className="h-4 w-4" /></Button>}</div>
           {r.note && <p className="text-sm">{r.note}</p>}
           {!compact && (open === r.id ? <ItemThread type="rec" id={r.id} userId={userId} title={r.title} /> : <Button variant="link" className="px-0" onClick={() => setOpen(r.id)}>React & comment</Button>)}
         </li>)}</ul>}
@@ -191,13 +191,13 @@ export function MediaLibrary({ userId }: { userId: string }) {
       {items === null ? <p role="status">Loading the library…</p> : !shown.length ? <p className="text-sm text-muted-foreground">{items.length ? 'Nothing in this view. Drag files here from All files, or upload new ones.' : 'Nothing here yet. Upload the first photo or video.'}</p> :
         <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">{shown.map((m, i) => <li key={m.id} className="gentle-fade" style={{ animationDelay: `${Math.min(i, 12) * 60}ms` }} draggable onDragStart={e => { e.dataTransfer.setData('text/media-id', m.id); e.dataTransfer.effectAllowed = 'move'; }}>
           <button type="button" onClick={() => { setView(m); setEditCaption(m.caption); }} className="group block w-full cursor-grab overflow-hidden rounded-lg border border-border text-left focus-visible:ring-2 focus-visible:ring-ring active:cursor-grabbing" aria-label={`Open ${m.caption || m.file_name}`}>
-            <div className="aspect-square bg-muted">{isVideo(m) ? <video src={m.url} muted preload="metadata" className="pointer-events-none h-full w-full object-cover" /> : <img src={m.url} alt={m.caption || m.file_name} loading="lazy" draggable={false} className="h-full w-full object-cover transition duration-700 group-hover:scale-105" />}</div>
+            <div className="aspect-square bg-muted">{isVideo(m) ? <video src={m.url} muted preload="metadata" className="pointer-events-none h-full w-full object-cover" /> : <img src={m.url} alt={m.caption || m.file_name} width={320} height={320} loading="lazy" draggable={false} className="h-full w-full object-cover transition duration-700 group-hover:scale-105" />}</div>
             <div className="p-2 text-xs"><p className="truncate">{m.caption || m.file_name}</p><p className="truncate text-muted-foreground">{dir[m.uploaded_by] ?? 'Member'}{isVideo(m) ? ' · video' : ''}{m.folder_id ? ` · ${folders.find(f => f.id === m.folder_id)?.name ?? ''}` : ''}</p></div>
           </button></li>)}</ul>}
       <Dialog open={!!view} onOpenChange={o => !o && setView(null)}>
         <DialogContent className="max-h-[92vh] max-w-4xl overflow-y-auto">
           {view && <><DialogHeader><DialogTitle>{view.caption || view.file_name}</DialogTitle></DialogHeader>
-            {isVideo(view) ? <video src={view.url} controls autoPlay className="max-h-[60vh] w-full rounded" /> : <img loading="lazy" decoding="async" src={view.url} alt={view.caption || view.file_name} className="max-h-[60vh] w-full rounded object-contain" />}
+            {isVideo(view) ? <video src={view.url} controls autoPlay className="max-h-[60vh] w-full rounded" /> : <img loading="lazy" decoding="async" src={view.url} width={960} height={720} alt={view.caption || view.file_name} className="max-h-[60vh] w-full rounded object-contain" />}
             <div className="grid gap-2 sm:grid-cols-[1fr_auto_auto] sm:items-center">
               <Input value={editCaption} onChange={e => setEditCaption(e.target.value)} aria-label="Edit caption" placeholder="Caption" />
               <Button size="sm" variant="outline" onClick={() => saveCaption(view)} disabled={editCaption === view.caption}>Save caption</Button>

@@ -86,7 +86,7 @@ export function AppShell() {
   const keepNames = founderState !== false && KEEP_NAME_PATHS.some(p => location.pathname === p || location.pathname.startsWith(`${p}/`));
   const [signedIn, setSignedIn] = useState<boolean | null>(null);
   useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => setSignedIn(!!data.session));
+    supabase.auth.getSession().then(({ data }) => setSignedIn(!!data.session)).catch(() => setSignedIn(false));
     const { data } = supabase.auth.onAuthStateChange((_e, s) => setSignedIn(!!s));
     return () => data.subscription.unsubscribe();
   }, []);

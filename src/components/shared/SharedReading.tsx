@@ -32,7 +32,7 @@ export function SharedReading({ userId }: { userId: string }) {
 
   useEffect(() => {
     loadDocs();
-    supabase.rpc('shared_member_directory').then(({ data }) => setNames(Object.fromEntries((data ?? []).map((m: { user_id: string; display_name: string }) => [m.user_id, m.display_name]))));
+    supabase.rpc('shared_member_directory').then(({ data }) => setNames(Object.fromEntries((data ?? []).map((m: { user_id: string; display_name: string }) => [m.user_id, m.display_name])))).catch(() => undefined);
     const ch = supabase.channel(`shared-reading:${userId}`)
       .on('postgres_changes', { event: '*', schema: 'public', table: 'shared_documents' }, loadDocs)
       .on('postgres_changes', { event: '*', schema: 'public', table: 'shared_annotations' }, () => { if (selectedRef.id) loadNotes(selectedRef.id); })
@@ -45,7 +45,7 @@ export function SharedReading({ userId }: { userId: string }) {
     setUrl(''); setNotes([]);
     if (!selected) return;
     loadNotes(selected.id);
-    supabase.storage.from('shared-space').createSignedUrl(selected.file_path, 3600).then(({ data }) => setUrl(data?.signedUrl ?? ''));
+    supabase.storage.from('shared-space').createSignedUrl(selected.file_path, 3600).then(({ data }) => setUrl(data?.signedUrl ?? '')).catch(() => setUrl(''));
   }, [selected, loadNotes]);
 
   const upload = async () => {
