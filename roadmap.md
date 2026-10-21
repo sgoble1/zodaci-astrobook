@@ -9,9 +9,9 @@
 - [ ] Verify at 393px and 1280px, signed out, member and admin.
 
 ## In progress (previous request: finish all remaining implementation)
-- [ ] Dependency advisories: router, lodash (via charts) and spreadsheet import library upgraded; dependency scan clean.
+- [x] Dependency advisories fixed; dependency scan clean (0 known vulnerabilities, 77 packages).
 - [ ] Lulu Print API integration (Phase 5): admin connection status, live quote per order, submit verified-paid orders, status/tracking sync and signed webhook. Goes live once Lulu keys are added. Remaining: full test run and admin browser check as Shane.
-- [ ] Admin launch-readiness checklist (Phase 7 "global control checklist") from real system signals.
+- [ ] Hub quick tabs and non-repeating next steps fixed; admin launch-readiness checklist still to build (Phase 7 "global control checklist") from real system signals.
 
 ## Earlier current-request items
 - [x] Complete interrupted marketing audit: prices/FAQ verification, route metadata, invitation sharing, honest public claims and mobile/desktop checks; evidence and external limits: docs/marketing-audit-2026-10-20.md.
@@ -77,6 +77,8 @@
 - AI credits top-up (owner action)
 
 ## Founder editions (April & Shane)
+- [x] Classic view switch for April/Shane (member layout) with banner to return to the full edition.
+- [ ] Reorganize April's founder sidebar groups and verify classic view in her account.
 - [x] Founder access + higher reading limits; Shane Masterbook (63 chapters) at /shane; share-with-April switch
 - [x] Side-by-side "Our two charts" page
 - [x] Map Shane chapters into topic pages; readings generate on demand from his calculated chart (generation resumed)
