@@ -6,6 +6,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/co
 import { Button } from '@/components/ui/button';
 import { ZodaciLogo } from '@/components/brand/ZodaciLogo';
 import { SampleChartDemo } from '@/components/brand/SampleChartDemo';
+import { PromoVideo } from '@/components/brand/PromoVideo';
 import { GlobalFooter } from '@/components/brand/GlobalFooter';
 import { NewsletterSignup } from '@/components/brand/NewsletterSignup';
 import { PUBLIC_ARTICLES } from '@/content/publicArticles';
@@ -92,6 +93,18 @@ export default function BrandLanding() {
       </section>
 
       <section aria-label="Zodaci at a glance" className="border-b border-border bg-card/40"><dl className="mx-auto grid grid-cols-2 lg:flex max-w-7xl lg:flex-wrap lg:justify-center gap-x-6 lg:gap-x-12 gap-y-5 px-5 py-7 sm:px-10">{FACTS.map(([n, l]) => <div key={l} className="flex flex-col lg:flex-row lg:items-baseline gap-1 lg:gap-2"><dt className="sr-only">{l}</dt><dd className="font-display text-3xl">{n}</dd><dd aria-hidden className="text-sm text-muted-foreground">{l}</dd></div>)}</dl></section>
+
+      <section aria-labelledby="film-h" className="brand-band border-b border-border">
+        <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]">
+          <div>
+            <p className="font-smallcaps text-xs text-gold">The short film</p>
+            <h2 id="film-h" className="mt-3">See Zodaci<br />in 24 seconds.</h2>
+            <p className="mt-4 max-w-md text-muted-foreground leading-relaxed">A quick look at what you get: a chart calculated from your exact birth moment, readings written about you alone, free lessons, and AstroComic.</p>
+            <div className="mt-6 flex flex-wrap gap-3"><Button asChild><Link to="/start">Explore your chart<ArrowRight /></Link></Button><Button asChild variant="ghost"><Link to="/demo">Try the interactive demo</Link></Button></div>
+          </div>
+          <PromoVideo schema />
+        </div>
+      </section>
 
       <section aria-labelledby="pillars-h" className="brand-band border-b border-border">
         <h2 id="pillars-h" className="sr-only">Why Zodaci</h2>

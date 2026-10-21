@@ -1,4 +1,5 @@
 import { CinematicVideo } from '@/components/fx/CinematicVideo';
+import { PromoVideo } from '@/components/brand/PromoVideo';
 import { Navigate, Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { BoxArt } from '@/components/common/BoxArt';
