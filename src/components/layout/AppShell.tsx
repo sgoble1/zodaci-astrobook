@@ -12,6 +12,13 @@ import { Menu, X } from 'lucide-react';
 import { GenerationProgress } from '@/components/readings/GenerationProgress';
 import { useAprilSpace, useClassicView, setClassicView } from '@/hooks/useAprilSpace';
 
+/** April's menu sections in order of purpose; unrecognised sections keep their order at the end. Nothing is removed. */
+const FOUNDER_ORDER: RegExp[] = [/begin|home|start/i, /natal|chart|planet/i, /house|life area|architecture/i, /timing|cycle|timeline|retrograde/i, /other system|feng|kua|numerolog|bagua/i, /masterbook|compendium|library|archive|read/i, /shared|relationship/i, /workbook|counsel|reflect/i];
+export function orderFounderGroups<T extends { title: string }>(groups: T[]): T[] {
+  const rank = (t: string) => { const i = FOUNDER_ORDER.findIndex(r => r.test(t)); return i < 0 ? FOUNDER_ORDER.length : i; };
+  return groups.map((g, i) => ({ g, i, r: rank(g.title) })).sort((a, b) => a.r - b.r || a.i - b.i).map(x => x.g);
+}
+
 /** Shown in classic view for founders: one click back to the full private edition. */
 function ClassicViewBanner() {
   return (
@@ -246,7 +253,7 @@ function SidebarInner({ mobile = false, onNavigate }: { mobile?: boolean; onNavi
   const allGroups: NavGroup[] = useMemo(() => {
     const shared = { ...SHARED_GROUP, items: SHARED_GROUP.items.map(item => ({ ...item, badge: item.to === '/shared/conversations' ? badges.chat : item.to === '/shared/wonderings' ? badges.wonderings : undefined })) };
     const relationships = { ...RELATIONSHIPS_GROUP, items: [...RELATIONSHIPS_GROUP.items, ...rels.map(r => ({ to: `/relationships/${r.id}`, label: `↳ ${r.name}${r.relation ? ` · ${r.relation}` : ''}` }))] };
-    return [...aprilGroups.slice(0, 2), shared, relationships, ...aprilGroups.slice(2)]
+    return orderFounderGroups([...aprilGroups.slice(0, 2), shared, relationships, ...aprilGroups.slice(2)])
       .map(g => ({ ...g, items: [...g.items, ...custom.filter(c => c.menu_group === g.title).map(c => ({ to: `/p/${c.id}`, label: c.status === 'generating' ? `${c.title} · writing…` : c.title, created: true } as NavItem))] }));
   }, [aprilGroups, badges.chat, badges.wonderings, rels, custom]);
   useMenuTitleFallback(useMemo(() => allGroups.flatMap(g => [...g.items, ...(g.footer ?? []), ...(g.submenus ?? []).flatMap(s => s.items)]), [allGroups]));
