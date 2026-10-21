@@ -68,3 +68,18 @@ export function useAprilSpace() {
   useEffect(() => { listeners.add(setOk); check(); return () => { listeners.delete(setOk); }; }, []);
   return ok;
 }
+
+/** Founder-only presentation choice: 'classic' shows the standard member layout. Purely visual; access rules are unchanged. */
+export const CLASSIC_VIEW_KEY = 'zodaci-classic-view';
+const classicListeners = new Set<(v: boolean) => void>();
+const readClassic = () => typeof window !== 'undefined' && localStorage.getItem(CLASSIC_VIEW_KEY) === '1';
+export function setClassicView(on: boolean) {
+  if (on) localStorage.setItem(CLASSIC_VIEW_KEY, '1'); else localStorage.removeItem(CLASSIC_VIEW_KEY);
+  classicListeners.forEach(l => l(on));
+  window.scrollTo({ top: 0 });
+}
+export function useClassicView() {
+  const [on, setOn] = useState(readClassic);
+  useEffect(() => { classicListeners.add(setOn); return () => { classicListeners.delete(setOn); }; }, []);
+  return on;
+}

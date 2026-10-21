@@ -1,18 +1,21 @@
-import { ExternalLink, ArrowLeftRight, Eye } from 'lucide-react';
+import { ExternalLink, ArrowLeftRight, Eye, LayoutGrid } from 'lucide-react';
 import { useSession } from '@/hooks/useLibrary';
-import { isAdminEmail, leaveAprilEdition, openAprilEditionTab, viewAprilEditionInApp, useAprilSpace } from '@/hooks/useAprilSpace';
+import { isAdminEmail, leaveAprilEdition, openAprilEditionTab, viewAprilEditionInApp, useAprilSpace, setClassicView } from '@/hooks/useAprilSpace';
 import { Button } from '@/components/ui/button';
 
-/** Admin-only: view April's original edition in this tab or a separate tab, or return to your own. */
+/** Founder edition controls: classic-view switch for April and Shane; admin can also open April's original edition. */
 export function AdminEditionSwitch() {
   const session = useSession();
   const april = useAprilSpace();
-  if (!isAdminEmail(session?.user.email)) return null;
+  const admin = isAdminEmail(session?.user.email);
+  const classic = april ? <Button variant="ghost" size="sm" className="w-full justify-start" onClick={() => setClassicView(true)}><LayoutGrid className="h-4 w-4" />Switch to classic view</Button> : null;
+  if (!admin) return classic;
   if (april) {
     return (
       <div className="space-y-2" data-keep-wording>
         <p className="text-xs text-gold">You are viewing April's original edition.</p>
         <Button variant="outline" size="sm" className="w-full justify-start" onClick={leaveAprilEdition}><ArrowLeftRight className="h-4 w-4" />Back to my own content</Button>
+        {classic}
       </div>
     );
   }

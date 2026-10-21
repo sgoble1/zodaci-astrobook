@@ -80,12 +80,14 @@ export function NextStepPanel() {
   const s = useNavState();
   if (s.birth === undefined) return null;
   const steps = nextStepsFor(pathname, { plan: s.plan, hasChart: !!s.birth, moonSign: s.moonSign, lastVisit: s.lastVisit?.path?.startsWith('/my-readings/topic/') ? { path: s.lastVisit.path, title: s.lastVisit.title } : null });
-  if (!steps.length) return null;
+  const back = new Set((breadcrumbsFor(pathname) ?? []).map(c => c.to).filter(Boolean));
+  const shown = steps.filter(st => !back.has(st.to));
+  if (!shown.length) return null;
   return (
     <section aria-labelledby="continue-exploring" className="mt-16 border-t border-border pt-8 print:hidden">
       <h2 id="continue-exploring" className="font-display text-2xl">Continue exploring</h2>
       <ul className="mt-5 grid gap-4 sm:grid-cols-3">
-        {steps.map(step => {
+        {shown.map(step => {
           const need = s.lock(step.to);
           return <li key={step.to}>
             <Link to={step.to} className="group flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-card/60 backdrop-blur-md transition-colors hover:border-primary/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">

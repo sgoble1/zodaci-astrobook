@@ -10,7 +10,17 @@ import { FirstViewReveal } from '@/components/fx/FirstViewReveal';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Menu, X } from 'lucide-react';
 import { GenerationProgress } from '@/components/readings/GenerationProgress';
-import { useAprilSpace } from '@/hooks/useAprilSpace';
+import { useAprilSpace, useClassicView, setClassicView } from '@/hooks/useAprilSpace';
+
+/** Shown in classic view for founders: one click back to the full private edition. */
+function ClassicViewBanner() {
+  return (
+    <div role="status" className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-gold/40 bg-gold/10 px-4 py-3 text-sm">
+      <span>You're seeing the classic view — the same layout every member sees.</span>
+      <Button size="sm" variant="outline" onClick={() => setClassicView(false)}>Back to your full edition</Button>
+    </div>
+  );
+}
 import { useSharedSpaceMember } from '@/hooks/useSharedSpaceMember';
 import { PublicWording } from '@/components/common/PublicWording';
 import { PublicChartFallback, isPublicPath } from '@/components/common/PublicChartFallback';
