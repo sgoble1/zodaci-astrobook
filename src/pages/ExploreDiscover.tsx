@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { useAprilSpace } from '@/hooks/useAprilSpace';
 import { BoxArt } from '@/components/common/BoxArt';
 import { privateImage } from '@/content/privateAssets';
+import { MemberExploreHub } from '@/components/layout/ExploreHub';
 
 const ART: Record<string, { src: string; alt: string }> = {
   chart: { src: 'explore/chart.jpg', alt: 'Etched zodiac wheel above an open book' },
@@ -55,21 +56,15 @@ const items: DiscoveryItem[] = [
   { category: 'sources', title: 'Explore themes and questions', description: 'Choose a life topic and see its key ideas, linked source passages and useful questions to consider.', to: '/topics', sources: [{ label: 'All protected sources', to: '/read' }] },
 ];
 
-const publicItems: DiscoveryItem[] = [
- {category:'chart',title:'Your calculated birth chart',description:'Explore your own planets, houses and aspects from your saved birth details.',to:'/my-chart',sources:[],next:{label:'Chart guide',to:'/chart-guide'}},
- {category:'chart',title:'Your personal readings',description:'Reflect on identity, feelings and daily patterns using your own chart.',to:'/my-readings',sources:[]},
- {category:'growth',title:'Your six foundational chapters',description:'Pro includes six chapters written from your own chart. Cosmic adds custom chapters.',to:'/my-masterbook',sources:[],next:{label:'Compare plans',to:'/pricing'}},
- {category:'relationships',title:'Compare relationships',description:'Add birth details with permission and compare placements.',to:'/relationships',sources:[]},
- {category:'sources',title:'Your private library',description:'Keep your own readings and uploaded material together.',to:'/my-astrobook',sources:[]},
- {category:'sources',title:'Listen to your podcasts',description:'Creator members can make audio episodes from their own chart.',to:'/podcasts',sources:[]},
- {category:'home',title:'Your book, in print',description:'Choose a personal cover and up to two additional topics.',to:'/books',sources:[]},
- {category:'growth',title:'Community journal',description:'Read reflections and publish your own articles with Pro or Cosmic.',to:'/blog',sources:[]},
- {category:'growth',title:'Your life, in context',description:'Save real experiences privately, choose what informs generation, and turn an example into a suggested chapter.',to:'/personal-context',sources:[]},
- {category:'relationships',title:'Your invited workspaces',description:'Create a workspace and share selected podcasts with invited members.',to:'/workspaces',sources:[]},
-];
 export default function ExploreDiscover() {
   const april = useAprilSpace();
-  const collection = april ? items : publicItems;
+  if (!april) return <MemberExploreHub />;
+  return <AprilDiscover />;
+}
+
+function AprilDiscover() {
+  const april = true;
+  const collection = items;
   const [active, setActive] = useState('all');
   const visibleItems = useMemo(() => active === 'all' ? collection : collection.filter(item => item.category === active), [active,collection]);
   const activeLabel = categories.find(category => category.id === active)?.label ?? 'Everything';
