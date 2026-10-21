@@ -8,3 +8,9 @@ export const PROMO_VIDEO = {
   uploadDate: '2026-10-21',
   origin: 'https://zodaci.com',
 } as const;
+
+/** Landing-page body marker: a line containing only [film] shows the promo film at that spot. */
+export const FILM_MARKER = '[film]';
+export function splitOnFilm(body: string): string[] {
+  return body.split(/^[ \t]*\[film\][ \t]*$/m).map(s => s.trim());
+}
