@@ -112,7 +112,7 @@ export default function AprilHome() {
         <div className="grid md:grid-cols-2 gap-6">
           {PHASES.filter(p => p.current).map(p => (
             <div key={p.id} className="p-6 border border-gold/40 rounded bg-card">
-              <div className="font-smallcaps text-[10px] text-gold">Phase {p.number} · {p.years}</div>
+              <div className="font-smallcaps text-[10px] text-gold">{p.years}</div>
               <h3 className="font-display mt-2">{p.title}</h3>
               <p className="text-sm text-foreground/85 mt-3 leading-relaxed">{p.interpretation}</p>
             </div>
