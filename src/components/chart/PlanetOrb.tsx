@@ -32,15 +32,16 @@ export function PlanetOrb({ planet, size = 64, label, className = '' }: { planet
         <radialGradient id={`${id}s`} cx="0.3" cy="0.28" r="0.3"><stop offset="0" stopColor="#FFFFFF" stopOpacity="0.7" /><stop offset="1" stopColor="#FFFFFF" stopOpacity="0" /></radialGradient>
         <linearGradient id={`${id}r`} x1="0" x2="1"><stop offset="0" stopColor={l.light} stopOpacity="0.15" /><stop offset="0.5" stopColor={l.light} stopOpacity="0.85" /><stop offset="1" stopColor={l.light} stopOpacity="0.15" /></linearGradient>
         <clipPath id={`${id}c`}><circle r="34" /></clipPath>
+        <clipPath id={`${id}f`}><rect x="-60" y="0" width="120" height="60" /></clipPath>
       </defs>
       <circle r={k === 'sun' ? 58 : 50} fill={`url(#${id}g)`} />
-      {ring && <ellipse rx="54" ry="12" fill="none" stroke={`url(#${id}r)`} strokeWidth="5" transform="rotate(-18)" clipPath={undefined} />}
+      {ring && <ellipse rx="54" ry="12" fill="none" stroke={`url(#${id}r)`} strokeWidth="5" transform="rotate(-18)" opacity="0.6" />}
       <circle r="34" fill={`url(#${id}b)`} />
       {l.bands && <g clipPath={`url(#${id}c)`} opacity="0.35">{[-18, -6, 6, 17].map((y, i) => <ellipse key={i} cx="0" cy={y} rx="40" ry={i % 2 ? 3 : 4.5} fill={l.bands} />)}</g>}
       {k === 'moon' && <g fill={l.dark} opacity="0.3"><circle cx="-10" cy="-6" r="6" /><circle cx="12" cy="8" r="4" /><circle cx="2" cy="18" r="3" /></g>}
       {k === 'mars' && <g fill={l.dark} opacity="0.3"><ellipse cx="-8" cy="4" rx="10" ry="5" /><ellipse cx="12" cy="-10" rx="6" ry="3" /></g>}
       <circle r="34" fill={`url(#${id}s)`} />
-      {ring && <path d="M -51 16.6 A 54 12 -18 0 0 51 -16.6" fill="none" stroke={`url(#${id}r)`} strokeWidth="5" transform="rotate(-18) rotate(18)" />}
+      {ring && <g transform="rotate(-18)"><ellipse rx="54" ry="12" fill="none" stroke={`url(#${id}r)`} strokeWidth="5" clipPath={`url(#${id}f)`} /></g>}
     </svg>
   );
 }
