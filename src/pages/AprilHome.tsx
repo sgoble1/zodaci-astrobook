@@ -5,6 +5,8 @@ import { UpdatesFeed } from '@/components/common/UpdatesFeed';
 import heroImg from '@/assets/hero-threshold.jpg';
 import { SharedChatFeed } from '@/components/shared/SharedChatFeed';
 import { Button } from '@/components/ui/button';
+import { PlanetOrb } from '@/components/chart/PlanetOrb';
+import { chartTitle } from '@/lib/chartTitle';
 
 const modules = [
   { to: '/birth-chart', title: 'The Birth Chart', desc: "The full snapshot — recorded birth data, sourced placements, independent calculations, chart shape, elemental balance and chart rulers." },
@@ -19,6 +21,8 @@ const modules = [
 ];
 
 export default function AprilHome() {
+  const sign = (k: string) => PLACEMENTS.find(p => p.key === k)?.sign;
+  const named = sign('sun') ? chartTitle({ sun: sign('sun')!, moon: sign('moon') }) : null;
   return (
     <div className="space-y-16">
       {/* Hero */}
@@ -56,6 +60,22 @@ export default function AprilHome() {
           <img loading="lazy" decoding="async" src={heroImg} alt="A woman viewed from behind stands at the threshold of a great celestial doorway; above her a natal chart in antique gold." width={1600} height={1024} className="w-full h-auto" />
         </div>
       </section>
+
+      {PLACEMENTS.length > 0 && (
+        <section aria-labelledby="april-planets" className="gentle-fade">
+          {named && <p className="font-display text-2xl text-gold">{named.title}</p>}
+          {named && <p className="mt-1 text-sm text-muted-foreground max-w-2xl">{named.subtitle}</p>}
+          <h2 id="april-planets" className="sr-only">Planets</h2>
+          <ul className="mt-6 grid grid-cols-3 gap-3 sm:grid-cols-5 lg:grid-cols-6">
+            {PLACEMENTS.slice(0, 12).map(p => (
+              <li key={p.key}><Link to={`/planets/${p.key}`} className="flex flex-col items-center gap-2 rounded-xl border border-border bg-card/60 p-3 text-center hover:border-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+                <PlanetOrb planet={p.key} size={48} />
+                <span className="text-sm">{p.name}</span><span className="text-xs text-muted-foreground">{p.sign} {p.degree}°</span>
+              </Link></li>
+            ))}
+          </ul>
+        </section>
+      )}
 
       {/* Wheel */}
       <section className="vellum deckle p-6 sm:p-10 gentle-fade">

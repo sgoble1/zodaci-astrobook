@@ -31,3 +31,10 @@ export function chaptersForTheme(entries: ArchiveEntry[], theme: string) {
   return entries.filter(e => matcher.test([e.title, e.label, ...e.sections].join(' ')));
 }
 export function angularDifference(a: number, b: number) { return Math.abs(((a - b + 540) % 360) - 180); }
+/** April's menu sections in order of purpose; unrecognised sections keep their order at the end. Nothing is removed. */
+const FOUNDER_ORDER: RegExp[] = [/begin|home|start/i, /natal|chart|planet/i, /house|life area|architecture/i, /timing|cycle|timeline|retrograde/i, /other system|feng|kua|numerolog|bagua/i, /masterbook|compendium|library|archive|read/i, /shared|relationship/i, /workbook|counsel|reflect/i];
+export function orderFounderGroups<T extends { title: string }>(groups: T[]): T[] {
+  const rank = (t: string) => { const i = FOUNDER_ORDER.findIndex(r => r.test(t)); return i < 0 ? FOUNDER_ORDER.length : i; };
+  return groups.map((g, i) => ({ g, i, r: rank(g.title) })).sort((a, b) => a.r - b.r || a.i - b.i).map(x => x.g);
+}
+

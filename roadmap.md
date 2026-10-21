@@ -78,7 +78,10 @@
 
 ## Founder editions (April & Shane)
 - [x] Classic view switch for April/Shane (member layout) with banner to return to the full edition.
-- [ ] Reorganize April's founder sidebar groups and verify classic view in her account.
+- [x] April's menu ordered by purpose (chart, houses, timing, systems, books, shared, workbook); planets and personal chart title on her home page; classic view also in the account menu; Shane's edition panel labelled.
+- [x] Planet artwork on Results, Deep Dive, Compendium, Transits and Our Two Charts.
+- [ ] Browser check of April's edition and classic switch (needs a founder session).
+- [ ] Asteroids Ceres/Pallas/Juno/Vesta (needs Astrodienst/AstroSeek reference degrees for tests).
 - [x] Founder access + higher reading limits; Shane Masterbook (63 chapters) at /shane; share-with-April switch
 - [x] Side-by-side "Our two charts" page
 - [x] Map Shane chapters into topic pages; readings generate on demand from his calculated chart (generation resumed)

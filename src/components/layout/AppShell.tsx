@@ -10,6 +10,7 @@ import { FirstViewReveal } from '@/components/fx/FirstViewReveal';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Menu, X } from 'lucide-react';
 import { GenerationProgress } from '@/components/readings/GenerationProgress';
+import { orderFounderGroups } from '@/lib/founderEdition';
 import { useAprilSpace, useClassicView, setClassicView } from '@/hooks/useAprilSpace';
 
 /** Shown in classic view for founders: one click back to the full private edition. */
@@ -246,7 +247,7 @@ function SidebarInner({ mobile = false, onNavigate }: { mobile?: boolean; onNavi
   const allGroups: NavGroup[] = useMemo(() => {
     const shared = { ...SHARED_GROUP, items: SHARED_GROUP.items.map(item => ({ ...item, badge: item.to === '/shared/conversations' ? badges.chat : item.to === '/shared/wonderings' ? badges.wonderings : undefined })) };
     const relationships = { ...RELATIONSHIPS_GROUP, items: [...RELATIONSHIPS_GROUP.items, ...rels.map(r => ({ to: `/relationships/${r.id}`, label: `↳ ${r.name}${r.relation ? ` · ${r.relation}` : ''}` }))] };
-    return [...aprilGroups.slice(0, 2), shared, relationships, ...aprilGroups.slice(2)]
+    return orderFounderGroups([...aprilGroups.slice(0, 2), shared, relationships, ...aprilGroups.slice(2)])
       .map(g => ({ ...g, items: [...g.items, ...custom.filter(c => c.menu_group === g.title).map(c => ({ to: `/p/${c.id}`, label: c.status === 'generating' ? `${c.title} · writing…` : c.title, created: true } as NavItem))] }));
   }, [aprilGroups, badges.chat, badges.wonderings, rels, custom]);
   useMenuTitleFallback(useMemo(() => allGroups.flatMap(g => [...g.items, ...(g.footer ?? []), ...(g.submenus ?? []).flatMap(s => s.items)]), [allGroups]));

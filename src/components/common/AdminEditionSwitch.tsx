@@ -12,7 +12,7 @@ export function AdminEditionSwitch() {
   if (!admin) return classic;
   if (april) {
     return (
-      <div className="space-y-2" data-keep-wording>
+      <div className="space-y-2" data-keep-wording role="group" aria-label="Edition">
         <p className="text-xs text-gold">You are viewing April's original edition.</p>
         <Button variant="outline" size="sm" className="w-full justify-start" onClick={leaveAprilEdition}><ArrowLeftRight className="h-4 w-4" />Back to my own content</Button>
         {classic}
@@ -20,7 +20,8 @@ export function AdminEditionSwitch() {
     );
   }
   return (
-    <div className="space-y-2" data-keep-wording>
+    <div className="space-y-2" data-keep-wording role="group" aria-label="Edition">
+      <p className="text-xs text-muted-foreground">Viewing your own content.</p>
       <Button variant="outline" size="sm" className="w-full justify-start" onClick={viewAprilEditionInApp}><Eye className="h-4 w-4" />View April's content here</Button>
       <Button variant="ghost" size="sm" className="w-full justify-start" onClick={openAprilEditionTab}><ExternalLink className="h-4 w-4" />Open in a new tab</Button>
     </div>
