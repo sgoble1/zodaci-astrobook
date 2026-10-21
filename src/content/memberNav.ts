@@ -354,6 +354,7 @@ export function nextStepsFor(path: string, ctx: NextStepContext): NextStep[] {
 export function memberDestinations(ctx: NavContext = {}) {
   const seen = new Map<string, { to: string; label: string; description: string; group: string }>();
   for (const d of MEMBER_DOMAINS) for (const c of visibleColumns(d, ctx)) for (const i of c.items) if (!seen.has(i.to)) seen.set(i.to, { to: i.to, label: i.label, description: i.description, group: `${d.label} · ${c.title}` });
+  for (const d of MEMBER_DOMAINS) if (!seen.has(d.hub)) seen.set(d.hub, { to: d.hub, label: `${d.label} · ${d.hubLabel.replace(/^Open /, '')}`, description: d.description, group: d.label });
   for (const t of TOPIC_READINGS) { const to = topic(t.slug); if (!seen.has(to)) seen.set(to, { to, label: t.title, description: 'In-depth topic reading', group: 'Readings · Topics' }); }
   for (const t of CORE_THEMES) { const to = topic(t.slug); if (!seen.has(to)) seen.set(to, { to, label: t.title, description: 'Core theme reading', group: 'Readings · Core themes' }); }
   for (const s of SYSTEM_READINGS) if (!seen.has(s.route)) seen.set(s.route, { to: s.route, label: s.title, description: 'Other systems reading', group: 'Explore · Other systems' });
