@@ -8,6 +8,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { toChartInput, useMyBirth } from '@/lib/myBirth';
 import { ChartWheel } from '@/components/chart/ChartWheel';
 import { BoxArt } from '@/components/common/BoxArt';
+import { PlanetOrb } from '@/components/chart/PlanetOrb';
 import { chartTitle } from '@/lib/chartTitle';
 import { balance } from '@/lib/resultsEngine';
 import { Button } from '@/components/ui/button';
@@ -66,7 +67,7 @@ export default function MyChart() {
       <section aria-labelledby="pl"><h2 id="pl" className="font-display text-2xl">Your placements</h2>
         <ul className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{chart.bodies.map(b => (
           <li key={b.key}><button type="button" onClick={() => setSel(b)} aria-label={`More about ${b.name} in ${b.sign}`} className="block h-full w-full overflow-hidden rounded border border-border bg-card text-left transition-all duration-500 hover:-translate-y-0.5 hover:border-primary/60 focus-visible:outline focus-visible:outline-2">
-            <BoxArt seed={`${b.key}-${b.sign}`} label={b.name} className="h-16 w-full" />
+            <div className="relative"><BoxArt seed={`${b.key}-${b.sign}`} label={b.name} className="h-16 w-full" /><PlanetOrb planet={b.key} size={56} className="absolute left-3 top-1/2 -translate-y-1/2" /></div>
             <div className="p-4"><h3 className="font-display text-lg">{b.glyph} {b.name} in {b.sign}</h3>
               <p className="text-xs text-muted-foreground">{b.deg}°{String(b.min).padStart(2, '0')}′{b.retro ? ' · retrograde' : ''}{b.house && birth.time ? ` · house ${b.house}` : ''}</p>
               <p className="mt-2 text-sm"><strong>In plain words:</strong> {b.name} shows {BODY[b.key] ?? 'one part of your life'}, expressed in a {b.sign} way.</p><p className="mt-2 text-xs text-primary">Tap for full details →</p></div>
