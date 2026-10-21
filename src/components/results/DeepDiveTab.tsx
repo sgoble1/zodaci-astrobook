@@ -1,3 +1,4 @@
+import { PlanetOrb } from '@/components/chart/PlanetOrb';
 import { useMemo } from 'react';
 import type { ChartResult } from '@/lib/astro';
 import { arabicParts, fixedStarContacts } from '@/lib/resultsEngine';
@@ -28,7 +29,7 @@ export function DeepDiveTab({ chart, date, timeKnown, plan, loading }: { chart: 
       <section aria-labelledby="dd-pts" className="space-y-3">
         <h2 id="dd-pts" className="font-display text-2xl">Sensitive points</h2>
         <TierGate plan={plan} loading={loading} need="full" title="Chiron, Lilith, the Nodes and more">
-          <ul className="grid gap-3 md:grid-cols-2">{points.map(b => <li key={b.key} className="rounded-lg border border-border bg-card p-4"><p className="font-medium">{b.glyph} {b.name} in {b.sign} {b.deg}°{String(b.min).padStart(2, '0')}′{b.house && timeKnown ? ` · house ${b.house}` : ''}</p>{b.note && <p className="mt-1 text-xs text-muted-foreground">{b.note}</p>}</li>)}</ul>
+          <ul className="grid gap-3 md:grid-cols-2">{points.map(b => <li key={b.key} className="rounded-lg border border-border bg-card p-4"><p className="flex items-center gap-2 font-medium"><PlanetOrb planet={b.key} size={28} />{b.name} in {b.sign} {b.deg}°{String(b.min).padStart(2, '0')}′{b.house && timeKnown ? ` · house ${b.house}` : ''}</p>{b.note && <p className="mt-1 text-xs text-muted-foreground">{b.note}</p>}</li>)}</ul>
           {oob.map(d => <p key={d.id} className="mt-3 rounded border border-border bg-card p-4 text-sm"><span className="font-medium">{d.title}.</span> {d.text}</p>)}
           <p className="mt-2 text-xs text-muted-foreground">Asteroids such as Ceres, Pallas, Juno and Vesta are not yet calculated.</p>
         </TierGate>

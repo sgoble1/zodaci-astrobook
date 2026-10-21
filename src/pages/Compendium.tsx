@@ -1,3 +1,4 @@
+import { PlanetOrb } from '@/components/chart/PlanetOrb';
 import { IllustrationGallery } from '@/components/common/IllustrationGallery';
 import { ZODIAC, PLACEMENTS, HOUSES } from '@/content/april';
 import {
@@ -62,7 +63,7 @@ export default function Compendium() {
             <tbody className="divide-y divide-border/70">
               {PLACEMENTS.map(p => (
                 <tr key={p.key} className="hover:bg-muted/30">
-                  <td className="px-3 py-2 font-display"><span className="text-gold mr-2">{p.glyph}</span>{p.name}</td>
+                  <td className="px-3 py-2 font-display"><span className="inline-flex items-center gap-2"><PlanetOrb planet={p.key} size={26} />{p.name}</span></td>
                   <td className="px-3 py-2">{p.sign} {p.signGlyph}</td>
                   <td className="px-3 py-2">{p.degree}°{String(p.minute).padStart(2,'0')}′</td>
                   <td className="px-3 py-2">H{p.house}</td>

@@ -1,3 +1,4 @@
+import { PlanetOrb } from '@/components/chart/PlanetOrb';
 import { useState } from 'react';
 import { ChevronDown } from 'lucide-react';
 import { fmtLon, SIGN_KEYWORDS, type ChartResult } from '@/lib/astro';
@@ -19,7 +20,7 @@ export function PlacementsTab({ chart, timeKnown, plan, loading }: { chart: Char
   const Row = ({ b }: { b: typeof all[number] }) => (
     <li>
       <button type="button" aria-expanded={open === b.key} onClick={() => setOpen(open === b.key ? null : b.key)} className="flex w-full items-center gap-3 p-4 text-left transition-colors duration-500 hover:bg-primary/5 focus-visible:outline focus-visible:outline-2">
-        <span className="w-8 text-center text-xl" aria-hidden>{b.glyph}</span>
+        <PlanetOrb planet={b.key} size={32} />
         <span className="flex-1"><span className="font-medium">{b.name} in {b.sign}</span>
           <span className="block text-xs text-muted-foreground">{b.deg}°{String(b.min).padStart(2, '0')}′{b.house && timeKnown ? ` · house ${b.house}` : ''}{b.retro && b.key !== 'northNode' ? ' · retrograde' : ''}</span></span>
         {b.retro && CORE_KEYS.includes(b.key) && <span className="rounded-full border border-gold/50 px-2 py-0.5 text-xs text-gold">{TIER_GLYPH[tierOf(dignityOf(b.key, b.sign))]} {tierOf(dignityOf(b.key, b.sign))}</span>}
