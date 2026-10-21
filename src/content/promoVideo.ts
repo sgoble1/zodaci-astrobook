@@ -7,6 +7,8 @@ export const PROMO_VIDEO = {
   isoDuration: 'PT24S',
   uploadDate: '2026-10-21',
   origin: 'https://zodaci.com',
+  /** Numbers shown on screen in the film; a test keeps them equal to the live site. */
+  onScreen: { readings: 38, houseSystems: 4, academyLessons: 14 },
 } as const;
 
 /** Landing-page body marker: a line containing only [film] shows the promo film at that spot. */
