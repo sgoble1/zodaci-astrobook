@@ -10,7 +10,8 @@ import { FirstViewReveal } from '@/components/fx/FirstViewReveal';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Menu, X } from 'lucide-react';
 import { GenerationProgress } from '@/components/readings/GenerationProgress';
-import { founderPlace, orderFounderGroups } from '@/lib/founderEdition';
+import { founderPlace, onlyInFullEdition, orderFounderGroups } from '@/lib/founderEdition';
+import { domainFor } from '@/content/memberNav';
 import { useAprilSpace, useClassicView, setClassicView } from '@/hooks/useAprilSpace';
 
 /** April's breadcrumb (section › page) from her own menu; hidden on the first page of a section. */
@@ -38,9 +39,11 @@ function FounderNext() {
 
 /** Shown in classic view for founders: one click back to the full private edition. */
 function ClassicViewBanner() {
+  const { pathname } = useLocation();
+  const fullOnly = onlyInFullEdition(APRIL_NAV_GROUPS, pathname, domainFor(pathname) !== null);
   return (
     <div role="status" className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-gold/40 bg-gold/10 px-4 py-3 text-sm">
-      <span>You're seeing the classic view — the same layout every member sees.</span>
+      <span>{fullOnly ? "This page is part of your full edition — the classic menu doesn't list it." : "You're seeing the classic view — the same layout every member sees."}</span>
       <Button size="sm" variant="outline" onClick={() => setClassicView(false)}>Back to your full edition</Button>
     </div>
   );
