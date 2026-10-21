@@ -48,7 +48,7 @@ export default function Masterbook() {
       <header>
         <div className="font-smallcaps text-xs text-gold">The Masterbook · complete text</div>
         <h1 className="text-4xl sm:text-5xl mt-2">April’s Astrological Masterbook</h1>
-        <p className="text-muted-foreground mt-3 max-w-2xl">Every chapter, appendix, extended analysis and illustration plate from the Masterbook, reproduced in full — {entries.length} sections, about {Math.round(total / 1000)}k words. Pick any entry to read it.</p>
+        <p className="text-muted-foreground mt-3 max-w-2xl">Every chapter, appendix, extended analysis and illustration plate from the Masterbook, reproduced in full{entries.length ? ` — ${entries.length} sections, about ${Math.round(total / 1000)}k words` : ''}. Pick any entry to read it.</p>
         <div className="flex flex-wrap gap-4 text-sm mt-3"><Link to="/masterbook/index" className="underline">Document index — every source & section</Link><Link to="/masterbook/upload" className="underline">Upload your own PDFs & spreadsheets</Link><Link to="/reading" className="underline">The complete reading</Link><Link to="/chart-calculator" className="underline">Chart calculator</Link><Link to="/feng-shui/bagua" className="underline">Feng Shui · Bagua & home</Link><Link to="/feng-shui/flying-stars" className="underline">Feng Shui · Flying Stars</Link></div>
         <Input placeholder="Search chapter titles and section headings…" value={q} onChange={e => setQ(e.target.value)} className="max-w-md mt-4" />
         <div className="flex flex-wrap items-center gap-2 mt-4 text-xs">
