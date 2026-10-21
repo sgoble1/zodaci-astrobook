@@ -68,6 +68,7 @@ function useRouteChangeFocus() {
 export function AppShell() {
   const location = useLocation();
   const april = useAprilSpace();
+  const classic = useClassicView();
   // April and Shane's joint pages and admin tools keep real names; elsewhere April-written copy reads as "you".
   const founderState = useSharedSpaceMember();
   // Wait for the membership answer so names are never rewritten before it arrives.
@@ -95,8 +96,10 @@ export function AppShell() {
       </div>
     );
   }
-  const page = <PageErrorBoundary key={location.pathname}>{!april && !keepNames && <PublicWording />}{april === undefined && !isPublicPath(location.pathname) ? null : april ? <Outlet /> : <PlanGuard>{isPublicPath(location.pathname) ? <Outlet /> : <PublicChartFallback />}</PlanGuard>}<VerifySources /></PageErrorBoundary>;
-  if (!april) return <MemberShell>{page}</MemberShell>;
+  // Founders can switch to the classic view: the same pages and menu every member sees.
+  const founder = april && !classic;
+  const page = <PageErrorBoundary key={location.pathname}>{!founder && !keepNames && <PublicWording />}{april === undefined && !isPublicPath(location.pathname) ? null : founder ? <Outlet /> : <PlanGuard>{isPublicPath(location.pathname) ? <Outlet /> : <PublicChartFallback />}</PlanGuard>}<VerifySources /></PageErrorBoundary>;
+  if (!founder) return <MemberShell>{april && classic && <ClassicViewBanner />}{page}</MemberShell>;
   return <AprilShell>{page}</AprilShell>;
 }
 
