@@ -1,3 +1,4 @@
+import { PlanetOrb } from '@/components/chart/PlanetOrb';
 import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { computeChart, type ChartInput } from '@/lib/astro';
@@ -43,7 +44,7 @@ export default function OurCharts() {
         <p className="mt-2">Suns: {signPair(sun(A), sun(B))}</p>
         <p className="mt-2">Moons: {signPair(moon(A), moon(B))}</p></section>
       <section><h2 className="font-display text-2xl">Strongest contacts</h2>
-        <ul className="mt-3 space-y-2">{ia.slice().sort((a, b) => b.weight - a.weight).slice(0, 12).map((x, i) => <li key={i} className="rounded border border-border bg-card p-3 text-sm"><span className="font-medium">{x.aName} {x.symbol} {x.bName}</span> · orb {x.orb.toFixed(1)}° — {x.text}</li>)}</ul></section>
+        <ul className="mt-3 space-y-2">{ia.slice().sort((a, b) => b.weight - a.weight).slice(0, 12).map((x, i) => <li key={i} className="rounded border border-border bg-card p-3 text-sm"><span className="inline-flex items-center gap-1.5 font-medium align-middle"><PlanetOrb planet={String(x.aName).toLowerCase()} size={22} />{x.aName} {x.symbol} <PlanetOrb planet={String(x.bName).toLowerCase()} size={22} />{x.bName}</span> · orb {x.orb.toFixed(1)}° — {x.text}</li>)}</ul></section>
       <section><h2 className="font-display text-2xl">Composite chart</h2>
         <p className="mt-2 text-sm text-muted-foreground">{comp.slice(0, 7).map((b: { name: string; sign: string }) => `${b.name} in ${b.sign}`).join(' · ')}</p></section>
     </article>

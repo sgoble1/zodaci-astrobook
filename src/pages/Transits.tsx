@@ -1,3 +1,4 @@
+import { PlanetOrb } from '@/components/chart/PlanetOrb';
 import { SourceChapters } from '@/components/common/SourceChapters';
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
@@ -90,7 +91,7 @@ export default function Transits() {
               <ConfidenceBadge level={active.reasoning.confidence} note={active.reasoning.caveats?.[0]} compact />
               <CopyLinkButton hash={active.id} label="Share this transit" />
             </div>
-            <h2 className="font-display text-2xl mt-1">{active.title}</h2>
+            <h2 className="font-display text-2xl mt-1 flex items-center gap-3"><PlanetOrb planet={active.transiting.toLowerCase()} size={40} />{active.title}</h2>
             <div className="text-sm text-muted-foreground mt-1">
               {active.transiting} <span className="italic">{active.aspect}</span> {active.natalPoint}
             </div>
