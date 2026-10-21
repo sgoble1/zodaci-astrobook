@@ -10,7 +10,17 @@ import { FirstViewReveal } from '@/components/fx/FirstViewReveal';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Menu, X } from 'lucide-react';
 import { GenerationProgress } from '@/components/readings/GenerationProgress';
-import { useAprilSpace } from '@/hooks/useAprilSpace';
+import { useAprilSpace, useClassicView, setClassicView } from '@/hooks/useAprilSpace';
+
+/** Shown in classic view for founders: one click back to the full private edition. */
+function ClassicViewBanner() {
+  return (
+    <div role="status" className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-gold/40 bg-gold/10 px-4 py-3 text-sm">
+      <span>You're seeing the classic view — the same layout every member sees.</span>
+      <Button size="sm" variant="outline" onClick={() => setClassicView(false)}>Back to your full edition</Button>
+    </div>
+  );
+}
 import { useSharedSpaceMember } from '@/hooks/useSharedSpaceMember';
 import { PublicWording } from '@/components/common/PublicWording';
 import { PublicChartFallback, isPublicPath } from '@/components/common/PublicChartFallback';
@@ -68,6 +78,7 @@ function useRouteChangeFocus() {
 export function AppShell() {
   const location = useLocation();
   const april = useAprilSpace();
+  const classic = useClassicView();
   // April and Shane's joint pages and admin tools keep real names; elsewhere April-written copy reads as "you".
   const founderState = useSharedSpaceMember();
   // Wait for the membership answer so names are never rewritten before it arrives.
@@ -95,8 +106,10 @@ export function AppShell() {
       </div>
     );
   }
-  const page = <PageErrorBoundary key={location.pathname}>{!april && !keepNames && <PublicWording />}{april === undefined && !isPublicPath(location.pathname) ? null : april ? <Outlet /> : <PlanGuard>{isPublicPath(location.pathname) ? <Outlet /> : <PublicChartFallback />}</PlanGuard>}<VerifySources /></PageErrorBoundary>;
-  if (!april) return <MemberShell>{page}</MemberShell>;
+  // Founders can switch to the classic view: the same pages and menu every member sees.
+  const founder = april && !classic;
+  const page = <PageErrorBoundary key={location.pathname}>{!founder && !keepNames && <PublicWording />}{april === undefined && !isPublicPath(location.pathname) ? null : founder ? <Outlet /> : <PlanGuard>{isPublicPath(location.pathname) ? <Outlet /> : <PublicChartFallback />}</PlanGuard>}<VerifySources /></PageErrorBoundary>;
+  if (!founder) return <MemberShell>{april && classic && <ClassicViewBanner />}{page}</MemberShell>;
   return <AprilShell>{page}</AprilShell>;
 }
 

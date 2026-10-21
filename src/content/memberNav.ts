@@ -211,6 +211,7 @@ const under = (path: string, base: string) => path === base || path.startsWith(`
 /** Which domain a path belongs to; 'account' for account utilities, null for pages outside the member menu. */
 export function domainFor(path: string): DomainId | 'account' | null {
   if (['/dashboard', '/personal-context', '/pricing', '/creator', '/checkout/return', '/'].includes(path) || ADMIN_PATHS.some(p => under(path, p))) return 'account';
+  const hub = MEMBER_DOMAINS.find(d => d.hub === path); if (hub) return hub.id;
   // Exact menu items first (e.g. Key Years lives in Explore although it is a reading).
   for (const d of MEMBER_DOMAINS) if (d.columns.some(c => c.items.some(i => pathOnly(i.to) === path))) return d.id;
   let best: { id: DomainId; len: number } | null = null;
