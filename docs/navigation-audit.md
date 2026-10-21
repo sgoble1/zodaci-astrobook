@@ -90,4 +90,8 @@ Playwright at 393px and 1280px: signed out (public chrome only, private paths re
 
 ## 7. Results
 
-_Pending — filled in after implementation._
+- 12 navigation tests pass (route inventory: no route unclassified, no former menu destination lost); full suite 275 tests pass.
+- Shane (admin), desktop 1280px and phone 393px: five menu buttons, menu panels close on Escape, outside click and page change, arrow keys work, admin tools only in Account, phone tab bar hidden on admin pages, no sideways overflow.
+- Fixed after first pass: hub pages (/my-chart, /my-readings, /my-astrobook, /explore, /academy) now show the section shortcut row; "Continue exploring" no longer repeats breadcrumb links.
+- Founders can switch to the classic member layout and back (banner on every page).
+- Not yet verified in a browser: regular non-admin member and April's own account.

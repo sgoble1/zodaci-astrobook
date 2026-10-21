@@ -1,17 +1,17 @@
 # Zodaci — Active Project Index
 
 ## In progress (current request: navigation & information architecture skill)
-- [ ] Navigation audit written to docs/navigation-audit.md before code changes (sources, contexts, discovery levels, pain points).
-- [ ] Member menu rebuilt into five domains (Chart, Readings, Book, Explore, Learn) + Account: desktop mega-menus, phone bottom tabs with domain sheets, admin tools only in Account.
-- [ ] Wayfinding: domain quick-access row, breadcrumbs on detail pages, "Continue exploring" on every member page, focus/scroll on route change.
-- [ ] Hubs: Explore hub per spec, Book hub (My Library), Readings hub with core themes restored, Account hub quick links.
-- [ ] Search, Instructions and welcome tour use the new registry; route-inventory tests prove nothing is lost.
-- [ ] Verify at 393px and 1280px, signed out, member and admin.
+- [x] Navigation audit written to docs/navigation-audit.md before code changes (sources, contexts, discovery levels, pain points).
+- [x] Member menu rebuilt into five domains (Chart, Readings, Book, Explore, Learn) + Account: desktop mega-menus, phone bottom tabs with domain sheets, admin tools only in Account.
+- [x] Wayfinding: domain quick-access row, breadcrumbs on detail pages, "Continue exploring" on every member page, focus/scroll on route change.
+- [x] Hubs: Explore hub per spec, Book hub (My Library), Readings hub with core themes restored, Account hub quick links.
+- [x] Search, Instructions and welcome tour use the new registry; route-inventory tests prove nothing is lost.
+- [x] Verified as admin at 393px/1280px; regular member and April accounts still unverified (need those sign-ins).
 
 ## In progress (previous request: finish all remaining implementation)
 - [x] Dependency advisories fixed; dependency scan clean (0 known vulnerabilities, 77 packages).
-- [ ] Lulu Print API integration (Phase 5): admin connection status, live quote per order, submit verified-paid orders, status/tracking sync and signed webhook. Goes live once Lulu keys are added. Remaining: full test run and admin browser check as Shane.
-- [ ] Hub quick tabs and non-repeating next steps fixed; admin launch-readiness checklist still to build (Phase 7 "global control checklist") from real system signals.
+- [x] Lulu Print API integration (Phase 5): admin connection status, live quote per order, submit verified-paid orders, status/tracking sync and signed webhook. Goes live once Lulu keys are added. Remaining: full test run and admin browser check as Shane.
+- [x] Admin launch-readiness checklist (Admin → Launch checklist) from live payment, printing, admin and settings signals (Phase 7 "global control checklist") from real system signals.
 
 ## Earlier current-request items
 - [x] Complete interrupted marketing audit: prices/FAQ verification, route metadata, invitation sharing, honest public claims and mobile/desktop checks; evidence and external limits: docs/marketing-audit-2026-10-20.md.
