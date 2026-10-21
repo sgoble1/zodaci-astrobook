@@ -229,10 +229,13 @@ function SidebarInner({ mobile = false, onNavigate }: { mobile?: boolean; onNavi
     });
     return () => cancelAnimationFrame(raf);
   }, [custom]);
-  const shared = { ...SHARED_GROUP, items: SHARED_GROUP.items.map(item => ({ ...item, badge: item.to === '/shared/conversations' ? badges.chat : item.to === '/shared/wonderings' ? badges.wonderings : undefined })) };
-  const relationships = { ...RELATIONSHIPS_GROUP, items: [...RELATIONSHIPS_GROUP.items, ...rels.map(r => ({ to: `/relationships/${r.id}`, label: `↳ ${r.name}${r.relation ? ` · ${r.relation}` : ''}` }))] };
-  const allGroups: NavGroup[] = useMemo(() => [...APRIL_NAV_GROUPS.slice(0, 2), shared, relationships, ...APRIL_NAV_GROUPS.slice(2)]
-    .map(g => ({ ...g, items: [...g.items, ...custom.filter(c => c.menu_group === g.title).map(c => ({ to: `/p/${c.id}`, label: c.status === 'generating' ? `${c.title} · writing…` : c.title, created: true } as NavItem))] })), [shared, relationships, custom]);
+  const aprilGroups = APRIL_NAV_GROUPS; // private payload; re-read each render so late registration shows up
+  const allGroups: NavGroup[] = useMemo(() => {
+    const shared = { ...SHARED_GROUP, items: SHARED_GROUP.items.map(item => ({ ...item, badge: item.to === '/shared/conversations' ? badges.chat : item.to === '/shared/wonderings' ? badges.wonderings : undefined })) };
+    const relationships = { ...RELATIONSHIPS_GROUP, items: [...RELATIONSHIPS_GROUP.items, ...rels.map(r => ({ to: `/relationships/${r.id}`, label: `↳ ${r.name}${r.relation ? ` · ${r.relation}` : ''}` }))] };
+    return [...aprilGroups.slice(0, 2), shared, relationships, ...aprilGroups.slice(2)]
+      .map(g => ({ ...g, items: [...g.items, ...custom.filter(c => c.menu_group === g.title).map(c => ({ to: `/p/${c.id}`, label: c.status === 'generating' ? `${c.title} · writing…` : c.title, created: true } as NavItem))] }));
+  }, [aprilGroups, badges.chat, badges.wonderings, rels, custom]);
   useMenuTitleFallback(useMemo(() => allGroups.flatMap(g => [...g.items, ...(g.footer ?? []), ...(g.submenus ?? []).flatMap(s => s.items)]), [allGroups]));
   return (
     <div className={`flex min-h-full flex-col gap-6 overflow-x-hidden ${mobile ? 'px-4 pb-8 pt-4' : 'h-full overflow-y-auto p-6'}`}>
