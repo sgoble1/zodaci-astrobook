@@ -32,7 +32,7 @@ export function SharedReading({ userId }: { userId: string }) {
 
   useEffect(() => {
     loadDocs();
-    supabase.rpc('shared_member_directory').then(({ data }) => setNames(Object.fromEntries((data ?? []).map((m: { user_id: string; display_name: string }) => [m.user_id, m.display_name])))).catch(() => undefined);
+    supabase.rpc('shared_member_directory').then(({ data }) => setNames(Object.fromEntries((data ?? []).map((m: { user_id: string; display_name: string }) => [m.user_id, m.display_name]))), () => undefined);
     const ch = supabase.channel(`shared-reading:${userId}`)
       .on('postgres_changes', { event: '*', schema: 'public', table: 'shared_documents' }, loadDocs)
       .on('postgres_changes', { event: '*', schema: 'public', table: 'shared_annotations' }, () => { if (selectedRef.id) loadNotes(selectedRef.id); })

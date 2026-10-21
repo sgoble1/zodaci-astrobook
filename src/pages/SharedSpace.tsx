@@ -64,7 +64,7 @@ function SharedSpaceGate({ children }: { children: (userId: string) => React.Rea
 
 function useDirectory() {
   const [directory, setDirectory] = useState<Directory>({});
-  useEffect(() => { supabase.rpc('shared_member_directory').then(({ data }) => setDirectory(Object.fromEntries((data ?? []).map(row => [row.user_id, row.display_name])))).catch(() => undefined); }, []);
+  useEffect(() => { supabase.rpc('shared_member_directory').then(({ data }) => setDirectory(Object.fromEntries((data ?? []).map(row => [row.user_id, row.display_name]))), () => undefined); }, []);
   return directory;
 }
 

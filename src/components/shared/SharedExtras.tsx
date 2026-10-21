@@ -21,7 +21,7 @@ type Reaction = { id: string; user_id: string; emoji: string };
 
 function useDirectory() {
   const [d, setD] = useState<Record<string, string>>({});
-  useEffect(() => { supabase.rpc('shared_member_directory').then(({ data }) => setD(Object.fromEntries((data ?? []).map(r => [r.user_id, r.display_name])))).catch(() => undefined); }, []);
+  useEffect(() => { supabase.rpc('shared_member_directory').then(({ data }) => setD(Object.fromEntries((data ?? []).map(r => [r.user_id, r.display_name]))), () => undefined); }, []);
   return d;
 }
 
