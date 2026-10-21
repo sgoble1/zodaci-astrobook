@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Lock } from 'lucide-react';
 import { BoxArt } from '@/components/common/BoxArt';
@@ -25,7 +26,7 @@ function HubCard({ card, size = 'md' }: { card: Card; size?: 'lg' | 'md' | 'sm' 
   );
 }
 
-function Row({ id, title, intro, children, links }: { id: string; title: string; intro: string; children: React.ReactNode; links?: Card[] }) {
+function Row({ id, title, intro, children, links }: { id: string; title: string; intro: string; children: ReactNode; links?: Card[] }) {
   return (
     <section aria-labelledby={id} className="space-y-4">
       <div className="flex flex-wrap items-end justify-between gap-3">
@@ -64,7 +65,7 @@ export function MemberExploreHub() {
       <Row id="explore-timing" title="Timing" intro="What is active for you now, and what is coming." links={[{ to: '/timeline', title: 'Personal Timeline', body: '' }, { to: '/profection', title: 'Year Ahead', body: '' }, { to: '/my-readings/topic/timing', title: 'Key Years', body: '' }]}>
         <div className="grid gap-4 md:grid-cols-2">
           <HubCard size="lg" card={{ to: '/transits', title: 'Current transits', body: 'See what is active in your chart today and which windows are opening.' }} />
-          <HubCard size="lg" card={{ to: '/retrogrades', title: 'Retrograde guide', body: 'Navigate Mercury, Venus, Mars and Saturn retrogrades — at your birth and ahead.' }} />
+          <HubCard size="lg" card={{ to: '/retrogrades', title: 'Retrograde guide', body: 'Inward periods — the ones at your birth and the ones coming up.' }} />
         </div>
       </Row>
 
@@ -87,7 +88,7 @@ export function MemberExploreHub() {
       <Row id="explore-community" title="Community" intro="Share, compare and talk things through." links={[{ to: '/workspaces', title: 'Shared workspaces', body: '' }, { to: '/referrals', title: 'Invite a friend', body: '' }, ...(shared ? [{ to: '/shared', title: 'Our Shared Space', body: '' }] : [])]}>
         <div className="grid gap-4 md:grid-cols-2">
           <HubCard card={{ to: '/community', title: 'Connect with members', body: 'Read reflections and reply in the community.' }} />
-          <HubCard card={{ to: '/counselors', title: 'Work with a counselor', body: 'Chart-informed counselors that remember your saved sessions.' }} />
+          <HubCard card={{ to: '/counselors', title: 'Work with a counselor', body: 'Chart-informed counselors with private, saved sessions.' }} />
         </div>
       </Row>
     </div>
