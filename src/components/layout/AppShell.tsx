@@ -10,8 +10,31 @@ import { FirstViewReveal } from '@/components/fx/FirstViewReveal';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Menu, X } from 'lucide-react';
 import { GenerationProgress } from '@/components/readings/GenerationProgress';
-import { orderFounderGroups } from '@/lib/founderEdition';
+import { founderPlace, orderFounderGroups } from '@/lib/founderEdition';
 import { useAprilSpace, useClassicView, setClassicView } from '@/hooks/useAprilSpace';
+
+/** April's breadcrumb (section › page) from her own menu; hidden on the first page of a section. */
+function FounderTrail() {
+  const { pathname } = useLocation();
+  const place = founderPlace(APRIL_NAV_GROUPS, pathname);
+  if (!place || place.home.to === pathname) return null;
+  return <nav aria-label="Breadcrumb" className="mb-6 text-xs text-muted-foreground"><Link to={place.home.to} className="hover:text-foreground underline-offset-2 hover:underline">{place.section}</Link><span aria-hidden="true" className="mx-2">›</span><span className="text-foreground">{place.label}</span></nav>;
+}
+
+/** "Continue in this section": the next pages in April's own menu, so no page is a dead end. */
+function FounderNext() {
+  const { pathname } = useLocation();
+  const place = founderPlace(APRIL_NAV_GROUPS, pathname);
+  if (!place || !place.next.length) return null;
+  return (
+    <nav aria-labelledby="founder-next" className="mt-16 border-t border-border pt-8 print:hidden">
+      <h2 id="founder-next" className="font-display text-2xl">Continue in {place.section}</h2>
+      <ul className="mt-5 grid gap-3 sm:grid-cols-3">
+        {place.next.map(n => <li key={n.to}><Link to={n.to} className="flex h-full items-center justify-between gap-2 rounded-xl border border-border bg-card/60 p-4 text-sm hover:border-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"><span>{n.label}</span><span aria-hidden="true">→</span></Link></li>)}
+      </ul>
+    </nav>
+  );
+}
 
 /** Shown in classic view for founders: one click back to the full private edition. */
 function ClassicViewBanner() {
@@ -205,7 +228,9 @@ function AprilShell({ children }: { children: ReactNode }) {
       <main id="main-content" tabIndex={-1} className="flex-1 min-w-0 lg:pt-0 pt-[64px] relative z-10 outline-none">
         <div className="mx-auto max-w-5xl px-4 sm:px-8 py-8 sm:py-10 lg:py-14">
           <motion.div key={location.pathname} initial={{ opacity: 0, y: 24, filter: 'blur(6px)' }} animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }} transition={{ duration: 0 }}>
+            <FounderTrail />
             {children}
+            <FounderNext />
           </motion.div>
         </div>
         <footer className="border-t border-border mt-16">
