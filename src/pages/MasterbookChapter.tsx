@@ -1,3 +1,4 @@
+import { LoadFailed } from '@/components/common/LoadFailed';
 import { withPlates } from '@/content/plates';
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
@@ -18,7 +19,9 @@ export default function MasterbookChapter() {
   const [entries, setEntries] = useState<MbEntry[]>([]);
   const [text, setText] = useState<string | null>(null);
   useEffect(() => { loadIndex().then(setEntries).catch(() => setEntries([])); }, []);
-  useEffect(() => { setText(null); loadProtectedText('masterbook', `${id}.md`).then(t => setText(withPlates(t))).catch(() => setText('')); }, [id]);
+  const [failed, setFailed] = useState(false);
+  const [attempt, setAttempt] = useState(0);
+  useEffect(() => { setText(null); setFailed(false); loadProtectedText('masterbook', `${id}.md`).then(t => setText(withPlates(t))).catch(() => setFailed(true)); }, [id, attempt]);
   useEffect(() => {
     if (text && window.location.hash) setTimeout(() => document.getElementById(window.location.hash.slice(1))?.scrollIntoView({ behavior: 'smooth' }), 50);
   }, [text]);
@@ -26,11 +29,12 @@ export default function MasterbookChapter() {
   const i = entries.findIndex(e => e.id === id);
   const e = entries[i]; const prev = entries[i - 1]; const next = entries[i + 1];
   const [libFile, setLibFile] = useState<string | null>(null);
-  useEffect(() => { if (e?.doc) loadLibraryIndex().then(l => setLibFile(l.find(d => d.id === e.doc)?.fileName ?? null)); }, [e?.doc]);
+  useEffect(() => { if (e?.doc) loadLibraryIndex().then(l => setLibFile(l.find(d => d.id === e.doc)?.fileName ?? null)).catch(() => setLibFile(null)); }, [e?.doc]);
   const src = e?.doc ? BUILT_IN_SOURCES.find(s => s.fileName === libFile) : BUILT_IN_SOURCES.find(s => /Masterbook/.test(s.fileName));
   const body = useMemo(() => (text ?? '').replace(/<!-- page (\d+) -->/g, (_m, n) => `\n\n###### Page ${n}\n\n`), [text]);
   const toc = useMemo(() => (text ?? '').split('\n').filter(l => l.startsWith('### ')).map(l => l.slice(4)), [text]);
 
+  if (failed) return <div className="space-y-4"><Link to="/masterbook" className="text-xs font-smallcaps text-muted-foreground hover:text-foreground">← Masterbook contents</Link><LoadFailed what="This chapter" onRetry={() => setAttempt(a => a + 1)} /></div>;
   if (text === '') return <p>Section not found. <Link className="underline" to="/masterbook">Back to the Masterbook</Link></p>;
 
   return (

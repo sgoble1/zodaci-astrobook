@@ -1,3 +1,4 @@
+import { LoadFailed } from '@/components/common/LoadFailed';
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Input } from '@/components/ui/input';
@@ -30,7 +31,9 @@ export default function Masterbook() {
   const [q, setQ] = useState('');
   const [cat, setCat] = useState<string | null>(null);
   const [view, setView] = useState<'parts' | 'topics'>('parts');
-  useEffect(() => { loadIndex().then(setEntries).catch(() => setEntries([])); }, []);
+  const [failed, setFailed] = useState(false);
+  const [attempt, setAttempt] = useState(0);
+  useEffect(() => { setFailed(false); loadIndex().then(setEntries).catch(() => setFailed(true)); }, [attempt]);
   const parts = useMemo(() => {
     const m = new Map<string, MbEntry[]>();
     entries.filter(e => (!cat || catsFor(e).includes(cat)) && (e.title + e.label + e.sections.join(' ') + e.excerpt).toLowerCase().includes(q.toLowerCase()))
