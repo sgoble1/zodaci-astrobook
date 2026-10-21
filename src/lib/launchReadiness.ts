@@ -1,0 +1,33 @@
+/** Launch-readiness rules: each check turns real system signals into Ready / Needs action / Waiting on you. */
+export type CheckState = 'ready' | 'action' | 'external' | 'unknown';
+export type Check = { id: string; label: string; state: CheckState; detail: string; tab?: string };
+
+export type Signals = {
+  payments: { reachable: boolean; activeSubscriptions?: number } | null;
+  lulu: { configured: boolean; connected: boolean; environment: string; webhook: boolean } | null;
+  admins: number | null;
+  maintenance: boolean | null;
+};
+
+export function launchChecks(s: Signals): Check[] {
+  const pay: Check = !s.payments ? { id: 'payments', label: 'Live payments', state: 'unknown', detail: 'Could not reach the payment provider. Retry in a moment.', tab: 'stripe' }
+    : s.payments.reachable ? { id: 'payments', label: 'Live payments', state: 'ready', detail: `Connected · ${s.payments.activeSubscriptions ?? 0} active subscriptions.`, tab: 'stripe' }
+    : { id: 'payments', label: 'Live payments', state: 'action', detail: 'Live payments are not answering. Finish payment setup before launch.', tab: 'stripe' };
+  const lulu: Check = !s.lulu ? { id: 'lulu', label: 'AstroBook printing (Lulu)', state: 'unknown', detail: 'Printing status could not load.', tab: 'orders' }
+    : !s.lulu.configured ? { id: 'lulu', label: 'AstroBook printing (Lulu)', state: 'external', detail: 'Add your Lulu account keys to print books automatically. Orders can still be fulfilled by hand.', tab: 'orders' }
+    : !s.lulu.connected ? { id: 'lulu', label: 'AstroBook printing (Lulu)', state: 'action', detail: 'Lulu keys are saved but the connection failed. Check the keys.', tab: 'orders' }
+    : s.lulu.environment !== 'production' ? { id: 'lulu', label: 'AstroBook printing (Lulu)', state: 'action', detail: 'Connected to Lulu test mode — nothing is really printed yet.', tab: 'orders' }
+    : !s.lulu.webhook ? { id: 'lulu', label: 'AstroBook printing (Lulu)', state: 'action', detail: 'Live printing works, but status updates from Lulu are not registered.', tab: 'orders' }
+    : { id: 'lulu', label: 'AstroBook printing (Lulu)', state: 'ready', detail: 'Live printing with status updates.', tab: 'orders' };
+  const admins: Check = s.admins == null ? { id: 'admins', label: 'Admin access', state: 'unknown', detail: 'Admin list could not load.', tab: 'settings' }
+    : s.admins >= 1 ? { id: 'admins', label: 'Admin access', state: 'ready', detail: `${s.admins} admin account${s.admins === 1 ? '' : 's'}.`, tab: 'settings' }
+    : { id: 'admins', label: 'Admin access', state: 'action', detail: 'No admin accounts found.', tab: 'settings' };
+  const maint: Check = s.maintenance == null ? { id: 'maintenance', label: 'Site open to visitors', state: 'unknown', detail: 'Settings could not load.', tab: 'settings' }
+    : s.maintenance ? { id: 'maintenance', label: 'Site open to visitors', state: 'action', detail: 'Maintenance mode is on — visitors see the maintenance notice.', tab: 'settings' }
+    : { id: 'maintenance', label: 'Site open to visitors', state: 'ready', detail: 'Maintenance mode is off.', tab: 'settings' };
+  return [pay, lulu, admins, maint,
+    { id: 'email', label: 'Email sending', state: 'external', detail: 'Needs a sender domain before newsletters, digests and shipping emails can go out.', tab: 'newsletter' },
+    { id: 'comic-printer', label: 'AstroComic printing', state: 'external', detail: 'Needs a printer account; print files are ready to export.', tab: 'comic' },
+    { id: 'social-proof', label: 'Testimonials', state: 'external', detail: 'Add real customer quotes when you have them — none are invented.' },
+  ];
+}
