@@ -60,6 +60,8 @@ export default function Masterbook() {
           {CATEGORIES.map(([c]) => <button key={c} onClick={() => setCat(cat === c ? null : c)} className={`px-3 py-1 rounded-full border ${cat === c ? 'border-accent bg-accent/15' : 'border-border hover:bg-muted'}`}>{c} <span className="text-muted-foreground">{entries.filter(e => catsFor(e).includes(c)).length}</span></button>)}
         </div>
       </header>
+      {failed && <LoadFailed what="The Masterbook contents" onRetry={() => setAttempt(a => a + 1)} />}
+      {!failed && entries.length > 0 && parts.length === 0 && <p className="text-sm text-muted-foreground">No sections match. Clear the search or choose another topic.</p>}
       {parts.map(([part, list]) => (
         <section key={part}>
           <h2 className="text-2xl mb-1">{part} <span className="text-sm text-muted-foreground font-sans">· {list.length}</span></h2>
