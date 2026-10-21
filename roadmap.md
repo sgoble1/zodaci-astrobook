@@ -11,7 +11,7 @@
 ## In progress (previous request: finish all remaining implementation)
 - [x] Dependency advisories fixed; dependency scan clean (0 known vulnerabilities, 77 packages).
 - [ ] Lulu Print API integration (Phase 5): admin connection status, live quote per order, submit verified-paid orders, status/tracking sync and signed webhook. Goes live once Lulu keys are added. Remaining: full test run and admin browser check as Shane.
-- [ ] Hub quick tabs and non-repeating next steps fixed; admin launch-readiness checklist still to build (Phase 7 "global control checklist") from real system signals.
+- [x] Admin launch-readiness checklist (Admin → Launch checklist) from live payment, printing, admin and settings signals (Phase 7 "global control checklist") from real system signals.
 
 ## Earlier current-request items
 - [x] Complete interrupted marketing audit: prices/FAQ verification, route metadata, invitation sharing, honest public claims and mobile/desktop checks; evidence and external limits: docs/marketing-audit-2026-10-20.md.

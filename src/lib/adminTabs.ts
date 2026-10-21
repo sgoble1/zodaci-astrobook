@@ -1,5 +1,5 @@
 /** Admin dashboard sections, grouped Content / Operations / Platform. The open tab lives in ?tab= so links and reloads keep it. */
-export type AdminTab = 'upload' | 'sections' | 'index' | 'relationships' | 'marketing' | 'growth' | 'activity' | 'charts' | 'orders' | 'comic' | 'stripe' | 'newsletter' | 'april' | 'credits' | 'audit' | 'settings';
+export type AdminTab = 'upload' | 'sections' | 'index' | 'relationships' | 'marketing' | 'growth' | 'activity' | 'charts' | 'orders' | 'comic' | 'stripe' | 'newsletter' | 'april' | 'credits' | 'audit' | 'settings' | 'launch';
 export type AdminTabGroup = { label: string; tabs: { id: AdminTab; label: string; adminOnly?: boolean }[] };
 
 export const ADMIN_TAB_GROUPS: AdminTabGroup[] = [
@@ -13,7 +13,7 @@ export const ADMIN_TAB_GROUPS: AdminTabGroup[] = [
   ] },
   { label: 'Platform', tabs: [
     { id: 'newsletter', label: 'Newsletter', adminOnly: true }, { id: 'april', label: 'April monitor', adminOnly: true }, { id: 'credits', label: 'Credits & grants', adminOnly: true },
-    { id: 'audit', label: 'Audit log', adminOnly: true }, { id: 'settings', label: 'Settings', adminOnly: true },
+    { id: 'audit', label: 'Audit log', adminOnly: true }, { id: 'settings', label: 'Settings', adminOnly: true }, { id: 'launch', label: 'Launch checklist', adminOnly: true },
   ] },
 ];
 

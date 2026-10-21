@@ -1,3 +1,4 @@
+import { LaunchChecklist } from '@/components/admin/LaunchChecklist';
 import { CreditLedger } from '@/components/admin/CreditLedger';
 import { confirmAction } from '@/components/common/ConfirmHost';
 import { SectionEditor } from '@/components/admin/SectionEditor';
@@ -79,6 +80,7 @@ export default function Admin() {
             {tab === 'credits' && <div className="space-y-10"><MemberGrants initialMember={params.get('member')} /><CreditLedger /></div>}
             {tab === 'audit' && <AuditLog />}
             {tab === 'settings' && <PlatformSettings />}
+            {tab === 'launch' && <LaunchChecklist />}
           </>}
         </div>
       )}</AuthGate>
