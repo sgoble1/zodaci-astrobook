@@ -1,5 +1,7 @@
 import { useAprilSpace } from '@/hooks/useAprilSpace';
-import { MEMBER_SECTIONS } from '@/content/navigation';
+import { MEMBER_DOMAINS, ACCOUNT_MENU, visibleColumns } from '@/content/memberNav';
+import { useShaneAccount } from '@/hooks/useShaneAccount';
+import { useSharedSpaceMember } from '@/hooks/useSharedSpaceMember';
 import { replayWelcomeTour } from '@/components/common/WelcomeTour';
 import { BoxArt } from '@/components/common/BoxArt';
 import { useMemo, useState } from 'react';
@@ -107,7 +109,7 @@ export default function Instructions() {
     if (!q) return groups;
     return groups.map(group => ({ ...group, items: group.items.filter(item => `${group.title} ${item.label} ${helpFor(item)}`.toLowerCase().includes(q)), submenus: group.submenus?.map(sub => ({ ...sub, items: sub.items.filter(item => `${group.title} ${sub.label} ${item.label} ${helpFor(item)}`.toLowerCase().includes(q)) })).filter(sub => sub.items.length) })).filter(group => group.items.length || group.submenus?.length);
   }, [query]);
-  if (april === false) return <article className="space-y-8"><h1>Instructions & Help</h1><p className="text-muted-foreground">Your chart and two full readings are free. Core themes include first-section previews; deeper readings need Pro and creation tools need Cosmic.</p><div className="flex flex-wrap gap-2"><Button asChild variant="outline"><Link to="/dashboard">Dashboard</Link></Button><Button asChild variant="outline"><Link to="/books">Create an AstroBook</Link></Button><Button asChild variant="outline"><Link to="/orders">Orders & PDF downloads</Link></Button></div>{MEMBER_SECTIONS.map(section => <section key={section.title} className="border-t border-border pt-6"><h2>{section.title}</h2><ul className="mt-4 divide-y divide-border">{groups.filter(g => section.groupTitles.includes(g.title) && g.title !== SHARED_GROUP.title).flatMap(g => [...g.items, ...g.submenus?.flatMap(sub => sub.items) ?? [], ...g.footer ?? []]).map(item => <li key={item.to}><Link to={item.to} className="block py-3">{item.label} →</Link></li>)}</ul></section>)}<p className="text-sm text-muted-foreground">Readings are saved after generation. If writing is stopped or fails, use Resume or Try again; usage limits apply. Digital PDFs download from My orders after payment confirmation. Printed-order tracking appears after dispatch.</p></article>;
+  if (april === false) return <MemberInstructions />;
   return <article className="space-y-10">
     <header className="max-w-3xl"><div className="font-smallcaps text-xs text-gold">Clickable guide · Every main feature</div><h1 className="mt-2">Instructions &amp; Help</h1><p className="mt-4 text-lg text-muted-foreground">Choose a menu section to understand what is inside, or search for the thing you want to do. Every feature name below opens the real page.</p><button type="button" onClick={replayWelcomeTour} className="mt-3 text-sm text-primary underline">Replay the welcome tour</button></header>
     <section aria-labelledby="quick-help"><h2 id="quick-help" className="text-2xl">Common tasks</h2><div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
@@ -124,5 +126,25 @@ export default function Instructions() {
     <div id="all-features" className="space-y-10 scroll-mt-24">{shown.map(group => <section key={group.title} id={slug(group.title)} className="scroll-mt-24" aria-labelledby={`${slug(group.title)}-title`}><div className="flex flex-wrap items-end justify-between gap-3"><div><div className="font-smallcaps text-xs text-gold">Menu section</div><h2 id={`${slug(group.title)}-title`} className="mt-1">{group.title}</h2></div>{group.items[0] && <Button asChild size="sm"><Link to={group.items[0].to}>Open {group.title}</Link></Button>}</div><p className="mt-2 max-w-3xl text-muted-foreground">{GROUP_HELP[group.title]}</p><div className="mt-5 grid gap-3 md:grid-cols-2">{group.items.map(item => <Link key={item.to} to={item.to} className="overflow-hidden rounded border border-border bg-card/60 p-4 transition-colors hover:border-gold"><div className="-mx-4 -mt-4 mb-3"><BoxArt seed={item.to} label={item.label} className="h-16 w-full" /></div><h3 className="text-lg">{item.label}</h3><p className="mt-1 text-sm text-muted-foreground">{helpFor(item)}</p><span className="mt-3 inline-block text-xs text-gold">Open feature →</span></Link>)}{group.submenus?.flatMap(sub => sub.items.map(item => <Link key={item.to} to={item.to} className="overflow-hidden rounded border border-border bg-card/60 p-4 transition-colors hover:border-gold"><div className="-mx-4 -mt-4 mb-3"><BoxArt seed={item.to} label={item.label} className="h-16 w-full" /></div><div className="font-smallcaps text-[10px] text-gold">{sub.label}</div><h3 className="mt-1 text-lg">{item.label}</h3><p className="mt-1 text-sm text-muted-foreground">{helpFor(item)}</p><span className="mt-3 inline-block text-xs text-gold">Open feature →</span></Link>))}</div></section>)}</div>
     {shown.length === 0 && <p role="status" className="parchment p-5 text-muted-foreground">No feature matched that search. Try a shorter word such as “chart,” “chat,” “source,” or “podcast.”</p>}
     <footer className="border-t border-border pt-6 text-sm text-muted-foreground"><HelpCircle className="mr-2 inline h-4 w-4" aria-hidden />Return here anytime from <strong className="text-foreground">Instructions</strong>, directly beneath <strong className="text-foreground">Chat about this page</strong> in the side menu.</footer>
+  </article>;
+}
+/** Member help: the same five sections and items as the menu, with each item's one-line description. */
+function MemberInstructions() {
+  const shane = useShaneAccount();
+  const shared = useSharedSpaceMember() === true;
+  return <article className="space-y-10">
+    <header className="max-w-3xl space-y-3">
+      <h1>Instructions &amp; Help</h1>
+      <p className="text-muted-foreground">Your chart and two full readings are free. Core themes include first-section previews; deeper readings need Pro and creation tools need Cosmic.</p>
+      <p className="text-sm text-muted-foreground">The menu has five sections — Chart, Readings, Book, Explore and Learn — plus your account. On a phone they sit in the tab bar at the bottom of the screen. Press <kbd className="rounded border border-border px-1 text-xs">⌘K</kbd> or the search button to jump anywhere.</p>
+      <div className="flex flex-wrap gap-2"><Button asChild variant="outline"><Link to="/dashboard">Dashboard</Link></Button><Button asChild variant="outline"><Link to="/books">Create an AstroBook</Link></Button><Button asChild variant="outline"><Link to="/orders">Orders & PDF downloads</Link></Button><Button type="button" variant="ghost" onClick={replayWelcomeTour}>Replay the welcome tour</Button></div>
+    </header>
+    <nav aria-label="Help sections" className="flex flex-wrap gap-2">{MEMBER_DOMAINS.map(d => <Button key={d.id} asChild size="sm" variant="outline"><a href={`#help-${d.id}`}>{d.label}</a></Button>)}<Button asChild size="sm" variant="outline"><a href="#help-account">Account</a></Button></nav>
+    {MEMBER_DOMAINS.map(d => <section key={d.id} id={`help-${d.id}`} aria-labelledby={`help-${d.id}-h`} className="scroll-mt-24 border-t border-border pt-6">
+      <div className="flex flex-wrap items-end justify-between gap-3"><div><h2 id={`help-${d.id}-h`}>{d.label}</h2><p className="mt-1 text-muted-foreground">{d.description}</p></div><Button asChild size="sm"><Link to={d.hub}>{d.hubLabel}</Link></Button></div>
+      <div className="mt-5 grid gap-6 md:grid-cols-2">{visibleColumns(d, { shane, shared }).map(col => <div key={col.title}><h3 className="font-smallcaps text-xs text-gold">{col.title}</h3><ul className="mt-2 divide-y divide-border">{col.items.map(item => <li key={item.to}><Link to={item.to} className="flex min-h-12 flex-col justify-center py-2"><span>{item.label} →</span><span className="text-sm text-muted-foreground">{item.description}</span></Link></li>)}</ul></div>)}</div>
+    </section>)}
+    <section id="help-account" aria-labelledby="help-account-h" className="scroll-mt-24 border-t border-border pt-6"><h2 id="help-account-h">Account</h2><p className="mt-1 text-muted-foreground">Open the account button at the top right (or the Account tab on a phone).</p><ul className="mt-4 divide-y divide-border">{ACCOUNT_MENU.map(a => <li key={a.to}><Link to={a.to} className="block py-3">{a.label} →</Link></li>)}</ul></section>
+    <p className="text-sm text-muted-foreground">Readings are saved after generation. If writing is stopped or fails, use Resume or Try again; usage limits apply. Digital PDFs download from My orders after payment confirmation. Printed-order tracking appears after dispatch.</p>
   </article>;
 }

@@ -31,7 +31,7 @@ export function TopicReadings({ seed }: { seed: string }) {
   const done = (slug: string) => rows?.find(r => r.page_key === `topic-${slug}`);
   if (signedIn === false) return <p className="text-sm text-muted-foreground">Sign in to get your in-depth topic readings.</p>;
   return (
-    <section aria-labelledby="deep-h" className="space-y-4">
+    <section id="topics" aria-labelledby="deep-h" className="scroll-mt-24 space-y-4">
       <h2 id="deep-h" className="font-display text-3xl">In-depth topic readings</h2>
       <p className="max-w-2xl text-sm text-muted-foreground">Long chapters written from your own calculated chart: each one looks at the signs, houses, links between planets and their rulers that apply to that topic.</p>
       {writing && <p role="status" className="text-sm">Pages still being written are tracked in the progress bar at the top of the screen.</p>}

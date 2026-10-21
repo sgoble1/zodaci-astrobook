@@ -8,12 +8,12 @@ import { useSession } from '@/hooks/useLibrary';
 const KEY = 'zodaci-welcome-tour-v1';
 const STEPS = [
   { icon: '✦', title: 'Welcome to Zodaci', body: 'Everything here is calculated from your own birth moment and written in plain language. Here’s a 30-second tour of where things live.' },
-  { icon: '☉', title: 'Your chart', body: 'Open “My Chart” in the menu. Tap any planet for what it means, its sign, house and links to other planets. Hover dotted words for quick explanations.', to: '/my-chart' },
-  { icon: '❦', title: 'Themes & Topics', body: 'The side menu lists your in-depth readings — love, career, purpose, sex & attraction and more. They write themselves after you save your birth details; a small badge shows progress.', to: '/my-readings' },
-  { icon: '✚', title: 'Create your own topic', body: 'At the bottom of the topic list, “+ Create a Topic & Page” writes a brand-new page about anything you’re curious about, from your chart.', to: '/create' },
-  { icon: '♪', title: 'Podcasts & Library', body: 'Under Library → Podcasts you can turn your readings into audio episodes, keep them private or share them with your workspace.', to: '/podcasts' },
-  { icon: '☾', title: 'Timing, workbook & chat', body: 'Timing & Cycles shows transits and turning points. The Workbook has exercises for your placements, and SmartChat answers questions about your chart.', to: '/chat' },
-  { icon: '⚙', title: 'Your account', body: 'The account button at the top holds plans, birth details, workspaces, orders and help. You can replay this tour from Instructions & Help.' },
+  { icon: '☉', title: 'Your chart', body: 'Open Chart at the top (or the Chart tab on a phone). Tap any planet for what it means, its sign, house and links to other planets. Hover dotted words for quick explanations.', to: '/my-chart' },
+  { icon: '❦', title: 'Readings', body: 'Readings holds your in-depth topics and core themes — love, career, purpose, sex & attraction and more. They write themselves after you save your birth details; a progress bar shows what is being written.', to: '/my-readings' },
+  { icon: '✚', title: 'Create your own topic', body: 'In Readings → Reflect, “Create a Topic & Page” writes a brand-new page about anything you’re curious about, from your chart.', to: '/create' },
+  { icon: '♪', title: 'Podcasts & Library', body: 'Book holds your Masterbook, printed AstroBook, orders and Podcasts — turn readings into audio, keep them private or share them with your workspace.', to: '/podcasts' },
+  { icon: '☾', title: 'Timing, workbook & chat', body: 'Explore shows transits, turning points, relationships and other traditions. The Workbook has exercises for your placements, and SmartChat answers questions about your chart.', to: '/chat' },
+  { icon: '⚙', title: 'Your account', body: 'The account button (top right, or the Account tab on a phone) holds plans, birth details, workspaces, orders, help and Learn. Every page ends with ideas for where to go next. You can replay this tour from Instructions & Help.' },
 ];
 
 export function replayWelcomeTour() { localStorage.removeItem(KEY); window.dispatchEvent(new Event('zodaci-tour')); }

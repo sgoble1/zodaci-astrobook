@@ -3,6 +3,7 @@ export type UpdateKind = 'Feature' | 'Content' | 'Change' | 'Fix';
 export type Update = { date: string; kind: UpdateKind; title: string; body: string; to?: string };
 
 export const UPDATES: Update[] = [
+  { date: '2026-10-20T23:59:00Z', kind: 'Change', title: 'A simpler menu in five sections', body: 'Chart, Readings, Book, Explore and Learn now sit across the top, with your account on the right. On a phone they live in a tab bar at the bottom. Every page shows where you are and three places to go next; core-theme readings are now listed on My readings.', to: '/instructions' },
   { date: '2026-10-11T18:48:00Z', kind: 'Feature', title: 'Private examples and invited podcasts', body: 'Save life examples privately, opt into their use in new chapters, and choose a private or invited workspace library for podcasts.', to: '/personal-context' },
   { date: '2026-10-11', kind: 'Change', title: 'The Zodaci identity', body: 'Zodaci is the site; AstroBook is its printed book product. A purple planet logo, softly rounded boxes and separate public artwork.', to: '/explore' },
   { date: '2026-10-11', kind: 'Feature', title: 'Your AstroBook in print', body: 'Configure a standard or expanded softcover, choose a personal cover and add up to two extra topics. US shipping is free.', to: '/books' },
