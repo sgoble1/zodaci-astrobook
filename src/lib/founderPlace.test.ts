@@ -1,5 +1,5 @@
-import { onlyInFullEdition, describe, expect, it } from 'vitest';
-import { founderPlace } from './founderEdition';
+import { describe, expect, it } from 'vitest';
+import { founderPlace, onlyInFullEdition } from './founderEdition';
 
 const groups = [{ title: 'Chart', items: [{ to: '/birth-chart', label: 'Birth Chart' }, { to: '/planets', label: 'Planets' }, { to: '/houses', label: 'Houses' }, { to: '/aspects', label: 'Aspects' }] }];
 describe('founder wayfinding', () => {
