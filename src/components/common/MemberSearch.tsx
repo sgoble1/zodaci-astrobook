@@ -1,19 +1,44 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
-import { NAV_GROUPS } from '@/content/navigation';
+import { memberDestinations } from '@/content/memberNav';
 import { useCustomPages } from '@/hooks/useCustomPages';
+import { useShaneAccount } from '@/hooks/useShaneAccount';
+import { useSharedSpaceMember } from '@/hooks/useSharedSpaceMember';
 
-/** Search public member destinations without loading private source text. */
+/** Search member destinations from the navigation registry, without loading private source text. */
 export function MemberSearch() {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
   const custom = useCustomPages();
-  const destinations = [...new Map([...NAV_GROUPS.flatMap(g => [...g.items, ...g.submenus?.flatMap(s => s.items) ?? [], ...g.footer ?? []]), ...custom.map(page => ({ to: `/p/${page.id}`, label: page.title })), { to: '/dashboard', label: 'Dashboard' }, { to: '/orders', label: 'My orders' }].map(item => [item.to, item])).values()];
+  const shane = useShaneAccount();
+  const shared = useSharedSpaceMember() === true;
+  const groups = useMemo(() => {
+    const all = [...memberDestinations({ shane, shared }), ...custom.map(page => ({ to: `/p/${page.id}`, label: page.title, description: 'A page you created', group: 'Your created pages' }))];
+    const byGroup = new Map<string, typeof all>();
+    for (const item of all) { const key = item.group.split(' · ')[0]; byGroup.set(key, [...(byGroup.get(key) ?? []), item]); }
+    return [...byGroup.entries()];
+  }, [custom, shane, shared]);
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => { if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') { event.preventDefault(); setOpen(v => !v); } };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
   }, []);
-  return <CommandDialog open={open} onOpenChange={setOpen}><CommandInput placeholder="Find a page or reading…" /><CommandList><CommandEmpty>No matching pages.</CommandEmpty><CommandGroup heading="Pages & readings">{destinations.map(item => <CommandItem key={item.to} value={item.label} onSelect={() => { setOpen(false); navigate(item.to); }}>{item.label}</CommandItem>)}</CommandGroup></CommandList></CommandDialog>;
+  return (
+    <CommandDialog open={open} onOpenChange={setOpen}>
+      <CommandInput placeholder="Find a page or reading…" />
+      <CommandList className="max-h-[70vh]">
+        <CommandEmpty>No matching pages.</CommandEmpty>
+        {groups.map(([group, items]) => (
+          <CommandGroup key={group} heading={group}>
+            {items.map(item => (
+              <CommandItem key={item.to} value={`${item.label} ${item.description} ${item.group}`} onSelect={() => { setOpen(false); navigate(item.to); }}>
+                <div className="flex w-full flex-col gap-0.5"><span>{item.label}</span><span className="text-[11px] text-muted-foreground">{item.group} · {item.description}</span></div>
+              </CommandItem>
+            ))}
+          </CommandGroup>
+        ))}
+      </CommandList>
+    </CommandDialog>
+  );
 }
