@@ -35,7 +35,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
     <PlayerCtx.Provider value={{ current, queue, speed, positions, playing, play, playNext, stop, toggle, setSpeed, setQueue, setCatalog }}>
       {children}
       {current?.url && (
-        <div className="fixed bottom-4 right-4 left-4 lg:left-auto lg:w-[420px] z-50 rounded-xl border border-border bg-card/90 backdrop-blur-xl shadow-lg p-3">
+        <div className="float-above-tabbar fixed bottom-4 right-4 left-4 lg:left-auto lg:w-[420px] z-50 rounded-xl border border-border bg-card/90 backdrop-blur-xl shadow-lg p-3">
           <div className="flex items-center gap-3">
             {current.cover_url && <img loading="lazy" decoding="async" src={current.cover_url} alt="" className="h-10 w-10 shrink-0 rounded object-cover"/>}
             <button onClick={toggle} aria-label={playing ? 'Pause' : 'Play'} className="shrink-0 w-10 h-10 rounded-full bg-primary text-primary-foreground grid place-items-center">

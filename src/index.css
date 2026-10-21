@@ -365,3 +365,12 @@ body:has(#mobile-menu) [data-generation-notice] { display: none; }
 .cine-projector { background: radial-gradient(ellipse 70% 60% at 15% 0%, hsl(var(--primary) / .22), transparent 70%); mix-blend-mode: screen; }
 .cine-grain { inset: -10%; opacity: .12; pointer-events: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); animation: cine-grain 1.2s steps(4) infinite; }
 @media (prefers-reduced-motion: reduce) { .cine-grain { animation: none; } }
+
+/* Member navigation: mega-menu fade, and floating notices lifted above the phone tab bar. */
+@keyframes mega-fade-in { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+.mega-fade { animation: mega-fade-in 200ms ease-out both; }
+@media (prefers-reduced-motion: reduce) { .mega-fade { animation: none; } }
+@media (max-width: 767px) {
+  body:has([data-mobile-tabbar]) .float-above-tabbar { bottom: calc(4.75rem + env(safe-area-inset-bottom)) !important; }
+  body:has([data-mobile-tabbar]) [data-sonner-toaster][data-y-position="bottom"] { bottom: calc(4.75rem + env(safe-area-inset-bottom)) !important; }
+}
