@@ -12,9 +12,10 @@ export function CinematicVideo({ poster, className = '' }: { poster?: string; cl
   return (
     <div aria-hidden className={`absolute inset-0 -z-20 overflow-hidden ${className}`}>
       {reduced || failed ? <img loading="lazy" decoding="async" src={posterFailed && poster ? poster : videoPoster.url} alt="" className="h-full w-full object-cover" onError={() => setPosterFailed(true)} /> : (
-        <video poster={videoPoster.url} autoPlay muted loop playsInline preload="auto" onError={() => setFailed(true)} className="cine-video h-full w-full object-cover">
+        <video poster={videoPoster.url} autoPlay muted loop playsInline preload="auto" className="cine-video h-full w-full object-cover">
           <source src={heroWebm.url} type="video/webm" />
-          <source src={heroVideo.url} type="video/mp4" />
+          {/* With <source> children the failure event fires on the last source, not on the video. */}
+          <source src={heroVideo.url} type="video/mp4" onError={() => setFailed(true)} />
         </video>
       )}
       <div className="cine-projector absolute inset-0" />

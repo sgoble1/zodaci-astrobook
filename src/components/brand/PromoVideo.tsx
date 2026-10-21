@@ -2,6 +2,8 @@ import { useId, useRef, useState } from 'react';
 import { Play } from 'lucide-react';
 import promo1080 from '@/assets/videos/zodaci-promo-1080.mp4.asset.json';
 import promo720 from '@/assets/videos/zodaci-promo-720.mp4.asset.json';
+import promo1080Webm from '@/assets/videos/zodaci-promo-1080.webm.asset.json';
+import promo720Webm from '@/assets/videos/zodaci-promo-720.webm.asset.json';
 import promoPoster from '@/assets/videos/zodaci-promo-poster.jpg.asset.json';
 import { useJsonLd } from '@/hooks/useJsonLd';
 import { PROMO_VIDEO } from '@/content/promoVideo';
@@ -27,9 +29,12 @@ export function PromoVideo({ className = '', schema = false }: { className?: str
     <figure className={`overflow-hidden rounded-2xl border border-border bg-card/40 shadow-[0_30px_80px_-40px_hsl(var(--primary)/0.6)] ${className}`}>
       <div className="relative aspect-video w-full bg-background">
         {playing && !failed ? (
-          <video ref={ref} controls playsInline preload="auto" poster={promoPoster.url} aria-describedby={summaryId} onError={() => setFailed(true)} className="h-full w-full">
+          <video ref={ref} controls playsInline preload="auto" poster={promoPoster.url} aria-describedby={summaryId} className="h-full w-full">
+            <source src={promo720Webm.url} type="video/webm" media="(max-width: 768px)" />
             <source src={promo720.url} type="video/mp4" media="(max-width: 768px)" />
-            <source src={promo1080.url} type="video/mp4" />
+            <source src={promo1080Webm.url} type="video/webm" />
+            {/* A <video> with <source> children reports failure on the last source, not on itself. */}
+            <source src={promo1080.url} type="video/mp4" onError={() => setFailed(true)} />
           </video>
         ) : (
           <button type="button" onClick={start} disabled={failed} aria-describedby={summaryId}
