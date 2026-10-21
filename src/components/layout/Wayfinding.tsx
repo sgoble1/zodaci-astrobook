@@ -6,6 +6,7 @@ import { BoxArt } from '@/components/common/BoxArt';
 import { PLAN_LABEL } from '@/components/common/PlanLock';
 import { MEMBER_DOMAINS, breadcrumbsFor, domainById, domainFor, nextStepsFor, type MemberNavItem } from '@/content/memberNav';
 import { useNavState } from './MemberNav';
+import { recommendFor } from '@/lib/recommend';
 
 function tabLabel(to: string) {
   for (const d of MEMBER_DOMAINS) { if (d.hub === to) return d.columns.flatMap(c => c.items).find(i => i.to === to)?.label ?? d.label; }
@@ -71,7 +72,7 @@ function PageBreadcrumbs({ path }: { path: string }) {
 export function WayfindingTop() {
   const { pathname } = useLocation();
   const crumbs = breadcrumbsFor(pathname);
-  return <>{<NeedsChartBanner path={pathname} />}{crumbs ? <PageBreadcrumbs path={pathname} /> : <DomainTabs path={pathname} />}</>;
+  return <>{<NeedsChartBanner path={pathname} />}{crumbs ? <PageBreadcrumbs path={pathname} /> : <DomainTabs path={pathname} />}<RecommendedCard path={pathname} /></>;
 }
 
 /** New members without saved birth details get one clear first step instead of empty chart pages. */
@@ -119,5 +120,21 @@ export function NextStepPanel() {
         })}
       </ul>
     </section>
+  );
+}
+
+/** One personal suggestion at the top of each domain hub. */
+function RecommendedCard({ path }: { path: string }) {
+  const s = useNavState();
+  if (!MEMBER_DOMAINS.some(d => d.hub === path)) return null;
+  const rec = recommendFor({ hub: path, hasChart: !!s.birth, moonSign: s.moonSign, plan: s.plan, lastVisit: s.lastVisit?.path?.startsWith('/my-readings/topic/') ? { path: s.lastVisit.path, title: s.lastVisit.title } : null });
+  if (!rec || rec.to === path) return null;
+  return (
+    <aside aria-label="Recommended for you" className="mb-8 rounded-2xl border border-gold/30 bg-card/60 p-5 backdrop-blur-md">
+      <p className="text-xs text-gold">Recommended for you</p>
+      <p className="mt-1 font-display text-xl">{rec.title}</p>
+      <p className="mt-1 text-sm text-muted-foreground">{rec.reason}</p>
+      <Link to={rec.to} className="mt-3 inline-flex items-center gap-1 text-sm text-primary hover:underline">{rec.cta}<ArrowRight className="h-3.5 w-3.5" aria-hidden="true" /></Link>
+    </aside>
   );
 }
