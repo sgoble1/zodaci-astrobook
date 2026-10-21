@@ -8,6 +8,8 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { toChartInput, useMyBirth } from '@/lib/myBirth';
 import { ChartWheel } from '@/components/chart/ChartWheel';
 import { BoxArt } from '@/components/common/BoxArt';
+import { chartTitle } from '@/lib/chartTitle';
+import { balance } from '@/lib/resultsEngine';
 import { Button } from '@/components/ui/button';
 import { HouseRulers } from '@/components/chart/HouseRulers';
 
@@ -34,6 +36,8 @@ export default function MyChart() {
   );
   const big3 = [chart.bodies.find(b => b.key === 'sun'), chart.bodies.find(b => b.key === 'moon')].filter(Boolean);
   const rising = chart.asc != null ? fmtLon(chart.asc) : null;
+  const sunB = chart.bodies.find(b => b.key === 'sun')!; const moonB = chart.bodies.find(b => b.key === 'moon');
+  const named = chartTitle({ sun: sunB.sign, moon: moonB?.sign, rising: rising?.sign, dominant: balance(chart).dominant as never });
   return (
     <article className="space-y-10">
       {deviceOnly && (
@@ -45,6 +49,8 @@ export default function MyChart() {
         <p className="font-smallcaps text-xs text-gold">{birth.name ? `${birth.name}'s chart` : 'Your chart'}</p>
         <h1 className="font-display mt-1 text-4xl">Your birth chart</h1>
         <p className="mt-2 text-muted-foreground">{birth.date}{birth.time ? ` · ${birth.time}` : ' · time unknown'} · {birth.placeLabel}</p>
+        <p className="mt-3 font-display text-2xl text-gold">{named.title}</p>
+        <p className="text-sm text-muted-foreground" title={named.why}>{named.subtitle}. {named.why}</p>
         <p className="mt-3 text-lg">{big3.map(b => `${b!.name} in ${b!.sign}`).join(', ')}{rising ? `, ${rising.sign} rising` : ''}.</p>
         <div className="mt-4 flex flex-wrap gap-3">
           <Button asChild variant="outline"><Link to="/start">Edit birth details</Link></Button>

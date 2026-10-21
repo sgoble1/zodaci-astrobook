@@ -1,4 +1,5 @@
 import { BoxArt } from '@/components/common/BoxArt';
+import { PlanetOrb } from '@/components/chart/PlanetOrb';
 import { Link } from 'react-router-dom';
 import { PLACEMENTS } from '@/content/april';
 
@@ -17,8 +18,8 @@ export default function Planets() {
         {PLACEMENTS.map(p => (
           <Link key={p.key} to={`/planets/${p.key}`} className="group overflow-hidden p-5 border border-border rounded bg-card hover:border-gold hover:shadow-[var(--shadow-gold)] transition-all">
             <div className="-mx-5 -mt-5 mb-4"><BoxArt seed={p.key} label={p.name} className="h-20 w-full" /></div>
-            <div className="flex items-baseline gap-3">
-              <div className="font-display text-3xl text-gold">{p.glyph}</div>
+            <div className="flex items-center gap-3">
+              <PlanetOrb planet={p.key} size={52} /><div className="font-display text-2xl text-gold" aria-hidden>{p.glyph}</div>
               <div>
                 <div className="font-display text-lg leading-tight">{p.name}</div>
                 <div className="text-xs text-muted-foreground">

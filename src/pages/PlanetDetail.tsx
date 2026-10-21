@@ -1,4 +1,5 @@
 import { SourceChapters } from '@/components/common/SourceChapters';
+import { PlanetOrb } from '@/components/chart/PlanetOrb';
 import { Link, useParams } from 'react-router-dom';
 import { PLACEMENTS, ASPECTS } from '@/content/april';
 
@@ -18,8 +19,9 @@ export default function PlanetDetail() {
     <article className="space-y-10 max-w-3xl">
       <header>
         <Link to="/planets" className="font-smallcaps text-[10px] text-muted-foreground hover:text-gold">← All planets</Link>
-        <div className="mt-4 flex items-baseline gap-4">
-          <div className="font-display text-7xl text-gold leading-none">{p.glyph}</div>
+        <div className="mt-4 flex items-center gap-4">
+          <PlanetOrb planet={p.key} size={112} label={p.name} />
+          <div className="font-display text-5xl text-gold leading-none">{p.glyph}</div>
           <div>
             <h1 className="font-display leading-none">{p.name}</h1>
             <div className="text-sm text-muted-foreground mt-2">
