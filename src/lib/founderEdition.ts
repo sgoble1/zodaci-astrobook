@@ -51,6 +51,6 @@ export function founderPlace(groups: { title: string; items: { to: string; label
 }
 
 /** In classic view, a page from April's own menu that the member menu doesn't list: tell her it lives in her full edition. */
-export function onlyInFullEdition(groups: FounderNavGroup[], path: string, memberListed: boolean): boolean {
+export function onlyInFullEdition(groups: { title: string; items: { to: string; label: string }[] }[], path: string, memberListed: boolean): boolean {
   return !memberListed && founderPlace(groups, path) !== null;
 }
