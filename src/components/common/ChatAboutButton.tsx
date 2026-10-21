@@ -9,7 +9,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
 const MEMBERS = new Set(['shanealecompte@gmail.com', 'shanegoble@gmail.com', 'babybluepuppet@gmail.com']);
 
 /** Opens the current page in the user's chosen conversation. */
-export function ChatAboutButton({ path: fixed, label, compact }: { path?: string; label?: string; compact?: boolean }) {
+export function ChatAboutButton({ path: fixed, label, compact, icon }: { path?: string; label?: string; compact?: boolean; icon?: boolean }) {
   const session = useSession(); const nav = useNavigate(); const { pathname, hash } = useLocation();
   if (!session) return null;
   const path = fixed ?? pathname + hash;
