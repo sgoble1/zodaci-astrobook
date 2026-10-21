@@ -264,6 +264,8 @@ export function breadcrumbsFor(path: string, names: CrumbNames = {}): Crumb[] | 
     const sys = SYSTEM_READINGS.find(s => s.route === path);
     return [hubCrumb('explore'), { label: 'Other systems', to: '/other-systems' }, { label: sys?.title ?? titleCase(m[1]) }];
   }
+  if ((m = path.match(/^\/academy\/([\w-]+)$/))) return [hubCrumb('learn'), { label: 'Academy', to: '/academy' }, { label: titleCase(m[1]) }];
+  if ((m = path.match(/^\/themes\/([\w-]+)$/))) return [hubCrumb('learn'), { label: 'Core themes', to: '/themes' }, { label: titleCase(m[1]) }];
   if ((m = path.match(/^\/workbook\/module\/([\w-]+)$/))) return [hubCrumb('readings'), { label: 'Workbook', to: '/workbook' }, { label: titleCase(m[1]) }];
   if (path.match(/^\/workbook\/companion\/[\w-]+$/)) return [hubCrumb('readings'), { label: 'The Oracle Within', to: '/workbook/companion' }, { label: 'Session' }];
   if (path.match(/^\/workbook\/social-integration\/[\w-]+$/)) return [hubCrumb('readings'), { label: 'Social Counselor', to: '/workbook/social-integration' }, { label: 'Session' }];

@@ -110,4 +110,8 @@ describe('member navigation architecture', () => {
     expect(nextStepsFor('/chat/abc', { plan: 'creator', hasChart: true })).toEqual([]);
     expect(nextStepsFor('/my-readings', { plan: 'free', hasChart: false })[0].to).toBe('/start');
   });
+  it('gives Academy lessons and theme pages a three-level breadcrumb', () => {
+    expect(breadcrumbsFor('/academy/houses-101')?.map(c => c.label)).toEqual(['Learn', 'Academy', 'Houses 101']);
+    expect(breadcrumbsFor('/themes/core-emotions')).toHaveLength(3);
+  });
 });
