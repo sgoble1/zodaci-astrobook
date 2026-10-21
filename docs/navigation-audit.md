@@ -94,4 +94,6 @@ Playwright at 393px and 1280px: signed out (public chrome only, private paths re
 - Shane (admin), desktop 1280px and phone 393px: five menu buttons, menu panels close on Escape, outside click and page change, arrow keys work, admin tools only in Account, phone tab bar hidden on admin pages, no sideways overflow.
 - Fixed after first pass: hub pages (/my-chart, /my-readings, /my-astrobook, /explore, /academy) now show the section shortcut row; "Continue exploring" no longer repeats breadcrumb links.
 - Founders can switch to the classic member layout and back (banner on every page).
-- Not yet verified in a browser: regular non-admin member and April's own account.
+- Regular member (2026-10-21), 393px and 1280px: Explore, Book and Chart shortcut rows show on hub pages; My Library loads (the earlier "Opening Zodaci…" capture was a timing artifact); header stays at the top after scrolling; no admin links; no overflow; no page errors.
+- Signed out: private pages redirect to sign-in; no member menu; no overflow.
+- Not yet verified in a browser: April's own account and Shane inside April's edition (needs a fresh founder session).
