@@ -70,6 +70,7 @@ export default function MasterbookSources() {
           <Link to="/masterbook/upload" className="text-sm underline">Upload your own →</Link>
         </div>
       </header>
+      {failed && <LoadFailed what="The document index" onRetry={() => setAttempt(a => a + 1)} />}
       <div className="space-y-3">
         {shown.map(d => {
           const isOpen = expanded === d.key || !!q;

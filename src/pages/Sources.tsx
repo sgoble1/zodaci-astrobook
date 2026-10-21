@@ -66,6 +66,7 @@ export default function Sources() {
         <p className="text-muted-foreground mt-3 max-w-2xl">Every original document this site was built from. Open one to read it, or download it to verify any passage.</p>
         <Input placeholder="Filter files…" value={q} onChange={e => setQ(e.target.value)} className="max-w-sm mt-4" />
       </header>
+      {indexFailed && <LoadFailed what="The reading view list" onRetry={() => setAttempt(a => a + 1)} />}
 
       <section>
         <p className="text-sm text-muted-foreground mb-3">The Masterbook is readable chapter by chapter in <Link to="/masterbook" className="underline">The Masterbook</Link>. Every other document has a “Read” view with its full text, page by page. Have a question? <Link to="/ask" className="underline">Ask the Sources</Link>.</p>
