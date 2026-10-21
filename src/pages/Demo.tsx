@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
+import { PromoVideo } from '@/components/brand/PromoVideo';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { Book3D } from '@/components/books/Book3D';
 
@@ -72,6 +73,8 @@ export default function Demo() {
         <p className="max-w-2xl text-muted-foreground">This demo uses a made-up person, {SAMPLE.name} ({SAMPLE.facts}). Your own readings are written from your exact birth time and place.</p>
         <div className="flex flex-wrap gap-2"><Button asChild><Link to="/auth">Start free with your chart</Link></Button><Button asChild variant="outline"><Link to="/pricing">Compare plans</Link></Button></div>
       </header>
+
+      <section aria-label="Zodaci in 24 seconds"><PromoVideo /></section>
 
       <section className="space-y-5" aria-labelledby="reading-h">
         <div className="flex flex-wrap items-end justify-between gap-4">

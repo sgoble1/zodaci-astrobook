@@ -1,4 +1,5 @@
 import { CinematicVideo } from '@/components/fx/CinematicVideo';
+import { PromoVideo } from '@/components/brand/PromoVideo';
 import { Navigate, Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { BoxArt } from '@/components/common/BoxArt';
@@ -73,6 +74,10 @@ export default function Home() {
           </div>
           <p className="mt-6 text-xs text-muted-foreground">Free to start · No birth time needed · Your data stays yours</p>
         </div>
+      </section>
+      <section aria-labelledby="home-film-h" className="space-y-4">
+        <div className="flex flex-wrap items-end justify-between gap-3"><h2 id="home-film-h" className="text-3xl">Zodaci in 24 seconds</h2><Link to="/demo" className="text-sm text-primary hover:underline">Then try the interactive demo →</Link></div>
+        <PromoVideo />
       </section>
 
       <section className="flex flex-wrap items-center justify-between gap-4 border-y border-border py-6"><div><h2 className="text-2xl">Your sky, in print.</h2><p className="text-muted-foreground mt-2">{BOOK_VERSIONS.filter(v => v.id === 'pocket' || v.id === 'classic').map(v => `${v.name} paperback ${money(v.price)}`).join(' · ')}. Free US shipping.</p></div><div className="flex gap-2"><Button asChild><Link to="/books">Create my printed book</Link></Button><Button asChild variant="outline"><Link to="/blog">Community journal</Link></Button></div></section>

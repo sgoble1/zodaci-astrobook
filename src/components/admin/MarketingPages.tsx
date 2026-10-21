@@ -5,6 +5,10 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { BRAND_COPY } from '@/content/brandCopy';
+import { PromoVideo } from '@/components/brand/PromoVideo';
+import { PROMO_VIDEO, FILM_MARKER } from '@/content/promoVideo';
+import promo1080 from '@/assets/videos/zodaci-promo-1080.mp4.asset.json';
+import promo720 from '@/assets/videos/zodaci-promo-720.mp4.asset.json';
 
 type Row = { id?: string; slug: string; title: string; headline: string; subheadline: string; body: string; cta_label: string; cta_link: string; published: boolean };
 const blank: Row = { slug: '', title: '', headline: '', subheadline: '', body: '', cta_label: 'Create my free chart', cta_link: '/auth', published: false };
@@ -24,9 +28,34 @@ export function MarketingPages() {
     if (error) return toast.error(error.message);
     toast.success('Saved'); setEdit(null); void load();
   };
-  const del = async (r: Row) => { if (!confirm(`Delete “${r.title || r.slug}”?`)) return; await supabase.from('marketing_pages').delete().eq('id', r.id!); void load(); };
+  const del = async (r: Row) => {
+    if (!confirm(`Delete “${r.title || r.slug}”?`)) return;
+    const { error } = await supabase.from('marketing_pages').delete().eq('id', r.id!);
+    if (error) return toast.error(`Couldn’t delete: ${error.message}`);
+    toast.success('Deleted'); void load();
+  };
+  const copy = (text: string, what: string) => navigator.clipboard.writeText(text).then(() => toast.success(`${what} copied`), () => toast.error('Copy didn’t work — select the text and copy it instead.'));
   return (
     <div className="space-y-8">
+      <section aria-labelledby="film-admin-h" className="space-y-4">
+        <h2 id="film-admin-h" className="font-display text-2xl">Brand film</h2>
+        <p className="max-w-2xl text-sm text-muted-foreground">The {PROMO_VIDEO.lengthLabel} promo film plays on the welcome page, the public home page and the demo. Add it to any landing page by putting <code className="rounded bg-muted px-1">{FILM_MARKER}</code> on its own line in the body.</p>
+        <div className="grid gap-5 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
+          <PromoVideo />
+          <div className="space-y-3 text-sm">
+            <p className="text-muted-foreground">For social posts and ads:</p>
+            <div className="flex flex-wrap gap-2">
+              <Button asChild variant="outline" size="sm"><a href={promo1080.url} download="zodaci-promo-1080p.mp4">Download 1080p MP4</a></Button>
+              <Button asChild variant="outline" size="sm"><a href={promo720.url} download="zodaci-promo-720p.mp4">Download 720p MP4</a></Button>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              <Button variant="ghost" size="sm" onClick={() => copy('https://zodaci.com/welcome', 'Welcome page link')}>Copy welcome page link</Button>
+              <Button variant="ghost" size="sm" onClick={() => copy(PROMO_VIDEO.summary, 'Film description')}>Copy film description</Button>
+            </div>
+            <p className="text-xs text-muted-foreground">Music only, no narration. Its numbers (readings, house systems, Academy lessons) match the site today; update the film if those change.</p>
+          </div>
+        </div>
+      </section>
       <section className="space-y-3">
         <div className="flex items-center justify-between"><h2 className="font-display text-2xl">Landing pages</h2><Button onClick={() => setEdit({ ...blank })}>New landing page</Button></div>
         {rows.length === 0 && <p className="text-sm text-muted-foreground">No landing pages yet. Each one lives at /lp/your-address and can be shared in ads or social posts.</p>}

@@ -1,0 +1,18 @@
+/** Facts about the Zodaci promo film shown on public marketing pages. The summary mirrors the on-screen text. */
+export const PROMO_VIDEO = {
+  title: 'Zodaci in 24 seconds',
+  description: 'A short film about Zodaci: birth charts calculated from astronomical data, readings written for one person, the free Academy and AstroComic.',
+  summary: 'Your sky, your story: every planet, house and angle calculated from your exact birth moment; readings that name the placement behind each sentence; free Academy lessons on the measured sky; and AstroComic, your month as a comic.',
+  lengthLabel: '0:24',
+  isoDuration: 'PT24S',
+  uploadDate: '2026-10-21',
+  origin: 'https://zodaci.com',
+  /** Numbers shown on screen in the film; a test keeps them equal to the live site. */
+  onScreen: { readings: 38, houseSystems: 4, academyLessons: 14 },
+} as const;
+
+/** Landing-page body marker: a line containing only [film] shows the promo film at that spot. */
+export const FILM_MARKER = '[film]';
+export function splitOnFilm(body: string): string[] {
+  return body.split(/^[ \t]*\[film\][ \t]*$/m).map(s => s.trim());
+}
