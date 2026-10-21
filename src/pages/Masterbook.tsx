@@ -62,9 +62,9 @@ export default function Masterbook() {
       </header>
       {failed && <LoadFailed what="The Masterbook contents" onRetry={() => setAttempt(a => a + 1)} />}
       {!failed && entries.length > 0 && parts.length === 0 && <p className="text-sm text-muted-foreground">No sections match. Clear the search or choose another topic.</p>}
-      {parts.map(([part, list]) => (
-        <section key={part}>
-          <h2 className="text-2xl mb-1">{part} <span className="text-sm text-muted-foreground font-sans">· {list.length}</span></h2>
+      {parts.map(([part, list], idx) => (
+        <details key={part} open={idx === 0 || !!q || !!cat} className="group">
+          <summary className="cursor-pointer list-none rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"><h2 className="text-2xl mb-1 inline-flex items-baseline gap-2"><span aria-hidden="true" className="text-gold text-base transition-transform group-open:rotate-90">›</span>{part} <span className="text-sm text-muted-foreground font-sans">· {list.length}</span></h2></summary>
           <div className="gold-rule mb-4" />
           <div className="grid sm:grid-cols-2 gap-3">
             {list.map(e => (
@@ -76,7 +76,7 @@ export default function Masterbook() {
               </Link>
             ))}
           </div>
-        </section>
+        </details>
       ))}
       {uploads.items.length > 0 && !cat && (
         <section>
