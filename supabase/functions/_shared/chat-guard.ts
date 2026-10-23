@@ -23,8 +23,10 @@ export function latestUserText(messages: unknown[]): { id: string; text: string 
 
 /** Loads the saved conversation with database roles only (user/assistant, text parts only). */
 export async function savedHistory(sb: any, table: string, sessionId: string): Promise<UIMessage[]> {
-  const { data } = await sb.from(table).select("ui_id,role,parts").eq("session_id", sessionId).order("created_at", { ascending: true }).limit(200);
-  return (data ?? []).filter((m: any) => m.role === "user" || m.role === "assistant").map((m: any) => ({
+  // Newest 200 turns, replayed oldest-first, so long sessions keep their latest context.
+  const { data, error } = await sb.from(table).select("ui_id,role,parts").eq("session_id", sessionId).order("created_at", { ascending: false }).limit(200);
+  if (error) throw new Error("Session history unavailable");
+  return (data ?? []).reverse().filter((m: any) => m.role === "user" || m.role === "assistant").map((m: any) => ({
     id: m.ui_id || crypto.randomUUID(),
     role: m.role,
     parts: (Array.isArray(m.parts) ? m.parts : []).filter((p: any) => p?.type === "text" && typeof p.text === "string").map((p: any) => ({ type: "text", text: p.text })),
