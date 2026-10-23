@@ -24,17 +24,27 @@ export const COUNSELORS: Counselor[] = [
   },
   {
     key: 'social', name: 'Social Counselor', role: 'Social integration coach', chatPath: '/workbook/social-integration',
-    bio: "A practical coach for the 'outsider looking in' feeling. It explains social situations from a calm third-person view and gives concrete, chart-aware ways for you to connect with people while staying herself.",
+    bio: "A practical coach for the 'outsider looking in' feeling. It explains social situations from a calm third-person view and gives concrete, chart-aware ways for you to connect with people while staying yourself.",
     plain: 'Like a friendly guide who explains how people work and gives you simple things to try next time.',
-    specialties: ['Reading social situations', 'Small talk & starting conversations', 'Friendship & group belonging (Jupiter in the 7th)', 'Playful expression (Mars in Gemini, 5th house)', 'Recovering after awkward moments', 'Step-by-step practice plans'],
+    specialties: ['Reading social situations', 'Small talk & starting conversations', 'Friendship & group belonging', 'Playful, confident expression', 'Recovering after awkward moments', 'Step-by-step practice plans'],
     sessions: 'social_sessions', messages: 'social_messages',
   },
 ];
 
+function RetryNote({ what, onRetry }: { what: string; onRetry: () => void }) {
+  return (
+    <div role="alert" className="rounded-lg border border-border bg-card/60 p-4 text-sm">
+      <p className="font-medium text-foreground">{what} couldn't load.</p>
+      <p className="mt-1 text-muted-foreground">Your connection may have dropped. Nothing was lost — try again in a moment.</p>
+      <Button size="sm" variant="outline" className="mt-3" onClick={onRetry}>Try again</Button>
+    </div>
+  );
+}
+
 const fmt = (d: string) => new Date(d).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' });
 const PrivacyNote = () => (
   <p className="flex items-start gap-2 rounded-md border border-border bg-muted/40 p-3 text-sm text-muted-foreground">
-    <Lock className="mt-0.5 h-4 w-4 shrink-0" aria-hidden /> Your sessions are private. Only you can see them — not the admin, not anyone else.
+    <Lock className="mt-0.5 h-4 w-4 shrink-0" aria-hidden /> Your sessions are private to your account. They never appear in shared spaces or in your other counselor's chats.
   </p>
 );
 
@@ -64,16 +74,24 @@ function useCounselor() {
 export function CounselorProfile() {
   const c = useCounselor();
   const [sessions, setSessions] = useState<{ id: string; title: string; created_at: string; updated_at: string }[] | null>(null);
+  const [failed, setFailed] = useState(false);
+  const [attempt, setAttempt] = useState(0);
   useEffect(() => {
     if (!c) return;
+    let active = true;
+    setFailed(false); setSessions(null);
     (async () => {
       const { data: u } = await supabase.auth.getUser();
+      if (!active) return;
       if (!u.user) return setSessions([]);
       // Owner-only: database rules already limit rows to the signed-in person; the filter makes it explicit.
-      const { data } = await supabase.from(c.sessions).select('id,title,created_at,updated_at').eq('owner_id', u.user.id).order('updated_at', { ascending: false });
+      const { data, error } = await supabase.from(c.sessions).select('id,title,created_at,updated_at').eq('owner_id', u.user.id).order('updated_at', { ascending: false });
+      if (!active) return;
+      if (error) return setFailed(true);
       setSessions(data ?? []);
-    })();
-  }, [c]);
+    })().catch(() => { if (active) setFailed(true); });
+    return () => { active = false; };
+  }, [c, attempt]);
   if (!c) return <p>Counselor not found. <Link className="underline" to="/counselors">See all counselors</Link></p>;
   return (
     <AuthGate what="your counselor sessions">{() => (
@@ -90,7 +108,8 @@ export function CounselorProfile() {
           <div className="flex flex-wrap items-center justify-between gap-2"><h2 id="sess" className="font-display text-xl">Your sessions</h2>
             <Button asChild><Link to={c.chatPath}><MessageCircle className="mr-2 h-4 w-4" aria-hidden />Start or continue a chat</Link></Button></div>
           <PrivacyNote />
-          {sessions === null ? <p role="status" className="text-muted-foreground">Loading…</p>
+          {failed ? <RetryNote what="Your sessions" onRetry={() => setAttempt(a => a + 1)} />
+            : sessions === null ? <p role="status" className="text-muted-foreground">Loading…</p>
             : sessions.length === 0 ? <p className="text-muted-foreground">No sessions yet.</p>
             : <ul className="divide-y divide-border rounded-lg border border-border">{sessions.map(s => (
               <li key={s.id}><Link to={`/counselors/${c.key}/sessions/${s.id}`} className="flex flex-wrap justify-between gap-2 p-3 hover:bg-muted/50 focus-visible:bg-muted/50">
@@ -108,18 +127,28 @@ export function CounselorSession() {
   const [title, setTitle] = useState('');
   const [rows, setRows] = useState<Row[] | null>(null);
   const [denied, setDenied] = useState(false);
+  const [failed, setFailed] = useState(false);
+  const [attempt, setAttempt] = useState(0);
   useEffect(() => {
     if (!c || !sessionId) return;
+    let active = true;
+    setFailed(false); setRows(null);
     (async () => {
       const { data: u } = await supabase.auth.getUser();
+      if (!active) return;
       if (!u.user) return setDenied(true);
-      const { data: s } = await supabase.from(c.sessions).select('title').eq('id', sessionId).eq('owner_id', u.user.id).maybeSingle();
+      const { data: s, error: sErr } = await supabase.from(c.sessions).select('title').eq('id', sessionId).eq('owner_id', u.user.id).maybeSingle();
+      if (!active) return;
+      if (sErr) return setFailed(true);
       if (!s) return setDenied(true);
       setTitle(s.title);
-      const { data } = await supabase.from(c.messages).select('id,role,parts,created_at').eq('session_id', sessionId).eq('owner_id', u.user.id).order('created_at');
+      const { data, error } = await supabase.from(c.messages).select('id,role,parts,created_at').eq('session_id', sessionId).eq('owner_id', u.user.id).order('created_at');
+      if (!active) return;
+      if (error) return setFailed(true);
       setRows((data ?? []) as Row[]);
-    })();
-  }, [c, sessionId]);
+    })().catch(() => { if (active) setFailed(true); });
+    return () => { active = false; };
+  }, [c, sessionId, attempt]);
   if (!c) return <p>Counselor not found.</p>;
   const text = (p: unknown) => (Array.isArray(p) ? p : []).map((x: { type?: string; text?: string }) => (x.type === 'text' ? x.text : '')).join('');
   return (
@@ -130,7 +159,7 @@ export function CounselorSession() {
           <header className="flex flex-wrap items-center justify-between gap-2"><h1 className="font-display text-2xl">{title || 'Session'}</h1>
             <Button asChild variant="outline"><Link to={`${c.chatPath}/${sessionId}`}>Continue this chat</Link></Button></header>
           <PrivacyNote />
-          {rows === null ? <p role="status">Loading…</p> : rows.length === 0 ? <p className="text-muted-foreground">No messages in this session yet.</p> :
+          {failed ? <RetryNote what="This conversation" onRetry={() => setAttempt(a => a + 1)} /> : rows === null ? <p role="status">Loading…</p> : rows.length === 0 ? <p className="text-muted-foreground">No messages in this session yet.</p> :
             <ol className="space-y-4" aria-label="Conversation">{rows.map(r => {
               const you = r.role === 'user';
               return (
