@@ -10,9 +10,9 @@ export type Signals = {
 };
 
 export function launchChecks(s: Signals): Check[] {
-  const pay: Check = !s.payments ? { id: 'payments', label: 'Live payments', state: 'unknown', detail: 'Could not reach the payment provider. Retry in a moment.', tab: 'stripe' }
-    : s.payments.reachable ? { id: 'payments', label: 'Live payments', state: 'ready', detail: `Provider reachable · ${s.payments.activeSubscriptions ?? 0} active subscriptions. Reachable isn't the same as proven — record a test purchase below.`, tab: 'stripe' }
-    : { id: 'payments', label: 'Live payments', state: 'action', detail: 'Live payments are not answering. Finish payment setup before launch.', tab: 'stripe' };
+  const pay: Check = !s.payments ? { id: 'payments', label: 'Payment provider connection', state: 'unknown', detail: 'Could not reach the payment provider. Retry in a moment.', tab: 'stripe' }
+    : s.payments.reachable ? { id: 'payments', label: 'Payment provider connection', state: 'ready', detail: `Provider reachable · ${s.payments.activeSubscriptions ?? 0} active subscriptions. Reachable isn't the same as proven — record a test purchase below.`, tab: 'stripe' }
+    : { id: 'payments', label: 'Payment provider connection', state: 'action', detail: 'Live payments are not answering. Finish payment setup before launch.', tab: 'stripe' };
   const lulu: Check = !s.lulu ? { id: 'lulu', label: 'AstroBook printing (Lulu)', state: 'unknown', detail: 'Printing status could not load.', tab: 'orders' }
     : !s.lulu.configured ? { id: 'lulu', label: 'AstroBook printing (Lulu)', state: 'external', detail: 'Add your Lulu account keys to print books automatically. Orders can still be fulfilled by hand.', tab: 'orders' }
     : !s.lulu.connected ? { id: 'lulu', label: 'AstroBook printing (Lulu)', state: 'action', detail: 'Lulu keys are saved but the connection failed. Check the keys.', tab: 'orders' }
@@ -48,7 +48,7 @@ const DAY = 24 * 60 * 60 * 1000;
 export function proofCheck(def: ProofDef, record: ProofRecord | undefined, now = Date.now()): Check {
   const base = { id: `proof-${def.id}`, label: def.label };
   const t = record ? Date.parse(record.date) : NaN;
-  if (!record || Number.isNaN(t) || t > now + DAY) return { ...base, state: 'external', detail: `Not proven yet. ${def.how}` };
+  if (!record || Number.isNaN(t) || t > now + DAY) return { ...base, state: 'external', detail: def.how };
   const when = new Date(t).toLocaleDateString(undefined, { dateStyle: 'medium' });
   if (def.maxAgeDays && now - t > def.maxAgeDays * DAY) return { ...base, state: 'action', detail: `Last done ${when} — older than ${def.maxAgeDays} days. Run it again.` };
   return { ...base, state: 'ready', detail: `Proven ${when}${record.note ? ` · ${record.note}` : ''}.` };
