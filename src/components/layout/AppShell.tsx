@@ -237,6 +237,7 @@ function AprilShell({ children }: { children: ReactNode }) {
     for (const el of [mainRef.current, asideRef.current]) { if (open) el?.setAttribute('inert', ''); else el?.removeAttribute('inert'); }
     // Dismissing returns focus to the menu button; choosing a page leaves focus on the new page instead.
     if (!open && openedRef.current && !navigatedRef.current) menuButtonRef.current?.focus();
+    if (!open && navigatedRef.current) requestAnimationFrame(() => { if (document.activeElement === document.body) mainRef.current?.focus({ preventScroll: true }); });
     navigatedRef.current = false;
     openedRef.current = open;
     return () => { document.body.style.overflow = ''; };
