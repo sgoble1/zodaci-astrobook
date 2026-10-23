@@ -8,13 +8,14 @@
 @tailwind utilities;
 
 /*
- * Design tokens — an illuminated manuscript in the browser.
- * Black ink on cream vellum, touched with antique gold.
- * Drawn from the Illustration Reference Guide.
+ * Design tokens — the "Digital Sanctuary" theme: deep night background and surfaces, violet primary,
+ * gold accents, soft blue glow, DM Serif Display headings and Fira Sans body. These tokens are the single
+ * source of truth for interface colour; illustrations (planet orbs, cover art) keep their own pigments.
+ * Legacy names kept for compatibility: --glow-teal holds the blue glow, --shadow-gold is a violet halo.
  */
 :root {
   --font-size: 16px;
-  /* Cosmic glass theme — deep night, violet + teal glow (Zodaci showcase style) */
+  /* Digital Sanctuary — deep night, violet + blue glow, gold accents */
   --background: 230 37% 4%;
   --foreground: 270 33% 91%;
   --card: 233 51% 10%;
