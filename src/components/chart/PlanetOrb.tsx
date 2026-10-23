@@ -1,4 +1,4 @@
-import { useId } from 'react';
+import { useId, type ReactNode } from 'react';
 
 /**
  * Luminous 3D-style planet spheres drawn in SVG: radial lighting, surface bands, rings and a soft glow.
@@ -39,7 +39,7 @@ const ALIAS: Record<string, string> = {
 };
 export function planetKey(raw: string): string {
   const flat = String(raw ?? '').toLowerCase().replace(/[^a-z]/g, '');
-  return ALIAS[flat] ?? (flat in LOOKS ? flat : flat);
+  return ALIAS[flat] ?? flat;
 }
 const POINTS = new Set(['northNode', 'southNode', 'lilith', 'fortune', 'vertex', 'asc', 'mc']);
 export const isChartPoint = (raw: string) => POINTS.has(planetKey(raw));
@@ -49,7 +49,7 @@ export function PlanetOrb({ planet, size = 64, label, className = '' }: { planet
   const k = planetKey(planet); const l = LOOKS[k] ?? FALLBACK; const known = k in LOOKS;
   const id = `po${useId().replace(/:/g, '')}`;
   const a11y = { role: label ? 'img' : undefined, 'aria-label': label, 'aria-hidden': label ? undefined : true } as const;
-  const svg = (children: React.ReactNode) => (
+  const svg = (children: ReactNode) => (
     <svg width={size} height={size} viewBox="-60 -60 120 120" className={`shrink-0 overflow-hidden ${className}`} {...a11y}>{children}</svg>
   );
   const glow = <radialGradient id={`${id}g`}><stop offset="0.45" stopColor={l.glow} stopOpacity="0.55" /><stop offset="1" stopColor={l.glow} stopOpacity="0" /></radialGradient>;
