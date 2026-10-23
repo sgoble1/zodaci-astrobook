@@ -16,6 +16,11 @@ import { ART_RULES, buildComicIssue, CAST, COMIC_FAQ, COMIC_PLANS, COMIC_SPEC, f
 import cover from '@/assets/astrocomic-cover.jpg';
 import cast from '@/assets/astrocomic-cast.jpg';
 import spread from '@/assets/astrocomic-spread.jpg';
+import skyPanel from '@/assets/astrocomic-sky-panel.jpg';
+import letterPanel from '@/assets/astrocomic-letter-panel.jpg';
+
+// These scenes are shared illustrations; chart positions and personal letters stay calculated below them.
+const PREVIEW_ART: Record<string, string> = { '2-0': skyPanel, '3-0': letterPanel };
 
 const PAGE_MAP: [string, string][] = [
   ['1', 'Cover — your name, month and constellation'], ['2', 'Your Sky This Month'], ['3', 'Letter from the Stars'], ['4–7', 'Main Story Arc — the transit that matters most to your chart'],
@@ -88,8 +93,8 @@ export default function AstroComic() {
           <div><h2 id="preview-h" className="font-display text-3xl">{personal ? `Your first three pages, ${preview.reader}` : 'A three-page preview'}</h2><p className="mt-2 max-w-2xl text-muted-foreground">{personal ? `Calculated from your saved chart for ${preview.monthLabel}. The story centers on: ${preview.mainEvent}.` : `Shown for our fictional reader Olivia Chen (Pisces Sun). Sign in with your birth details to preview your own issue.`}</p></div>
           {!personal && <Button asChild variant="outline"><Link to={session ? '/start' : `/auth?mode=signup&next=${encodeURIComponent('/astrocomic#preview')}`}>Preview my own issue</Link></Button>}
         </div>
-        <div className="mt-8 grid gap-5 sm:grid-cols-3">{preview.pages.slice(0, 3).map(p => <ComicPageView key={p.n} page={p} />)}</div>
-        <p className="mt-3 text-xs text-muted-foreground">Preview pages show the issue plan — scene direction, captions and lettering. Printed issues are fully illustrated in the Lantern &amp; Ink style.</p>
+        <div className="mt-8 grid gap-5 sm:grid-cols-3">{preview.pages.slice(0, 3).map(p => <ComicPageView key={p.n} page={p} art={PREVIEW_ART} />)}</div>
+        <p className="mt-3 text-xs text-muted-foreground">Sample illustrations accompany {personal ? 'your calculated sky positions and personal letter' : 'Olivia’s calculated sky positions and letter'}. Each printed issue receives artwork for its own story.</p>
       </section>
 
       <section aria-labelledby="inside-h" className="grid gap-10 lg:grid-cols-2">
