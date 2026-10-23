@@ -216,10 +216,28 @@ function AprilShell({ children }: { children: ReactNode }) {
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const mobileMenuRef = useRef<HTMLDivElement>(null);
   const openedRef = useRef(false);
+  const navigatedRef = useRef(false);
+  const headerRef = useRef<HTMLDivElement>(null);
+  const mainRef = useRef<HTMLElement>(null);
+  const asideRef = useRef<HTMLElement>(null);
+  const groups = useFounderGroups();
+  // The phone top bar grows with notches and larger text; the menu and page start right below its real height.
+  const [headerH, setHeaderH] = useState(64);
+  useEffect(() => {
+    const el = headerRef.current;
+    if (!el || typeof ResizeObserver === 'undefined') return;
+    const ro = new ResizeObserver(() => setHeaderH(Math.ceil(el.getBoundingClientRect().height) || 64));
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
   useEffect(() => { setOpen(false); }, [location.pathname]);
   useEffect(() => {
     document.body.style.overflow = open ? 'hidden' : '';
-    if (!open && openedRef.current) menuButtonRef.current?.focus();
+    // While the phone menu is open, the page behind it can't be reached by keyboard or screen reader.
+    for (const el of [mainRef.current, asideRef.current]) { if (open) el?.setAttribute('inert', ''); else el?.removeAttribute('inert'); }
+    // Dismissing returns focus to the menu button; choosing a page leaves focus on the new page instead.
+    if (!open && openedRef.current && !navigatedRef.current) menuButtonRef.current?.focus();
+    navigatedRef.current = false;
     openedRef.current = open;
     return () => { document.body.style.overflow = ''; };
   }, [open]);
@@ -240,26 +258,30 @@ function AprilShell({ children }: { children: ReactNode }) {
     return () => window.removeEventListener('keydown', onKey);
   }, [open]);
   return (
+    <FounderGroupsContext.Provider value={groups}>
     <PlayerProvider>
-    <div className="min-h-screen flex text-foreground relative">
+    <div className="min-h-screen flex text-foreground relative" style={{ ['--founder-header-h' as string]: `${headerH}px` }}>
       <a href="#main-content" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded focus:bg-primary focus:px-4 focus:py-2 focus:text-primary-foreground">Skip to content</a>
       <ScrollProgress /><FirstViewReveal />
       <ParticleField />
-      <aside className="hidden lg:flex w-72 shrink-0 flex-col border-r border-border/60 bg-card/40 backdrop-blur-xl sticky top-0 h-screen z-10">
+      <aside ref={asideRef} className="hidden lg:flex w-72 shrink-0 flex-col border-r border-border/60 bg-card/40 backdrop-blur-xl sticky top-0 h-screen z-10">
         <SidebarInner />
       </aside>
-      <div className="lg:hidden fixed top-0 inset-x-0 z-50 flex min-h-[64px] items-center justify-between gap-2 border-b border-border bg-background/95 px-3 py-2 backdrop-blur-xl pt-[max(0.5rem,env(safe-area-inset-top))]">
+      <div ref={headerRef} className="lg:hidden fixed top-0 inset-x-0 z-50 flex min-h-[64px] items-center justify-between gap-2 border-b border-border bg-background/95 px-3 py-2 backdrop-blur-xl pt-[max(0.5rem,env(safe-area-inset-top))]">
         <NavLink to="/" className="min-w-0 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"><ZodaciLogo compact /></NavLink>
         <div className="flex items-center gap-2"><AccountButton compact /><Button ref={menuButtonRef} type="button" size="icon" variant="ghost" onClick={() => setOpen(v => !v)} aria-label={open ? 'Close menu' : 'Open menu'} aria-expanded={open} aria-controls="mobile-menu" className="min-h-11 min-w-11">
           {open ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
         </Button></div>
       </div>
       {open && (
-        <div ref={mobileMenuRef} id="mobile-menu" role="dialog" aria-modal="true" aria-label="Zodaci menu" className="lg:hidden fixed inset-x-0 bottom-0 top-[64px] z-40 overflow-y-auto overscroll-contain bg-background pb-[env(safe-area-inset-bottom)]">
-          <SidebarInner mobile onNavigate={() => setOpen(false)} />
+        <div ref={mobileMenuRef} id="mobile-menu" role="dialog" aria-modal="true" aria-label="Zodaci menu" className="lg:hidden fixed inset-x-0 bottom-0 top-[var(--founder-header-h,64px)] z-40 overflow-y-auto overscroll-contain bg-background pb-[env(safe-area-inset-bottom)]">
+          <div className="sticky top-0 z-10 flex justify-end border-b border-border/60 bg-background/95 px-3 py-2 backdrop-blur-xl">
+            <Button type="button" variant="ghost" size="sm" className="min-h-11" onClick={() => setOpen(false)}><X className="h-4 w-4" aria-hidden="true" />Close menu</Button>
+          </div>
+          <SidebarInner mobile onNavigate={() => { navigatedRef.current = true; setOpen(false); }} />
         </div>
       )}
-      <main id="main-content" tabIndex={-1} className="flex-1 min-w-0 lg:pt-0 pt-[64px] relative z-10 outline-none">
+      <main ref={mainRef} id="main-content" tabIndex={-1} className="flex-1 min-w-0 lg:pt-0 pt-[var(--founder-header-h,64px)] relative z-10 outline-none">
         <div className="mx-auto max-w-5xl px-4 sm:px-8 py-8 sm:py-10 lg:py-14">
           <motion.div key={location.pathname} initial={{ opacity: 0, y: 24, filter: 'blur(6px)' }} animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }} transition={{ duration: 0 }}>
             <FounderTrail />
@@ -279,6 +301,7 @@ function AprilShell({ children }: { children: ReactNode }) {
       </main>
     </div>
     </PlayerProvider>
+    </FounderGroupsContext.Provider>
   );
 }
 
