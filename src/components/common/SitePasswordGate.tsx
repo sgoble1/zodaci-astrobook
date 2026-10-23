@@ -14,15 +14,29 @@ export function UnlockForm({ onUnlocked, compact = false }: { onUnlocked?: () =>
 
   const submit = async (e: FormEvent) => {
     e.preventDefault();
+    if (busy) return;
     setBusy(true); setErr('');
-    const { data, error } = await supabase.functions.invoke('site-password', { body: { password: pw } });
-    setBusy(false);
-    if (!error && data?.ok && data?.token) {
+    try {
+      const { data, error } = await supabase.functions.invoke('site-password', { body: { password: pw } });
+      if (error) {
+        // An incorrect archive password is an expected rejection, not a broken service.
+        const response = 'context' in error && error.context instanceof Response ? error.context : null;
+        setErr(response?.status === 401 ? 'That password is not right. Please try again.' : 'We couldn’t check the password just now. Please try again in a moment.');
+        return;
+      }
+      if (!data?.ok || typeof data.token !== 'string') {
+        setErr('That password is not right. Please try again.');
+        return;
+      }
       localStorage.setItem(CONTENT_TOKEN_KEY, data.token);
-      window.dispatchEvent(new Event(CONTENT_UNLOCKED_EVENT));
       setPw('');
+      window.dispatchEvent(new Event(CONTENT_UNLOCKED_EVENT));
       onUnlocked?.();
-    } else setErr(error ? 'We couldn’t check the password just now. Please try again in a moment.' : 'That password is not right. Please try again.');
+    } catch {
+      setErr('We couldn’t unlock the archive just now. Please try again in a moment.');
+    } finally {
+      setBusy(false);
+    }
   };
 
   return (
