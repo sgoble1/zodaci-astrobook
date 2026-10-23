@@ -18,6 +18,16 @@ export function leaveAprilEdition() { sessionStorage.removeItem(ADMIN_EDITION_KE
 const listeners = new Set<(v: boolean | undefined) => void>();
 
 let revision = 0;
+/** True when an approved member's private edition failed to open (network, download or unpack), so the UI can offer a retry instead of silently showing the member view. */
+let loadFailed = false;
+const errorListeners = new Set<(v: boolean) => void>();
+const setFailed = (v: boolean) => { loadFailed = v; errorListeners.forEach(l => l(v)); };
+export function retryAprilSpace() { cached = null; setFailed(false); void check(); }
+export function useAprilSpaceError() {
+  const [v, setV] = useState(loadFailed);
+  useEffect(() => { errorListeners.add(setV); return () => { errorListeners.delete(setV); }; }, []);
+  return v;
+}
 async function check() {
   const version = ++revision;
   const valid = () => version === revision;
@@ -45,17 +55,20 @@ async function check() {
       hydratePrivateEdition(edition);
     }
     if (!valid()) return;
+    setFailed(false);
     cached = { uid, ok };
     listeners.forEach(l => l(ok));
   } catch {
     if (!valid()) return;
     cached = null;
     clearPrivateEdition();
+    setFailed(true);
     listeners.forEach(l => l(false));
   }
 }
 supabase.auth.onAuthStateChange(() => {
   revision++;
+  setFailed(false);
   cached = null;
   clearPrivateEdition();
   listeners.forEach(l => l(false));

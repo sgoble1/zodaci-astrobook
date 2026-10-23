@@ -38,8 +38,9 @@ export function CoverCustomizer() {
       <div role="radiogroup" aria-label="Cover design" className="flex flex-wrap gap-2">{COVERS.map(([label], i) => <button key={label} type="button" role="radio" aria-checked={cover === i} onClick={() => { setTouched(true); setCover(i); }} className={`rounded-full border px-3 py-1 text-sm transition-colors duration-500 ${cover === i ? 'border-primary bg-primary/15' : 'border-border hover:border-primary/60'}`}>{label}{match?.index === i && <span className="ml-1 text-xs text-gold">· Recommended</span>}</button>)}</div>
       {match && <p className="text-xs text-muted-foreground">Recommended for your sky: {match.reason} You can choose any design.</p>}
       {sun && <p className="text-sm text-muted-foreground" role="status">Sun in {sun.sign}{sun.cusp ? ' — the Sun changed sign around this day, so your birth time decides. Your real book uses your exact time.' : '.'}{named ? ` Your book title draws on your full chart; this preview uses your Sun only.` : ''}</p>}
-      <Button asChild><Link to={next}>Make this my AstroBook<ArrowRight /></Link></Button>
-      <p className="text-xs text-muted-foreground">Preview only. Nothing you type here is saved.</p>
+      {touched && match && cover !== match.index && <button type="button" className="text-xs text-gold underline underline-offset-4" onClick={() => { setTouched(false); setCover(match.index); }}>Use the recommended design</button>}
+      <Button asChild><Link to={next}>Create my AstroBook<ArrowRight /></Link></Button>
+      <p className="text-xs text-muted-foreground">Preview only. Your name, date and design choice are not saved or carried into signup.</p>
     </form>
     <figure className="mx-auto w-56" aria-live="polite">
       <div className="relative aspect-[2/3] overflow-hidden rounded shadow-2xl">

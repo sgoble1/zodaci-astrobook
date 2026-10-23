@@ -12,7 +12,7 @@ import { Menu, X } from 'lucide-react';
 import { GenerationProgress } from '@/components/readings/GenerationProgress';
 import { founderPlace, onlyInFullEdition, orderFounderGroups } from '@/lib/founderEdition';
 import { domainFor } from '@/content/memberNav';
-import { useAprilSpace, useClassicView, setClassicView } from '@/hooks/useAprilSpace';
+import { useAprilSpace, useAprilSpaceError, retryAprilSpace, useClassicView, setClassicView } from '@/hooks/useAprilSpace';
 
 /** April's breadcrumb (section › page) from her own menu; hidden on the first page of a section. */
 function FounderTrail() {
@@ -43,7 +43,7 @@ function ClassicViewBanner() {
   const fullOnly = onlyInFullEdition(APRIL_NAV_GROUPS, pathname, domainFor(pathname) !== null);
   return (
     <div role="status" className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-gold/40 bg-gold/10 px-4 py-3 text-sm">
-      <span>{fullOnly ? "This page is part of your full edition — the classic menu doesn't list it." : "You're seeing the classic view — the same layout every member sees."}</span>
+      <span>{fullOnly ? "This page is part of your full edition — the classic menu doesn't list it." : "You're seeing the classic view — the same menus and layout every member sees, with your own pages kept intact."}</span>
       <Button size="sm" variant="outline" onClick={() => setClassicView(false)}>Back to your full edition</Button>
     </div>
   );
@@ -106,6 +106,7 @@ export function AppShell() {
   const location = useLocation();
   const april = useAprilSpace();
   const classic = useClassicView();
+  const editionFailed = useAprilSpaceError();
   // April and Shane's joint pages and admin tools keep real names; elsewhere April-written copy reads as "you".
   const founderState = useSharedSpaceMember();
   // Wait for the membership answer so names are never rewritten before it arrives.
@@ -135,7 +136,9 @@ export function AppShell() {
   }
   // Founders can switch to the classic view: the same pages and menu every member sees.
   const founder = april && !classic;
-  const page = <PageErrorBoundary key={location.pathname}>{!founder && !keepNames && <PublicWording />}{april === undefined && !isPublicPath(location.pathname) ? null : founder ? <Outlet /> : <PlanGuard>{isPublicPath(location.pathname) ? <Outlet /> : <PublicChartFallback />}</PlanGuard>}<VerifySources /></PageErrorBoundary>;
+  // Classic view changes only menus and layout: April's own pages keep their original content.
+  const ownPage = april && classic && founderPlace(APRIL_NAV_GROUPS, location.pathname) !== null;
+  const page = <PageErrorBoundary key={location.pathname}>{editionFailed && <div role="alert" className="mb-4 rounded-2xl border border-gold/40 bg-card/60 p-4 text-sm"><p className="font-medium text-foreground">Your private edition couldn't open.</p><p className="mt-1 text-muted-foreground">Your connection may have dropped, so you're seeing the member view for now.</p><Button size="sm" variant="outline" className="mt-3" onClick={retryAprilSpace}>Try again</Button></div>}{!founder && !keepNames && !ownPage && <PublicWording />}{april === undefined && !isPublicPath(location.pathname) ? null : founder || ownPage ? <Outlet /> : <PlanGuard>{isPublicPath(location.pathname) ? <Outlet /> : <PublicChartFallback />}</PlanGuard>}<VerifySources /></PageErrorBoundary>;
   if (!founder) return <MemberShell>{april && classic && <ClassicViewBanner />}{page}</MemberShell>;
   return <AprilShell>{page}</AprilShell>;
 }
