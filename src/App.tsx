@@ -10,7 +10,7 @@ import {
   SABIAN_SYMBOLS, FIXED_STARS, ASTEROIDS, SPECIAL_ASPECTS, ARABIC_PARTS,
   PROFECTION_35, PRENATAL_ECLIPSE, PROFECTION_BEATS,
 } from './content/compendium';
-import { useAprilSpace } from './hooks/useAprilSpace';
+import { useAprilSpace, useClassicView } from './hooks/useAprilSpace';
 import { AutomaticChapters } from './components/payments/AutomaticChapters';
 import { PublicSiteLayout } from './components/brand/PublicSiteLayout';
 import { ReferralCapture } from './components/common/ReferralCapture';

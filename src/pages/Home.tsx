@@ -4,7 +4,7 @@ import { Navigate, Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { BoxArt } from '@/components/common/BoxArt';
 import { useMyBirth } from '@/lib/myBirth';
-import { useAprilSpace } from '@/hooks/useAprilSpace';
+import { useAprilSpace, useClassicView } from '@/hooks/useAprilSpace';
 import AprilHome from '@/pages/AprilHome';
 import heroImg from '@/assets/astrobook-public.jpg';
 import { BOOK_VERSIONS, money } from '@/lib/books';
