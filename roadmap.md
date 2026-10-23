@@ -128,6 +128,7 @@
 - [x] Promo film: retry + open-in-new-tab fallback
 - [x] Cover preview: real-date validation, exact sign-change day detection, arrow-key design choice, long names fit
 - [x] Counselors: retry on failed history, generic specialties, accurate privacy note
+- [x] Dependency scan Oct 23: 0 known issues in 77 packages after DOMPurify 3.4.17 override (SheetJS CDN tarball unscanned)
 - [x] Browser matrix Oct 23 (393/1280): April full + classic via admin edition tab, phone menu, Shane admin launch/marketing, signed-out /books /welcome /lp /april — no overflow, no page errors
 - [ ] April's Masterbook chapters with the archive unlocked — blocked: archive password is hidden from the agent; owner unlocks once in preview
 - [ ] Social share image — hosting adds the social preview; set a custom one only from an owner-provided public image URL
