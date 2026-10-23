@@ -30,3 +30,8 @@ export function clearPrivateEdition() {
   retained = null;
   for (const entry of setters.values()) entry.set(structuredClone(entry.empty));
 }
+/** Reads one module's values from a downloaded payload without touching the app-wide store (used by the shared report page). */
+export function readPrivateModule(data: Record<string, Record<string, unknown>> | null | undefined, module: string): Record<string, unknown> {
+  const entries = data?.[module];
+  return entries && typeof entries === 'object' ? (revive(entries) as Record<string, unknown>) : {};
+}

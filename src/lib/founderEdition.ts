@@ -39,18 +39,50 @@ export function orderFounderGroups<T extends { title: string }>(groups: T[]): T[
 }
 
 
-/** Where a page sits in April's own menu: its section, the section's first page, and the next pages to read. */
-export function founderPlace(groups: { title: string; items: { to: string; label: string }[] }[], path: string) {
-  for (const g of groups) {
-    const i = g.items.findIndex(it => it.to === path);
-    if (i < 0) continue;
-    const ring = [...g.items.slice(i + 1), ...g.items.slice(0, i)].filter(it => it.to !== path);
-    return { section: g.title, home: g.items[0], label: g.items[i].label, next: ring.slice(0, 3) };
+type FounderLink = { to: string; label: string };
+export type FounderGroup = { title: string; items: FounderLink[]; submenus?: { label: string; items: FounderLink[] }[]; footer?: FounderLink[] };
+export type FounderPlace = { section: string; home: FounderLink; label: string; parent?: FounderLink; next: FounderLink[] };
+
+/** Main links plus submenu links (in menu order); footer actions only count for matching, never as reading suggestions. */
+const readable = (g: FounderGroup) => {
+  const seen = new Set<string>();
+  return [...g.items, ...(g.submenus ?? []).flatMap(s => s.items)].filter(it => !seen.has(it.to) && seen.add(it.to));
+};
+
+/**
+ * Where a page sits in April's own menu: its section, the section's first page and the next pages to read.
+ * Detail pages (for example a Masterbook chapter) resolve to their closest menu parent. A section with a
+ * single page suggests the first page of the following section, so no page is a dead end.
+ */
+export function founderPlace(groups: FounderGroup[], path: string): FounderPlace | null {
+  const nextSectionStart = (gi: number) => {
+    for (let k = 1; k < groups.length; k++) { const first = readable(groups[(gi + k) % groups.length])[0]; if (first && first.to !== path) return first; }
+    return undefined;
+  };
+  for (const [gi, g] of groups.entries()) {
+    const items = readable(g);
+    const i = items.findIndex(it => it.to === path);
+    const isFooter = i < 0 && (g.footer ?? []).some(it => it.to === path);
+    if (i < 0 && !isFooter) continue;
+    const label = i >= 0 ? items[i].label : (g.footer ?? []).find(it => it.to === path)!.label;
+    const ring = i >= 0 ? [...items.slice(i + 1), ...items.slice(0, i)] : items;
+    const next = ring.filter(it => it.to !== path).slice(0, 3);
+    if (!next.length) { const n = nextSectionStart(gi); if (n) next.push(n); }
+    return { section: g.title, home: items[0] ?? { to: path, label }, label, next };
   }
-  return null;
+  // Closest menu parent for detail routes; '/' never acts as a parent.
+  let best: { gi: number; item: FounderLink } | null = null;
+  for (const [gi, g] of groups.entries()) for (const it of [...readable(g), ...(g.footer ?? [])]) {
+    if (it.to !== '/' && path.startsWith(`${it.to}/`) && (!best || it.to.length > best.item.to.length)) best = { gi, item: it };
+  }
+  if (!best) return null;
+  const g = groups[best.gi];
+  const items = readable(g);
+  const next = [best.item, ...items.filter(it => it.to !== best!.item.to)].slice(0, 3);
+  return { section: g.title, home: items[0] ?? best.item, label: best.item.label, parent: best.item, next };
 }
 
 /** In classic view, a page from April's own menu that the member menu doesn't list: tell her it lives in her full edition. */
-export function onlyInFullEdition(groups: { title: string; items: { to: string; label: string }[] }[], path: string, memberListed: boolean): boolean {
+export function onlyInFullEdition(groups: FounderGroup[], path: string, memberListed: boolean): boolean {
   return !memberListed && founderPlace(groups, path) !== null;
 }

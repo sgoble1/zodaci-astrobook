@@ -7,31 +7,58 @@ import { motion } from 'framer-motion';
 import ParticleField from '@/components/fx/ParticleField';
 import ScrollProgress from '@/components/fx/ScrollProgress';
 import { FirstViewReveal } from '@/components/fx/FirstViewReveal';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { createContext, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { Menu, X } from 'lucide-react';
 import { GenerationProgress } from '@/components/readings/GenerationProgress';
 import { founderPlace, onlyInFullEdition, orderFounderGroups } from '@/lib/founderEdition';
 import { domainFor } from '@/content/memberNav';
 import { useAprilSpace, useAprilSpaceError, retryAprilSpace, useClassicView, setClassicView } from '@/hooks/useAprilSpace';
 
+/** April's full menu exactly as the sidebar shows it: her sections plus Shared, Relationships and pages she created. */
+const FounderGroupsContext = createContext<NavGroup[] | null>(null);
+function useFounderGroups(): NavGroup[] {
+  const { items: rels } = useRelationships();
+  const custom = useCustomPages();
+  const badges = useSharedBadges();
+  const aprilGroups = APRIL_NAV_GROUPS; // private payload; re-read each render so late registration shows up
+  return useMemo(() => {
+    const shared = { ...SHARED_GROUP, items: SHARED_GROUP.items.map(item => ({ ...item, badge: item.to === '/shared/conversations' ? badges.chat : item.to === '/shared/wonderings' ? badges.wonderings : undefined })) };
+    const relationships = { ...RELATIONSHIPS_GROUP, items: [...RELATIONSHIPS_GROUP.items, ...rels.map(r => ({ to: `/relationships/${r.id}`, label: `↳ ${r.name}${r.relation ? ` · ${r.relation}` : ''}` }))] };
+    return orderFounderGroups([...aprilGroups.slice(0, 2), shared, relationships, ...aprilGroups.slice(2)])
+      .map(g => ({ ...g, items: [...g.items, ...custom.filter(c => c.menu_group === g.title).map(c => ({ to: `/p/${c.id}`, label: c.status === 'generating' ? `${c.title} · writing…` : c.title, created: true } as NavItem))] }));
+  }, [aprilGroups, badges.chat, badges.wonderings, rels, custom]);
+}
+const cleanLabel = (l: string) => l.replace(/^↳\s*/, '');
+
 /** April's breadcrumb (section › page) from her own menu; hidden on the first page of a section. */
 function FounderTrail() {
   const { pathname } = useLocation();
-  const place = founderPlace(APRIL_NAV_GROUPS, pathname);
-  if (!place || place.home.to === pathname) return null;
-  return <nav aria-label="Breadcrumb" className="mb-6 text-xs text-muted-foreground"><Link to={place.home.to} className="hover:text-foreground underline-offset-2 hover:underline">{place.section}</Link><span aria-hidden="true" className="mx-2">›</span><span className="text-foreground">{place.label}</span></nav>;
+  const groups = useContext(FounderGroupsContext) ?? APRIL_NAV_GROUPS;
+  const place = founderPlace(groups, pathname);
+  if (!place || (!place.parent && place.home.to === pathname)) return null;
+  const crumb = 'hover:text-foreground underline-offset-2 hover:underline';
+  return (
+    <nav aria-label="Breadcrumb" className="mb-6 text-xs text-muted-foreground">
+      <Link to={place.home.to} className={crumb}>{place.section}</Link>
+      <span aria-hidden="true" className="mx-2">›</span>
+      {place.parent
+        ? <><Link to={place.parent.to} className={crumb}>{cleanLabel(place.parent.label)}</Link><span aria-hidden="true" className="mx-2">›</span><span className="text-foreground" aria-current="page">This page</span></>
+        : <span className="text-foreground" aria-current="page">{cleanLabel(place.label)}</span>}
+    </nav>
+  );
 }
 
 /** "Continue in this section": the next pages in April's own menu, so no page is a dead end. */
 function FounderNext() {
   const { pathname } = useLocation();
-  const place = founderPlace(APRIL_NAV_GROUPS, pathname);
+  const groups = useContext(FounderGroupsContext) ?? APRIL_NAV_GROUPS;
+  const place = founderPlace(groups, pathname);
   if (!place || !place.next.length) return null;
   return (
     <nav aria-labelledby="founder-next" className="mt-16 border-t border-border pt-8 print:hidden">
       <h2 id="founder-next" className="font-display text-2xl">Continue in {place.section}</h2>
       <ul className="mt-5 grid gap-3 sm:grid-cols-3">
-        {place.next.map(n => <li key={n.to}><Link to={n.to} className="flex h-full items-center justify-between gap-2 rounded-xl border border-border bg-card/60 p-4 text-sm hover:border-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"><span>{n.label}</span><span aria-hidden="true">→</span></Link></li>)}
+        {place.next.map(n => <li key={n.to}><Link to={n.to} className="flex h-full items-center justify-between gap-2 rounded-xl border border-border bg-card/60 p-4 text-sm hover:border-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"><span>{place.parent?.to === n.to ? `Back to ${cleanLabel(n.label)}` : cleanLabel(n.label)}</span><span aria-hidden="true">→</span></Link></li>)}
       </ul>
     </nav>
   );
@@ -43,7 +70,7 @@ function ClassicViewBanner() {
   const fullOnly = onlyInFullEdition(APRIL_NAV_GROUPS, pathname, domainFor(pathname) !== null);
   return (
     <div role="status" className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-gold/40 bg-gold/10 px-4 py-3 text-sm">
-      <span>{fullOnly ? "This page is part of your full edition — the classic menu doesn't list it." : "You're seeing the classic view — the same menus and layout every member sees, with your own pages kept intact."}</span>
+      <span>{fullOnly ? "This page is part of your full edition — the classic menu doesn't list it, so it opens as written for you." : "You're seeing the classic view — the same pages and menus every member sees."}</span>
       <Button size="sm" variant="outline" onClick={() => setClassicView(false)}>Back to your full edition</Button>
     </div>
   );
@@ -136,8 +163,9 @@ export function AppShell() {
   }
   // Founders can switch to the classic view: the same pages and menu every member sees.
   const founder = april && !classic;
-  // Classic view changes only menus and layout: April's own pages keep their original content.
-  const ownPage = april && classic && founderPlace(APRIL_NAV_GROUPS, location.pathname) !== null;
+  // Classic view shows the member version of every page the member menu lists; pages that exist only in
+  // April's full edition keep their original content rather than falling back to unrelated member pages.
+  const ownPage = !!april && classic && onlyInFullEdition(APRIL_NAV_GROUPS, location.pathname, domainFor(location.pathname) !== null);
   const page = <PageErrorBoundary key={location.pathname}>{editionFailed && <div role="alert" className="mb-4 rounded-2xl border border-gold/40 bg-card/60 p-4 text-sm"><p className="font-medium text-foreground">Your private edition couldn't open.</p><p className="mt-1 text-muted-foreground">Your connection may have dropped, so you're seeing the member view for now.</p><Button size="sm" variant="outline" className="mt-3" onClick={retryAprilSpace}>Try again</Button></div>}{!founder && !keepNames && !ownPage && <PublicWording />}{april === undefined && !isPublicPath(location.pathname) ? null : founder || ownPage ? <Outlet /> : <PlanGuard>{isPublicPath(location.pathname) ? <Outlet /> : <PublicChartFallback />}</PlanGuard>}<VerifySources /></PageErrorBoundary>;
   if (!founder) return <MemberShell>{april && classic && <ClassicViewBanner />}{page}</MemberShell>;
   return <AprilShell>{page}</AprilShell>;
@@ -188,10 +216,29 @@ function AprilShell({ children }: { children: ReactNode }) {
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const mobileMenuRef = useRef<HTMLDivElement>(null);
   const openedRef = useRef(false);
+  const navigatedRef = useRef(false);
+  const headerRef = useRef<HTMLDivElement>(null);
+  const mainRef = useRef<HTMLElement>(null);
+  const asideRef = useRef<HTMLElement>(null);
+  const groups = useFounderGroups();
+  // The phone top bar grows with notches and larger text; the menu and page start right below its real height.
+  const [headerH, setHeaderH] = useState(64);
+  useEffect(() => {
+    const el = headerRef.current;
+    if (!el || typeof ResizeObserver === 'undefined') return;
+    const ro = new ResizeObserver(() => setHeaderH(Math.ceil(el.getBoundingClientRect().height) || 64));
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
   useEffect(() => { setOpen(false); }, [location.pathname]);
   useEffect(() => {
     document.body.style.overflow = open ? 'hidden' : '';
-    if (!open && openedRef.current) menuButtonRef.current?.focus();
+    // While the phone menu is open, the page behind it can't be reached by keyboard or screen reader.
+    for (const el of [mainRef.current, asideRef.current]) { if (open) el?.setAttribute('inert', ''); else el?.removeAttribute('inert'); }
+    // Dismissing returns focus to the menu button; choosing a page leaves focus on the new page instead.
+    if (!open && openedRef.current && !navigatedRef.current) menuButtonRef.current?.focus();
+    if (!open && navigatedRef.current) requestAnimationFrame(() => { if (document.activeElement === document.body) mainRef.current?.focus({ preventScroll: true }); });
+    navigatedRef.current = false;
     openedRef.current = open;
     return () => { document.body.style.overflow = ''; };
   }, [open]);
@@ -212,26 +259,30 @@ function AprilShell({ children }: { children: ReactNode }) {
     return () => window.removeEventListener('keydown', onKey);
   }, [open]);
   return (
+    <FounderGroupsContext.Provider value={groups}>
     <PlayerProvider>
-    <div className="min-h-screen flex text-foreground relative">
+    <div className="min-h-screen flex text-foreground relative" style={{ ['--founder-header-h' as string]: `${headerH}px` }}>
       <a href="#main-content" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded focus:bg-primary focus:px-4 focus:py-2 focus:text-primary-foreground">Skip to content</a>
       <ScrollProgress /><FirstViewReveal />
       <ParticleField />
-      <aside className="hidden lg:flex w-72 shrink-0 flex-col border-r border-border/60 bg-card/40 backdrop-blur-xl sticky top-0 h-screen z-10">
+      <aside ref={asideRef} className="hidden lg:flex w-72 shrink-0 flex-col border-r border-border/60 bg-card/40 backdrop-blur-xl sticky top-0 h-screen z-10">
         <SidebarInner />
       </aside>
-      <div className="lg:hidden fixed top-0 inset-x-0 z-50 flex min-h-[64px] items-center justify-between gap-2 border-b border-border bg-background/95 px-3 py-2 backdrop-blur-xl pt-[max(0.5rem,env(safe-area-inset-top))]">
+      <div ref={headerRef} className="lg:hidden fixed top-0 inset-x-0 z-50 flex min-h-[64px] items-center justify-between gap-2 border-b border-border bg-background/95 px-3 py-2 backdrop-blur-xl pt-[max(0.5rem,env(safe-area-inset-top))]">
         <NavLink to="/" className="min-w-0 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"><ZodaciLogo compact /></NavLink>
         <div className="flex items-center gap-2"><AccountButton compact /><Button ref={menuButtonRef} type="button" size="icon" variant="ghost" onClick={() => setOpen(v => !v)} aria-label={open ? 'Close menu' : 'Open menu'} aria-expanded={open} aria-controls="mobile-menu" className="min-h-11 min-w-11">
           {open ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
         </Button></div>
       </div>
       {open && (
-        <div ref={mobileMenuRef} id="mobile-menu" role="dialog" aria-modal="true" aria-label="Zodaci menu" className="lg:hidden fixed inset-x-0 bottom-0 top-[64px] z-40 overflow-y-auto overscroll-contain bg-background pb-[env(safe-area-inset-bottom)]">
-          <SidebarInner mobile onNavigate={() => setOpen(false)} />
+        <div ref={mobileMenuRef} id="mobile-menu" role="dialog" aria-modal="true" aria-label="Zodaci menu" className="lg:hidden fixed inset-x-0 bottom-0 top-[var(--founder-header-h,64px)] z-40 overflow-y-auto overscroll-contain bg-background pb-[env(safe-area-inset-bottom)]">
+          <div className="sticky top-0 z-10 flex justify-end border-b border-border/60 bg-background/95 px-3 py-2 backdrop-blur-xl">
+            <Button type="button" variant="ghost" size="sm" className="min-h-11" onClick={() => setOpen(false)}><X className="h-4 w-4" aria-hidden="true" />Close menu</Button>
+          </div>
+          <SidebarInner mobile onNavigate={() => { navigatedRef.current = true; setOpen(false); }} />
         </div>
       )}
-      <main id="main-content" tabIndex={-1} className="flex-1 min-w-0 lg:pt-0 pt-[64px] relative z-10 outline-none">
+      <main ref={mainRef} id="main-content" tabIndex={-1} className="flex-1 min-w-0 lg:pt-0 pt-[var(--founder-header-h,64px)] relative z-10 outline-none">
         <div className="mx-auto max-w-5xl px-4 sm:px-8 py-8 sm:py-10 lg:py-14">
           <motion.div key={location.pathname} initial={{ opacity: 0, y: 24, filter: 'blur(6px)' }} animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }} transition={{ duration: 0 }}>
             <FounderTrail />
@@ -251,13 +302,12 @@ function AprilShell({ children }: { children: ReactNode }) {
       </main>
     </div>
     </PlayerProvider>
+    </FounderGroupsContext.Provider>
   );
 }
 
 function SidebarInner({ mobile = false, onNavigate }: { mobile?: boolean; onNavigate?: () => void }) {
-  const { items: rels } = useRelationships();
   const custom = useCustomPages();
-  const badges = useSharedBadges();
   const navRef = useRef<HTMLElement>(null);
   const [glowId, setGlowId] = useState<string | null>(null);
   // After a page is created: scroll its new menu item into view and make it glow.
@@ -274,13 +324,7 @@ function SidebarInner({ mobile = false, onNavigate }: { mobile?: boolean; onNavi
     });
     return () => cancelAnimationFrame(raf);
   }, [custom]);
-  const aprilGroups = APRIL_NAV_GROUPS; // private payload; re-read each render so late registration shows up
-  const allGroups: NavGroup[] = useMemo(() => {
-    const shared = { ...SHARED_GROUP, items: SHARED_GROUP.items.map(item => ({ ...item, badge: item.to === '/shared/conversations' ? badges.chat : item.to === '/shared/wonderings' ? badges.wonderings : undefined })) };
-    const relationships = { ...RELATIONSHIPS_GROUP, items: [...RELATIONSHIPS_GROUP.items, ...rels.map(r => ({ to: `/relationships/${r.id}`, label: `↳ ${r.name}${r.relation ? ` · ${r.relation}` : ''}` }))] };
-    return orderFounderGroups([...aprilGroups.slice(0, 2), shared, relationships, ...aprilGroups.slice(2)])
-      .map(g => ({ ...g, items: [...g.items, ...custom.filter(c => c.menu_group === g.title).map(c => ({ to: `/p/${c.id}`, label: c.status === 'generating' ? `${c.title} · writing…` : c.title, created: true } as NavItem))] }));
-  }, [aprilGroups, badges.chat, badges.wonderings, rels, custom]);
+  const allGroups = useContext(FounderGroupsContext) ?? APRIL_NAV_GROUPS;
   useMenuTitleFallback(useMemo(() => allGroups.flatMap(g => [...g.items, ...(g.footer ?? []), ...(g.submenus ?? []).flatMap(s => s.items)]), [allGroups]));
   return (
     <div className={`founder-sidebar flex min-h-full flex-col gap-6 overflow-x-hidden ${mobile ? 'px-4 pb-8 pt-4' : 'h-full overflow-y-auto p-6'}`}>

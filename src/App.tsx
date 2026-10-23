@@ -10,7 +10,7 @@ import {
   SABIAN_SYMBOLS, FIXED_STARS, ASTEROIDS, SPECIAL_ASPECTS, ARABIC_PARTS,
   PROFECTION_35, PRENATAL_ECLIPSE, PROFECTION_BEATS,
 } from './content/compendium';
-import { useAprilSpace } from './hooks/useAprilSpace';
+import { useAprilSpace, useClassicView } from './hooks/useAprilSpace';
 import { AutomaticChapters } from './components/payments/AutomaticChapters';
 import { PublicSiteLayout } from './components/brand/PublicSiteLayout';
 import { ReferralCapture } from './components/common/ReferralCapture';
@@ -204,10 +204,12 @@ function useDrawerRegistry(): Record<string, DrawerPayload> {
 function Providers({ children }: { children: ReactNode }) {
   const registry = useDrawerRegistry();
   const april = useAprilSpace();
+  const classic = useClassicView();
   if (april === undefined) return <div role="status" className="p-8 text-muted-foreground">Opening your library…</div>;
   return (
     <DetailDrawerProvider registry={registry}>
-      {april ? <CommandPalette /> : <MemberSearch />}
+      {/* Search follows the chosen view: April's compendium search in her full edition, member search in classic. */}
+      {april && !classic ? <CommandPalette /> : <MemberSearch />}
       {children}
     </DetailDrawerProvider>
   );

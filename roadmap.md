@@ -114,11 +114,22 @@
 
 ## Completion pass (Oct 23)
 - [x] April edition load failure shows "couldn't open — Try again" instead of silently switching views
-- [x] Classic view keeps April's own pages' content (menus/layout only change)
+- [x] Classic view: member-listed pages show the member version; April-only pages keep their own content (no unrelated fallbacks); classic search/home follow the member view
 - [x] Podcast creation restricted to private-edition accounts; partial uploads cleaned up
 - [x] AI credit check fails closed; counselors replay newest 200 turns
 - [x] Chart titles never show blank words; ties handled; cover preview copy + "Use recommended"
 - [x] Missing landing pages noindexed; privacy FAQ claim made accurate
-- [ ] Wayfinding from dynamic sidebar groups; phone menu focus/close; /april contents list
-- [ ] Launch checklist proof slots; marketing admin error states; planet orb node/Chiron styling; film retry
-- [ ] Browser matrix (April unlocked Masterbook — blocked on archive password), Shane Lulu check
+- [x] Wayfinding from the full sidebar (Shared, Relationships, created pages, submenus, detail-route parents, singleton sections)
+- [x] Phone menu: inner close button, background inert, measured header height, focus lands on the new page
+- [x] /april shared report: contents list, "shared report" wording, local-only payload
+- [x] Launch checklist: dated proof records (test purchase, PDF, print sample, email sender, security review ≤90 days)
+- [x] Marketing admin: loading/error/retry, labeled fields, save/publish guards, safe clipboard
+- [x] Planet graphics: chart points drawn as points, Chiron small body, unknown → starlight, name normalization
+- [x] Promo film: retry + open-in-new-tab fallback
+- [x] Cover preview: real-date validation, exact sign-change day detection, arrow-key design choice, long names fit
+- [x] Counselors: retry on failed history, generic specialties, accurate privacy note
+- [x] Dependency scan Oct 23: 0 known issues in 77 packages after DOMPurify 3.4.17 override (SheetJS CDN tarball unscanned)
+- [x] Browser matrix Oct 23 (393/1280): April full + classic via admin edition tab, phone menu, Shane admin launch/marketing, signed-out /books /welcome /lp /april — no overflow, no page errors
+- [ ] April's Masterbook chapters with the archive unlocked — blocked: archive password is hidden from the agent; owner unlocks once in preview
+- [ ] Social share image — hosting adds the social preview; set a custom one only from an owner-provided public image URL
+- [ ] Owner/external: Lulu keys + printed sample, email sender domain, AstroComic printer, licensed Sabian text, asteroid reference degrees, real testimonials, approved test purchase

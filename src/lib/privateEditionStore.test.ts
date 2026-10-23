@@ -33,3 +33,14 @@ describe('authorized private archive hydration', () => {
     expect(set).toHaveBeenLastCalledWith(['second']);
   });
 });
+import { readPrivateModule } from './privateEditionStore';
+describe('shared report reading', () => {
+  it('reads a module locally without filling the app-wide store', () => {
+    const values = readPrivateModule({ sharedOnly: { BIRTH: { name: 'A' } } }, 'sharedOnly');
+    expect(values.BIRTH).toEqual({ name: 'A' });
+    const set = vi.fn();
+    registerPrivateValue('sharedOnly', 'BIRTH', set, null);
+    expect(set).not.toHaveBeenCalled();
+  });
+  it('returns nothing for a missing module', () => expect(readPrivateModule(null, 'april')).toEqual({}));
+});
