@@ -105,7 +105,7 @@ export default function AstroComic() {
       </section>
 
       <section aria-labelledby="style-h" className="grid gap-10 lg:grid-cols-2">
-        <div><h2 id="style-h" className="font-display text-3xl">Celestial Noir</h2><ul className="mt-5 space-y-2 text-sm">{ART_RULES.rules.map(r => <li key={r} className="flex gap-2"><Sparkles aria-hidden className="mt-0.5 h-4 w-4 shrink-0 text-gold" />{r}</li>)}</ul>
+        <div><h2 id="style-h" className="font-display text-3xl">Lantern &amp; Ink</h2><ul className="mt-5 space-y-2 text-sm">{ART_RULES.rules.map(r => <li key={r} className="flex gap-2"><Sparkles aria-hidden className="mt-0.5 h-4 w-4 shrink-0 text-gold" />{r}</li>)}</ul>
           <div className="mt-6 flex flex-wrap gap-3" aria-label="Print palette">{ART_RULES.palette.map(([name, hex]) => <div key={hex} className="text-center text-[10px]"><span className="block h-10 w-10 rounded-full border border-border" style={{ backgroundColor: hex }} aria-hidden /><span className="mt-1 block">{name}</span></div>)}</div>
         </div>
         <div><h2 className="font-display text-3xl">Printed to spec</h2><dl className="mt-5 divide-y divide-border border-y border-border text-sm">{COMIC_SPEC.map(([k, v]) => <div key={k} className="grid grid-cols-[7rem_1fr] gap-3 py-2.5"><dt className="text-muted-foreground">{k}</dt><dd>{v}</dd></div>)}</dl><p className="mt-4 text-sm text-muted-foreground">Ships by the 8th of each month, US addresses only. Pause for up to three months or skip any month from My AstroComic.</p></div>

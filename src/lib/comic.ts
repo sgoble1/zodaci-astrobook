@@ -48,7 +48,7 @@ export const castOf = (key: string) => CAST.find(c => c.key === key);
 /** Celestial Noir art rules (print palette — content data, not UI colors). */
 export const ART_RULES = {
   palette: [['Night navy', '#07080F'], ['Royal purple', '#3B0F6E'], ['Burnt gold', '#B45309'], ['Fire', '#C2410C'], ['Water', '#0D9488'], ['Earth', '#4D7C0F'], ['Air', '#7C3AED']] as [string, string][],
-  rules: ['Art Nouveau frames, indie-comic inking, tarot symbolism and 1960s space-poster color', 'Black 2–4 pt outlines, flat color, minimal halftone — never photorealistic or airbrushed', 'Mixed panel shapes: bleeds, ovals and arched frames', 'Covers: full-bleed golden-thread constellation, title and month in the top third', 'Dot stars, ink-wash nebulae and moon phases as recurring texture', 'Lettering: hand-drawn speech balloons, serif captions'],
+  rules: ['Lantern & Ink: soft, glowing pastel-and-chalk light layered over fine Victorian pen-and-ink crosshatching — storybook warmth meets gently gothic whimsy', 'Elongated, expressive figures with slightly exaggerated features, drawn in delicate scratchy linework with warm rim light — never photorealistic, never glossy digital', 'Mixed panel shapes: bleeds, ovals and arched frames with engraved, antique-book borders', 'Covers: full-bleed golden-thread constellation, title and month in the top third', 'Candlelit amber glows against deep shadowy skies, hatched night textures, dot stars and moon phases as recurring motifs', 'Lettering: hand-drawn speech balloons, serif captions'],
 };
 
 /** Issues ship by the 8th. Anyone who joins during a month starts with the next month's run. */
