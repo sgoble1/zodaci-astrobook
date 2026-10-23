@@ -14,13 +14,26 @@ const RISING_PHRASE: Record<string, string> = { Aries: 'leading with courage', T
 export type ChartTitleInput = { sun: string; moon?: string | null; rising?: string | null; dominant?: Element | null };
 export type ChartTitle = { title: string; subtitle: string; why: string };
 
-export function chartTitle({ sun, moon, rising, dominant }: ChartTitleInput): ChartTitle {
+const SIGN = (s?: string | null) => (s && s in ELEMENT_OF ? s : null);
+const ELEMENT = (e?: string | null): Element | null => (e && e in ELEMENT_REALM ? (e as Element) : null);
+
+/** Unknown or unexpected signs are dropped rather than shown as blank words; without a valid Sun the title stays generic. */
+export function chartTitle(input: ChartTitleInput): ChartTitle {
+  const sun = SIGN(input.sun), moon = SIGN(input.moon), rising = SIGN(input.rising), dominant = ELEMENT(input.dominant);
+  if (!sun) return { title: 'Your Personal Sky', subtitle: 'Add your birth details to personalize this title', why: 'Built once your Sun sign is calculated.' };
   const el = dominant ?? ELEMENT_OF[sun];
   const quality = moon ? MOON_QUALITY[moon] : null;
   const title = `The ${quality ? `${quality} ` : ''}${SUN_ARCHETYPE[sun]} of ${ELEMENT_REALM[el]}`;
   const subtitle = rising ? `${sun} Sun, ${RISING_PHRASE[rising]}` : `${sun} Sun${moon ? ` · ${moon} Moon` : ''}`;
   const why = [`${SUN_ARCHETYPE[sun]} from your ${sun} Sun`, quality && `${quality.toLowerCase()} from your ${moon} Moon`, `${ELEMENT_REALM[el].toLowerCase()} from your ${dominant ? 'strongest element' : 'Sun element'} (${el})`, rising && `${RISING_PHRASE[rising]} from your ${rising} Rising`].filter(Boolean).join('; ');
   return { title, subtitle, why: `Built from ${why}.` };
+}
+
+/** Strongest element, or null when two or more tie (the title then falls back to the Sun's element). */
+export function dominantElement(counts: Partial<Record<Element, number>>): Element | null {
+  const sorted = (Object.entries(counts) as [Element, number][]).sort((a, b) => b[1] - a[1]);
+  if (!sorted.length || (sorted[1] && sorted[1][1] === sorted[0][1])) return null;
+  return sorted[0][0];
 }
 
 /** Cover design matched to the chart's leading element. Indexes match the cover list order: Midnight Stars, Blue Cosmos, Gold Aurora. */
