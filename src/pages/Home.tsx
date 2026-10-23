@@ -36,8 +36,10 @@ const faqs = [
 
 export default function Home() {
   const april = useAprilSpace();
+  const classic = useClassicView();
   const myBirth = useMyBirth();
-  if (april) return <AprilHome />;
+  if (april && !classic) return <AprilHome />;
+  if (april && classic) return <Navigate to="/dashboard" replace />;
   if (april === false) return <Navigate to="/dashboard" replace />;
   return (
     <div className="space-y-16">
