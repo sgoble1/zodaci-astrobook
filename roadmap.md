@@ -111,3 +111,14 @@
 - [x] Member: get-started banner without chart, Recommended for you on hubs, reading filters + Show all
 - [ ] April signed-in browser check (needs April's session)
 - [ ] External: Lulu credentials, email sender domain, licensed Sabian text, real testimonials
+
+## Completion pass (Oct 23)
+- [x] April edition load failure shows "couldn't open — Try again" instead of silently switching views
+- [x] Classic view keeps April's own pages' content (menus/layout only change)
+- [x] Podcast creation restricted to private-edition accounts; partial uploads cleaned up
+- [x] AI credit check fails closed; counselors replay newest 200 turns
+- [x] Chart titles never show blank words; ties handled; cover preview copy + "Use recommended"
+- [x] Missing landing pages noindexed; privacy FAQ claim made accurate
+- [ ] Wayfinding from dynamic sidebar groups; phone menu focus/close; /april contents list
+- [ ] Launch checklist proof slots; marketing admin error states; planet orb node/Chiron styling; film retry
+- [ ] Browser matrix (April unlocked Masterbook — blocked on archive password), Shane Lulu check
