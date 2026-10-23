@@ -15,6 +15,7 @@ import { PROMO_VIDEO } from '@/content/promoVideo';
 export function PromoVideo({ className = '', schema = false }: { className?: string; schema?: boolean }) {
   const [playing, setPlaying] = useState(false);
   const [failed, setFailed] = useState(false);
+  const [attempt, setAttempt] = useState(0);
   const ref = useRef<HTMLVideoElement>(null);
   const summaryId = `${useId()}-promo-summary`;
   useJsonLd('promo-video', schema ? {
@@ -23,13 +24,14 @@ export function PromoVideo({ className = '', schema = false }: { className?: str
     uploadDate: PROMO_VIDEO.uploadDate, duration: PROMO_VIDEO.isoDuration,
   } : null);
 
-  const start = () => { setPlaying(true); requestAnimationFrame(() => { void ref.current?.play().catch(() => undefined); }); };
+  // A failed load can be retried; each retry mounts a fresh player so the browser re-requests the sources.
+  const start = () => { if (failed) { setFailed(false); setAttempt(a => a + 1); } setPlaying(true); requestAnimationFrame(() => { void ref.current?.play().catch(() => undefined); }); };
 
   return (
     <figure className={`overflow-hidden rounded-2xl border border-border bg-card/40 shadow-[0_30px_80px_-40px_hsl(var(--primary)/0.6)] ${className}`}>
       <div className="relative aspect-video w-full bg-background">
         {playing && !failed ? (
-          <video ref={ref} controls playsInline preload="auto" poster={promoPoster.url} aria-describedby={summaryId} className="h-full w-full">
+          <video key={attempt} ref={ref} controls playsInline preload="auto" poster={promoPoster.url} aria-describedby={summaryId} className="h-full w-full">
             <source src={promo720Webm.url} type="video/webm" media="(max-width: 768px)" />
             <source src={promo720.url} type="video/mp4" media="(max-width: 768px)" />
             <source src={promo1080Webm.url} type="video/webm" />
@@ -37,14 +39,14 @@ export function PromoVideo({ className = '', schema = false }: { className?: str
             <source src={promo1080.url} type="video/mp4" onError={() => setFailed(true)} />
           </video>
         ) : (
-          <button type="button" onClick={start} disabled={failed} aria-describedby={summaryId}
-            className="group absolute inset-0 h-full w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring disabled:cursor-not-allowed">
+          <button type="button" onClick={start} aria-describedby={summaryId}
+            className="group absolute inset-0 h-full w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring">
             <img src={promoPoster.url} alt="" width={1600} height={900} loading="lazy" decoding="async" className="h-full w-full object-cover" />
             <span className="absolute inset-0 bg-gradient-to-t from-background/70 via-transparent to-transparent" aria-hidden="true" />
             <span className="absolute inset-0 grid place-items-center">
               <span className="inline-flex items-center gap-3 rounded-full border border-gold/50 bg-background/70 px-5 py-3 text-sm text-foreground backdrop-blur-md transition-colors duration-700 group-hover:border-gold group-hover:bg-background/85">
                 <Play className="h-5 w-5 fill-current text-gold" aria-hidden="true" />
-                {failed ? 'The film couldn’t play here' : `Play the film · ${PROMO_VIDEO.lengthLabel}`}
+                {failed ? 'The film couldn’t play — try again' : `Play the film · ${PROMO_VIDEO.lengthLabel}`}
               </span>
             </span>
           </button>
@@ -52,6 +54,7 @@ export function PromoVideo({ className = '', schema = false }: { className?: str
       </div>
       <figcaption id={summaryId} className="px-5 py-4 text-sm text-muted-foreground">
         <span className="text-foreground">{PROMO_VIDEO.title}.</span> {PROMO_VIDEO.summary} <span className="whitespace-nowrap">Music only, no narration.</span>
+        {failed && <span role="status" className="mt-2 block">Still not playing? <a href={promo720.url} target="_blank" rel="noopener" className="text-foreground underline underline-offset-4">Open the film in a new tab</a>.</span>}
       </figcaption>
     </figure>
   );
