@@ -43,7 +43,7 @@ function ClassicViewBanner() {
   const fullOnly = onlyInFullEdition(APRIL_NAV_GROUPS, pathname, domainFor(pathname) !== null);
   return (
     <div role="status" className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-gold/40 bg-gold/10 px-4 py-3 text-sm">
-      <span>{fullOnly ? "This page is part of your full edition — the classic menu doesn't list it." : "You're seeing the classic view — the same menus and layout every member sees, with your own pages kept intact."}</span>
+      <span>{fullOnly ? "This page is part of your full edition — the classic menu doesn't list it, so it opens as written for you." : "You're seeing the classic view — the same pages and menus every member sees."}</span>
       <Button size="sm" variant="outline" onClick={() => setClassicView(false)}>Back to your full edition</Button>
     </div>
   );
@@ -136,8 +136,9 @@ export function AppShell() {
   }
   // Founders can switch to the classic view: the same pages and menu every member sees.
   const founder = april && !classic;
-  // Classic view changes only menus and layout: April's own pages keep their original content.
-  const ownPage = april && classic && founderPlace(APRIL_NAV_GROUPS, location.pathname) !== null;
+  // Classic view shows the member version of every page the member menu lists; pages that exist only in
+  // April's full edition keep their original content rather than falling back to unrelated member pages.
+  const ownPage = !!april && classic && onlyInFullEdition(APRIL_NAV_GROUPS, location.pathname, domainFor(location.pathname) !== null);
   const page = <PageErrorBoundary key={location.pathname}>{editionFailed && <div role="alert" className="mb-4 rounded-2xl border border-gold/40 bg-card/60 p-4 text-sm"><p className="font-medium text-foreground">Your private edition couldn't open.</p><p className="mt-1 text-muted-foreground">Your connection may have dropped, so you're seeing the member view for now.</p><Button size="sm" variant="outline" className="mt-3" onClick={retryAprilSpace}>Try again</Button></div>}{!founder && !keepNames && !ownPage && <PublicWording />}{april === undefined && !isPublicPath(location.pathname) ? null : founder || ownPage ? <Outlet /> : <PlanGuard>{isPublicPath(location.pathname) ? <Outlet /> : <PublicChartFallback />}</PlanGuard>}<VerifySources /></PageErrorBoundary>;
   if (!founder) return <MemberShell>{april && classic && <ClassicViewBanner />}{page}</MemberShell>;
   return <AprilShell>{page}</AprilShell>;
