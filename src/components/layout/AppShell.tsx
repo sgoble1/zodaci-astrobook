@@ -43,7 +43,7 @@ function ClassicViewBanner() {
   const fullOnly = onlyInFullEdition(APRIL_NAV_GROUPS, pathname, domainFor(pathname) !== null);
   return (
     <div role="status" className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-gold/40 bg-gold/10 px-4 py-3 text-sm">
-      <span>{fullOnly ? "This page is part of your full edition — the classic menu doesn't list it." : "You're seeing the classic view — the same layout every member sees."}</span>
+      <span>{fullOnly ? "This page is part of your full edition — the classic menu doesn't list it." : "You're seeing the classic view — the same menus and layout every member sees, with your own pages kept intact."}</span>
       <Button size="sm" variant="outline" onClick={() => setClassicView(false)}>Back to your full edition</Button>
     </div>
   );
