@@ -9,7 +9,7 @@ import { toChartInput, useMyBirth } from '@/lib/myBirth';
 import { ChartWheel } from '@/components/chart/ChartWheel';
 import { BoxArt } from '@/components/common/BoxArt';
 import { PlanetOrb } from '@/components/chart/PlanetOrb';
-import { chartTitle } from '@/lib/chartTitle';
+import { chartTitle, dominantElement } from "@/lib/chartTitle";
 import { balance } from '@/lib/resultsEngine';
 import { Button } from '@/components/ui/button';
 import { HouseRulers } from '@/components/chart/HouseRulers';
@@ -38,7 +38,7 @@ export default function MyChart() {
   const big3 = [chart.bodies.find(b => b.key === 'sun'), chart.bodies.find(b => b.key === 'moon')].filter(Boolean);
   const rising = chart.asc != null ? fmtLon(chart.asc) : null;
   const sunB = chart.bodies.find(b => b.key === 'sun')!; const moonB = chart.bodies.find(b => b.key === 'moon');
-  const named = chartTitle({ sun: sunB.sign, moon: moonB?.sign, rising: rising?.sign, dominant: balance(chart).dominant as never });
+  const named = chartTitle({ sun: sunB.sign, moon: moonB?.sign, rising: rising?.sign, dominant: dominantElement(balance(chart).el) });
   return (
     <article className="space-y-10">
       {deviceOnly && (
