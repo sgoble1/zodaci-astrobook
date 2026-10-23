@@ -51,7 +51,11 @@ export function MarketingPages() {
     if (error) return toast.error(`Couldn’t delete: ${error.message}`);
     toast.success('Deleted'); void load();
   };
-  const copy = (text: string, what: string) => navigator.clipboard.writeText(text).then(() => toast.success(`${what} copied`), () => toast.error('Copy didn’t work — select the text and copy it instead.'));
+  const copy = (text: string, what: string) => {
+    const failed = () => toast.error('Copy didn’t work — select the text and copy it instead.');
+    if (!navigator.clipboard?.writeText) return failed();
+    navigator.clipboard.writeText(text).then(() => toast.success(`${what} copied`), failed);
+  };
   return (
     <div className="space-y-8">
       <section aria-labelledby="film-admin-h" className="space-y-4">
