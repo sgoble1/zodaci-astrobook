@@ -106,7 +106,7 @@ export default function Home() {
         <h2 className="font-display mb-8">The complete compendium.</h2>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {features.map(m => (
-            <Link key={m.to} to={m.to} className="group block rounded border border-border bg-card/60 hover:border-gold hover:shadow-[var(--shadow-gold)] transition-all overflow-hidden">
+            <Link key={m.seed} to={m.to} className="group block rounded border border-border bg-card/60 hover:border-gold hover:shadow-[var(--shadow-gold)] transition-all overflow-hidden">
               <BoxArt seed={m.seed} label={m.title} className="h-28 w-full object-cover" />
               <div className="p-5">
                 <div className="font-display text-xl leading-tight">{m.title}</div>
