@@ -28,7 +28,7 @@ const features = [
 ];
 
 const faqs = [
-  { q: 'Is my birth data private?', a: 'Yes. Your birth details and readings belong to your account. Shared spaces only include the people you invite, and private chats are never visible to anyone else — not even an admin.' },
+  { q: 'Is my birth data private?', a: 'Yes. Your birth details and readings belong to your account. Shared spaces only include the people you invite, and private chats are restricted to your own account and never appear in shared spaces.' },
   { q: 'How accurate is the chart?', a: 'Positions use astronomical calculations. Your birth time, location and chosen house system affect the results. Astrological interpretations are not scientifically verified predictions.' },
   { q: 'What if I don’t know my birth time?', a: 'You can still get your planets, signs and aspects. Houses and the Rising sign need a time, so those sections explain what changes without one.' },
   { q: 'Is this a prediction service?', a: 'No. Zodaci interprets your birth chart as a mirror for reflection. It never invents facts about your family, past or future.' },
