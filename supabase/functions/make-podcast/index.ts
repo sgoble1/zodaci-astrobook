@@ -69,6 +69,9 @@ Deno.serve(async (req) => {
     const sb = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_ANON_KEY')!, { global: { headers: { Authorization: auth } } });
     const { data: u } = await sb.auth.getUser();
     if (!u?.user) return json({ error: 'Please sign in to create podcasts.' }, 401);
+    // Episodes are written about April's chart, so only the approved shared-space accounts may create them.
+    const { data: member, error: memberErr } = await sb.rpc('is_shared_space_member');
+    if (memberErr || member !== true) return json({ error: 'Podcast creation is part of the private edition.' }, 403);
     const parsed = Body.safeParse(await req.json());
     if (!parsed.success) return json({ error: 'Please give the episode a topic.' }, 400);
     const { topic, brief, voice, duration, passages, shared } = parsed.data;
@@ -100,10 +103,10 @@ Deno.serve(async (req) => {
     const coverPath = `${u.user.id}/podcast/${Date.now()}-${name.replace(/\.wav$/i, '')}-cover.svg`;
     const cover = new TextEncoder().encode(podcastCover(topic));
     const coverUp = await admin.storage.from('library').upload(coverPath, cover, { contentType: 'image/svg+xml' });
-    if (coverUp.error) return json({ error: 'Could not save the episode cover.' }, 500);
+    if (coverUp.error) { await admin.storage.from('library').remove([path]); return json({ error: 'Could not save the episode cover.' }, 500); }
     const citations = passages.map(p => ({ title: p.source, text: p.text, loc: p.loc, href: p.href ?? '', n: p.n }));
     const ins = await admin.from('library_items').insert({ kind: 'podcast', title: topic, description: script.split(/(?<=[.!?])\s/).slice(0, 2).join(' '), category: 'Created episodes', file_path: path, cover_path: coverPath, shared_with_space: shared, file_name: name, mime_type: 'audio/wav', size_bytes: file.length, owner_id: u.user.id, sections: [{ title: 'Episode transcript', text: script }, ...citations] }).select('id').single();
-    if (ins.error) return json({ error: 'Could not list the episode.' }, 500);
+    if (ins.error) { await admin.storage.from('library').remove([path, coverPath]); return json({ error: 'Could not list the episode.' }, 500); }
     return json({ id: ins.data.id, script, seconds: Math.round(joined.length / 48000) });
   } catch (e) {
     if (req.signal.aborted) return new Response(null, { status: 499, headers: corsHeaders });
