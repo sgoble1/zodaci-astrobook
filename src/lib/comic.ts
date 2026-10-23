@@ -30,7 +30,7 @@ export const COMIC_FAQ: { q: string; a: string }[] = [
 ];
 
 export type ComicCharacter = { key: string; planet: string; name: string; look: string; companion: string; voice: string; retro: string };
-/** Planet character bible ("Celestial Noir"). Saturn is a fair teacher, never a villain. */
+/** Planet character bible ("Lantern & Ink"). Saturn is a fair teacher, never a villain. */
 export const CAST: ComicCharacter[] = [
   { key: 'sun', planet: 'Sun', name: 'Sovereign', look: 'Gold armor, a crown of rays, amber light', companion: 'a lion', voice: 'Generous and steady; speaks about who you are becoming.', retro: '' },
   { key: 'moon', planet: 'Moon', name: 'Dreamer', look: 'Silver robes that change with the phases, a soft halo', companion: 'an owl', voice: 'Gentle and intuitive; notices what you need before you say it.', retro: '' },
@@ -45,7 +45,7 @@ export const CAST: ComicCharacter[] = [
 ];
 export const castOf = (key: string) => CAST.find(c => c.key === key);
 
-/** Celestial Noir art rules (print palette — content data, not UI colors). */
+/** Lantern & Ink art rules (print palette — content data, not UI colors). */
 export const ART_RULES = {
   palette: [['Night navy', '#07080F'], ['Royal purple', '#3B0F6E'], ['Burnt gold', '#B45309'], ['Fire', '#C2410C'], ['Water', '#0D9488'], ['Earth', '#4D7C0F'], ['Air', '#7C3AED']] as [string, string][],
   rules: ['Lantern & Ink: soft, glowing pastel-and-chalk light layered over fine Victorian pen-and-ink crosshatching — storybook warmth meets gently gothic whimsy', 'Elongated, expressive figures with slightly exaggerated features, drawn in delicate scratchy linework with warm rim light — never photorealistic, never glossy digital', 'Mixed panel shapes: bleeds, ovals and arched frames with engraved, antique-book borders', 'Covers: full-bleed golden-thread constellation, title and month in the top third', 'Candlelit amber glows against deep shadowy skies, hatched night textures, dot stars and moon phases as recurring motifs', 'Lettering: hand-drawn speech balloons, serif captions'],

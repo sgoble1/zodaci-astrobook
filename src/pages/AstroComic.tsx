@@ -89,7 +89,7 @@ export default function AstroComic() {
           {!personal && <Button asChild variant="outline"><Link to={session ? '/start' : `/auth?mode=signup&next=${encodeURIComponent('/astrocomic#preview')}`}>Preview my own issue</Link></Button>}
         </div>
         <div className="mt-8 grid gap-5 sm:grid-cols-3">{preview.pages.slice(0, 3).map(p => <ComicPageView key={p.n} page={p} />)}</div>
-        <p className="mt-3 text-xs text-muted-foreground">Preview pages show the issue plan — scene direction, captions and lettering. Printed issues are fully illustrated in the Celestial Noir style.</p>
+        <p className="mt-3 text-xs text-muted-foreground">Preview pages show the issue plan — scene direction, captions and lettering. Printed issues are fully illustrated in the Lantern &amp; Ink style.</p>
       </section>
 
       <section aria-labelledby="inside-h" className="grid gap-10 lg:grid-cols-2">
