@@ -7,31 +7,58 @@ import { motion } from 'framer-motion';
 import ParticleField from '@/components/fx/ParticleField';
 import ScrollProgress from '@/components/fx/ScrollProgress';
 import { FirstViewReveal } from '@/components/fx/FirstViewReveal';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { createContext, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { Menu, X } from 'lucide-react';
 import { GenerationProgress } from '@/components/readings/GenerationProgress';
 import { founderPlace, onlyInFullEdition, orderFounderGroups } from '@/lib/founderEdition';
 import { domainFor } from '@/content/memberNav';
 import { useAprilSpace, useAprilSpaceError, retryAprilSpace, useClassicView, setClassicView } from '@/hooks/useAprilSpace';
 
+/** April's full menu exactly as the sidebar shows it: her sections plus Shared, Relationships and pages she created. */
+const FounderGroupsContext = createContext<NavGroup[] | null>(null);
+function useFounderGroups(): NavGroup[] {
+  const { items: rels } = useRelationships();
+  const custom = useCustomPages();
+  const badges = useSharedBadges();
+  const aprilGroups = APRIL_NAV_GROUPS; // private payload; re-read each render so late registration shows up
+  return useMemo(() => {
+    const shared = { ...SHARED_GROUP, items: SHARED_GROUP.items.map(item => ({ ...item, badge: item.to === '/shared/conversations' ? badges.chat : item.to === '/shared/wonderings' ? badges.wonderings : undefined })) };
+    const relationships = { ...RELATIONSHIPS_GROUP, items: [...RELATIONSHIPS_GROUP.items, ...rels.map(r => ({ to: `/relationships/${r.id}`, label: `↳ ${r.name}${r.relation ? ` · ${r.relation}` : ''}` }))] };
+    return orderFounderGroups([...aprilGroups.slice(0, 2), shared, relationships, ...aprilGroups.slice(2)])
+      .map(g => ({ ...g, items: [...g.items, ...custom.filter(c => c.menu_group === g.title).map(c => ({ to: `/p/${c.id}`, label: c.status === 'generating' ? `${c.title} · writing…` : c.title, created: true } as NavItem))] }));
+  }, [aprilGroups, badges.chat, badges.wonderings, rels, custom]);
+}
+const cleanLabel = (l: string) => l.replace(/^↳\s*/, '');
+
 /** April's breadcrumb (section › page) from her own menu; hidden on the first page of a section. */
 function FounderTrail() {
   const { pathname } = useLocation();
-  const place = founderPlace(APRIL_NAV_GROUPS, pathname);
-  if (!place || place.home.to === pathname) return null;
-  return <nav aria-label="Breadcrumb" className="mb-6 text-xs text-muted-foreground"><Link to={place.home.to} className="hover:text-foreground underline-offset-2 hover:underline">{place.section}</Link><span aria-hidden="true" className="mx-2">›</span><span className="text-foreground">{place.label}</span></nav>;
+  const groups = useContext(FounderGroupsContext) ?? APRIL_NAV_GROUPS;
+  const place = founderPlace(groups, pathname);
+  if (!place || (!place.parent && place.home.to === pathname)) return null;
+  const crumb = 'hover:text-foreground underline-offset-2 hover:underline';
+  return (
+    <nav aria-label="Breadcrumb" className="mb-6 text-xs text-muted-foreground">
+      <Link to={place.home.to} className={crumb}>{place.section}</Link>
+      <span aria-hidden="true" className="mx-2">›</span>
+      {place.parent
+        ? <><Link to={place.parent.to} className={crumb}>{cleanLabel(place.parent.label)}</Link><span aria-hidden="true" className="mx-2">›</span><span className="text-foreground" aria-current="page">This page</span></>
+        : <span className="text-foreground" aria-current="page">{cleanLabel(place.label)}</span>}
+    </nav>
+  );
 }
 
 /** "Continue in this section": the next pages in April's own menu, so no page is a dead end. */
 function FounderNext() {
   const { pathname } = useLocation();
-  const place = founderPlace(APRIL_NAV_GROUPS, pathname);
+  const groups = useContext(FounderGroupsContext) ?? APRIL_NAV_GROUPS;
+  const place = founderPlace(groups, pathname);
   if (!place || !place.next.length) return null;
   return (
     <nav aria-labelledby="founder-next" className="mt-16 border-t border-border pt-8 print:hidden">
       <h2 id="founder-next" className="font-display text-2xl">Continue in {place.section}</h2>
       <ul className="mt-5 grid gap-3 sm:grid-cols-3">
-        {place.next.map(n => <li key={n.to}><Link to={n.to} className="flex h-full items-center justify-between gap-2 rounded-xl border border-border bg-card/60 p-4 text-sm hover:border-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"><span>{n.label}</span><span aria-hidden="true">→</span></Link></li>)}
+        {place.next.map(n => <li key={n.to}><Link to={n.to} className="flex h-full items-center justify-between gap-2 rounded-xl border border-border bg-card/60 p-4 text-sm hover:border-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"><span>{place.parent?.to === n.to ? `Back to ${cleanLabel(n.label)}` : cleanLabel(n.label)}</span><span aria-hidden="true">→</span></Link></li>)}
       </ul>
     </nav>
   );
@@ -256,9 +283,7 @@ function AprilShell({ children }: { children: ReactNode }) {
 }
 
 function SidebarInner({ mobile = false, onNavigate }: { mobile?: boolean; onNavigate?: () => void }) {
-  const { items: rels } = useRelationships();
   const custom = useCustomPages();
-  const badges = useSharedBadges();
   const navRef = useRef<HTMLElement>(null);
   const [glowId, setGlowId] = useState<string | null>(null);
   // After a page is created: scroll its new menu item into view and make it glow.
@@ -275,13 +300,7 @@ function SidebarInner({ mobile = false, onNavigate }: { mobile?: boolean; onNavi
     });
     return () => cancelAnimationFrame(raf);
   }, [custom]);
-  const aprilGroups = APRIL_NAV_GROUPS; // private payload; re-read each render so late registration shows up
-  const allGroups: NavGroup[] = useMemo(() => {
-    const shared = { ...SHARED_GROUP, items: SHARED_GROUP.items.map(item => ({ ...item, badge: item.to === '/shared/conversations' ? badges.chat : item.to === '/shared/wonderings' ? badges.wonderings : undefined })) };
-    const relationships = { ...RELATIONSHIPS_GROUP, items: [...RELATIONSHIPS_GROUP.items, ...rels.map(r => ({ to: `/relationships/${r.id}`, label: `↳ ${r.name}${r.relation ? ` · ${r.relation}` : ''}` }))] };
-    return orderFounderGroups([...aprilGroups.slice(0, 2), shared, relationships, ...aprilGroups.slice(2)])
-      .map(g => ({ ...g, items: [...g.items, ...custom.filter(c => c.menu_group === g.title).map(c => ({ to: `/p/${c.id}`, label: c.status === 'generating' ? `${c.title} · writing…` : c.title, created: true } as NavItem))] }));
-  }, [aprilGroups, badges.chat, badges.wonderings, rels, custom]);
+  const allGroups = useContext(FounderGroupsContext) ?? APRIL_NAV_GROUPS;
   useMenuTitleFallback(useMemo(() => allGroups.flatMap(g => [...g.items, ...(g.footer ?? []), ...(g.submenus ?? []).flatMap(s => s.items)]), [allGroups]));
   return (
     <div className={`founder-sidebar flex min-h-full flex-col gap-6 overflow-x-hidden ${mobile ? 'px-4 pb-8 pt-4' : 'h-full overflow-y-auto p-6'}`}>
