@@ -23,7 +23,7 @@ function ProtectedRoom({ children }: { children: React.ReactNode }) {
   }, []);
   if (owner === undefined) return <Frame><p role="status">Opening the reading room…</p></Frame>;
   if (!owner) return <Frame><h1 className="font-display text-3xl">Private reading room</h1><p className="mt-3 text-muted-foreground">Sign in with an approved account to open these sources.</p><Button asChild className="mt-6"><Link to={`/auth?next=${encodeURIComponent(location.pathname + location.search + location.hash)}`}>Sign in</Link></Button></Frame>;
-  return <SitePasswordGate key={owner}>{children}</SitePasswordGate>;
+  return <SitePasswordGate key={owner} edition="april">{children}</SitePasswordGate>;
 }
 
 function useRoomIndex() {
