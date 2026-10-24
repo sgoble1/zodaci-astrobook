@@ -1,25 +1,17 @@
 import { useState } from 'react';
-import coverMidnightStars from '@/assets/cover-design-midnight-stars.jpg';
-import coverBlueCosmos from '@/assets/cover-design-blue-cosmos.jpg';
-import coverGoldAurora from '@/assets/cover-design-gold-aurora.jpg';
-
-const COVERS = [
-  { key: 'midnight', label: 'Midnight Stars', src: coverMidnightStars },
-  { key: 'blue', label: 'Blue Cosmos', src: coverBlueCosmos },
-  { key: 'gold', label: 'Gold Aurora', src: coverGoldAurora },
-];
+import { COVER_DESIGNS, coverSrc } from '@/content/coverDesigns';
 
 /**
  * Interactive 3D AstroBook mockup scaled from the printer spec: US Trade 6 × 9 in softcover,
  * perfect-bound. Spine thickness approximates page count on 80 lb satin stock (~0.0045 in/page).
  */
-export function Book3D({ pages = 250, trimPt = [432, 648], label = '6″ × 9″ · softcover perfect binding', hardcover = false, coverSrc }: { pages?: number; trimPt?: [number, number]; label?: string; hardcover?: boolean; coverSrc?: string }) {
-  const [cover, setCover] = useState(COVERS[0]);
+export function Book3D({ pages = 250, trimPt = [432, 648], label = '6″ × 9″ · softcover perfect binding', hardcover = false, coverSrc: fixedSrc }: { pages?: number; trimPt?: [number, number]; label?: string; hardcover?: boolean; coverSrc?: string }) {
+  const [cover, setCover] = useState(COVER_DESIGNS[0]);
   const [angle, setAngle] = useState(-28);
   const spinePx = Math.round(pages * 0.0045 * 40) + (hardcover ? 8 : 0); // 40px per inch, boards add thickness
   const ratio = trimPt[1] / trimPt[0];
   const h = Math.min(360, Math.round(240 * ratio)), w = Math.round(h / ratio);
-  const src = coverSrc ?? cover.src;
+  const src = fixedSrc ?? coverSrc(cover);
   return (
     <figure className="space-y-4">
       <div className="flex justify-center py-6" style={{ perspective: 1400 }}>
@@ -37,8 +29,8 @@ export function Book3D({ pages = 250, trimPt = [432, 648], label = '6″ × 9″
       </div>
       <div className="flex flex-col items-center gap-3">
         <input type="range" min={-60} max={60} value={angle} onChange={e => setAngle(Number(e.target.value))} aria-label="Rotate the book" className="w-56 accent-primary" />
-        {!coverSrc && <div className="flex flex-wrap justify-center gap-2" role="radiogroup" aria-label="Preview cover">
-          {COVERS.map(c => (
+        {!fixedSrc && <div className="flex flex-wrap justify-center gap-2" role="radiogroup" aria-label="Preview cover">
+          {COVER_DESIGNS.map(c => (
             <button key={c.key} type="button" role="radio" aria-checked={c.key === cover.key} onClick={() => setCover(c)}
               className={`rounded-full border px-3 py-1 text-sm transition-colors ${c.key === cover.key ? 'border-primary bg-primary/15' : 'border-border hover:border-primary/60'}`}>{c.label}</button>
           ))}

@@ -449,6 +449,20 @@
       "when": 1792539926005,
       "tag": "0063_lulu_print_jobs",
       "breakpoints": true
+    },
+    {
+      "idx": 64,
+      "version": "7",
+      "when": 1792808681070,
+      "tag": "0064_zac_edition_and_investor_access",
+      "breakpoints": true
+    },
+    {
+      "idx": 65,
+      "version": "7",
+      "when": 1792808815571,
+      "tag": "0065_edition_access_table",
+      "breakpoints": true
     }
   ]
 }

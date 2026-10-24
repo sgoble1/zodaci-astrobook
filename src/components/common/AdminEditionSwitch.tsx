@@ -4,12 +4,12 @@ import { isAdminEmail, leaveAprilEdition, openAprilEditionTab, viewAprilEditionI
 import { Button } from '@/components/ui/button';
 
 /** Founder edition controls: classic-view switch for April and Shane; admin can also open April's original edition. */
-export function AdminEditionSwitch() {
+export function AdminEditionSwitch({ fullEdition = false }: { fullEdition?: boolean }) {
   const session = useSession();
   const april = useAprilSpace();
   const admin = isAdminEmail(session?.user.email);
-  const classic = april ? <Button variant="ghost" size="sm" className="w-full justify-start" onClick={() => setClassicView(true)}><LayoutGrid className="h-4 w-4" />Switch to classic view</Button> : null;
-  if (!admin) return classic;
+  const classic = april || fullEdition ? <Button variant="ghost" size="sm" className="w-full justify-start" onClick={() => setClassicView(true)}><LayoutGrid className="h-4 w-4" />Switch to classic view</Button> : null;
+  if (!admin || (fullEdition && !april)) return admin && !april ? <div className="space-y-2">{classic}<Button variant="ghost" size="sm" className="w-full justify-start" onClick={viewAprilEditionInApp}><Eye className="h-4 w-4" />View April's content here</Button></div> : classic;
   if (april) {
     return (
       <div className="space-y-2" data-keep-wording role="group" aria-label="Edition">

@@ -930,6 +930,24 @@ export type Database = {
         }
         Relationships: []
       }
+      edition_access: {
+        Row: {
+          created_at: string
+          edition: string
+          email: string
+        }
+        Insert: {
+          created_at?: string
+          edition: string
+          email: string
+        }
+        Update: {
+          created_at?: string
+          edition?: string
+          email?: string
+        }
+        Relationships: []
+      }
       generated_pages: {
         Row: {
           content: string
@@ -969,6 +987,27 @@ export type Database = {
           title?: string
           updated_at?: string
           version?: number
+        }
+        Relationships: []
+      }
+      investor_access: {
+        Row: {
+          created_at: string
+          email: string
+          invited_by: string | null
+          note: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          invited_by?: string | null
+          note?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          invited_by?: string | null
+          note?: string
         }
         Relationships: []
       }
@@ -2634,6 +2673,8 @@ export type Database = {
         }[]
       }
       can_read_shane_edition: { Args: never; Returns: boolean }
+      can_read_zac_edition: { Args: never; Returns: boolean }
+      can_view_investors: { Args: never; Returns: boolean }
       claim_admin: { Args: never; Returns: boolean }
       claim_referral: { Args: { _code: string }; Returns: string }
       claim_signup_bonus: { Args: never; Returns: number }
@@ -2696,6 +2737,7 @@ export type Database = {
       is_space_member: { Args: { _space_id: string }; Returns: boolean }
       is_space_owner: { Args: { _space_id: string }; Returns: boolean }
       monitored_account_id: { Args: never; Returns: string }
+      my_founder_edition: { Args: never; Returns: string }
       my_referral_code: { Args: never; Returns: string }
       plan_tier: { Args: { _user_id: string }; Returns: string }
       public_site_settings: {

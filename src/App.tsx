@@ -52,6 +52,10 @@ const NotFound = lazy(() => import('./pages/NotFound'));
 const Masterbook = lazy(() => import('./pages/Masterbook'));
 const MasterbookChapter = lazy(() => import('./pages/MasterbookChapter'));
 const ShaneEdition = lazy(() => import('./pages/ShaneEdition'));
+const ZacEdition = lazy(() => import('./pages/ShaneEdition').then(m => ({ default: m.ZacEdition })));
+const ZacWorkbook = lazy(() => import('./pages/ZacWorkbook'));
+const OfficialAstroBook = lazy(() => import('./pages/OfficialAstroBook'));
+const Investors = lazy(() => import('./pages/Investors'));
 const Podcasts = lazy(() => import('./pages/Podcasts'));
 const Sources = lazy(() => import('./pages/Sources'));
 const SourceReader = lazy(() => import('./pages/SourceReader'));
@@ -334,6 +338,11 @@ export default function App() {
             <Route path="/masterbook/:id" element={<MasterbookChapter />} />
             <Route path="/shane" element={<ShaneEdition />} />
             <Route path="/shane/:id" element={<ShaneEdition />} />
+            <Route path="/zac" element={<ZacEdition />} />
+            <Route path="/zac/workbook" element={<ZacWorkbook />} />
+            <Route path="/zac/:id" element={<ZacEdition />} />
+            <Route path="/official-astrobook" element={<OfficialAstroBook />} />
+            <Route path="/investors" element={<Investors />} />
             <Route path="/podcasts" element={<Podcasts />} />
             <Route path="/sources" element={<Sources />} />
             <Route path="/sources/read/:id" element={<SourceReader />} />
