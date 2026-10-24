@@ -3,7 +3,7 @@
 ## In progress (current request: UPDATES collection, Zac edition, store, investors)
 - [x] Separate archive passwords for April, Shane, Zac (edition-scoped unlocks)
 - [x] Zac full edition: 198 named chapters from Volumes I–VI, own sidebar/phone menu, classic switch, Diamond Workbook
-- [ ] Zac sign-in: waiting on Zac's real email (admin grants it in Admin → Editions & investors); he saves his birth details once so counselors use his chart
+- [x] Zac's edition granted to shanealecomptegoble@gmail.com (opens once he signs up and saves his birth details)
 - [x] April + Shane chapter lists visible without unlock, descriptive titles
 - [x] Official AstroBook section for April, Shane, Zac
 - [x] Covers: remove Blue Cosmos/Gold Aurora; Midnight Ember variant; solid + gradient options
