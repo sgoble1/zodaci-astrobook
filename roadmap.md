@@ -1,5 +1,16 @@
 # Zodaci — Active Project Index
 
+## In progress (current request: UPDATES collection, Zac edition, store, investors)
+- [ ] Separate archive passwords for April, Shane, Zac (waiting: user enters them in secure form)
+- [ ] Zac full edition (shane@notardex.com), July 10 1987 12:08 EDT Columbus; Volumes I–VI archive with descriptive chapter titles; Zac workbook; counselors tuned to his chart
+- [ ] April + Shane chapter lists visible without unlock; Shane full view finished with descriptive titles
+- [ ] Official AstroBook section for April, Shane, Zac
+- [ ] Covers: remove Blue Cosmos/Gold Aurora; Midnight Stars color variant; solid + gradient options
+- [ ] Shopify store: posters, stickers, notebooks (waiting: Shopify setup approval)
+- [ ] /investors page, invitees only, admin-managed access
+- [ ] Reading Room 7 articles + Mystic Ink artwork; Unified Spec gap items; print report notes
+
+
 ## In progress (current request: navigation & information architecture skill)
 - [x] Navigation audit written to docs/navigation-audit.md before code changes (sources, contexts, discovery levels, pain points).
 - [x] Member menu rebuilt into five domains (Chart, Readings, Book, Explore, Learn) + Account: desktop mega-menus, phone bottom tabs with domain sheets, admin tools only in Account.
