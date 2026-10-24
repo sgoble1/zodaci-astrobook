@@ -12,6 +12,8 @@ import { Menu, X } from 'lucide-react';
 import { GenerationProgress } from '@/components/readings/GenerationProgress';
 import { founderPlace, onlyInFullEdition, orderFounderGroups } from '@/lib/founderEdition';
 import { domainFor } from '@/content/memberNav';
+import { useShaneAccount } from '@/hooks/useShaneAccount';
+import { loadShaneIndex } from '@/pages/ShaneEdition';
 import { useAprilSpace, useAprilSpaceError, retryAprilSpace, useClassicView, setClassicView } from '@/hooks/useAprilSpace';
 
 /** April's full menu exactly as the sidebar shows it: her sections plus Shared, Relationships and pages she created. */
@@ -28,6 +30,28 @@ function useFounderGroups(): NavGroup[] {
       .map(g => ({ ...g, items: [...g.items, ...custom.filter(c => c.menu_group === g.title).map(c => ({ to: `/p/${c.id}`, label: c.status === 'generating' ? `${c.title} · writing…` : c.title, created: true } as NavItem))] }));
   }, [aprilGroups, badges.chat, badges.wonderings, rels, custom]);
 }
+/** Shane's full edition menu: his own edition and chapters, shared pages, relationships and admin tools. */
+function useShaneGroups(): NavGroup[] {
+  const { items: rels } = useRelationships();
+  const badges = useSharedBadges();
+  const [chapters, setChapters] = useState<{ id: string; label: string; part: string }[] | null>(null);
+  useEffect(() => { let on = true; loadShaneIndex().then(e => { if (on) setChapters(e); }).catch(() => { if (on) setChapters([]); }); return () => { on = false; }; }, []);
+  return useMemo(() => {
+    const parts = new Map<string, NavItem[]>();
+    for (const c of chapters ?? []) parts.set(c.part || 'Chapters', [...(parts.get(c.part || 'Chapters') ?? []), { to: `/shane/${c.id}`, label: c.label }]);
+    const shared = { ...SHARED_GROUP, items: SHARED_GROUP.items.map(item => ({ ...item, badge: item.to === '/shared/conversations' ? badges.chat : item.to === '/shared/wonderings' ? badges.wonderings : undefined })) };
+    const relationships = { ...RELATIONSHIPS_GROUP, items: [...RELATIONSHIPS_GROUP.items, ...rels.map(r => ({ to: `/relationships/${r.id}`, label: `↳ ${r.name}${r.relation ? ` · ${r.relation}` : ''}` }))] };
+    return [
+      { title: 'My Edition', items: [{ to: '/dashboard', label: 'Home' }, { to: '/shane', label: 'My Masterbook' }, { to: '/my-chart', label: 'My chart' }, { to: '/my-readings', label: 'My readings' }, { to: '/transits', label: 'Transits' }] },
+      { title: 'Masterbook Chapters', items: chapters === null ? [] : chapters.length ? [] : [{ to: '/shane', label: 'Unlock to list chapters' }], submenus: [...parts.entries()].map(([label, items]) => ({ label, items })) },
+      shared, relationships,
+      { title: 'Together & Media', items: [{ to: '/our-charts', label: 'Our charts' }, { to: '/podcasts', label: 'Podcasts' }] },
+      { title: 'Admin', items: [{ to: '/admin', label: 'Admin dashboard' }, { to: '/dispatch', label: 'Dispatch' }] },
+    ] as NavGroup[];
+  }, [chapters, rels, badges.chat, badges.wonderings]);
+}
+const EditionContext = createContext<'april' | 'shane'>('april');
+
 const cleanLabel = (l: string) => l.replace(/^↳\s*/, '');
 
 /** April's breadcrumb (section › page) from her own menu; hidden on the first page of a section. */
@@ -162,12 +186,15 @@ export function AppShell() {
     );
   }
   // Founders can switch to the classic view: the same pages and menu every member sees.
+  const shane = useShaneAccount();
   const founder = april && !classic;
+  const shaneFull = !april && shane && !classic;
   // Classic view shows the member version of every page the member menu lists; pages that exist only in
   // April's full edition keep their original content rather than falling back to unrelated member pages.
   const ownPage = !!april && classic && onlyInFullEdition(APRIL_NAV_GROUPS, location.pathname, domainFor(location.pathname) !== null);
   const page = <PageErrorBoundary key={location.pathname}>{editionFailed && <div role="alert" className="mb-4 rounded-2xl border border-gold/40 bg-card/60 p-4 text-sm"><p className="font-medium text-foreground">Your private edition couldn't open.</p><p className="mt-1 text-muted-foreground">Your connection may have dropped, so you're seeing the member view for now.</p><Button size="sm" variant="outline" className="mt-3" onClick={retryAprilSpace}>Try again</Button></div>}{!founder && !keepNames && !ownPage && <PublicWording />}{april === undefined && !isPublicPath(location.pathname) ? null : founder || ownPage ? <Outlet /> : <PlanGuard>{isPublicPath(location.pathname) ? <Outlet /> : <PublicChartFallback />}</PlanGuard>}<VerifySources /></PageErrorBoundary>;
-  if (!founder) return <MemberShell>{april && classic && <ClassicViewBanner />}{page}</MemberShell>;
+  if (shaneFull) return <AprilShell edition="shane">{page}</AprilShell>;
+  if (!founder) return <MemberShell>{(april || shane) && classic && <ClassicViewBanner />}{page}</MemberShell>;
   return <AprilShell>{page}</AprilShell>;
 }
 
@@ -210,7 +237,7 @@ function MemberShell({ children }: { children: ReactNode }) {
 }
 
 /** April's private edition keeps her original sidebar menu and colour-coded groups. */
-function AprilShell({ children }: { children: ReactNode }) {
+function AprilShell({ children, edition = 'april' }: { children: ReactNode; edition?: 'april' | 'shane' }) {
   const location = useLocation();
   const [open, setOpen] = useState(false);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
