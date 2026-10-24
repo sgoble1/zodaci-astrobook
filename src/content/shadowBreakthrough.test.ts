@@ -3,7 +3,7 @@ import { computeChart } from '@/lib/astro';
 import { detectPatterns, rankPatterns } from '@/lib/chartPatterns';
 import { firstPerson, PLACEMENT_PAIRS, practiceAffirmations, shadowBreakthroughBlock } from '@/content/shadowBreakthrough';
 
-const april = computeChart({ date: '1990-09-06', time: '15:38', lat: 42.86896, lon: -76.97774, tz: 'America/New_York', houseSystem: 'placidus' });
+const april = computeChart({ date: '1990-09-06', time: '15:38', lat: 42.86896, lon: -76.97774, tz: 'America/New_York', houseSystem: 'placidus', placeLabel: '', placeSource: 'geocoded' });
 const ranked = rankPatterns(detectPatterns(april), april);
 
 describe('Shadow and Breakthrough (§7)', () => {

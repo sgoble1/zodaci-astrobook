@@ -3,8 +3,8 @@ import { computeChart } from '@/lib/astro';
 import { buildOpeningLetter, FORBIDDEN_PHRASES, LETTER_MIN_WORDS, letterText } from '@/lib/openingLetter';
 import { birthFingerprint } from '@/lib/birthFingerprint';
 
-const april = computeChart({ date: '1990-09-06', time: '15:38', lat: 42.86896, lon: -76.97774, tz: 'America/New_York', houseSystem: 'placidus' });
-const noTime = computeChart({ date: '2000-02-29', time: null, lat: 53.8, lon: -1.55, tz: 'Europe/London', houseSystem: 'placidus' });
+const april = computeChart({ date: '1990-09-06', time: '15:38', lat: 42.86896, lon: -76.97774, tz: 'America/New_York', houseSystem: 'placidus', placeLabel: '', placeSource: 'geocoded' });
+const noTime = computeChart({ date: '2000-02-29', time: null, lat: 53.8, lon: -1.55, tz: 'Europe/London', houseSystem: 'placidus', placeLabel: '', placeSource: 'geocoded' });
 
 describe('Opening Letter (§3.4)', () => {
   const letter = buildOpeningLetter({ name: 'April Example', placeLabel: 'Geneva, New York, United States', chart: april, timeKnown: true });
