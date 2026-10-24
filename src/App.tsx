@@ -119,6 +119,8 @@ const Instructions = lazy(() => import('./pages/Instructions'));
 const BrandLanding = lazy(() => import('./pages/BrandLanding'));
 const BrandLaunch = lazy(() => import('./pages/BrandLaunch'));
 const PublicArticle = lazy(() => import('./pages/PublicArticle'));
+const ReadingRoom = lazy(() => import('./pages/ReadingRoom'));
+const ReadingRoomArticle = lazy(() => import('./pages/ReadingRoom').then(m => ({ default: m.ReadingRoomArticle })));
 const Community = lazy(() => import('./pages/Community'));
 const CommunityGuidelines = lazy(() => import('./pages/Community').then(m => ({ default: m.CommunityGuidelines })));
 const CreatorDashboard = lazy(() => import('./pages/CreatorDashboard'));
@@ -244,6 +246,8 @@ export default function App() {
             <Route path="/lp/:slug" element={<LandingPage />} />
             <Route path="/blog" element={<Blog />} />
             <Route path="/blog/learn/:slug" element={<PublicArticle />} />
+            <Route path="/reading-room" element={<ReadingRoom />} />
+            <Route path="/reading-room/:slug" element={<ReadingRoomArticle />} />
             <Route path="/community" element={<FeatureGate flag="community"><Community /></FeatureGate>} />
             <Route path="/community/guidelines" element={<FeatureGate flag="community"><CommunityGuidelines /></FeatureGate>} />
             <Route path="/community/:id" element={<FeatureGate flag="community"><Community /></FeatureGate>} />
