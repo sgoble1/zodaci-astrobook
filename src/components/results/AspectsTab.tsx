@@ -6,11 +6,12 @@ import { TierGate } from '@/components/common/TierGate';
 import { AspectMatrix } from '@/components/results/AspectMatrix';
 import type { Plan } from '@/content/navigation';
 
-const PATTERN_IDS = ['shape', 'focal', 'unaspected', 't-square', 'grand-trine', 'yod', 'reception'];
+// T-squares, grand trines and yods come from detectPatterns (spec orbs), so they are not repeated from the deductions.
+const PATTERN_IDS = ['shape', 'focal', 'unaspected', 'reception'];
 
 /** Aspects & Patterns: full matrix and pattern callouts for Pro/Cosmic; Free sees a blurred preview. */
 export function AspectsTab({ chart, date, timeKnown, plan, loading }: { chart: ChartResult; date: string; timeKnown: boolean; plan: Plan; loading: boolean }) {
-  const patterns = useMemo(() => detectPatterns(chart).filter(p => timeKnown || !/bucket|bundle|handle/i.test(p.code)), [chart, timeKnown]);
+  const patterns = useMemo(() => detectPatterns(timeKnown ? chart : { ...chart, utc: null }).filter(p => timeKnown || !/bucket|bundle|handle/i.test(p.code)), [chart, timeKnown]);
   const extra = useMemo(() => advancedDeductions(chart, { date, timeKnown }).filter(d => PATTERN_IDS.some(id => d.id.startsWith(id))), [chart, date, timeKnown]);
   const tight = [...chart.aspects].sort((a, b) => a.orb - b.orb).slice(0, 2);
   return (

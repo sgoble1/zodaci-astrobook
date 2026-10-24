@@ -11,7 +11,8 @@ const TIER: Record<string, string> = {
 
 /** Rare chart signatures and the RetroGOOD rating, all calculated (no AI). */
 export function ChartSignatures({ chart, timeKnown }: { chart: ChartResult; timeKnown: boolean }) {
-  const patterns = detectPatterns(timeKnown ? chart : { ...chart, asc: null, cusps: null });
+  // Without a birth time the Moon's exact phase and the angles are unknown, so timing-based patterns are left out.
+  const patterns = detectPatterns(timeKnown ? chart : { ...chart, asc: null, cusps: null, utc: null });
   const rg = retroGood(chart);
   return (
     <section aria-labelledby="sig" className="space-y-4">

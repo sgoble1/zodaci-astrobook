@@ -24,9 +24,9 @@ const RETRO_MEANING: Record<string, string> = {
 };
 export const retroMeaning = (name: string) => RETRO_MEANING[name] ?? 'This planet works in a more inward, reflective way.';
 
-export function perceive(chart: Pick<ChartResult, 'bodies' | 'asc' | 'cusps'>, timeKnown: boolean): Insight[] {
+export function perceive(chart: Pick<ChartResult, 'bodies' | 'asc' | 'cusps'> & { utc?: Date | null }, timeKnown: boolean): Insight[] {
   const out: Insight[] = [];
-  detectPatterns(chart).forEach(p => {
+  detectPatterns(timeKnown ? chart : { ...chart, utc: null }).forEach(p => {
     if (!timeKnown && /bucket|bundle|handle/i.test(p.code)) return;
     out.push({ id: `p-${p.code}-${p.bodies.join('')}`, title: p.title, text: p.detail, weight: p.weight, source: 'pattern' });
   });

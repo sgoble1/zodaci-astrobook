@@ -7,15 +7,16 @@ const body = (key: string, lon: number, retro = false, house: number | null = nu
 const codes = (bodies: BodyPos[], asc: number | null = null) => detectPatterns({ bodies, asc, cusps: null }).map(p => p.code);
 
 describe('chart patterns', () => {
-  it('flags a full-moon birth when Sun and Moon are 172°+ apart', () => {
+  it('flags a full-moon birth within 12° of exact opposition (spec 2.7)', () => {
     expect(codes([body('sun', 10), body('moon', 188)])).toContain('FULL_MOON_BIRTH');
+    expect(codes([body('sun', 10), body('moon', 179)])).toContain('FULL_MOON_BIRTH');
     expect(codes([body('sun', 10), body('moon', 150)])).not.toContain('FULL_MOON_BIRTH');
   });
   it('flags an anaretic (29°) Ascendant', () => {
     expect(codes([], 59.5)).toContain('ANARETIC_ASC');
     expect(codes([], 50)).not.toContain('ANARETIC_ASC');
   });
-  it('finds a grand trine within 7°', () => {
+  it('finds a grand trine within 8° (spec 6.1)', () => {
     expect(codes([body('sun', 0), body('jupiter', 121), body('saturn', 239)])).toContain('GRAND_TRINE');
   });
   it('finds a T-square', () => {
