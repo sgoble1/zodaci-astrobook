@@ -18,6 +18,9 @@ export type OpeningLetter = { salutation: string; paragraphs: string[]; closing:
 const ORD = (n: number) => `${n}${n % 10 === 1 && n !== 11 ? 'st' : n % 10 === 2 && n !== 12 ? 'nd' : n % 10 === 3 && n !== 13 ? 'rd' : 'th'}`;
 
 const lower = (s: string) => s.charAt(0).toLowerCase() + s.slice(1);
+const PROPER = /^(Sun|Moon|Mercury|Venus|Mars|Jupiter|Saturn|Uranus|Neptune|Pluto|Chiron|Ascendant|Aries|Taurus|Gemini|Cancer|Leo|Virgo|Libra|Scorpio|Sagittarius|Capricorn|Aquarius|Pisces|Grand|T-Square|Yod|Kite|Mystic|Bucket|Bundle|Retrograde|Direct)\b/;
+/** A pattern label inside a sentence: proper names keep their capital, other words start lower-case. */
+const inSentence = (label: string) => (PROPER.test(label) ? label : lower(label));
 const listOf = (xs: string[]) => (xs.length <= 1 ? xs.join('') : `${xs.slice(0, -1).join(', ')} and ${xs[xs.length - 1]}`);
 export const wordCount = (t: string) => t.split(/\s+/).filter(Boolean).length;
 
@@ -51,19 +54,20 @@ export function buildOpeningLetter({ name, placeLabel, chart, timeKnown }: Lette
   else p.push(`Your birth time is not recorded, so this letter leaves your rising sign and houses unnamed rather than guessing them. The Sun, the slower planets and most of the Moon's position are still exact for the day, and they carry the larger part of what follows.`);
 
   if (top.length) {
-    const names = top.map(t => lower(t.label));
+    const names = top.map(t => inSentence(t.label));
     p.push(`Three things stand out when your chart is ranked by what a person would recognise as most themselves. ${top.length > 1 ? `The strongest are ${listOf(names)}.` : `The strongest is ${names[0]}.`} ${top.map(t => t.detail.replace(/\s+$/, '')).join(' ')} These were ranked by how closely they involve your Sun, Moon and Ascendant, how near they sit to the angles of the chart, and how tightly they are formed. They are the threads the rest of your reading follows first.`);
   } else {
     p.push('No single configuration dominates your chart. That is less common than it sounds: it means your story is carried by the individual placements rather than by one loud pattern, and each planet gets to speak in its own voice. The reading that follows takes them one at a time, in order of how strongly they are placed.');
   }
 
-  if (lead) p.push(`Every gift in a chart has a form it takes under pressure. For you, the pressure point most worth naming is ${lower(lead.source)}: when it is strained, it can look like ${lower(lead.shadow)}. The same energy, worked with rather than against, becomes ${lower(lead.breakthrough)}. A small way to practise the second: ${lower(lead.practice ?? '')}.`);
+  if (lead) p.push(`Every gift in a chart has a form it takes under pressure. For you, the pressure point most worth naming is ${lead.phrase}: when it is strained, it can look like ${lower(lead.shadow)}. The same energy, worked with rather than against, becomes ${lower(lead.breakthrough)}. A small way to practise the second: ${lower(lead.practice ?? '')}.`);
 
-  const els = Object.entries(chart.elements ?? {}).filter(([, n]) => typeof n === 'number').sort((a, b) => b[1] - a[1]);
-  if (els.length) {
-    const [hi] = els, lo = els[els.length - 1];
-    p.push(`Across the whole chart, ${hi[0].toLowerCase()} carries the most weight${lo[1] === 0 ? `, and ${lo[0].toLowerCase()} is missing entirely, which usually means its qualities are learned on purpose rather than given` : `, and ${lo[0].toLowerCase()} carries the least`}. Treat that balance as a description of your starting point, not a limit. Charts describe tendencies and timing; the choices are yours.`);
-  }
+  // Western element balance across the ten planets (the chart's `elements` field holds the Chinese five elements).
+  const counts: Record<string, number> = { Fire: 0, Earth: 0, Air: 0, Water: 0 };
+  chart.bodies.filter(b => ['sun', 'moon', 'mercury', 'venus', 'mars', 'jupiter', 'saturn', 'uranus', 'neptune', 'pluto'].includes(b.key)).forEach(b => { const e = SIGN_EXPRESSIONS[b.sign]?.element; if (e) counts[e]++; });
+  const els = Object.entries(counts).sort((a, b) => b[1] - a[1]);
+  const [hi] = els, lo = els[els.length - 1];
+  p.push(`Across the ten planets, ${hi[0].toLowerCase()} carries the most weight, with ${hi[1]} of them${lo[1] === 0 ? `, and ${lo[0].toLowerCase()} is missing entirely, which usually means its qualities are learned on purpose rather than given` : `, and ${lo[0].toLowerCase()} carries the least, with ${lo[1]}`}. Treat that balance as a description of your starting point, not a limit. Charts describe tendencies and timing; the choices are yours.`);
 
   p.push(`Read the pages that follow slowly, and keep what is useful. If a passage does not fit, notice that too: the chart is a map drawn from a single moment, and you have been walking the territory ever since. You know things about your life that no calculation can see, and those always come first.`);
 

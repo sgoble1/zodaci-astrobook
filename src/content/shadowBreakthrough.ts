@@ -44,10 +44,17 @@ export const CONFIG_PAIRS: Partial<Record<string, SBPair & { label: string }>> =
   DOMICILE_PLUTO_10: { label: 'Domicile Pluto in the 10th house', shadow: 'Power that expects to be recognised', breakthrough: 'Legacy built through transformation of others', practice: 'Let go of one thing you are gripping' },
 };
 
+/** How the letter names each configuration in a sentence. */
+const CONFIG_PHRASE: Record<string, string> = {
+  ANARETIC_ASC: 'your Ascendant at the last degree of its sign', ANARETIC_PERSONAL_PLANET: 'the personal planet you carry at 29°',
+  OUTER_PLANET_H1_STELLIUM: 'the outer planets gathered in your 1st house', FULL_MOON_BIRTH: 'your Full Moon birth', FULL_MOON_PHASE: 'your birth in the Full Moon phase',
+  BUCKET_CHART: 'the handle of your Bucket chart', RETROGRADE_HANDLE: 'the handle of your Bucket chart', DIRECT_HANDLE: 'the handle of your Bucket chart', DOMICILE_PLUTO_10: 'Pluto at home in your 10th house',
+};
+
 const BODY_KEY: Record<string, string> = { Sun: 'sun', Moon: 'moon', Mercury: 'mercury', Venus: 'venus', Mars: 'mars', Jupiter: 'jupiter', Saturn: 'saturn', Uranus: 'uranus', Neptune: 'neptune', Pluto: 'pluto', Chiron: 'chiron', 'North Node': 'northNode', 'South Node': 'southNode', Ascendant: 'asc' };
 
 export type SBTone = 'oracle' | 'educational' | 'professional';
-export type SBItem = { id: string; title: string; source: string; shadow: string; breakthrough: string; practice: string | null; definition: string | null; score: number };
+export type SBItem = { id: string; title: string; source: string; phrase: string; shadow: string; breakthrough: string; practice: string | null; definition: string | null; score: number };
 type Ranked = { pattern_id: string; label: string; affected_planets: string[]; score: number };
 
 const DEFINE: Record<string, string> = {
@@ -80,8 +87,9 @@ export function shadowBreakthroughBlock(ranked: Ranked[], tone: SBTone = 'oracle
     if (seen.has(dedupe)) continue;
     seen.add(dedupe);
     const source = config ? config.label : `${PLACEMENT_PAIRS[lead!].label}, leading ${r.label}`;
+    const phrase = config ? CONFIG_PHRASE[r.pattern_id] ?? `your ${config.label.toLowerCase()}` : `your ${PLACEMENT_PAIRS[lead!].label}, which leads the ${r.label.replace(/^(Born|The) /, '').toLowerCase().replace(/\b(sun|moon|mercury|venus|mars|jupiter|saturn|uranus|neptune|pluto|aries|taurus|gemini|cancer|leo|virgo|libra|scorpio|sagittarius|capricorn|aquarius|pisces|ascendant)\b/g, w => w[0].toUpperCase() + w.slice(1))} in your chart`;
     const fix = (t: string) => (tone === 'professional' ? thirdPerson(t) : t);
-    out.push({ id: `${r.pattern_id}-${r.affected_planets.join('')}`, title: r.label, source, shadow: fix(pair.shadow), breakthrough: fix(pair.breakthrough), practice: tone === 'professional' ? null : pair.practice, definition: tone === 'educational' ? DEFINE[r.pattern_id] ?? null : null, score: r.score });
+    out.push({ id: `${r.pattern_id}-${r.affected_planets.join('')}`, title: r.label, source, phrase, shadow: fix(pair.shadow), breakthrough: fix(pair.breakthrough), practice: tone === 'professional' ? null : pair.practice, definition: tone === 'educational' ? DEFINE[r.pattern_id] ?? null : null, score: r.score });
   }
   return out;
 }
