@@ -9,7 +9,16 @@ export function AdminEditionSwitch({ fullEdition = false }: { fullEdition?: bool
   const april = useAprilSpace();
   const admin = isAdminEmail(session?.user.email);
   const classic = april || fullEdition ? <Button variant="ghost" size="sm" className="w-full justify-start" onClick={() => setClassicView(true)}><LayoutGrid className="h-4 w-4" />Switch to classic view</Button> : null;
-  if (!admin || (fullEdition && !april)) return admin && !april ? <div className="space-y-2">{classic}<Button variant="ghost" size="sm" className="w-full justify-start" onClick={viewAprilEditionInApp}><Eye className="h-4 w-4" />View April's content here</Button>{zacBtn}</div> : classic;
+  if (!admin) return classic;
+  const zacBtn = <Button variant="ghost" size="sm" className="w-full justify-start" onClick={viewZacEditionInApp}><Eye className="h-4 w-4" />View Zac's edition here</Button>;
+  if (viewingZacAsAdmin(session?.user.email)) return (
+    <div className="space-y-2" data-keep-wording role="group" aria-label="Edition">
+      <p className="text-xs text-gold">You are viewing Zac's edition.</p>
+      <Button variant="outline" size="sm" className="w-full justify-start" onClick={leaveAprilEdition}><ArrowLeftRight className="h-4 w-4" />Back to my own content</Button>
+      <Button variant="ghost" size="sm" className="w-full justify-start" onClick={viewAprilEditionInApp}><Eye className="h-4 w-4" />View April's content here</Button>
+    </div>
+  );
+  if (fullEdition && !april) return <div className="space-y-2">{classic}<Button variant="ghost" size="sm" className="w-full justify-start" onClick={viewAprilEditionInApp}><Eye className="h-4 w-4" />View April's content here</Button>{zacBtn}</div>;
   if (april) {
     return (
       <div className="space-y-2" data-keep-wording role="group" aria-label="Edition">
