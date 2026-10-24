@@ -35,7 +35,10 @@ function useShaneGroups(enabled: boolean): NavGroup[] {
   const { items: rels } = useRelationships();
   const badges = useSharedBadges();
   const [chapters, setChapters] = useState<{ id: string; label: string; part: string }[] | null>(null);
-  useEffect(() => { if (!enabled) return; let on = true; loadShaneIndex().then(e => { if (on) setChapters(e); }).catch(() => { if (on) setChapters([]); }); return () => { on = false; }; }, [enabled]);
+  const { pathname } = useLocation();
+  const listed = !!chapters?.length;
+  // Retry after navigation so chapters appear once the edition is unlocked.
+  useEffect(() => { if (!enabled || listed) return; let on = true; loadShaneIndex().then(e => { if (on) setChapters(e); }).catch(() => { if (on) setChapters([]); }); return () => { on = false; }; }, [enabled, listed, pathname]);
   return useMemo(() => {
     const parts = new Map<string, NavItem[]>();
     for (const c of chapters ?? []) parts.set(c.part || 'Chapters', [...(parts.get(c.part || 'Chapters') ?? []), { to: `/shane/${c.id}`, label: c.label }]);
