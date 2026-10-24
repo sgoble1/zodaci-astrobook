@@ -16,6 +16,7 @@ import { PublicSiteLayout } from './components/brand/PublicSiteLayout';
 import { ReferralCapture } from './components/common/ReferralCapture';
 import { SiteNotice } from './components/common/SiteNotice';
 import { FeatureGate } from './components/common/FeatureGate';
+import { useCartSync } from './hooks/useCartSync';
 const Dashboard = lazy(() => import('./pages/Dashboard'));
 const MasterbookSources = lazy(() => import('./pages/MasterbookSources'));
 const MyUploads = lazy(() => import('./pages/MyUploads'));
@@ -127,6 +128,8 @@ const FaqPage = lazy(() => import('./pages/PublicInfo').then(m => ({ default: m.
 const PrivacyPage = lazy(() => import('./pages/PublicInfo').then(m => ({ default: m.PrivacyPage })));
 const TermsPage = lazy(() => import('./pages/PublicInfo').then(m => ({ default: m.TermsPage })));
 const AstroComic = lazy(() => import('./pages/AstroComic'));
+const Store = lazy(() => import('./pages/Store'));
+const ProductDetail = lazy(() => import('./pages/Store').then(m => ({ default: m.ProductDetail })));
 const MyComic = lazy(() => import('./pages/MyComic'));
 const AcademyHome = lazy(() => import('./pages/Academy').then(m => ({ default: m.AcademyHome })));
 const AcademyLesson = lazy(() => import('./pages/Academy').then(m => ({ default: m.AcademyLesson })));
@@ -201,6 +204,8 @@ function useDrawerRegistry(): Record<string, DrawerPayload> {
   }, [april]);
 }
 
+function CartSync() { useCartSync(); return null; }
+
 function Providers({ children }: { children: ReactNode }) {
   const registry = useDrawerRegistry();
   const april = useAprilSpace();
@@ -221,6 +226,7 @@ export default function App() {
     <>
       <Providers>
         <ActivityTracker />
+        <CartSync />
         <ReferralCapture />
         <SiteNotice />
         <AutomaticChapters />
@@ -246,6 +252,8 @@ export default function App() {
             <Route path="/privacy" element={<PrivacyPage />} />
             <Route path="/terms" element={<TermsPage />} />
             <Route path="/astrocomic" element={<FeatureGate flag="astrocomic"><AstroComic /></FeatureGate>} />
+            <Route path="/store" element={<Store />} />
+            <Route path="/product/:handle" element={<ProductDetail />} />
             <Route path="/academy" element={<FeatureGate flag="academy"><AcademyHome /></FeatureGate>} />
             <Route path="/academy/:slug" element={<FeatureGate flag="academy"><AcademyLesson /></FeatureGate>} />
             <Route path="/compatibility" element={<FeatureGate flag="compatibility"><Compatibility /></FeatureGate>} />
