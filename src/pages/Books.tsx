@@ -18,7 +18,6 @@ import { streamImage } from '@/lib/streamImage';
 import { BOOK_SECTIONS, BOOK_VERSIONS, CHAPTER_TABS, COVER_STYLES, EXTRA_SECTION_PRICE, bookTotal, isEdition, money, versionOf, type Edition } from '@/lib/books';
 import { validateBookOrder } from '@/lib/bookOrder';
 import bookPhoto from '@/assets/astrobook-public.jpg';
-import coverMidnightStars from '@/assets/cover-design-midnight-stars.jpg';
 import { COVER_DESIGNS, coverSrc } from '@/content/coverDesigns';
 import { ManuscriptPreview } from '@/components/books/ManuscriptPreview';
 import { VersionCompare } from '@/components/books/VersionCompare';
