@@ -37,11 +37,16 @@ import { ADMIN_TAB_GROUPS, resolveAdminTab, type AdminTab } from '@/lib/adminTab
 export default function Admin() {
   const session = useSession();
   const isAdmin = useIsAdmin(session);
+  const [roleChecked, setRoleChecked] = useState<boolean | null>(null);
+  useEffect(() => { let on = true; setRoleChecked(null); if (!session) { setRoleChecked(false); return; } void supabase.rpc('has_role', { _user_id: session.user.id, _role: 'admin' }).then(({ data }) => { if (on) setRoleChecked(data === true); }); return () => { on = false; }; }, [session?.user.id]); // eslint-disable-line react-hooks/exhaustive-deps
   const [params, setParams] = useSearchParams();
   const tab = resolveAdminTab(params.get('tab'), isAdmin);
   const go = (t: AdminTab, extra: Record<string, string> = {}) => setParams({ tab: t, ...extra }, { replace: false });
   const groups = useMemo(() => ADMIN_TAB_GROUPS.map(g => ({ ...g, tabs: g.tabs.filter(t => !t.adminOnly || isAdmin) })).filter(g => g.tabs.length), [isAdmin]);
   useEffect(() => { document.getElementById(`admin-tab-${tab}`)?.scrollIntoView({ block: 'nearest', inline: 'nearest' }); }, [tab]);
+  // The admin dashboard is for admins only; April, Zac and members never see it.
+  if (roleChecked === null) return <p role="status" className="text-muted-foreground">Checking access…</p>;
+  if (!roleChecked) return <Navigate to="/dashboard" replace />;
   return (
     // Admin tools name April and Shane exactly; the public "you" wording never applies here.
     <div className="space-y-8" data-keep-wording>

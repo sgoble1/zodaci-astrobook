@@ -18,6 +18,7 @@ import { useZacAccount } from '@/hooks/useZacAccount';
 import { useAprilSpace, useAprilSpaceError, retryAprilSpace, useClassicView, setClassicView } from '@/hooks/useAprilSpace';
 
 /** April's full menu exactly as the sidebar shows it: her sections plus Shared, Relationships and pages she created. */
+const ADMIN_ONLY = ['/admin', '/dispatch', '/data-quality'];
 const FounderGroupsContext = createContext<NavGroup[] | null>(null);
 function useFounderGroups(): NavGroup[] {
   const { items: rels } = useRelationships();
@@ -27,7 +28,9 @@ function useFounderGroups(): NavGroup[] {
   return useMemo(() => {
     const shared = { ...SHARED_GROUP, items: SHARED_GROUP.items.map(item => ({ ...item, badge: item.to === '/shared/conversations' ? badges.chat : item.to === '/shared/wonderings' ? badges.wonderings : undefined })) };
     const relationships = { ...RELATIONSHIPS_GROUP, items: [...RELATIONSHIPS_GROUP.items, ...rels.map(r => ({ to: `/relationships/${r.id}`, label: `↳ ${r.name}${r.relation ? ` · ${r.relation}` : ''}` }))] };
-    return orderFounderGroups([...aprilGroups.slice(0, 2), shared, relationships, ...aprilGroups.slice(2)])
+    // Admin pages never appear in April's menu; the admin opens her edition from his own account.
+    const noAdmin = (gs: NavGroup[]) => gs.map(g => ({ ...g, items: g.items.filter(i => !ADMIN_ONLY.includes(i.to)), submenus: g.submenus?.map(sm => ({ ...sm, items: sm.items.filter(i => !ADMIN_ONLY.includes(i.to)) })) })).filter(g => g.items.length || g.submenus?.length);
+    return orderFounderGroups(noAdmin([...aprilGroups.slice(0, 2), shared, relationships, ...aprilGroups.slice(2)]))
       .map(g => ({ ...g, items: [...g.items, ...custom.filter(c => c.menu_group === g.title).map(c => ({ to: `/p/${c.id}`, label: c.status === 'generating' ? `${c.title} · writing…` : c.title, created: true } as NavItem))] }));
   }, [aprilGroups, badges.chat, badges.wonderings, rels, custom]);
 }
