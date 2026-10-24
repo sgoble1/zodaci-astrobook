@@ -6,11 +6,13 @@ import { chartShape, SHAPE_TEXT } from '@/lib/advancedDeductions';
 import { lifePath, LP_MEANING } from '@/lib/synastry';
 import { retroGood } from '@/lib/chartPatterns';
 import { narrative, perceive, type Tone } from '@/lib/perception';
+import { OpeningLetterCard } from '@/components/results/OpeningLetterCard';
+import { ShadowBreakthrough } from '@/components/results/ShadowBreakthrough';
 
 const EL_CLS: Record<string, string> = { Fire: 'bg-candle', Earth: 'bg-gold', Air: 'bg-primary', Water: 'bg-accent' };
 
 /** Blueprint: wheel, Big Three degrees, element/modality balance, shape, year animal, Life Path and the top-ranked story. Free for everyone. */
-export function BlueprintTab({ chart, date, timeKnown, tone }: { chart: ChartResult; date: string; timeKnown: boolean; tone: Tone }) {
+export function BlueprintTab({ chart, date, timeKnown, tone, name = '', placeLabel = '' }: { chart: ChartResult; date: string; timeKnown: boolean; tone: Tone; name?: string; placeLabel?: string }) {
   const bal = useMemo(() => balance(chart), [chart]);
   const shape = useMemo(() => chartShape(chart.bodies.filter(b => ['sun', 'moon', 'mercury', 'venus', 'mars', 'jupiter', 'saturn', 'uranus', 'neptune', 'pluto'].includes(b.key)).map(b => b.lon)), [chart]);
   const insights = useMemo(() => perceive(chart, timeKnown), [chart, timeKnown]);
@@ -31,7 +33,9 @@ export function BlueprintTab({ chart, date, timeKnown, tone }: { chart: ChartRes
         <h2 id="bp-story" className="font-display text-2xl">Your chart at a glance</h2>
         <p className="mt-2 text-lg leading-relaxed">{narrative(insights, tone)}</p>
       </section>
+      <OpeningLetterCard chart={chart} name={name} placeLabel={placeLabel} timeKnown={timeKnown} />
       <ChartWheel r={chart} />
+      <ShadowBreakthrough chart={chart} timeKnown={timeKnown} tone={tone} />
       <div className="grid gap-6 md:grid-cols-2">
         <section aria-labelledby="bp-el" className="rounded-lg border border-border bg-card p-5">
           <h2 id="bp-el" className="font-display text-xl">Elements</h2>

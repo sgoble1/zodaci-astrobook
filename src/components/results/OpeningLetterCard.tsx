@@ -18,7 +18,7 @@ export function OpeningLetterCard({ chart, name, placeLabel, timeKnown }: { char
     catch { toast.error('Copying is blocked in this browser. Select the text instead.'); }
   };
   const print = () => {
-    const w = window.open('', '_blank', 'noopener=no,width=760,height=900');
+    const w = window.open('', '_blank', 'width=760,height=900');
     if (!w) { toast.error('Allow pop-ups to print your letter.'); return; }
     const esc = (t: string) => t.replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]!));
     w.document.write(`<!doctype html><title>Your opening letter</title><style>body{font:16px/1.7 Georgia,serif;max-width:40rem;margin:3rem auto;padding:0 1.5rem;color:#111}p{margin:0 0 1rem}</style>${[letter.salutation, ...letter.paragraphs, letter.closing, letter.signature].map(p => `<p>${esc(p)}</p>`).join('')}`);

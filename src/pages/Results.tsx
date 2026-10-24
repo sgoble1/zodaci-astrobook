@@ -55,7 +55,7 @@ export default function Results() {
       </div>
       <section id="results-panel" role="tabpanel" aria-labelledby={`tab-${tab}`} tabIndex={-1} className="outline-none">
         <Suspense fallback={<div className="h-64 animate-pulse rounded-lg bg-card" role="status" aria-label="Loading" />}>
-          {tab === 'blueprint' && <BlueprintTab chart={chart} date={birth.date} timeKnown={timeKnown} tone={tone} />}
+          {tab === 'blueprint' && <BlueprintTab chart={chart} date={birth.date} timeKnown={timeKnown} tone={tone} name={birth.name} placeLabel={birth.placeLabel} />}
           {tab === 'placements' && <PlacementsTab chart={chart} timeKnown={timeKnown} plan={plan} loading={loading} />}
           {tab === 'aspects' && <AspectsTab chart={chart} date={birth.date} timeKnown={timeKnown} plan={plan} loading={loading} />}
           {tab === 'systems' && <SystemsTab chart={chart} date={birth.date} name={birth.name} sex={kuaSex(birth.sex)} plan={plan} loading={loading} />}

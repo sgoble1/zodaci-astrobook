@@ -7,6 +7,8 @@ import { retroPatterns, retroPlanets, TIER_GLYPH, type RgTier } from '@/lib/retr
 import { chartShape } from '@/lib/advancedDeductions';
 import { narrative, perceive } from '@/lib/perception';
 import { chartAffirmations } from '@/lib/affirmations';
+import { practiceAffirmations, shadowBreakthroughBlock } from '@/content/shadowBreakthrough';
+import { detectPatterns, rankPatterns } from '@/lib/chartPatterns';
 import { useReadingTone } from '@/hooks/useReadingTone';
 import { usePlan } from '@/hooks/usePlan';
 import { usePageMeta } from '@/hooks/usePageMeta';
@@ -32,7 +34,7 @@ export default function RetroGood() {
     const planets = retroPlanets(chart);
     const shape = chartShape(chart.bodies.filter(b => ['sun', 'moon', 'mercury', 'venus', 'mars', 'jupiter', 'saturn', 'uranus', 'neptune', 'pluto'].includes(b.key)).map(b => b.lon));
     const handle = shape.shape === 'Bucket' && shape.handle != null ? chart.bodies.find(b => Math.abs(b.lon - shape.handle!) < 1e-6)?.key ?? null : null;
-    return { planets, patterns: retroPatterns(chart, planets, handle), rg: retroGood(chart), insights: perceive(chart, !!birth.time), affirmations: chartAffirmations(chart, birth.date) };
+    return { planets, patterns: retroPatterns(chart, planets, handle), rg: retroGood(chart), insights: perceive(chart, !!birth.time), affirmations: [...chartAffirmations(chart, birth.date), ...practiceAffirmations(shadowBreakthroughBlock(rankPatterns(detectPatterns(birth.time ? chart : { ...chart, asc: null, cusps: null, utc: null }), chart)))] };
   }, [chart, birth]);
   if (birth === undefined) return <div className="mx-auto max-w-3xl space-y-4" role="status" aria-label="Loading your chart"><div className="h-10 w-48 animate-pulse rounded bg-card" /><div className="h-64 animate-pulse rounded-lg bg-card" /></div>;
   if (!birth || !chart || !data) return <article className="mx-auto max-w-lg space-y-4 py-10 text-center"><h1 className="font-display text-3xl">Add your birth details first</h1><Button asChild><Link to="/start">Create my chart</Link></Button></article>;
