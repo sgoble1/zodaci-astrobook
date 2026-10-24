@@ -5,6 +5,7 @@ import { PlanetOrb } from '@/components/chart/PlanetOrb';
 import { useSession } from '@/hooks/useLibrary';
 import { Button } from '@/components/ui/button';
 import { usePageMeta } from '@/hooks/usePageMeta';
+import { supabase } from '@/integrations/supabase/client';
 
 /** Zac's verified birth facts (Volume I: Mount Carmel Medical Center, Columbus, Ohio). */
 export const ZAC_BIRTH = { date: '1987-07-10', time: '12:08', lat: 39.9567, lon: -83.0144, tz: 'America/New_York', placeLabel: 'Columbus, Ohio', placeSource: 'geocoded' as const, houseSystem: 'placidus' as const };
@@ -40,10 +41,14 @@ export default function ZacWorkbook() {
     const b = chart.bodies.find(x => x.key === key);
     return b ? `${fmtLon(b.lon).text}${b.retro ? ' ℞' : ''}${b.house ? ` · house ${b.house}` : ''}` : '';
   };
+  const [allowed, setAllowed] = useState<boolean | null>(null);
+  useEffect(() => { let on = true; setAllowed(null); if (uid) void supabase.rpc('can_read_zac_edition').then(({ data }) => { if (on) setAllowed(data === true); }); return () => { on = false; }; }, [uid]);
   const done = STATIONS.filter(s => notes[s.key]?.done).length;
   const s = STATIONS.find(x => x.key === active)!;
   const pct = Math.round((done / STATIONS.length) * 100);
 
+  if (allowed === null) return <p role="status" className="text-muted-foreground">Opening the workbook…</p>;
+  if (!allowed) return <p className="text-muted-foreground">This workbook belongs to a private edition.</p>;
   return (
     <article className="space-y-8">
       <header className="space-y-2">

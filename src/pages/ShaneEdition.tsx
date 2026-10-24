@@ -55,7 +55,7 @@ function ShareSwitch() {
 }
 
 export default function ShaneEdition() { return <SitePasswordGate edition="shane"><EditionInner area="shane" /></SitePasswordGate>; }
-export function ZacEdition() { return <SitePasswordGate edition="zac"><EditionInner area="zac" /></SitePasswordGate>; }
+export function ZacEdition() { return <SitePasswordGate edition="zac" alsoAccept="shane"><EditionInner area="zac" /></SitePasswordGate>; }
 function EditionInner({ area }: { area: EditionKey }) {
   const copy = EDITION_COPY[area];
   const session = useSession();

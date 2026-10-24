@@ -58,23 +58,24 @@ export function UnlockForm({ onUnlocked, compact = false, edition }: { onUnlocke
   );
 }
 
-export function SitePasswordGate({ children, edition }: { children: ReactNode; edition?: Edition }) {
-  const [unlocked, setUnlocked] = useState(() => !!getContentToken(edition));
+export function SitePasswordGate({ children, edition, alsoAccept }: { children: ReactNode; edition?: Edition; alsoAccept?: Edition }) {
+  const has = () => !!getContentToken(edition) || (!!alsoAccept && !!getContentToken(alsoAccept));
+  const [unlocked, setUnlocked] = useState(has);
 
   useEffect(() => {
-    const lock = () => setUnlocked(!!getContentToken(edition));
-    const unlock = () => setUnlocked(!!getContentToken(edition));
+    const lock = () => setUnlocked(has());
+    const unlock = () => setUnlocked(has());
     window.addEventListener('private-content-locked', lock);
     window.addEventListener(CONTENT_UNLOCKED_EVENT, unlock);
     return () => { window.removeEventListener('private-content-locked', lock); window.removeEventListener(CONTENT_UNLOCKED_EVENT, unlock); };
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const { pathname } = useLocation();
   if (unlocked || pathname === '/contents' || pathname.startsWith('/contents/')) return <>{children}</>;
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background p-6">
-      <UnlockForm edition={edition} onUnlocked={() => setUnlocked(!!getContentToken(edition))} />
+      <UnlockForm edition={edition} onUnlocked={() => setUnlocked(has())} />
     </div>
   );
 }
