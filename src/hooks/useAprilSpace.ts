@@ -14,6 +14,9 @@ const adminWantsOwn = (email?: string) => !originalAprilView(email, sessionStora
 export const isAdminEmail = (email?: string | null) => email?.toLowerCase() === ADMIN_EMAIL;
 export function openAprilEditionTab() { window.open(`${window.location.origin}/?edition=april`, '_blank', 'noopener'); }
 export function viewAprilEditionInApp() { sessionStorage.setItem(ADMIN_EDITION_KEY, 'april'); window.location.href = '/'; }
+/** Admin only: preview Zac's full edition in this tab (the server still checks every chapter). */
+export function viewZacEditionInApp() { sessionStorage.setItem(ADMIN_EDITION_KEY, 'zac'); window.location.href = '/zac'; }
+export const viewingZacAsAdmin = (email?: string | null) => isAdminEmail(email) && sessionStorage.getItem(ADMIN_EDITION_KEY) === 'zac';
 export function leaveAprilEdition() { sessionStorage.removeItem(ADMIN_EDITION_KEY); window.location.href = '/'; }
 const listeners = new Set<(v: boolean | undefined) => void>();
 
