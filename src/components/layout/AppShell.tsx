@@ -59,6 +59,7 @@ function useShaneGroups(enabled: boolean, area: 'shane' | 'zac' = 'shane'): NavG
       chapterGroup,
       shared, relationships,
       { title: 'Together & Media', items: [{ to: '/our-charts', label: 'Our charts' }, { to: '/podcasts', label: 'Podcasts' }, { to: '/official-astrobook', label: 'Official AstroBooks' }, { to: '/investors', label: 'Investor overview' }, { to: '/store', label: 'Shop' }] },
+      { title: 'Family Editions', items: [{ to: '/zac', label: 'Zac’s Astrological Library' }, { to: '/zac/workbook', label: 'Zac’s Workbook' }] },
       { title: 'Admin', items: [{ to: '/admin', label: 'Admin dashboard' }, { to: '/dispatch', label: 'Dispatch' }] },
     ] as NavGroup[];
   }, [chapters, rels, badges.chat, badges.wonderings, area]);
