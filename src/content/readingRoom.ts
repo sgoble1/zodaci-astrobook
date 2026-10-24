@@ -1,12 +1,12 @@
 // Reading Room articles, from the Zodaci Reading Room content package (educational, for reflection).
-import reading_room_big_three from '@/assets/reading-room/reading-room-big-three.png';
-import reading_room_birth_chart_book from '@/assets/reading-room/reading-room-birth-chart-book.png';
-import reading_room_houses from '@/assets/reading-room/reading-room-houses.png';
-import reading_room_moon_phases from '@/assets/reading-room/reading-room-moon-phases.png';
-import reading_room_retrograde from '@/assets/reading-room/reading-room-retrograde.png';
-import reading_room_shadow_breakthrough from '@/assets/reading-room/reading-room-shadow-breakthrough.png';
-import reading_room_transits from '@/assets/reading-room/reading-room-transits.png';
-import reading_room_hero from '@/assets/reading-room/reading-room-hero.png';
+import reading_room_big_three from '@/assets/reading-room/reading-room-big-three.jpg';
+import reading_room_birth_chart_book from '@/assets/reading-room/reading-room-birth-chart-book.jpg';
+import reading_room_houses from '@/assets/reading-room/reading-room-houses.jpg';
+import reading_room_moon_phases from '@/assets/reading-room/reading-room-moon-phases.jpg';
+import reading_room_retrograde from '@/assets/reading-room/reading-room-retrograde.jpg';
+import reading_room_shadow_breakthrough from '@/assets/reading-room/reading-room-shadow-breakthrough.jpg';
+import reading_room_transits from '@/assets/reading-room/reading-room-transits.jpg';
+import reading_room_hero from '@/assets/reading-room/reading-room-hero.jpg';
 
 export type RoomArticle = { slug: string; title: string; category: string; minutes: number; image: string; glance: string; paras: string[]; words: { term: string; meaning: string }[]; tryThis: string };
 export const READING_ROOM_HERO = reading_room_hero;
