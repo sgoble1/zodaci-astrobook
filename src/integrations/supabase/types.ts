@@ -1243,6 +1243,36 @@ export type Database = {
         }
         Relationships: []
       }
+      official_editions: {
+        Row: {
+          birth: Json
+          birth_source: string
+          display_name: string
+          edition: string
+          owner_emails: string[]
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          birth?: Json
+          birth_source?: string
+          display_name: string
+          edition: string
+          owner_emails?: string[]
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          birth?: Json
+          birth_source?: string
+          display_name?: string
+          edition?: string
+          owner_emails?: string[]
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       personal_context: {
         Row: {
           body: string
@@ -2738,7 +2768,18 @@ export type Database = {
       is_space_owner: { Args: { _space_id: string }; Returns: boolean }
       monitored_account_id: { Args: never; Returns: string }
       my_founder_edition: { Args: never; Returns: string }
+      my_official_editions: {
+        Args: never
+        Returns: {
+          birth: Json
+          birth_source: string
+          display_name: string
+          edition: string
+          is_own: boolean
+        }[]
+      }
       my_referral_code: { Args: never; Returns: string }
+      owns_official_edition: { Args: { _edition: string }; Returns: boolean }
       plan_tier: { Args: { _user_id: string }; Returns: string }
       public_site_settings: {
         Args: never
