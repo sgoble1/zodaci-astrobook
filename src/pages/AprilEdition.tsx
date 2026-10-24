@@ -62,7 +62,7 @@ function AprilEditionInner() {
   const load = useCallback(async () => {
     setError('');
     try {
-      const token = getContentToken();
+      const token = getContentToken('april');
       const { data, error: err } = await supabase.functions.invoke('private-edition', {
         body: { share: true },
         headers: { 'X-Content-Token': token },
@@ -264,5 +264,5 @@ function AprilEditionInner() {
 
 /** Password-gated shareable page: April can send the link and site password to clients. */
 export default function AprilEdition() {
-  return <SitePasswordGate><AprilEditionInner /></SitePasswordGate>;
+  return <SitePasswordGate edition="april"><AprilEditionInner /></SitePasswordGate>;
 }
