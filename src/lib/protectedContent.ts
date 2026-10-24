@@ -49,13 +49,14 @@ export function loadProtectedText(area: Area, file: string): Promise<string> {
 
 async function fetchProtectedText(area: Area, file: string): Promise<string> {
   const edition = AREA_EDITION[area];
-  const token = getContentToken(edition);
+  // The admin's own unlock is accepted for the editions he can read (checked server-side).
+  const token = getContentToken(edition) || getContentToken('shane');
   // Chapter lists (index.json) open for the edition's own account without the password.
   if (!token && file !== 'index.json') throw new ContentLockedError();
   const { data, error } = await supabase.functions.invoke('protected-content', { body: { token, area, file } });
   if (error || !data?.content) {
     if (data?.code === 'LOCKED' || error?.context?.status === 401) {
-      clearContentToken(edition);
+      if (getContentToken(edition)) clearContentToken(edition);
       window.dispatchEvent(new CustomEvent('private-content-locked', { detail: { edition } }));
       throw new ContentLockedError();
     }

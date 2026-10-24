@@ -57,7 +57,9 @@ Deno.serve(async (req) => {
     const isIndex = file === 'index.json';
     const secret = Deno.env.get('CONTENT_UNLOCK_SECRET') ?? '';
     const token = typeof body?.token === 'string' ? body.token : '';
-    if (!isIndex && !(await tokenOpens(token, AREA_EDITION[area], secret))) return json({ error: 'Unlock required.', code: 'LOCKED', edition: AREA_EDITION[area] }, 401);
+    // The admin (Shane) opens Zac's and April's editions with his own unlock, as he does from his admin account.
+    const opens = await tokenOpens(token, AREA_EDITION[area], secret) || (AREA_EDITION[area] !== 'shane' && await tokenOpens(token, 'shane', secret) && (await client.rpc('has_role', { _user_id: user.user.id, _role: 'admin' })).data === true);
+    if (!isIndex && !opens) return json({ error: 'Unlock required.', code: 'LOCKED', edition: AREA_EDITION[area] }, 401);
     let content = area === 'shane' || area === 'zac' ? (await loadStored(area))[file] : (await loadArchive())[area as 'masterbook' | 'library'][file];
     if (typeof content !== 'string') return json({ error: 'Document not found.' }, 404);
     if (isIndex && area !== 'library') {
