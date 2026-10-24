@@ -94,7 +94,15 @@ export function shadowBreakthroughBlock(ranked: Ranked[], tone: SBTone = 'oracle
   return out;
 }
 
-/** Practices seed the affirmations carousel (§7.4, MOD-006): "I …" statements built from each practice. */
-export function practiceAffirmations(items: SBItem[]): string[] {
-  return items.filter(i => i.practice).map(i => `I am ready for this: ${i.practice!.charAt(0).toLowerCase()}${i.practice!.slice(1)}.`);
+/** An imperative practice in first person: "Ask for one thing you hold back" becomes "I ask for one thing I hold back." */
+export function firstPerson(practice: string): string {
+  const swap = (t: string) => t.replace(/\byours\b/g, 'mine').replace(/\byour\b/g, 'my').replace(/\byou are\b/g, 'I am').replace(/\byou\b/g, 'I');
+  const m = /^(When [^,]+,)\s*(.+)$/.exec(practice);
+  if (m) return `${m[1]} I ${swap(m[2].charAt(0).toLowerCase() + m[2].slice(1))}.`;
+  return `I ${swap(practice.charAt(0).toLowerCase() + practice.slice(1))}.`;
+}
+
+/** Practices seed the affirmations carousel (§7.4, MOD-006). */
+export function practiceAffirmations(items: SBItem[]): { text: string; source: string }[] {
+  return items.filter(i => i.practice).map(i => ({ text: firstPerson(i.practice!), source: `Practice for ${i.source}` }));
 }
