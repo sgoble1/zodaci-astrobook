@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, Download, Grid3X3, Loader2, RectangleVertical } from 'lucide-react';
 import { toast } from 'sonner';
@@ -40,7 +40,7 @@ export default function OfficialComic() {
     } catch { return undefined; }
   }, [row, month]);
   const total = issue?.pages.length ?? 0;
-  const go = useCallback((n: number) => setPage(p => Math.min(Math.max(1, n === 0 ? p : n), total || 1)), [total]);
+  const go = useCallback((n: number) => setPage(Math.min(Math.max(1, n), total || 1)), [total]);
   useEffect(() => { setPage(1); }, [month, edition]);
   useEffect(() => {
     if (view !== 'page') return;
@@ -135,7 +135,7 @@ export default function OfficialComic() {
   );
 }
 
-function Missing({ text, children }: { text: string; children?: React.ReactNode }) {
+function Missing({ text, children }: { text: string; children?: ReactNode }) {
   return (
     <div className="mx-auto max-w-xl space-y-4 py-12 text-center">
       <h1 className="font-display text-3xl">Official AstroComic</h1>
