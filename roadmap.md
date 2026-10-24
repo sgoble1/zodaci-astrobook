@@ -9,7 +9,8 @@
 - [x] Covers: remove Blue Cosmos/Gold Aurora; Midnight Ember variant; solid + gradient options
 - [x] Shopify store: posters, stickers, notebooks (prices need owner confirmation)
 - [x] /investors page, invite-only, admin-managed access
-- [ ] Reading Room 7 articles + Mystic Ink artwork; Unified Spec gap items; print report notes (next pass)
+- [x] Reading Room: 7 illustrated articles, filters, glossary pop-ups, progress bar, save/share
+- [ ] Mystic Ink artwork placement, Unified Spec gap items, print report notes (next pass)
 
 
 ## In progress (current request: navigation & information architecture skill)
