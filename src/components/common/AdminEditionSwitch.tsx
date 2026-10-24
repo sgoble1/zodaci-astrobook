@@ -18,7 +18,7 @@ export function AdminEditionSwitch({ fullEdition = false }: { fullEdition?: bool
       <Button variant="ghost" size="sm" className="w-full justify-start" onClick={viewAprilEditionInApp}><Eye className="h-4 w-4" />View April's content here</Button>
     </div>
   );
-  if (fullEdition && !april) return <div className="space-y-2">{classic}<Button variant="ghost" size="sm" className="w-full justify-start" onClick={viewAprilEditionInApp}><Eye className="h-4 w-4" />View April's content here</Button>{zacBtn}</div>;
+  if (fullEdition && !april) return <div className="space-y-2" data-keep-wording>{classic}<Button variant="ghost" size="sm" className="w-full justify-start" onClick={viewAprilEditionInApp}><Eye className="h-4 w-4" />View April's content here</Button>{zacBtn}</div>;
   if (april) {
     return (
       <div className="space-y-2" data-keep-wording role="group" aria-label="Edition">
