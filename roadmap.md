@@ -1,14 +1,15 @@
 # Zodaci — Active Project Index
 
 ## In progress (current request: UPDATES collection, Zac edition, store, investors)
-- [ ] Separate archive passwords for April, Shane, Zac (waiting: user enters them in secure form)
-- [ ] Zac full edition (shane@notardex.com), July 10 1987 12:08 EDT Columbus; Volumes I–VI archive with descriptive chapter titles; Zac workbook; counselors tuned to his chart
-- [ ] April + Shane chapter lists visible without unlock; Shane full view finished with descriptive titles
-- [ ] Official AstroBook section for April, Shane, Zac
-- [ ] Covers: remove Blue Cosmos/Gold Aurora; Midnight Stars color variant; solid + gradient options
-- [ ] Shopify store: posters, stickers, notebooks (waiting: Shopify setup approval)
-- [ ] /investors page, invitees only, admin-managed access
-- [ ] Reading Room 7 articles + Mystic Ink artwork; Unified Spec gap items; print report notes
+- [x] Separate archive passwords for April, Shane, Zac (edition-scoped unlocks)
+- [x] Zac full edition: 198 named chapters from Volumes I–VI, own sidebar/phone menu, classic switch, Diamond Workbook
+- [ ] Zac sign-in: waiting on Zac's real email (admin grants it in Admin → Editions & investors); he saves his birth details once so counselors use his chart
+- [x] April + Shane chapter lists visible without unlock, descriptive titles
+- [x] Official AstroBook section for April, Shane, Zac
+- [x] Covers: remove Blue Cosmos/Gold Aurora; Midnight Ember variant; solid + gradient options
+- [x] Shopify store: posters, stickers, notebooks (prices need owner confirmation)
+- [x] /investors page, invite-only, admin-managed access
+- [ ] Reading Room 7 articles + Mystic Ink artwork; Unified Spec gap items; print report notes (next pass)
 
 
 ## In progress (current request: navigation & information architecture skill)
