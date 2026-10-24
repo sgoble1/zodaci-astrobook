@@ -2,6 +2,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { ArrowLeftRight, ExternalLink, Eye, LayoutGrid, Lock, LogIn, LogOut, UserRound } from 'lucide-react';
 import { usePlan } from '@/hooks/usePlan';
 import { useIsAdmin, useSession } from '@/hooks/useLibrary';
+import { useShaneAccount } from '@/hooks/useShaneAccount';
 import { isAdminEmail, leaveAprilEdition, openAprilEditionTab, useAprilSpace, viewAprilEditionInApp, useClassicView, setClassicView } from '@/hooks/useAprilSpace';
 import { useMyBirth } from '@/lib/myBirth';
 import { AuthGate } from '@/components/common/AuthGate';
@@ -30,7 +31,8 @@ export function useAccountMenu() {
       : [{ label: 'View April’s content here', icon: Eye, run: viewAprilEditionInApp }, { label: 'Open April’s edition in a new tab', icon: ExternalLink, run: openAprilEditionTab }]
     : [];
   const classic = useClassicView();
-  if (april) editionSwitch.push(classic ? { label: 'Back to the full edition', icon: LayoutGrid, run: () => setClassicView(false) } : { label: 'Switch to classic view', icon: LayoutGrid, run: () => setClassicView(true) });
+  const shaneFull = useShaneAccount();
+  if (april || shaneFull) editionSwitch.push(classic ? { label: 'Back to the full edition', icon: LayoutGrid, run: () => setClassicView(false) } : { label: 'Switch to classic view', icon: LayoutGrid, run: () => setClassicView(true) });
   const signOut = async () => { await supabase.auth.signOut(); navigate('/welcome'); };
   const lock = (to: string) => access.loading || april ? null : itemLock(access.plan, to);
   return { session, email, plan: access.plan, planLoading: access.loading, admin, april, birth: april ? null : birth, editionSwitch, signOut, lock };
