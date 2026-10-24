@@ -1,5 +1,6 @@
 import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors';
 import { createClient } from 'npm:@supabase/supabase-js@2';
+import { tokenOpens } from '../_shared/content-token.ts';
 
 // The private edition's encrypted payload lives in the private `private-edition` storage bucket
 // (no client policies — it is only reachable through this gated function). This function's job:
@@ -9,16 +10,8 @@ import { createClient } from 'npm:@supabase/supabase-js@2';
 
 const json = (data: unknown, status = 200) => new Response(JSON.stringify(data), { status, headers: { ...corsHeaders, 'Content-Type': 'application/json', 'Cache-Control': 'private, no-store' } });
 
-const encode = (bytes: Uint8Array) => btoa(String.fromCharCode(...bytes)).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/g, '');
-
 async function shareTokenValid(token: string): Promise<boolean> {
-  const secret = Deno.env.get('CONTENT_UNLOCK_SECRET') ?? '';
-  if (!secret || !token) return false;
-  const [expires, sig] = token.split('.');
-  if (!expires || !sig || Number(expires) < Date.now()) return false;
-  const key = await crypto.subtle.importKey('raw', new TextEncoder().encode(secret), { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']);
-  const expected = encode(new Uint8Array(await crypto.subtle.sign('HMAC', key, new TextEncoder().encode(expires))));
-  return expected === sig;
+  return tokenOpens(token, 'april', Deno.env.get('CONTENT_UNLOCK_SECRET') ?? '');
 }
 
 Deno.serve(async req => {
