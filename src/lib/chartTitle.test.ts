@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { chartTitle, COVER_FOR_ELEMENT } from './chartTitle';
+import { COVER_DESIGNS } from '@/content/coverDesigns';
 
 describe('chartTitle', () => {
   it('combines Moon quality, Sun archetype and dominant element', () => {
@@ -11,8 +12,13 @@ describe('chartTitle', () => {
   it('mentions Rising only when known', () => {
     expect(chartTitle({ sun: 'Aries', moon: 'Cancer' }).subtitle).toBe('Aries Sun · Cancer Moon');
   });
-  it('matches Air charts to Blue Cosmos', () => {
-    expect(COVER_FOR_ELEMENT.Air.index).toBe(1);
+  it('matches Air charts to Violet Dusk', () => {
+    expect(COVER_DESIGNS[COVER_FOR_ELEMENT.Air.index].label).toBe('Violet Dusk');
+  });
+  it('offers no retired covers', () => {
+    expect(COVER_DESIGNS.map(d => d.key)).not.toContain('blue-cosmos');
+    expect(COVER_DESIGNS.map(d => d.key)).not.toContain('gold-aurora');
+    expect(COVER_DESIGNS[0].label).toBe('Midnight Stars');
   });
 });
 
