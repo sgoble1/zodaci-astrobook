@@ -33,6 +33,9 @@ export function clearContentToken(edition: Edition) {
   window.localStorage.setItem(CONTENT_TOKENS_KEY, JSON.stringify(t));
 }
 
+/** Files the server opens for the edition's authorized account without the password (titles and the workbook only). */
+export const OPEN_WITHOUT_UNLOCK = ['index.json', 'workbook.json'];
+
 const cache = new Map<string, Promise<string>>();
 supabase.auth.onAuthStateChange(() => cache.clear());
 if (typeof window !== 'undefined') window.addEventListener(CONTENT_UNLOCKED_EVENT, () => cache.clear());
@@ -51,8 +54,8 @@ async function fetchProtectedText(area: Area, file: string): Promise<string> {
   const edition = AREA_EDITION[area];
   // The admin's own unlock is accepted for the editions he can read (checked server-side).
   const token = getContentToken(edition) || getContentToken('shane');
-  // Chapter lists (index.json) open for the edition's own account without the password.
-  if (!token && file !== 'index.json') throw new ContentLockedError();
+  // Chapter lists (index.json) and Zac's workbook open for the edition's own account without the password.
+  if (!token && !OPEN_WITHOUT_UNLOCK.includes(file)) throw new ContentLockedError();
   const { data, error } = await supabase.functions.invoke('protected-content', { body: { token, area, file } });
   if (error || !data?.content) {
     if (data?.code === 'LOCKED' || error?.context?.status === 401) {
@@ -67,4 +70,11 @@ async function fetchProtectedText(area: Area, file: string): Promise<string> {
 
 export async function loadProtectedJson<T>(area: Area, file: string): Promise<T> {
   return JSON.parse(await loadProtectedText(area, file)) as T;
+}
+
+/** A short-lived private link for an edition's PDF (never cached: the link expires after a few minutes). */
+export async function loadProtectedFileUrl(area: Area, file: string): Promise<string> {
+  const { url } = JSON.parse(await fetchProtectedText(area, file)) as { url?: string };
+  if (!url) throw new Error('This document could not be opened.');
+  return url;
 }
