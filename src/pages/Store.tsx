@@ -21,7 +21,7 @@ function useAdd() {
 }
 
 export default function Store() {
-  usePageMeta({ title: 'The Zodaci Shop: posters, stickers and notebooks', description: 'Astrology posters, sticker sheets and star-chart notebooks from Zodaci.' });
+  usePageMeta('The Zodaci Shop: posters, stickers and notebooks', 'Astrology posters, sticker sheets and star-chart notebooks from Zodaci.');
   const [products, setProducts] = useState<ShopifyProduct[] | null>(null);
   const [error, setError] = useState('');
   const [type, setType] = useState('All');
@@ -62,7 +62,7 @@ export function ProductDetail() {
   const [product, setProduct] = useState<ShopifyProduct | null | undefined>(undefined);
   const [variantId, setVariantId] = useState('');
   const { add, loading } = useAdd();
-  usePageMeta({ title: product ? `${product.node.title} · Zodaci Shop` : 'Zodaci Shop', description: product?.node.description.slice(0, 150) || 'Zodaci Shop product.' });
+  usePageMeta(product ? `${product.node.title} · Zodaci Shop` : 'Zodaci Shop', product?.node.description.slice(0, 150) || 'Zodaci Shop product.');
   useEffect(() => {
     storefrontApiRequest(PRODUCT_BY_HANDLE_QUERY, { handle }).then(d => { const n = d?.data?.product; setProduct(n ? { node: n } : null); setVariantId(n?.variants?.edges?.[0]?.node?.id ?? ''); }).catch(() => setProduct(null));
   }, [handle]);

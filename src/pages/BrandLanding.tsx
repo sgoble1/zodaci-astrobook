@@ -46,7 +46,7 @@ const STEPS = [
   ['Go deeper when you’re ready', 'Read full chapters, compare charts with people you love, turn readings into audio, or have your sky printed as an AstroBook.'],
 ];
 
-const PRODUCT_LINKS = [['/astrobook', 'AstroBook'], ['/astrocomic', 'AstroComic'], ['/pricing', 'Pricing']] as const;
+const PRODUCT_LINKS = [['/astrobook', 'AstroBook'], ['/astrocomic', 'AstroComic'], ['/store', 'Shop'], ['/pricing', 'Pricing']] as const;
 
 export default function BrandLanding() {
   const [menuOpen, setMenuOpen] = useState(false);
