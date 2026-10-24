@@ -1,6 +1,6 @@
 import { ExternalLink, ArrowLeftRight, Eye, LayoutGrid } from 'lucide-react';
 import { useSession } from '@/hooks/useLibrary';
-import { isAdminEmail, leaveAprilEdition, openAprilEditionTab, viewAprilEditionInApp, useAprilSpace, setClassicView } from '@/hooks/useAprilSpace';
+import { isAdminEmail, leaveAprilEdition, openAprilEditionTab, viewAprilEditionInApp, viewZacEditionInApp, viewingZacAsAdmin, useAprilSpace, setClassicView } from '@/hooks/useAprilSpace';
 import { Button } from '@/components/ui/button';
 
 /** Founder edition controls: classic-view switch for April and Shane; admin can also open April's original edition. */
@@ -9,7 +9,7 @@ export function AdminEditionSwitch({ fullEdition = false }: { fullEdition?: bool
   const april = useAprilSpace();
   const admin = isAdminEmail(session?.user.email);
   const classic = april || fullEdition ? <Button variant="ghost" size="sm" className="w-full justify-start" onClick={() => setClassicView(true)}><LayoutGrid className="h-4 w-4" />Switch to classic view</Button> : null;
-  if (!admin || (fullEdition && !april)) return admin && !april ? <div className="space-y-2">{classic}<Button variant="ghost" size="sm" className="w-full justify-start" onClick={viewAprilEditionInApp}><Eye className="h-4 w-4" />View April's content here</Button></div> : classic;
+  if (!admin || (fullEdition && !april)) return admin && !april ? <div className="space-y-2">{classic}<Button variant="ghost" size="sm" className="w-full justify-start" onClick={viewAprilEditionInApp}><Eye className="h-4 w-4" />View April's content here</Button>{zacBtn}</div> : classic;
   if (april) {
     return (
       <div className="space-y-2" data-keep-wording role="group" aria-label="Edition">
@@ -24,6 +24,7 @@ export function AdminEditionSwitch({ fullEdition = false }: { fullEdition?: bool
       <p className="text-xs text-muted-foreground">Viewing your own content.</p>
       <Button variant="outline" size="sm" className="w-full justify-start" onClick={viewAprilEditionInApp}><Eye className="h-4 w-4" />View April's content here</Button>
       <Button variant="ghost" size="sm" className="w-full justify-start" onClick={openAprilEditionTab}><ExternalLink className="h-4 w-4" />Open in a new tab</Button>
+      {zacBtn}
     </div>
   );
 }
