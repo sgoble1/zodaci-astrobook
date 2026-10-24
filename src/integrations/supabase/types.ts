@@ -972,6 +972,27 @@ export type Database = {
         }
         Relationships: []
       }
+      investor_access: {
+        Row: {
+          created_at: string
+          email: string
+          invited_by: string | null
+          note: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          invited_by?: string | null
+          note?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          invited_by?: string | null
+          note?: string
+        }
+        Relationships: []
+      }
       library_items: {
         Row: {
           belongs_to: string
@@ -2634,6 +2655,8 @@ export type Database = {
         }[]
       }
       can_read_shane_edition: { Args: never; Returns: boolean }
+      can_read_zac_edition: { Args: never; Returns: boolean }
+      can_view_investors: { Args: never; Returns: boolean }
       claim_admin: { Args: never; Returns: boolean }
       claim_referral: { Args: { _code: string }; Returns: string }
       claim_signup_bonus: { Args: never; Returns: number }
