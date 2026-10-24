@@ -16,7 +16,7 @@ const APRIL_EMAIL = 'babybluepuppet@gmail.com';
 const SHANE_EMAILS = ['shanegoble@gmail.com', 'shanealecompte@gmail.com'];
 
 let cache: Promise<MbEntry[]> | null = null;
-const loadIndex = () => (cache ??= loadProtectedJson<MbEntry[]>('shane', 'index.json').catch(e => { cache = null; throw e; }));
+export const loadShaneIndex = () => (cache ??= loadProtectedJson<MbEntry[]>('shane', 'index.json').catch(e => { cache = null; throw e; }));
 supabase.auth.onAuthStateChange(() => { cache = null; });
 
 /** Shane's sharing switch: lets April read his full edition. Enforced server-side by can_read_shane_edition(). */
@@ -56,7 +56,7 @@ function ShaneEditionInner() {
   const [cat, setCat] = useState<string | null>(null);
   const [text, setText] = useState<string | null>(null);
   const [retry, setRetry] = useState(0);
-  useEffect(() => { let active = true; setEntries(null); setText(null); setErr(''); if (session) void loadIndex().then(e => { if (active) setEntries(e); }).catch(e => { if (active) setErr(e instanceof ContentLockedError ? 'Unlock the private edition with the site password first.' : 'Shane hasn’t shared his edition with you, or it couldn’t be opened.'); }); return () => { active = false; }; }, [session?.user.id, retry]);
+  useEffect(() => { let active = true; setEntries(null); setText(null); setErr(''); if (session) void loadShaneIndex().then(e => { if (active) setEntries(e); }).catch(e => { if (active) setErr(e instanceof ContentLockedError ? 'Unlock the private edition with the site password first.' : 'Shane hasn’t shared his edition with you, or it couldn’t be opened.'); }); return () => { active = false; }; }, [session?.user.id, retry]);
   useEffect(() => { let active = true; setText(null); if (id && session) void loadProtectedText('shane', `${id}.md`).then(t => { if (active) setText(t); }).catch(() => { if (active) setText(''); }); if (!window.location.hash) window.scrollTo(0, 0); return () => { active = false; }; }, [id, session?.user.id, retry]);
   const list = useMemo(() => (entries ?? []).filter(e => (!cat || catsFor(e).includes(cat)) && (e.title + e.sections.join(' ')).toLowerCase().includes(q.toLowerCase())), [entries, q, cat]);
 
