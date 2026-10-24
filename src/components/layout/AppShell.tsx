@@ -13,7 +13,8 @@ import { GenerationProgress } from '@/components/readings/GenerationProgress';
 import { founderPlace, onlyInFullEdition, orderFounderGroups } from '@/lib/founderEdition';
 import { domainFor } from '@/content/memberNav';
 import { useShaneAccount } from '@/hooks/useShaneAccount';
-import { loadShaneIndex } from '@/pages/ShaneEdition';
+import { loadEditionIndex } from '@/pages/ShaneEdition';
+import { useZacAccount } from '@/hooks/useZacAccount';
 import { useAprilSpace, useAprilSpaceError, retryAprilSpace, useClassicView, setClassicView } from '@/hooks/useAprilSpace';
 
 /** April's full menu exactly as the sidebar shows it: her sections plus Shared, Relationships and pages she created. */
@@ -31,29 +32,36 @@ function useFounderGroups(): NavGroup[] {
   }, [aprilGroups, badges.chat, badges.wonderings, rels, custom]);
 }
 /** Shane's full edition menu: his own edition and chapters, shared pages, relationships and admin tools. */
-function useShaneGroups(enabled: boolean): NavGroup[] {
+function useShaneGroups(enabled: boolean, area: 'shane' | 'zac' = 'shane'): NavGroup[] {
   const { items: rels } = useRelationships();
   const badges = useSharedBadges();
-  const [chapters, setChapters] = useState<{ id: string; label: string; part: string }[] | null>(null);
+  const [chapters, setChapters] = useState<{ id: string; label: string; title?: string; part: string }[] | null>(null);
   const { pathname } = useLocation();
   const listed = !!chapters?.length;
   // Retry after navigation so chapters appear once the edition is unlocked.
-  useEffect(() => { if (!enabled || listed) return; let on = true; loadShaneIndex().then(e => { if (on) setChapters(e); }).catch(() => { if (on) setChapters([]); }); return () => { on = false; }; }, [enabled, listed, pathname]);
+  useEffect(() => { if (!enabled || listed) return; let on = true; loadEditionIndex(area).then(e => { if (on) setChapters(e); }).catch(() => { if (on) setChapters([]); }); return () => { on = false; }; }, [enabled, listed, pathname, area]);
   return useMemo(() => {
     const parts = new Map<string, NavItem[]>();
-    for (const c of chapters ?? []) parts.set(c.part || 'Chapters', [...(parts.get(c.part || 'Chapters') ?? []), { to: `/shane/${c.id}`, label: c.label }]);
+    for (const c of chapters ?? []) parts.set(c.part || 'Chapters', [...(parts.get(c.part || 'Chapters') ?? []), { to: `/${area}/${c.id}`, label: c.title || c.label }]);
     const shared = { ...SHARED_GROUP, items: SHARED_GROUP.items.map(item => ({ ...item, badge: item.to === '/shared/conversations' ? badges.chat : item.to === '/shared/wonderings' ? badges.wonderings : undefined })) };
     const relationships = { ...RELATIONSHIPS_GROUP, items: [...RELATIONSHIPS_GROUP.items, ...rels.map(r => ({ to: `/relationships/${r.id}`, label: `↳ ${r.name}${r.relation ? ` · ${r.relation}` : ''}` }))] };
+    const chapterGroup = { title: area === 'zac' ? 'Library Chapters' : 'Masterbook Chapters', items: chapters === null ? [{ to: `/${area}`, label: 'Loading chapters…' }] : chapters.length ? [] : [{ to: `/${area}`, label: 'Chapters couldn’t load — open the edition' }], submenus: [...parts.entries()].map(([label, items]) => ({ label, items })) } as NavGroup;
+    if (area === 'zac') return [
+      { title: 'My Edition', items: [{ to: '/dashboard', label: 'Home' }, { to: '/zac', label: 'My Astrological Library' }, { to: '/zac/workbook', label: 'My Workbook' }, { to: '/my-chart', label: 'My chart' }, { to: '/transits', label: 'Transits' }, { to: '/counselors', label: 'Counselors' }] },
+      chapterGroup,
+      { title: 'Official AstroBook', items: [{ to: '/official-astrobook', label: 'Official AstroBooks' }, { to: '/investors', label: 'Investor overview' }, { to: '/store', label: 'Shop' }] },
+    ] as NavGroup[];
     return [
       { title: 'My Edition', items: [{ to: '/dashboard', label: 'Home' }, { to: '/shane', label: 'My Masterbook' }, { to: '/my-chart', label: 'My chart' }, { to: '/my-readings', label: 'My readings' }, { to: '/transits', label: 'Transits' }] },
-      { title: 'Masterbook Chapters', items: chapters === null ? [] : chapters.length ? [] : [{ to: '/shane', label: 'Unlock to list chapters' }], submenus: [...parts.entries()].map(([label, items]) => ({ label, items })) },
+      chapterGroup,
       shared, relationships,
-      { title: 'Together & Media', items: [{ to: '/our-charts', label: 'Our charts' }, { to: '/podcasts', label: 'Podcasts' }] },
+      { title: 'Together & Media', items: [{ to: '/our-charts', label: 'Our charts' }, { to: '/podcasts', label: 'Podcasts' }, { to: '/official-astrobook', label: 'Official AstroBooks' }, { to: '/investors', label: 'Investor overview' }, { to: '/store', label: 'Shop' }] },
       { title: 'Admin', items: [{ to: '/admin', label: 'Admin dashboard' }, { to: '/dispatch', label: 'Dispatch' }] },
     ] as NavGroup[];
-  }, [chapters, rels, badges.chat, badges.wonderings]);
+  }, [chapters, rels, badges.chat, badges.wonderings, area]);
 }
-const EditionContext = createContext<'april' | 'shane'>('april');
+type FounderEditionName = 'april' | 'shane' | 'zac';
+const EditionContext = createContext<FounderEditionName>('april');
 
 const cleanLabel = (l: string) => l.replace(/^↳\s*/, '');
 
@@ -131,7 +139,7 @@ function PlanGuard({ children }: { children: ReactNode }) {
   return planAllows(plan, need) ? <>{children}</> : <PlanLock need={need} />;
 }
 
-const KEEP_NAME_PATHS = ['/shared', '/our-charts', '/podcasts', '/shane', '/admin'];
+const KEEP_NAME_PATHS = ['/shared', '/our-charts', '/podcasts', '/shane', '/zac', '/admin', '/investors', '/official-astrobook'];
 const SIGNED_OUT_PATHS = ['/auth', '/pricing', '/books', '/reset-password'];
 const GROUP_COLORS = ['--primary', '--oxblood', '--accent', '--candle', '--gold-bright', '--starlight', '--gold', '--glow-violet'];
 
@@ -162,6 +170,7 @@ export function AppShell() {
   const classic = useClassicView();
   const editionFailed = useAprilSpaceError();
   const shane = useShaneAccount();
+  const zac = useZacAccount();
   // April and Shane's joint pages and admin tools keep real names; elsewhere April-written copy reads as "you".
   const founderState = useSharedSpaceMember();
   // Wait for the membership answer so names are never rewritten before it arrives.
@@ -192,12 +201,14 @@ export function AppShell() {
   // Founders can switch to the classic view: the same pages and menu every member sees.
   const founder = april && !classic;
   const shaneFull = !april && shane && !classic;
+  const zacFull = !april && !shane && zac && !classic;
   // Classic view shows the member version of every page the member menu lists; pages that exist only in
   // April's full edition keep their original content rather than falling back to unrelated member pages.
   const ownPage = !!april && classic && onlyInFullEdition(APRIL_NAV_GROUPS, location.pathname, domainFor(location.pathname) !== null);
   const page = <PageErrorBoundary key={location.pathname}>{editionFailed && <div role="alert" className="mb-4 rounded-2xl border border-gold/40 bg-card/60 p-4 text-sm"><p className="font-medium text-foreground">Your private edition couldn't open.</p><p className="mt-1 text-muted-foreground">Your connection may have dropped, so you're seeing the member view for now.</p><Button size="sm" variant="outline" className="mt-3" onClick={retryAprilSpace}>Try again</Button></div>}{!founder && !keepNames && !ownPage && <PublicWording />}{april === undefined && !isPublicPath(location.pathname) ? null : founder || ownPage ? <Outlet /> : <PlanGuard>{isPublicPath(location.pathname) ? <Outlet /> : <PublicChartFallback />}</PlanGuard>}<VerifySources /></PageErrorBoundary>;
+  if (zacFull) return <AprilShell edition="zac">{page}</AprilShell>;
   if (shaneFull) return <AprilShell edition="shane">{page}</AprilShell>;
-  if (!founder) return <MemberShell>{(april || shane) && classic && <ClassicViewBanner />}{page}</MemberShell>;
+  if (!founder) return <MemberShell>{(april || shane || zac) && classic && <ClassicViewBanner />}{page}</MemberShell>;
   return <AprilShell>{page}</AprilShell>;
 }
 
@@ -240,7 +251,7 @@ function MemberShell({ children }: { children: ReactNode }) {
 }
 
 /** April's private edition keeps her original sidebar menu and colour-coded groups. */
-function AprilShell({ children, edition = 'april' }: { children: ReactNode; edition?: 'april' | 'shane' }) {
+function AprilShell({ children, edition = 'april' }: { children: ReactNode; edition?: FounderEditionName }) {
   const location = useLocation();
   const [open, setOpen] = useState(false);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
@@ -251,8 +262,8 @@ function AprilShell({ children, edition = 'april' }: { children: ReactNode; edit
   const mainRef = useRef<HTMLElement>(null);
   const asideRef = useRef<HTMLElement>(null);
   const aprilGroups = useFounderGroups();
-  const shaneGroups = useShaneGroups(edition === 'shane');
-  const groups = edition === 'shane' ? shaneGroups : aprilGroups;
+  const shaneGroups = useShaneGroups(edition !== 'april', edition === 'zac' ? 'zac' : 'shane');
+  const groups = edition !== 'april' ? shaneGroups : aprilGroups;
   // The phone top bar grows with notches and larger text; the menu and page start right below its real height.
   const [headerH, setHeaderH] = useState(64);
   useEffect(() => {
@@ -366,7 +377,7 @@ function SidebarInner({ mobile = false, onNavigate }: { mobile?: boolean; onNavi
       <div>
         <div className="flex items-center justify-between gap-2"><ZodaciLogo />{!mobile && <AccountButton compact />}</div>
         <div className="mt-3"><AdminEditionSwitch /></div>
-        <div className="font-display text-2xl leading-tight mt-1">{edition === 'shane' ? 'Shane' : 'April'}</div>
+        <div className="font-display text-2xl leading-tight mt-1">{edition === 'shane' ? 'Shane' : edition === 'zac' ? 'Zac' : 'April'}</div>
         <div className="text-xs text-muted-foreground mt-1">Private edition</div>
         <div className="gold-rule my-4" />
       </div>
@@ -408,7 +419,7 @@ function SidebarInner({ mobile = false, onNavigate }: { mobile?: boolean; onNavi
       </nav>
 
       <div className="mt-auto text-[11px] text-muted-foreground leading-relaxed">
-        {edition === 'shane' ? "Your Masterbook chapters open from your private edition; unlock it once with the site password to list them here." : "Every planet, house, aspect and phase in this site is drawn verbatim from April's uploaded reports."} {edition === 'shane' ? null : ' Click any element in a chart, table, timeline or bagua for the full interpretation.'}
+        {edition !== 'april' ? "Every chapter is listed here; opening one asks once for your own Masterbook password on this device." : "Every planet, house, aspect and phase in this site is drawn verbatim from April's uploaded reports."} {edition !== 'april' ? null : ' Click any element in a chart, table, timeline or bagua for the full interpretation.'}
       </div>
     </div>
   );
