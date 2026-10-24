@@ -4,9 +4,10 @@
 - roadmap.md is the sole index. launch-plan.md/.lovable/plan.md mirror launch only. Keep other plans separate; delete superseded plans, never code/audits/source knowledge.
 
 ## Privacy and access
-- protected-content requires approved-account authentication and password tokens. Public bundles contain no archived payload.
+- protected-content requires approved-account authentication; chapter text needs an edition-scoped password token (April/Shane/Zac each separate), while title-only index.json opens to the edition's authorized account. Public bundles contain no archived payload.
 - private-edition retains authorized data for lazy registrations; clear retained data and setters on auth changes to prevent stale-account exposure. The /april shared report reads its payload locally (readPrivateModule) and never hydrates the app-wide store, so late responses can't refill private state.
 - Founder classic view: member-listed routes render the member version; routes only in April's menu keep their original renderer (onlyInFullEdition), so classic never substitutes unrelated pages. Founder trail/next use the same normalized groups the sidebar renders (FounderGroupsContext).
+- Zac's edition and investor access are granted by admins in edition_access/investor_access (email-keyed, RLS admin-only); checks run in can_read_zac_edition()/can_view_investors().
 - Admin uses user_roles + has_role(); claim_admin() grants the verified owner on sign-in. No auth-schema triggers.
 - Database/storage enforce Shane/April shared access, never client-only. SharedChatFeed is hidden when signed out/unapproved, including dashboards.
 - April pages use aprilOnly(): Shane chart/family/home appears only in Relationships. Never infer family/ancestry/childhood from symbolism; use verified placements/home guidance.
