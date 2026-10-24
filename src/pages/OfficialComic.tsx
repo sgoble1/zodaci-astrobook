@@ -65,7 +65,7 @@ export default function OfficialComic() {
         art.set(key, { bytes: new Uint8Array(await blob.arrayBuffer()), width: bmp.width, height: bmp.height });
       }));
       const { bytes } = await composeComicPdf({ issue, fontBytes: new Uint8Array(font), art, mode: 'proof' });
-      const url = URL.createObjectURL(new Blob([bytes], { type: 'application/pdf' }));
+      const url = URL.createObjectURL(new Blob([bytes as BlobPart], { type: "application/pdf" }));
       const a = document.createElement('a'); a.href = url; a.download = `astrocomic-${edition}-${issue.month}.pdf`; a.click();
       setTimeout(() => URL.revokeObjectURL(url), 10_000);
     } catch { toast.error('The proof PDF couldn’t be made. Please try again.'); }
