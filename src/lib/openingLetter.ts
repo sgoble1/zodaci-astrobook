@@ -16,7 +16,7 @@ export type LetterInput = { name: string; placeLabel: string; chart: ChartResult
 export type OpeningLetter = { salutation: string; paragraphs: string[]; closing: string; signature: string; patterns: SignificantPattern[]; shadowItem: SBItem | null; words: number };
 
 const ORD = (n: number) => `${n}${n % 10 === 1 && n !== 11 ? 'st' : n % 10 === 2 && n !== 12 ? 'nd' : n % 10 === 3 && n !== 13 ? 'rd' : 'th'}`;
-const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
+
 const lower = (s: string) => s.charAt(0).toLowerCase() + s.slice(1);
 const listOf = (xs: string[]) => (xs.length <= 1 ? xs.join('') : `${xs.slice(0, -1).join(', ')} and ${xs[xs.length - 1]}`);
 export const wordCount = (t: string) => t.split(/\s+/).filter(Boolean).length;
@@ -73,4 +73,4 @@ export function buildOpeningLetter({ name, placeLabel, chart, timeKnown }: Lette
 }
 
 export const letterText = (l: OpeningLetter) => [l.salutation, ...l.paragraphs, l.closing, l.signature].join('\n\n');
-export const letterCap = cap;
+
