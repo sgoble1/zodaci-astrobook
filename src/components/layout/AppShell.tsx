@@ -31,11 +31,11 @@ function useFounderGroups(): NavGroup[] {
   }, [aprilGroups, badges.chat, badges.wonderings, rels, custom]);
 }
 /** Shane's full edition menu: his own edition and chapters, shared pages, relationships and admin tools. */
-function useShaneGroups(): NavGroup[] {
+function useShaneGroups(enabled: boolean): NavGroup[] {
   const { items: rels } = useRelationships();
   const badges = useSharedBadges();
   const [chapters, setChapters] = useState<{ id: string; label: string; part: string }[] | null>(null);
-  useEffect(() => { let on = true; loadShaneIndex().then(e => { if (on) setChapters(e); }).catch(() => { if (on) setChapters([]); }); return () => { on = false; }; }, []);
+  useEffect(() => { if (!enabled) return; let on = true; loadShaneIndex().then(e => { if (on) setChapters(e); }).catch(() => { if (on) setChapters([]); }); return () => { on = false; }; }, [enabled]);
   return useMemo(() => {
     const parts = new Map<string, NavItem[]>();
     for (const c of chapters ?? []) parts.set(c.part || 'Chapters', [...(parts.get(c.part || 'Chapters') ?? []), { to: `/shane/${c.id}`, label: c.label }]);
@@ -247,7 +247,9 @@ function AprilShell({ children, edition = 'april' }: { children: ReactNode; edit
   const headerRef = useRef<HTMLDivElement>(null);
   const mainRef = useRef<HTMLElement>(null);
   const asideRef = useRef<HTMLElement>(null);
-  const groups = useFounderGroups();
+  const aprilGroups = useFounderGroups();
+  const shaneGroups = useShaneGroups(edition === 'shane');
+  const groups = edition === 'shane' ? shaneGroups : aprilGroups;
   // The phone top bar grows with notches and larger text; the menu and page start right below its real height.
   const [headerH, setHeaderH] = useState(64);
   useEffect(() => {
@@ -286,6 +288,7 @@ function AprilShell({ children, edition = 'april' }: { children: ReactNode; edit
     return () => window.removeEventListener('keydown', onKey);
   }, [open]);
   return (
+    <EditionContext.Provider value={edition}>
     <FounderGroupsContext.Provider value={groups}>
     <PlayerProvider>
     <div className="min-h-screen flex text-foreground relative" style={{ ['--founder-header-h' as string]: `${headerH}px` }}>
@@ -330,6 +333,7 @@ function AprilShell({ children, edition = 'april' }: { children: ReactNode; edit
     </div>
     </PlayerProvider>
     </FounderGroupsContext.Provider>
+    </EditionContext.Provider>
   );
 }
 
@@ -352,13 +356,14 @@ function SidebarInner({ mobile = false, onNavigate }: { mobile?: boolean; onNavi
     return () => cancelAnimationFrame(raf);
   }, [custom]);
   const allGroups = useContext(FounderGroupsContext) ?? APRIL_NAV_GROUPS;
+  const edition = useContext(EditionContext);
   useMenuTitleFallback(useMemo(() => allGroups.flatMap(g => [...g.items, ...(g.footer ?? []), ...(g.submenus ?? []).flatMap(s => s.items)]), [allGroups]));
   return (
     <div className={`founder-sidebar flex min-h-full flex-col gap-6 overflow-x-hidden ${mobile ? 'px-4 pb-8 pt-4' : 'h-full overflow-y-auto p-6'}`}>
       <div>
         <div className="flex items-center justify-between gap-2"><ZodaciLogo />{!mobile && <AccountButton compact />}</div>
         <div className="mt-3"><AdminEditionSwitch /></div>
-        <div className="font-display text-2xl leading-tight mt-1">April</div>
+        <div className="font-display text-2xl leading-tight mt-1">{edition === 'shane' ? 'Shane' : 'April'}</div>
         <div className="text-xs text-muted-foreground mt-1">Private edition</div>
         <div className="gold-rule my-4" />
       </div>
@@ -400,7 +405,7 @@ function SidebarInner({ mobile = false, onNavigate }: { mobile?: boolean; onNavi
       </nav>
 
       <div className="mt-auto text-[11px] text-muted-foreground leading-relaxed">
-        Every planet, house, aspect and phase in this site is drawn verbatim from April's uploaded reports. Click any element in a chart, table, timeline or bagua for the full interpretation.
+        {edition === 'shane' ? "Your Masterbook chapters open from your private edition; unlock it once with the site password to list them here." : "Every planet, house, aspect and phase in this site is drawn verbatim from April's uploaded reports."} {edition === 'shane' ? null : ' Click any element in a chart, table, timeline or bagua for the full interpretation.'}
       </div>
     </div>
   );
