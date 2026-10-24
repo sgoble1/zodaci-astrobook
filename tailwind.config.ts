@@ -59,6 +59,15 @@ export default {
         candle: "hsl(var(--candle))",
         starlight: "hsl(var(--starlight))",
         midnight: "hsl(var(--midnight))",
+        mystic: {
+          indigo: "hsl(var(--mi-indigo) / <alpha-value>)",
+          plum: "hsl(var(--mi-plum) / <alpha-value>)",
+          teal: "hsl(var(--mi-teal) / <alpha-value>)",
+          gold: "hsl(var(--mi-gold) / <alpha-value>)",
+          rose: "hsl(var(--mi-rose) / <alpha-value>)",
+          parchment: "hsl(var(--mi-parchment) / <alpha-value>)",
+          ink: "hsl(var(--mi-ink) / <alpha-value>)",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
