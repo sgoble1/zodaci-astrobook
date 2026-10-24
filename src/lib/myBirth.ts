@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import type { ChartInput, HouseSystem } from '@/lib/astro';
+import { birthFingerprint } from '@/lib/birthFingerprint';
+export { birthFingerprint };
 
 export type MyBirth = { name: string; date: string; time: string | null; placeLabel: string; lat: number; lon: number; tz: string; houseSystem: HouseSystem; sex?: string | null };
 /** Feng Shui Kua uses birth sex; other answers leave it unspecified. */
@@ -14,13 +16,18 @@ export async function saveMyBirth(b: MyBirth, chart: unknown) {
   localStorage.setItem(LOCAL, JSON.stringify(b));
   const { data: u } = await supabase.auth.getUser();
   if (!u.user) return { saved: 'device' as const };
+  // Readings are fresh when written after onboarded_at, so it only moves when the birth facts actually change.
+  const { data: prev } = await supabase.from('profiles').select('birth_date, birth_time, lat, lon, tz, house_system, onboarded_at').eq('id', u.user.id).maybeSingle();
+  const unchanged = !!prev?.onboarded_at && prev.birth_date != null && prev.lat != null && prev.lon != null
+    && birthFingerprint({ date: prev.birth_date, time: prev.birth_time, lat: prev.lat, lon: prev.lon, tz: prev.tz, houseSystem: prev.house_system }) === birthFingerprint(b);
+  const now = new Date().toISOString();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { error } = await (supabase as any).from('profiles').upsert({
     id: u.user.id, display_name: b.name, birth_date: b.date, birth_time: b.time, place_label: b.placeLabel,
-    lat: b.lat, lon: b.lon, tz: b.tz, house_system: b.houseSystem, chart, onboarded_at: new Date().toISOString(), updated_at: new Date().toISOString(),
+    lat: b.lat, lon: b.lon, tz: b.tz, house_system: b.houseSystem, chart, onboarded_at: unchanged ? prev!.onboarded_at : now, updated_at: now,
   });
   if (!error) window.dispatchEvent(new Event('astrobook-birth-saved'));
-  return { saved: error ? ('device' as const) : ('account' as const), error };
+  return { saved: error ? ('device' as const) : ('account' as const), error, readingsKept: unchanged };
 }
 
 export function useMyBirth() {

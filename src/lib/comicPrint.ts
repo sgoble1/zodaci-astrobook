@@ -1,4 +1,5 @@
 import { ART_RULES, CAST, type ComicIssue, type ComicPage, type ComicPanel } from '@/lib/comic';
+import { MYSTIC_INK_NEGATIVE, MYSTIC_INK_PREFIX } from '@/content/mysticInk';
 
 /**
  * AstroComic print geometry and artwork planning. One source for the proof/print PDF, the artwork sizes
@@ -169,6 +170,7 @@ export function artPrompt(issue: ComicIssue, page: ComicPage, panelIndex: number
   const cast = CAST.filter(c => scene.includes(c.name)).map(c => `${c.name}, the ${c.planet}: ${c.look}; companion ${c.companion}`);
   const full = isFullPage(page);
   return [
+    MYSTIC_INK_PREFIX,
     `Hand-inked comic book ${full ? 'cover' : 'panel'} artwork for a personalised monthly astrology comic. Section: ${page.section}.`,
     `Scene: ${scene}`,
     cast.length ? `Recurring characters — keep these exact designs: ${cast.join(' | ')}.` : '',
@@ -179,6 +181,7 @@ export function artPrompt(issue: ComicIssue, page: ComicPage, panelIndex: number
       ? `Full-page ${orientation(rect)} composition that runs off every edge. Keep the top third calm and dark for the title, and nothing important in the outer 5%.`
       : `${orientation(rect)} composition filling the whole frame edge to edge, no border drawn. Keep faces and key details away from the edges and leave calm space along the top for a caption box.`,
     'Absolutely no text, letters, numbers, signatures, speech balloons, captions, logos or watermarks anywhere in the image.',
+    MYSTIC_INK_NEGATIVE,
   ].filter(Boolean).join('\n');
 }
 

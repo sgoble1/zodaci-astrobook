@@ -10,7 +10,14 @@
 - [x] Shopify store: posters, stickers, notebooks (prices need owner confirmation)
 - [x] /investors page, invite-only, admin-managed access
 - [x] Reading Room: 7 illustrated articles, filters, glossary pop-ups, progress bar, save/share
-- [ ] Mystic Ink artwork placement, Unified Spec gap items, print report notes (next pass)
+- [ ] Official section visibility: April and Zac see only their own Masterbook + AstroComic; only Shane (admin) sees all three (server-checked)
+- [ ] Official AstroComic per founder (built from that founder's chart) + Shane's Illustrated October 2026 PDF in a private page viewer
+- [ ] Mystic Ink: shared style prefix/negative prompt, palette tokens, 12-sign guide, asset templates, prompt builder; three sample artworks placed
+- [ ] Unified Spec: Full Moon birth by lunar timing, spec orbs + Yod, significance ranking, Shadow & Breakthrough library, Opening Letter, keep readings when birth facts unchanged
+- [ ] Print report facts in admin production notes and investor page (UNVERIFIED kept)
+- [ ] Zac's workbook prompts served privately (not in the public bundle); answers saved to his account
+- [ ] Tests: edition password isolation, Zac chart vs Volume I, official visibility, cover list, spec rules
+- [ ] Verify every UPDATES document item (checklist in docs/updates-verification.md)
 
 
 ## In progress (current request: navigation & information architecture skill)

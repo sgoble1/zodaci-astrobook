@@ -463,6 +463,13 @@
       "when": 1792808815571,
       "tag": "0065_edition_access_table",
       "breakpoints": true
+    },
+    {
+      "idx": 66,
+      "version": "7",
+      "when": 1792811567530,
+      "tag": "0066_official_editions_visibility",
+      "breakpoints": true
     }
   ]
 }

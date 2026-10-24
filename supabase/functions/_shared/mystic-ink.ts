@@ -1,0 +1,8 @@
+// Mirror of src/content/mysticInk.ts (MYSTIC_INK_PREFIX / MYSTIC_INK_NEGATIVE). Every server-built illustration prompt
+// starts with the prefix unchanged; src/content/mysticInk.test.ts fails if the two copies drift apart.
+export const MYSTIC_INK_PREFIX = 'Original storybook illustration in the Zodaci "Mystic Ink" style: beautiful, mystical, enchanted. Soft pastel-pencil and chalk glow combined with rich painterly gouache and fine ink crosshatching. Luminous jewel tones of deep indigo, plum and teal with burnished gold, rose and pearl accents. Dramatic chiaroscuro lighting from a single magical light source such as a star, constellation or glowing zodiac symbol, giving figures a soft glowing rim light. Elegant, slightly elongated figures with graceful proportions and expressive faces. Refined, delicate linework in warm dark brown, never pure black. Gothic-Victorian architecture and antique props (astrolabes, brass telescopes, globes, old books). Atmospheric haze, drifting star dust, subtle paper grain. Constellations drawn as fine dotted gold lines with softly glowing star points. No text, no logos, no watermarks, no existing characters or copyrighted designs.';
+
+export const MYSTIC_INK_NEGATIVE = 'Avoid: cartoon or goofy proportions, thick wobbly marker outlines, flat vector shapes, neon or oversaturated colors, plastic 3D render look, anime styling, pure black outlines, copies of any existing book cover, film still, character or logo, readable text inside the artwork.';
+
+/** Prefix first, scene second, negative guidance last (the image model takes a single prompt). */
+export const withMysticInk = (scene: string) => `${MYSTIC_INK_PREFIX}\n${scene}\n${MYSTIC_INK_NEGATIVE}`;

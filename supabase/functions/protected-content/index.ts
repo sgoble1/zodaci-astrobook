@@ -35,6 +35,14 @@ async function loadArchive() {
 }
 
 const ACCESS_RPC: Record<string, string> = { masterbook: 'is_shared_space_member', library: 'is_shared_space_member', shane: 'can_read_shane_edition', zac: 'can_read_zac_edition' };
+/** Files kept as their own objects in private storage (not inside edition.json). */
+const STORED_FILES: Record<string, Record<string, { path: string; kind: 'json' | 'pdf'; needsUnlock: boolean }>> = {
+  // Zac's interactive workbook opens for his account (and the admin) without the password, like the chapter list.
+  zac: { 'workbook.json': { path: 'zac/workbook.json', kind: 'json', needsUnlock: false } },
+  // Shane's illustrated edition is a PDF: owner or admin only, after his own unlock; delivered as a short-lived link.
+  shane: { 'illustrated-october-2026.pdf': { path: 'shane/illustrated-october-2026.pdf', kind: 'pdf', needsUnlock: true } },
+};
+const SIGNED_URL_SECONDS = 600;
 
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
@@ -53,13 +61,30 @@ Deno.serve(async (req) => {
     if (!area || !file) return json({ error: 'Invalid document request.' }, 400);
     const { data: allowed, error: accessError } = await client.rpc(ACCESS_RPC[area]);
     if (accessError || allowed !== true) return json({ error: 'This document belongs to a private edition.' }, 403);
+    const stored = STORED_FILES[area]?.[file];
     // Chapter title lists open for the edition's own account without the password; chapter text needs it.
-    const isIndex = file === 'index.json';
+    const isIndex = file === 'index.json' || (stored ? !stored.needsUnlock : false);
     const secret = Deno.env.get('CONTENT_UNLOCK_SECRET') ?? '';
     const token = typeof body?.token === 'string' ? body.token : '';
     // The admin (Shane) opens Zac's and April's editions with his own unlock, as he does from his admin account.
     const opens = await tokenOpens(token, AREA_EDITION[area], secret) || (AREA_EDITION[area] !== 'shane' && await tokenOpens(token, 'shane', secret) && (await client.rpc('has_role', { _user_id: user.user.id, _role: 'admin' })).data === true);
     if (!isIndex && !opens) return json({ error: 'Unlock required.', code: 'LOCKED', edition: AREA_EDITION[area] }, 401);
+    if (stored) {
+      const admin = createClient(url, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!);
+      if (stored.kind === 'pdf') {
+        const [{ data: isAdmin }, { data: isOwner }] = await Promise.all([
+          client.rpc('has_role', { _user_id: user.user.id, _role: 'admin' }),
+          client.rpc('owns_official_edition', { _edition: AREA_EDITION[area] }),
+        ]);
+        if (isAdmin !== true && isOwner !== true) return json({ error: 'This document belongs to a private edition.' }, 403);
+        const { data: signed, error: signError } = await admin.storage.from('private-content').createSignedUrl(stored.path, SIGNED_URL_SECONDS);
+        if (signError || !signed?.signedUrl) return json({ error: 'Document not found.' }, 404);
+        return json({ content: JSON.stringify({ url: signed.signedUrl, expiresIn: SIGNED_URL_SECONDS }) });
+      }
+      const { data: blob, error: readError } = await admin.storage.from('private-content').download(stored.path);
+      if (readError || !blob) return json({ error: 'Document not found.' }, 404);
+      return json({ content: await blob.text() });
+    }
     let content = area === 'shane' || area === 'zac' ? (await loadStored(area))[file] : (await loadArchive())[area as 'masterbook' | 'library'][file];
     if (typeof content !== 'string') return json({ error: 'Document not found.' }, 404);
     if (isIndex && area !== 'library') {
