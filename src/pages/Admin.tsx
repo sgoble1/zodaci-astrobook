@@ -31,6 +31,7 @@ import { AprilMonitor } from '@/components/admin/AprilMonitor';
 import { MemberGrants } from '@/components/admin/MemberGrants';
 import { ComicQueue } from '@/components/admin/ComicQueue';
 import { StripeOverview } from '@/components/admin/StripeOverview';
+import { AccessManager } from '@/components/admin/AccessManager';
 import { ADMIN_TAB_GROUPS, resolveAdminTab, type AdminTab } from '@/lib/adminTabs';
 
 export default function Admin() {
@@ -81,6 +82,7 @@ export default function Admin() {
             {tab === 'audit' && <AuditLog />}
             {tab === 'settings' && <PlatformSettings />}
             {tab === 'launch' && <LaunchChecklist />}
+            {tab === 'access' && <AccessManager />}
           </>}
         </div>
       )}</AuthGate>

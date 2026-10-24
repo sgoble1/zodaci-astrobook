@@ -376,7 +376,7 @@ function SidebarInner({ mobile = false, onNavigate }: { mobile?: boolean; onNavi
     <div className={`founder-sidebar flex min-h-full flex-col gap-6 overflow-x-hidden ${mobile ? 'px-4 pb-8 pt-4' : 'h-full overflow-y-auto p-6'}`}>
       <div>
         <div className="flex items-center justify-between gap-2"><ZodaciLogo />{!mobile && <AccountButton compact />}</div>
-        <div className="mt-3"><AdminEditionSwitch /></div>
+        <div className="mt-3"><AdminEditionSwitch fullEdition /></div>
         <div className="font-display text-2xl leading-tight mt-1">{edition === 'shane' ? 'Shane' : edition === 'zac' ? 'Zac' : 'April'}</div>
         <div className="text-xs text-muted-foreground mt-1">Private edition</div>
         <div className="gold-rule my-4" />
