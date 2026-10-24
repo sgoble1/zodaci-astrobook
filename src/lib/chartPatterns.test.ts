@@ -33,8 +33,8 @@ describe('chart patterns', () => {
 });
 
 describe('Unified Master Specification pattern rules', () => {
-  const zac = computeChart({ date: '1987-07-10', time: '12:08', lat: 39.9567, lon: -83.0144, tz: 'America/New_York', houseSystem: 'whole' });
-  const april = computeChart({ date: '1990-09-06', time: '15:38', lat: 42.86896, lon: -76.97774, tz: 'America/New_York', houseSystem: 'placidus' });
+  const zac = computeChart({ date: '1987-07-10', time: '12:08', lat: 39.9567, lon: -83.0144, tz: 'America/New_York', houseSystem: 'whole', placeLabel: '', placeSource: 'geocoded' });
+  const april = computeChart({ date: '1990-09-06', time: '15:38', lat: 42.86896, lon: -76.97774, tz: 'America/New_York', houseSystem: 'placidus', placeLabel: '', placeSource: 'geocoded' });
 
   it('times a Full Moon birth from the real lunation, not the natal aspect (§2.7)', () => {
     const t = lunarTiming(zac)!;
