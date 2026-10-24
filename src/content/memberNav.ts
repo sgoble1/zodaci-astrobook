@@ -103,6 +103,7 @@ export const MEMBER_DOMAINS: MemberDomain[] = [
         { to: '/my-astrobook', label: 'My Library', description: 'Everything that is yours, searchable', icon: Library },
         { to: '/podcasts', label: 'Podcasts', description: 'Turn readings into audio episodes', icon: Headphones },
         { to: '/my-comic', label: 'My AstroComic', description: 'Your illustrated monthly issue', icon: Package },
+        { to: '/store', label: 'Zodaci Shop', description: 'Posters, stickers and notebooks', icon: Package },
       ] },
       { title: 'Editions', items: [
         { to: '/shane', label: 'Shane’s Full Masterbook', description: 'Your private founder edition', icon: Crown, audience: 'shane' },
@@ -377,7 +378,7 @@ export const ROUTE_INVENTORY: Record<string, Placement> = {
   '/community': P('explore', 'secondary'), '/community/guidelines': P('explore', 'tertiary', 'from Community'), '/community/:id': P('explore', 'tertiary', 'from Community'),
   '/astrobook': P('public', 'utility', 'public product page; members use /books'), '/book-preview': P('book', 'secondary'), '/demo': P('learn', 'secondary'),
   '/themes': P('learn', 'secondary'), '/themes/:slug': P('learn', 'tertiary', 'from Core themes explained'), '/faq': P('learn', 'secondary'), '/privacy': P('public', 'utility', 'footer'), '/terms': P('public', 'utility', 'footer'),
-  '/astrocomic': P('public', 'utility', 'public product page; members use /my-comic'), '/academy': P('learn', 'primary'), '/academy/:slug': P('learn', 'tertiary', 'from the Academy'), '/compatibility': P('explore', 'secondary'),
+  '/astrocomic': P('public', 'utility', 'public product page; members use /my-comic'), '/store': P('public', 'utility', 'public shop'), '/product/:handle': P('public', 'tertiary', 'from the shop'), '/academy': P('learn', 'primary'), '/academy/:slug': P('learn', 'tertiary', 'from the Academy'), '/compatibility': P('explore', 'secondary'),
   '/brand-launch': P('public', 'utility', 'launch kit'), '/contents': P('april', 'utility'), '/contents/:id': P('april', 'utility'), '/read': P('april', 'utility'), '/read/document/:slug': P('april', 'utility'), '/read/:id': P('april', 'utility'),
   '/': P('account', 'duplicate', 'members are sent to /dashboard'), '/explore': P('explore', 'primary'), '/personal-context': P('account', 'utility'), '/workspaces': P('explore', 'secondary'),
   '/wonderings': P('readings', 'secondary'), '/start': P('chart', 'secondary'), '/my-chart': P('chart', 'primary'), '/retrogood': P('readings', 'secondary'), '/our-charts': P('chart', 'secondary', 'shared-space accounts'),
