@@ -58,22 +58,29 @@ export default function ZacWorkbook() {
   }, [uid, canWrite]);
 
   const timers = useRef<Record<string, number>>({});
-  const persist = useCallback(async (key: string, question: string, module: string, entry: Entry) => {
+  const ids = useRef<Record<string, string>>({});
+  const inflight = useRef<Record<string, Promise<void>>>({});
+  useEffect(() => { for (const [k, e] of Object.entries(entries)) if (e.id) ids.current[k] = e.id; }, [entries]);
+  // Saves run one at a time per answer, so a slow first save can never create a second row for the same prompt.
+  const persist = useCallback((key: string, question: string, module: string, entry: Entry) => {
     if (!uid || !canWrite) return;
-    setSaving('saving');
-    const row = { owner_id: uid, kind: KIND, module, prompt_key: key, question, answer: entry.answer, data: { done: entry.done } };
-    const res = entry.id
-      ? await supabase.from('workbook_entries').update({ answer: row.answer, data: row.data, updated_at: new Date().toISOString() }).eq('id', entry.id).select('id').single()
-      : await supabase.from('workbook_entries').insert(row).select('id').single();
-    if (res.error) { setSaving('error'); return; }
-    setEntries(e => ({ ...e, [key]: { ...(e[key] ?? entry), id: res.data.id } }));
-    setSaving('saved');
+    const run = async () => {
+      setSaving('saving');
+      const id = ids.current[key];
+      const res = id
+        ? await supabase.from('workbook_entries').update({ answer: entry.answer, data: { done: entry.done }, updated_at: new Date().toISOString() }).eq('id', id).select('id').single()
+        : await supabase.from('workbook_entries').insert({ owner_id: uid, kind: KIND, module, prompt_key: key, question, answer: entry.answer, data: { done: entry.done } }).select('id').single();
+      if (res.error) { setSaving('error'); return; }
+      ids.current[key] = res.data.id;
+      setSaving('saved');
+    };
+    inflight.current[key] = (inflight.current[key] ?? Promise.resolve()).then(run, run);
   }, [uid, canWrite]);
   const edit = (key: string, question: string, module: string, patch: Partial<Entry>, immediate = false) => {
     setEntries(e => {
       const entry = { answer: '', done: false, ...e[key], ...patch };
       window.clearTimeout(timers.current[key]);
-      timers.current[key] = window.setTimeout(() => void persist(key, question, module, entry), immediate ? 0 : 900);
+      timers.current[key] = window.setTimeout(() => persist(key, question, module, entry), immediate ? 0 : 900);
       return { ...e, [key]: entry };
     });
   };
