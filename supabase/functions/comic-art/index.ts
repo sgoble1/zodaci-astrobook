@@ -1,6 +1,7 @@
 import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors';
 import { createClient } from 'npm:@supabase/supabase-js@2';
 import { z } from 'npm:zod@3';
+import { MYSTIC_INK_PREFIX, withMysticInk } from '../_shared/mystic-ink.ts';
 
 // AstroComic production: admins illustrate script panels one at a time; subscribers get short-lived links to released issues.
 const json = (body: unknown, status = 200) => new Response(JSON.stringify(body), { status, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
@@ -79,7 +80,7 @@ Deno.serve(async req => {
 
     const upstream = await fetch('https://ai.gateway.lovable.dev/v1/images/generations', {
       method: 'POST', headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ model: 'openai/gpt-image-2.5-sunburst', prompt, size: `${width}x${height}`, quality: 'high', ...(stream ? { stream: true, partial_images: 1 } : {}) }),
+      body: JSON.stringify({ model: 'openai/gpt-image-2.5-sunburst', prompt: prompt.startsWith(MYSTIC_INK_PREFIX) ? prompt : withMysticInk(prompt), size: `${width}x${height}`, quality: 'high', ...(stream ? { stream: true, partial_images: 1 } : {}) }),
     });
     if (!upstream.ok) {
       const err = await upstream.json().catch(() => ({}));
