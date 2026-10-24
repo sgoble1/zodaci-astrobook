@@ -117,7 +117,7 @@ export function detectPatterns(chart: PatternChart): Pattern[] {
       out.push({ code: 'GRAND_TRINE', title: 'Grand Trine', detail: `${names([a, b, c])} form a triangle of trines — natural, easy talent.`, bodies: [a.name, b.name, c.name], weight: 8 });
     }
     for (const [x, y, apex] of [[a, b, c], [a, c, b], [b, c, a]] as const) {
-      if (near(x.lon, y.lon, 180, O.tSquare.opposition) && near(x.lon, apex.lon, 90, O.tSquare.square) && near(y.lon, apex.lon, 90, O.tSquare.square)) out.push({ code: 'T_SQUARE', title: `T-Square with ${apex.name} at the apex`, detail: `${x.name} opposes ${y.name}, both square ${apex.name} — pressure that drives achievement.`, bodies: [x.name, y.name, apex.name], weight: 8 });
+      if (near(x.lon, y.lon, 180, O.tSquare.opposition) && near(x.lon, apex.lon, 90, O.tSquare.square) && near(y.lon, apex.lon, 90, O.tSquare.square)) out.push({ code: 'T_SQUARE', title: `T-Square: ${x.name}–${y.name}, ${apex.name} at the apex`, detail: `${x.name} opposes ${y.name}, both square ${apex.name} — pressure that drives achievement.`, bodies: [x.name, y.name, apex.name], weight: 8 });
       if (near(x.lon, y.lon, 60, O.yod.sextile) && near(x.lon, apex.lon, 150, O.yod.quincunx) && near(y.lon, apex.lon, 150, O.yod.quincunx)) out.push({ code: 'YOD', title: `Yod pointing to ${apex.name}`, detail: `${x.name} and ${y.name} sextile each other and both make a quincunx to ${apex.name} — a recurring call to adjust and specialise.`, bodies: [x.name, y.name, apex.name], weight: 8 });
     }
   }
@@ -132,7 +132,7 @@ export function detectPatterns(chart: PatternChart): Pattern[] {
     if (new Set([a, b, c, d]).size < 4) continue;
     const key = [a, b, c, d].map(p => p.key).sort().join(); if (fours.has(key)) continue;
     const cross = near(a.lon, c.lon, 180, O.grandCross.opposition) && near(b.lon, d.lon, 180, O.grandCross.opposition) && near(a.lon, b.lon, 90, O.grandCross.square) && near(b.lon, c.lon, 90, O.grandCross.square) && near(c.lon, d.lon, 90, O.grandCross.square);
-    if (cross) { fours.add(key); out.push({ code: 'GRAND_CROSS', title: 'Grand Cross', detail: `${names([a, b, c, d])} form a cross of squares and oppositions — strong tension and endurance.`, bodies: [a.name, b.name, c.name, d.name], weight: 9 }); continue; }
+    if (cross) { fours.add(key); out.push({ code: 'GRAND_CROSS', title: `Grand Cross: ${names([a, b, c, d])}`, detail: `${names([a, b, c, d])} form a cross of squares and oppositions — strong tension and endurance.`, bodies: [a.name, b.name, c.name, d.name], weight: 9 }); continue; }
     const R = O.mysticRectangle;
     const rect = near(a.lon, c.lon, 180, R.opposition) && near(b.lon, d.lon, 180, R.opposition) && near(a.lon, b.lon, 60, R.sextile) && near(b.lon, c.lon, 120, R.trine) && near(c.lon, d.lon, 60, R.sextile) && near(d.lon, a.lon, 120, R.trine);
     if (rect) { fours.add(key); out.push({ code: 'MYSTIC_RECTANGLE', title: 'Mystic Rectangle', detail: `${names([a, b, c, d])} form two oppositions held together by sextiles and trines — tension that works productively.`, bodies: [a.name, b.name, c.name, d.name], weight: 7 }); }
@@ -169,7 +169,8 @@ export function rankPatterns(patterns: Pattern[], chart: Pick<ChartResult, 'bodi
     if (bodies.some(b => angles.some(a => sep(a, b.lon) <= 3))) add(P.nearAngle, 'Within 3° of an angle');
     if (STELLIUMS.includes(p.code)) add(P.stellium, 'Stellium of three or more bodies');
     if (p.code === 'ANARETIC_ASC' || p.code === 'ANARETIC_PERSONAL_PLANET') add(P.anaretic, 'Anaretic degree on a personal planet or angle');
-    if (bodies.some(b => PERSONAL.includes(b.key) && ['domicile', 'exaltation', 'domicile+exaltation'].includes(dignityOf(b.key, b.sign)))) add(P.dignity, 'Personal planet in domicile or exaltation');
+    // Named dignity configurations (PE-013, e.g. domicile Pluto in the 10th) count with the personal-planet dignity factor.
+    if (p.code === 'DOMICILE_PLUTO_10' || bodies.some(b => PERSONAL.includes(b.key) && ['domicile', 'exaltation', 'domicile+exaltation'].includes(dignityOf(b.key, b.sign)))) add(P.dignity, p.code === 'DOMICILE_PLUTO_10' ? 'Named dignity configuration' : 'Personal planet in domicile or exaltation');
     if (ASPECT_PATTERNS.includes(p.code)) add(P.aspectPattern, 'Tight aspect pattern');
     if (HANDLE_OR_FULL.includes(p.code)) add(P.handleOrFullMoon, 'Chart handle or Full Moon birth');
     if (p.bodies.some(n => amplified.has(n))) add(P.amplifiedRetro, 'Amplified-tier retrograde');
