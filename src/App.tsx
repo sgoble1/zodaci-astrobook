@@ -16,6 +16,7 @@ import { PublicSiteLayout } from './components/brand/PublicSiteLayout';
 import { ReferralCapture } from './components/common/ReferralCapture';
 import { SiteNotice } from './components/common/SiteNotice';
 import { FeatureGate } from './components/common/FeatureGate';
+import { useCartSync } from './hooks/useCartSync';
 const Dashboard = lazy(() => import('./pages/Dashboard'));
 const MasterbookSources = lazy(() => import('./pages/MasterbookSources'));
 const MyUploads = lazy(() => import('./pages/MyUploads'));
@@ -203,6 +204,8 @@ function useDrawerRegistry(): Record<string, DrawerPayload> {
   }, [april]);
 }
 
+function CartSync() { useCartSync(); return null; }
+
 function Providers({ children }: { children: ReactNode }) {
   const registry = useDrawerRegistry();
   const april = useAprilSpace();
@@ -223,6 +226,7 @@ export default function App() {
     <>
       <Providers>
         <ActivityTracker />
+        <CartSync />
         <ReferralCapture />
         <SiteNotice />
         <AutomaticChapters />
