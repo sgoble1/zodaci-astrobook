@@ -49,9 +49,13 @@ export function useOfficialEditions(): { rows: OfficialEditionRow[] | null; erro
       if (e) { setError('Your editions couldn’t load.'); return; }
       setRows(((data ?? []) as OfficialEditionRow[]).filter(r => isOfficialEdition(r.edition)));
     });
-    const { data: sub } = supabase.auth.onAuthStateChange(() => { if (on) setAttempt(a => a + 1); });
-    return () => { on = false; sub.subscription.unsubscribe(); };
+    return () => { on = false; };
   }, [attempt]);
+  // A different account must never see the previous account's list.
+  useEffect(() => {
+    const { data: sub } = supabase.auth.onAuthStateChange(event => { if (event === 'SIGNED_IN' || event === 'SIGNED_OUT' || event === 'USER_UPDATED') setAttempt(a => a + 1); });
+    return () => sub.subscription.unsubscribe();
+  }, []);
   const retry = useCallback(() => setAttempt(a => a + 1), []);
   return { rows, error, retry };
 }
