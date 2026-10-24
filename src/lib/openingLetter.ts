@@ -55,7 +55,7 @@ export function buildOpeningLetter({ name, placeLabel, chart, timeKnown }: Lette
 
   if (top.length) {
     const names = top.map(t => inSentence(t.label));
-    p.push(`Three things stand out when your chart is ranked by what a person would recognise as most themselves. ${top.length > 1 ? `The strongest are ${listOf(names)}.` : `The strongest is ${names[0]}.`} ${top.map(t => t.detail.replace(/\s+$/, '')).join(' ')} These were ranked by how closely they involve your Sun, Moon and Ascendant, how near they sit to the angles of the chart, and how tightly they are formed. They are the threads the rest of your reading follows first.`);
+    p.push(`When your chart is ranked by what a person would recognise as most themselves, ${top.length === 1 ? 'one signature stands out' : `${top.length === 2 ? 'two' : 'three'} signatures stand out`}: ${listOf(names)}. ${top.map(t => t.detail.replace(/\s+$/, '')).join(' ')} These were ranked by how closely they involve your Sun, Moon and Ascendant, how near they sit to the angles of the chart, and how tightly they are formed. They are the threads the rest of your reading follows first.`);
   } else {
     p.push('No single configuration dominates your chart. That is less common than it sounds: it means your story is carried by the individual placements rather than by one loud pattern, and each planet gets to speak in its own voice. The reading that follows takes them one at a time, in order of how strongly they are placed.');
   }
@@ -66,8 +66,9 @@ export function buildOpeningLetter({ name, placeLabel, chart, timeKnown }: Lette
   const counts: Record<string, number> = { Fire: 0, Earth: 0, Air: 0, Water: 0 };
   chart.bodies.filter(b => ['sun', 'moon', 'mercury', 'venus', 'mars', 'jupiter', 'saturn', 'uranus', 'neptune', 'pluto'].includes(b.key)).forEach(b => { const e = SIGN_EXPRESSIONS[b.sign]?.element; if (e) counts[e]++; });
   const els = Object.entries(counts).sort((a, b) => b[1] - a[1]);
-  const [hi] = els, lo = els[els.length - 1];
-  p.push(`Across the ten planets, ${hi[0].toLowerCase()} carries the most weight, with ${hi[1]} of them${lo[1] === 0 ? `, and ${lo[0].toLowerCase()} is missing entirely, which usually means its qualities are learned on purpose rather than given` : `, and ${lo[0].toLowerCase()} carries the least, with ${lo[1]}`}. Treat that balance as a description of your starting point, not a limit. Charts describe tendencies and timing; the choices are yours.`);
+  const lo = els[els.length - 1];
+  const most = els.filter(e => e[1] === els[0][1]).map(e => e[0].toLowerCase());
+  p.push(`Across the ten planets, ${listOf(most)} ${most.length > 1 ? 'share' : 'carries'} the most weight, with ${els[0][1]} ${most.length > 1 ? 'each' : 'of them'}${lo[1] === 0 ? `, and ${lo[0].toLowerCase()} is missing entirely, which usually means its qualities are learned on purpose rather than given` : `, and ${lo[0].toLowerCase()} carries the least, with ${lo[1]}`}. Treat that balance as a description of your starting point, not a limit. Charts describe tendencies and timing; the choices are yours.`);
 
   p.push(`Read the pages that follow slowly, and keep what is useful. If a passage does not fit, notice that too: the chart is a map drawn from a single moment, and you have been walking the territory ever since. You know things about your life that no calculation can see, and those always come first.`);
 
