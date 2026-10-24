@@ -161,6 +161,7 @@ export function AppShell() {
   const april = useAprilSpace();
   const classic = useClassicView();
   const editionFailed = useAprilSpaceError();
+  const shane = useShaneAccount();
   // April and Shane's joint pages and admin tools keep real names; elsewhere April-written copy reads as "you".
   const founderState = useSharedSpaceMember();
   // Wait for the membership answer so names are never rewritten before it arrives.
@@ -189,7 +190,6 @@ export function AppShell() {
     );
   }
   // Founders can switch to the classic view: the same pages and menu every member sees.
-  const shane = useShaneAccount();
   const founder = april && !classic;
   const shaneFull = !april && shane && !classic;
   // Classic view shows the member version of every page the member menu lists; pages that exist only in
