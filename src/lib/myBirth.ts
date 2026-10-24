@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import type { ChartInput, HouseSystem } from '@/lib/astro';
+import { birthFingerprint } from '@/lib/birthFingerprint';
+export { birthFingerprint };
 
 export type MyBirth = { name: string; date: string; time: string | null; placeLabel: string; lat: number; lon: number; tz: string; houseSystem: HouseSystem; sex?: string | null };
 /** Feng Shui Kua uses birth sex; other answers leave it unspecified. */
@@ -8,14 +10,6 @@ export const kuaSex = (sex?: string | null): 'male' | 'female' | 'unspecified' =
 const LOCAL = 'astrobook-my-birth-v1';
 
 export const toChartInput = (b: MyBirth): ChartInput => ({ date: b.date, time: b.time, lat: b.lat, lon: b.lon, tz: b.tz, placeLabel: b.placeLabel, placeSource: 'geocoded', houseSystem: b.houseSystem });
-
-/**
- * Birth fingerprint (spec §2.8): only the astrologically significant fields. The name and place label are excluded,
- * so renaming yourself or tidying the place text keeps your readings instead of marking them out of date.
- */
-export function birthFingerprint(b: { date: string; time: string | null; lat: number; lon: number; tz: string; houseSystem: string }) {
-  return [b.date, b.time ?? '', b.lat.toFixed(4), b.lon.toFixed(4), b.tz, b.houseSystem].join('|');
-}
 
 /** Saves to the member's profile; keeps a device copy so a chart works before sign-in finishes. */
 export async function saveMyBirth(b: MyBirth, chart: unknown) {
