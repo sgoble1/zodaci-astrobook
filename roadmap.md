@@ -3,7 +3,7 @@
 ## Completion request — October 27
 - [ ] Repair verified personalization, privacy, session-refresh and navigation defects from the conversation.
 - [ ] Finish public navigation, Reading Room artwork placement and consistent edition presentation.
-- [ ] Finish merchandise admin, checkout recovery, book download/dispatch and comic/transit print actions.
+- [ ] Finish merchandise admin, checkout recovery, book download/dispatch and comic/transit print actions. (Done: AstroComic "Manage billing or cancel" now finds comic subscriptions; PDF reader back link no longer forces April's index.)
 - [ ] Close verified AI credit, prompt-context and owner-scoped workbook persistence gaps.
 - [ ] Reconcile UPDATES/spec items against actual code, add regression coverage and verify public/admin flows.
 - [ ] Owner/external release gates: live print credentials/proofs, comic printer, email domain, licensed symbols, reference asteroid degrees, authentic social proof and approved payment test.
