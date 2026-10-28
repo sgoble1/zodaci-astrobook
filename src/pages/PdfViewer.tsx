@@ -75,7 +75,7 @@ export default function PdfViewer() {
 
   return (
     <div className="space-y-4">
-      <Link to="/masterbook/index" className="text-xs font-smallcaps text-muted-foreground hover:text-foreground">← Document index</Link>
+      <button type="button" onClick={() => window.history.length > 1 ? window.history.back() : window.location.assign('/library')} className="text-xs font-smallcaps text-muted-foreground hover:text-foreground">← Back</button>
       <header className="flex flex-wrap items-end justify-between gap-3">
         <div><div className="font-smallcaps text-xs text-gold">PDF viewer</div><h1 className="text-2xl sm:text-3xl mt-1">{meta?.title ?? '…'}</h1></div>
         {meta && <div className="flex gap-3 text-xs">{meta.libId && <Link to={`/sources/read/${meta.libId}#u${page - 1}`} className="underline">Text of this page</Link>}<a href={meta.url} download className="underline flex items-center gap-1"><Download className="w-3 h-3" />Download</a></div>}

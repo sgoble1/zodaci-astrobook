@@ -19,7 +19,14 @@ Deno.serve(async (req) => {
     let returnUrl: string | undefined;
     try { const u = new URL(String(body.returnUrl)); if (TRUSTED.test(u.origin)) returnUrl = u.origin + u.pathname; } catch { /* ignore */ }
     returnUrl ??= "https://zodaci.com/pricing";
-    const { data: sub } = await admin.from("billing_subscriptions").select("stripe_customer_id").eq("user_id", user.id).eq("environment", env).order("created_at", { ascending: false }).limit(1).maybeSingle();
+    // Plan memberships and AstroComic subscriptions are stored separately; either can open billing.
+    const kind = body.kind === "comic" ? "comic" : "plan";
+    const tables = kind === "comic" ? ["comic_subscriptions", "billing_subscriptions"] : ["billing_subscriptions", "comic_subscriptions"];
+    let sub: { stripe_customer_id: string | null } | null = null;
+    for (const t of tables) {
+      const { data } = await admin.from(t).select("stripe_customer_id").eq("user_id", user.id).eq("environment", env).not("stripe_customer_id", "is", null).order("created_at", { ascending: false }).limit(1).maybeSingle();
+      if (data?.stripe_customer_id) { sub = data; break; }
+    }
     if (!sub?.stripe_customer_id) return json({ error: "No subscription found for this account yet." }, 404);
     const stripe = createStripeClient(env);
     const session = await stripe.billingPortal.sessions.create({ customer: sub.stripe_customer_id, return_url: returnUrl });
