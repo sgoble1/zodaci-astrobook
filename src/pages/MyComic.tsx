@@ -101,7 +101,7 @@ function SubscriptionPanel({ sub, issues, onChange }: { sub: Sub; issues: Issue[
   const pause = (months: number) => { const d = new Date(); d.setUTCMonth(d.getUTCMonth() + months); const cap = new Date(Date.now() + 91 * 864e5); const until = d > cap ? cap : d; void save({ paused_until: until.toISOString().slice(0, 10) }, `Paused until ${fmt(until)}`); };
   const portal = async () => {
     setBusy('portal');
-    const { data, error } = await supabase.functions.invoke('customer-portal', { body: { returnUrl: window.location.href, environment: envOrLive() } });
+    const { data, error } = await supabase.functions.invoke('customer-portal', { body: { returnUrl: window.location.href, environment: envOrLive(), kind: 'comic' } });
     setBusy('');
     if (error || !data?.url) { toast.error(data?.error || 'Could not open billing right now.'); return; }
     window.location.href = data.url;
