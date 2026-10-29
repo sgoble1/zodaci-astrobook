@@ -33,7 +33,7 @@ export default function ComicIssuePrint() {
           <h1 className="mt-3 font-display text-5xl leading-[0.95]">Print Issue #1:<br />{ISSUE_1.title}</h1>
           <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted-foreground">A 24-page digest comic in the Lantern &amp; Ink style, printed in full color and saddle-stitched. Choose a format below, then order it from the shop.</p>
           <div className="mt-8 flex flex-wrap gap-3">
-            <Button asChild size="lg"><Link to="/store?q=AstroComic"><ShoppingBag />Order a printed copy</Link></Button>
+            <Button asChild size="lg"><Link to="/product/astrocomic-issue-1-the-alchemist-of-williamsville"><ShoppingBag />Order a printed copy · $18.99</Link></Button>
             <Button asChild variant="outline" size="lg"><Link to="/astrocomic">Read the preview<ArrowRight /></Link></Button>
           </div>
         </div>
