@@ -18,8 +18,8 @@ export default function About() {
     <article className="space-y-20">
       <motion.header {...fade} className="mx-auto max-w-3xl space-y-5 text-center">
         <p className="font-smallcaps text-xs tracking-widest text-gold">About Zodaci</p>
-        <h1 className="font-display text-4xl sm:text-6xl leading-tight">A love letter to the sky — and to the person reading it.</h1>
-        <p className="text-lg text-muted-foreground">Zodaci began as a passion project between two people who wanted something astrology apps never gave us: depth, accuracy and warmth in the same place.</p>
+        <h1 className="text-silver font-display text-5xl sm:text-7xl leading-[0.98]">An encyclopedia, one sky at a time.</h1>
+        <p className="text-lg text-muted-foreground">Zodaci began when we calculated our own charts in full detail and read the results. They described things we had tried to put into words for years. We built it so anyone can have that same careful, complete account of their sky — accurate first, warm second.</p>
       </motion.header>
 
       <motion.section {...fade} className="mx-auto max-w-3xl space-y-5 text-lg leading-relaxed">

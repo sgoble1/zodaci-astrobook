@@ -65,7 +65,7 @@ export default function AstroComic() {
       <section className="grid items-center gap-10 lg:grid-cols-[1fr_380px]">
         <div>
           <p className="font-smallcaps text-xs text-gold">AstroComic by Zodaci</p>
-          <h1 className="mt-3 font-display text-5xl leading-[0.95] sm:text-6xl">Your month,<br />drawn from your chart.</h1>
+          <h1 className="mt-3 text-silver font-display text-5xl leading-[0.95] sm:text-7xl">Your month,<br />drawn from your chart.</h1>
           <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted-foreground">A printed 24-page digest every month. The planets become characters, your Sun, Moon and Rising drive the story, and that month’s real transits decide what happens.</p>
           <div role="radiogroup" aria-label="Choose a plan" className="mt-8 grid gap-3 sm:grid-cols-3">
             {(Object.keys(COMIC_PLANS) as ComicPlan[]).map(k => { const p = COMIC_PLANS[k]; const on = plan === k; return (

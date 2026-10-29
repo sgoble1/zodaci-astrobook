@@ -40,8 +40,8 @@ export function AstroBookPublic() {
         <CinematicVideo poster={heroPoster} /><div className="absolute inset-0 -z-10 bg-background/70" />
         <div className="space-y-5">
           <p className="text-xs font-medium tracking-[0.12em] text-accent">YOUR CHART, IN PRINT</p>
-          <h1 className="font-display text-4xl leading-tight sm:text-5xl">The book that only you could have written.</h1>
-          <p className="text-lg text-muted-foreground">AstroBook is your own Masterbook: six volumes interpreting your complete birth chart — who you are, your houses, planets and aspects, the esoteric points, world traditions and timing — all written from your exact placements.</p>
+          <h1 className="text-silver font-display text-5xl leading-[0.98] sm:text-7xl">Your encyclopedia, in print.</h1>
+          <p className="text-lg text-muted-foreground">AstroBook gathers what the sky held at your exact minute of birth into six bound volumes. It interprets your complete chart — who you are, your houses, planets and aspects, the esoteric points, world traditions and timing — all written from your exact placements.</p>
           <p className="text-sm text-muted-foreground">{BOOK_VERSIONS.filter(v => v.id === 'digital' || v.id === 'pocket' || v.id === 'linen').map(v => `${v.name} ${money(v.price)}`).join(' · ')} · free US shipping on printed versions</p>
           <div className="flex flex-wrap items-center gap-4"><Button asChild size="lg"><Link to={order()}>Order your AstroBook</Link></Button><Link to="/book-preview" className="text-accent">Read a sample book →</Link><Link to="/demo" className="text-accent">Try the interactive demo →</Link></div>
         </div>

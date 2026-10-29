@@ -86,8 +86,8 @@ export default function Pricing() {
     <article className="mx-auto max-w-5xl space-y-14">
       <PaymentTestModeBanner />
       <header className="space-y-3 text-center">
-        <h1 className="font-display text-4xl sm:text-5xl">Simple, honest pricing.</h1>
-        <p className="mx-auto max-w-2xl text-lg text-muted-foreground">Start free. Go deeper when you’re ready. No surprises.</p>
+        <h1 className="text-silver font-display text-5xl sm:text-7xl">Simple, honest pricing.</h1>
+        <p className="mx-auto max-w-2xl text-lg text-muted-foreground">Start free with the essentials of your chart. Open the full encyclopedia when you want the depth. No surprises.</p>
         <p className="text-sm"><Link to="/demo" className="text-primary underline underline-offset-4">Try the interactive demo first</Link></p>
         {sub.tier !== 'free' && <div className="flex flex-col items-center gap-1 pt-2">{billed && <Button variant="outline" onClick={manage}>Manage subscription · cancel, card & invoices</Button>}{sub.periodEnd && <p className="text-xs text-muted-foreground">{sub.status === 'granted' ? `${PLAN_NAME[sub.tier]} access granted until` : sub.cancelAtEnd ? 'Ends' : 'Renews'} {new Date(sub.periodEnd).toLocaleDateString()}</p>}{sub.status === 'past_due' && <p role="alert" className="text-sm text-destructive">Your last payment didn’t go through. Update your card in Manage subscription to keep your plan.</p>}</div>}
         {legacy && <p className="mx-auto max-w-xl rounded-lg border border-gold/40 bg-card/60 p-3 text-sm">You’re on an original {sub.priceId?.startsWith('creator') ? 'Creator' : 'Full Access'} plan, kept at your original price with everything in {PLAN_NAME[sub.tier]}. Switching plans moves you to today’s prices.</p>}
