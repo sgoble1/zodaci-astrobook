@@ -94,6 +94,7 @@ export default function AstroComic() {
         <h2 id="issue1-h" className="font-display text-3xl">Read Issue #1: {ISSUE_1.title}</h2>
         <p className="mt-2 mb-8 max-w-2xl text-muted-foreground">A finished issue in the Lantern &amp; Ink style. Turn the pages, tilt the book, and read each act beside its art.</p>
         <ComicFlipbook issue={ISSUE_1} />
+        <div className="mt-8"><Button asChild variant="outline"><Link to="/astrocomic/print-issue-1">Print Issue #1 — sizes &amp; pages<ArrowRight /></Link></Button></div>
       </section>
 
       <section id="preview" aria-labelledby="preview-h" className="scroll-mt-6">
