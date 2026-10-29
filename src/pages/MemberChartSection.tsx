@@ -6,6 +6,8 @@ import { toChartInput, type MyBirth } from '@/lib/myBirth';
 import { ChartWheel } from '@/components/chart/ChartWheel';
 import { BoxArt } from '@/components/common/BoxArt';
 import { Button } from '@/components/ui/button';
+import { PlanetOrb } from '@/components/chart/PlanetOrb';
+import { usePageMeta } from '@/hooks/usePageMeta';
 
 export type ChartFocus = 'planets' | 'houses' | 'aspects' | 'elements' | 'calculator';
 const HOUSE_AREA = ['', 'self, body and first impressions', 'money, possessions and self-worth', 'thinking, siblings and your neighbourhood', 'home, family life and inner foundations', 'creativity, romance, play and children', 'daily routine, work habits and health', 'partners and one-to-one relationships', 'shared resources, intimacy and deep change', 'beliefs, study and travel', 'career, reputation and public life', 'friends, groups and hopes', 'rest, solitude and the hidden inner life'];
@@ -25,6 +27,8 @@ const kwText = (s: string) => { const k = kw(s); return Array.isArray(k) ? k.joi
 export default function MemberChartSection({ birth, focus }: { birth: MyBirth; focus: ChartFocus }) {
   const chart = useMemo(() => computeChart({ ...toChartInput(birth), houseSystem: birth.houseSystem }), [birth]);
   const [title, intro] = TITLES[focus];
+  usePageMeta(`${title} · Zodaci`, intro);
+  const chironMissing = focus === 'planets' && !chart.bodies.some(b => b.key === 'chiron');
   const hasTime = !!birth.time && chart.cusps;
   return (
     <article className="space-y-8">
@@ -35,20 +39,21 @@ export default function MemberChartSection({ birth, focus }: { birth: MyBirth; f
       </header>
 
       {focus === 'planets' && <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{chart.bodies.map(b => (
-        <li key={b.key} className="overflow-hidden rounded border border-border bg-card">
-          <BoxArt seed={`${b.key}-${b.sign}-${b.deg}`} label={b.name} className="h-16 w-full" />
-          <div className="space-y-1 p-4 text-sm"><h2 className="font-display text-lg">{b.glyph} {b.name} in {b.sign}</h2>
+        <li key={b.key}><Link to={`/planets/${b.key}`} className="block h-full overflow-hidden rounded border border-border bg-card transition-colors hover:border-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+          <div className="relative"><BoxArt seed={`${b.key}-${b.sign}-${b.deg}`} label={b.name} className="h-16 w-full" /><PlanetOrb planet={b.key} size={40} className="absolute -bottom-4 left-4" /></div>
+          <div className="space-y-1 p-4 pt-6 text-sm"><h2 className="font-display text-lg">{b.glyph} {b.name} in {b.sign}</h2>
             <p className="text-muted-foreground">{b.deg}°{String(b.min).padStart(2, '0')}′{hasTime && b.house ? ` · house ${b.house}` : ''}{b.retro ? ' · retrograde' : ''}</p>
             <p>Style: {kwText(b.sign)}.</p>
             {hasTime && b.house && <p>Life area: {HOUSE_AREA[b.house]}.</p>}
             {b.retro && <p className="text-muted-foreground">Retrograde: this energy tends to work inwardly first — reflect before acting.</p>}
-          </div></li>))}</ul>}
+          </div></Link></li>))}</ul>}
+      {chironMissing && <p className="text-xs text-muted-foreground">Chiron isn’t listed: it comes from a NASA JPL table covering 1940–2060, and your birth year falls outside it.</p>}
 
       {focus === 'houses' && (hasTime ? <ol className="grid gap-3 sm:grid-cols-2">{chart.cusps!.map((c, i) => { const s = fmtLon(c); const inside = chart.bodies.filter(b => b.house === i + 1); return (
-        <li key={i} className="rounded border border-border bg-card p-4 text-sm"><h2 className="font-display text-lg">House {i + 1} · {s.sign} {s.deg}°</h2>
+        <li key={i}><Link to={`/houses/${i + 1}`} className="block h-full rounded border border-border bg-card p-4 text-sm transition-colors hover:border-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"><h2 className="font-display text-lg">House {i + 1} · {s.sign} {s.deg}°</h2>
           <p className="text-muted-foreground">{HOUSE_AREA[i + 1]}</p>
           <p className="mt-1">You approach this area with {s.sign} style: {kwText(s.sign)}.</p>
-          <p className="mt-1">{inside.length ? `Planets here: ${inside.map(b => b.name).join(', ')} — this area is a focus in your life.` : 'No planets here — this area runs mostly through its ruling sign.'}</p></li>); })}</ol>
+          <p className="mt-1">{inside.length ? `Planets here: ${inside.map(b => b.name).join(', ')} — this area is a focus in your life.` : 'No planets here — this area runs mostly through its ruling sign.'}</p></Link></li>); })}</ol>
         : <p className="rounded border border-border bg-muted/40 p-4 text-sm">Houses need a birth time. <Link className="underline" to="/start">Add your birth time</Link> to see them.</p>)}
 
       {focus === 'aspects' && <ul className="space-y-3">{[...chart.aspects].sort((x, y) => x.orb - y.orb).map((a, i) => (
