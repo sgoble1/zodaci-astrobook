@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { confirmAction } from '@/components/common/ConfirmHost';
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { NavigatedProse } from '@/components/readings/NavigatedProse';
 import { toast } from 'sonner';
@@ -35,6 +36,7 @@ export default function CustomPageView() {
     setPage({ ...page, menu_group }); window.dispatchEvent(new Event(CUSTOM_PAGES_CHANGED)); toast.success(`Moved to ${menu_group}`);
   };
   const remove = async () => {
+    if (!(await confirmAction(`Delete “${page.title}”? This can’t be undone.`, 'Delete page'))) return;
     const { error } = await supabase.from('custom_pages').delete().eq('id', page.id);
     if (error) return toast.error(error.message);
     window.dispatchEvent(new Event(CUSTOM_PAGES_CHANGED)); navigate('/create');

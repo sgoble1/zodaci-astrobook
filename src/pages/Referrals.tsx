@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
+import { shareOrigin } from '@/lib/siteOrigin';
 import { Link } from 'react-router-dom';
 import { Copy, Gift, Mail, MessageCircle, Share2, Users } from 'lucide-react';
 import { toast } from 'sonner';
@@ -39,7 +40,7 @@ function Inner({ uid }: { uid: string }) {
   useEffect(() => { void load(); }, [load]);
   if (failed) return <LoadError what="your invitations" onRetry={() => void load()} />;
   if (!code) return <div role="status" aria-label="Loading" className="h-40 animate-pulse rounded-lg bg-muted" />;
-  const link = `https://zodaci.com/welcome?ref=${code}`;
+  const link = `${shareOrigin()}/welcome?ref=${code}`;
   // Share only the public invitation, never account identifiers or chart facts.
   const shareText = 'Explore your birth chart on Zodaci — here’s 7 days of Pro on me.';
   const encodedText = encodeURIComponent(`${shareText} ${link}`);
