@@ -900,6 +900,39 @@ export type Database = {
         }
         Relationships: []
       }
+      credit_ledger: {
+        Row: {
+          amount_cents: number | null
+          created_at: string
+          delta: number
+          environment: string
+          id: string
+          reason: string
+          ref: string | null
+          user_id: string
+        }
+        Insert: {
+          amount_cents?: number | null
+          created_at?: string
+          delta: number
+          environment?: string
+          id?: string
+          reason: string
+          ref?: string | null
+          user_id: string
+        }
+        Update: {
+          amount_cents?: number | null
+          created_at?: string
+          delta?: number
+          environment?: string
+          id?: string
+          reason?: string
+          ref?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       custom_pages: {
         Row: {
           brief: string
@@ -2804,6 +2837,14 @@ export type Database = {
         }[]
       }
       create_space: { Args: { _name: string }; Returns: string }
+      credit_base: {
+        Args: { _user_id: string }
+        Returns: {
+          base: number
+          tier: string
+          unlimited: boolean
+        }[]
+      }
       credit_cost: { Args: { _feature: string }; Returns: number }
       credit_status: {
         Args: { _user_id: string }
@@ -2874,6 +2915,7 @@ export type Database = {
       is_space_member: { Args: { _space_id: string }; Returns: boolean }
       is_space_owner: { Args: { _space_id: string }; Returns: boolean }
       monitored_account_id: { Args: never; Returns: string }
+      my_credit_balance: { Args: never; Returns: number }
       my_edition_shares: {
         Args: { _edition: string }
         Returns: {
