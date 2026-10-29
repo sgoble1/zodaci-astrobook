@@ -47,8 +47,8 @@ function drawSpaced(ctx: CanvasRenderingContext2D, text: string, cx: number, y: 
   chars.forEach((c, i) => { ctx.fillText(c, x, y); x += widths[i] + spacing; });
 }
 
-function drawBox(ctx: CanvasRenderingContext2D, box: CoverTextBox, font: string, color: string, spaced = false) {
-  ctx.font = `${font.startsWith('500') ? '500 ' : ''}${box.size}px ${font.replace(/^500 /, '')}`;
+function drawBox(ctx: CanvasRenderingContext2D, box: CoverTextBox, family: string, color: string, weight = '', spaced = false) {
+  ctx.font = `${weight}${box.size}px ${family}`;
   ctx.fillStyle = color; ctx.textBaseline = 'alphabetic';
   box.lines.forEach((line, i) => {
     if (spaced) drawSpaced(ctx, line, box.x, box.y[i], box.size * SPACING);
@@ -79,13 +79,13 @@ export async function drawCover(ctx: CanvasRenderingContext2D, spec: CoverSpec, 
   ctx.fillStyle = bottom; ctx.fillRect(0, h * 0.8, w, h * 0.2);
 
   const ppi = w / (spec.trimPt[0] / 72);
-  const measure = (font: string, spacing = 0) => (text: string, size: number) => { ctx.font = `${size}px ${font}`; return ctx.measureText(text).width + spacing * size * Math.max(0, Array.from(text).length - 1); };
-  const t = coverType(w, h, ppi, spec.name, measure(SERIF), measure(`500 ${SANS}`.replace('500 ', ''), SPACING));
+  const measure = (family: string, weight = '', spacing = 0) => (text: string, size: number) => { ctx.font = `${weight}${size}px ${family}`; return ctx.measureText(text).width + spacing * size * Math.max(0, Array.from(text).length - 1); };
+  const t = coverType(w, h, ppi, spec.name, measure(SERIF), measure(SANS, '500 ', SPACING));
   ctx.save(); ctx.shadowColor = 'rgba(0,0,0,0.45)'; ctx.shadowBlur = t.title.size * 0.12;
   drawBox(ctx, t.title, SERIF, IVORY);
   ctx.restore();
   ctx.fillStyle = GOLD; ctx.globalAlpha = 0.9; ctx.fillRect(t.rule.x, t.rule.y, t.rule.width, Math.max(1, w / 600)); ctx.globalAlpha = 1;
-  drawBox(ctx, t.subtitle, `500 ${SANS}`, GOLD, true);
+  drawBox(ctx, t.subtitle, SANS, GOLD, '500 ', true);
   drawBox(ctx, t.wordmark, SERIF, GOLD);
   return t;
 }
