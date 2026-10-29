@@ -147,17 +147,17 @@ function HomeInner({ userId }: { userId: string }) {
   return (
     <div className="space-y-8">
       <section className="grid gap-3 sm:grid-cols-3" aria-label="Your progress">
-        <div className="parchment p-4"><div className="text-3xl font-display">{answered.size}<span className="text-base text-muted-foreground">/{total}</span></div><div className="text-xs text-muted-foreground">questions answered</div><div className="mt-2 h-1.5 rounded bg-muted" aria-hidden><div className="h-full rounded bg-accent" style={{ width: `${(answered.size / total) * 100}%` }} /></div></div>
+        <div className="parchment p-4"><div className="text-3xl font-display">{answered.size}<span className="text-base text-muted-foreground">/{total}</span></div><div className="text-xs text-muted-foreground">questions answered</div><div className="mt-2 h-1.5 rounded bg-muted" aria-hidden><div className="h-full rounded bg-accent" style={{ width: `${total ? (answered.size / total) * 100 : 0}%` }} /></div></div>
         <div className="parchment p-4"><div className="text-3xl font-display">{streak}</div><div className="text-xs text-muted-foreground">day check-in streak</div></div>
         <div className="parchment p-4"><div className="text-3xl font-display">{entries?.length ?? '…'}</div><div className="text-xs text-muted-foreground">entries in your journal</div></div>
       </section>
 
-      <section className="parchment deckle p-5 space-y-2" aria-labelledby="qotd">
+      {today ? <section className="parchment deckle p-5 space-y-2" aria-labelledby="qotd">
         <div className="font-smallcaps text-[10px] text-gold">Question of the day · {today.module.title}</div>
         <h2 id="qotd" className="text-2xl leading-snug">{today.q}</h2>
         <p className="text-sm text-muted-foreground">{today.why}</p>
         <Button asChild><Link to={`/workbook/module/${today.module.slug}#q-${today.key}`}>Answer it now</Link></Button>
-      </section>
+      </section> : <section className="parchment deckle p-5 space-y-2"><h2 className="text-2xl leading-snug">Your questions are on their way</h2><p className="text-sm text-muted-foreground">Start with a one-minute check-in while your workbook questions are prepared.</p><Button asChild><Link to="/workbook/check-in">Do today's check-in</Link></Button></section>}
 
       <section aria-labelledby="tools-h" className="space-y-3">
         <h2 id="tools-h" className="text-2xl">Tools</h2>

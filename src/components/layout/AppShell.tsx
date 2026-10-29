@@ -238,7 +238,7 @@ function MemberShell({ children }: { children: ReactNode }) {
       <main id="main-content" tabIndex={-1} className={`relative z-10 flex-1 outline-none ${tabs ? 'pb-[calc(4rem+env(safe-area-inset-bottom))] md:pb-0' : ''}`}>
         <div className="mx-auto max-w-5xl px-4 py-6 sm:px-8 sm:py-10 lg:py-12">
           <WayfindingTop />
-          <motion.div key={location.pathname} initial={{ opacity: 0, y: 24, filter: 'blur(6px)' }} animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }} transition={{ duration: 0 }}>
+          <motion.div key={location.pathname} initial={reduceMotion ? false : { opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: reduceMotion ? 0 : 0.9, ease: [0.2, 0.7, 0.2, 1] }}>
             {children}
           </motion.div>
           <NextStepPanel />
@@ -339,7 +339,7 @@ function AprilShell({ children, edition = 'april' }: { children: ReactNode; edit
       )}
       <main ref={mainRef} id="main-content" tabIndex={-1} className="flex-1 min-w-0 lg:pt-0 pt-[var(--founder-header-h,64px)] relative z-10 outline-none">
         <div className="mx-auto max-w-5xl px-4 sm:px-8 py-8 sm:py-10 lg:py-14">
-          <motion.div key={location.pathname} initial={{ opacity: 0, y: 24, filter: 'blur(6px)' }} animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }} transition={{ duration: 0 }}>
+          <motion.div key={location.pathname} initial={reduceMotion ? false : { opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: reduceMotion ? 0 : 0.9, ease: [0.2, 0.7, 0.2, 1] }}>
             <FounderTrail />
             {children}
             <FounderNext />

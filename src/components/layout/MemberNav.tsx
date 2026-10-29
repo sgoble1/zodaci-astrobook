@@ -1,5 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type KeyboardEvent as ReactKeyboardEvent, type ReactNode } from 'react';
-import { Link, NavLink, useLocation } from 'react-router-dom';
+import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { ArrowRight, ChevronDown, Lock, LogOut, Search, UserRound } from 'lucide-react';
 import { useSession, useIsAdmin } from '@/hooks/useLibrary';
 import { usePlan } from '@/hooks/usePlan';
@@ -298,13 +298,18 @@ export function MobileTabBar() {
   const current = domainFor(pathname);
   const activeTab = current === 'learn' ? 'account' : current;
   const close = () => s.setSheet(null);
+  const go = useNavigate();
+  const tap = (id: DomainId | 'account', active: boolean) => {
+    if (id === 'account' || active) { s.setSheet(s.sheet === id ? null : id); return; }
+    s.setSheet(null); go(domainById(id).hub);
+  };
   return <>
     <nav aria-label="Main tabs" data-mobile-tabbar className="fixed inset-x-0 bottom-0 z-50 border-t border-border bg-background/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-xl md:hidden">
       <ul className="grid h-16 grid-cols-5">
         {TABS.map(t => {
           const Icon = t.id === 'account' ? UserRound : domainById(t.id).icon;
           const isActive = activeTab === t.id;
-          return <li key={t.id} className="contents"><button type="button" onClick={() => s.setSheet(s.sheet === t.id ? null : t.id)} aria-haspopup="dialog" aria-expanded={s.sheet === t.id}
+          return <li key={t.id} className="contents"><button type="button" onClick={() => tap(t.id, isActive)} aria-haspopup={t.id === 'account' || isActive ? 'dialog' : undefined} aria-expanded={s.sheet === t.id}
             className={`flex h-16 flex-col items-center justify-center gap-1 text-[11px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring ${isActive ? 'text-gold' : 'text-muted-foreground'}`}>
             <Icon className="h-5 w-5" aria-hidden="true" />{t.label}{isActive && <span className="sr-only">(current section)</span>}
           </button></li>;

@@ -70,7 +70,7 @@ export default function Onboarding() {
 
   if (signedIn === null) return <p role="status" className="p-8 text-muted-foreground">Getting things ready…</p>;
   // Account first, so birth details save once and nothing asks to sign in again later.
-  if (!signedIn) return <Navigate to="/auth" replace />;
+  if (!signedIn) return <Navigate to="/auth?next=%2Fstart" replace />;
   return (
     <article className="mx-auto max-w-lg space-y-6 py-6">
       <header>

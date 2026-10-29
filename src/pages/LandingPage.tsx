@@ -17,9 +17,8 @@ export default function LandingPage() {
   usePageMeta(`${p?.title || p?.headline || 'Explore your chart'} · Zodaci`, p?.subheadline || 'Explore your calculated birth chart and personal, plain-language readings with Zodaci.');
   // Only a loaded, published page may be indexed; loading and missing pages stay out of search results.
   useEffect(() => {
-    if (p) return;
     const tag = document.querySelector('meta[name="robots"]');
-    tag?.setAttribute('content', 'noindex, follow');
+    tag?.setAttribute('content', p ? 'index, follow' : 'noindex, follow');
   }, [p]);
   useEffect(() => {
     let active = true;

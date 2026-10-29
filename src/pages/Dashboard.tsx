@@ -58,6 +58,7 @@ function Inner() {
 
 export default function Dashboard() {
   const april = useAprilSpace();
+  if (april === undefined) return <p role="status" className="text-muted-foreground">Opening your dashboard…</p>;
   if (april === false) return <MemberDashboard />;
   return (
     <div className="space-y-6">
