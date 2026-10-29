@@ -58,6 +58,6 @@ Deno.serve(async (req) => {
     return json({ status: 'changed', tier: TIER[f.price_id] ?? null, upgrade });
   } catch (e) {
     console.error('change-plan', e);
-    return json({ error: 'Could not change your plan right now. Nothing was charged. Please try again.' }, 500);
+    return json({ error: 'Could not change your plan right now. Please check Manage billing before trying again.' }, 500);
   }
 });
