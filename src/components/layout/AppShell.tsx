@@ -36,7 +36,7 @@ function useFounderGroups(): NavGroup[] {
     // Admin pages never appear in April's menu; the admin opens her edition from his own account.
     const noAdmin = (gs: NavGroup[]) => gs.map(g => ({ ...g, items: g.items.filter(i => !ADMIN_ONLY.includes(i.to)), submenus: g.submenus?.map(sm => ({ ...sm, items: sm.items.filter(i => !ADMIN_ONLY.includes(i.to)) })) })).filter(g => g.items.length || g.submenus?.length);
     // Her own Official AstroBook section: only her Masterbook and her AstroComic (the server lists nothing else for her).
-    const official: NavGroup = { title: 'Official AstroBook', items: [{ to: '/official-astrobook', label: 'My Official AstroBook' }, { to: '/official-astrobook/comic/april', label: 'My Official AstroComic' }] };
+    const official: NavGroup = { title: 'Official AstroBook', items: [{ to: '/official-astrobook', label: 'My Official AstroBook' }, { to: '/official-astrobook/comic/april', label: 'My Official AstroComic' }, { to: '/official-astrobook/showcase/april', label: 'My Illustrated Pages' }] };
     return orderFounderGroups(noAdmin([...aprilGroups.slice(0, 2), shared, relationships, ...aprilGroups.slice(2), official]))
       .map(g => ({ ...g, items: [...g.items, ...custom.filter(c => c.menu_group === g.title).map(c => ({ to: `/p/${c.id}`, label: c.status === 'generating' ? `${c.title} · writing…` : c.title, created: true } as NavItem))] }));
   }, [aprilGroups, badges.chat, badges.wonderings, rels, custom]);
@@ -64,13 +64,13 @@ function useShaneGroups(enabled: boolean, area: 'shane' | 'zac' = 'shane'): NavG
       { title: 'Explore', items: [{ to: '/explore', label: 'Explore everything' }, { to: '/transits', label: 'Transits' }, { to: '/timeline', label: 'Timeline' }, { to: '/profection', label: 'Year of life' }, { to: '/other-systems', label: 'Other systems' }] },
       relationships,
       ...(sharedLinks.length ? [{ title: 'Shared with me', items: sharedLinks }] : []),
-      { title: 'Official AstroBook', items: [{ to: '/official-astrobook', label: 'My Official AstroBook' }, { to: '/official-astrobook/comic/zac', label: 'My Official AstroComic' }, { to: '/investors', label: 'Investor overview' }, { to: '/store', label: 'Shop' }] },
+      { title: 'Official AstroBook', items: [{ to: '/official-astrobook', label: 'My Official AstroBook' }, { to: '/official-astrobook/comic/zac', label: 'My Official AstroComic' }, { to: '/official-astrobook/showcase/zac', label: 'My Illustrated Pages' }, { to: '/investors', label: 'Investor overview' }, { to: '/store', label: 'Shop' }] },
     ] as NavGroup[];
     return [
       { title: 'My Edition', items: [{ to: '/dashboard', label: 'Home' }, { to: '/shane', label: 'My Masterbook' }, { to: '/my-chart', label: 'My chart' }, { to: '/my-readings', label: 'My readings' }, { to: '/transits', label: 'Transits' }] },
       chapterGroup,
       shared, relationships,
-      { title: 'Official AstroBook', items: [{ to: '/official-astrobook', label: 'All Official AstroBooks' }, { to: '/official-astrobook/comic/shane', label: 'My Official AstroComic' }, { to: '/official-astrobook/illustrated', label: 'Zodaci Illustrated · Oct 2026' }] },
+      { title: 'Official AstroBook', items: [{ to: '/official-astrobook', label: 'All Official AstroBooks' }, { to: '/official-astrobook/comic/shane', label: 'My Official AstroComic' }, { to: '/official-astrobook/illustrated', label: 'Zodaci Illustrated · Oct 2026' }, { to: '/official-astrobook/showcase/shane', label: 'My Illustrated Pages' }] },
       { title: 'Together & Media', items: [{ to: '/our-charts', label: 'Our charts' }, { to: '/podcasts', label: 'Podcasts' }, { to: '/investors', label: 'Investor overview' }, { to: '/store', label: 'Shop' }] },
       { title: 'Family Editions', items: [...sharedLinks.filter(l => l.to !== '/zac'), { to: '/zac', label: 'Zac’s Astrological Library' }, { to: '/zac/workbook', label: 'Zac’s Workbook' }, { to: '/official-astrobook/comic/zac', label: 'Zac’s AstroComic' }, { to: '/official-astrobook/comic/april', label: 'April’s AstroComic' }] },
       { title: 'Admin', items: [{ to: '/admin', label: 'Admin dashboard' }, { to: '/dispatch', label: 'Dispatch' }] },
