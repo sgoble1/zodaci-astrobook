@@ -18,7 +18,7 @@ import { planAllows, requiredPlan, type Plan } from '@/content/navigation';
 export type DomainId = 'chart' | 'readings' | 'book' | 'explore' | 'learn';
 /** Who may see an item. Founder/admin audiences mirror checks the database already enforces; they only hide links. */
 export type Audience = 'all' | 'shane' | 'shared';
-export type MemberNavItem = { to: string; label: string; description: string; icon: LucideIcon; badge?: 'New' | 'Popular' | 'Free'; audience?: Audience };
+export type MemberNavItem = { to: string; label: string; description: string; icon: LucideIcon; badge?: 'New' | 'Popular' | 'Free'; audience?: Audience; /** Keeps real names (a shared edition's owner) instead of the "you" wording. */ keepName?: boolean };
 export type MemberNavColumn = { title: string; items: MemberNavItem[]; more?: { to: string; label: string } };
 export type MemberDomain = {
   id: DomainId; label: string; hub: string; hubLabel: string; description: string; icon: LucideIcon;
@@ -199,7 +199,7 @@ const SHARED_EDITION_LINK: Record<string, Omit<MemberNavItem, 'icon'>> = {
   zac: { to: '/zac', label: 'Zac’s Astrological Library', description: 'Shared with you by Zac' },
 };
 export function withSharedEditions(columns: MemberNavColumn[], editions: string[]): MemberNavColumn[] {
-  const links = [...new Set(editions)].map(e => SHARED_EDITION_LINK[e]).filter(Boolean).map(l => ({ ...l, icon: Crown }));
+  const links = [...new Set(editions)].map(e => SHARED_EDITION_LINK[e]).filter(Boolean).map(l => ({ ...l, icon: Crown, keepName: true }));
   if (!links.length) return columns;
   const at = columns.findIndex(c => c.title === 'Editions');
   if (at < 0) return [...columns, { title: 'Editions', items: links }];

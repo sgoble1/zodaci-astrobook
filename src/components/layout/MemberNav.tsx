@@ -120,7 +120,7 @@ function MenuItemLink({ item, onNavigate, dense }: { item: MemberNavItem; onNavi
   const Icon = item.icon;
   const glowing = !!newPageId && item.to === `/p/${newPageId}`;
   return (
-    <NavLink to={item.to} end onClick={onNavigate} data-mega-item
+    <NavLink to={item.to} end onClick={onNavigate} data-mega-item data-keep-wording={item.keepName || undefined}
       className={({ isActive }) => `group flex min-h-11 items-start gap-3 rounded-lg border border-transparent ${dense ? 'p-2' : 'p-2.5'} transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${isActive ? 'border-primary/30 bg-primary/10' : 'hover:bg-muted/60'}${glowing ? ' nav-new-glow' : ''}${lock(item.to) ? ' opacity-75' : ''}`}>
       {({ isActive }) => <>
         <span className="mt-0.5 grid h-8 w-8 shrink-0 place-items-center rounded-md border border-border bg-card/70 text-gold"><Icon className="h-4 w-4" aria-hidden="true" /></span>
