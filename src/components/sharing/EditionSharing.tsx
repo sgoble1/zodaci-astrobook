@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { toast } from '@/hooks/use-toast';
+import { toast } from 'sonner';
 import type { Edition } from '@/lib/protectedContent';
 import { revokeShare, shareEdition, useMyEditionShares, useShareTargets, validShareEmail, type EditionShare } from '@/lib/editionSharing';
 
@@ -53,7 +53,7 @@ export function EditionSharingPanel({ edition, ownerName }: { edition: Edition; 
   const chapters = (shares ?? []).filter(s => s.scope === 'chapter');
   const run = async (fn: () => Promise<void>, done: string) => {
     setBusy(true);
-    try { await fn(); toast({ title: done }); } catch (e) { toast({ title: 'Not saved', description: (e as Error).message, variant: 'destructive' }); } finally { setBusy(false); }
+    try { await fn(); toast.success(done); } catch (e) { toast.error((e as Error).message); } finally { setBusy(false); }
   };
   return (
     <section aria-labelledby={`share-${edition}`} className="glass-card space-y-5 p-5 sm:p-6">
@@ -108,7 +108,7 @@ export function ShareChapterButton({ edition, chapter }: { edition: Edition; cha
   const wholeBook = (shares ?? []).filter(s => s.scope === 'edition');
   const run = async (fn: () => Promise<void>, done: string) => {
     setBusy(true);
-    try { await fn(); toast({ title: done }); } catch (e) { toast({ title: 'Not saved', description: (e as Error).message, variant: 'destructive' }); } finally { setBusy(false); }
+    try { await fn(); toast.success(done); } catch (e) { toast.error((e as Error).message); } finally { setBusy(false); }
   };
   return (
     <Dialog open={open} onOpenChange={setOpen}>
