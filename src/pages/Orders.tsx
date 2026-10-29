@@ -28,7 +28,7 @@ export default function Orders() {
     const { data,error:err } = await query; if (version !== revision.current) return; if(err) setError(err.message); else setOrders(data || []);
   }, [userId,admin,all]);
   // Refresh while the page is on screen and something is still moving (payment confirming, printing, shipping).
-  const moving = orders.some(o => !['delivered','cancelled','refunded','draft'].includes(o.status));
+  const moving = orders.some(o => !['delivered','canceled','refunded','draft'].includes(o.status));
   useEffect(() => { setOrders([]); setCheckout(null); void load(); return () => { revision.current++; }; },[load]);
   useEffect(() => { if (!moving && !params.get('session_id')) return; const timer=window.setInterval(() => { if (document.visibilityState === 'visible') void load(); },15000); const onFocus = () => void load(); window.addEventListener('focus', onFocus); return () => { window.clearInterval(timer); window.removeEventListener('focus', onFocus); }; },[load, moving, params]);
   const downloadManuscript = async (path: string) => { const tab = window.open('', '_blank'); const result = await supabase.storage.from('library').createSignedUrl(path, 300); if (result.error) { tab?.close(); setError('The manuscript could not be opened.'); } else if (result.data?.signedUrl && tab) { tab.opener = null; tab.location.href = result.data.signedUrl; } };
