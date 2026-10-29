@@ -12,5 +12,8 @@ describe('admin tabs', () => {
     expect(resolveAdminTab('upload', false)).toBe('sections');
     expect(resolveAdminTab('upload', true)).toBe('upload');
   });
+  it('keeps the shop and AI tools admin-only', () => {
+    for (const id of ['shop', 'studio']) { expect(resolveAdminTab(id, false)).toBe('sections'); expect(resolveAdminTab(id, true)).toBe(id); }
+  });
   it('ignores unknown tabs', () => expect(resolveAdminTab('nope', true)).toBe('growth'));
 });
