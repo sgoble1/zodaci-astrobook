@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
-import { PLAN_PRICE, PLAN_AMOUNT } from '@/lib/plans';
+import { PLAN_PRICE, PLAN_AMOUNT, CREDIT_PACKS } from '@/lib/plans';
 import { BOOK_VERSIONS, money } from '@/lib/books';
 import { Button } from '@/components/ui/button';
 import { usePageMeta } from '@/hooks/usePageMeta';
@@ -14,22 +14,23 @@ const low = BOOK_VERSIONS[0]; const high = BOOK_VERSIONS[BOOK_VERSIONS.length - 
 const PRODUCTS: [string, string, string][] = [
   ['self', 'Memberships', `Free, Pro ${PLAN_PRICE.full.month} and Cosmic ${PLAN_PRICE.creator.month}. Readings, counselors, workbook, podcasts and a Masterbook written from each member’s own calculated chart.`],
   ['sign', 'AstroBook', `A six-volume personal book in five editions, ${money(low.price)} to ${money(high.price)}, printed on demand. Same structure and depth as our founders’ Masterbooks.`],
-  ['year', 'AstroComic', 'A monthly illustrated comic in the original Lantern & Ink style, starring the member’s chart. Issue #1 is drawn and on sale in print.'],
+  ['year', 'AstroComic', 'A monthly illustrated comic in the original Lantern & Ink style, starring the member’s chart. Issue #1 is open for print pre-order.'],
   ['chart', 'Shop', 'Posters, sticker sheets and notebooks, sold and fulfilled through a live Shopify storefront.'],
 ];
 const LIVE = [
   'Charts calculated in-app (planets, houses, angles, nodes, Chiron, asteroids) and checked against reference ephemerides in automated tests.',
   'Personal readings by tier, chart-aware AI counselors that replay full sessions, workbook tools and a shared “Reading Together” space for couples.',
   'Studio-voiced personal podcasts written from each member’s chart, saved to a private library.',
+  'Creator Studio: chart wallpapers, posters, journal pages and affirmation cards to download or save, plus one-time AI credit packs.',
   'Other Systems: Vedic, Chinese Ba Zi, numerology, Feng Shui and Flying Stars, Nine Star Ki, Tzolk’in and more — all from the same birth data.',
   'Six-volume AstroBook builder with cover designer, previews and print-ready PDFs; three fully illustrated sample pages on the public site.',
-  'AstroComic Issue #1: seven drawn pages, a 3D page-turning preview, a full read-through and a print page with specs and checkout.',
+  'AstroComic Issue #1: seven drawn pages, a 3D page-turning preview, a full read-through and a print pre-order with specs and a delivery timeline.',
   'Subscriptions with verified webhooks, plan changes and refunds; Shopify checkout; order tracking and a print-dispatch console.',
   'Private editions that open only for their owner and the people they share with — enforced on the server, never by passwords on a device.',
 ];
 const PHASES: { name: string; when: string; status: string; items: string[] }[] = [
   { name: 'Phase 1 · Foundation', when: 'Done', status: 'Live', items: ['Chart engine and accuracy tests', 'Memberships, readings, counselors, podcasts', 'Founder editions, sharing and privacy', 'Shop and AstroBook ordering'] },
-  { name: 'Phase 2 · Launch polish', when: 'Now', status: 'In progress', items: ['Automated print fulfilment with the print partner', 'Sending domain for receipts and newsletters (DNS pending)', 'Remaining 17 pages of AstroComic Issue #1', 'Owner sign-off on shop pricing'] },
+  { name: 'Phase 2 · Launch polish', when: 'Now', status: 'In progress', items: ['Automated print fulfilment with the print partner', 'Sending domain for receipts and newsletters (DNS pending)', 'Remaining 5 drawn story pages of AstroComic Issue #1', 'Owner sign-off on shop pricing'] },
   { name: 'Phase 3 · Growth', when: 'Next', status: 'Planned', items: ['Chart-matched product recommendations', 'Comic character creator and three illustration styles', 'Gift AstroBooks and referral rewards', 'Monthly comic art pipeline at scale', 'Licensed source texts (Sabian Symbols, asteroid tables)', 'Mobile app wrapper'] },
   { name: 'Phase 4 · Zodaci Social', when: 'Future', status: 'Vision', items: ['Pseudonymous profiles and communities', 'Topic boards with posts, threads and voting', 'Compatibility discovery between members', 'Moderation, safety and privacy controls'] },
 ];
@@ -61,6 +62,20 @@ const BOOK_AVG = 60; const SHOP_AVG = 25;
 const yearly = (x: typeof SCENARIOS[number]) => Math.round(x.members * (x.pro * ARPU.pro * 12 + x.cosmic * ARPU.cosmic * 12 + x.book * BOOK_AVG + x.shop * SHOP_AVG * 2));
 const usd = (n: number) => n >= 1e6 ? `$${(n / 1e6).toFixed(1)}M` : `$${Math.round(n / 1e3)}K`;
 type Metrics = { members: number; charts: number; paid: number; readings: number; podcasts: number; book_orders: number; comic_subs: number };
+
+const STUDIO = [
+  ['Live today', 'Pro and Cosmic members design phone wallpapers, 8 × 12 in chart posters, journal and planner pages and affirmation cards from their exact placements, then download them or keep them in a private library. They can also write new Masterbook chapters and voiced podcasts on any topic.'],
+  ['Why it earns', 'Every design is a ready-made product: one tap turns a poster into a framed print, a card set into a deck, a journal page into a bound planner. Each member makes things only they can have, so the urge to print and gift is strong.'],
+  ['Credit packs', `AI creations use credits. Members who want more buy one-time packs from $${CREDIT_PACKS[0].price} to $${CREDIT_PACKS[CREDIT_PACKS.length - 1].price} — revenue that grows with engagement, on top of the membership.`],
+  ['With the social network', 'Shared creations spread the brand: a friend sees a chart poster, makes their own, then orders a couple’s print. Social + Creator Studio + shop is a loop where every share can become a sale.'],
+];
+const STUDIO_ROWS = [
+  { members: 10_000, makers: 0.3, printers: 0.03, packs: 0.02 },
+  { members: 100_000, makers: 0.35, printers: 0.04, packs: 0.03 },
+  { members: 1_000_000, makers: 0.4, printers: 0.05, packs: 0.04 },
+];
+const PRINT_AVG = 30; const PACK_AVG = 25;
+const studioYear = (r: typeof STUDIO_ROWS[number]) => Math.round(r.members * (r.printers * PRINT_AVG * 2 + r.packs * PACK_AVG * 2));
 
 const NEEDS = ['Print-partner API credentials and a proofed physical sample of each edition', 'Verified sending domain for receipts', 'Illustration budget for monthly comics', 'Moderation and trust & safety design before any social features'];
 
@@ -122,6 +137,14 @@ export default function Investors() {
         <div className="overflow-x-auto"><table className="w-full text-sm"><thead><tr className="text-left text-muted-foreground"><th className="p-2">Free members</th><th className="p-2">Pro</th><th className="p-2">Cosmic</th><th className="p-2">Buy a book</th><th className="p-2">Shop, 2 orders/yr</th><th className="p-2 text-right">Yearly revenue</th></tr></thead>
           <tbody>{SCENARIOS.map(x => <tr key={x.members} className="border-t border-border/60"><td className="p-2">{x.members.toLocaleString()}</td><td className="p-2">{x.pro * 100}%</td><td className="p-2">{x.cosmic * 100}%</td><td className="p-2">{x.book * 100}%</td><td className="p-2">{x.shop * 100}%</td><td className="p-2 text-right font-display text-xl text-gold">{usd(yearly(x))}</td></tr>)}</tbody></table></div>
         <p className="text-sm text-muted-foreground">Assumes an average book of ${BOOK_AVG} and shop order of ${SHOP_AVG}; excludes comics, gifts and costs. The bigger upside is the combination: a social network gives every member reasons to return daily, and every visit shows products matched to their chart — compatibility gifts, couple’s books, friends’ posters — so community activity turns directly into shop and book sales.</p>
+      </section>
+
+      <section aria-labelledby="inv-cs" className="space-y-5">
+        <div className="max-w-3xl"><p className="font-smallcaps text-xs text-gold">Major income lever</p><h2 id="inv-cs" className="mt-1 text-3xl sm:text-4xl">Creator Studio</h2><p className="mt-3 text-muted-foreground">Members don’t just read about their chart — they make things from it. That turns a subscription into a personal product shop.</p></div>
+        <div className="grid gap-4 sm:grid-cols-2">{STUDIO.map(([t, d]) => <div key={t} className="vellum p-5"><h3 className="text-xl">{t}</h3><p className="mt-2 text-sm text-muted-foreground">{d}</p></div>)}</div>
+        <div className="overflow-x-auto"><table className="w-full text-sm"><thead><tr className="text-left text-muted-foreground"><th className="p-2">Members</th><th className="p-2">Make something</th><th className="p-2">Order a print (2/yr, ${PRINT_AVG})</th><th className="p-2">Buy credit packs (2/yr, ${PACK_AVG})</th><th className="p-2 text-right">Extra yearly revenue</th></tr></thead>
+          <tbody>{STUDIO_ROWS.map(r => <tr key={r.members} className="border-t border-border/60"><td className="p-2">{r.members.toLocaleString()}</td><td className="p-2">{r.makers * 100}%</td><td className="p-2">{r.printers * 100}%</td><td className="p-2">{r.packs * 100}%</td><td className="p-2 text-right font-display text-xl text-gold">{usd(studioYear(r))}</td></tr>)}</tbody></table></div>
+        <p className="text-xs text-muted-foreground">Projection on top of the membership table above; rates are assumptions, not results. Printed creations are planned through the existing print partner.</p>
       </section>
 
       <PrintPartnerMatrix />

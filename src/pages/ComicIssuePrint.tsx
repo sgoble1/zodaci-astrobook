@@ -21,6 +21,15 @@ const PLAN: [string, string, 'Drawn' | 'Scripted' | 'Planned'][] = [
   ['23–24', 'About Zodaci · Back cover', 'Planned'],
 ];
 
+/** Pre-order delivery plan. Dates are estimates; the stage that is done is derived from the drawn/scripted page lists. */
+const DELIVERY: [string, string, string][] = [
+  ['Pre-orders open', 'Now', 'Order today; you are charged at checkout and your copy is reserved.'],
+  ['Final pages drawn', 'By Nov 20, 2026', `${ISSUE_1_SCRIPTED.length} scripted pages are drawn and lettered; ${ISSUE_1.pages.length} are already finished.`],
+  ['Print proof approved', 'By Nov 25, 2026', 'A physical proof is checked for colour, trim and binding.'],
+  ['Printing', 'Nov 26 – Dec 5, 2026', 'Full print run: 5.5 × 8.5 in, saddle-stitched.'],
+  ['Ships to you', 'Early December 2026', 'US delivery in 3–7 business days after shipping, with tracking by email.'],
+];
+
 export default function ComicIssuePrint() {
   usePageMeta(`Print AstroComic Issue #${ISSUE_1.issueNumber} — ${ISSUE_1.title} | Zodaci`, 'Sizes, page count and print specifications for AstroComic Issue 1, The Alchemist of the Mill Valley, with a link to order a printed copy.');
   return (
@@ -30,13 +39,19 @@ export default function ComicIssuePrint() {
         <div>
           <p className="font-smallcaps text-xs text-gold">{ISSUE_1.banner}</p>
           <h1 className="mt-3 font-display text-5xl leading-[0.95]">Print Issue #1:<br />{ISSUE_1.title}</h1>
-          <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted-foreground">A 24-page digest comic in the Lantern &amp; Ink style, printed in full color and saddle-stitched. Choose a format below, then order it from the shop.</p>
+          <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted-foreground">A 24-page digest comic in the Lantern &amp; Ink style, printed in full color and saddle-stitched. Pre-order now — estimated to ship in early December 2026.</p>
           <div className="mt-8 flex flex-wrap gap-3">
-            <Button asChild size="lg"><Link to="/product/astrocomic-issue-1-the-alchemist-of-williamsville"><ShoppingBag />Order a printed copy · $18.99</Link></Button>
+            <Button asChild size="lg"><Link to="/product/astrocomic-issue-1-the-alchemist-of-williamsville"><ShoppingBag />Pre-order a printed copy · $18.99</Link></Button>
             <Button asChild variant="outline" size="lg"><Link to="/astrocomic">Read the preview<ArrowRight /></Link></Button>
           </div>
         </div>
         <img src={ISSUE_1.cover} alt={ISSUE_1.coverAlt} width={1024} height={1536} className="mx-auto w-full max-w-xs rounded-sm border-2 border-foreground/80 shadow-2xl" />
+      </section>
+
+      <section aria-labelledby="deliv-h" className="space-y-4">
+        <h2 id="deliv-h" className="font-display text-3xl">Pre-order delivery timeline</h2>
+        <p className="text-muted-foreground">Estimated dates. If anything slips we email every pre-order with the new date, and you can cancel for a full refund before it ships.</p>
+        <ol className="grid gap-4 md:grid-cols-5">{DELIVERY.map(([t, d, n], i) => <li key={t} className="vellum p-4"><p className="font-smallcaps text-xs text-gold">{d}</p><h3 className="mt-1 text-lg">{t}</h3><p className="mt-1 text-sm text-muted-foreground">{n}</p></li>)}</ol>
       </section>
 
       <section aria-labelledby="formats-h">
