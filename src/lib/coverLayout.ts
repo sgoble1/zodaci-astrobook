@@ -32,7 +32,7 @@ export function titleLines(name: string): string[][] {
  */
 export function coverType(w: number, h: number, ppi: number, name: string, serif: Measure, sans: Measure): CoverType {
   const safe = COVER_SAFE_IN * ppi;
-  const inner = w - safe * 2;
+  const inner = (w - safe * 2) * 0.92; // a little breathing room inside the safe zone
   const title = coverName(name);
   // Largest size where the best one- or two-line split fits the safe width, capped so short names stay elegant.
   let best = { lines: [title], size: 0 };
