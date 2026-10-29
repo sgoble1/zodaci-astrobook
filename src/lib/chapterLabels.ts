@@ -21,21 +21,28 @@ const SHANE: Record<string, string> = {
   'sm-61': 'Breaking Karmic Loops', 'sm-62': 'Discernment Checklist', 'sm-63': 'Transits 2025–2027',
 };
 
+const RENAME: [RegExp, string][] = [
+  [/^The (Five-Volume|Complete Five-Volume|Celestial Library)/i, 'Series Overview'], [/^Zachary at a Glance/i, 'Quick Reference'],
+  [/^What the Chart Says About/i, 'Core Emotional Nature'], [/^What the Stars Say About Who He Is/i, 'Who He Is Becoming'],
+  [/^Introduction: Why Pet Astrology/i, 'Pet Astrology'], [/^Part Two: Career/i, 'Career & Relationships'],
+  [/^Zachary \(Zac\)/i, 'Zac’s Profile'], [/^Shane — Gift-Giver/i, 'Shane’s Profile'], [/^Father$/, 'Father’s Profile'], [/^Mother$/, 'Mother’s Profile'],
+];
+
 const ASTRO = /\b(Sun|Moon|Mercury|Venus|Mars|Jupiter|Saturn|Uranus|Neptune|Pluto|Chiron|Node|Ascendant|Midheaven|Rising|Aries|Taurus|Gemini|Cancer|Leo|Virgo|Libra|Scorpio|Sagittarius|Capricorn|Aquarius|Pisces|House|Houses|Stellium|Lagna|Nakshatra|Mahadasha|Navamsa)\b/;
 
 /** Shortens a chapter title: drops degree notes and name possessives, and keeps the direct half of "Poetic: Direct" titles. */
 export function shortChapterLabel(id: string, title: string): string {
   if (SHANE[id]) return SHANE[id];
+  for (const [re, label] of RENAME) if (re.test(title)) return label;
   let t = title.replace(/\s*\([^)]*[°′'][^)]*\)/g, '').replace(/\s*\((Expanded|Complete)\)/gi, '').trim();
   t = t.replace(/\bZachary(?:’|')s\s+/g, '').replace(/\bin Zachary(?:’|')s Chart\b/g, '').trim();
   const colon = t.split(/:\s+/);
   if (colon.length === 2) {
     const [a, b] = colon;
-    if (/^The\s/.test(a) && ASTRO.test(b) && !ASTRO.test(a)) t = b;
-    else if (b.length > 28 && a.length <= 34) t = a;
+    t = /^The\s/.test(a) && ASTRO.test(b) && !ASTRO.test(a) ? b : a;
   }
   const dash = t.split(/\s+—\s+/);
   if (dash.length === 2 && dash[0].length >= 6) t = dash[0];
   t = t.replace(/^The (Complete|Comprehensive)\s+/i, '').replace(/\s+/g, ' ').trim();
-  return t.length > 42 ? `${t.slice(0, 40).replace(/\s+\S*$/, '')}…` : t;
+  return t.length > 38 ? `${t.slice(0, 36).replace(/\s+\S*$/, '')}…` : t;
 }
