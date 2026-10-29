@@ -65,6 +65,8 @@ describe('edition chapters come from the calculated chart', () => {
   it('saved readings land in the volume they belong to', () => {
     expect(volumeFor('Love & Attraction')).toBe('III');
     expect(volumeFor('Career Calling')).toBe('II');
+    expect(volumeFor('Purpose & Work')).toBe('II');
+    expect(volumeFor('Shadow Work & Psychological Integration')).toBe('IV');
     expect(volumeFor('Your Shadow Work')).toBe('IV');
     expect(volumeFor('The Year Ahead')).toBe('VI');
     expect(volumeFor('Big Three')).toBe('I');

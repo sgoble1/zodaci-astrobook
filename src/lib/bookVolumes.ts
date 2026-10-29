@@ -37,7 +37,7 @@ export function volumeFor(title: string): VolumeNo {
   const t = title.toLowerCase();
   if (/vedic|jyotish|chinese|numerolog|mayan|tzolk|feng shui|bagua|kua|celtic|tree calendar|druid|tibetan|mewa|nine star|egyptian|aztec|tarot|kabbal|human design|i ching|system/.test(t)) return 'V';
   if (/forecast|transit|year ahead|timing|timeline|return|profection|retrograde/.test(t)) return 'VI';
-  if (/shadow|spirit|karm|past li|purpose|mission|node|chiron|soul|esoteric|intuition|gift/.test(t)) return 'IV';
+  if (/shadow|spirit|karm|past li|mission|node|chiron|soul|esoteric|intuition|gift/.test(t)) return 'IV';
   if (/love|relationship|sex|attract|partner|venus|mars|aspect|communication|mind/.test(t)) return 'III';
   if (/home|family|career|money|resource|health|work|house|calling|wellness/.test(t)) return 'II';
 
