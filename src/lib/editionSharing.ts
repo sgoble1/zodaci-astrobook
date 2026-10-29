@@ -129,7 +129,7 @@ export function useOwnsEdition(edition: Edition) {
 /** Whole editions shared with this account (for the edition switch), decided by the database. */
 export function useSharedEditions() {
   const { items } = useSharedWithMe();
-  return (items ?? []).filter(i => i.scope === 'edition').map(i => i.edition);
+  return useMemo(() => (items ?? []).filter(i => i.scope === 'edition').map(i => i.edition), [items]);
 }
 
 /** Whether this account may read the whole edition (owner, or shared the whole book). Chapter-only readers get false. */
