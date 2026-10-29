@@ -122,7 +122,7 @@ function ReaderInner() {
   );
 }
 
-/** One whole Masterbook document (every chapter of a part) on a single page; text loads through the password. */
+/** One whole Masterbook document (every chapter of a part) on a single page; text loads only for accounts with access. */
 export function PublicDocument() {
   return <ProtectedRoom><DocumentInner /></ProtectedRoom>;
 }

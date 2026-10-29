@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, Loader2, ZoomIn, ZoomOut } from 'lucide-react';
 import type { PDFDocumentProxy } from 'pdfjs-dist';
 import { Button } from '@/components/ui/button';
-import { SitePasswordGate } from '@/components/common/SitePasswordGate';
+import { NoEditionAccess, PrivateEditionGate } from '@/components/common/PrivateEditionGate';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { ContentLockedError, loadProtectedFileUrl } from '@/lib/protectedContent';
 
@@ -12,12 +12,13 @@ const FILE = 'illustrated-october-2026.pdf';
 /** Shane's illustrated October 2026 edition: a private PDF opened through a short-lived link, read page by page. */
 export default function OfficialIllustrated() {
   usePageMeta('Shane · Zodaci Illustrated, October 2026', 'Private illustrated edition.');
-  return <SitePasswordGate edition="shane"><IllustratedReader /></SitePasswordGate>;
+  return <PrivateEditionGate><IllustratedReader /></PrivateEditionGate>;
 }
 
 function IllustratedReader() {
   const [doc, setDoc] = useState<PDFDocumentProxy | null>(null);
   const [err, setErr] = useState('');
+  const [denied, setDenied] = useState(false);
   const [attempt, setAttempt] = useState(0);
   const [page, setPage] = useState(1);
   const [scale, setScale] = useState(1);
@@ -27,7 +28,7 @@ function IllustratedReader() {
 
   useEffect(() => {
     let cancelled = false;
-    setErr(''); setDoc(null);
+    setErr(''); setDenied(false); setDoc(null);
     (async () => {
       try {
         const url = await loadProtectedFileUrl('shane', FILE);
@@ -37,7 +38,9 @@ function IllustratedReader() {
         const d = await pdfjs.getDocument({ url }).promise;
         if (!cancelled) setDoc(d);
       } catch (e) {
-        if (!cancelled) setErr(e instanceof ContentLockedError ? 'Unlock with Shane’s Masterbook password to open this edition.' : 'This edition is private to Shane, or it couldn’t be opened.');
+        if (cancelled) return;
+        if (e instanceof ContentLockedError) setDenied(true);
+        else setErr('The illustrated edition couldn’t be opened. Check your connection and try again.');
       }
     })();
     return () => { cancelled = true; };
@@ -91,8 +94,9 @@ function IllustratedReader() {
           </div>
         )}
       </header>
+      {denied && <NoEditionAccess owner="Shane" onRetry={() => setAttempt(a => a + 1)} />}
       {err && <div role="alert" className="flex flex-wrap items-center gap-3 text-destructive">{err}<Button size="sm" variant="outline" onClick={() => setAttempt(a => a + 1)}>Try again</Button></div>}
-      {!doc && !err && <p role="status" className="flex items-center gap-2 text-muted-foreground"><Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />Opening the illustrated edition…</p>}
+      {!doc && !err && !denied && <p role="status" className="flex items-center gap-2 text-muted-foreground"><Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />Opening the illustrated edition…</p>}
       {doc && (
         <>
           <div ref={wrap} className="relative overflow-auto rounded-xl border border-border bg-card/40 p-1">
