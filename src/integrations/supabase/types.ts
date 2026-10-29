@@ -2556,6 +2556,14 @@ export type Database = {
     Functions: {
       accept_space_invite: { Args: { _token: string }; Returns: string }
       active_grant_tier: { Args: { _user_id: string }; Returns: string }
+      admin_ai_pauses: {
+        Args: never
+        Returns: {
+          created_at: string
+          message: string
+          scope: string
+        }[]
+      }
       admin_april_events: {
         Args: { _kind?: string; _limit?: number }
         Returns: {
@@ -2596,6 +2604,7 @@ export type Database = {
           uses: number
         }[]
       }
+      admin_clear_ai_pause: { Args: { _scope: string }; Returns: boolean }
       admin_comic_manifest: {
         Args: never
         Returns: {

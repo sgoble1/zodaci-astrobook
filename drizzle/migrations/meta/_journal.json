@@ -470,6 +470,13 @@
       "when": 1792811567530,
       "tag": "0066_official_editions_visibility",
       "breakpoints": true
+    },
+    {
+      "idx": 67,
+      "version": "7",
+      "when": 1793300818043,
+      "tag": "0067_zac_owner_ai_pause_admin_workbook_unique",
+      "breakpoints": true
     }
   ]
 }
