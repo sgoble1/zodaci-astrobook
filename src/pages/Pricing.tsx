@@ -5,13 +5,14 @@ import { Fragment, useEffect, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { Check, Minus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useSubscription, type Tier } from '@/hooks/useSubscription';
+import { refreshSubscription, useSubscription, type Tier } from '@/hooks/useSubscription';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { StripeEmbeddedCheckout } from '@/components/payments/StripeEmbeddedCheckout';
 import { CreatorStudio } from '@/components/payments/CreatorStudio';
 import { PaymentTestModeBanner } from '@/components/payments/PaymentTestModeBanner';
 import { Faq, PRICING_FAQ } from '@/components/brand/Faq';
 import { usePageMeta } from '@/hooks/usePageMeta';
-import { CREDIT_ALLOWANCE, PLAN_AMOUNT, PLAN_NAME, PLAN_PRICE, REFUND_WINDOW_DAYS, maxYearlySavingPct, yearlySaving } from '@/lib/plans';
+import { CREDIT_ALLOWANCE, PLAN_AMOUNT, PLAN_NAME, PLAN_PRICE, PRICE_TIER, REFUND_WINDOW_DAYS, SELLABLE_PRICES, maxYearlySavingPct, yearlySaving } from '@/lib/plans';
 import { BOOK_VERSIONS, money } from '@/lib/books';
 import { internalDestination } from '@/lib/internalDestination';
 import { logActivity } from '@/components/common/ActivityTracker';
@@ -56,6 +57,25 @@ export default function Pricing() {
     if (error || !data?.url) return toast.error(data?.error || 'Could not open billing right now.');
     window.location.href = data.url;
   };
+  // Members who already pay switch plans on the same subscription (prorated), never through a second checkout.
+  const billed = !!sub.priceId && !!PRICE_TIER[sub.priceId] && sub.status !== 'granted';
+  const legacy = billed && !SELLABLE_PRICES.includes(sub.priceId!);
+  const [change, setChange] = useState<{ pid: string; label: string; up: boolean } | null>(null);
+  const [changing, setChanging] = useState(false);
+  const env = () => { try { return getStripeEnvironment(); } catch { return null; } };
+  const confirmChange = async () => {
+    if (!change) return; const environment = env();
+    if (!environment) { toast.error('Payments are not available on this site yet.'); return; }
+    setChanging(true);
+    const { data, error } = await supabase.functions.invoke('change-plan', { body: { priceId: change.pid, environment } });
+    let msg: string | undefined = data?.error;
+    if (!msg && error && 'context' in error && error.context instanceof Response) msg = (await error.context.json().catch(() => null))?.error;
+    setChanging(false); setChange(null);
+    if (error || msg) { toast.error(msg || 'Could not change your plan right now.'); return; }
+    logActivity({ kind: 'plan_changed', path: '/pricing', label: change.pid, detail: { product: change.pid } });
+    toast.success(`You’re now on ${change.label}.`);
+    refreshSubscription();
+  };
   const signupLink = (slug: string) => `/auth?mode=signup&next=${encodeURIComponent(slug === 'free' ? '/start' : `/pricing?plan=${slug}&period=${yearly ? 'year' : 'month'}&next=${encodeURIComponent(returnTo)}`)}`;
   const close = () => { setOpen(null); if (intent) { const n = new URLSearchParams(params); n.delete('plan'); n.delete('period'); setParams(n, { replace: true }); } };
   const prints = BOOK_VERSIONS.filter(v => v.format === 'print').sort((a, b) => a.price - b.price);
@@ -69,12 +89,13 @@ export default function Pricing() {
         <h1 className="font-display text-4xl sm:text-5xl">Simple, honest pricing.</h1>
         <p className="mx-auto max-w-2xl text-lg text-muted-foreground">Start free. Go deeper when you’re ready. No surprises.</p>
         <p className="text-sm"><Link to="/demo" className="text-primary underline underline-offset-4">Try the interactive demo first</Link></p>
-        {sub.tier !== 'free' && <div className="flex flex-col items-center gap-1 pt-2"><Button variant="outline" onClick={manage}>Manage subscription · cancel, card & invoices</Button>{sub.periodEnd && <p className="text-xs text-muted-foreground">{sub.status === 'granted' ? `${PLAN_NAME[sub.tier]} access granted until` : sub.cancelAtEnd ? 'Ends' : 'Renews'} {new Date(sub.periodEnd).toLocaleDateString()}</p>}</div>}
+        {sub.tier !== 'free' && <div className="flex flex-col items-center gap-1 pt-2">{billed && <Button variant="outline" onClick={manage}>Manage subscription · cancel, card & invoices</Button>}{sub.periodEnd && <p className="text-xs text-muted-foreground">{sub.status === 'granted' ? `${PLAN_NAME[sub.tier]} access granted until` : sub.cancelAtEnd ? 'Ends' : 'Renews'} {new Date(sub.periodEnd).toLocaleDateString()}</p>}{sub.status === 'past_due' && <p role="alert" className="text-sm text-destructive">Your last payment didn’t go through. Update your card in Manage subscription to keep your plan.</p>}</div>}
+        {legacy && <p className="mx-auto max-w-xl rounded-lg border border-gold/40 bg-card/60 p-3 text-sm">You’re on an original {sub.priceId?.startsWith('creator') ? 'Creator' : 'Full Access'} plan, kept at your original price with everything in {PLAN_NAME[sub.tier]}. Switching plans moves you to today’s prices.</p>}
       </header>
       {open ? (
         <section className="parchment space-y-3 p-4" aria-label="Checkout">
           <Button variant="outline" size="sm" onClick={close}>← Back to plans</Button>
-          <StripeEmbeddedCheckout priceId={open} returnUrl={`${window.location.origin}/checkout/return?session_id={CHECKOUT_SESSION_ID}&next=${encodeURIComponent(returnTo)}`} />
+          <StripeEmbeddedCheckout priceId={open} onError={m => { toast.error(m); close(); }} returnUrl={`${window.location.origin}/checkout/return?session_id={CHECKOUT_SESSION_ID}&next=${encodeURIComponent(returnTo)}`} />
         </section>
       ) : (<>
         <div role="radiogroup" aria-label="Billing period" className="mx-auto flex w-fit items-center gap-1 rounded-full border border-border p-1">
@@ -88,8 +109,10 @@ export default function Pricing() {
             const per = !paid ? 'forever' : yearly ? 'per year' : 'per month';
             const saving = paid && yearly ? yearlySaving(p.tier as Exclude<Tier, 'free'>) : 0;
             const pid = paid ? priceFor(p.tier as Exclude<Tier, 'free'>, yearly) : null;
-            const current = !sub.loading && sub.userId && sub.tier === p.tier;
+            const current = !sub.loading && sub.userId && sub.tier === p.tier && (!billed || !pid || sub.priceId === pid || (legacy && PRICE_TIER[sub.priceId!] === p.tier && !pid));
             const below = rank[p.tier] < rank[sub.tier];
+            const switchable = billed && paid && pid && sub.priceId !== pid;
+            const label = `${PLAN_NAME[p.tier]} ${yearly ? 'annual' : 'monthly'} (${price} ${per})`;
             return (
               <section key={p.slug} className={`parchment flex flex-col space-y-4 p-6 ${p.tier === 'full' ? 'border-gold ring-1 ring-gold/40' : ''}`} aria-labelledby={`plan-${i}`}>
                 <div className="flex items-center justify-between"><h2 id={`plan-${i}`} className="text-2xl">{PLAN_NAME[p.tier]}</h2>{p.tier === 'full' && <span className="rounded-full bg-gold/15 px-2 py-0.5 text-xs text-gold">Recommended</span>}</div>
@@ -97,6 +120,7 @@ export default function Pricing() {
                 <p className="text-sm text-muted-foreground">{p.blurb}</p>
                 <ul className="flex-1 space-y-2 text-sm">{p.items.map(x => <li key={x} className="flex gap-2"><Check className="h-4 w-4 shrink-0 text-gold" aria-hidden />{x}</li>)}</ul>
                 {!paid ? (sub.userId ? <Button asChild variant="outline" className="w-full"><Link to="/start">Open my free chart</Link></Button> : <Button asChild variant="outline" className="w-full"><Link to={signupLink('free')}>{p.cta}</Link></Button>)
+                  : switchable ? <Button className="w-full" variant={below ? 'outline' : 'default'} onClick={() => setChange({ pid: pid!, label, up: !below && !(sub.tier === p.tier && !yearly) })}>{sub.tier === p.tier ? `Switch to ${yearly ? 'annual' : 'monthly'} — ${price}` : below ? `Switch to ${PLAN_NAME[p.tier]} — ${price}` : `Upgrade to ${PLAN_NAME[p.tier]} — ${price}`}</Button>
                   : current ? <Button disabled className="w-full">Your current plan</Button>
                   : below ? <Button disabled variant="outline" className="w-full">Included in your plan</Button>
                   : sub.userId ? <Button className="w-full" onClick={() => pid && startCheckout(pid)}>{p.cta} — {price}</Button>
@@ -107,6 +131,18 @@ export default function Pricing() {
         </div>
         <p className="mx-auto max-w-2xl text-center text-sm text-muted-foreground">Prices in US dollars; any sales tax is calculated at checkout. Cancel anytime and keep access until the period ends. Changed your mind? Ask within {REFUND_WINDOW_DAYS} days of your first subscription payment for a full refund.</p>
       </>)}
+      <AlertDialog open={!!change} onOpenChange={o => { if (!o && !changing) setChange(null); }}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Switch to {change?.label}?</AlertDialogTitle>
+            <AlertDialogDescription>{change?.up ? 'You’ll be charged the prorated difference today with your saved card, and the new plan starts right away.' : 'The change starts now. Unused time on your current plan becomes a credit on your next bill.'}{legacy ? ' Your original grandfathered price will no longer apply.' : ''}</AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={changing}>Keep my plan</AlertDialogCancel>
+            <AlertDialogAction disabled={changing} onClick={e => { e.preventDefault(); void confirmChange(); }}>{changing ? 'Switching…' : 'Confirm switch'}</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
       {sub.tier === 'creator' && <p className="text-center"><Button asChild><Link to="/creator">Open your Cosmic dashboard</Link></Button></p>}
       {sub.tier === 'creator' && <div className="space-y-2"><CreatorStudio /><p className="text-center text-sm"><Link to="/my-masterbook" className="underline">Open My Masterbook to read and play what you’ve made</Link></p></div>}
       <section className="space-y-4" aria-labelledby="pricing-faq"><h2 id="pricing-faq" className="font-display text-3xl">Questions</h2><Faq items={PRICING_FAQ} id="pricing-faq-schema" /></section>
