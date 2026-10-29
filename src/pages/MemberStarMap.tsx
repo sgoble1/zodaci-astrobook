@@ -1,3 +1,4 @@
+import { usePageMeta } from '@/hooks/usePageMeta';
 import { useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
 import { computeChart, fmtLon } from '@/lib/astro';
@@ -14,6 +15,7 @@ const STARS: [string, number, string][] = [
 ];
 
 export default function MemberStarMap({ birth }: { birth: MyBirth }) {
+  usePageMeta('Your star map · Zodaci', 'The fixed stars touching your planets, from your own birth chart.');
   const chart = useMemo(() => computeChart(toChartInput(birth)), [birth]);
   // Precess to the exact birth moment (years since J2000.0, from the birth UTC instant).
   const years = (chart.utc.getTime() - Date.UTC(2000, 0, 1, 12)) / (365.25 * 864e5);

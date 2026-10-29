@@ -3,6 +3,10 @@ import { Link } from 'react-router-dom';
 import * as Astronomy from 'astronomy-engine';
 import { computeChart, eclLon, houseOf, SIGNS, BODY_KEYWORDS, type ChartResult } from '@/lib/astro';
 import { toChartInput, type MyBirth } from '@/lib/myBirth';
+import { Printer } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { usePageMeta } from '@/hooks/usePageMeta';
+import { SIGN_RULER } from '@/lib/signRulers';
 
 type Focus = 'transits' | 'retrogrades' | 'timeline' | 'profection';
 const SLOW: [string, Astronomy.Body][] = [['Jupiter', Astronomy.Body.Jupiter], ['Saturn', Astronomy.Body.Saturn], ['Uranus', Astronomy.Body.Uranus], ['Neptune', Astronomy.Body.Neptune], ['Pluto', Astronomy.Body.Pluto]];
@@ -80,6 +84,9 @@ export default function PersonalTiming({ birth, focus }: { birth: MyBirth; focus
   }, [birth]);
   const { current, windows, retro, miles, age, profHouse, profSign, house, now, chart } = data;
   const titles: Record<Focus, string> = { transits: 'Your Transits', retrogrades: 'Your Retrogrades', timeline: 'Your Personal Timeline', profection: 'Your Year Ahead (Profection)' };
+  usePageMeta(`${titles[focus]} · Zodaci`, 'Transits, retrogrades, life milestones and this year’s focus, calculated from your own birth chart.');
+  const lord = profSign ? chart.bodies.find(b => b.key === SIGN_RULER[profSign].traditional) : undefined;
+  const lordTransits = lord ? windows.filter(w => w.p === lord.name) : [];
   const order: Focus[] = [focus, ...(['transits', 'retrogrades', 'timeline', 'profection'] as Focus[]).filter(f => f !== focus)];
   const sections: Record<Focus, JSX.Element> = {
     transits: (
@@ -111,12 +118,13 @@ export default function PersonalTiming({ birth, focus }: { birth: MyBirth; focus
         <h2 className="font-display text-2xl">This year’s focus</h2>
         <p className="text-sm text-muted-foreground">Annual profection is an old timing method: each birthday moves your focus one house forward around the chart.</p>
         <p className="rounded-lg border border-border bg-card p-4 text-sm">At age {age}, this is your <strong>{ord(profHouse)}-house year</strong>{profSign ? <> ({profSign}). The ruler of {profSign} is your “lord of the year” — watch its transits closely.</> : '. Add a birth time to see the sign and ruler.'}</p>
+        {lord && <p className="text-sm">Your lord of the year is <Link to={`/planets/${lord.key}`} className="underline">{lord.name}</Link>, born in {lord.sign}{lord.house ? ` in your ${ord(lord.house)} house` : ''}. {lordTransits.length ? `Exact hits to it this year: ${lordTransits.map(w => `${w.t} ${w.x.n} (${fmtD(w.start)})`).join('; ')}.` : 'No slow planet makes an exact hit to it in the next 12 months.'}</p>}
       </section>
     ),
   };
   return (
-    <article className="mx-auto max-w-4xl space-y-8">
-      <header className="space-y-2"><h1 className="font-display text-4xl">{titles[focus]}</h1><p className="text-muted-foreground">Calculated live from your birth chart ({birth.placeLabel}). <Link to="/my-readings/topic/timing" className="underline">Read your Key Years reading</Link>.</p>{!birth.time && <p className="text-sm text-destructive">No birth time saved, so houses are left out.</p>}</header>
+    <article className="print-chart mx-auto max-w-4xl space-y-8">
+      <header className="space-y-2"><div className="flex flex-wrap items-start justify-between gap-3"><h1 className="font-display text-4xl">{titles[focus]}</h1><Button type="button" variant="outline" size="sm" onClick={() => window.print()}><Printer className="mr-1.5 h-4 w-4" aria-hidden="true" />Print or save PDF</Button></div><p className="hidden text-sm print:block">{birth.displayName ? `${birth.displayName} · ` : ''}{birth.date}{birth.time ? ` ${birth.time}` : ''} · printed {fmtD(now)}</p><p className="text-muted-foreground">Calculated live from your birth chart ({birth.placeLabel}). <Link to="/my-readings/topic/timing" className="underline">Read your Key Years reading</Link>.</p>{!birth.time && <p className="text-sm text-destructive">No birth time saved, so houses are left out.</p>}</header>
       {order.map(f => sections[f])}
     </article>
   );

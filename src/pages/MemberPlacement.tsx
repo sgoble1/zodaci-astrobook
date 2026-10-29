@@ -8,14 +8,9 @@ import { ConfidenceBadge } from '@/components/common/ConfidenceBadge';
 import { ThemeArt } from '@/components/common/ThemeArt';
 import { Button } from '@/components/ui/button';
 import { usePageMeta } from '@/hooks/usePageMeta';
+import { SIGN_RULER } from '@/lib/signRulers';
 
 const HOUSE_AREA = ['', 'self, body and first impressions', 'money, possessions and self-worth', 'thinking, siblings and your neighbourhood', 'home, family life and inner foundations', 'creativity, romance, play and children', 'daily routine, work habits and health', 'partners and one-to-one relationships', 'shared resources, intimacy and deep change', 'beliefs, study and travel', 'career, reputation and public life', 'friends, groups and hopes', 'rest, solitude and the hidden inner life'];
-/** Traditional and modern rulers, used to trace each house to the planet that runs it. */
-export const SIGN_RULER: Record<string, { traditional: string; modern?: string }> = {
-  Aries: { traditional: 'mars' }, Taurus: { traditional: 'venus' }, Gemini: { traditional: 'mercury' }, Cancer: { traditional: 'moon' },
-  Leo: { traditional: 'sun' }, Virgo: { traditional: 'mercury' }, Libra: { traditional: 'venus' }, Scorpio: { traditional: 'mars', modern: 'pluto' },
-  Sagittarius: { traditional: 'jupiter' }, Capricorn: { traditional: 'saturn' }, Aquarius: { traditional: 'saturn', modern: 'uranus' }, Pisces: { traditional: 'jupiter', modern: 'neptune' },
-};
 /** Where to read more about each planet in the member's own readings. */
 const READING_FOR: Record<string, { slug: string; title: string }> = {
   sun: { slug: 'big-three', title: 'Your Big Three' }, moon: { slug: 'big-three', title: 'Your Big Three' }, mercury: { slug: 'mind', title: 'Mind & Communication' },
