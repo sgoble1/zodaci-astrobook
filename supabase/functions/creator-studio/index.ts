@@ -37,30 +37,16 @@ function chunk(text: string, max = 1400): string[] {
   if (cur.trim()) out.push(cur.trim());
   return out;
 }
-function pcmFromWav(buf: Uint8Array): Uint8Array {
-  const v = new DataView(buf.buffer, buf.byteOffset, buf.byteLength);
-  if (String.fromCharCode(...buf.slice(0, 4)) !== 'RIFF') return buf;
-  let o = 12;
-  while (o + 8 <= buf.length) { const id = String.fromCharCode(...buf.slice(o, o + 4)); const size = v.getUint32(o + 4, true); if (id === 'data') return buf.slice(o + 8, o + 8 + size); o += 8 + size + (size % 2); }
-  return buf.slice(44);
-}
 function wav(pcm: Uint8Array, rate = 24000): Uint8Array {
   const h = new DataView(new ArrayBuffer(44)); const w = (o: number, s: string) => [...s].forEach((c, i) => h.setUint8(o + i, c.charCodeAt(0)));
   w(0, 'RIFF'); h.setUint32(4, 36 + pcm.length, true); w(8, 'WAVE'); w(12, 'fmt '); h.setUint32(16, 16, true); h.setUint16(20, 1, true); h.setUint16(22, 1, true);
   h.setUint32(24, rate, true); h.setUint32(28, rate * 2, true); h.setUint16(32, 2, true); h.setUint16(34, 16, true); w(36, 'data'); h.setUint32(40, pcm.length, true);
   const out = new Uint8Array(44 + pcm.length); out.set(new Uint8Array(h.buffer)); out.set(pcm, 44); return out;
 }
-async function speak(apiKey: string, text: string): Promise<Uint8Array> {
-  const res = await fetch(`${GATEWAY_URL}/audio/speech`, {
-    method: 'POST', headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ model: TTS_MODEL, contents: [{ role: 'user', parts: [{ text: `Read warmly and calmly, like a podcast host: ${text}` }] }], generationConfig: { responseModalities: ['AUDIO'], speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: 'Kore' } } } }, stream_format: 'audio' }),
-  });
-  if (!res.ok) { const t = await res.text(); throw Object.assign(new Error(`speech ${res.status}: ${t.slice(0, 300)}`), { statusCode: res.status }); }
-  return pcmFromWav(new Uint8Array(await res.arrayBuffer()));
-}
 
 const RULES = 'Use ONLY the placements listed. Never invent placements, aspects, relatives, events or biography. Explain each technical term in everyday words right after using it. Present meanings as reflective interpretation, not prediction. For sex, desire and attraction, focus on consent, boundaries, communication and non-graphic adult reflection. Never infer sexual orientation, libido, sexual history, preferences, trauma or consent from a chart. A Venus/Mars contact is symbolism, not evidence of mutual attraction. Never sexualize minors.';
 
+import { speakAll } from '../_shared/speech.ts';
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
   if (req.method !== 'POST') return json({ error: 'Method not allowed' }, 405);
@@ -153,7 +139,7 @@ Deno.serve(async (req) => {
     const script = (await call.result.text).trim();
     if (!script) return json({ error: 'The script came back empty. Please try again.' }, 502);
     const pcm: Uint8Array[] = [];
-    for (const p of chunk(script)) pcm.push(await speak(apiKey, p));
+    pcm.push(await speakAll(apiKey, chunk(script)));
     const total = pcm.reduce((a, b) => a + b.length, 0); const joined = new Uint8Array(total); let off = 0; for (const b of pcm) { joined.set(b, off); off += b.length; }
     const file = wav(joined);
     const name = `${topic.replace(/[^\w]+/g, '_').slice(0, 60)}.wav`;
