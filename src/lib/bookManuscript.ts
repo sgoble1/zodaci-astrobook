@@ -112,7 +112,13 @@ export async function composeManuscript(input: ManuscriptInput) {
       for (let ly = H - M - 70; ly > BOTTOM + 10; ly -= 24) page.drawLine({ start: { x: M, y: ly }, end: { x: W - M, y: ly }, thickness: .4, color: rgb(.75, .73, .8) });
     }
   }
-  entries.forEach((s, i) => { const p = tocPages[Math.floor(i / perToc)]; if (i % perToc === 0) p.drawText('Contents', { x: M, y: H - M, size: 23, font, color: ink }); const top = H - M - 56 - (i % perToc) * 36; const titleLines = lines(s, 10.5, W - M * 2 - 35); titleLines.slice(0, 2).forEach((l, n) => p.drawText(l, { x: M, y: top - n * 13, size: 10.5, font, color: ink })); p.drawText(String(starts[i] ?? ''), { x: W - M - 25, y: top, size: 10.5, font, color: ink }); });
+  entries.forEach((s, i) => {
+    const p = tocPages[Math.floor(i / perToc)]; if (i % perToc === 0) p.drawText('Contents', { x: M, y: H - M, size: 23, font, color: ink });
+    const top = H - M - 56 - (i % perToc) * 36; const vol = isVolume(i); const indent = input.volumes?.length && !vol && i < sections.length ? 12 : 0;
+    const titleLines = lines(s, vol ? 11.5 : 10.5, W - M * 2 - 35 - indent);
+    titleLines.slice(0, 2).forEach((l, n) => p.drawText(l, { x: M + indent, y: top - n * 13, size: vol ? 11.5 : 10.5, font, color: vol ? gold : ink }));
+    p.drawText(String(starts[i] ?? ''), { x: W - M - 25, y: top, size: 10.5, font, color: vol ? gold : ink });
+  });
   pdf.getPages().forEach((p, i) => { if (i === 0) return; p.drawText(`Zodaci · AstroBook     ${i + 1}`, { x: M, y: Math.max(18, M * .55), size: 8, font, color: muted }); });
   const target = version ? version.pages[1] : input.edition === 'expanded' ? 400 : 250;
   return { bytes: await pdf.save(), pages: pdf.getPageCount(), target };
@@ -169,6 +175,20 @@ function drawGrid(page: PDFPage, font: PDFFont, c: ChartResult, x: number, top: 
     if (i < keys.length - 1) page.drawText(PLANET_GLYPH[k], { x: x + (i + 1.3) * cell, y: top - (i + 1.7) * cell, size: cell * .45, font, color: gold });
   });
   return (keys.length + 1) * cell;
+}
+
+/** A volume divider: "VOLUME III" spaced in gold, the volume title, a rule and its one-line scope, centred. */
+function drawVolume(page: PDFPage, font: PDFFont, W: number, H: number, M: number, title: string, line: string) {
+  const [label, name] = title.includes(' · ') ? title.split(' · ') : ['', title];
+  const center = (t: string, yy: number, size: number, color = ink) => page.drawText(t, { x: (W - font.widthOfTextAtSize(t, size)) / 2, y: yy, size, font, color });
+  const spaced = label.toUpperCase().split('').join(' ');
+  if (spaced) center(spaced, H * .64, 10, gold);
+  const size = Math.min(26, (W - M * 2) / 12);
+  const nameLines = wrap(name, font, size, W - M * 2.4);
+  nameLines.forEach((l, i) => center(l, H * .56 - i * size * 1.25, size, ink));
+  const after = H * .56 - nameLines.length * size * 1.25 - 6;
+  page.drawLine({ start: { x: W / 2 - 28, y: after }, end: { x: W / 2 + 28, y: after }, thickness: .8, color: gold });
+  wrap(line, font, 10, W - M * 3).forEach((l, i) => center(l, after - 22 - i * 14, 10, muted));
 }
 
 function drawCertificate(page: PDFPage, font: PDFFont, W: number, H: number, M: number, name: string, facts: string, number?: string) {
