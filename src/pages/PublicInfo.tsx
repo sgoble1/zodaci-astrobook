@@ -11,9 +11,8 @@ import { PLAN_NAME, REFUND_WINDOW_DAYS } from '@/lib/plans';
 import { VersionCompare } from '@/components/books/VersionCompare';
 import { CoverCustomizer } from '@/components/books/CoverCustomizer';
 import { CosmicTeaser } from '@/components/books/CosmicTeaser';
-import cover1 from '@/assets/cover-example-cosmic.jpg';
-import cover2 from '@/assets/cover-example-botanical.jpg';
-import cover3 from '@/assets/cover-example-atlas.jpg';
+import { useCoverImage } from '@/hooks/useCoverImage';
+import { DEFAULT_CROP } from '@/lib/coverLayout';
 import { ThemeArt } from '@/components/common/ThemeArt';
 import { SampleBook } from '@/components/books/SampleBookReader';
 
@@ -45,7 +44,7 @@ export function AstroBookPublic() {
       </section>
       <section id="story" className="grid gap-8 md:grid-cols-2 items-center">
         <div className="space-y-4"><h2 className="font-display text-3xl">Calculated, not guessed.</h2><p className="text-muted-foreground">Every AstroBook starts with astronomy: the exact positions of the Sun, Moon and planets at the moment and place you were born. Interpretation comes second, and the book always tells you which is which.</p><p className="text-muted-foreground">Then we write it for one person. No two AstroBooks are alike, because no two birth moments are.</p></div>
-        <div className="grid grid-cols-3 gap-3">{[cover1, cover2, cover3].map((c, i) => <img key={i} src={c} alt="Example AstroBook cover design" loading="lazy" className="aspect-[2/3] w-full rounded object-cover shadow-xl" />)}</div>
+        <div className="grid grid-cols-3 gap-3">{['midnight-stars', 'midnight-ember', 'gradient-violet-dusk'].map(k => <ExampleCover key={k} design={k} />)}</div>
       </section>
       <section id="inside" className="space-y-6">
         <h2 className="font-display text-3xl">What’s inside.</h2>
@@ -132,4 +131,10 @@ export function TermsPage() {
     ['Community', 'Be kind, keep other people’s private information private and follow the community guidelines. We may remove content that breaks them.'],
     ['Contact', 'hello@zodaci.com'],
   ]} />;
+}
+
+/** A current cover design with a sample name, drawn exactly as a printed AstroBook cover. */
+function ExampleCover({ design }: { design: string }) {
+  const url = useCoverImage({ source: { kind: 'design', key: design }, crop: DEFAULT_CROP, name: 'Your Name', trimPt: [432, 648] }, 40);
+  return <div className="aspect-[2/3] w-full overflow-hidden rounded bg-muted shadow-xl">{url && <img src={url} alt="Example AstroBook cover: your name as the title, “Your exact placement in print” beneath, AstroBook bottom right" className="h-full w-full object-cover" />}</div>;
 }
