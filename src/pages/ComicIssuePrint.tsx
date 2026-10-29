@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { ArrowRight, Printer, ShoppingBag } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { usePageMeta } from '@/hooks/usePageMeta';
-import { ISSUE_1 } from '@/content/comicIssue1';
+import { ISSUE_1, ISSUE_1_SCRIPTED } from '@/content/comicIssue1';
 import { COMIC_SPEC } from '@/lib/comic';
 
 /** Print formats for Issue 1. Trim/bleed match comicPrint.ts (5.5 × 8.5 in digest, 0.125 in bleed, 0.25 in safe zone). */
