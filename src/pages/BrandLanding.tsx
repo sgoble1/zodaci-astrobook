@@ -1,8 +1,7 @@
-import { useState } from 'react';
 import { CinematicVideo } from '@/components/fx/CinematicVideo';
 import { Link } from 'react-router-dom';
-import { ArrowUpRight, ArrowRight, Orbit, PenLine, Scale, ShieldCheck, Check, Menu } from 'lucide-react';
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+import { ArrowUpRight, ArrowRight, Orbit, PenLine, Scale, ShieldCheck, Check } from 'lucide-react';
+import { PublicHeader } from '@/components/brand/PublicHeader';
 import { Button } from '@/components/ui/button';
 import { ZodaciLogo } from '@/components/brand/ZodaciLogo';
 import { SampleChartDemo } from '@/components/brand/SampleChartDemo';
@@ -46,10 +45,8 @@ const STEPS = [
   ['Go deeper when you’re ready', 'Read full chapters, compare charts with people you love, turn readings into audio, or have your sky printed as an AstroBook.'],
 ];
 
-const PRODUCT_LINKS = [['/astrobook', 'AstroBook'], ['/astrocomic', 'AstroComic'], ['/store', 'Shop'], ['/pricing', 'Pricing']] as const;
 
 export default function BrandLanding() {
-  const [menuOpen, setMenuOpen] = useState(false);
   usePageMeta('Zodaci — Your sky. Your story.', 'Zodaci calculates your birth chart with astronomical precision, then translates every symbol into plain language. Free to begin, private by default.');
   const fromBook = Math.min(...BOOK_VERSIONS.map(v => v.price));
   const plans = [
@@ -59,27 +56,7 @@ export default function BrandLanding() {
   ];
   return <div className="brand-site min-h-screen bg-background text-foreground">
     <a href="#brand-main" className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:bg-background focus:p-3">Skip to content</a>
-    <header className="sticky top-0 z-40 border-b border-border bg-background/85 backdrop-blur-md">
-      <div className="mx-auto max-w-7xl px-5 sm:px-10 h-16 lg:h-20 flex items-center justify-between gap-4">
-        <Link to="/welcome" aria-label="Zodaci home" className="shrink-0"><ZodaciLogo /></Link>
-        <nav aria-label="Brand navigation" className="hidden lg:flex items-center gap-1">{navigation.map(item => <Button key={item} asChild variant="ghost" size="sm"><a href={`#${item.toLowerCase()}`}>{item}</a></Button>)}<span aria-hidden="true" className="mx-1 h-5 w-px bg-border" />{PRODUCT_LINKS.map(([to, label]) => <Button key={to} asChild variant="ghost" size="sm"><Link to={to}>{label}</Link></Button>)}</nav>
-        <div className="flex items-center gap-2">
-          <Button asChild variant="outline" size="sm" className="hidden sm:inline-flex"><Link to="/auth">Sign in<ArrowUpRight /></Link></Button>
-          <Sheet open={menuOpen} onOpenChange={setMenuOpen}>
-            <SheetTrigger asChild><Button variant="ghost" size="icon" className="lg:hidden" aria-label="Open menu"><Menu /></Button></SheetTrigger>
-            <SheetContent side="right" className="w-[85vw] max-w-sm bg-background">
-              <SheetHeader><SheetTitle className="text-left">Menu</SheetTitle></SheetHeader>
-              <nav aria-label="Mobile navigation" className="mt-6 flex flex-col">
-                {navigation.map(item => <a key={item} href={`#${item.toLowerCase()}`} onClick={() => setMenuOpen(false)} className="border-b border-border py-3 text-lg">{item}</a>)}
-                <p className="mt-6 mb-1 font-smallcaps text-xs text-gold">Products</p>
-                {PRODUCT_LINKS.map(([to, label]) => <Link key={to} to={to} onClick={() => setMenuOpen(false)} className="border-b border-border py-3 text-lg">{label}</Link>)}
-              </nav>
-              <div className="mt-8 grid gap-3"><Button asChild><Link to="/start">Explore your chart<ArrowRight /></Link></Button><Button asChild variant="outline"><Link to="/auth">Sign in</Link></Button></div>
-            </SheetContent>
-          </Sheet>
-        </div>
-      </div>
-    </header>
+    <PublicHeader sections={navigation} />
     <main id="brand-main">
       <section className="relative isolate min-h-[520px] sm:min-h-[600px] overflow-hidden flex items-center border-b border-border">
         <CinematicVideo poster={hero} />
