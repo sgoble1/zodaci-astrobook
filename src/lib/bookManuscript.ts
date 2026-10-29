@@ -10,6 +10,11 @@ export type ManuscriptInput = {
   name: string; birthFacts: string; chartFacts: string; chapters: ManuscriptChapter[]; cover?: Uint8Array; edition: string; extras: string[]; fontBytes: Uint8Array; bigThree?: string;
   /** Deterministic chapters for the chosen version (moon phase, RetroGOOD, forecast…). */
   editionChapters?: BookChapter[];
+  /**
+   * The complete six-volume book (see buildVolumes). When given, it is the whole body of the book: saved readings are
+   * already woven into it, so a reader with no finished readings still gets a full chart-derived manuscript.
+   */
+  volumes?: BookChapter[];
   /** Calculated chart, used to draw the birth-sky wheel and aspect grid pages. */
   chart?: ChartResult;
   /** Certificate number shown on Collector's Linen certificate pages. */
@@ -20,7 +25,7 @@ const clean = (s: string) => s.replace(/!\[([^\]]*)\]\([^)]*\)/g, '$1').replace(
 
 /** Two-pass, real pagination at the version's trim size. No invented filler to manufacture a promised page count. */
 export async function composeManuscript(input: ManuscriptInput) {
-  if (!input.chapters.length) throw new Error('Write your personal chapters before composing a manuscript.');
+  if (!input.volumes?.length && !input.chapters.length) throw new Error('Write your personal chapters before composing a manuscript.');
   const version = versionOf(input.edition);
   const [W, H] = version?.trimPt ?? [432, 648];
   const scale = Math.min(W, H) / 432;
