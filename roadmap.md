@@ -35,12 +35,14 @@ Audit Oct 29: payment already waits for a real manuscript (server-checked); rema
 ### 6. Founder editions & member design (agent)
 - [x] Shane and Zac edition homes match April's depth (hero, chart title, planet orbs, wheel, volume shelves, module cards).
 - [x] ChartWheel gets the illuminated style, larger tap targets (17px hit circles), keyboard selection, reduced-motion.
-- [ ] Sidebars: Zac gets readings/explore/home; Shane gets April's Masterbook link; member menu Editions lists family editions for Shane; mobile tab active state; Zac workbook autosave without duplicates.
+- [x] Sidebars: Zac has Home/readings/Explore; Shane's Family Editions + shared April link; Zac workbook autosave debounced per question (audited Oct 29).
+- [ ] Mobile tab active state on member sub-routes.
 
 ### 7. Public site & member flow (agent)
-- [ ] Reading Room: Gemini Observatory + Leo Heroine placed; Blog ↔ Reading Room cross-links; signup-first CTA; Community sign-in returns; theme CTAs; contact form on /welcome; Demo interactive chart.
-- [ ] Workbook eyebrow, Wonderings link, "Create a chapter about this" topic, Instructions/search leaks, onboarding return to edition, podcast player vs progress overlap, chat safe-area, dead Home code.
-- [ ] Page titles/descriptions on every page.
+- [x] Reading Room: Leo Heroine in Big Three, Gemini Observatory in Transits; Blog ↔ Reading Room links; contact form on /welcome (validation checked at 393px; no test message sent).
+- [ ] Signup-first CTA; Community sign-in returns; theme CTAs; Demo interactive chart.
+- [ ] Workbook eyebrow, Wonderings link, "Create a chapter about this" topic, Instructions/search leaks, onboarding return to edition, podcast player vs progress overlap, chat safe-area (already padded). Dead Home code removed.
+- [x] Page titles: pages without their own title take one from the navigation registry (tested); dedicated descriptions still welcome per page.
 
 ### 8. AI & payments functions (lead)
 Audit Oct 29: Chat/counselors already use the member's chart; podcast/custom page prompts still April-only; checkout lacks membership amount check; webhook lacks checkout activation + invoice events; portal falls back to fixed domain. Podcast assignment is a label, access stays workspace membership (as designed).
