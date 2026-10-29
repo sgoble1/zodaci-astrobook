@@ -104,3 +104,23 @@ describe('finished readings in the six volumes', () => {
     expect(big[0].content).toBe('reading');
   });
 });
+
+describe('life cycles come from the ephemeris', () => {
+  it("Olivia's first Saturn return falls in 2021, at 28", async () => {
+    const { lifeCycles } = await import('./lifeCycles');
+    const sr = lifeCycles(olivia).find(e => e.key === 'saturn-return-1')!;
+    expect(sr.date.getUTCFullYear()).toBe(2021); expect(sr.age).toBe(28);
+  });
+  it('her first Jupiter return is at 11 or 12, and events are in date order', async () => {
+    const { lifeCycles } = await import('./lifeCycles');
+    const ev = lifeCycles(olivia);
+    expect([11, 12]).toContain(ev.find(e => e.key === 'jupiter-return-1')!.age);
+    expect(ev.map(e => e.date.getTime())).toEqual([...ev.map(e => e.date.getTime())].sort((a, b) => a - b));
+  });
+  it('every version opens with the Opening Letter and includes Life Cycles', () => {
+    for (const e of ['digital', 'linen']) {
+      const t = buildVolumes({ edition: e, chart: olivia, name: 'Olivia', saved: [] }).map(c => c.title);
+      expect(t).toEqual(expect.arrayContaining(['Your Opening Letter', 'Life Cycles: Returns and Turning Points', 'Aspect Patterns', 'Dignities and Chart Emphasis', 'Shadow and Breakthrough']));
+    }
+  });
+});
