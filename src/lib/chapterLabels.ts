@@ -25,7 +25,7 @@ const RENAME: [RegExp, string][] = [
   [/^The (Five-Volume|Complete Five-Volume|Celestial Library)/i, 'Series Overview'], [/^Zachary at a Glance/i, 'Quick Reference'],
   [/^What the Chart Says About/i, 'Core Emotional Nature'], [/^What the Stars Say About Who He Is/i, 'Who He Is Becoming'],
   [/^Introduction: Why Pet Astrology/i, 'Pet Astrology'], [/^Part Two: Career/i, 'Career & Relationships'],
-  [/^Zachary \(Zac\)/i, 'Zac’s Profile'], [/^Shane — Gift-Giver/i, 'Shane’s Profile'], [/^Father$/, 'Father’s Profile'], [/^Mother$/, 'Mother’s Profile'],
+  [/^Now: Age/i, 'Your Year Ahead'], [/^Volume [IVX]+: Contents/i, 'Contents'], [/^Zachary \(Zac\)/i, 'Zac’s Profile'], [/^Shane — Gift-Giver/i, 'Shane’s Profile'], [/^Father$/, 'Father’s Profile'], [/^Mother$/, 'Mother’s Profile'],
 ];
 
 const ASTRO = /\b(Sun|Moon|Mercury|Venus|Mars|Jupiter|Saturn|Uranus|Neptune|Pluto|Chiron|Node|Ascendant|Midheaven|Rising|Aries|Taurus|Gemini|Cancer|Leo|Virgo|Libra|Scorpio|Sagittarius|Capricorn|Aquarius|Pisces|House|Houses|Stellium|Lagna|Nakshatra|Mahadasha|Navamsa)\b/;
@@ -35,7 +35,7 @@ export function shortChapterLabel(id: string, title: string): string {
   if (SHANE[id]) return SHANE[id];
   for (const [re, label] of RENAME) if (re.test(title)) return label;
   let t = title.replace(/\s*\([^)]*[°′'][^)]*\)/g, '').replace(/\s*\((Expanded|Complete)\)/gi, '').trim();
-  t = t.replace(/\bZachary(?:’|')s\s+/g, '').replace(/\bin Zachary(?:’|')s Chart\b/g, '').trim();
+  t = t.replace(/\bZachary(?:’|')s\s+/g, '').replace(/\s+in (?:Zachary(?:’|')s )?Chart\b/g, '').trim();
   const colon = t.split(/:\s+/);
   if (colon.length === 2) {
     const [a, b] = colon;
