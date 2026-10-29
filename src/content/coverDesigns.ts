@@ -14,12 +14,12 @@ import coverMidnightEmberLetter from '@/assets/cover-design-midnight-ember-lette
  * Artwork comes in reframes for each trim shape — 2:3 (Pocket, Classic, PDF), US Letter (Collector's Linen) and square
  * (Signature) — so the cover fills the trim from the full-resolution file instead of an enlarged crop.
  */
-export type ArtVariant = { src: string; ratio: number };
+export type ArtVariant = { src: string; size: [number, number] };
 export type CoverDesign = { key: string; label: string; kind: 'art' | 'solid' | 'gradient'; detail: string; src?: string; variants?: ArtVariant[]; colors?: string[]; accent?: string };
 
 export const COVER_DESIGNS: CoverDesign[] = [
-  { key: 'midnight-stars', label: 'Midnight Stars', kind: 'art', detail: 'Black night sky with fine gold stars and a faint violet glow.', src: coverMidnightStars, variants: [{ src: coverMidnightStars, ratio: 1280 / 1920 }, { src: coverMidnightStarsLetter, ratio: 1488 / 1920 }, { src: coverMidnightStarsSquare, ratio: 1 }] },
-  { key: 'midnight-ember', label: 'Midnight Ember', kind: 'art', detail: 'The Midnight Stars design in wine-plum with rose-gold stars.', src: coverMidnightEmber, variants: [{ src: coverMidnightEmber, ratio: 1280 / 1920 }, { src: coverMidnightEmberLetter, ratio: 1488 / 1920 }, { src: coverMidnightEmberSquare, ratio: 1 }] },
+  { key: 'midnight-stars', label: 'Midnight Stars', kind: 'art', detail: 'Black night sky with fine gold stars and a faint violet glow.', src: coverMidnightStars, variants: [{ src: coverMidnightStars, size: [1280, 1920] }, { src: coverMidnightStarsLetter, size: [1488, 1920] }, { src: coverMidnightStarsSquare, size: [1920, 1920] }] },
+  { key: 'midnight-ember', label: 'Midnight Ember', kind: 'art', detail: 'The Midnight Stars design in wine-plum with rose-gold stars.', src: coverMidnightEmber, variants: [{ src: coverMidnightEmber, size: [1280, 1920] }, { src: coverMidnightEmberLetter, size: [1488, 1920] }, { src: coverMidnightEmberSquare, size: [1920, 1920] }] },
   { key: 'solid-midnight', label: 'Solid Midnight', kind: 'solid', detail: 'Deep-midnight cloth with a fine grain, faint stars and a gold inset line.', colors: ['#0D1028'], accent: '#D4A853' },
   { key: 'gradient-violet-dusk', label: 'Violet Dusk', kind: 'gradient', detail: 'Midnight fading into violet, with grain and a scatter of stars.', colors: ['#07080F', '#2A1458', '#8B5CF6'], accent: '#E9D9A6' },
   { key: 'gradient-gold-dawn', label: 'Gold Dawn', kind: 'gradient', detail: 'Midnight rising into soft gold, with grain and a scatter of stars.', colors: ['#07080F', '#3A2A12', '#D4A853'], accent: '#F4E3B5' },
@@ -31,11 +31,13 @@ export const RETIRED_COVER_KEYS = ['blue-cosmos', 'gold-aurora', 'solid-ivory', 
 export const coverByKey = (key: string) => COVER_DESIGNS.find(d => d.key === key);
 
 /** The artwork file whose shape is closest to the trim (with bleed), so the least of the picture is cropped away. */
-export function designSrc(d: CoverDesign, trimPt?: [number, number]) {
-  if (!trimPt || !d.variants?.length) return d.src;
+export function designVariant(d: CoverDesign, trimPt: [number, number]): ArtVariant | undefined {
+  if (!d.variants?.length) return undefined;
   const bleed = 0.125 * 72 * 2, ratio = (trimPt[0] + bleed) / (trimPt[1] + bleed);
-  return d.variants.reduce((best, v) => Math.abs(Math.log(v.ratio / ratio)) < Math.abs(Math.log(best.ratio / ratio)) ? v : best).src;
+  const off = (v: ArtVariant) => Math.abs(Math.log(v.size[0] / v.size[1] / ratio));
+  return d.variants.reduce((best, v) => off(v) < off(best) ? v : best);
 }
+export const designSrc = (d: CoverDesign, trimPt?: [number, number]) => (trimPt && designVariant(d, trimPt)?.src) || d.src;
 
 /** CSS background for a painted cover (used for small swatches). */
 export function coverBackground(d: CoverDesign) {
