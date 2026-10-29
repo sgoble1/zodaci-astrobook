@@ -85,6 +85,7 @@ export async function composeManuscript(input: ManuscriptInput) {
   const journal = version?.journal ?? 0;
   const entries = [...sections.map(s => s.title), ...(journal ? [`Journal · ${journal} page${journal > 1 ? 's' : ''}`] : [])];
   const isVolume = (i: number) => sections[i]?.draw === 'volume';
+  const firstVolume = sections.findIndex(s => s.draw === 'volume');
   // Reserve as many contents pages as needed before laying out chapters.
   const perToc = Math.max(8, Math.floor((H - M * 2 - 56) / 36));
   const tocPages = Array.from({ length: Math.ceil(entries.length / perToc) }, () => pdf.addPage([W, H]));
@@ -114,7 +115,7 @@ export async function composeManuscript(input: ManuscriptInput) {
   }
   entries.forEach((s, i) => {
     const p = tocPages[Math.floor(i / perToc)]; if (i % perToc === 0) p.drawText('Contents', { x: M, y: H - M, size: 23, font, color: ink });
-    const top = H - M - 56 - (i % perToc) * 36; const vol = isVolume(i); const indent = input.volumes?.length && !vol && i < sections.length ? 12 : 0;
+    const top = H - M - 56 - (i % perToc) * 36; const vol = isVolume(i); const indent = firstVolume >= 0 && !vol && i > firstVolume && i < sections.length ? 12 : 0;
     const titleLines = lines(s, vol ? 11.5 : 10.5, W - M * 2 - 35 - indent);
     titleLines.slice(0, 2).forEach((l, n) => p.drawText(l, { x: M + indent, y: top - n * 13, size: vol ? 11.5 : 10.5, font, color: vol ? gold : ink }));
     p.drawText(String(starts[i] ?? ''), { x: W - M - 25, y: top, size: 10.5, font, color: vol ? gold : ink });

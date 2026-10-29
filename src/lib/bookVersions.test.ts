@@ -88,3 +88,17 @@ describe('manifest depth per version', () => {
   it('Classic includes finished topic readings', () => expect(manuscriptManifest([row('Inner world'), row('Career', 'Topic Reading')], 'classic', [], null)).toHaveLength(2));
   it('Pocket leaves topic readings out', () => expect(manuscriptManifest([row('Inner world'), row('Career', 'Topic Reading')], 'pocket', [], null)).toHaveLength(1));
 });
+
+describe('finished readings in the six volumes', () => {
+  it('world-tradition readings go to Volume V', () => {
+    expect(volumeFor('Celtic Tree Calendar')).toBe('V');
+    expect(volumeFor('Tibetan Mewa')).toBe('V');
+    expect(volumeFor('Vedic Jyotish — The Eastern Chart')).toBe('V');
+  });
+  it('a finished “Your Big Three” reading replaces the calculated one instead of repeating it', () => {
+    const t = buildVolumes({ edition: 'classic', chart: olivia, name: 'Olivia', saved: [{ title: 'Your Big Three', content: 'reading' }] });
+    const big = t.filter(c => c.title === 'Your Big Three');
+    expect(big).toHaveLength(1);
+    expect(big[0].content).toBe('reading');
+  });
+});

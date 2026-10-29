@@ -35,11 +35,12 @@ const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 /** Which volume a saved reading belongs in, from its title. */
 export function volumeFor(title: string): VolumeNo {
   const t = title.toLowerCase();
+  if (/vedic|jyotish|chinese|numerolog|mayan|tzolk|feng shui|bagua|kua|celtic|tree calendar|druid|tibetan|mewa|nine star|egyptian|aztec|tarot|kabbal|human design|i ching|system/.test(t)) return 'V';
   if (/forecast|transit|year ahead|timing|timeline|return|profection|retrograde/.test(t)) return 'VI';
   if (/shadow|spirit|karm|past li|purpose|mission|node|chiron|soul|esoteric|intuition|gift/.test(t)) return 'IV';
   if (/love|relationship|sex|attract|partner|venus|mars|aspect|communication|mind/.test(t)) return 'III';
   if (/home|family|career|money|resource|health|work|house|calling|wellness/.test(t)) return 'II';
-  if (/vedic|chinese|numerolog|mayan|feng shui|bagua|kua/.test(t)) return 'V';
+
   return 'I';
 }
 
@@ -207,6 +208,14 @@ export function buildVolumes({ edition, chart: c, name, saved, people = [], toda
   if (r >= 2) vol.VI.push({ title: 'RetroGOOD: Your Retrograde Planets', content: retroChapter(c) }, { title: 'Solar Return Preview', content: solarReturnChapter(c, timeKnown, today) });
   if (r >= 4) vol.VI.push({ title: 'Your 12-Month Sky Forecast', content: forecastChapter(c, today) }, { title: 'Twelve Affirmations', content: affirmationsChapter(c) });
   vol.VI.push(...bySaved('VI'));
+
+  // A finished reading with the same title as a calculated chapter replaces it (the reading is the deeper version).
+  const key = (t: string) => t.toLowerCase().replace(/^your\s+/, '').replace(/[^a-z0-9]+/g, ' ').trim();
+  const savedKeys = new Set(saved.map(s => key(s.title)));
+  for (const n of Object.keys(vol) as VolumeNo[]) {
+    const own = new Set(bySaved(n).map(s => s.title));
+    vol[n] = vol[n].filter(ch => own.has(ch.title) || ch.draw || !savedKeys.has(key(ch.title)));
+  }
 
   const out: BookChapter[] = [];
   if (r >= 1) out.push({ title: 'Your Birth-Moment Verse', content: birthVerse(c, name) });
