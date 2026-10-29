@@ -8,6 +8,7 @@ import { useSession, useIsAdmin } from '@/hooks/useLibrary';
 import { shippingError, trackingUrl } from '@/lib/tracking';
 import { OrderPdfDownload } from '@/components/books/OrderPdfDownload';
 import { statusLabel } from '@/lib/bookFulfillment';
+import { LuluOrderActions, useLulu } from '@/components/admin/LuluPrint';
 import type { Tables } from '@/integrations/supabase/types';
 
 /** Admin dispatch desk: paid books waiting to ship. Saving marks the order shipped so the customer's tracking updates. */
@@ -20,6 +21,7 @@ export default function Dispatch() {
     if (error) setErr('Orders could not load.'); else setOrders(data ?? []);
   }, []);
   useEffect(() => { if (admin) void load(); }, [admin, load]);
+  const lulu = useLulu();
   if (!admin) return <p className="text-muted-foreground">Dispatch is for admins only.</p>;
   const today = new Date().toISOString().slice(0, 10);
   const dispatch = async (o: Tables<'book_orders'>, form: FormData) => {
@@ -33,14 +35,19 @@ export default function Dispatch() {
   const waiting = orders.filter(o => o.status !== 'shipped'); const sent = orders.filter(o => o.status === 'shipped');
   return (
     <article className="space-y-8">
-      <header><p className="text-gold font-smallcaps text-xs">Printed AstroBook</p><h1 className="text-4xl mt-2">Dispatch</h1><p className="text-muted-foreground mt-3">Enter the carrier, tracking number and dispatch date for each printed book.</p><Link to="/orders" className="text-sm underline">All orders</Link></header>
+      <header><p className="text-gold font-smallcaps text-xs">Printed AstroBook</p><h1 className="text-4xl mt-2">Dispatch</h1><p className="text-muted-foreground mt-3">Enter the carrier, tracking number and dispatch date for each printed book.</p><Link to="/orders?all=1" className="text-sm underline">All orders</Link>
+        {lulu.statusError && <p role="alert" className="mt-2 text-sm text-destructive">Lulu: {lulu.statusError}</p>}
+        {lulu.status && !lulu.status.configured && <p className="mt-2 text-sm text-muted-foreground">Lulu isn’t connected yet, so print each book by hand and record its tracking here. Connect Lulu in Admin → AstroBook orders to send jobs from this page.</p>}
+        {lulu.status?.configured && <p className="mt-2 text-sm text-muted-foreground">Lulu {lulu.status.environment === 'production' ? 'production — jobs are really printed' : 'sandbox — test jobs only, nothing is printed'}{lulu.status.connected ? '' : ` · ${lulu.status.problem ?? 'not reachable'}`}.</p>}
+      </header>
       {msg && <p role="status" className="text-gold">{msg}</p>}{err && <p role="alert" className="text-destructive">{err}</p>}
       <section className="space-y-4"><h2 className="text-2xl">Waiting to ship ({waiting.length})</h2>
         {!waiting.length && <p className="text-muted-foreground">No paid books waiting.</p>}
-        {waiting.map(o => { const a = o.shipping_address as Record<string, string>; return (
+        {waiting.map(o => { const a = (o.shipping_address ?? {}) as Record<string, string>; const hasAddress = !!(a.line1 && a.city && a.state && a.postal_code); return (
           <form key={o.id} onSubmit={e => { e.preventDefault(); void dispatch(o, new FormData(e.currentTarget)); }} className="parchment p-4 space-y-3">
             <div className="flex flex-wrap justify-between gap-2"><p className="font-medium capitalize">{o.edition} AstroBook · {o.id.slice(0, 8)} · <span className="text-gold">{statusLabel(o.status)}</span></p><OrderPdfDownload orderId={o.id} /></div>
-            <p className="text-sm text-muted-foreground">{a.name} · {[a.line1, a.line2, a.city, a.state, a.postal_code].filter(Boolean).join(', ')}</p>
+            {hasAddress ? <p className="text-sm text-muted-foreground">{a.name} · {[a.line1, a.line2, a.city, a.state, a.postal_code].filter(Boolean).join(', ')}</p> : <p role="alert" className="text-sm text-destructive">No complete shipping address on this order — contact the customer before printing.</p>}
+            <LuluOrderActions order={o} status={lulu.status} jobs={lulu.jobs} onChanged={() => { void lulu.reload(); void load(); }} />
             <div className="grid gap-3 sm:grid-cols-4">
               <div><Label htmlFor={`c-${o.id}`}>Carrier</Label><select id={`c-${o.id}`} name="carrier" defaultValue={o.carrier} className="w-full bg-input border border-border rounded h-10 px-3"><option value="">Choose</option>{['USPS', 'UPS', 'FedEx'].map(c => <option key={c}>{c}</option>)}</select></div>
               <div className="sm:col-span-2"><Label htmlFor={`t-${o.id}`}>Tracking number</Label><Input id={`t-${o.id}`} name="tracking" defaultValue={o.tracking_number} maxLength={120} /></div>
