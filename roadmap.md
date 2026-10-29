@@ -1,12 +1,51 @@
 # Zodaci — Active Project Index
 
-## Completion request — October 27
-- [ ] Repair verified personalization, privacy, session-refresh and navigation defects from the conversation.
-- [ ] Finish public navigation, Reading Room artwork placement and consistent edition presentation.
-- [ ] Finish merchandise admin, checkout recovery, book download/dispatch and comic/transit print actions. (Done: AstroComic "Manage billing or cancel" now finds comic subscriptions; PDF reader back link no longer forces April's index.)
-- [ ] Close verified AI credit, prompt-context and owner-scoped workbook persistence gaps.
-- [ ] Reconcile UPDATES/spec items against actual code, add regression coverage and verify public/admin flows.
-- [ ] Owner/external release gates: live print credentials/proofs, comic printer, email domain, licensed symbols, reference asteroid degrees, authentic social proof and approved payment test.
+## Pre-publish completion (Oct 29 document: "PrePublish Bugs, Gaps and Finishing Implementations")
+Every item is checked against the code first; findings already fixed or proven wrong are marked so.
+
+### 1. Private Masterbooks without passwords (lead)
+- [ ] Masterbooks open by account only: owner, or someone the owner shared the whole book / a chapter with. No passwords, no device tokens.
+- [ ] Sharing controls: share whole book or single chapter with April, Shane, Zac or any email; list and revoke.
+- [ ] Today's access kept as revocable shares (April→Shane, Zac→Shane); April's /april link becomes sign-in + share.
+- [ ] Session refresh no longer tears down the app; admin check uses both of Shane's emails; reset password clears edition state and handles new reset links.
+- [ ] Zac in official_editions owners. Zac stays out of April & Shane's private shared space (privacy); client list matches server.
+
+### 2. Personal chart pages (agent)
+- [ ] Planet/house detail, birth chart, chart guide/elements, reading, data quality, profection, purpose, numerology, Chinese, Feng Shui/Bagua/Flying Stars/Bagua reading/wheel, Other Systems, Volume II, Compendium, uploads routes: signed-in people see their own chart; April keeps her archive pages; no blank-page crashes.
+- [ ] Transit report print / Save as PDF; Chiron pre-1940 note; Zac chart accuracy test; Kua 2005 regression test (formula already correct).
+
+### 3. Relationships (agent)
+- [ ] Relationship detail/reading/timeline/synastry/Our charts compare against the signed-in person's chart and Kua; Compatibility keeps entered data.
+
+### 4. Shop, orders and admin (agent)
+- [ ] Store admin tab with Shopify deep links; product page in house style with gallery/specs/shipping; search, sort, sold-out; friendly store-offline message; no 50-item cap.
+- [ ] Dispatch + AstroBook orders include every format (digital too); Lulu submit from Dispatch; Lulu errors shown; Orders bucket, polling, missing address.
+- [ ] AstroComic preflight report restored on reopen + downloadable PDF; subscriber print PDF download.
+- [ ] Admin: AI pause view/clear, Mystic Ink prompt builder, print-partner matrix (UNVERIFIED tags) also on /investors, Activity default, plan-check fix in Cosmic Studio.
+- [ ] Pricing shows grandfathered plans; checkout return retry/recovery; subscription polling only when needed; referral links use current site; custom page delete confirmation.
+
+### 5. AstroBook (agent)
+- [ ] Covers: retire Solid Ivory, Solid Violet, Deep Sea; textured colour covers; cover editor (6×9 crop, pan, zoom, safe zone); title = your name, "Your exact placement in print" beneath, AstroBook bottom right — same on preview, 3D book, PDF and print file.
+- [ ] AstroBook as a personal Masterbook (six volumes) per edition; baseline manuscript from the chart so payment never deadlocks; Linen synastry fallback; JPEG covers saved as JPEG; demo/spec/public page updated, retired cover images removed.
+
+### 6. Founder editions & member design (agent)
+- [ ] Shane and Zac edition homes match April's depth (hero, chart title, planet orbs, illuminated wheel, volume shelves, module cards); ChartWheel gets the illuminated style, larger tap targets, reduced-motion.
+- [ ] Sidebars: Zac gets readings/explore/home; Shane gets April's Masterbook link; member menu Editions lists family editions for Shane; mobile tab active state; Zac workbook autosave without duplicates.
+
+### 7. Public site & member flow (agent)
+- [ ] Reading Room: Gemini Observatory + Leo Heroine placed; Blog ↔ Reading Room cross-links; signup-first CTA; Community sign-in returns; theme CTAs; contact form on /welcome; Demo interactive chart.
+- [ ] Workbook eyebrow, Wonderings link, "Create a chapter about this" topic, Instructions/search leaks, onboarding return to edition, podcast player vs progress overlap, chat safe-area, dead Home code.
+- [ ] Page titles/descriptions on every page.
+
+### 8. AI & payments functions (lead)
+- [ ] Podcasts for Cosmic members on their own chart + personal context + credits; custom pages for everyone on their own chart; Ask/Chat stay on the member's chart with citations; neutral pronouns in workbook/safety prompts; Zac counselor profile; shared podcast audio by assignment.
+- [ ] Subscription checkout amount check; billing portal return to current site; webhook activates subscriptions on checkout and handles renewals/failures; Cosmic synthesis and tone in readings; longer book PDF links.
+
+### 9. Wrap-up
+- [ ] docs/updates-verification.md; regression tests for each rule; browser checks at 393/1280; build clean.
+
+### Waiting on the owner or outside services
+- Store prices/margins sign-off; Lulu live keys + printed proofs; email sender domain; comic printer account; licensed Sabian text; asteroid reference degrees; real testimonials/user counts; live payment test.
 
 ## In progress (current request: UPDATES collection, Zac edition, store, investors)
 - [x] Separate archive passwords for April, Shane, Zac (edition-scoped unlocks)
