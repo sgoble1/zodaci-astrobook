@@ -106,10 +106,10 @@ describe('finished readings in the six volumes', () => {
 });
 
 describe('life cycles come from the ephemeris', () => {
-  it("Olivia's first Saturn return falls in 2021, at 28", async () => {
+  it("Olivia's first exact Saturn return is January 2022, at 29 (Saturn peaked just short of her 14° Aquarius in 2021)", async () => {
     const { lifeCycles } = await import('./lifeCycles');
     const sr = lifeCycles(olivia).find(e => e.key === 'saturn-return-1')!;
-    expect(sr.date.getUTCFullYear()).toBe(2021); expect(sr.age).toBe(28);
+    expect(sr.date.toISOString().slice(0, 7)).toBe('2022-01'); expect(sr.age).toBe(29);
   });
   it('her first Jupiter return is at 11 or 12, and events are in date order', async () => {
     const { lifeCycles } = await import('./lifeCycles');
