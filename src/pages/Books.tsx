@@ -153,7 +153,7 @@ export default function Books() {
         </button>)}
       </div>
       <div className="grid gap-6 lg:grid-cols-2 items-center">
-        <div className="rounded border border-border p-4"><Book3D pages={version.pages[1]} trimPt={version.trimPt} hardcover={edition === 'signature' || edition === 'linen'} label={`${version.trim ?? '6″ × 9″ PDF'} · ${version.binding}`} coverSrc={spec ? composed?.url : undefined} name={nameOnCover} /></div>
+        <div className="rounded border border-border p-4"><Book3D pages={version.pages[1]} trimPt={version.trimPt} hardcover={edition === 'signature' || edition === 'linen'} label={`${version.trim ?? '6″ × 9″ PDF'} · ${version.binding}`} coverSrc={spec ? composed?.url : undefined} name={nameOnCover} design={design?.key} onPick={k => pick(`design:${k}`)} /></div>
         <div className="space-y-3">
           <h3 className="text-xl">What’s inside the {version.name}</h3>
           <ul className="space-y-2 text-sm">{version.inside.map(x => <li key={x} className="flex gap-2"><Check className="h-4 w-4 shrink-0 text-gold" aria-hidden />{x}</li>)}</ul>
