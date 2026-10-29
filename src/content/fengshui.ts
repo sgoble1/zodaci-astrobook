@@ -35,7 +35,7 @@ export let TWELVE_WEEKS: Week[] = [];
 // Not covered by the source PDFs — computed in-app from the classical method and labelled as such.
 export interface StarInfo { n: number; name: string; element: string; color: string; nature: 'Auspicious' | 'Mixed' | 'Inauspicious'; theme: string; remedy: string; }
 export const STAR_INFO: Record<number, StarInfo> = {
-  1: { n: 1, name: 'White Star (Tan Lang)', element: 'Water', color: 'White', nature: 'Auspicious', theme: 'Career, new opportunities, wisdom, romance. April’s own Kua element — extra resonant.', remedy: 'Activate with a water feature or blue/black accents; keep active and clear.' },
+  1: { n: 1, name: 'White Star (Tan Lang)', element: 'Water', color: 'White', nature: 'Auspicious', theme: 'Career, new opportunities, wisdom, romance. Especially resonant for anyone with a Water (Kua 1) element.', remedy: 'Activate with a water feature or blue/black accents; keep active and clear.' },
   2: { n: 2, name: 'Black Star (Ju Men)', element: 'Earth', color: 'Black', nature: 'Inauspicious', theme: 'Illness and low vitality.', remedy: 'Metal: brass gourd, metal wind chime, salt-water cure. Avoid red/fire and heavy activity.' },
   3: { n: 3, name: 'Jade Star (Lu Cun)', element: 'Wood', color: 'Jade', nature: 'Inauspicious', theme: 'Arguments, gossip, legal friction.', remedy: 'Fire (red, candles) to exhaust Wood. Keep quiet; avoid water and plants here.' },
   4: { n: 4, name: 'Green Star (Wen Qu)', element: 'Wood', color: 'Green', nature: 'Auspicious', theme: 'Study, writing, scholarship, romance.', remedy: 'Four stalks of bamboo or a healthy plant; excellent for a study desk.' },
