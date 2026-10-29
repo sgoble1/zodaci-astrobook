@@ -45,6 +45,7 @@ Deno.serve(async (req) => {
     if (saved.error) throw saved.error;
     return json({ status: ['active', 'trialing'].includes(f.status) ? 'active' : f.status });
   } catch (e) {
+    if ((e as { code?: string })?.code === 'resource_missing') return json({ error: 'That checkout could not be found.' }, 404);
     console.error('sync-checkout', e);
     return json({ error: 'Could not confirm the payment yet. Please try again in a moment.' }, 500);
   }
