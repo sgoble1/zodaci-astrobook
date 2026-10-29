@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import type { ChartInput, HouseSystem } from '@/lib/astro';
+import type { ChartInput, ChartResult, HouseSystem } from '@/lib/astro';
 import { birthFingerprint } from '@/lib/birthFingerprint';
 import { onAccountChange } from '@/lib/authEvents';
 export { birthFingerprint };
@@ -11,6 +11,9 @@ export const kuaSex = (sex?: string | null): 'male' | 'female' | 'unspecified' =
 const LOCAL = 'astrobook-my-birth-v1';
 
 export const toChartInput = (b: MyBirth): ChartInput => ({ date: b.date, time: b.time, lat: b.lat, lon: b.lon, tz: b.tz, placeLabel: b.placeLabel, placeSource: 'geocoded', houseSystem: b.houseSystem });
+
+/** The chart snapshot stored on the profile (angles and houses are dropped when the birth time is unknown). */
+export const savedChart = (chart: ChartResult, timed: boolean) => ({ bodies: chart.bodies, asc: timed ? chart.asc : null, mc: timed ? chart.mc : null, aspects: chart.aspects, cusps: chart.cusps, bazi: chart.bazi, elements: chart.elements, flags: chart.flags });
 
 /** Saves to the member's profile; keeps a device copy so a chart works before sign-in finishes. */
 export async function saveMyBirth(b: MyBirth, chart: unknown) {

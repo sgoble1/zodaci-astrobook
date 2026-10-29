@@ -57,7 +57,7 @@ export default function Onboarding() {
       const birth = { ...b, time: unknownTime ? null : b.time };
       const chart = computeChart(toChartInput(birth));
       setStage('Saving to your account…');
-      const res = await saveMyBirth(birth, { bodies: chart.bodies, asc: unknownTime ? null : chart.asc, mc: unknownTime ? null : chart.mc, aspects: chart.aspects, cusps: chart.cusps, bazi: chart.bazi, elements: chart.elements, flags: chart.flags });
+      const res = await saveMyBirth(birth, savedChart(chart, !unknownTime));
       if (res.error) { setErr('Your chart is saved on this device, but your account could not save it. Please try again.'); return; }
       const { data: u } = await supabase.auth.getUser();
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
