@@ -65,20 +65,26 @@ export async function composeManuscript(input: ManuscriptInput) {
   write('About this manuscript', 22); write(input.birthFacts);
   write(`Edition: ${version ? `${version.name}${version.trim ? ` · ${version.trim}` : ''} · ${version.binding}` : input.edition}. Printer approval is required before production.`);
   write('Planet positions and calculations are distinct from traditional symbolic interpretation. Astrology does not establish personality, sexuality, diagnosis or future events. Personal examples are user reports, not independently verified facts.');
-  write(`Page count is determined by the actual saved content${version ? ` (this version aims for ${version.pages[0]}–${version.pages[1]} pages)` : ''}. No blank filler or invented biography is added to meet a target; journal pages are listed in the contents.`);
-  const baseChapters = input.chapters.filter(c => !input.extras.some(e => e.toLowerCase() === c.title.toLowerCase()));
-  const pick = (re: RegExp, not?: RegExp) => baseChapters.filter(c => re.test(c.title) && !(not?.test(c.title))).map(c => `## ${c.title}\n\n${c.content}`).join('\n\n');
-  const sections: BookChapter[] = [
-    { title: BOOK_SECTIONS[0].title, content: input.chartFacts },
-    { title: BOOK_SECTIONS[1].title, content: pick(/big three|mind|communication|growth|lesson/i) },
-    { title: BOOK_SECTIONS[2].title, content: pick(/love|relationship|sex|attract/i) },
-    { title: BOOK_SECTIONS[3].title, content: baseChapters.filter(c => !/big three|mind|communication|growth|lesson|love|relationship|sex|attract/i.test(c.title)).map(c => `## ${c.title}\n\n${c.content}`).join('\n\n') },
-  ];
-  for (const extra of input.extras) { const chapter = input.chapters.find(c => c.title.toLowerCase() === extra.toLowerCase()); if (!chapter) throw new Error(`Write the extra section “${extra}” in My Masterbook before adding it to print.`); sections.push({ title: extra, content: chapter.content }); }
-  if (sections.some(s => !s.content.trim())) throw new Error('Your four foundations are incomplete. Finish the ready-made chapters in My Masterbook first.');
-  sections.push(...(input.editionChapters ?? []));
+  write(`Page count is determined by the actual content${version ? ` (this version aims for ${version.pages[0]}–${version.pages[1]} pages)` : ''}. No blank filler or invented biography is added to meet a target; journal pages are listed in the contents.`);
+  if (input.volumes?.length) write('Every chapter is written from your calculated chart. Readings you finished in Zodaci appear inside the volume they belong to; where a calculation needs a birth time you did not give, the chapter says so instead of guessing.');
+  let sections: BookChapter[];
+  if (input.volumes?.length) sections = input.volumes;
+  else {
+    const baseChapters = input.chapters.filter(c => !input.extras.some(e => e.toLowerCase() === c.title.toLowerCase()));
+    const pick = (re: RegExp, not?: RegExp) => baseChapters.filter(c => re.test(c.title) && !(not?.test(c.title))).map(c => `## ${c.title}\n\n${c.content}`).join('\n\n');
+    sections = [
+      { title: BOOK_SECTIONS[0].title, content: input.chartFacts },
+      { title: BOOK_SECTIONS[1].title, content: pick(/big three|mind|communication|growth|lesson/i) },
+      { title: BOOK_SECTIONS[2].title, content: pick(/love|relationship|sex|attract/i) },
+      { title: BOOK_SECTIONS[3].title, content: baseChapters.filter(c => !/big three|mind|communication|growth|lesson|love|relationship|sex|attract/i.test(c.title)).map(c => `## ${c.title}\n\n${c.content}`).join('\n\n') },
+    ];
+    for (const extra of input.extras) { const chapter = input.chapters.find(c => c.title.toLowerCase() === extra.toLowerCase()); if (!chapter) throw new Error(`Write the extra section “${extra}” in My Masterbook before adding it to print.`); sections.push({ title: extra, content: chapter.content }); }
+    if (sections.some(s => !s.content.trim())) throw new Error('Your four foundations are incomplete. Finish the ready-made chapters in My Masterbook first.');
+    sections.push(...(input.editionChapters ?? []));
+  }
   const journal = version?.journal ?? 0;
   const entries = [...sections.map(s => s.title), ...(journal ? [`Journal · ${journal} page${journal > 1 ? 's' : ''}`] : [])];
+  const isVolume = (i: number) => sections[i]?.draw === 'volume';
   // Reserve as many contents pages as needed before laying out chapters.
   const perToc = Math.max(8, Math.floor((H - M * 2 - 56) / 36));
   const tocPages = Array.from({ length: Math.ceil(entries.length / perToc) }, () => pdf.addPage([W, H]));
@@ -86,6 +92,7 @@ export async function composeManuscript(input: ManuscriptInput) {
   for (const section of sections) {
     newPage(); starts.push(pdf.getPageCount());
     if (section.draw === 'certificate') { drawCertificate(page, font, W, H, M, input.name, input.birthFacts, input.certificate); continue; }
+    if (section.draw === 'volume') { drawVolume(page, font, W, H, M, section.title, section.content); continue; }
     write(section.title, 22, 18);
     if (section.draw === 'wheel' && input.chart) { const size = Math.min(W - M * 2, H - M * 2 - 120); drawWheel(page, font, input.chart, W / 2, y - size / 2, size / 2); y -= size + 24; }
     if (section.draw === 'grid' && input.chart) { const used = drawGrid(page, font, input.chart, M, y, W - M * 2); y -= used + 20; if (y < BOTTOM + 60) newPage(); }
