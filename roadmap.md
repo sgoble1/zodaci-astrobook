@@ -34,7 +34,7 @@ Audit Oct 29: payment already waits for a real manuscript (server-checked); rema
 
 ### 6. Founder editions & member design (agent)
 - [x] Shane and Zac edition homes match April's depth (hero, chart title, planet orbs, wheel, volume shelves, module cards).
-- [ ] ChartWheel gets the illuminated style, larger tap targets, reduced-motion.
+- [x] ChartWheel gets the illuminated style, larger tap targets (17px hit circles), keyboard selection, reduced-motion.
 - [ ] Sidebars: Zac gets readings/explore/home; Shane gets April's Masterbook link; member menu Editions lists family editions for Shane; mobile tab active state; Zac workbook autosave without duplicates.
 
 ### 7. Public site & member flow (agent)
