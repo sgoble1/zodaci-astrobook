@@ -13,12 +13,14 @@ Deno.serve(async (req) => {
     const { data: { user } } = await admin.auth.getUser(token);
     if (!user) return json({ error: "Please sign in first." }, 401);
     const body = await req.json().catch(() => ({}));
-    const env: StripeEnv = body.environment === "sandbox" ? "sandbox" : "live";
-    // Only our own sites may be used as the return destination.
+    if (body.environment !== "sandbox" && body.environment !== "live") return json({ error: "Invalid environment" }, 400);
+    const env: StripeEnv = body.environment;
+    // Only our own sites may be used as the return destination; default back to the site the member came from.
     const TRUSTED = /^https:\/\/((www\.)?zodaci\.com|april\.zodaci\.com|[a-z0-9-]+\.lovable\.app)$/;
+    const origin = req.headers.get("Origin") ?? "";
     let returnUrl: string | undefined;
     try { const u = new URL(String(body.returnUrl)); if (TRUSTED.test(u.origin)) returnUrl = u.origin + u.pathname; } catch { /* ignore */ }
-    returnUrl ??= "https://zodaci.com/pricing";
+    returnUrl ??= TRUSTED.test(origin) ? `${origin}/pricing` : "https://zodaci.com/pricing";
     // Plan memberships and AstroComic subscriptions are stored separately; either can open billing.
     const kind = body.kind === "comic" ? "comic" : "plan";
     const tables = kind === "comic" ? ["comic_subscriptions", "billing_subscriptions"] : ["billing_subscriptions", "comic_subscriptions"];
