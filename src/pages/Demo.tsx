@@ -1,11 +1,21 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Switch } from '@/components/ui/switch';
 import { PromoVideo } from '@/components/brand/PromoVideo';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { Book3D } from '@/components/books/Book3D';
 import { SampleChartDemo } from '@/components/brand/SampleChartDemo';
+import { ComicFlipbook } from '@/components/comic/ComicFlipbook';
+import { ISSUE_1 } from '@/content/comicIssue1';
+import { PLAN_NAME, PLAN_PRICE } from '@/lib/plans';
+import episode from '@/assets/zodaci-demo-episode.mp3.asset.json';
+import plate2 from '@/assets/plates/plate-02.jpg';
+import plate5 from '@/assets/plates/plate-05.jpg';
+import plate8 from '@/assets/plates/plate-08.jpg';
+import plate11 from '@/assets/plates/plate-11.jpg';
+import plate13 from '@/assets/plates/plate-13.jpg';
+import plate16 from '@/assets/plates/plate-16.jpg';
+import pisces from '@/assets/mystic/pisces-opener.jpg';
 
 /** Fictional sample profile — no real member data is used on this page. */
 const SAMPLE = { name: 'Jules Harbor', facts: 'Sun Virgo · Moon Pisces · Rising Scorpio' };
@@ -22,43 +32,39 @@ const SECTIONS = [
 
 const SCRIPT = `Welcome to your Zodaci podcast. Today, ${SAMPLE.name}, we're exploring your emotional world. Your Moon in Pisces means you feel the tide of a room before anyone speaks. Your Scorpio rising guards that softness, and your Virgo Sun turns it into steady, practical care.`;
 
-function PodcastSimulator() {
-  const [voice, setVoice] = useState(0);
-  const [playing, setPlaying] = useState(false);
-  const [progress, setProgress] = useState(0);
-  const timer = useRef<number>();
-  const voices = ['Warm narrator', 'Calm guide', 'Conversational host', 'Deep storyteller'];
-  const supported = typeof window !== 'undefined' && 'speechSynthesis' in window;
-
-  useEffect(() => () => { window.clearInterval(timer.current); if (supported) speechSynthesis.cancel(); }, [supported]);
-
-  const toggle = () => {
-    if (playing) { speechSynthesis.cancel(); window.clearInterval(timer.current); setPlaying(false); return; }
-    const u = new SpeechSynthesisUtterance(SCRIPT);
-    const sys = speechSynthesis.getVoices().filter(v => v.lang.startsWith('en'));
-    if (sys.length) u.voice = sys[voice % sys.length];
-    u.rate = [0.95, 0.9, 1.05, 0.85][voice]; u.pitch = [1, 1.05, 1.1, 0.8][voice];
-    u.onend = () => { setPlaying(false); setProgress(100); window.clearInterval(timer.current); };
-    setProgress(0); setPlaying(true); speechSynthesis.speak(u);
-    timer.current = window.setInterval(() => setProgress(p => Math.min(99, p + 2.5)), 500);
-  };
-
+function PodcastPlayer() {
   return (
     <div className="glass rounded-lg p-6 space-y-4">
-      <div className="flex flex-wrap gap-2" role="radiogroup" aria-label="Voice">
-        {voices.map((v, i) => <button key={v} type="button" role="radio" aria-checked={voice === i} onClick={() => setVoice(i)} className={`rounded-full border px-3 py-1 text-sm ${voice === i ? 'border-primary bg-primary/15' : 'border-border hover:border-primary/60'}`}>{v}</button>)}
-      </div>
-      <div className="flex h-16 items-end gap-1" aria-hidden>
-        {Array.from({ length: 48 }, (_, i) => <span key={i} className={`flex-1 rounded-sm ${i / 48 * 100 < progress ? 'bg-primary' : 'bg-muted'}`} style={{ height: `${20 + Math.abs(Math.sin(i * 1.7)) * 80}%` }} />)}
-      </div>
-      <div className="flex items-center gap-3">
-        <Button onClick={toggle} disabled={!supported}>{playing ? 'Stop' : 'Play sample episode'}</Button>
-        <span className="text-sm text-muted-foreground">{supported ? 'Demo uses your device voice. Members get studio-quality voices and saved episodes.' : 'Audio preview is not available in this browser.'}</span>
-      </div>
+      <div className="flex flex-wrap items-baseline justify-between gap-2"><p className="font-display text-xl">Your emotional world, Jules</p><p className="text-sm text-muted-foreground">Sample episode · 54 seconds · studio voice</p></div>
+      <audio controls preload="none" src={episode.url} className="w-full">Your browser cannot play this sample.</audio>
+      <p className="text-sm text-muted-foreground">This is the same voice members hear. Real episodes run 2 to 8 minutes and are written from your own readings, with sources.</p>
       <details className="text-sm"><summary className="cursor-pointer text-primary">Read the script</summary><p className="mt-2 text-muted-foreground">{SCRIPT}</p></details>
     </div>
   );
 }
+
+type DemoTier = 'free' | 'full' | 'creator';
+const TIER_SHOWS: Record<DemoTier, { sections: number; points: string[] }> = {
+  free: { sections: 1, points: ['Your full calculated chart', 'Sun, Moon and Rising explained', 'The opening section of each reading'] },
+  full: { sections: 7, points: ['Every section of every reading', 'All planets plus Chiron and the Nodes', 'Your Masterbook to read online'] },
+  creator: { sections: 7, points: ['Everything in Pro', 'New Masterbook chapters on any topic you choose', 'Podcast episodes in a studio voice', 'Arabic Parts, profections and deeper timing'] },
+};
+
+/** Illustrated six-volume Masterbook, the structure every member book follows. */
+const VOLUMES = [
+  { n: 'I', title: 'The Celestial Matrix', art: plate2, text: 'Sun, Moon, Rising and every planet, each with its sign, house, dignity and ruler.' },
+  { n: 'II', title: 'The Twelve Temples', art: plate5, text: 'All twelve houses: what lives there, who rules it, and how it shows up day to day.' },
+  { n: 'III', title: 'Planetary Geometry', art: plate8, text: 'Every aspect and pattern, ranked by how strongly it shapes the chart.' },
+  { n: 'IV', title: 'The Esoteric Points', art: plate11, text: 'Chiron, the Nodes, Lilith, the Part of Fortune and the asteroids.' },
+  { n: 'V', title: 'World Systems', art: plate13, text: 'Vedic, Chinese Ba Zi, numerology and Feng Shui from the same birth moment.' },
+  { n: 'VI', title: 'Cycles of Time', art: plate16, text: 'Saturn and Jupiter returns, profections and the transits ahead.' },
+];
+
+const MASTER_SAMPLE = [
+  'Volume I · Chapter 2 — The Moon in Pisces in the Twelfth House',
+  'Your Moon sits at 18° Pisces in the twelfth house, the most private room in the chart. Pisces is a mutable water sign ruled by Neptune, and the twelfth house is where we keep what we have not yet put into words. Together they describe an emotional life that runs deep and mostly out of sight: you take in atmospheres, other people’s moods and the unspoken weather of a room long before you can name any of it.',
+  'The Moon’s ruler, Neptune, decides how this plays out. In Jules’s chart Neptune trines the Virgo Sun, so the softness has a practical outlet: care becomes something you do, not just something you feel. The square from Saturn adds the lesson. Feelings that never get named become tiredness. This chapter ends with three practices matched to these placements, and the next one follows the same Moon through the houses it rules.',
+];
 
 export default function Demo() {
   usePageMeta('Try Zodaci Pro — Interactive Demo | Zodaci', 'Explore a full-length sample reading, compare Free and Pro depth, listen to a sample podcast and turn a 3D AstroBook — no sign-up needed.');
