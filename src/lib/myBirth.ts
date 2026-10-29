@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import type { ChartInput, HouseSystem } from '@/lib/astro';
 import { birthFingerprint } from '@/lib/birthFingerprint';
+import { onAccountChange } from '@/lib/authEvents';
 export { birthFingerprint };
 
 export type MyBirth = { name: string; date: string; time: string | null; placeLabel: string; lat: number; lon: number; tz: string; houseSystem: HouseSystem; sex?: string | null };
@@ -51,8 +52,8 @@ export function useMyBirth() {
     void load();
     const refresh = () => { void load(); };
     window.addEventListener('astrobook-birth-saved', refresh);
-    const { data: listener } = supabase.auth.onAuthStateChange(() => { revision++; if (active) setBirth(undefined); setTimeout(refresh, 0); });
-    return () => { active = false; window.removeEventListener('astrobook-birth-saved', refresh); listener.subscription.unsubscribe(); };
+    const stop = onAccountChange(() => { revision++; if (active) setBirth(undefined); setTimeout(refresh, 0); });
+    return () => { active = false; window.removeEventListener('astrobook-birth-saved', refresh); stop(); };
   }, []);
   return birth;
 }

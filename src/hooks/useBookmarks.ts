@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useSession } from '@/hooks/useLibrary';
 import { createBookmarkStore } from './bookmarkStore';
+import { onAccountChange } from '@/lib/authEvents';
 
 export type Bookmark = { id: string; path: string; title: string; note: string; created_at: string };
 
@@ -14,7 +15,7 @@ const fetchAll = (ownerId: string) => store.load(ownerId, async () => {
   return (data as Bookmark[]) ?? [];
 });
 const notify = () => { store.clear(); listeners.forEach(l => l()); };
-supabase.auth.onAuthStateChange(() => { store.clear(); });
+onAccountChange(() => { store.clear(); });
 
 export function useBookmarks() {
   const session = useSession();

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import { onAccountChange } from '@/lib/authEvents';
 
 let cached: { uid: string; ok: boolean } | null = null;
 const listeners = new Set<(v: boolean | undefined) => void>();
@@ -26,7 +27,7 @@ async function check() {
     listeners.forEach(l => l(false));
   }
 }
-supabase.auth.onAuthStateChange(() => {
+onAccountChange(() => {
   revision++;
   cached = null;
   listeners.forEach(l => l(false));

@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
 import { ALL_READINGS, FLAGSHIP_READINGS, FREE_READINGS, canWriteAllReadings, loadMyTopicReadings, writeTopicReading } from '@/lib/topicReadings';
+import { onAccountChange } from '@/lib/authEvents';
 
 const MIN_KEY = 'zodaci-gen-minimized';
 const STARTED_KEY = 'zodaci-gen-started';
@@ -26,9 +27,9 @@ export function GenerationProgress() {
   const revision = useRef(0);
   useEffect(() => {
     const reset = () => { revision.current++; setEligible(false); setDone(null); setError(''); setRequested(new Set()); setRunId(n => n + 1); };
-    const { data } = supabase.auth.onAuthStateChange(reset);
+    const stop = onAccountChange(reset);
     window.addEventListener('astrobook-birth-saved', reset);
-    return () => { data.subscription.unsubscribe(); window.removeEventListener('astrobook-birth-saved', reset); };
+    return () => { stop(); window.removeEventListener('astrobook-birth-saved', reset); };
   }, []);
 
   const refresh = async () => {

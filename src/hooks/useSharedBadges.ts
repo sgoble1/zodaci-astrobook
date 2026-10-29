@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import { onAccountChange } from '@/lib/authEvents';
 
 let badgeSubscriberNumber = 0;
 
@@ -27,8 +28,8 @@ export function useSharedBadges() {
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'shared_messages' }, load)
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'shared_wonderings' }, load).subscribe();
     const t = window.setInterval(load, 60000);
-    const { data: sub } = supabase.auth.onAuthStateChange(() => load());
-    return () => { live = false; supabase.removeChannel(ch); clearInterval(t); sub.subscription.unsubscribe(); };
+    const stop = onAccountChange(() => load());
+    return () => { live = false; supabase.removeChannel(ch); clearInterval(t); stop(); };
   }, []);
   return badges;
 }
