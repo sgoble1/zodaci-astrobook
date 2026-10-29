@@ -20,12 +20,12 @@ import { VOLUMES } from '@/lib/bookVolumes';
 /** The six volumes of every AstroBook, described from what buildVolumes() actually writes. */
 const VOLUME_ART = { I: 'chart', II: 'house', III: 'aspect', IV: 'healing', V: 'sign', VI: 'year' } as const;
 const VOLUME_DETAIL: Record<string, string> = {
-  I: 'Birth facts, the full planet table, your Big Three, chart ruler and birth Moon phase',
+  I: 'Opens with a letter from your chart, then birth facts, the planet table, your Big Three, chart ruler, dignities and Moon phase',
   II: 'All twelve houses, one by one: the sign on each cusp, its ruler and the planets inside',
-  III: 'Every planet by sign and house, then your aspects with exact orbs, tightest first',
-  IV: 'Your North Node, then Chiron, the sensitive points, lots and fixed stars in larger versions',
+  III: 'Every planet by sign and house, your aspects with exact orbs, and the aspect patterns they form',
+  IV: 'Your North Node, shadow and breakthrough, then Chiron, sensitive points, lots and fixed stars in larger versions',
   V: 'A Vedic sidereal snapshot, your Chinese year pillar and your Life Path number (Classic and up)',
-  VI: 'This year’s profection, then retrogrades, your solar return and a 12-month forecast as versions grow',
+  VI: 'This year’s profection and your life cycles (Jupiter and Saturn returns), then retrogrades, solar return and a 12-month forecast',
 };
 
 export function AstroBookPublic() {
