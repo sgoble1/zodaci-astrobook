@@ -70,7 +70,7 @@ function LibraryInner() {
   return (
     <Frame>
       <h1 className="font-display text-4xl mb-2">Every source, chapter and section</h1>
-      <p className="text-muted-foreground mb-6">Browse and read all {entries.length} extracted chapters from the real Masterbook documents. This room and every chapter open only for the edition's owner and the people she shares it with.</p>
+      <p className="text-muted-foreground mb-6">{entries.length ? `Browse and read ${entries.length === 1 ? 'the 1 chapter' : `all ${entries.length} chapters`} open to your account. ` : ''}This room and every chapter open only for the edition’s owner and the people she shares it with.</p>
       <Input aria-label="Find a chapter or section" value={q} onChange={e => setQ(e.target.value)} placeholder="Find a chapter or section…" className="mb-8" />
       {loading && <p role="status">Opening the chapter index…</p>}
       {denied && <NoEditionAccess owner="April" onRetry={retry} />}
