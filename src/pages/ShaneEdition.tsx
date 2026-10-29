@@ -4,7 +4,6 @@ import { ChevronLeft, ChevronRight, Search } from 'lucide-react';
 import { markdownSections, NavigatedProse } from '@/components/readings/NavigatedProse';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { supabase } from '@/integrations/supabase/client';
 import { loadProtectedJson, loadProtectedText, ContentLockedError, ACCESS_CHANGED_EVENT } from '@/lib/protectedContent';
 import { CATEGORIES, catsFor, type MbEntry } from './Masterbook';
 import { NoEditionAccess, PrivateEditionGate } from '@/components/common/PrivateEditionGate';
