@@ -5,8 +5,13 @@ import { HOUSE_ARENAS, SIGN_EXPRESSIONS } from '@/content/interpretationLibrary'
 import { SIGN_RULER } from '@/lib/signRulers';
 import { NUM_KEYWORD } from '@/lib/numerologyCross';
 import { versionOf } from '@/lib/books';
+import { detectPatterns, rankPatterns, sep } from '@/lib/chartPatterns';
+import { dignityOf } from '@/lib/retrogood';
+import { shadowBreakthroughBlock } from '@/content/shadowBreakthrough';
+import { buildOpeningLetter, letterText } from '@/lib/openingLetter';
+import { lifeCycles } from '@/lib/lifeCycles';
 import {
-  affirmationsChapter, birthVerse, elementChapter, forecastChapter, letter, moonPhase, mythologyChapter, northNodeChapter, relationshipPrimer,
+  affirmationsChapter, birthVerse, elementChapter, forecastChapter, moonPhase, mythologyChapter, northNodeChapter, relationshipPrimer,
   retroChapter, rulershipSummary, sensitivePoints, solarReturnChapter, synastryChapter, type BookChapter, type Person,
 } from '@/lib/bookExtras';
 
@@ -168,6 +173,61 @@ function synastryKeys(c: ChartResult) {
   ].join('\n\n');
 }
 
+const DIGNITY_WORD: Record<string, string> = { domicile: 'at home (domicile)', exaltation: 'exalted', 'domicile+exaltation': 'at home and exalted', peregrine: 'peregrine (a guest)', detriment: 'in detriment', fall: 'in fall', 'detriment+fall': 'in detriment and fall' };
+/** Dignity of each planet plus where the chart's weight falls (hemispheres need a birth time). */
+function dignitiesChapter(c: ChartResult, timeKnown: boolean) {
+  const rows = PLANETS.map(k => body(c, k)).filter((b): b is NonNullable<typeof b> => !!b).map(b => `**${b.name}** in ${b.sign} · ${DIGNITY_WORD[dignityOf(b.key, b.sign)] ?? 'peregrine'}`);
+  const strong = PLANETS.map(k => body(c, k)!).filter(b => ['domicile', 'exaltation', 'domicile+exaltation'].includes(dignityOf(b.key, b.sign)));
+  const parts = ['Dignity describes how comfortable a planet is in its sign. At home or exalted, it works with ease; in detriment or fall, it works harder and often grows more skilful for it.', rows.join('\n\n')];
+  parts.push(strong.length ? `## Your strongest voices\n\n${strong.map(b => b.name).join(', ')} ${strong.length > 1 ? 'are' : 'is'} dignified in your chart, so ${strong.length > 1 ? 'they speak' : 'it speaks'} clearly and early in life.` : '## Your strongest voices\n\nNo planet sits in its own sign or exaltation, so no single voice dominates; your chart is a conversation between equals.');
+  if (timeKnown && c.cusps?.length) {
+    const ps = PLANETS.map(k => body(c, k)!).filter(b => b.house);
+    const above = ps.filter(b => b.house! >= 7).length, east = ps.filter(b => b.house! >= 10 || b.house! <= 3).length;
+    parts.push(`## Where the weight falls\n\n${above} of 10 planets are above the horizon (houses 7–12) and ${10 - above} below it; ${east} are on the eastern side (houses 10–3) and ${10 - east} on the western. ${above >= 6 ? 'A chart weighted above the horizon tends to live outwardly, through the world and other people.' : above <= 4 ? 'A chart weighted below the horizon tends to live inwardly first, from private life and personal ground.' : 'Above and below are close to balanced.'} ${east >= 6 ? 'Eastern emphasis favours self-direction: you shape circumstances.' : east <= 4 ? 'Western emphasis favours relationship: circumstances and people shape you, and you shape them back.' : ''}`.trim());
+  }
+  return parts.join('\n\n');
+}
+
+/** Multi-planet configurations, ranked by significance, with the reasons each one ranks. */
+function patternsChapter(c: ChartResult, timeKnown: boolean) {
+  const ranked = rankPatterns(detectPatterns(timeKnown ? c : { ...c, asc: null, cusps: null, utc: null }), c);
+  if (!ranked.length) return 'No major multi-planet configuration (stellium, Grand Trine, T-square, Yod, Kite or Grand Cross) forms in your chart. Your planets act more as individuals than as a choir, so the planet-by-planet chapters carry the story.';
+  return `${ranked.length} configuration${ranked.length > 1 ? 's' : ''} found, most significant first.\n\n` + ranked.map(r => `## ${r.label}\n\n${r.detail}${r.factors.length ? `\n\nWhy it ranks: ${r.factors.join('; ')}.` : ''}`).join('\n\n');
+}
+
+/** Shadow and breakthrough for the most significant patterns, with one small practice each. */
+function shadowChapter(c: ChartResult, timeKnown: boolean) {
+  const ranked = rankPatterns(detectPatterns(timeKnown ? c : { ...c, asc: null, cusps: null, utc: null }), c);
+  const items = shadowBreakthroughBlock(ranked, 'oracle', 5);
+  if (!items.length) return 'Your chart has no single dominant configuration, so shadow and breakthrough are read planet by planet in Volume III.';
+  return 'Each strong pattern has a form it takes under pressure and a form it grows into. Neither is a verdict; both are yours to notice.\n\n' + items.map(i => `## ${i.source}\n\nUnder pressure: ${i.shadow}.\n\nIntegrated: ${i.breakthrough}.${i.practice ? `\n\nPractice: ${i.practice}.` : ''}`).join('\n\n');
+}
+
+/** Planetary midpoints and the planets sitting on them (within 1.5°). */
+function midpointsChapter(c: ChartResult) {
+  const pts = [...PLANETS.map(k => body(c, k)!).map(b => ({ name: b.name, lon: b.lon })), ...(c.asc != null ? [{ name: 'Ascendant', lon: c.asc }] : []), ...(c.mc != null ? [{ name: 'Midheaven', lon: c.mc }] : [])];
+  const pairs: [string, string][] = [['Sun', 'Moon'], ['Venus', 'Mars'], ['Sun', 'Saturn'], ['Moon', 'Venus'], ['Jupiter', 'Saturn'], ...(c.asc != null && c.mc != null ? [['Ascendant', 'Midheaven'] as [string, string]] : [])];
+  const lines = pairs.map(([a, b]) => {
+    const pa = pts.find(p => p.name === a)!, pb = pts.find(p => p.name === b)!;
+    let mid = norm(pa.lon + norm(pb.lon - pa.lon) / 2); if (norm(pb.lon - pa.lon) > 180) mid = norm(mid + 180);
+    const on = pts.filter(p => p.name !== a && p.name !== b && (sep(p.lon, mid) <= 1.5 || sep(p.lon, mid + 180) <= 1.5));
+    return `**${a}/${b}** · ${fmtLon(mid).text}${on.length ? ` — activated by ${on.map(p => p.name).join(', ')}` : ''}`;
+  });
+  return 'A midpoint is the exact halfway point between two planets. When a third planet sits on it (or opposite it), the three act as one theme.\n\n' + lines.join('\n\n');
+}
+
+/** Returns and turning points across a lifetime, from the real ephemeris. */
+function cyclesChapter(c: ChartResult, today = new Date()) {
+  const events = lifeCycles(c);
+  if (!events.length) return 'The cycle dates could not be calculated for this chart.';
+  const fmt = (d: Date) => d.toLocaleDateString('en-US', { month: 'long', year: 'numeric', timeZone: c.input.tz });
+  const next = events.find(e => e.date > today);
+  return [
+    `These are the dates when a planet returns to its own place in your chart, or squares or opposes it, calculated from the ephemeris.${next ? ` Your next one is the ${next.title} in ${fmt(next.date)}, at about ${next.age}.` : ''}`,
+    ...events.map(e => `## ${e.title} · age ${e.age} · ${fmt(e.date)}${e.date <= today ? ' (passed)' : ''}\n\n${e.meaning}`),
+  ].join('\n\n');
+}
+
 export type VolumeInput = { edition: string; chart: ChartResult; name: string; saved: { title: string; content: string }[]; people?: Person[]; today?: Date; /** Birth facts and the full planet table. */ facts?: string };
 
 /** All chapters of a personal AstroBook, in reading order, with a divider page before each volume. */
@@ -184,6 +244,7 @@ export function buildVolumes({ edition, chart: c, name, saved, people = [], toda
   vol.I.push({ title: 'Your Big Three', content: bigThree(c, timeKnown) });
   if (r >= 2) vol.I.push({ title: 'Your Birth Sky', content: 'The wheel above is drawn from your calculated positions: signs around the edge, planets at their exact degrees.', draw: 'wheel' });
   vol.I.push({ title: 'Your Birth Moon Phase', content: `${ph.name} · ${Math.round(ph.angle)}° from the Sun · ${ph.illumination}% lit\n\n${ph.text}` });
+  vol.I.push({ title: 'Dignities and Chart Emphasis', content: dignitiesChapter(c, timeKnown) });
   if (r >= 3) vol.I.push({ title: 'Element and Modality Balance', content: elementChapter(c) }, { title: 'The Story of Your Sky', content: narrative(perceive(c, timeKnown), 'oracle', 6) + '\n\n' + perceive(c, timeKnown).slice(0, 6).map(i => `## ${i.title}\n\n${i.text}`).join('\n\n') });
   vol.I.push(...bySaved('I'));
 
@@ -192,12 +253,14 @@ export function buildVolumes({ edition, chart: c, name, saved, people = [], toda
 
   vol.III.push({ title: 'Your Planets, One by One', content: planetsChapter(c, timeKnown) });
   vol.III.push({ title: 'Your Aspects', content: aspectsChapter(c, [8, 12, 24, 36, 60][r]) });
+  vol.III.push({ title: 'Aspect Patterns', content: patternsChapter(c, timeKnown) });
+  if (r >= 3) vol.III.push({ title: 'Midpoints', content: midpointsChapter(c) });
   if (r >= 2) vol.III.push({ title: 'Aspect Grid', content: 'Each square marks an aspect between the two planets on its row and column.', draw: 'grid' });
   if (r >= 3) vol.III.push({ title: 'Relationship Primer', content: relationshipPrimer(c, timeKnown) });
   if (r >= 4) vol.III.push(people.length ? { title: 'Relationship Comparisons', content: synastryChapter(c, people) } : { title: 'Your Synastry Keys', content: synastryKeys(c) });
   vol.III.push(...bySaved('III'));
 
-  vol.IV.push({ title: 'Your North Node', content: northNodeChapter(c) });
+  vol.IV.push({ title: 'Your North Node', content: northNodeChapter(c) }, { title: 'Shadow and Breakthrough', content: shadowChapter(c, timeKnown) });
   if (r >= 2) vol.IV.push({ title: 'Chiron, the Nodes and Sensitive Points', content: sensitivePoints(c, timeKnown) });
   if (r >= 4) vol.IV.push({ title: 'Lots and Fixed Stars', content: lotsAndStars(c) }, { title: 'Planet Mythology', content: mythologyChapter(c) });
   vol.IV.push(...bySaved('IV'));
@@ -205,7 +268,7 @@ export function buildVolumes({ edition, chart: c, name, saved, people = [], toda
   if (r >= RANK.indexOf(WORLD_SYSTEMS_FROM)) vol.V.push({ title: 'Your Birth Moment Across Traditions', content: worldSystems(c) });
   vol.V.push(...bySaved('V'));
 
-  vol.VI.push({ title: 'Your Profection Year', content: profectionChapter(c, today) });
+  vol.VI.push({ title: 'Your Profection Year', content: profectionChapter(c, today) }, { title: 'Life Cycles: Returns and Turning Points', content: cyclesChapter(c, today) });
   if (r >= 2) vol.VI.push({ title: 'RetroGOOD: Your Retrograde Planets', content: retroChapter(c) }, { title: 'Solar Return Preview', content: solarReturnChapter(c, timeKnown, today) });
   if (r >= 4) vol.VI.push({ title: 'Your 12-Month Sky Forecast', content: forecastChapter(c, today) }, { title: 'Twelve Affirmations', content: affirmationsChapter(c) });
   vol.VI.push(...bySaved('VI'));
@@ -217,7 +280,7 @@ export function buildVolumes({ edition, chart: c, name, saved, people = [], toda
 
   const out: BookChapter[] = [];
   if (r >= 1) out.push({ title: 'Your Birth-Moment Verse', content: birthVerse(c, name) });
-  if (r >= 3) out.push({ title: 'A Letter From Your Sky', content: letter(c, name) });
+  out.push({ title: 'Your Opening Letter', content: letterText(buildOpeningLetter({ name, placeLabel: c.input.placeLabel, chart: c, timeKnown })) });
   for (const v of VOLUMES) {
     const chapters = vol[v.n];
     if (!chapters.length) continue;
