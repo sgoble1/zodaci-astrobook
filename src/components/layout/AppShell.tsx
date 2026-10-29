@@ -72,7 +72,7 @@ function useShaneGroups(enabled: boolean, area: 'shane' | 'zac' = 'shane'): NavG
       shared, relationships,
       { title: 'Official AstroBook', items: [{ to: '/official-astrobook', label: 'All Official AstroBooks' }, { to: '/official-astrobook/comic/shane', label: 'My Official AstroComic' }, { to: '/official-astrobook/illustrated', label: 'Zodaci Illustrated · Oct 2026' }, { to: '/official-astrobook/showcase/shane', label: 'My Illustrated Pages' }] },
       { title: 'Together & Media', items: [{ to: '/our-charts', label: 'Our charts' }, { to: '/podcasts', label: 'Podcasts' }, { to: '/investors', label: 'Investor overview' }, { to: '/store', label: 'Shop' }] },
-      { title: 'Family Editions', items: [...sharedLinks.filter(l => l.to !== '/zac'), { to: '/zac', label: 'Zac’s Astrological Library' }, { to: '/zac/workbook', label: 'Zac’s Workbook' }, { to: '/official-astrobook/comic/zac', label: 'Zac’s AstroComic' }, { to: '/official-astrobook/comic/april', label: 'April’s AstroComic' }] },
+      { title: 'Founder Editions', items: [...sharedLinks.filter(l => l.to !== '/zac'), { to: '/zac', label: 'Zac’s Astrological Library' }, { to: '/zac/workbook', label: 'Zac’s Workbook' }, { to: '/official-astrobook/comic/zac', label: 'Zac’s AstroComic' }, { to: '/official-astrobook/comic/april', label: 'April’s AstroComic' }] },
       { title: 'Admin', items: [{ to: '/admin', label: 'Admin dashboard' }, { to: '/dispatch', label: 'Dispatch' }] },
     ] as NavGroup[];
   }, [chapters, rels, badges.chat, badges.wonderings, area, sharedEditions]);
