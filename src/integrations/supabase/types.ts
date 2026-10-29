@@ -2857,6 +2857,18 @@ export type Database = {
         }
         Returns: boolean
       }
+      investor_metrics: {
+        Args: never
+        Returns: {
+          book_orders: number
+          charts: number
+          comic_subs: number
+          members: number
+          paid: number
+          podcasts: number
+          readings: number
+        }[]
+      }
       is_shared_space_member: { Args: never; Returns: boolean }
       is_shared_space_user_id: { Args: { _user_id: string }; Returns: boolean }
       is_space_member: { Args: { _space_id: string }; Returns: boolean }
