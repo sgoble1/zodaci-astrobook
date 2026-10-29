@@ -53,7 +53,6 @@ export function MemberPlanetDetail({ birth, planetKey }: { birth: MyBirth; plane
   const prev = list[i - 1], next = list[i + 1];
   return (
     <article className="space-y-8">
-      <Link to="/planets" className="font-smallcaps text-xs text-muted-foreground hover:text-foreground">← Your planets</Link>
       <header className="flex flex-wrap items-center gap-6">
         <PlanetOrb planet={b.key} size={96} />
         <div>
@@ -63,9 +62,9 @@ export function MemberPlanetDetail({ birth, planetKey }: { birth: MyBirth; plane
         </div>
       </header>
       <section className="grid gap-4 md:grid-cols-3">
-        <div className="vellum p-5"><h2 className="font-smallcaps text-xs text-gold">What it is</h2><p className="mt-2">{BODY_KEYWORDS[b.key] ?? b.name}.</p></div>
-        <div className="vellum p-5"><h2 className="font-smallcaps text-xs text-gold">How it works in {b.sign}</h2><p className="mt-2">{SIGN_KEYWORDS[b.sign]}.</p></div>
-        <div className="vellum p-5"><h2 className="font-smallcaps text-xs text-gold">Where it shows up</h2><p className="mt-2">{hasTime && b.house ? `The ${ordinal(b.house)} house: ${HOUSE_AREA[b.house]}.` : 'Houses need a birth time.'}</p>{!hasTime && <Link to="/start" className="mt-2 inline-block text-sm underline">Add your birth time</Link>}</div>
+        <div className="vellum p-5"><h2 className="font-smallcaps !text-xs text-gold">What it is</h2><p className="mt-2">{BODY_KEYWORDS[b.key] ?? b.name}.</p></div>
+        <div className="vellum p-5"><h2 className="font-smallcaps !text-xs text-gold">How it works in {b.sign}</h2><p className="mt-2">{SIGN_KEYWORDS[b.sign]}.</p></div>
+        <div className="vellum p-5"><h2 className="font-smallcaps !text-xs text-gold">Where it shows up</h2><p className="mt-2">{hasTime && b.house ? `The ${ordinal(b.house)} house: ${HOUSE_AREA[b.house]}.` : 'Houses need a birth time.'}</p>{!hasTime && <Link to="/start" className="mt-2 inline-block text-sm underline">Add your birth time</Link>}</div>
       </section>
       {b.retro && !b.key.includes('Node') && <p className="rounded border border-border bg-card/60 p-4 text-sm">Retrograde at birth: this part of you tends to work inwardly first — reflect, review and revise before acting.</p>}
       {b.key === 'chiron' && <p className="text-xs text-muted-foreground">Chiron comes from a NASA JPL Horizons table (1940–2060), interpolated; births outside that range don’t show Chiron.</p>}
@@ -94,7 +93,6 @@ export function MemberHouseDetail({ birth, house }: { birth: MyBirth; house: num
   if (!valid) return <article className="space-y-4"><h1 className="font-display text-3xl">Houses run from 1 to 12</h1><Button asChild variant="outline"><Link to="/houses">All your houses</Link></Button></article>;
   if (!birth.time || !chart.cusps) return (
     <article className="space-y-4">
-      <Link to="/houses" className="font-smallcaps text-xs text-muted-foreground hover:text-foreground">← Your houses</Link>
       <h1 className="font-display text-4xl">Your {ordinal(house)} house</h1>
       <p className="text-muted-foreground">{HOUSE_AREA[house][0].toUpperCase() + HOUSE_AREA[house].slice(1)}. Houses need a birth time to calculate.</p>
       <Button asChild><Link to="/start">Add your birth time</Link></Button>
@@ -108,7 +106,6 @@ export function MemberHouseDetail({ birth, house }: { birth: MyBirth; house: num
   const reading = HOUSE_READING[house];
   return (
     <article className="space-y-8">
-      <Link to="/houses" className="font-smallcaps text-xs text-muted-foreground hover:text-foreground">← Your houses</Link>
       <header className="flex flex-wrap items-center gap-6">
         <ThemeArt kind="house" className="h-24 w-24" badge={house} />
         <div>
@@ -118,8 +115,8 @@ export function MemberHouseDetail({ birth, house }: { birth: MyBirth; house: num
         </div>
       </header>
       <section className="grid gap-4 md:grid-cols-2">
-        <div className="vellum p-5"><h2 className="font-smallcaps text-xs text-gold">The sign on the door</h2><p className="mt-2">You approach this area with {cusp.sign} style: {SIGN_KEYWORDS[cusp.sign]}.</p></div>
-        <div className="vellum p-5"><h2 className="font-smallcaps text-xs text-gold">The planet that runs it</h2>
+        <div className="vellum p-5"><h2 className="font-smallcaps !text-xs text-gold">The sign on the door</h2><p className="mt-2">You approach this area with {cusp.sign} style: {SIGN_KEYWORDS[cusp.sign]}.</p></div>
+        <div className="vellum p-5"><h2 className="font-smallcaps !text-xs text-gold">The planet that runs it</h2>
           {rulerBody ? <p className="mt-2"><Link to={`/planets/${rulerBody.key}`} className="underline">{rulerBody.name}</Link> rules {cusp.sign} and sits in {rulerBody.sign}{rulerBody.house ? `, in your ${ordinal(rulerBody.house)} house (${HOUSE_AREA[rulerBody.house]})` : ''} — so this area connects to that one.{modernBody && <> Modern ruler: <Link to={`/planets/${modernBody.key}`} className="underline">{modernBody.name}</Link> in {modernBody.sign}{modernBody.house ? ` (${ordinal(modernBody.house)} house)` : ''}.</>}</p> : <p className="mt-2 text-muted-foreground">Ruler not available.</p>}
         </div>
       </section>
