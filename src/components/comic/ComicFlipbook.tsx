@@ -38,8 +38,8 @@ export function ComicFlipbook({ issue }: { issue: AstroComicShowcase }) {
                 style={{ transform: turned ? 'rotateY(-165deg)' : 'rotateY(0deg)', zIndex: turned ? i : leaves - i }}>
                 {p == null ? (
                   <>
-                    <img src={issue.cover} alt="Issue 1 cover: a young man on a limestone cliff holding a glowing astrolabe above a misty mill valley" width={1024} height={1536} className="absolute inset-0 h-full w-full object-cover" />
-                    <div className="absolute inset-x-0 top-0 bg-gradient-to-b from-background/95 via-background/60 to-transparent p-4">
+                    <img src={issue.cover} alt={issue.coverAlt} width={1024} height={1536} className="absolute inset-0 h-full w-full object-cover" />
+                    <div className="absolute inset-x-0 top-0 bg-gradient-to-b from-background/80 via-background/30 to-transparent px-4 pb-10 pt-4">
                       <p className="font-smallcaps text-[10px] text-gold">{issue.banner}</p>
                       <p className="mt-1 font-display text-2xl leading-tight sm:text-3xl">{issue.title}</p>
                     </div>
@@ -80,7 +80,7 @@ export function ComicFlipbook({ issue }: { issue: AstroComicShowcase }) {
         {page ? (
           <ol className="mt-5 space-y-4">{page.panels.map((p, i) => <li key={i} className="border-l-2 border-gold/60 pl-4"><p className="text-xs text-muted-foreground">Panel {i + 1}</p><p className="mt-1 leading-relaxed">{p.narration}</p>{p.dialogue && <p className="mt-1 font-semibold">{p.dialogue}</p>}</li>)}</ol>
         ) : (
-          <p className="mt-4 leading-relaxed text-muted-foreground">Three acts, three placements. The rising sign sets the scene, the Sun lights the action, and the Moon brings the story home. Turn the page to read the script beside the art.</p>
+          <p className="mt-4 leading-relaxed text-muted-foreground">Seven drawn pages, one real chart. The rising sign sets the scene, the Sun lights the action, the Moon brings the story home — then Mercury, Mars, Saturn and the North Node each take a page. Turn the page to read the script beside the art.</p>
         )}
         {at === leaves - 1 && <p className="mt-6 font-smallcaps text-xs text-gold">{issue.footer}</p>}
       </div>
