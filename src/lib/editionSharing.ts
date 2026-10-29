@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { ACCESS_CHANGED_EVENT, type Edition } from '@/lib/protectedContent';
 import { onAccountChange } from '@/lib/authEvents';
