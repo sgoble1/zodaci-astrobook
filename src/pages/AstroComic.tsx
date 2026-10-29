@@ -6,6 +6,8 @@ import { Faq } from '@/components/brand/Faq';
 import { StripeEmbeddedCheckout } from '@/components/payments/StripeEmbeddedCheckout';
 import { PaymentTestModeBanner } from '@/components/payments/PaymentTestModeBanner';
 import { ComicPageView } from '@/components/comic/ComicPageView';
+import { ComicFlipbook } from '@/components/comic/ComicFlipbook';
+import { ISSUE_1 } from '@/content/comicIssue1';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { useJsonLd } from '@/hooks/useJsonLd';
 import { useSession } from '@/hooks/useLibrary';
@@ -13,7 +15,7 @@ import { useMyBirth, toChartInput } from '@/lib/myBirth';
 import { computeChart } from '@/lib/astro';
 import { SAMPLE_BIRTH } from '@/lib/sampleBook';
 import { ART_RULES, buildComicIssue, CAST, COMIC_FAQ, COMIC_PLANS, COMIC_SPEC, firstIssueMonth, isComicPlan, monthLabel, shipBy, type ComicPlan } from '@/lib/comic';
-import cover from '@/assets/astrocomic-cover.jpg';
+import cover from '@/assets/comic-issue1-cover.jpg';
 import cast from '@/assets/astrocomic-cast.jpg';
 import spread from '@/assets/astrocomic-spread.jpg';
 import skyPanel from '@/assets/astrocomic-sky-panel.jpg';
@@ -85,7 +87,13 @@ export default function AstroComic() {
           )}
           {session && <p className="mt-4 text-sm"><Link to="/my-comic" className="text-primary underline underline-offset-4">Already subscribed? Open My AstroComic</Link></p>}
         </div>
-        <img loading="lazy" decoding="async" src={cover} alt="AstroComic cover illustration: Sovereign the Sun with a lion and Dreamer the Moon with an owl beneath a golden constellation" width={1024} height={1584} className="mx-auto w-full max-w-sm rounded-sm border-2 border-foreground/80 shadow-2xl" />
+        <img loading="lazy" decoding="async" src={cover} alt="AstroComic Issue 1 cover: a young man on a limestone cliff holding a glowing astrolabe" width={1024} height={1536} className="mx-auto w-full max-w-sm rounded-sm border-2 border-foreground/80 shadow-2xl" />
+      </section>
+
+      <section aria-labelledby="issue1-h">
+        <h2 id="issue1-h" className="font-display text-3xl">Read Issue #1: {ISSUE_1.title}</h2>
+        <p className="mt-2 mb-8 max-w-2xl text-muted-foreground">A finished issue in the Lantern &amp; Ink style. Turn the pages, tilt the book, and read each act beside its art.</p>
+        <ComicFlipbook issue={ISSUE_1} />
       </section>
 
       <section id="preview" aria-labelledby="preview-h" className="scroll-mt-6">
