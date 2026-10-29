@@ -3,7 +3,8 @@ import { ArrowLeftRight, ExternalLink, Eye, LayoutGrid, Lock, LogIn, LogOut, Use
 import { usePlan } from '@/hooks/usePlan';
 import { useIsAdmin, useSession } from '@/hooks/useLibrary';
 import { useShaneAccount } from '@/hooks/useShaneAccount';
-import { isAdminEmail, leaveAprilEdition, openAprilEditionTab, useAprilSpace, viewAprilEditionInApp, useClassicView, setClassicView } from '@/hooks/useAprilSpace';
+import { leaveAprilEdition, openAprilEditionTab, useAprilSpace, viewAprilEditionInApp, viewZacEditionInApp, viewingSharedEdition, useClassicView, setClassicView } from '@/hooks/useAprilSpace';
+import { EDITION_OWNER_NAME, useSharedEditions } from '@/lib/editionSharing';
 import { useMyBirth } from '@/lib/myBirth';
 import { AuthGate } from '@/components/common/AuthGate';
 import { PLAN_LABEL } from '@/components/common/PlanLock';
@@ -25,11 +26,13 @@ export function useAccountMenu() {
   const birth = useMyBirth();
   const navigate = useNavigate();
   const email = session?.user.email ?? '';
-  const editionSwitch = isAdminEmail(email)
-    ? april
-      ? [{ label: 'Back to my own content', icon: ArrowLeftRight, run: leaveAprilEdition }]
-      : [{ label: 'View April’s content here', icon: Eye, run: viewAprilEditionInApp }, { label: 'Open April’s edition in a new tab', icon: ExternalLink, run: openAprilEditionTab }]
-    : [];
+  // Whole editions other owners shared with this account (decided by the database); the switch only changes the view.
+  const shared = useSharedEditions().filter((e): e is 'april' | 'zac' => e === 'april' || e === 'zac');
+  const view = viewingSharedEdition();
+  const editionSwitch: { label: string; icon: typeof Eye; run: () => void }[] = [];
+  if (view) editionSwitch.push({ label: 'Back to my own content', icon: ArrowLeftRight, run: leaveAprilEdition });
+  for (const e of shared) if (e !== view) editionSwitch.push({ label: `View ${EDITION_OWNER_NAME[e]}’s edition here`, icon: Eye, run: e === 'april' ? viewAprilEditionInApp : viewZacEditionInApp });
+  if (shared.includes('april') && view !== 'april') editionSwitch.push({ label: 'Open April’s edition in a new tab', icon: ExternalLink, run: openAprilEditionTab });
   const classic = useClassicView();
   const shaneFull = useShaneAccount();
   if (april || shaneFull) editionSwitch.push(classic ? { label: 'Back to the full edition', icon: LayoutGrid, run: () => setClassicView(false) } : { label: 'Switch to classic view', icon: LayoutGrid, run: () => setClassicView(true) });
@@ -68,7 +71,7 @@ export function AccountButton({ compact = false }: { compact?: boolean }) {
         </DropdownMenuGroup>
         {(menu.admin || menu.editionSwitch.length > 0) && <>
           <DropdownMenuSeparator />
-          <DropdownMenuLabel className="text-xs font-normal text-muted-foreground">Admin</DropdownMenuLabel>
+          <DropdownMenuLabel className="text-xs font-normal text-muted-foreground">{menu.admin ? 'Admin & editions' : 'Editions'}</DropdownMenuLabel>
           {menu.admin && ADMIN_MENU.map(({ to, label, icon: Icon }) => <DropdownMenuItem key={to} asChild><Link to={to}><Icon className="mr-2 h-4 w-4 text-muted-foreground" aria-hidden="true" />{label}</Link></DropdownMenuItem>)}
           {menu.editionSwitch.map(({ label, icon: Icon, run }) => <DropdownMenuItem key={label} onSelect={run} data-keep-wording><Icon className="mr-2 h-4 w-4 text-muted-foreground" aria-hidden="true" />{label}</DropdownMenuItem>)}
         </>}

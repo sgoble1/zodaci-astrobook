@@ -3,7 +3,7 @@ import {
   Activity, Atom, BookHeart, BookOpen, BookOpenText, Calculator, CalendarClock, CalendarRange, CircleHelp, Compass, Crown, Gift, Globe2,
   GraduationCap, Hash, Headphones, Heart, HeartHandshake, Info, LayoutDashboard, Library, ListChecks, MessageCircle, MessagesSquare, Moon,
   NotebookPen, Orbit, Package, PenLine, PlayCircle, Printer, RefreshCcw, Repeat, ScrollText, Search, Settings2, ShieldCheck, Sparkles, Star,
-  Sun, Telescope, Truck, UserRound, Users, Wand2, Waypoints,
+  Share2, Sun, Telescope, Truck, UserRound, Users, Wand2, Waypoints,
 } from 'lucide-react';
 import { CORE_THEMES, SYSTEM_READINGS, TOPIC_READINGS } from '@/lib/topicReadings';
 import { planAllows, requiredPlan, type Plan } from '@/content/navigation';
@@ -175,6 +175,7 @@ export const ACCOUNT_MENU: AccountLink[] = [
   { to: '/start', label: 'Edit birth details', icon: Settings2 },
   { to: '/personal-context', label: 'Personal context', icon: UserRound },
   { to: '/workspaces', label: 'Shared workspaces', icon: Users },
+  { to: '/shared-with-me', label: 'Shared with me', icon: Share2 },
   { to: '/pricing', label: 'Plans & Pricing', icon: Crown },
   { to: '/orders', label: 'My book orders', icon: Truck },
   { to: '/creator', label: 'Cosmic Studio', icon: Wand2 },
@@ -373,7 +374,7 @@ const P = (domain: Placement['domain'], level: Placement['level'], note?: string
  * so new pages must be placed before they ship.
  */
 export const ROUTE_INVENTORY: Record<string, Placement> = {
-  '/index': P('public', 'utility', 'redirects to /welcome'), '/welcome': P('public', 'primary'), '/april': P('public', 'utility', 'password link for April'),
+  '/index': P('public', 'utility', 'redirects to /welcome'), '/welcome': P('public', 'primary'), '/april': P('public', 'utility', 'April’s shared report; opens for her account and people she shared her edition with'), '/shared-with-me': P('account', 'utility'),
   '/about': P('learn', 'secondary'), '/lp/:slug': P('public', 'utility', 'campaign pages'), '/blog': P('learn', 'secondary'), '/blog/learn/:slug': P('learn', 'tertiary', 'from the Journal'),
   '/community': P('explore', 'secondary'), '/community/guidelines': P('explore', 'tertiary', 'from Community'), '/community/:id': P('explore', 'tertiary', 'from Community'),
   '/astrobook': P('public', 'utility', 'public product page; members use /books'), '/book-preview': P('book', 'secondary'), '/demo': P('learn', 'secondary'),

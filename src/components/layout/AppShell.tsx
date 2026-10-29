@@ -15,7 +15,7 @@ import { domainFor } from '@/content/memberNav';
 import { useShaneAccount } from '@/hooks/useShaneAccount';
 import { loadEditionIndex } from '@/pages/ShaneEdition';
 import { useZacAccount } from '@/hooks/useZacAccount';
-import { viewingZacAsAdmin } from '@/hooks/useAprilSpace';
+import { viewingSharedEdition } from '@/hooks/useAprilSpace';
 import { useSession } from '@/hooks/useLibrary';
 import { useAprilSpace, useAprilSpaceError, retryAprilSpace, useClassicView, setClassicView } from '@/hooks/useAprilSpace';
 
@@ -182,8 +182,7 @@ export function AppShell() {
   const editionFailed = useAprilSpaceError();
   const shane = useShaneAccount();
   const zacOwn = useZacAccount();
-  const zacSession = useSession();
-  const zac = zacOwn || viewingZacAsAdmin(zacSession?.user.email);
+  const zac = zacOwn || viewingSharedEdition() === 'zac';
   // April and Shane's joint pages and admin tools keep real names; elsewhere April-written copy reads as "you".
   const founderState = useSharedSpaceMember();
   // Wait for the membership answer so names are never rewritten before it arrives.
