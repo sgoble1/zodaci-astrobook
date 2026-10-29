@@ -13,7 +13,7 @@ import { computeChart } from '@/lib/astro';
 import { readingVisitKey, type ReadingVisit } from '@/lib/readingExperience';
 import type { Plan } from '@/content/navigation';
 import {
-  ACCOUNT_MENU, ADMIN_MENU, ADMIN_PATHS, MEMBER_DOMAINS, domainById, domainFor, domainForMenuGroup, itemLock, memberDestinations, visibleColumns,
+  ACCOUNT_MENU, ADMIN_MENU, ADMIN_PATHS, MEMBER_DOMAINS, domainById, domainFor, domainForMenuGroup, itemLock, memberDestinations, visibleColumns, withSharedEditions,
   type DomainId, type MemberDomain, type MemberNavColumn, type MemberNavItem,
 } from '@/content/memberNav';
 import { ZodaciLogo } from '@/components/brand/ZodaciLogo';
