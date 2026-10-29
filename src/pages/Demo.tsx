@@ -5,6 +5,7 @@ import { Switch } from '@/components/ui/switch';
 import { PromoVideo } from '@/components/brand/PromoVideo';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { Book3D } from '@/components/books/Book3D';
+import { SampleChartDemo } from '@/components/brand/SampleChartDemo';
 
 /** Fictional sample profile — no real member data is used on this page. */
 const SAMPLE = { name: 'Jules Harbor', facts: 'Sun Virgo · Moon Pisces · Rising Scorpio' };
@@ -75,6 +76,8 @@ export default function Demo() {
       </header>
 
       <section aria-label="Zodaci in 24 seconds"><PromoVideo /></section>
+
+      <section aria-label="Interactive sample chart"><SampleChartDemo /></section>
 
       <section className="space-y-5" aria-labelledby="reading-h">
         <div className="flex flex-wrap items-end justify-between gap-4">
