@@ -147,10 +147,10 @@ function synastryKeys(c: ChartResult) {
   ].join('\n\n');
 }
 
-export type VolumeInput = { edition: string; chart: ChartResult; name: string; saved: { title: string; content: string }[]; people?: Person[]; today?: Date };
+export type VolumeInput = { edition: string; chart: ChartResult; name: string; saved: { title: string; content: string }[]; people?: Person[]; today?: Date; /** Birth facts and the full planet table. */ facts?: string };
 
 /** All chapters of a personal AstroBook, in reading order, with a divider page before each volume. */
-export function buildVolumes({ edition, chart: c, name, saved, people = [], today }: VolumeInput): BookChapter[] {
+export function buildVolumes({ edition, chart: c, name, saved, people = [], today, facts }: VolumeInput): BookChapter[] {
   const rank = RANK.indexOf(versionOf(edition)?.id ?? '');
   const r = rank < 0 ? 2 : rank;
   const timeKnown = !!c.input.time;
@@ -158,6 +158,7 @@ export function buildVolumes({ edition, chart: c, name, saved, people = [], toda
   const bySaved = (n: VolumeNo) => saved.filter(s => volumeFor(s.title) === n).map(s => ({ title: s.title, content: s.content }));
   const vol: Record<VolumeNo, BookChapter[]> = { I: [], II: [], III: [], IV: [], V: [], VI: [] };
 
+  if (facts) vol.I.push({ title: 'Birth Facts and Planet Table', content: facts });
   vol.I.push({ title: 'Your Big Three', content: bigThree(c, timeKnown) });
   if (r >= 2) vol.I.push({ title: 'Your Birth Sky', content: 'The wheel above is drawn from your calculated positions: signs around the edge, planets at their exact degrees.', draw: 'wheel' });
   vol.I.push({ title: 'Your Birth Moon Phase', content: `${ph.name} · ${Math.round(ph.angle)}° from the Sun · ${ph.illumination}% lit\n\n${ph.text}` });
