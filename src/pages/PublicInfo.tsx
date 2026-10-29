@@ -15,15 +15,17 @@ import { useCoverImage } from '@/hooks/useCoverImage';
 import { DEFAULT_CROP } from '@/lib/coverLayout';
 import { ThemeArt } from '@/components/common/ThemeArt';
 import { SampleBook } from '@/components/books/SampleBookReader';
+import { VOLUMES } from '@/lib/bookVolumes';
 
-const CHAPTERS = [
-  ['Your Chart Snapshot', 'Every planet, sign, house and aspect, calculated to the minute'],
-  ['Who You Are', 'Sun, Moon, Rising and dominant element interpreted'],
-  ['Love & Connection', 'Venus, Mars, the 7th house and relationship patterns'],
-  ['Purpose & Work', 'Midheaven, Saturn, the 10th house and life direction'],
-  ['Healing & Growth', 'Chiron, the 12th house and the places that shape you'],
-  ['Moon Phase & Rulers', 'Your birth Moon phase and where each house ruler leads'],
-];
+/** The six volumes of every AstroBook, described from what buildVolumes() actually writes. */
+const VOLUME_DETAIL: Record<string, string> = {
+  I: 'Birth facts, the full planet table, your Big Three, chart ruler and birth Moon phase',
+  II: 'All twelve houses, one by one: the sign on each cusp, its ruler and the planets inside',
+  III: 'Every planet by sign and house, then your aspects with exact orbs, tightest first',
+  IV: 'Your North Node, then Chiron, the sensitive points, lots and fixed stars in larger versions',
+  V: 'A Vedic sidereal snapshot, your Chinese year pillar and your Life Path number (Classic and up)',
+  VI: 'This year’s profection, then retrogrades, your solar return and a 12-month forecast as versions grow',
+};
 
 export function AstroBookPublic() {
   usePageMeta('AstroBook — Your Personalized Birth Chart Book in Five Versions | Zodaci', 'A book written entirely from your birth chart. Digital PDF $24.99, Pocket $34.99, Classic $59.99, Signature Hardcover $97 and Collector’s Linen $149. Free US shipping.');
@@ -36,7 +38,7 @@ export function AstroBookPublic() {
         <div className="space-y-5">
           <p className="text-xs font-medium tracking-[0.12em] text-accent">YOUR CHART, IN PRINT</p>
           <h1 className="font-display text-4xl leading-tight sm:text-5xl">The book that only you could have written.</h1>
-          <p className="text-lg text-muted-foreground">AstroBook is a personalized interpretation of your complete birth chart: chapters on who you are, love, purpose and timing, all written from your exact placements.</p>
+          <p className="text-lg text-muted-foreground">AstroBook is your own Masterbook: six volumes interpreting your complete birth chart — who you are, your houses, planets and aspects, the esoteric points, world traditions and timing — all written from your exact placements.</p>
           <p className="text-sm text-muted-foreground">{BOOK_VERSIONS.filter(v => v.id === 'digital' || v.id === 'pocket' || v.id === 'linen').map(v => `${v.name} ${money(v.price)}`).join(' · ')} · free US shipping on printed versions</p>
           <div className="flex flex-wrap items-center gap-4"><Button asChild size="lg"><Link to={order()}>Order your AstroBook</Link></Button><Link to="/book-preview" className="text-accent">Read a sample book →</Link><Link to="/demo" className="text-accent">Try the interactive demo →</Link></div>
         </div>
@@ -47,15 +49,15 @@ export function AstroBookPublic() {
         <div className="grid grid-cols-3 gap-3">{['midnight-stars', 'midnight-ember', 'gradient-violet-dusk'].map(k => <ExampleCover key={k} design={k} />)}</div>
       </section>
       <section id="inside" className="space-y-6">
-        <h2 className="font-display text-3xl">What’s inside.</h2>
-        <p className="text-muted-foreground">Every version includes these chapters. Larger versions add more; compare them below.</p>
-        <ol className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{CHAPTERS.map(([t, d]) => <li key={t} className="vellum p-5"><ThemeArt label={t} /><h3 className="mt-4 text-xl">{t}</h3><p className="mt-2 text-sm text-muted-foreground">{d}</p></li>)}</ol>
+        <h2 className="font-display text-3xl">Six volumes, one sky.</h2>
+        <p className="text-muted-foreground">Every AstroBook follows the same six-volume structure as our founders’ Masterbooks, written from your chart. Every version includes Volumes I–IV and VI; World Systems begins at Classic, and larger versions add chapters inside each volume. Compare them below.</p>
+        <ol className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{VOLUMES.map(v => <li key={v.n} className="vellum p-5"><ThemeArt label={v.title} /><p className="mt-4 font-smallcaps text-xs text-gold">Volume {v.n}</p><h3 className="mt-1 text-xl">{v.title}</h3><p className="mt-2 text-sm text-muted-foreground">{VOLUME_DETAIL[v.n]}</p></li>)}</ol>
       </section>
       <section className="space-y-6">
         <h2 className="font-display text-3xl">How it works.</h2>
         <ol className="grid gap-4 md:grid-cols-4">{[
           ['chart', 'Add your birth details', 'Date, time and place. We calculate your exact chart.'],
-          ['self', 'Your readings are written', 'Every chapter comes from your own placements.'],
+          ['self', 'Your volumes are written', 'Every chapter comes from your own placements; finished readings are woven in.'],
           ['sign', 'Preview and choose', 'Read the real PDF, pick a version, cover and extras.'],
           ['year', 'Printed and shipped', 'Free US shipping on printed versions. Lulu fulfillment is being prepared; delivery estimates are confirmed before production.'],
         ].map(([k, t, d], i) => <li key={t} className="vellum p-5"><ThemeArt kind={k as never} badge={i + 1} className="h-16 w-16" /><h3 className="mt-4 text-lg">{t}</h3><p className="mt-1 text-sm text-muted-foreground">{d}</p></li>)}</ol>
@@ -70,11 +72,11 @@ export function AstroBookPublic() {
           <Button asChild variant={v.id === 'classic' ? 'default' : 'outline'} className="mt-5"><Link to={order(v.id)}>Choose {v.name}<ArrowRight /></Link></Button>
         </div>)}</div>
         <VersionCompare orderLink />
-        <p className="text-xs text-muted-foreground">Page ranges are targets based on finished readings. Your real page count is shown in the PDF preview before you pay. Extra sections are {money(EXTRA_SECTION_PRICE)} each.</p>
+        <p className="text-xs text-muted-foreground">Page ranges are targets; finished readings add pages. Your real page count is shown in the PDF preview before you pay. Extra sections are {money(EXTRA_SECTION_PRICE)} each.</p>
       </section>
       <section id="look-inside" className="space-y-6">
         <h2 className="font-display text-3xl">Look inside before you order.</h2>
-        <p className="text-muted-foreground">A short fictional sample for Olivia Chen, born March 14, 1992 in Portland, with calculated chart facts and illustrative passages. Your own book uses your finished readings and the page count shown before payment. Turn the first pages below, or <Link to="/book-preview" className="underline text-accent">read the full sample book</Link>.</p>
+        <p className="text-muted-foreground">A short fictional sample for Olivia Chen, born March 14, 1992 in Portland, with calculated chart facts and illustrative passages. Your own book is written from your chart, adds your finished readings, and shows its real page count before payment. Turn the first pages below, or <Link to="/book-preview" className="underline text-accent">read the full sample book</Link>.</p>
         <SampleBook maxPages={6} cta={<Button asChild variant="outline"><Link to="/book-preview">Read the full sample<ArrowRight /></Link></Button>} />
       </section>
       <section id="teaser" className="grid gap-8 rounded-xl border border-gold/30 bg-card p-8 md:grid-cols-2">
