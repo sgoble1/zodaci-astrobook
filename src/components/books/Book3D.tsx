@@ -1,17 +1,21 @@
 import { useState } from 'react';
 import { COVER_DESIGNS, coverSrc } from '@/content/coverDesigns';
+import { useCoverImage } from '@/hooks/useCoverImage';
+import { DEFAULT_CROP } from '@/lib/coverLayout';
 
 /**
  * Interactive 3D AstroBook mockup scaled from the printer spec: US Trade 6 × 9 in softcover,
  * perfect-bound. Spine thickness approximates page count on 80 lb satin stock (~0.0045 in/page).
  */
-export function Book3D({ pages = 250, trimPt = [432, 648], label = '6″ × 9″ · softcover perfect binding', hardcover = false, coverSrc: fixedSrc }: { pages?: number; trimPt?: [number, number]; label?: string; hardcover?: boolean; coverSrc?: string }) {
+export function Book3D({ pages = 250, trimPt = [432, 648], label = '6″ × 9″ · softcover perfect binding', hardcover = false, coverSrc: fixedSrc, name = '' }: { pages?: number; trimPt?: [number, number]; label?: string; hardcover?: boolean; coverSrc?: string; name?: string }) {
   const [cover, setCover] = useState(COVER_DESIGNS[0]);
+  // Without a finished cover, show the chosen design with the same name, subtitle and wordmark as the printed book.
+  const designed = useCoverImage(fixedSrc ? null : { source: { kind: 'design', key: cover.key }, crop: DEFAULT_CROP, name, trimPt }, 40);
   const [angle, setAngle] = useState(-28);
   const spinePx = Math.round(pages * 0.0045 * 40) + (hardcover ? 8 : 0); // 40px per inch, boards add thickness
   const ratio = trimPt[1] / trimPt[0];
   const h = Math.min(360, Math.round(240 * ratio)), w = Math.round(h / ratio);
-  const src = fixedSrc ?? coverSrc(cover);
+  const src = fixedSrc || designed || coverSrc(cover);
   return (
     <figure className="space-y-4">
       <div className="flex justify-center py-6" style={{ perspective: 1400 }}>

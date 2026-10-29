@@ -3,6 +3,7 @@ import fontkit from '@pdf-lib/fontkit';
 import { BOOK_SECTIONS, versionOf } from '@/lib/books';
 import { SIGN_GLYPH, type ChartResult } from '@/lib/astro';
 import type { BookChapter } from '@/lib/bookExtras';
+import { coverType } from '@/lib/coverLayout';
 
 export type ManuscriptChapter = { title: string; content: string };
 export type ManuscriptInput = {
@@ -29,17 +30,23 @@ export async function composeManuscript(input: ManuscriptInput) {
   const font = await pdf.embedFont(input.fontBytes, { subset: true });
   pdf.setTitle(`${input.name || 'My'} AstroBook`); pdf.setAuthor('Zodaci'); pdf.setSubject(`Personal chart manuscript · ${version?.name ?? input.edition}`);
   const lines = (text: string, size: number, width = W - M * 2) => wrap(clean(text), font, size, width);
+  // Page 1 is the designed front cover exactly as the reader approved it (name, subtitle and wordmark are part of it).
   const cover = pdf.addPage([W, H]);
   if (input.cover) {
     const image = input.cover[0] === 137 ? await pdf.embedPng(input.cover) : await pdf.embedJpg(input.cover);
     const s = Math.max(W / image.width, H / image.height);
     cover.drawImage(image, { x: (W - image.width * s) / 2, y: (H - image.height * s) / 2, width: image.width * s, height: image.height * s });
+  } else {
+    // No designed cover (tests and previews): the same type layout on plain midnight.
+    cover.drawRectangle({ x: 0, y: 0, width: W, height: H, color: rgb(13 / 255, 16 / 255, 40 / 255) });
+    const t = coverType(W, H, 72, input.name, (txt, size) => font.widthOfTextAtSize(txt, size), (txt, size) => font.widthOfTextAtSize(txt, size) + size * 0.18 * Math.max(0, txt.length - 1));
+    const ivory = rgb(244 / 255, 236 / 255, 221 / 255), coverGold = rgb(212 / 255, 168 / 255, 83 / 255);
+    t.title.lines.forEach((l, i) => cover.drawText(l, { x: t.title.x - font.widthOfTextAtSize(l, t.title.size) / 2, y: H - t.title.y[i], size: t.title.size, font, color: ivory }));
+    cover.drawRectangle({ x: t.rule.x, y: H - t.rule.y, width: t.rule.width, height: 0.6, color: coverGold });
+    const sub = t.subtitle.lines[0]; const sw = font.widthOfTextAtSize(sub, t.subtitle.size) + t.subtitle.size * 0.18 * (sub.length - 1);
+    let x = t.subtitle.x - sw / 2; for (const ch of sub) { cover.drawText(ch, { x, y: H - t.subtitle.y[0], size: t.subtitle.size, font, color: coverGold }); x += font.widthOfTextAtSize(ch, t.subtitle.size) + t.subtitle.size * 0.18; }
+    const wm = t.wordmark.lines[0]; cover.drawText(wm, { x: t.wordmark.x - font.widthOfTextAtSize(wm, t.wordmark.size), y: H - t.wordmark.y[0], size: t.wordmark.size, font, color: coverGold });
   }
-  const band = 160 * Math.min(1, H / 648);
-  cover.drawRectangle({ x: 0, y: H - band - 20, width: W, height: band, color: rgb(1, 1, 1), opacity: .94 });
-  const tsize = 27 * Math.max(.75, Math.min(scale, 1.2));
-  lines(`${input.name || 'My'} AstroBook`, tsize).forEach((line, i) => cover.drawText(line, { x: M, y: H - 76 * Math.min(1, H / 648) - i * tsize * 1.3, size: tsize, font, color: ink }));
-  cover.drawText('A personal sky, in print · Zodaci', { x: M, y: H - band, size: 11 * Math.max(.85, Math.min(scale, 1.1)), font, color: ink });
   // Title page built from the reader's own chart.
   const title = pdf.addPage([W, H]);
   lines(`${input.name || 'My'} AstroBook`, 24).forEach((line, i) => title.drawText(line, { x: M, y: H * 0.62 - i * 32, size: 24, font, color: ink }));
