@@ -80,7 +80,7 @@ function lotsAndStars(c: ChartResult) {
   const stars = fixedStarContacts(c, 1);
   const out: string[] = [];
   out.push(lots.length ? '## The Hermetic lots\n\nEach lot is a calculated point that combines your Ascendant with two planets; day and night births use mirrored formulas.\n\n' + lots.map(l => `**${l.name}** · ${l.text} · ${l.theme} (${l.formula})`).join('\n\n') : '## The Hermetic lots\n\nThe lots are measured from the Ascendant, which needs a birth time.');
-  out.push(stars.length ? '## Fixed-star contacts (within 1°)\n\n' + stars.map((s: { star: string; body: string; orb: number; meaning?: string }) => `**${s.body} with ${s.star}** · ${s.orb.toFixed(2)}°${s.meaning ? ` — ${s.meaning}` : ''}`).join('\n\n') : '## Fixed-star contacts\n\nNone of your planets sit within 1° of the bright fixed stars used here.');
+  out.push(stars.length ? '## Fixed-star contacts (within 1°)\n\nStar positions are precessed to your birth year.\n\n' + stars.map(s => `**${s.point} with ${s.star}** (${s.position}) · orb ${s.orb.toFixed(2)}° — ${s.meaning}`).join('\n\n') : '## Fixed-star contacts\n\nNone of your planets or angles sit within 1° of the bright fixed stars used here.');
   return out.join('\n\n');
 }
 
