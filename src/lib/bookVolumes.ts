@@ -175,15 +175,16 @@ export function buildVolumes({ edition, chart: c, name, saved, people = [], toda
   if (r >= 4) vol.III.push(people.length ? { title: 'Relationship Comparisons', content: synastryChapter(c, people) } : { title: 'Your Synastry Keys', content: synastryKeys(c) });
   vol.III.push(...bySaved('III'));
 
+  vol.IV.push({ title: 'Your North Node', content: northNodeChapter(c) });
   if (r >= 2) vol.IV.push({ title: 'Chiron, the Nodes and Sensitive Points', content: sensitivePoints(c, timeKnown) });
-  if (r >= 3) vol.IV.push({ title: 'Your North Node', content: northNodeChapter(c) });
   if (r >= 4) vol.IV.push({ title: 'Lots and Fixed Stars', content: lotsAndStars(c) }, { title: 'Planet Mythology', content: mythologyChapter(c) });
   vol.IV.push(...bySaved('IV'));
 
   if (r >= RANK.indexOf(WORLD_SYSTEMS_FROM)) vol.V.push({ title: 'Your Birth Moment Across Traditions', content: worldSystems(c) });
   vol.V.push(...bySaved('V'));
 
-  if (r >= 2) vol.VI.push({ title: 'RetroGOOD: Your Retrograde Planets', content: retroChapter(c) }, { title: 'Solar Return Preview', content: solarReturnChapter(c, timeKnown, today) }, { title: 'Your Profection Year', content: profectionChapter(c, today) });
+  vol.VI.push({ title: 'Your Profection Year', content: profectionChapter(c, today) });
+  if (r >= 2) vol.VI.push({ title: 'RetroGOOD: Your Retrograde Planets', content: retroChapter(c) }, { title: 'Solar Return Preview', content: solarReturnChapter(c, timeKnown, today) });
   if (r >= 4) vol.VI.push({ title: 'Your 12-Month Sky Forecast', content: forecastChapter(c, today) }, { title: 'Twelve Affirmations', content: affirmationsChapter(c) });
   vol.VI.push(...bySaved('VI'));
 
