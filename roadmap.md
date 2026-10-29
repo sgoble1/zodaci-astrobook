@@ -19,11 +19,11 @@ Every item is checked against the code first; findings already fixed or proven w
 
 ### 4. Shop, orders and admin (agent)
 Audit Oct 29: already done — same-tab cart checkout, Dispatch print-only filter (correct: digital needs no dispatch), Orders final-PDF bucket, subscriber comic PDF, Creator plan check (tier id is 'creator'). Remaining below.
-- [ ] Store admin tab with Shopify deep links; product page in house style with gallery/specs/shipping; search, sort, sold-out; friendly store-offline message; no 50-item cap.
-- [ ] Dispatch + AstroBook orders include every format (digital too); Lulu submit from Dispatch; Lulu errors shown; Orders bucket, polling, missing address.
-- [ ] AstroComic preflight report restored on reopen + downloadable PDF; subscriber print PDF download.
-- [ ] Admin: AI pause view/clear, Mystic Ink prompt builder, print-partner matrix (UNVERIFIED tags) also on /investors, Activity default, plan-check fix in Cosmic Studio.
-- [ ] Pricing shows grandfathered plans; checkout return retry/recovery; subscription polling only when needed; referral links use current site; custom page delete confirmation.
+- [x] Admin → Shop & print: Shopify deep links, live product/stock table, print partner matrix; product page with gallery, specs, shipping, sold-out; shop search/sort/type filter in the link; calm offline message; every product loaded (no 50 cap). Browser-checked as admin.
+- [x] Dispatch sends/previews/refreshes Lulu jobs and shows Lulu errors and connection; missing address warned instead of crashing (Dispatch + Orders); Orders refreshes every 15s only while an order is moving and the page is visible. Digital orders correctly stay out of Dispatch.
+- [x] AstroComic preflight saved on every check (pass or fail), restored on reopen, downloadable as a one-page report PDF (tested); subscriber PDF download already in place.
+- [x] Admin → AI & illustrations: AI pause status + Resume (audited); Mystic Ink prompt builder with palette/checklist/copy; print partner matrix with UNVERIFIED tags on admin and /investors; Activity opens on Everyone with any active member selectable; Cosmic Studio plan check already correct. Admin no longer bounces to the dashboard on a fresh load.
+- [x] Pricing shows grandfathered plans; checkout return retry/recovery; subscription polling only when needed; invite links use the current site (previews fall back to zodaci.com); custom page delete asks first.
 
 ### 5. AstroBook (agent)
 Audit Oct 29: payment already waits for a real manuscript (server-checked); remaining below.
