@@ -11,7 +11,7 @@ export function CartDrawer() {
   const count = items.reduce((s, i) => s + i.quantity, 0);
   const total = items.reduce((s, i) => s + parseFloat(i.price.amount) * i.quantity, 0);
   useEffect(() => { if (open) syncCart(); }, [open, syncCart]);
-  const checkout = () => { const url = getCheckoutUrl(); if (url) { window.open(url, '_blank'); setOpen(false); } };
+  const checkout = () => { const url = getCheckoutUrl(); if (url) { setOpen(false); window.location.assign(url); } };
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>

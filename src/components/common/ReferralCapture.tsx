@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -18,9 +19,12 @@ export const REFERRAL_MESSAGES: Record<string, string> = {
 
 /** Keeps a ?ref= invitation code from any page, applies it after sign-in, and claims the one-time welcome credits. */
 export function ReferralCapture() {
+  const { search } = useLocation();
   useEffect(() => {
-    const ref = new URLSearchParams(window.location.search).get('ref')?.trim().toUpperCase();
+    const ref = new URLSearchParams(search).get('ref')?.trim().toUpperCase();
     if (ref && REF_PATTERN.test(ref)) localStorage.setItem(REF_KEY, ref);
+  }, [search]);
+  useEffect(() => {
     let busy = false;
     const apply = async (uid: string | undefined) => {
       if (!uid || busy) return;

@@ -16,7 +16,7 @@ export let ALL_QUESTIONS: { module: WorkbookModule; key: string; q: string; why:
 /** A deterministic "question of the day". */
 export function questionOfTheDay(date = new Date()) {
   const day = Math.floor(date.getTime() / 86_400_000);
-  return ALL_QUESTIONS[day % ALL_QUESTIONS.length];
+  return ALL_QUESTIONS.length ? ALL_QUESTIONS[day % ALL_QUESTIONS.length] : undefined;
 }
 
 export const EMOTIONS = ['Calm', 'Hopeful', 'Joyful', 'Grateful', 'Tired', 'Anxious', 'Irritable', 'Sad', 'Lonely', 'Overwhelmed', 'Restless', 'Inspired'];

@@ -3,7 +3,7 @@ import { PageErrorBoundary } from '@/components/common/PageErrorBoundary';
 import { VerifySources } from '@/components/common/VerifySources';
 import { Link, Navigate, NavLink, Outlet, useLocation } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import ParticleField from '@/components/fx/ParticleField';
 import ScrollProgress from '@/components/fx/ScrollProgress';
 import { FirstViewReveal } from '@/components/fx/FirstViewReveal';
@@ -225,6 +225,7 @@ export function AppShell() {
 
 /** Member app: five-domain header with mega-menus, phone tab bar, quick-access row, breadcrumbs and next steps. */
 function MemberShell({ children }: { children: ReactNode }) {
+  const reduceMotion = useReducedMotion();
   const location = useLocation();
   const tabs = !hidesTabBar(location.pathname);
   return (
@@ -238,7 +239,7 @@ function MemberShell({ children }: { children: ReactNode }) {
       <main id="main-content" tabIndex={-1} className={`relative z-10 flex-1 outline-none ${tabs ? 'pb-[calc(4rem+env(safe-area-inset-bottom))] md:pb-0' : ''}`}>
         <div className="mx-auto max-w-5xl px-4 py-6 sm:px-8 sm:py-10 lg:py-12">
           <WayfindingTop />
-          <motion.div key={location.pathname} initial={{ opacity: 0, y: 24, filter: 'blur(6px)' }} animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }} transition={{ duration: 0 }}>
+          <motion.div key={location.pathname} initial={reduceMotion ? false : { opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: reduceMotion ? 0 : 0.9, ease: [0.2, 0.7, 0.2, 1] }}>
             {children}
           </motion.div>
           <NextStepPanel />
@@ -263,6 +264,7 @@ function MemberShell({ children }: { children: ReactNode }) {
 
 /** April's private edition keeps her original sidebar menu and colour-coded groups. */
 function AprilShell({ children, edition = 'april' }: { children: ReactNode; edition?: FounderEditionName }) {
+  const reduceMotion = useReducedMotion();
   const location = useLocation();
   const [open, setOpen] = useState(false);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
@@ -339,7 +341,7 @@ function AprilShell({ children, edition = 'april' }: { children: ReactNode; edit
       )}
       <main ref={mainRef} id="main-content" tabIndex={-1} className="flex-1 min-w-0 lg:pt-0 pt-[var(--founder-header-h,64px)] relative z-10 outline-none">
         <div className="mx-auto max-w-5xl px-4 sm:px-8 py-8 sm:py-10 lg:py-14">
-          <motion.div key={location.pathname} initial={{ opacity: 0, y: 24, filter: 'blur(6px)' }} animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }} transition={{ duration: 0 }}>
+          <motion.div key={location.pathname} initial={reduceMotion ? false : { opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: reduceMotion ? 0 : 0.9, ease: [0.2, 0.7, 0.2, 1] }}>
             <FounderTrail />
             {children}
             <FounderNext />

@@ -23,7 +23,7 @@ export default function UploadedDoc() {
   useEffect(() => { const m = window.location.hash.match(/^#s(\d+)/); if (m) setOpen(+m[1]); }, [row]);
 
   if (row === undefined) return <p className="text-muted-foreground">Opening…</p>;
-  if (!row) return <p>Document not found. <Link to="/masterbook" className="underline">Back to the Masterbook</Link></p>;
+  if (!row) return <p>Document not found. <Link to="/library" className="underline">Back to your library</Link></p>;
   const secs = row.sections ?? [];
   const cur = secs[open];
   const isPdf = /\.pdf$/i.test(row.file_name);
@@ -31,7 +31,7 @@ export default function UploadedDoc() {
   return (
     <div className="grid lg:grid-cols-[260px_1fr] gap-8">
       <aside className="space-y-1 text-sm lg:sticky lg:top-6 lg:self-start lg:max-h-[85vh] overflow-y-auto">
-        <Link to="/masterbook" className="text-xs font-smallcaps text-muted-foreground hover:text-foreground">← Masterbook contents</Link>
+        <Link to="/library" className="text-xs font-smallcaps text-muted-foreground hover:text-foreground">← Your library</Link>
         <div className="font-smallcaps text-[10px] text-gold pt-3">{secs.length} sections</div>
         {secs.map((s, i) => (
           <button key={i} onClick={() => { setOpen(i); history.replaceState(null, '', `#s${i}`); }}
