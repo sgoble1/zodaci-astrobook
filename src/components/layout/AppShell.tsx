@@ -3,7 +3,7 @@ import { PageErrorBoundary } from '@/components/common/PageErrorBoundary';
 import { VerifySources } from '@/components/common/VerifySources';
 import { Link, Navigate, NavLink, Outlet, useLocation } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import ParticleField from '@/components/fx/ParticleField';
 import ScrollProgress from '@/components/fx/ScrollProgress';
 import { FirstViewReveal } from '@/components/fx/FirstViewReveal';
@@ -225,6 +225,7 @@ export function AppShell() {
 
 /** Member app: five-domain header with mega-menus, phone tab bar, quick-access row, breadcrumbs and next steps. */
 function MemberShell({ children }: { children: ReactNode }) {
+  const reduceMotion = useReducedMotion();
   const location = useLocation();
   const tabs = !hidesTabBar(location.pathname);
   return (
@@ -263,6 +264,7 @@ function MemberShell({ children }: { children: ReactNode }) {
 
 /** April's private edition keeps her original sidebar menu and colour-coded groups. */
 function AprilShell({ children, edition = 'april' }: { children: ReactNode; edition?: FounderEditionName }) {
+  const reduceMotion = useReducedMotion();
   const location = useLocation();
   const [open, setOpen] = useState(false);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
