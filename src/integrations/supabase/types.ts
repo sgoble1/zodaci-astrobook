@@ -813,6 +813,42 @@ export type Database = {
           },
         ]
       }
+      contact_messages: {
+        Row: {
+          created_at: string
+          email: string
+          handled_at: string | null
+          id: string
+          message: string
+          name: string
+          sender_id: string | null
+          source_path: string
+          topic: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          handled_at?: string | null
+          id?: string
+          message: string
+          name: string
+          sender_id?: string | null
+          source_path?: string
+          topic?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          handled_at?: string | null
+          id?: string
+          message?: string
+          name?: string
+          sender_id?: string | null
+          source_path?: string
+          topic?: string
+        }
+        Relationships: []
+      }
       counselor_private_profiles: {
         Row: {
           content: string
