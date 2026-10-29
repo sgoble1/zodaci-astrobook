@@ -58,6 +58,7 @@ const ZacWorkbook = lazy(() => import('./pages/ZacWorkbook'));
 const OfficialAstroBook = lazy(() => import('./pages/OfficialAstroBook'));
 const OfficialComic = lazy(() => import('./pages/OfficialComic'));
 const OfficialIllustrated = lazy(() => import('./pages/OfficialIllustrated'));
+const OfficialShowcase = lazy(() => import('./pages/OfficialShowcase'));
 const Investors = lazy(() => import('./pages/Investors'));
 const Podcasts = lazy(() => import('./pages/Podcasts'));
 const Sources = lazy(() => import('./pages/Sources'));
@@ -356,6 +357,7 @@ export default function App() {
             <Route path="/official-astrobook" element={<OfficialAstroBook />} />
             <Route path="/official-astrobook/comic/:edition" element={<OfficialComic />} />
             <Route path="/official-astrobook/illustrated" element={<OfficialIllustrated />} />
+            <Route path="/official-astrobook/showcase/:edition" element={<OfficialShowcase />} />
             <Route path="/investors" element={<Investors />} />
             <Route path="/podcasts" element={<Podcasts />} />
             <Route path="/sources" element={<Sources />} />

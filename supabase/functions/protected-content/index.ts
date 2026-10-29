@@ -40,9 +40,15 @@ async function loadArchive() {
 }
 
 /** Files kept as their own objects in private storage (not inside edition.json). Whole-edition access only. */
+// Illustrated showcase: a JSON of pages plus four private plates per edition (plates open through short-lived links).
+const showcase = (folder: string) => Object.fromEntries([
+  ['showcase.json', { path: `${folder}/showcase.json`, kind: 'json' as const }],
+  ...[1, 2, 3, 4].map(n => [`showcase-${n}.jpg`, { path: `${folder}/showcase-${n}.jpg`, kind: 'pdf' as const }]),
+]);
 const STORED_FILES: Record<string, Record<string, { path: string; kind: 'json' | 'pdf' }>> = {
-  zac: { 'workbook.json': { path: 'zac/workbook.json', kind: 'json' } },
-  shane: { 'illustrated-october-2026.pdf': { path: 'shane/illustrated-october-2026.pdf', kind: 'pdf' } },
+  zac: { 'workbook.json': { path: 'zac/workbook.json', kind: 'json' }, ...showcase('zac') },
+  shane: { 'illustrated-october-2026.pdf': { path: 'shane/illustrated-october-2026.pdf', kind: 'pdf' }, ...showcase('shane') },
+  masterbook: showcase('april'),
 };
 const SIGNED_URL_SECONDS = 600;
 

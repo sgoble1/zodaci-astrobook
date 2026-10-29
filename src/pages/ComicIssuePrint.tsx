@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { ArrowRight, Printer, ShoppingBag } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { usePageMeta } from '@/hooks/usePageMeta';
-import { ISSUE_1 } from '@/content/comicIssue1';
+import { ISSUE_1, ISSUE_1_SCRIPTED } from '@/content/comicIssue1';
 import { COMIC_SPEC } from '@/lib/comic';
 
 /** Print formats for Issue 1. Trim/bleed match comicPrint.ts (5.5 × 8.5 in digest, 0.125 in bleed, 0.25 in safe zone). */
@@ -13,17 +13,16 @@ const FORMATS = [
 
 /** Issue 1 page plan: cover drawn, three acts scripted with one finished illustration each; the rest follow the standard 24-page issue map. */
 const PLAN: [string, string, 'Drawn' | 'Scripted' | 'Planned'][] = [
-  ['1', 'Cover — The Alchemist of Williamsville', 'Drawn'],
-  ['2–3', 'Act I · The Lantern at the Gate (Leo Rising)', 'Scripted'],
-  ['4–7', 'Act II · The Cardinal Spark (Sun in Aries)', 'Scripted'],
-  ['8–10', 'Act III · The Steady Hearth (Moon in Taurus)', 'Scripted'],
-  ['11–21', 'Retrograde Watch, Lunar Calendar, House Focus, Reflection Prompts, Constellation', 'Planned'],
+  ['1', 'Cover — The Alchemist of the Mill Valley', 'Drawn'],
+  ...ISSUE_1.pages.map(p => [String(p.pageNumber + 1), `${p.actTitle} (${p.placement})`, 'Drawn'] as [string, string, 'Drawn']),
+  ...ISSUE_1_SCRIPTED.map(p => [String(p.pageNumber + 1), `${p.title} (${p.placement})`, 'Scripted'] as [string, string, 'Scripted']),
+  ['14–21', 'Retrograde Watch, Lunar Calendar, House Focus, Reflection Prompts, Constellation', 'Planned'],
   ['22', 'Next issue: The Starry Compass', 'Planned'],
   ['23–24', 'About Zodaci · Back cover', 'Planned'],
 ];
 
 export default function ComicIssuePrint() {
-  usePageMeta(`Print AstroComic Issue #${ISSUE_1.issueNumber} — ${ISSUE_1.title} | Zodaci`, 'Sizes, page count and print specifications for AstroComic Issue 1, The Alchemist of Williamsville, with a link to order a printed copy.');
+  usePageMeta(`Print AstroComic Issue #${ISSUE_1.issueNumber} — ${ISSUE_1.title} | Zodaci`, 'Sizes, page count and print specifications for AstroComic Issue 1, The Alchemist of the Mill Valley, with a link to order a printed copy.');
   return (
     <article className="space-y-16">
       <nav aria-label="Breadcrumb" className="text-sm text-muted-foreground"><Link to="/astrocomic" className="underline underline-offset-4">AstroComic</Link> / Print Issue #1</nav>
@@ -37,7 +36,7 @@ export default function ComicIssuePrint() {
             <Button asChild variant="outline" size="lg"><Link to="/astrocomic">Read the preview<ArrowRight /></Link></Button>
           </div>
         </div>
-        <img src={ISSUE_1.cover} alt="Issue 1 cover: a young man on a limestone cliff holding a glowing astrolabe" width={1024} height={1536} className="mx-auto w-full max-w-xs rounded-sm border-2 border-foreground/80 shadow-2xl" />
+        <img src={ISSUE_1.cover} alt={ISSUE_1.coverAlt} width={1024} height={1536} className="mx-auto w-full max-w-xs rounded-sm border-2 border-foreground/80 shadow-2xl" />
       </section>
 
       <section aria-labelledby="formats-h">
