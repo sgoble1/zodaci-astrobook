@@ -43,13 +43,25 @@ Deno.serve(async (req) => {
     if (body.action === 'fix') {
       const original = ed[body.key];
       if (typeof original !== 'string') return json({ error: 'missing' }, 404);
-      const r = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
+      const r = await fetch('https://ai.gateway.lovable.dev/v1/responses', {
         method: 'POST',
-        headers: { Authorization: `Bearer ${Deno.env.get('LOVABLE_API_KEY')}`, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ model: 'google/gemini-2.5-flash', messages: [{ role: 'system', content: RULES }, { role: 'user', content: original }] }),
+        headers: { Authorization: `Bearer ${Deno.env.get('LOVABLE_API_KEY')}`, 'Content-Type': 'application/json', 'X-Lovable-AIG-SDK': 'fetch' },
+        body: JSON.stringify({ model: 'openai/gpt-6-astra', stream: true, store: false, reasoning: { effort: 'low' }, instructions: RULES, input: original }),
       });
-      if (!r.ok) return json({ error: `ai ${r.status}`, detail: await r.text() }, 502);
-      const out = (await r.json()).choices?.[0]?.message?.content?.trim() ?? '';
+      if (!r.ok || !r.body) return json({ error: `ai ${r.status}`, detail: await r.text() }, 502);
+      let out = '', buf = '';
+      const reader = r.body.pipeThrough(new TextDecoderStream()).getReader();
+      for (;;) {
+        const { value, done } = await reader.read();
+        if (done) break;
+        buf += value;
+        const lines = buf.split('\n'); buf = lines.pop() ?? '';
+        for (const l of lines) {
+          if (!l.startsWith('data:')) continue;
+          try { const ev = JSON.parse(l.slice(5)); if (ev.type === 'response.output_text.delta') out += ev.delta; } catch { /* keep-alive */ }
+        }
+      }
+      out = out.trim();
       if (out.length < original.length * 0.6) return json({ error: 'output too short', got: out.length, had: original.length }, 422);
       const fresh = await load();
       fresh[body.key] = out;
