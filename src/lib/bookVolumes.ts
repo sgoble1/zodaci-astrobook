@@ -176,7 +176,8 @@ export function buildVolumes({ edition, chart: c, name, saved, people = [], toda
   const r = rank < 0 ? 2 : rank;
   const timeKnown = !!c.input.time;
   const ph = moonPhase(c);
-  const bySaved = (n: VolumeNo) => saved.filter(s => volumeFor(s.title) === n).map(s => ({ title: s.title, content: s.content }));
+  const fromReadings = new Set<BookChapter>();
+  const bySaved = (n: VolumeNo) => saved.filter(s => volumeFor(s.title) === n).map(s => { const ch = { title: s.title, content: s.content }; fromReadings.add(ch); return ch; });
   const vol: Record<VolumeNo, BookChapter[]> = { I: [], II: [], III: [], IV: [], V: [], VI: [] };
 
   if (facts) vol.I.push({ title: 'Birth Facts and Planet Table', content: facts });
@@ -212,10 +213,7 @@ export function buildVolumes({ edition, chart: c, name, saved, people = [], toda
   // A finished reading with the same title as a calculated chapter replaces it (the reading is the deeper version).
   const key = (t: string) => t.toLowerCase().replace(/^your\s+/, '').replace(/[^a-z0-9]+/g, ' ').trim();
   const savedKeys = new Set(saved.map(s => key(s.title)));
-  for (const n of Object.keys(vol) as VolumeNo[]) {
-    const own = new Set(bySaved(n).map(s => s.title));
-    vol[n] = vol[n].filter(ch => own.has(ch.title) || ch.draw || !savedKeys.has(key(ch.title)));
-  }
+  for (const n of Object.keys(vol) as VolumeNo[]) vol[n] = vol[n].filter(ch => fromReadings.has(ch) || ch.draw || !savedKeys.has(key(ch.title)));
 
   const out: BookChapter[] = [];
   if (r >= 1) out.push({ title: 'Your Birth-Moment Verse', content: birthVerse(c, name) });
