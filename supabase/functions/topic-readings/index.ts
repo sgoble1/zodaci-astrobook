@@ -90,7 +90,7 @@ const RULES = 'Use ONLY the placements listed. Never invent placements, aspects,
 const TONE_NOTE: Record<string, string> = {
   oracle: 'warm, evocative and personal, like a wise astrologer speaking to you — still precise about every placement.',
   educational: 'clear and teacherly: briefly explain each technique and term in brackets the first time it appears.',
-  professional: 'concise, technical and neutral, like a professional natal report; minimal imagery.',
+  professional: 'concise and technical, written in the third person ("the native") like a practitioner\'s natal report, overriding the second-person address; minimal imagery.',
 };
 
 Deno.serve(async req => {
