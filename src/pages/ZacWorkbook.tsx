@@ -66,11 +66,17 @@ export default function ZacWorkbook() {
     if (!uid || !canWrite) return;
     const run = async () => {
       setSaving('saving');
+      const update = (rowId: string) => supabase.from('workbook_entries').update({ answer: entry.answer, data: { done: entry.done }, updated_at: new Date().toISOString() }).eq('id', rowId).select('id').single();
       const id = ids.current[key];
-      const res = id
-        ? await supabase.from('workbook_entries').update({ answer: entry.answer, data: { done: entry.done }, updated_at: new Date().toISOString() }).eq('id', id).select('id').single()
+      let res = id
+        ? await update(id)
         : await supabase.from('workbook_entries').insert({ owner_id: uid, kind: KIND, module, prompt_key: key, question, answer: entry.answer, data: { done: entry.done } }).select('id').single();
-      if (res.error) { setSaving('error'); return; }
+      // Typed before saved answers finished loading: the database keeps one answer per prompt, so update that row instead.
+      if (!id && res.error?.code === '23505') {
+        const found = await supabase.from('workbook_entries').select('id').eq('owner_id', uid).eq('kind', KIND).eq('prompt_key', key).maybeSingle();
+        res = found.data ? await update(found.data.id) : res;
+      }
+      if (res.error || !res.data) { setSaving('error'); return; }
       ids.current[key] = res.data.id;
       setSaving('saved');
     };
