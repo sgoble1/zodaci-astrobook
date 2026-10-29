@@ -18,6 +18,7 @@ Every item is checked against the code first; findings already fixed or proven w
 - [x] Relationship detail/reading/timeline/synastry/Our charts compare against the signed-in person's chart and Kua; Compatibility keeps entered data. (Browser-checked with a temporary partner; no April data shown.)
 
 ### 4. Shop, orders and admin (agent)
+Audit Oct 29: already done — same-tab cart checkout, Dispatch print-only filter (correct: digital needs no dispatch), Orders final-PDF bucket, subscriber comic PDF, Creator plan check (tier id is 'creator'). Remaining below.
 - [ ] Store admin tab with Shopify deep links; product page in house style with gallery/specs/shipping; search, sort, sold-out; friendly store-offline message; no 50-item cap.
 - [ ] Dispatch + AstroBook orders include every format (digital too); Lulu submit from Dispatch; Lulu errors shown; Orders bucket, polling, missing address.
 - [ ] AstroComic preflight report restored on reopen + downloadable PDF; subscriber print PDF download.
@@ -25,6 +26,7 @@ Every item is checked against the code first; findings already fixed or proven w
 - [ ] Pricing shows grandfathered plans; checkout return retry/recovery; subscription polling only when needed; referral links use current site; custom page delete confirmation.
 
 ### 5. AstroBook (agent)
+Audit Oct 29: payment already waits for a real manuscript (server-checked); remaining below.
 - [ ] Covers: retire Solid Ivory, Solid Violet, Deep Sea; textured colour covers; cover editor (6×9 crop, pan, zoom, safe zone); title = your name, "Your exact placement in print" beneath, AstroBook bottom right — same on preview, 3D book, PDF and print file.
 - [ ] AstroBook as a personal Masterbook (six volumes) per edition; baseline manuscript from the chart so payment never deadlocks; Linen synastry fallback; JPEG covers saved as JPEG; demo/spec/public page updated, retired cover images removed.
 
@@ -39,6 +41,7 @@ Every item is checked against the code first; findings already fixed or proven w
 - [ ] Page titles/descriptions on every page.
 
 ### 8. AI & payments functions (lead)
+Audit Oct 29: Chat/counselors already use the member's chart; podcast/custom page prompts still April-only; checkout lacks membership amount check; webhook lacks checkout activation + invoice events; portal falls back to fixed domain. Podcast assignment is a label, access stays workspace membership (as designed).
 - [ ] Podcasts for Cosmic members on their own chart + personal context + credits; custom pages for everyone on their own chart; Ask/Chat stay on the member's chart with citations; neutral pronouns in workbook/safety prompts; Zac counselor profile; shared podcast audio by assignment.
 - [ ] Subscription checkout amount check; billing portal return to current site; webhook activates subscriptions on checkout and handles renewals/failures; Cosmic synthesis and tone in readings; longer book PDF links.
 
