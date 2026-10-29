@@ -8,6 +8,14 @@ import { usePageMeta } from '@/hooks/usePageMeta';
 import { useJsonLd } from '@/hooks/useJsonLd';
 import { useSession } from '@/hooks/useLibrary';
 import { supabase } from '@/integrations/supabase/client';
+import geminiObservatory from '@/assets/mystic/gemini-observatory.jpg';
+import leoHeroine from '@/assets/mystic/leo-heroine.jpg';
+
+/** Mystic Ink plates placed inside guides, after the second paragraph. */
+const PLATES: Record<string, { src: string; alt: string; caption: string }> = {
+  'your-sun-moon-and-rising': { src: leoHeroine, alt: 'A heroine crowned by a lion of stars, lit by a single golden sun', caption: 'The Sun as the main character of your story.' },
+  'transits': { src: geminiObservatory, alt: 'Twin figures at a brass telescope in a starlit observatory', caption: 'Watching today’s sky meet the sky you were born under.' },
+};
 
 /** Public Reading Room: seven storybook-illustrated guides to reading a chart. */
 export default function ReadingRoom() {
@@ -88,7 +96,7 @@ export function ReadingRoomArticle() {
           </div>
         </header>
         <aside className={callout} aria-label="At a glance"><div className="font-smallcaps text-xs text-gold">At a glance</div><p className="mt-2 text-lg">{a.glance}</p></aside>
-        <div className="space-y-5 text-lg leading-[1.7] text-foreground/90">{a.paras.map((p, i) => <p key={i}>{p}</p>)}</div>
+        <div className="space-y-5 text-lg leading-[1.7] text-foreground/90">{a.paras.map((p, i) => <div key={i} className="space-y-5"><p>{p}</p>{i === 1 && PLATES[a.slug] && <figure className="space-y-2"><img src={PLATES[a.slug].src} alt={PLATES[a.slug].alt} width={1024} height={1024} loading="lazy" className="w-full rounded-2xl border border-gold/30" /><figcaption className="text-sm text-muted-foreground">{PLATES[a.slug].caption}</figcaption></figure>}</div>)}</div>
         <aside className={callout} aria-label="Words to know">
           <div className="font-smallcaps text-xs text-gold">Words to know</div>
           <ul className="mt-3 flex flex-wrap gap-2">{a.words.map(w => (
@@ -99,6 +107,7 @@ export function ReadingRoomArticle() {
         <div className="flex flex-wrap gap-3"><Button asChild><Link to={session ? '/my-chart' : '/start'}>See this in your own chart</Link></Button></div>
         <section aria-labelledby="rel-h" className="border-t border-border pt-8"><h2 id="rel-h" className="text-2xl">Keep reading</h2>
           <ul className="mt-5 grid gap-4 sm:grid-cols-3">{related.map(r => <li key={r.slug}><ArticleCard a={r} /></li>)}</ul>
+          <p className="mt-6 text-sm text-muted-foreground">Want longer essays? <Link to="/blog" className="text-accent underline underline-offset-2">Visit the Zodaci journal</Link>.</p>
         </section>
       </article>
     </>
