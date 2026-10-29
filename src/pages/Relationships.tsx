@@ -4,8 +4,10 @@ import { AuthGate } from '@/components/common/AuthGate';
 import { Button } from '@/components/ui/button';
 import { useRelationships, saveRelationship } from '@/hooks/useRelationships';
 import { PersonForm, EMPTY } from '@/components/relationships/PersonForm';
+import { usePageMeta } from '@/hooks/usePageMeta';
 
 export default function Relationships() {
+  usePageMeta('Your relationships · Zodaci', 'Compare your chart with the people in your life.');
   const { items, loading } = useRelationships();
   const [adding, setAdding] = useState(false);
   const nav = useNavigate();
@@ -13,8 +15,8 @@ export default function Relationships() {
     <div className="space-y-8">
       <header className="space-y-2">
         <div className="font-smallcaps text-xs text-gold">Relationships</div>
-        <h1 className="text-4xl">Relationships with April</h1>
-        <p className="max-w-3xl text-muted-foreground">Add someone’s birth details to calculate their chart and compare it with April’s: planet contacts between the two charts, house overlays, the combined (composite) chart, Chinese zodiac and Day Master match, Feng Shui Kua directions and numerology. Birth time is optional; without it the Moon, Rising sign and houses are marked uncertain or left out.</p>
+        <h1 className="text-4xl">Your relationships</h1>
+        <p className="max-w-3xl text-muted-foreground">Add someone’s birth details to calculate their chart and compare it with yours: planet contacts between the two charts, house overlays, the combined (composite) chart, Chinese zodiac and Day Master match, Feng Shui Kua directions and numerology. Birth time is optional; without it the Moon, Rising sign and houses are marked uncertain or left out.</p>
       </header>
       <AuthGate what="save relationships">
         {() => <div className="space-y-6">
