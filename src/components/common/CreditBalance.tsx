@@ -21,7 +21,7 @@ export function CreditBalance() {
     <section aria-label="AI credits" className="rounded border border-border bg-card p-4">
       <div className="flex items-center justify-between text-sm"><span>AI credits this month</span><span className="font-medium">{left} of {s.allowance} left</span></div>
       <div className="mt-2 h-2 overflow-hidden rounded bg-muted"><div className="h-full bg-primary" style={{ width: `${Math.min(100, (s.used / s.allowance) * 100)}%` }} /></div>
-      <p className="mt-2 text-xs text-muted-foreground">Counselor messages use 1, chart covers 3, podcasts 5. Credits refresh on the 1st.{s.tier !== 'creator' && <> <Link to="/pricing" className="text-primary underline">Get more</Link></>}</p>
+      <p className="mt-2 text-xs text-muted-foreground">Counselor messages use 1, chart covers 3, podcasts 5. Credits refresh on the 1st.{" "}<Link to="/credits" className="text-primary underline">Buy more credits</Link></p>
     </section>
   );
 }
