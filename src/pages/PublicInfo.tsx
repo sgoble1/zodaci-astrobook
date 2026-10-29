@@ -18,6 +18,7 @@ import { SampleBook } from '@/components/books/SampleBookReader';
 import { VOLUMES } from '@/lib/bookVolumes';
 
 /** The six volumes of every AstroBook, described from what buildVolumes() actually writes. */
+const VOLUME_ART = { I: 'chart', II: 'house', III: 'aspect', IV: 'healing', V: 'sign', VI: 'year' } as const;
 const VOLUME_DETAIL: Record<string, string> = {
   I: 'Birth facts, the full planet table, your Big Three, chart ruler and birth Moon phase',
   II: 'All twelve houses, one by one: the sign on each cusp, its ruler and the planets inside',
@@ -51,7 +52,7 @@ export function AstroBookPublic() {
       <section id="inside" className="space-y-6">
         <h2 className="font-display text-3xl">Six volumes, one sky.</h2>
         <p className="text-muted-foreground">Every AstroBook follows the same six-volume structure as our founders’ Masterbooks, written from your chart. Every version includes Volumes I–IV and VI; World Systems begins at Classic, and larger versions add chapters inside each volume. Compare them below.</p>
-        <ol className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{VOLUMES.map(v => <li key={v.n} className="vellum p-5"><ThemeArt label={v.title} /><p className="mt-4 font-smallcaps text-xs text-gold">Volume {v.n}</p><h3 className="mt-1 text-xl">{v.title}</h3><p className="mt-2 text-sm text-muted-foreground">{VOLUME_DETAIL[v.n]}</p></li>)}</ol>
+        <ol className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{VOLUMES.map(v => <li key={v.n} className="vellum p-5"><ThemeArt kind={VOLUME_ART[v.n]} /><p className="mt-4 font-smallcaps text-xs text-gold">Volume {v.n}</p><h3 className="mt-1 text-xl">{v.title}</h3><p className="mt-2 text-sm text-muted-foreground">{VOLUME_DETAIL[v.n]}</p></li>)}</ol>
       </section>
       <section className="space-y-6">
         <h2 className="font-display text-3xl">How it works.</h2>
