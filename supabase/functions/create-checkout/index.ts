@@ -72,10 +72,10 @@ Deno.serve(async (req) => {
       if (!price) return json({ error: 'Credit packs are not configured.' }, 404);
       if (price.currency !== 'usd' || price.unit_amount !== pack.amount || price.type !== 'one_time') return json({ error: 'Checkout prices do not match the advertised credit packs.' }, 409);
       const customerId = await resolveOrCreateCustomer(stripe, { email: user.email ?? undefined, userId: user.id });
-      const meta = { userId: user.id, kind: 'credits', pack: priceId };
+      const meta = { userId: user.id, kind: 'credits', pack: priceId, managed_payments: 'true' };
       const session = await stripe.checkout.sessions.create({
         mode: 'payment', ui_mode: 'embedded_page', return_url: returnUrl, customer: customerId,
-        line_items: [{ price: price.id, quantity: 1 }], automatic_tax: { enabled: true }, customer_update: { address: 'auto' },
+        line_items: [{ price: price.id, quantity: 1 }], managed_payments: { enabled: true },
         metadata: meta, payment_intent_data: { description: `Zodaci AI credits · ${pack.credits}`, metadata: meta },
       } as Stripe.Checkout.SessionCreateParams);
       return json({ clientSecret: session.client_secret });
