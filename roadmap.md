@@ -215,3 +215,10 @@ Audit Oct 29: Chat/counselors already use the member's chart; podcast/custom pag
 - [ ] April's Masterbook chapters with the archive unlocked — blocked: archive password is hidden from the agent; owner unlocks once in preview
 - [ ] Social share image — hosting adds the social preview; set a custom one only from an owner-provided public image URL
 - [ ] Owner/external: Lulu keys + printed sample, email sender domain, AstroComic printer, licensed Sabian text, asteroid reference degrees, real testimonials, approved test purchase
+
+## Investor + access request (Oct 29, night)
+- [x] Investor page: live numbers, trust section, chart-matched shop, comic character creator, 3 comic styles, income projection, social+shop upside
+- [x] April can open investor page; menu renamed "Founder Editions"
+- [x] Chart accuracy tests re-run (51 passed)
+- [ ] Pro gets full access like founders — waiting on owner decision (affects Cosmic tier)
+- [ ] Creator Studio expansion (wallpapers, posters, cards, journal pages, saved library) — waiting on scope choice
