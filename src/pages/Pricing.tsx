@@ -109,9 +109,9 @@ export default function Pricing() {
             const per = !paid ? 'forever' : yearly ? 'per year' : 'per month';
             const saving = paid && yearly ? yearlySaving(p.tier as Exclude<Tier, 'free'>) : 0;
             const pid = paid ? priceFor(p.tier as Exclude<Tier, 'free'>, yearly) : null;
-            const current = !sub.loading && sub.userId && sub.tier === p.tier && (!billed || !pid || sub.priceId === pid || (legacy && PRICE_TIER[sub.priceId!] === p.tier && !pid));
+            const current = !sub.loading && sub.userId && sub.tier === p.tier && (!billed || legacy || sub.priceId === pid);
             const below = rank[p.tier] < rank[sub.tier];
-            const switchable = billed && paid && pid && sub.priceId !== pid;
+            const switchable = billed && paid && !!pid && !current && sub.priceId !== pid;
             const label = `${PLAN_NAME[p.tier]} ${yearly ? 'annual' : 'monthly'} (${price} ${per})`;
             return (
               <section key={p.slug} className={`parchment flex flex-col space-y-4 p-6 ${p.tier === 'full' ? 'border-gold ring-1 ring-gold/40' : ''}`} aria-labelledby={`plan-${i}`}>
