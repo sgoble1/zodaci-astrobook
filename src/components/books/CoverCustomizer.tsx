@@ -6,7 +6,9 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { computeChart, type ChartInput } from '@/lib/astro';
-import { COVER_DESIGNS, coverSrc } from '@/content/coverDesigns';
+import { COVER_DESIGNS } from '@/content/coverDesigns';
+import { useCoverImage } from '@/hooks/useCoverImage';
+import { DEFAULT_CROP } from '@/lib/coverLayout';
 
 const COVERS = COVER_DESIGNS;
 
@@ -37,7 +39,8 @@ export function sunFromDate(date: string) {
 export function CoverCustomizer() {
   const [name, setName] = useState(''); const [date, setDate] = useState(''); const [cover, setCover] = useState(0);
   const sun = useMemo(() => sunFromDate(date), [date]);
-  const match = sun ? COVER_FOR_ELEMENT[ELEMENT_OF[sun.sign]] : null;
+  const rec = sun ? COVER_FOR_ELEMENT[ELEMENT_OF[sun.sign]] : null;
+  const match = rec ? { ...rec, index: Math.max(0, COVERS.findIndex(c => c.key === rec.key)) } : null;
   const [touched, setTouched] = useState(false);
   useEffect(() => { if (match && !touched) setCover(match.index); }, [match, touched]);
   const named = sun ? chartTitle({ sun: sun.sign }) : null;
@@ -53,6 +56,8 @@ export function CoverCustomizer() {
     e.preventDefault(); choose(to); radios.current[to]?.focus();
   };
   const shown = name.trim();
+  // Drawn by the same code as the printed cover: name as the title, the subtitle line, AstroBook bottom-right.
+  const preview = useCoverImage({ source: { kind: 'design', key: COVERS[cover].key }, crop: DEFAULT_CROP, name: shown, trimPt: [432, 648] }, 56);
   return <div className="grid items-center gap-8 md:grid-cols-[1fr_auto]">
     <form className="space-y-4" onSubmit={e => e.preventDefault()} aria-label="Preview your AstroBook cover">
       <div><Label htmlFor="cc-name">Name on the cover</Label><Input id="cc-name" maxLength={40} value={name} onChange={e => setName(e.target.value)} placeholder="Your name" autoComplete="given-name" /></div>
@@ -64,17 +69,15 @@ export function CoverCustomizer() {
       <Button asChild><Link to={next}>Create my AstroBook<ArrowRight /></Link></Button>
       <p className="text-xs text-muted-foreground">Preview only. Your name, date and design choice are not saved or carried into signup.</p>
     </form>
-    <figure className="mx-auto w-56" aria-live="polite">
-      <div className="relative aspect-[2/3] overflow-hidden rounded shadow-2xl">
-        <img loading="lazy" decoding="async" src={coverSrc(COVERS[cover])} alt={`${COVERS[cover].label} cover preview`} className="h-full w-full object-cover" />
-        <div className="absolute inset-x-3 top-6 space-y-1 bg-background/70 p-3 text-center [overflow-wrap:anywhere]">
-          <p className={`font-display leading-tight ${shown.length > 22 ? 'text-base' : shown.length > 14 ? 'text-lg' : 'text-xl'}`}>{shown ? `${shown}’s` : 'Your'} AstroBook</p>
-          {named && <p className="text-xs italic text-gold">{named.title}</p>}
-          {pretty && <p className="text-xs text-muted-foreground">{pretty}</p>}
-        </div>
-        {sun && <span className="absolute bottom-6 inset-x-0 text-center font-display text-5xl text-gold" aria-hidden>{sun.glyph}</span>}
+    <figure className="mx-auto w-56">
+      <div className="relative aspect-[2/3] overflow-hidden rounded bg-muted shadow-2xl">
+        {preview && <img src={preview} alt={`${COVERS[cover].label} cover preview${shown ? ` for ${shown}` : ''}`} className="h-full w-full object-cover" />}
       </div>
-      <figcaption className="mt-2 text-center text-xs text-muted-foreground">Live cover preview</figcaption>
+      <figcaption className="mt-2 space-y-0.5 text-center text-xs text-muted-foreground" aria-live="polite">
+        <span className="block">Live cover preview · 6 × 9 in</span>
+        {named && <span className="block italic text-gold">{named.title}</span>}
+        {pretty && <span className="block">{pretty}{sun ? ` · Sun in ${sun.sign} ${sun.glyph}` : ''}</span>}
+      </figcaption>
     </figure>
   </div>;
 }
