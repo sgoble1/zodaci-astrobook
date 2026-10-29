@@ -1,4 +1,4 @@
-import { useEffect, useId, useMemo, useState } from 'react';
+import { useEffect, useId, useMemo, useState, type KeyboardEvent } from 'react';
 import { Link } from 'react-router-dom';
 import { SIGNS, SIGN_GLYPH, SIGN_KEYWORDS, BODY_KEYWORDS, fmtLon, type ChartResult } from '@/lib/astro';
 import { FIXED_STARS, type SourceRef } from '@/content/compendium';
@@ -68,7 +68,7 @@ export function ChartWheel({ r, sourcesFor }: { r: ChartResult; sourcesFor?: (ke
   const press = (k: NonNullable<Sel>) => ({
     role: 'button' as const, tabIndex: 0, className: 'cursor-pointer outline-none [&:focus-visible>.hit]:stroke-[hsl(var(--ring))]',
     onClick: () => setSel(k),
-    onKeyDown: (e: React.KeyboardEvent) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setSel(k); } },
+    onKeyDown: (e: KeyboardEvent) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setSel(k); } },
   });
   const uid = useId().replace(/:/g, '');
   return (
@@ -76,7 +76,7 @@ export function ChartWheel({ r, sourcesFor }: { r: ChartResult; sourcesFor?: (ke
       <svg viewBox={`0 0 ${S} ${S}`} className="w-full max-w-[460px] mx-auto" role="group" aria-label="Natal chart wheel — choose any planet, sign, aspect or pillar for details">
         <defs>
           <radialGradient id={`vellum-${uid}`} cx="50%" cy="50%" r="60%">
-            <stop offset="0%" stopColor="hsl(var(--surface, var(--card)))" />
+            <stop offset="0%" stopColor="hsl(var(--card))" />
             <stop offset="100%" stopColor="hsl(var(--vellum))" />
           </radialGradient>
           <radialGradient id={`sky-${uid}`} cx="50%" cy="45%" r="55%">
