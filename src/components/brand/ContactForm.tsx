@@ -30,8 +30,7 @@ export function ContactForm() {
       const parsed = contactSchema.safeParse(v);
       if (!parsed.success) { const out: Errors = {}; parsed.error.issues.forEach(i => { out[i.path[0] as 'name'] ??= i.message; }); setErrors(out); return; }
       setErrors({}); setState('busy');
-      const { data: s } = await supabase.auth.getSession();
-      const { error } = await supabase.from('contact_messages').insert({ name: parsed.data.name, email: parsed.data.email, topic: parsed.data.topic, message: parsed.data.message, sender_id: s.session?.user.id ?? null, source_path: window.location.pathname.slice(0, 200) });
+      const { error } = await supabase.functions.invoke('contact-message', { body: { ...parsed.data, source_path: window.location.pathname.slice(0, 200) } });
       if (error) { setErrors({ form: 'Your message could not be sent. Check your connection and try again.' }); setState('idle'); return; }
       setState('done');
     }}>

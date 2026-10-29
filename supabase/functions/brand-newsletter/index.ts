@@ -1,6 +1,7 @@
 import { createClient } from 'npm:@supabase/supabase-js@2';
 import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors';
 import { z } from 'npm:zod@3';
+import { sendEmail, layout } from '../_shared/resend.ts';
 
 const schema = z.object({ email: z.string().trim().email().max(254), consent: z.literal(true), website: z.string().max(200).optional(), source: z.enum(['welcome', 'astrobook-teaser', 'pricing', 'sky-notes', 'astrocomic']).optional() });
 Deno.serve(async req => {
@@ -17,6 +18,7 @@ Deno.serve(async req => {
     const db = createClient(url, key);
     const { error } = await db.from('brand_email_subscribers').upsert({ email: parsed.data.email.toLowerCase(), ...(parsed.data.source ? { source: parsed.data.source } : {}) }, { onConflict: 'email', ignoreDuplicates: true });
     if (error) return reply({ error: 'We could not save your signup. Please try again.' }, 500);
+    await sendEmail({ to: parsed.data.email, subject: 'Welcome to Zodaci Sky Notes', html: layout('You are on the list', '<p>Thank you for joining Zodaci. We will write when there is something worth reading in the sky.</p><p>To stop these emails, reply with “unsubscribe”.</p>') });
     return reply({ ok: true });
   } catch { return reply({ error: 'Please check your email and try again.' }, 400); }
 });
