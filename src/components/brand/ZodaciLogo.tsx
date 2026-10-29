@@ -44,7 +44,7 @@ export function ZodaciLogo({ compact = false, className }: { compact?: boolean; 
   return (
     <div className={cn('flex min-w-0 items-center gap-2', className)} aria-label="Zodaci">
       <span className={cn('relative shrink-0', compact ? 'h-12 w-12' : 'h-16 w-16')}>
-        <img src={planetCore} alt="" width={1024} height={1024} loading="eager" className="absolute inset-[14%] h-[72%] w-[72%] object-contain drop-shadow-lg" />
+        <img src={planetCore} alt="" width={1024} height={1024} loading="eager" className="absolute inset-0 h-full w-full object-contain drop-shadow-lg" />
         <CloudRing arrive={arrive} />
       </span>
       <span className={cn('font-display leading-none text-silver tracking-tight', compact ? 'text-2xl' : 'text-4xl')}>Zodaci</span>
