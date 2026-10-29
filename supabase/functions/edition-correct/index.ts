@@ -39,7 +39,7 @@ Deno.serve(async (req) => {
       await admin.storage.from('private-content').upload('shane/edition.backup-2026-10-29.json', new Blob([JSON.stringify(ed)], { type: 'application/json' }), { upsert: true });
       return json({ ok: true });
     }
-    if (body.action === 'set') { ed[body.key] = body.content; await save(ed); return json({ ok: true }); }
+    if (body.action === 'setmany') { for (const [k, v] of Object.entries(body.items as Record<string, string>)) if (k in ed && typeof v === 'string') ed[k] = v; await save(ed); return json({ ok: true }); }
     if (body.action === 'fix') {
       const original = ed[body.key];
       if (typeof original !== 'string') return json({ error: 'missing' }, 404);
@@ -63,10 +63,7 @@ Deno.serve(async (req) => {
       }
       out = out.trim();
       if (out.length < original.length * 0.6) return json({ error: 'output too short', got: out.length, had: original.length }, 422);
-      const fresh = await load();
-      fresh[body.key] = out;
-      await save(fresh);
-      return json({ ok: true, had: original.length, now: out.length });
+      return json({ ok: true, had: original.length, now: out.length, content: out });
     }
     return json({ error: 'bad action' }, 400);
   } catch (e) {
