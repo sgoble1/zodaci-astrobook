@@ -65,8 +65,28 @@ function housesChapter(c: ChartResult) {
 }
 
 const PLANETS = ['sun', 'moon', 'mercury', 'venus', 'mars', 'jupiter', 'saturn', 'uranus', 'neptune', 'pluto'];
+const PLANET_PROMPT: Record<string, string> = {
+  sun: 'When did you last feel fully yourself? What were you doing?', moon: 'What restores you after a hard day, honestly?',
+  mercury: 'How do you think best: out loud, on paper, or alone?', venus: 'What do you find beautiful that others overlook?',
+  mars: 'What makes you act before you have time to doubt?', jupiter: 'Where has generosity, given or received, changed your path?',
+  saturn: 'What have you built slowly that you are proud of?', uranus: 'Where do you refuse to be like everyone else?',
+  neptune: 'What do you long for that you cannot quite name?', pluto: 'What ending made room for who you are now?',
+};
+/** One section per planet: position, sign and house meaning, its tightest aspects, and a reflection. */
 function planetsChapter(c: ChartResult, timeKnown: boolean) {
-  return PLANETS.map(k => body(c, k)).filter(Boolean).map(b => `## ${b!.name} in ${b!.sign}${b!.house ? ` · ${ordinal(b!.house)} house` : ''}${b!.retro ? ' · retrograde' : ''}\n\n${fmtLon(b!.lon).text}. ${placementText(b!, timeKnown)}`).join('\n\n');
+  return PLANETS.map(k => body(c, k)).filter((b): b is NonNullable<typeof b> => !!b).map(b => {
+    const e = SIGN_EXPRESSIONS[b.sign];
+    const house = b.house && timeKnown ? HOUSE_ARENAS[b.house] : null;
+    const hits = c.aspects.filter(a => a.a === b.name || a.b === b.name).sort((x, y) => x.orb - y.orb).slice(0, 4);
+    return [
+      `## ${b.name} in ${b.sign}${house ? ` · ${ordinal(b.house!)} house` : ''}${b.retro ? ' · retrograde' : ''}`,
+      `${fmtLon(b.lon).text}. ${placementText(b, timeKnown)}`,
+      e ? `${b.sign} ${e.core}. Through ${b.name}, its gift is ${e.gift}; its growing edge is ${e.shadow}.` : '',
+      house ? `The ${ordinal(b.house!)} house asks: ${house.question} Here that question is answered through ${house.themes}.` : '',
+      hits.length ? `Its closest contacts: ${hits.map(a => `${a.a} ${a.type.toLowerCase()} ${a.b} (${a.orb.toFixed(1)}°)`).join('; ')}.` : `${b.name} makes no major aspect within orb, so it tends to act on its own terms.`,
+      `Reflect: ${PLANET_PROMPT[b.key]}`,
+    ].filter(Boolean).join('\n\n');
+  }).join('\n\n');
 }
 
 function aspectsChapter(c: ChartResult, limit: number) {
