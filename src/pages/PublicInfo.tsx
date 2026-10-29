@@ -16,6 +16,8 @@ import { DEFAULT_CROP } from '@/lib/coverLayout';
 import { ThemeArt } from '@/components/common/ThemeArt';
 import { SampleBook } from '@/components/books/SampleBookReader';
 import { VOLUMES } from '@/lib/bookVolumes';
+import { EditionPages } from '@/components/book/EditionPages';
+import { SAMPLE_EDITION } from '@/content/sampleEdition';
 
 /** The six volumes of every AstroBook, described from what buildVolumes() actually writes. */
 const VOLUME_ART = { I: 'chart', II: 'house', III: 'aspect', IV: 'healing', V: 'sign', VI: 'year' } as const;
@@ -44,6 +46,11 @@ export function AstroBookPublic() {
           <div className="flex flex-wrap items-center gap-4"><Button asChild size="lg"><Link to={order()}>Order your AstroBook</Link></Button><Link to="/book-preview" className="text-accent">Read a sample book →</Link><Link to="/demo" className="text-accent">Try the interactive demo →</Link></div>
         </div>
         <div className="vellum p-6"><h2 className="mb-4 font-display text-2xl">See your cover</h2><CoverCustomizer /></div>
+      </section>
+      <section id="full-edition" aria-labelledby="fe-h" className="space-y-6">
+        <div className="max-w-3xl"><p className="font-smallcaps text-xs text-gold">Open the Collector’s edition</p><h2 id="fe-h" className="mt-1 font-display text-3xl sm:text-4xl">Three full pages from {SAMPLE_EDITION.owner}’s AstroBook</h2><p className="mt-3 text-muted-foreground">Exactly as they print: an illuminated plate for each placement, the calculated facts, then the interpretation. {SAMPLE_EDITION.note} Your book is written the same way from your own chart.</p></div>
+        <EditionPages pages={SAMPLE_EDITION.pages} />
+        <div className="flex flex-wrap gap-4"><Button asChild size="lg"><Link to={order()}>Start my AstroBook</Link></Button><Link to="/astrocomic" className="self-center text-accent">Read {SAMPLE_EDITION.owner.split(' ')[0]}’s comic issue →</Link></div>
       </section>
       <section id="story" className="grid gap-8 md:grid-cols-2 items-center">
         <div className="space-y-4"><h2 className="font-display text-3xl">Calculated, not guessed.</h2><p className="text-muted-foreground">Every AstroBook starts with astronomy: the exact positions of the Sun, Moon and planets at the moment and place you were born. Interpretation comes second, and the book always tells you which is which.</p><p className="text-muted-foreground">Then we write it for one person. No two AstroBooks are alike, because no two birth moments are.</p></div>
