@@ -50,4 +50,5 @@ export function requiredPlan(path: string): Plan {
   return 'free';
 }
 const RANK: Record<Plan, number> = { free: 0, full: 1, creator: 2 };
-export function planAllows(have: Plan, need: Plan) { return RANK[have] >= RANK[need]; }
+// Pro and Cosmic share every feature; Cosmic differs only by credits.
+export function planAllows(have: Plan, need: Plan) { return RANK[have] >= Math.min(RANK[need], 1); }

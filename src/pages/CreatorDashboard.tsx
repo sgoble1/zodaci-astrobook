@@ -26,9 +26,9 @@ export default function CreatorDashboard() {
   const [error, setError] = useState(false);
   const [retry, setRetry] = useState(0);
   const [rows, setRows] = useState<TopicRow[] | null>(null);
-  useEffect(() => { if (access.plan === 'creator') { setError(false); void loadMyTopicReadings().then(setRows).catch(() => setError(true)); } }, [access.plan, retry]);
+  useEffect(() => { if (access.plan !== 'free') { setError(false); void loadMyTopicReadings().then(setRows).catch(() => setError(true)); } }, [access.plan, retry]);
   if (access.loading) return <div role="status" className="h-40 animate-pulse rounded bg-muted" />;
-  if (access.plan !== 'creator') return (
+  if (access.plan === 'free') return (
     <article className="mx-auto max-w-xl space-y-4 text-center">
       <h1 className="font-display text-4xl">Cosmic dashboard</h1>
       <p className="text-muted-foreground">The Cosmic plan lets you manage several charts, write new chapters and make podcasts from your readings.</p>

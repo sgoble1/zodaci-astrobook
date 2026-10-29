@@ -53,7 +53,7 @@ Deno.serve(async (req) => {
     const [{ data: member }, { data: edition }, { data: tier }] = await Promise.all([
       sb.rpc('is_shared_space_member'), sb.rpc('my_founder_edition'), admin.rpc('plan_tier', { _user_id: u.user.id }),
     ]);
-    if (member !== true && !edition && tier !== 'creator') return json({ error: 'Podcasts are part of the Cosmic plan.' }, 403);
+    if (member !== true && !edition && tier !== 'creator' && tier !== 'full') return json({ error: 'Podcasts are part of Pro and Cosmic.' }, 403);
     const parsed = Body.safeParse(await req.json().catch(() => ({})));
     if (!parsed.success) return json({ error: 'Please give the episode a topic.' }, 400);
     const { topic, brief, voice, duration, passages, shared } = parsed.data;

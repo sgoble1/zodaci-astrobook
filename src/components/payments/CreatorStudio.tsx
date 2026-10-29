@@ -23,7 +23,7 @@ export function CreatorStudio({ onMade }: { onMade?: () => void }) {
   const [msg, setMsg] = useState('');
 
   if (access.loading) return null;
-  if (access.plan !== 'creator') return (
+  if (access.plan === 'free') return (
     <section className="parchment p-5 space-y-2" aria-labelledby="studio-h">
       <h2 id="studio-h" className="text-xl">Cosmic Studio</h2>
       <p className="text-sm text-muted-foreground">Make podcasts and new Masterbook chapters written from your own chart. Included with the Cosmic plan ($19/month).</p>
