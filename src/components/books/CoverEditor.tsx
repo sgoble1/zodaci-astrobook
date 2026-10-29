@@ -49,7 +49,7 @@ export function CoverEditor({ spec, onChange, trimLabel }: { spec: CoverSpec; on
   const onUp = () => { drag.current = null; };
   const onKey = (e: KeyboardEvent<HTMLCanvasElement>) => {
     const step = e.shiftKey ? 0.2 : 0.05;
-    const moves: Record<string, Partial<CoverSpec['crop']>> = { ArrowLeft: { x: spec.crop.x + step }, ArrowRight: { x: spec.crop.x - step }, ArrowUp: { y: spec.crop.y + step }, ArrowDown: { y: spec.crop.y - step }, '+': { zoom: spec.crop.zoom + 0.1 }, '=': { zoom: spec.crop.zoom + 0.1 }, '-': { zoom: spec.crop.zoom - 0.1 }, '0': DEFAULT_CROP };
+    const moves: Record<string, Partial<CoverSpec['crop']>> = { ArrowLeft: { x: spec.crop.x - step }, ArrowRight: { x: spec.crop.x + step }, ArrowUp: { y: spec.crop.y - step }, ArrowDown: { y: spec.crop.y + step }, '+': { zoom: spec.crop.zoom + 0.1 }, '=': { zoom: spec.crop.zoom + 0.1 }, '-': { zoom: spec.crop.zoom - 0.1 }, '0': DEFAULT_CROP };
     const m = moves[e.key]; if (!m) return; e.preventDefault(); set(m);
   };
   const movable = (() => { const r = range(); return r.x > 1 || r.y > 1; })();
