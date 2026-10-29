@@ -6,7 +6,6 @@ import { perceive, narrative } from '@/lib/perception';
 import { chartAffirmations } from '@/lib/affirmations';
 import { upcomingEvents } from '@/lib/transitOverlay';
 import { interAspects, scoreSummary } from '@/lib/synastry';
-import { versionOf, type BookVersion } from '@/lib/books';
 
 /** A manuscript chapter. `draw` asks the composer to draw a figure page instead of (or before) text. */
 export type BookChapter = { title: string; content: string; draw?: 'wheel' | 'grid' | 'certificate' | 'volume' };
