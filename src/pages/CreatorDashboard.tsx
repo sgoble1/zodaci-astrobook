@@ -6,6 +6,7 @@ import { readingStatus } from '@/lib/readingExperience';
 import { LoadError } from '@/components/common/LoadError';
 import { useSubscription } from '@/hooks/useSubscription';
 import { CreatorStudio } from '@/components/payments/CreatorStudio';
+import { CreationMaker } from '@/components/payments/CreationMaker';
 import { ALL_READINGS, loadMyTopicReadings, type TopicRow } from '@/lib/topicReadings';
 import { usePageMeta } from '@/hooks/usePageMeta';
 
@@ -20,7 +21,7 @@ const TOOLS: [string, string, string][] = [
 
 /** Creator members' home: their charts, readings and creation tools in one place. Server checks still gate every Creator action. */
 export default function CreatorDashboard() {
-  usePageMeta('Cosmic dashboard | Zodaci', 'Manage your charts, readings and creations.');
+  usePageMeta('Creator Studio | Zodaci', 'Manage your charts, readings and creations.');
   const sub = useSubscription();
   const access = usePlan();
   const [error, setError] = useState(false);
@@ -30,9 +31,9 @@ export default function CreatorDashboard() {
   if (access.loading) return <div role="status" className="h-40 animate-pulse rounded bg-muted" />;
   if (access.plan === 'free') return (
     <article className="mx-auto max-w-xl space-y-4 text-center">
-      <h1 className="font-display text-4xl">Cosmic dashboard</h1>
-      <p className="text-muted-foreground">The Cosmic plan lets you manage several charts, write new chapters and make podcasts from your readings.</p>
-      <Button asChild><Link to="/pricing">See the Cosmic plan</Link></Button>
+      <h1 className="font-display text-4xl">Creator Studio</h1>
+      <p className="text-muted-foreground">Pro and Cosmic members design wallpapers, posters, journal pages and cards, write new chapters and make podcasts from their own chart.</p>
+      <Button asChild><Link to="/pricing">See Pro</Link></Button>
     </article>
   );
   if (error) return <LoadError what="your readings" onRetry={() => setRetry(n => n + 1)} />;
@@ -45,7 +46,7 @@ export default function CreatorDashboard() {
         <h2 className="text-2xl">Your readings · {ready.size ? ALL_READINGS.filter(t => ready.has(`topic-${t.slug}`)).length : 0} of {ALL_READINGS.length} written</h2>
         <ul className="grid gap-2 sm:grid-cols-2">{ALL_READINGS.map(t => { const done = ready.has(`topic-${t.slug}`); const to = 'route' in t ? (t as { route: string }).route : `/my-readings/topic/${t.slug}`; return <li key={t.slug}><Link to={to} className="flex justify-between rounded border border-border px-3 py-2 text-sm hover:bg-muted"><span>{t.title}</span><span className="text-muted-foreground">{done ? (readingStatus(rows?.find(r => r.page_key === `topic-${t.slug}`)?.status) === 'preview' ? 'Preview' : 'Saved') : 'Open to create'}</span></Link></li>; })}</ul>
       </section>
-      <section className="space-y-3"><h2 className="text-2xl">Create something new</h2><CreatorStudio /></section>
+      <section className="space-y-3"><h2 className="text-2xl">Create something new</h2><CreatorStudio /><CreationMaker /></section>
     </article>
   );
 }

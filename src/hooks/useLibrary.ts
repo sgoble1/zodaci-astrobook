@@ -28,7 +28,7 @@ export function useIsAdmin(session: Session | null) {
   return admin;
 }
 
-export function useLibrary(kind: 'podcast' | 'source' | 'masterbook') {
+export function useLibrary(kind: 'podcast' | 'source' | 'masterbook' | 'creation') {
   const [items, setItems] = useState<LibraryItem[]>([]);
   const [loading, setLoading] = useState(true);
   const reload = useCallback(async () => {
