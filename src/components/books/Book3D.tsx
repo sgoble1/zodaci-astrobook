@@ -7,8 +7,8 @@ import { DEFAULT_CROP } from '@/lib/coverLayout';
  * Interactive 3D AstroBook mockup scaled from the printer spec: US Trade 6 × 9 in softcover,
  * perfect-bound. Spine thickness approximates page count on 80 lb satin stock (~0.0045 in/page).
  */
-export function Book3D({ pages = 250, trimPt = [432, 648], label = '6″ × 9″ · softcover perfect binding', hardcover = false, coverSrc: fixedSrc, name = '' }: { pages?: number; trimPt?: [number, number]; label?: string; hardcover?: boolean; coverSrc?: string; name?: string }) {
-  const [cover, setCover] = useState(COVER_DESIGNS[0]);
+export function Book3D({ pages = 250, trimPt = [432, 648], label = '6″ × 9″ · softcover perfect binding', hardcover = false, coverSrc: fixedSrc, name = '', design }: { pages?: number; trimPt?: [number, number]; label?: string; hardcover?: boolean; coverSrc?: string; name?: string; design?: string }) {
+  const [cover, setCover] = useState(() => COVER_DESIGNS.find(d => d.key === design) ?? COVER_DESIGNS[0]);
   // Without a finished cover, show the chosen design with the same name, subtitle and wordmark as the printed book.
   const designed = useCoverImage(fixedSrc ? null : { source: { kind: 'design', key: cover.key }, crop: DEFAULT_CROP, name, trimPt }, 40);
   const [angle, setAngle] = useState(-28);
@@ -33,7 +33,7 @@ export function Book3D({ pages = 250, trimPt = [432, 648], label = '6″ × 9″
       </div>
       <div className="flex flex-col items-center gap-3">
         <input type="range" min={-60} max={60} value={angle} onChange={e => setAngle(Number(e.target.value))} aria-label="Rotate the book" className="w-56 accent-primary" />
-        {!fixedSrc && <div className="flex flex-wrap justify-center gap-2" role="radiogroup" aria-label="Preview cover">
+        {!fixedSrc && !design && <div className="flex flex-wrap justify-center gap-2" role="radiogroup" aria-label="Preview cover">
           {COVER_DESIGNS.map(c => (
             <button key={c.key} type="button" role="radio" aria-checked={c.key === cover.key} onClick={() => setCover(c)}
               className={`rounded-full border px-3 py-1 text-sm transition-colors ${c.key === cover.key ? 'border-primary bg-primary/15' : 'border-border hover:border-primary/60'}`}>{c.label}</button>

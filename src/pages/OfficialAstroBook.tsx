@@ -55,7 +55,7 @@ function EditionShelf({ row }: { row: OfficialEditionRow }) {
       </div>
       <div className="grid gap-6 lg:grid-cols-2">
         <div className="parchment flex flex-col gap-4 p-5 sm:flex-row">
-          <div className="mx-auto shrink-0"><Book3D pages={book.pages} label="Official edition · 6″ × 9″" hardcover coverSrc={midnightStars} /></div>
+          <div className="mx-auto shrink-0"><Book3D pages={book.pages} label="Official edition · 6″ × 9″" hardcover design="midnight-stars" name={row.display_name} /></div>
           <div className="flex flex-1 flex-col gap-3">
             <div className="font-smallcaps text-xs text-gold">Official Masterbook</div>
             <h3 className="text-2xl leading-tight">{book.masterbookTitle}</h3>
