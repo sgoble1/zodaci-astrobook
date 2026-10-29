@@ -4,7 +4,6 @@ import { Book3D } from '@/components/books/Book3D';
 import { Button } from '@/components/ui/button';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { OFFICIAL_BOOKS, ownerLabel, useOfficialEditions, type OfficialEditionRow } from '@/lib/officialEditions';
-import midnightStars from '@/assets/cover-design-midnight-stars.jpg';
 import comicCover from '@/assets/astrocomic-cover.jpg';
 import opener from '@/assets/mystic/pisces-opener.jpg';
 
