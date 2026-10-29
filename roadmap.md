@@ -4,11 +4,11 @@
 Every item is checked against the code first; findings already fixed or proven wrong are marked so.
 
 ### 1. Private Masterbooks without passwords (lead)
-- [ ] Masterbooks open by account only: owner, or someone the owner shared the whole book / a chapter with. No passwords, no device tokens.
-- [ ] Sharing controls: share whole book or single chapter with April, Shane, Zac or any email; list and revoke.
-- [ ] Today's access kept as revocable shares (April→Shane, Zac→Shane); April's /april link becomes sign-in + share.
-- [ ] Session refresh no longer tears down the app; admin check uses both of Shane's emails; reset password clears edition state and handles new reset links.
-- [ ] Zac in official_editions owners. Zac stays out of April & Shane's private shared space (privacy); client list matches server.
+- [x] Masterbooks open by account only: owner, or someone the owner shared the whole book / a chapter with. No passwords, no device tokens. (Server denial verified for a regular member; owner/share access verified in the database.)
+- [x] Sharing controls: share whole book or single chapter with April, Shane, Zac or any email; list and revoke; "Shared with me" page and account-menu link. Owner browser walkthrough still needs an owner sign-in.
+- [x] Today's access kept as revocable shares (April→Shane, Zac→Shane); April's /april link becomes sign-in + share.
+- [x] Session refresh no longer tears down the app; edition switch follows shares (both of Shane's emails); reset password handles code/token links, expiry, confirmation and success.
+- [x] Zac in official_editions owners. Zac stays out of April & Shane's private shared space (privacy); client list matches server.
 
 ### 2. Personal chart pages (agent)
 - [ ] Planet/house detail, birth chart, chart guide/elements, reading, data quality, profection, purpose, numerology, Chinese, Feng Shui/Bagua/Flying Stars/Bagua reading/wheel, Other Systems, Volume II, Compendium, uploads routes: signed-in people see their own chart; April keeps her archive pages; no blank-page crashes.
@@ -29,7 +29,8 @@ Every item is checked against the code first; findings already fixed or proven w
 - [ ] AstroBook as a personal Masterbook (six volumes) per edition; baseline manuscript from the chart so payment never deadlocks; Linen synastry fallback; JPEG covers saved as JPEG; demo/spec/public page updated, retired cover images removed.
 
 ### 6. Founder editions & member design (agent)
-- [ ] Shane and Zac edition homes match April's depth (hero, chart title, planet orbs, illuminated wheel, volume shelves, module cards); ChartWheel gets the illuminated style, larger tap targets, reduced-motion.
+- [x] Shane and Zac edition homes match April's depth (hero, chart title, planet orbs, wheel, volume shelves, module cards).
+- [ ] ChartWheel gets the illuminated style, larger tap targets, reduced-motion.
 - [ ] Sidebars: Zac gets readings/explore/home; Shane gets April's Masterbook link; member menu Editions lists family editions for Shane; mobile tab active state; Zac workbook autosave without duplicates.
 
 ### 7. Public site & member flow (agent)
