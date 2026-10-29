@@ -4,14 +4,14 @@ import { Link, useLocation, useParams } from 'react-router-dom';
 import { type MbEntry } from './Masterbook';
 import { loadProtectedJson, loadProtectedText } from '@/lib/protectedContent';
 import { supabase } from '@/integrations/supabase/client';
-import { SitePasswordGate } from '@/components/common/SitePasswordGate';
+import { PrivateEditionGate } from '@/components/common/PrivateEditionGate';
 import { markdownSections, NavigatedProse } from '@/components/readings/NavigatedProse';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 
 export const slugify = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 
-/** Password-protected reading room backed by the extracted Masterbook files. */
+/** April's private reading room backed by the extracted Masterbook files: opens for her account and people she shared with. */
 function ProtectedRoom({ children }: { children: React.ReactNode }) {
   const [owner, setOwner] = useState<string | null | undefined>(undefined);
   const location = useLocation();
@@ -22,8 +22,8 @@ function ProtectedRoom({ children }: { children: React.ReactNode }) {
     return () => { active = false; data.subscription.unsubscribe(); };
   }, []);
   if (owner === undefined) return <Frame><p role="status">Opening the reading room…</p></Frame>;
-  if (!owner) return <Frame><h1 className="font-display text-3xl">Private reading room</h1><p className="mt-3 text-muted-foreground">Sign in with an approved account to open these sources.</p><Button asChild className="mt-6"><Link to={`/auth?next=${encodeURIComponent(location.pathname + location.search + location.hash)}`}>Sign in</Link></Button></Frame>;
-  return <SitePasswordGate key={owner} edition="april">{children}</SitePasswordGate>;
+  if (!owner) return <Frame><h1 className="font-display text-3xl">Private reading room</h1><p className="mt-3 text-muted-foreground">Sign in with your own account. These sources open only for their owner and the people she shares them with.</p><Button asChild className="mt-6"><Link to={`/auth?next=${encodeURIComponent(location.pathname + location.search + location.hash)}`}>Sign in</Link></Button></Frame>;
+  return <PrivateEditionGate key={owner}>{children}</PrivateEditionGate>;
 }
 
 function useRoomIndex() {
@@ -67,7 +67,7 @@ function LibraryInner() {
   return (
     <Frame>
       <h1 className="font-display text-4xl mb-2">Every source, chapter and section</h1>
-      <p className="text-muted-foreground mb-6">Browse and read all {entries.length} extracted chapters from the real Masterbook documents. The site password protects this room and every chapter.</p>
+      <p className="text-muted-foreground mb-6">Browse and read all {entries.length} extracted chapters from the real Masterbook documents. This room and every chapter open only for the edition's owner and the people she shares it with.</p>
       <Input aria-label="Find a chapter or section" value={q} onChange={e => setQ(e.target.value)} placeholder="Find a chapter or section…" className="mb-8" />
       {loading && <p role="status">Opening the chapter index…</p>}
       {error && <div className="space-y-3"><p role="alert">The chapter index couldn’t be opened.</p><Button variant="outline" onClick={retry}>Try again</Button></div>}

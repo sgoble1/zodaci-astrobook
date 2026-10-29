@@ -94,7 +94,7 @@ function AprilEditionInner() {
         <div className="font-smallcaps text-xs text-gold">A shared chart report</div>
         <h1 className="text-4xl sm:text-6xl">{birth.name || "April's"} Edition</h1>
         <p className="mx-auto max-w-2xl text-muted-foreground">
-          The original chart readings, prepared from April's verified birth chart. Shared with clients by invitation — please keep this page private.
+          The original chart readings, prepared from April's verified birth chart. Shared by April with the accounts she chose — please keep this page private.
         </p>
         <nav id="contents" aria-label="Report contents" className="mx-auto max-w-2xl pt-2 print:hidden">
           <ul className="flex flex-wrap justify-center gap-2">
