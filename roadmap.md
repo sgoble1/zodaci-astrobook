@@ -1,11 +1,11 @@
 # Zodaci — Active Project Index
 
 ## Showcase request (Oct 29, evening)
-- [ ] AstroBook page + AstroComic page: three fully illustrated sample book pages written from Shane's placements under a different name (no personal context)
-- [ ] Example comic: 8 drawn pages (cover + 7), title moved off the character's face, full read-through
-- [ ] Private illustrated showcases for April, Shane and Zac: 4 illustrated pages each, the rest as script; owner/share access only
-- [ ] Investor page: live capabilities, phases, needed work, future social network plan
-- [ ] Shane and Zac sidebars: short, direct topic titles like April's
+- [x] AstroBook page + AstroComic page: three fully illustrated sample book pages written from Shane's placements under a different name (no personal context)
+- [x] Example comic: 8 drawn pages (cover + 7), title moved off the character's face, full read-through
+- [x] Private illustrated showcases for April, Shane and Zac: 4 illustrated pages each, the rest as script; owner/share access only
+- [x] Investor page: live capabilities, phases, needed work, future social network plan
+- [x] Shane and Zac sidebars: short, direct topic titles like April's
 
 ## Pre-publish completion (Oct 29 document: "PrePublish Bugs, Gaps and Finishing Implementations")
 Every item is checked against the code first; findings already fixed or proven wrong are marked so.

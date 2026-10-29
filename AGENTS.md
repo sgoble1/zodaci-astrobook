@@ -40,6 +40,7 @@
 - make-podcast saves script→TTS WAV in private library storage/library_items; bounded duration presets synchronize script length/source depth.
 - Queue/speed/resume use per-device localStorage; PDF viewer uses pdfjs-dist legacy.
 - Shared recommendations/media use generic shared_item_comments/reactions keyed by item_type/item_id.
+- Founder illustrated showcases are showcase.json + plates in private storage, served by protected-content; the public sample edition (content/sampleEdition.ts) uses a real chart under an invented name, checked by test.
 - Box grids use BoxArt(seed,label). One logo; print products keep names.
 - /welcome stays separate/private routes unchanged. CinematicVideo: WebM/MP4, matching frame for accessibility/errors.
 - Samples cannot be ordered; landing text is public. Root boundary catches lazy failures; bounded reloads precede App.
