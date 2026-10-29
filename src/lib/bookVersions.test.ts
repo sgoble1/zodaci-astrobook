@@ -78,7 +78,7 @@ describe('world systems and timing are calculated', () => {
   it('Lahiri ayanamsa is about 23.85° at 2000 and 24.2° in 2025', () => { expect(lahiri(2000)).toBeCloseTo(23.853, 3); expect(lahiri(2025)).toBeCloseTo(24.2, 1); });
   it('a birth on Jan 20, 1990 (before Lichun) belongs to the 1989 Yin Earth Snake year', () => expect(chineseYear('1990-01-20', 300)).toEqual({ year: 1989, element: 'Earth', polarity: 'Yin', animal: 'Snake' }));
   it('Olivia (Mar 14, 1992) is a Yang Water Monkey', () => expect(chineseYear('1992-03-14', 354)).toMatchObject({ year: 1992, element: 'Water', polarity: 'Yang', animal: 'Monkey' }));
-  it('Life Path for 1992-03-14 is 2 (3 + 5 + 3 = 11 → kept as master 11)', () => expect(lifePath('1992-03-14')).toBe(11));
+  it('Life Path for 1992-03-14 is master number 11 (3 + 5 + 3)', () => expect(lifePath('1992-03-14')).toBe(11));
   it('Life Path for 1987-07-10 is 6 (7 + 1 + 7 = 15 → 6)', () => expect(lifePath('1987-07-10')).toBe(6));
   it('profection at 33 activates the 10th house', () => expect(profection(olivia, new Date('2026-01-01T00:00:00Z'))?.house).toBe(10));
 });
