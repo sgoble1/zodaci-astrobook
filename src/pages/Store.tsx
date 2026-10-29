@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { Fragment, useEffect, useMemo, useState } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { Loader2, Search, Store as StoreIcon } from 'lucide-react';
 import { toast } from 'sonner';
@@ -159,7 +159,7 @@ export function ProductDetail() {
             <h2 id="specs" className="font-smallcaps !text-xs text-gold">Details</h2>
             <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 text-sm">
               {n.productType && <><dt className="text-muted-foreground">Type</dt><dd>{n.productType}</dd></>}
-              {options.map(o => <><dt key={`${o.name}-t`} className="text-muted-foreground">{o.name}</dt><dd key={`${o.name}-d`}>{v?.selectedOptions.find(s => s.name === o.name)?.value ?? o.values.join(', ')}</dd></>)}
+              {options.map(o => <Fragment key={o.name}><dt className="text-muted-foreground">{o.name}</dt><dd>{v?.selectedOptions.find(s => s.name === o.name)?.value ?? o.values.join(', ')}</dd></Fragment>)}
             </dl>
           </section>}
           <section aria-labelledby="shipping" className="space-y-1 border-t border-border pt-4 text-sm">
