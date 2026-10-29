@@ -51,7 +51,7 @@ export default function ComicIssuePrint() {
       <section aria-labelledby="deliv-h" className="space-y-4">
         <h2 id="deliv-h" className="font-display text-3xl">Pre-order delivery timeline</h2>
         <p className="text-muted-foreground">Estimated dates. If anything slips we email every pre-order with the new date, and you can cancel for a full refund before it ships.</p>
-        <ol className="grid gap-4 md:grid-cols-5">{DELIVERY.map(([t, d, n], i) => <li key={t} className="vellum p-4"><p className="font-smallcaps text-xs text-gold">Step {i + 1} · {d}</p><h3 className="mt-1 text-lg">{t}</h3><p className="mt-1 text-sm text-muted-foreground">{n}</p></li>)}</ol>
+        <ol className="grid gap-4 md:grid-cols-5">{DELIVERY.map(([t, d, n], i) => <li key={t} className="vellum p-4"><p className="font-smallcaps text-xs text-gold">{d}</p><h3 className="mt-1 text-lg">{t}</h3><p className="mt-1 text-sm text-muted-foreground">{n}</p></li>)}</ol>
       </section>
 
       <section aria-labelledby="formats-h">
