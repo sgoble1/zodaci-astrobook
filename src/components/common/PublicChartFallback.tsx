@@ -1,4 +1,4 @@
-import { Link, useLocation } from 'react-router-dom';
+import { Link, Navigate, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { useMyBirth } from '@/lib/myBirth';
 import MyChart from '@/pages/MyChart';
@@ -21,6 +21,7 @@ import MemberFengShui from '@/pages/MemberFengShui';
 import MemberDataQuality from '@/pages/MemberDataQuality';
 import BaguaReading from '@/pages/BaguaReading';
 import { kuaSex, toChartInput } from '@/lib/myBirth';
+import { useZacAccount } from '@/hooks/useZacAccount';
 
 const TIMING = { '/transits': 'transits', '/retrogrades': 'retrogrades', '/timeline': 'timeline', '/profection': 'profection' } as const;
 const TOPIC_ROUTES: Record<string, string> = { '/numerology': 'numerology', '/purpose': 'purpose', '/family-home': 'family-home', '/love': 'love', '/career': 'career', '/health': 'health' };
@@ -37,6 +38,7 @@ export function PublicChartFallback() {
   const { pathname } = useLocation();
   const birth = useMyBirth();
   const shane = useShaneAccount();
+  const zac = useZacAccount();
   if (birth === undefined) return null;
   if (!birth) return (
     <article className="mx-auto max-w-xl space-y-4 py-12 text-center">
@@ -50,6 +52,7 @@ export function PublicChartFallback() {
   );
   const timing = TIMING[pathname as keyof typeof TIMING];
   if (shane && pathname === '/topics') return <FounderTopics />;
+  if (zac && !shane && pathname === '/masterbook') return <Navigate to="/zac" replace />;
   if (shane && (pathname === '/masterbook' || pathname === '/reading' || pathname === '/compendium')) return <ShaneEdition />;
   if (timing) return <><PersonalTiming birth={birth} focus={timing} /><FounderSourcePanel theme="timing" /></>;
   // Detail pages come before the overview fallbacks so /planets/venus never collapses into the planet list.
