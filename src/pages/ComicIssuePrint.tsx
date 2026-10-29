@@ -13,7 +13,7 @@ const FORMATS = [
 
 /** Issue 1 page plan: cover drawn, three acts scripted with one finished illustration each; the rest follow the standard 24-page issue map. */
 const PLAN: [string, string, 'Drawn' | 'Scripted' | 'Planned'][] = [
-  ['1', 'Cover — The Alchemist of Williamsville', 'Drawn'],
+  ['1', 'Cover — The Alchemist of the Mill Valley', 'Drawn'],
   ['2–3', 'Act I · The Lantern at the Gate (Leo Rising)', 'Scripted'],
   ['4–7', 'Act II · The Cardinal Spark (Sun in Aries)', 'Scripted'],
   ['8–10', 'Act III · The Steady Hearth (Moon in Taurus)', 'Scripted'],
@@ -23,7 +23,7 @@ const PLAN: [string, string, 'Drawn' | 'Scripted' | 'Planned'][] = [
 ];
 
 export default function ComicIssuePrint() {
-  usePageMeta(`Print AstroComic Issue #${ISSUE_1.issueNumber} — ${ISSUE_1.title} | Zodaci`, 'Sizes, page count and print specifications for AstroComic Issue 1, The Alchemist of Williamsville, with a link to order a printed copy.');
+  usePageMeta(`Print AstroComic Issue #${ISSUE_1.issueNumber} — ${ISSUE_1.title} | Zodaci`, 'Sizes, page count and print specifications for AstroComic Issue 1, The Alchemist of the Mill Valley, with a link to order a printed copy.');
   return (
     <article className="space-y-16">
       <nav aria-label="Breadcrumb" className="text-sm text-muted-foreground"><Link to="/astrocomic" className="underline underline-offset-4">AstroComic</Link> / Print Issue #1</nav>
@@ -37,7 +37,7 @@ export default function ComicIssuePrint() {
             <Button asChild variant="outline" size="lg"><Link to="/astrocomic">Read the preview<ArrowRight /></Link></Button>
           </div>
         </div>
-        <img src={ISSUE_1.cover} alt="Issue 1 cover: a young man on a limestone cliff holding a glowing astrolabe" width={1024} height={1536} className="mx-auto w-full max-w-xs rounded-sm border-2 border-foreground/80 shadow-2xl" />
+        <img src={ISSUE_1.cover} alt={ISSUE_1.coverAlt} width={1024} height={1536} className="mx-auto w-full max-w-xs rounded-sm border-2 border-foreground/80 shadow-2xl" />
       </section>
 
       <section aria-labelledby="formats-h">

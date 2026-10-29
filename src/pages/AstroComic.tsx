@@ -7,7 +7,10 @@ import { StripeEmbeddedCheckout } from '@/components/payments/StripeEmbeddedChec
 import { PaymentTestModeBanner } from '@/components/payments/PaymentTestModeBanner';
 import { ComicPageView } from '@/components/comic/ComicPageView';
 import { ComicFlipbook } from '@/components/comic/ComicFlipbook';
-import { ISSUE_1 } from '@/content/comicIssue1';
+import { ISSUE_1, ISSUE_1_SCRIPTED } from '@/content/comicIssue1';
+import { ComicReader } from '@/components/comic/ComicReader';
+import { EditionPages } from '@/components/book/EditionPages';
+import { SAMPLE_EDITION } from '@/content/sampleEdition';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { useJsonLd } from '@/hooks/useJsonLd';
 import { useSession } from '@/hooks/useLibrary';
@@ -15,7 +18,7 @@ import { useMyBirth, toChartInput } from '@/lib/myBirth';
 import { computeChart } from '@/lib/astro';
 import { SAMPLE_BIRTH } from '@/lib/sampleBook';
 import { ART_RULES, buildComicIssue, CAST, COMIC_FAQ, COMIC_PLANS, COMIC_SPEC, firstIssueMonth, isComicPlan, monthLabel, shipBy, type ComicPlan } from '@/lib/comic';
-import cover from '@/assets/comic-issue1-cover.jpg';
+import cover from '@/assets/comic-issue1-cover-v2.jpg';
 import cast from '@/assets/astrocomic-cast.jpg';
 import spread from '@/assets/astrocomic-spread.jpg';
 import skyPanel from '@/assets/astrocomic-sky-panel.jpg';
@@ -87,14 +90,20 @@ export default function AstroComic() {
           )}
           {session && <p className="mt-4 text-sm"><Link to="/my-comic" className="text-primary underline underline-offset-4">Already subscribed? Open My AstroComic</Link></p>}
         </div>
-        <img loading="lazy" decoding="async" src={cover} alt="AstroComic Issue 1 cover: a young man on a limestone cliff holding a glowing astrolabe" width={1024} height={1536} className="mx-auto w-full max-w-sm rounded-sm border-2 border-foreground/80 shadow-2xl" />
+        <img loading="lazy" decoding="async" src={cover} alt={ISSUE_1.coverAlt} width={1024} height={1536} className="mx-auto w-full max-w-sm rounded-sm border-2 border-foreground/80 shadow-2xl" />
       </section>
 
       <section aria-labelledby="issue1-h">
         <h2 id="issue1-h" className="font-display text-3xl">Read Issue #1: {ISSUE_1.title}</h2>
-        <p className="mt-2 mb-8 max-w-2xl text-muted-foreground">A finished issue in the Lantern &amp; Ink style. Turn the pages, tilt the book, and read each act beside its art.</p>
+        <p className="mt-2 mb-8 max-w-2xl text-muted-foreground">Seven drawn pages in the Lantern &amp; Ink style, written from one real chart. Turn the pages here, or open the full issue to read every panel before you subscribe.</p>
         <ComicFlipbook issue={ISSUE_1} />
-        <div className="mt-8"><Button asChild variant="outline"><Link to="/astrocomic/print-issue-1">Print Issue #1 — sizes &amp; pages<ArrowRight /></Link></Button></div>
+        <div className="mt-8 flex flex-wrap gap-3"><ComicReader issue={ISSUE_1} scripted={ISSUE_1_SCRIPTED} /><Button asChild size="lg" variant="outline"><Link to="/astrocomic/print-issue-1">Print Issue #1 — sizes &amp; pages<ArrowRight /></Link></Button></div>
+      </section>
+
+      <section aria-labelledby="book-h" className="space-y-6">
+        <div><p className="font-smallcaps text-xs text-gold">The same chart, in the AstroBook</p><h2 id="book-h" className="mt-1 font-display text-3xl">Three full pages of {ISSUE_1.hero}’s book</h2><p className="mt-2 max-w-2xl text-muted-foreground">The comic tells the story; the book explains it. {SAMPLE_EDITION.note}</p></div>
+        <EditionPages pages={SAMPLE_EDITION.pages} />
+        <Button asChild variant="outline"><Link to="/astrobook">See the AstroBook<ArrowRight /></Link></Button>
       </section>
 
       <section id="preview" aria-labelledby="preview-h" className="scroll-mt-6">

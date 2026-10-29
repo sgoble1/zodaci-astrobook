@@ -17,7 +17,7 @@ import { BOOK_VERSIONS, money } from '@/lib/books';
 import { COMIC_PLANS } from '@/lib/comic';
 import hero from '@/assets/zodaci-brand-hero.jpg';
 import bookCover from '@/assets/cover-design-midnight-stars-hd.jpg';
-import comicCover from '@/assets/comic-issue1-cover.jpg';
+import comicCover from '@/assets/comic-issue1-cover-v2.jpg';
 import { ALL_READINGS } from '@/lib/topicReadings';
 import { ACADEMY } from '@/content/academy';
 import { HOUSE_SYSTEMS } from '@/lib/astro';
