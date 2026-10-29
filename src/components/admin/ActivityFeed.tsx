@@ -118,7 +118,7 @@ export function ActivityFeed() {
             <li key={r.id} className="py-1.5 grid grid-cols-[7.5rem_5.5rem_1fr] gap-2">
               <span className="text-muted-foreground text-xs">{fmtTime(r.created_at)}</span>
               <span className="text-xs">{KIND[r.kind] ?? r.kind}</span>
-              <span className="min-w-0 break-words">{r.label || r.path} {r.kind !== 'page_view' && r.kind !== 'page_leave' ? <span className="text-muted-foreground text-xs">on {r.path}</span> : <span className="text-muted-foreground text-xs">{r.path}</span>}{r.duration_seconds != null && <span className="text-xs"> · {fmtDur(r.duration_seconds)} active{r.detail?.reason ? ` (${r.detail.reason})` : ''}</span>}</span>
+              <span className="min-w-0 break-words">{r.label || r.path} {r.kind !== 'page_view' && r.kind !== 'page_leave' ? <span className="text-muted-foreground text-xs">on {r.path}</span> : <span className="text-muted-foreground text-xs">{r.path}</span>}{r.duration_seconds != null && <span className="text-xs"> · {fmtDur(r.duration_seconds)} active{r.detail?.reason ? ` (${r.detail.reason})` : ''}</span>}{who === EVERYONE && <span className="text-xs text-gold"> · {nameOf(r.user_id)}</span>}</span>
             </li>
           ))}
           {!feed.length && <Empty />}
