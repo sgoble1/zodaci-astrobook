@@ -24,7 +24,7 @@ export default function OfficialAstroBook() {
           <p className="mt-3 max-w-2xl text-muted-foreground">
             {viewingAll
               ? 'Every founding edition, as the admin sees them. Each owner sees only their own Masterbook and AstroComic.'
-              : 'Your Masterbook and your own AstroComic, read in full here and printable as an AstroBook. Chapters open with your own password.'}
+              : 'Your Masterbook and your own AstroComic, read in full here and printable as an AstroBook. Only you, and the people you share it with, can open it.'}
           </p>
         </div>
         <img src={opener} alt="Mystic Ink chapter opener: two luminous fish circling a gold constellation inside an astrolabe frame" width={1200} height={1200} className="mx-auto w-56 rounded-full border border-mystic-gold/50 shadow-[0_0_60px_-20px_hsl(var(--mi-gold))] md:w-full" />
@@ -77,6 +77,11 @@ function EditionShelf({ row }: { row: OfficialEditionRow }) {
           </div>
         </div>
       </div>
+      <Link to={`/official-astrobook/showcase/${row.edition}`} className="vellum flex flex-col gap-1 p-5 hover:border-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+        <span className="font-smallcaps text-xs text-gold">New · Illustrated showcase</span>
+        <span className="font-display text-2xl">{row.is_own ? 'Your' : `${row.display_name}’s`} four illustrated pages</span>
+        <span className="text-sm text-muted-foreground">Rising sign, Sun, Moon and a signature pattern, each with its own plate and calculated facts — plus the next chapters in script.</span>
+      </Link>
       {book.extras.length > 0 && (
         <ul className="grid gap-4 sm:grid-cols-2">
           {book.extras.map(x => (
