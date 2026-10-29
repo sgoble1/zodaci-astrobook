@@ -197,32 +197,3 @@ export function synastryChapter(c: ChartResult, people: Person[]) {
     return `## You and ${p.name}\n\nHarmony ${s.harmony} · Tension ${s.tension} · Fusion ${s.fusion}\n\n${ia.slice(0, 6).map(x => `${x.aName} ${x.symbol} ${p.name}’s ${x.bName} (${x.orb.toFixed(1)}°): ${x.text}`).join('\n\n')}`;
   }).join('\n\n');
 }
-
-/** Builds the deterministic chapters each version includes, in reading order. */
-export function editionExtras(edition: string, c: ChartResult, name: string, opts: { people?: Person[]; today?: Date } = {}): BookChapter[] {
-  const v: BookVersion | undefined = versionOf(edition);
-  const timeKnown = !!c.input.time;
-  const rank = ['digital', 'pocket', 'classic', 'signature', 'linen'].indexOf(v?.id ?? '');
-  if (rank < 0) return [];
-  const ph = moonPhase(c);
-  const out: BookChapter[] = [
-    { title: 'Your Birth Moon Phase', content: `${ph.name} · ${Math.round(ph.angle)}° from the Sun · ${ph.illumination}% lit\n\n${ph.text}` },
-    { title: 'Rulership Summary', content: rulershipSummary(c) },
-  ];
-  if (rank >= 1) out.unshift({ title: 'Your Birth-Moment Verse', content: birthVerse(c, name) });
-  if (rank >= 2) out.push(
-    { title: 'Your Birth Sky', content: 'The wheel above is drawn from your calculated positions: signs around the edge, planets at their exact degrees.', draw: 'wheel' },
-    { title: 'Aspect Grid', content: c.aspects.slice(0, 24).map(a => aspectText(a, c.bodies)).join('\n\n'), draw: 'grid' },
-    { title: 'Chiron, the Nodes and Sensitive Points', content: sensitivePoints(c, timeKnown) },
-    { title: 'RetroGOOD: Your Retrograde Planets', content: retroChapter(c) },
-    { title: 'Solar Return Preview', content: solarReturnChapter(c, timeKnown, opts.today) },
-  );
-  if (rank >= 3) out.unshift({ title: 'A Letter From Your Sky', content: letter(c, name) }, { title: 'The Story of Your Sky', content: narrative(perceive(c, timeKnown), 'oracle', 6) + '\n\n' + perceive(c, timeKnown).slice(0, 6).map(i => `## ${i.title}\n\n${i.text}`).join('\n\n') });
-  if (rank >= 3) out.push({ title: 'Element and Modality Balance', content: elementChapter(c) }, { title: 'Relationship Primer', content: relationshipPrimer(c, timeKnown) }, { title: 'Your North Node', content: northNodeChapter(c) });
-  if (rank >= 4) {
-    out.push({ title: 'Planet Mythology', content: mythologyChapter(c) }, { title: 'Your 12-Month Sky Forecast', content: forecastChapter(c, opts.today) }, { title: 'Twelve Affirmations', content: affirmationsChapter(c) });
-    if (opts.people?.length) out.push({ title: 'Relationship Comparisons', content: synastryChapter(c, opts.people) });
-    out.push({ title: 'Collector’s Certificate', content: '', draw: 'certificate' });
-  }
-  return out;
-}

@@ -1,7 +1,7 @@
 import { computeChart } from '@/lib/astro';
 import { toChartInput, type MyBirth } from '@/lib/myBirth';
 import { composeManuscript } from '@/lib/bookManuscript';
-import { editionExtras } from '@/lib/bookExtras';
+import { buildVolumes } from '@/lib/bookVolumes';
 import fontUrl from '@/assets/fonts/manuscript.ttf?url';
 import sampleCover from '@/assets/cover-design-midnight-stars.jpg';
 
@@ -108,7 +108,7 @@ export async function composeSampleBook() {
     chartFacts,
     chapters: SAMPLE_CHAPTERS,
     edition: 'classic',
-    editionChapters: editionExtras('classic', chart, SAMPLE_BIRTH.name, { today: new Date('2026-01-01T00:00:00Z') }),
+    volumes: buildVolumes({ edition: 'classic', chart, name: SAMPLE_BIRTH.name, saved: SAMPLE_CHAPTERS, facts: chartFacts, today: new Date('2026-01-01T00:00:00Z') }),
     chart,
     extras: [],
     fontBytes: new Uint8Array(fontBuffer),
