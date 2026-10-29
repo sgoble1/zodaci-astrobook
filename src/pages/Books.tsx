@@ -1,7 +1,7 @@
 import { CinematicVideo } from '@/components/fx/CinematicVideo';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { Book3D } from '@/components/books/Book3D';
-import { useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { BookOpen, Check, Truck, Plus, Trash2, Sparkles, Upload, Lock, Gift } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -18,15 +18,20 @@ import { streamImage } from '@/lib/streamImage';
 import { BOOK_SECTIONS, BOOK_VERSIONS, CHAPTER_TABS, COVER_STYLES, EXTRA_SECTION_PRICE, bookTotal, isEdition, money, versionOf, type Edition } from '@/lib/books';
 import { validateBookOrder } from '@/lib/bookOrder';
 import bookPhoto from '@/assets/astrobook-public.jpg';
-import { COVER_DESIGNS, coverSrc } from '@/content/coverDesigns';
+import { COVER_DESIGNS } from '@/content/coverDesigns';
+import { CoverEditor } from '@/components/books/CoverEditor';
+import { useCoverImage } from '@/hooks/useCoverImage';
+import { DEFAULT_CROP, type CoverCrop } from '@/lib/coverLayout';
+import { coverSpecKey, renderCoverJpeg, type CoverSpec } from '@/lib/coverRender';
 import { ManuscriptPreview } from '@/components/books/ManuscriptPreview';
 import { VersionCompare } from '@/components/books/VersionCompare';
 import { Faq, ASTROBOOK_FAQ } from '@/components/brand/Faq';
 
-const aiCoverIdentity = (covers: Record<string, { url: string; final: boolean }>, choice: string) => covers[choice.slice(3)]?.url;
-
-/** Free cover designs every visitor can use, no account or credits needed. */
-const UNIVERSAL_COVERS = COVER_DESIGNS.map(d => ({ ...d, get src() { return coverSrc(d); } }));
+/** A small finished-cover thumbnail (artwork plus the reader's name), drawn by the same code as the print cover. */
+function CoverThumb({ spec, alt, blur = false }: { spec: CoverSpec; alt: string; blur?: boolean }) {
+  const url = useCoverImage(spec, 40);
+  return url ? <img src={url} alt={alt} className={`h-full w-full object-cover ${blur ? 'blur-lg' : ''}`} /> : <div className="h-full w-full animate-pulse bg-muted motion-reduce:animate-none" aria-hidden />;
+}
 
 export default function Books() {
   usePageMeta('AstroBook · Your personal astrology book in five versions', 'Order AstroBook, written from your own birth chart: Digital PDF $24.99, Pocket $34.99, Classic $59.99, Signature Hardcover $97 or Collector’s Linen $149. Free US shipping.');
@@ -42,18 +47,41 @@ export default function Books() {
   const [covers, setCovers] = useState<Record<string, { url: string; final: boolean }>>({});
   // Cover choice: 'design:<key>' for the free universal designs, 'upload' for the visitor's own image, 'ai:<style>' for chart-based previews.
   const [choice, setChoice] = useState('');
-  const [uploaded, setUploaded] = useState<{ path: string; url: string } | null>(null);
+  const [uploaded, setUploaded] = useState<{ url: string; name: string } | null>(null);
+  const [crop, setCrop] = useState<CoverCrop>(DEFAULT_CROP);
+  const [coverName, setCoverName] = useState<string | null>(null);
+  const nameOnCover = coverName ?? birth?.name ?? '';
   const fileRef = useRef<HTMLInputElement>(null);
   const [busy, setBusy] = useState(''); const [error, setError] = useState('');
   const [address, setAddress] = useState({ name: '', line1: '', line2: '', city: '', state: '', postal_code: '', country: 'US' });
   const [manuscript, setManuscript] = useState<{ blob: Blob; pages: number; config: string } | null>(null);
-  const config = JSON.stringify([edition, extras, choice, uploaded?.path, aiCoverIdentity(covers, choice), birth]);
-  const manuscriptReady = manuscript?.config === config;
-  const design = choice.startsWith('design:') ? UNIVERSAL_COVERS.find(d => d.key === choice.slice(7)) : undefined;
+  const design = choice.startsWith('design:') ? COVER_DESIGNS.find(d => d.key === choice.slice(7)) : undefined;
   const aiStyle = choice.startsWith('ai:') ? choice.slice(3) : '';
   const aiCover = aiStyle ? covers[aiStyle] : undefined;
-  const coverReady = !!design || (choice === 'upload' && !!uploaded) || !!aiCover?.final;
-  const coverPreviewUrl = design?.src ?? (choice === 'upload' ? uploaded?.url : aiCover?.url);
+  // The cover as designed: artwork source, position/zoom, the name, and this version's trim.
+  const spec = useMemo<CoverSpec | null>(() => {
+    const source = design ? { kind: 'design' as const, key: design.key } : choice === 'upload' && uploaded ? { kind: 'image' as const, url: uploaded.url } : aiCover?.final ? { kind: 'image' as const, url: aiCover.url } : null;
+    return source ? { source, crop, name: nameOnCover, trimPt: version.trimPt } : null;
+  }, [design, choice, uploaded, aiCover?.final, aiCover?.url, crop, nameOnCover, version.trimPt]);
+  const specKey = spec ? coverSpecKey(spec) : '';
+  // The print-resolution cover (300 ppi) is rebuilt shortly after you stop adjusting; it is page 1 of the book.
+  const [composed, setComposed] = useState<{ key: string; blob: Blob; url: string } | null>(null);
+  const [composing, setComposing] = useState(false);
+  useEffect(() => {
+    if (!spec) return;
+    let on = true; setComposing(true);
+    const t = window.setTimeout(() => {
+      renderCoverJpeg(spec).then(r => { if (!on) return; setComposed(prev => { if (prev) URL.revokeObjectURL(prev.url); return { key: specKey, blob: r.blob, url: URL.createObjectURL(r.blob) }; }); })
+        .catch(e => { if (on) setError(e instanceof Error ? e.message : 'The cover could not be prepared.'); })
+        .finally(() => { if (on) setComposing(false); });
+    }, 600);
+    return () => { on = false; window.clearTimeout(t); };
+  }, [specKey]); // eslint-disable-line react-hooks/exhaustive-deps
+  const pick = (next: string) => { if (next !== choice) setCrop(DEFAULT_CROP); setChoice(next); };
+  const coverReady = !!spec && composed?.key === specKey;
+  const coverPreviewUrl = coverReady ? composed?.url : undefined;
+  const config = JSON.stringify([edition, extras, specKey, birth]);
+  const manuscriptReady = manuscript?.config === config;
   const canUseAiCovers = usePlan().plan !== 'free';
   const certificate = edition === 'linen' ? orderId.slice(0, 8).toUpperCase() : undefined;
   const generate = async () => {
@@ -77,13 +105,13 @@ export default function Books() {
       if (!['image/png', 'image/jpeg'].includes(file.type)) throw new Error('Please choose an image file (JPG or PNG).');
       if (file.size > 10 * 1024 * 1024) throw new Error('Please choose an image under 10 MB.');
       const decoded = await createImageBitmap(file);
+      const small = Math.min(decoded.width, decoded.height) < 600;
       decoded.close();
-      const ext = file.type === 'image/png' ? 'png' : 'jpg';
-      const path = `${sub.userId}/book-covers/upload-${crypto.randomUUID()}.${ext}`;
-      const { error: err } = await supabase.storage.from('library').upload(path, file, { contentType: file.type });
-      if (err) throw err;
-      setUploaded({ path, url: URL.createObjectURL(file) });
-      setChoice('upload');
+      if (small) throw new Error('That image is too small to print well. Please choose one at least 600 pixels on its shortest side.');
+      // The picture stays in this browser while you design; only the finished cover is saved with your order.
+      if (uploaded) URL.revokeObjectURL(uploaded.url);
+      setUploaded({ url: URL.createObjectURL(file), name: file.name });
+      setCrop(DEFAULT_CROP); setChoice('upload');
     } catch (e) { setError(e instanceof Error ? e.message : 'Could not upload your cover.'); }
     finally { setBusy(''); if (fileRef.current) fileRef.current.value = ''; }
   };
@@ -94,22 +122,12 @@ export default function Books() {
       if (invalid || !manuscript) throw new Error(invalid ?? 'Choose a finished cover and compose your manuscript first.');
       if (gift && giftMessage.length > 500) throw new Error('Keep the gift message under 500 characters.');
       const id = orderId;
-      let path: string; let coverStyleLabel: string;
-      if (design) {
-        path = `${sub.userId}/book-covers/${id}.png`; coverStyleLabel = design.label;
-        const blob = await fetch(design.src).then(r => r.blob());
-        const upload = await supabase.storage.from('library').upload(path, blob, { contentType: 'image/png', upsert: true });
-        if (upload.error) throw upload.error;
-      } else if (choice === 'upload' && uploaded) {
-        path = uploaded.path; coverStyleLabel = 'Your own upload';
-      } else {
-        const cover = covers[aiStyle];
-        if (!cover?.final) throw new Error('Choose a finished cover first.');
-        path = `${sub.userId}/book-covers/${id}.png`; coverStyleLabel = aiStyle;
-        const blob = await fetch(cover.url).then(r => r.blob());
-        const upload = await supabase.storage.from('library').upload(path, blob, { contentType: 'image/png', upsert: true });
-        if (upload.error) throw upload.error;
-      }
+      if (!composed || composed.key !== specKey) throw new Error('Your cover is still being prepared. Try again in a moment.');
+      // The saved cover is exactly the designed front cover, as a print-resolution JPEG.
+      const path = `${sub.userId}/book-covers/${id}.jpg`;
+      const coverStyleLabel = design ? design.label : choice === 'upload' ? 'Your own upload' : aiStyle;
+      const upload = await supabase.storage.from('library').upload(path, composed.blob, { contentType: 'image/jpeg', upsert: true });
+      if (upload.error) throw upload.error;
       const manuscriptPath = `${sub.userId}/manuscripts/${id}.pdf`;
       const uploadedPdf = await supabase.storage.from('library').upload(manuscriptPath, manuscript.blob, { contentType: 'application/pdf', upsert: true });
       if (uploadedPdf.error) throw uploadedPdf.error;
@@ -119,7 +137,6 @@ export default function Books() {
     } catch (e) { setError(e instanceof Error ? e.message : 'Could not save your order.'); }
     finally { setBusy(''); }
   };
-  const nameOnCover = birth?.name ? `${birth.name}’s AstroBook` : 'My AstroBook';
   return <article className="space-y-12">
     <header className="relative isolate overflow-hidden rounded min-h-[360px] flex items-end"><CinematicVideo poster={bookPhoto} /><div className="absolute inset-0 -z-10 bg-background/65" /><div className="p-6 sm:p-10"><p className="font-smallcaps text-gold text-xs">Made for your birth chart</p><h1 className="text-4xl mt-2">AstroBook</h1><p className="mt-4 max-w-lg">Your chart, written into a book. Five versions, from an instant PDF to a linen-bound collector’s edition, all built from your exact birth moment.</p><p className="text-sm text-muted-foreground mt-3">Illustrative sample · your own cover is previewed below.</p></div></header>
 
