@@ -100,7 +100,7 @@ Deno.serve(async (req) => {
       if (area === 'library') return json({ content: raw, access: 'edition' });
       const entries = JSON.parse(raw) as { id: string; title: string; sections?: string[]; excerpt?: string }[];
       const visible = allowedIds ? entries.filter(e => allowedIds!.has(String(e.id))) : entries;
-      return json({ content: JSON.stringify(visible.map(e => ({ ...describeEntry(e), excerpt: '' }))), access: full ? 'edition' : 'chapters' });
+      return json({ content: JSON.stringify(visible.map(e => describeEntry(e))), access: full ? 'edition' : 'chapters' });
     }
 
     if (!full) {
