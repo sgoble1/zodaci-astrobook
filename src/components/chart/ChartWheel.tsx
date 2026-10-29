@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useId, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { SIGNS, SIGN_GLYPH, SIGN_KEYWORDS, BODY_KEYWORDS, fmtLon, type ChartResult } from '@/lib/astro';
 import { FIXED_STARS, type SourceRef } from '@/content/compendium';
@@ -33,8 +33,9 @@ const ASPECT_TONE: Record<string, string> = { Conjunction: 'hsl(var(--gold))', T
  */
 export function ChartWheel({ r, sourcesFor }: { r: ChartResult; sourcesFor?: (key: string) => { label: string; href: string }[] }) {
   const [sel, setSel] = useState<Sel>(null);
-  const [spun, setSpun] = useState(false);
-  useEffect(() => { const t = setTimeout(() => setSpun(true), 50); return () => clearTimeout(t); }, [r]);
+  const reduced = typeof window !== 'undefined' && !!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+  const [spun, setSpun] = useState(reduced);
+  useEffect(() => { if (reduced) return; const t = setTimeout(() => setSpun(true), 50); return () => clearTimeout(t); }, [r, reduced]);
   const asc = r.asc ?? 0;
   const S = 440, C = S / 2;
   // Place the Ascendant on the left (9 o'clock), zodiac running counter-clockwise.
@@ -63,28 +64,56 @@ export function ChartWheel({ r, sourcesFor }: { r: ChartResult; sourcesFor?: (ke
   })();
 
   const is = (k: Sel) => sel?.kind === k?.kind && sel?.id === k?.id;
+  // Every interactive mark is keyboard reachable, with a hit area larger than the glyph it covers.
+  const press = (k: NonNullable<Sel>) => ({
+    role: 'button' as const, tabIndex: 0, className: 'cursor-pointer outline-none [&:focus-visible>.hit]:stroke-[hsl(var(--ring))]',
+    onClick: () => setSel(k),
+    onKeyDown: (e: React.KeyboardEvent) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setSel(k); } },
+  });
+  const uid = useId().replace(/:/g, '');
   return (
     <div className="grid lg:grid-cols-[minmax(0,460px)_1fr] gap-6 items-start">
-      <svg viewBox={`0 0 ${S} ${S}`} className="w-full max-w-[460px] mx-auto" role="img" aria-label="Natal chart wheel">
-        <g style={{ transform: `rotate(${spun ? 0 : -120}deg)`, transformOrigin: 'center', transition: 'transform 3.5s cubic-bezier(.2,.7,.2,1)' }}>
+      <svg viewBox={`0 0 ${S} ${S}`} className="w-full max-w-[460px] mx-auto" role="group" aria-label="Natal chart wheel — choose any planet, sign, aspect or pillar for details">
+        <defs>
+          <radialGradient id={`vellum-${uid}`} cx="50%" cy="50%" r="60%">
+            <stop offset="0%" stopColor="hsl(var(--surface, var(--card)))" />
+            <stop offset="100%" stopColor="hsl(var(--vellum))" />
+          </radialGradient>
+          <radialGradient id={`sky-${uid}`} cx="50%" cy="45%" r="55%">
+            <stop offset="0%" stopColor="hsl(var(--primary) / .18)" />
+            <stop offset="100%" stopColor="hsl(var(--midnight))" />
+          </radialGradient>
+          <radialGradient id={`orb-${uid}`} cx="35%" cy="30%" r="75%">
+            <stop offset="0%" stopColor="hsl(var(--gold-bright) / .35)" />
+            <stop offset="100%" stopColor="hsl(var(--vellum))" />
+          </radialGradient>
+        </defs>
+        <g style={{ transform: `rotate(${spun ? 0 : -120}deg)`, transformOrigin: 'center', transition: reduced ? 'none' : 'transform 3.5s cubic-bezier(.2,.7,.2,1)' }}>
+          {/* Illuminated rings: vellum zodiac band, night-sky house field */}
+          <circle cx={C} cy={C} r={185} fill={`url(#vellum-${uid})`} stroke="hsl(var(--gold))" strokeWidth={1.5} />
+          <circle cx={C} cy={C} r={189} fill="none" stroke="hsl(var(--gold) / .35)" strokeWidth={0.6} />
+          <circle cx={C} cy={C} r={155} fill={`url(#sky-${uid})`} stroke="hsl(var(--gold) / .7)" />
+          <circle cx={C} cy={C} r={95} fill="none" stroke="hsl(var(--gold) / .35)" strokeWidth={0.6} />
           {/* Ba Zi outer ring */}
           {r.bazi.map((p, i) => { const a0 = (i * 90 - 45) * Math.PI / 180; const x = C + 207 * Math.cos(a0 - Math.PI / 2 + Math.PI / 4), y = C + 207 * Math.sin(a0 - Math.PI / 2 + Math.PI / 4);
-            return <g key={p.label} className="cursor-pointer" onClick={() => setSel({ kind: 'pillar', id: p.label })}><circle cx={x} cy={y} r={16} fill={is({ kind: 'pillar', id: p.label }) ? 'hsl(var(--gold) / .35)' : 'hsl(var(--card))'} stroke="hsl(var(--gold))" /><text x={x} y={y + 5} textAnchor="middle" fontSize="13" fill="hsl(var(--foreground))">{p.stem}{p.branch}</text><title>{p.label} pillar {p.romanized}</title></g>; })}
-          <circle cx={C} cy={C} r={185} fill="none" stroke="hsl(var(--gold))" />
-          <circle cx={C} cy={C} r={155} fill="none" stroke="hsl(var(--gold) / .6)" />
-          <circle cx={C} cy={C} r={95} fill="none" stroke="hsl(var(--border))" />
-          {SIGNS.map((s, i) => { const [x1, y1] = xy(i * 30, 155), [x2, y2] = xy(i * 30, 185), [tx, ty] = xy(i * 30 + 15, 170);
-            return <g key={s} className="cursor-pointer" onClick={() => setSel({ kind: 'sign', id: String(i) })}><line x1={x1} y1={y1} x2={x2} y2={y2} stroke="hsl(var(--gold) / .6)" /><text x={tx} y={ty + 5} textAnchor="middle" fontSize="15" fill={is({ kind: 'sign', id: String(i) }) ? 'hsl(var(--gold))' : 'hsl(var(--foreground))'}>{SIGN_GLYPH[i]}</text></g>; })}
+            return <g key={p.label} {...press({ kind: 'pillar', id: p.label })} aria-label={`${p.label} pillar ${p.romanized}`}><circle className="hit" cx={x} cy={y} r={18} fill={is({ kind: 'pillar', id: p.label }) ? 'hsl(var(--gold) / .35)' : 'hsl(var(--card))'} stroke="hsl(var(--gold))" strokeWidth={1.2} /><text x={x} y={y + 5} textAnchor="middle" fontSize="13" fill="hsl(var(--foreground))">{p.stem}{p.branch}</text><title>{p.label} pillar {p.romanized}</title></g>; })}
+          {SIGNS.map((s, i) => { const [x1, y1] = xy(i * 30, 155), [x2, y2] = xy(i * 30, 185), [tx, ty] = xy(i * 30 + 15, 170); const on = is({ kind: 'sign', id: String(i) });
+            const [a1x, a1y] = xy(i * 30, 185), [a2x, a2y] = xy(i * 30 + 30, 185), [b1x, b1y] = xy(i * 30 + 30, 155), [b2x, b2y] = xy(i * 30, 155);
+            return <g key={s} {...press({ kind: 'sign', id: String(i) })} aria-label={s}>
+              <path className="hit" d={`M${a1x},${a1y} A185,185 0 0 0 ${a2x},${a2y} L${b1x},${b1y} A155,155 0 0 1 ${b2x},${b2y} Z`} fill={on ? 'hsl(var(--gold) / .18)' : 'transparent'} stroke="transparent" />
+              <line x1={x1} y1={y1} x2={x2} y2={y2} stroke="hsl(var(--gold) / .7)" strokeWidth={0.8} />
+              <text x={tx} y={ty + 5} textAnchor="middle" fontSize="16" fill={on ? 'hsl(var(--gold-bright))' : 'hsl(var(--gold))'} className="font-display">{SIGN_GLYPH[i]}</text>
+            </g>; })}
           {r.cusps?.map((c, i) => { const [x1, y1] = xy(c, 95), [x2, y2] = xy(c, 155), [tx, ty] = xy(c + 4, 102); const angle = i % 3 === 0;
-            return <g key={i}><line x1={x1} y1={y1} x2={x2} y2={y2} stroke={angle ? 'hsl(var(--gold))' : 'hsl(var(--border))'} strokeWidth={angle ? 1.6 : 0.8} /><text x={tx} y={ty + 3} fontSize="8" textAnchor="middle" fill="hsl(var(--muted-foreground))">{i + 1}</text></g>; })}
+            return <g key={i}><line x1={x1} y1={y1} x2={x2} y2={y2} stroke={angle ? 'hsl(var(--gold))' : 'hsl(var(--starlight) / .55)'} strokeWidth={angle ? 1.6 : 0.6} strokeDasharray={angle ? undefined : '2 3'} /><text x={tx} y={ty + 3} fontSize="8" textAnchor="middle" fill="hsl(var(--starlight) / .8)">{i + 1}</text></g>; })}
           {r.aspects.map((a, i) => { const A = r.bodies.find(b => b.name === a.a), B = r.bodies.find(b => b.name === a.b); if (!A || !B) return null; const [x1, y1] = xy(A.lon, 92), [x2, y2] = xy(B.lon, 92); const on = is({ kind: 'aspect', id: String(i) });
-            return <line key={i} x1={x1} y1={y1} x2={x2} y2={y2} stroke={ASPECT_TONE[a.type] ?? 'hsl(var(--muted-foreground))'} strokeOpacity={on ? 1 : 0.45} strokeWidth={on ? 3 : 1.2} className="cursor-pointer" onClick={() => setSel({ kind: 'aspect', id: String(i) })}><title>{a.a} {a.type} {a.b}</title></line>; })}
-          {placed.map(({ b, shown }) => { const [x, y] = xy(shown, 130), [dx, dy] = xy(b.lon, 155); const on = is({ kind: 'body', id: b.key });
-            return <g key={b.key} className="cursor-pointer" onClick={() => setSel({ kind: 'body', id: b.key })}><line x1={dx} y1={dy} x2={x} y2={y} stroke="hsl(var(--muted-foreground) / .5)" strokeWidth={0.6} /><circle cx={x} cy={y} r={11} fill={on ? 'hsl(var(--gold) / .35)' : 'hsl(var(--background))'} stroke={b.confidence === 'confirmed' || b.confidence === 'derived' ? 'hsl(var(--gold) / .7)' : 'hsl(var(--destructive))'} /><text x={x} y={y + 5} textAnchor="middle" fontSize="14" fill="hsl(var(--foreground))">{b.glyph}</text><title>{b.name} {b.sign} {b.deg}°</title></g>; })}
+            return <g key={i} {...press({ kind: 'aspect', id: String(i) })} aria-label={`${a.a} ${a.type} ${a.b}`}><line x1={x1} y1={y1} x2={x2} y2={y2} stroke="transparent" strokeWidth={10} /><line x1={x1} y1={y1} x2={x2} y2={y2} stroke={ASPECT_TONE[a.type] ?? 'hsl(var(--muted-foreground))'} strokeOpacity={on ? 1 : 0.5} strokeWidth={on ? 3 : 1.2} /><title>{a.a} {a.type} {a.b}</title></g>; })}
+          {placed.map(({ b, shown }) => { const [x, y] = xy(shown, 130), [dx, dy] = xy(b.lon, 155); const on = is({ kind: 'body', id: b.key }); const sure = b.confidence === 'confirmed' || b.confidence === 'derived';
+            return <g key={b.key} {...press({ kind: 'body', id: b.key })} aria-label={`${b.name} in ${b.sign} ${b.deg} degrees`}><line x1={dx} y1={dy} x2={x} y2={y} stroke="hsl(var(--gold) / .45)" strokeWidth={0.6} /><circle cx={x} cy={y} r={17} fill="transparent" /><circle className="hit" cx={x} cy={y} r={12} fill={on ? 'hsl(var(--gold) / .4)' : `url(#orb-${uid})`} stroke={sure ? 'hsl(var(--gold) / .8)' : 'hsl(var(--destructive))'} strokeWidth={on ? 1.8 : 1} /><text x={x} y={y + 5} textAnchor="middle" fontSize="14" fill="hsl(var(--foreground))">{b.glyph}</text><title>{b.name} {b.sign} {b.deg}°</title></g>; })}
           {stars.map((s, i) => { const l = parseLon(s.star.degree)!; const [x, y] = xy(l, 190);
-            return <text key={i} x={x} y={y + 4} textAnchor="middle" fontSize="11" fill="hsl(var(--gold))" className="cursor-pointer" onClick={() => setSel({ kind: 'star', id: String(i) })}>★<title>{s.star.name}</title></text>; })}
+            return <g key={i} {...press({ kind: 'star', id: String(i) })} aria-label={`Fixed star ${s.star.name}`}><circle cx={x} cy={y} r={9} fill="transparent" /><text x={x} y={y + 4} textAnchor="middle" fontSize="12" fill="hsl(var(--gold-bright))">★</text><title>{s.star.name}</title></g>; })}
           {r.asc != null && [['Ascendant', r.asc, 'AC'], ['Midheaven', r.mc!, 'MC']].map(([n, l, t]) => { const [x, y] = xy(l as number, 70);
-            return <text key={n as string} x={x} y={y + 4} textAnchor="middle" fontSize="11" fontWeight={700} fill="hsl(var(--gold))" className="cursor-pointer" onClick={() => setSel({ kind: 'angle', id: n as string })}>{t as string}</text>; })}
+            return <g key={n as string} {...press({ kind: 'angle', id: n as string })} aria-label={n as string}><circle cx={x} cy={y - 1} r={12} fill="transparent" /><text x={x} y={y + 4} textAnchor="middle" fontSize="11" fontWeight={700} fill="hsl(var(--gold))">{t as string}</text></g>; })}
         </g>
       </svg>
 
@@ -92,7 +121,7 @@ export function ChartWheel({ r, sourcesFor }: { r: ChartResult; sourcesFor?: (ke
         {!detail ? (
           <div className="text-sm text-muted-foreground space-y-2">
             <p className="font-display text-lg text-foreground">Tap anything on the wheel</p>
-            <p>Planets, signs, house lines, aspect lines, the AC/MC angles, gold ★ fixed-star contacts and the four Ba Zi pillars on the outer ring all open their details here, with a confidence badge and a source.</p>
+            <p>Planets, signs, aspect lines, the AC/MC angles, gold ★ fixed-star contacts and the four Ba Zi pillars on the outer ring all open their details here, with a confidence badge and a source. You can also use Tab and Enter.</p>
             <p className="text-xs">Red-ringed planets have a lower-confidence position (usually because the birth time is unknown).</p>
           </div>
         ) : (
