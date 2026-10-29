@@ -37,10 +37,10 @@ describe('plans', () => {
 describe('checkout price mirror', () => {
   it('server checkout charges exactly the advertised membership prices', async () => {
     const { readFileSync } = await import('node:fs');
-    const src = readFileSync('supabase/functions/create-checkout/index.ts', 'utf8');
+    const src = readFileSync('supabase/functions/_shared/billing.ts', 'utf8');
     const ids = [PLAN_PRICE.full.monthId, PLAN_PRICE.full.yearId, PLAN_PRICE.creator.monthId, PLAN_PRICE.creator.yearId];
     const cents = [PLAN_AMOUNT.full.month, PLAN_AMOUNT.full.year, PLAN_AMOUNT.creator.month, PLAN_AMOUNT.creator.year].map(d => d * 100);
-    ids.forEach((id, i) => expect(src).toMatch(new RegExp(`${id}: \\{ amount: ${cents[i]}, interval: '${i % 2 ? 'year' : 'month'}' \\}`)));
+    ids.forEach((id, i) => expect(src).toMatch(new RegExp(`${id}: \\{ amount: ${cents[i]}, interval: '${i % 2 ? 'year' : 'month'}', tier: '${i < 2 ? 'full' : 'creator'}' \\}`)));
     expect([...SELLABLE_PRICES].sort()).toEqual([...ids].sort());
   });
 });
