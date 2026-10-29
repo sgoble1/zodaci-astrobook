@@ -23,7 +23,7 @@ function isActive(r: { status: string; current_period_end: string | null }) {
 export function useSubscription(): SubState {
   const [s, setS] = useState<SubState>({ loading: true, userId: null, tier: 'free' });
   useEffect(() => {
-    let revision = 0; let currentUid: string | null = null; let alive = true; let live = false; let channel: ReturnType<typeof supabase.channel> | null = null;
+    let revision = 0; let currentUid: string | null = null; let alive = true; let live = false; let bound = false; let channel: ReturnType<typeof supabase.channel> | null = null;
     const load = async (uid: string | null) => {
       const version = ++revision;
       const env = envOrNull();
@@ -44,7 +44,7 @@ export function useSubscription(): SubState {
       if (alive && version === revision && uid === currentUid) setS({ loading: false, userId: uid, tier: useGrant ? grantTier : subTier, status: useGrant ? 'granted' : row?.status, periodEnd: useGrant ? grant!.expires_at : row?.current_period_end, cancelAtEnd: useGrant ? false : !!row?.cancel_at_period_end, grantReason: useGrant ? grant!.reason : undefined, priceId: useGrant ? undefined : row?.price_id });
     };
     const bind = (uid: string | null) => {
-      currentUid = uid; revision++; setS({ loading: true, userId: uid, tier: 'free' });
+      bound = true; currentUid = uid; revision++; setS({ loading: true, userId: uid, tier: 'free' });
       if (channel) { void supabase.removeChannel(channel); channel = null; }
       live = false;
       void load(uid);
@@ -53,9 +53,9 @@ export function useSubscription(): SubState {
         .subscribe(status => { live = status === 'SUBSCRIBED'; });
     };
     const reload = () => { if (alive) void load(currentUid); };
-    supabase.auth.getUser().then(({ data }) => { if(alive) bind(data.user?.id ?? null); });
+    supabase.auth.getUser().then(({ data }) => { const uid = data.user?.id ?? null; if (alive && (!bound || uid !== currentUid)) bind(uid); });
     // Routine token refreshes keep the same account, so only a real sign-in/out or account switch rebinds.
-    const { data: auth } = supabase.auth.onAuthStateChange((_event, session) => { setTimeout(() => { const uid = session?.user.id ?? null; if (alive && uid !== currentUid) bind(uid); },0); });
+    const { data: auth } = supabase.auth.onAuthStateChange((_event, session) => { setTimeout(() => { const uid = session?.user.id ?? null; if (alive && (!bound || uid !== currentUid)) bind(uid); },0); });
     // Live updates normally carry plan changes; poll only while that connection is down.
     const timer = window.setInterval(() => { if (!live && currentUid && document.visibilityState === 'visible') reload(); }, 15000);
     const onFocus = () => { if (currentUid) reload(); };
