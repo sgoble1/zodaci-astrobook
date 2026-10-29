@@ -1,4 +1,4 @@
-import { coverByKey, paintCover, type CoverDesign } from '@/content/coverDesigns';
+import { coverByKey, designSrc, paintCover, type CoverDesign } from '@/content/coverDesigns';
 import { COVER_BLEED_IN, PRINT_PPI, coverType, placeArt, type CoverCrop, type CoverTextBox } from '@/lib/coverLayout';
 
 /** Where the cover artwork comes from: one of our designs, or an image URL (your upload or a chart cover). */
