@@ -12,7 +12,7 @@ export function FounderSourcePanel({ theme }: { theme: string }) {
   const [error, setError] = useState('');
   useEffect(() => {
     let active = true; setEntries([]); setError('');
-    if (own) void loadProtectedJson<ArchiveEntry[]>('shane', 'index.json').then(e => { if (active) setEntries(chaptersForTheme(e, theme)); }).catch(e => { if (active) setError(e instanceof ContentLockedError ? 'Enter the private edition password to read the original chapters.' : 'The original chapters could not load.'); });
+    if (own) void loadProtectedJson<ArchiveEntry[]>('shane', 'index.json').then(e => { if (active) setEntries(chaptersForTheme(e, theme)); }).catch(e => { if (active) setError(e instanceof ContentLockedError ? 'These original chapters are private to their owner.' : 'The original chapters could not load.'); });
     return () => { active = false; };
   }, [own, theme]);
   if (!own) return null;

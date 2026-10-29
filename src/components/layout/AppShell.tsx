@@ -432,7 +432,7 @@ function SidebarInner({ mobile = false, onNavigate }: { mobile?: boolean; onNavi
       </nav>
 
       <div className="mt-auto text-[11px] text-muted-foreground leading-relaxed">
-        {edition !== 'april' ? "Every chapter is listed here; opening one asks once for your own Masterbook password on this device." : "Every planet, house, aspect and phase in this site is drawn verbatim from April's uploaded reports."} {edition !== 'april' ? null : ' Click any element in a chart, table, timeline or bagua for the full interpretation.'}
+        {edition !== 'april' ? "Every chapter is listed here. Your Masterbook is private to your account; share it, or single chapters, from the edition home." : "Every planet, house, aspect and phase in this site is drawn verbatim from April's uploaded reports."} {edition !== 'april' ? null : ' Click any element in a chart, table, timeline or bagua for the full interpretation.'}
       </div>
     </div>
   );
