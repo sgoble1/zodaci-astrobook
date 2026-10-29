@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { computeChart, fmtLon, SIGN_KEYWORDS, BODY_KEYWORDS } from '@/lib/astro';
+import { computeChart, fmtLon, SIGN_KEYWORDS, BODY_KEYWORDS, type ChartInput } from '@/lib/astro';
+import { usePageMeta } from '@/hooks/usePageMeta';
 import { APRIL, fromParams, toParams } from './ChartCalculator';
 import { starContacts } from '@/components/chart/ChartWheel';
 import { KuaWheel } from '@/components/fengshui/KuaWheel';
@@ -14,11 +15,14 @@ import { BCB_CHAPTER } from '@/content/birthChartBook';
 const GEN: Record<string, string> = { Wood: 'Fire', Fire: 'Earth', Earth: 'Metal', Metal: 'Water', Water: 'Wood' };
 
 /** One reading that ties natal positions, aspects, Ba Zi, Compendium stars and the Kua/Bagua directions together. */
-export default function BaguaReading() {
+export default function BaguaReading({ input: given }: { input?: ChartInput } = {}) {
   const [sp] = useSearchParams();
-  const input = fromParams(sp) ?? APRIL;
-  const isApril = input.date === APRIL.date && input.time === APRIL.time;
-  const r = useMemo(() => computeChart(input), [sp.toString()]); // eslint-disable-line react-hooks/exhaustive-deps
+  // Members pass their own birth details; April's edition (the only place this renders without them) reads hers.
+  const input = given ?? fromParams(sp) ?? APRIL;
+  const isApril = !given && input.date === APRIL.date && input.time === APRIL.time;
+  usePageMeta(given ? 'Your Bagua reading · Zodaci' : 'Bagua reading · Zodaci', 'Natal positions, Four Pillars and Feng Shui directions woven into one reading.');
+  const key = JSON.stringify(input);
+  const r = useMemo(() => computeChart(input), [key]); // eslint-disable-line react-hooks/exhaustive-deps
   const k = isApril ? { kua: 1, steps: ['Kua 1 as stated in April’s Feng Shui guide, Section 18A (p. 114).'] } : kuaNumber(input.date, input.sex ?? 'unspecified');
   const stars = starContacts(r);
   const day = r.bazi.find(p => p.label.startsWith('Day'))!;
@@ -32,13 +36,13 @@ export default function BaguaReading() {
     <div className="space-y-10">
       <header className="space-y-2">
         <div className="font-smallcaps text-xs text-gold">Bagua reading</div>
-        <h1 className="text-4xl">Bagua Reading · {isApril ? 'April' : `${input.date} · ${input.placeLabel}`}</h1>
-        <p className="max-w-3xl text-muted-foreground">Natal positions, aspects, the Four Pillars, Compendium fixed stars and the Feng Shui Kua directions woven into one reading, with confidence and reasoning for each part. <Link to={`/reading?${toParams(input)}`} className="underline">Full reading</Link> · <Link to={`/chart-calculator?${toParams(input)}`} className="underline">Change the chart</Link></p>
+        <h1 className="text-4xl">{given ? 'Your Bagua reading' : `Bagua Reading · ${isApril ? 'April' : `${input.date} · ${input.placeLabel}`}`}</h1>
+        <p className="max-w-3xl text-muted-foreground">Natal positions, aspects, the Four Pillars, Compendium fixed stars and the Feng Shui Kua directions woven into one reading, with confidence and reasoning for each part. {given ? <><Link to="/my-chart" className="underline">Your chart</Link> · <Link to="/feng-shui" className="underline">Your directions</Link></> : <><Link to={`/reading?${toParams(input)}`} className="underline">Full reading</Link> · <Link to={`/chart-calculator?${toParams(input)}`} className="underline">Change the chart</Link></>}</p>
         <div className="flex flex-wrap gap-2">{r.flags.map((f, i) => <ConfidenceBadge key={i} level={f.level} note={`${f.topic}: ${f.note}`} />)}</div>
       </header>
 
       <section className="space-y-3"><h2 className="text-2xl border-b border-gold/40 pb-1">I · The directions</h2>
-        {isApril ? <BaguaWheel /> : k ? <KuaWheel kua={k.kua} /> : <p className="text-oxblood">Sex isn’t given, so the Kua number can’t be calculated. Add it in the Chart Calculator.</p>}
+        {isApril ? <BaguaWheel /> : k ? <KuaWheel kua={k.kua} /> : <p className="text-oxblood">Sex isn’t given, so the Kua number can’t be calculated. {given ? <Link to="/start" className="underline">Add it to your birth details</Link> : 'Add it in the Chart Calculator.'}</p>}
         {k && <ReasoningPanel reasoning={{ inputs: [{ label: 'Birth date', value: input.date }, { label: 'Sex', value: isApril ? 'female (Kua from guide)' : input.sex ?? '—' }], steps: k.steps.map((s, i) => ({ label: `Step ${i + 1}`, detail: s })), output: `Kua ${k.kua} · ${kEl} · ${groupOf(k.kua)} group`, confidence: isApril ? 'confirmed' : 'derived', caveats: isApril ? ['The standard female formula gives Kua 8 for this birth year; the guide’s Kua 1 is used.'] : [] }} />}
       </section>
 

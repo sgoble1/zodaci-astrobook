@@ -1,4 +1,4 @@
-import { Link, useLocation } from 'react-router-dom';
+import { Link, Navigate, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { useMyBirth } from '@/lib/myBirth';
 import MyChart from '@/pages/MyChart';
@@ -16,6 +16,12 @@ import { Fragment } from 'react';
 import FounderTopics from '@/pages/FounderTopics';
 import { useShaneAccount } from '@/hooks/useShaneAccount';
 import ShaneEdition from '@/pages/ShaneEdition';
+import { MemberHouseDetail, MemberPlanetDetail } from '@/pages/MemberPlacement';
+import MemberFengShui from '@/pages/MemberFengShui';
+import MemberDataQuality from '@/pages/MemberDataQuality';
+import BaguaReading from '@/pages/BaguaReading';
+import { kuaSex, toChartInput } from '@/lib/myBirth';
+import { useZacAccount } from '@/hooks/useZacAccount';
 
 const TIMING = { '/transits': 'transits', '/retrogrades': 'retrogrades', '/timeline': 'timeline', '/profection': 'profection' } as const;
 const TOPIC_ROUTES: Record<string, string> = { '/numerology': 'numerology', '/purpose': 'purpose', '/family-home': 'family-home', '/love': 'love', '/career': 'career', '/health': 'health' };
@@ -23,7 +29,7 @@ const WORKBOOK: Record<string, string> = { '/workbook': '', '/workbook/check-in'
 // Library topic slugs that map onto a member's own in-depth reading.
 const LIB_TO_READING: Record<string, string> = { love: 'love', career: 'career', money: 'money', health: 'health', mind: 'mind', 'family-home': 'family-home', shadow: 'shadow-work', karma: 'past-lives', spirituality: 'spiritual-gifts', purpose: 'purpose' };
 
-const PUBLIC = ['/shane', '/zac', '/official-astrobook', '/investors', '/admin', '/shared', '/dispatch', '/creator', '/', '/explore', '/start', '/my-chart', '/my-readings', '/my-astrobook', '/auth', '/instructions', '/pricing', '/checkout', '/my-masterbook', '/podcasts', '/dashboard', '/books', '/orders', '/blog', '/personal-context', '/workspaces', '/wonderings', '/shared/wonderings', '/chat', '/create', '/verify', '/relationships', '/p', '/about', '/counselors', '/workbook/companion', '/workbook/social-integration', '/retrogood', '/findings', '/results', '/our-charts', '/referrals', '/my-comic'];
+const PUBLIC = ['/shane', '/zac', '/official-astrobook', '/investors', '/admin', '/shared', '/dispatch', '/creator', '/', '/explore', '/start', '/my-chart', '/my-readings', '/my-astrobook', '/auth', '/instructions', '/pricing', '/checkout', '/my-masterbook', '/podcasts', '/dashboard', '/books', '/orders', '/blog', '/personal-context', '/workspaces', '/wonderings', '/shared/wonderings', '/chat', '/create', '/verify', '/relationships', '/p', '/about', '/counselors', '/workbook/companion', '/workbook/social-integration', '/retrogood', '/findings', '/results', '/our-charts', '/referrals', '/my-comic', '/shared-with-me'];
 export const isPublicPath = (p: string) => PUBLIC.some(x => p === x || (x !== '/' && p.startsWith(`${x}/`)));
 const CHART = ['/birth-chart', '/planets', '/houses', '/aspects', '/star-map', '/chart-elements', '/reading', '/compendium', '/chart-guide', '/chart-calculator'];
 
@@ -32,6 +38,7 @@ export function PublicChartFallback() {
   const { pathname } = useLocation();
   const birth = useMyBirth();
   const shane = useShaneAccount();
+  const zac = useZacAccount();
   if (birth === undefined) return null;
   if (!birth) return (
     <article className="mx-auto max-w-xl space-y-4 py-12 text-center">
@@ -45,8 +52,18 @@ export function PublicChartFallback() {
   );
   const timing = TIMING[pathname as keyof typeof TIMING];
   if (shane && pathname === '/topics') return <FounderTopics />;
+  if (zac && !shane && pathname === '/masterbook') return <Navigate to="/zac" replace />;
   if (shane && (pathname === '/masterbook' || pathname === '/reading' || pathname === '/compendium')) return <ShaneEdition />;
   if (timing) return <><PersonalTiming birth={birth} focus={timing} /><FounderSourcePanel theme="timing" /></>;
+  // Detail pages come before the overview fallbacks so /planets/venus never collapses into the planet list.
+  const planet = pathname.match(/^\/planets\/([\w-]+)$/)?.[1];
+  if (planet) return <MemberPlanetDetail birth={birth} planetKey={planet} />;
+  const house = pathname.match(/^\/houses\/(\d+)$/)?.[1];
+  if (house) return <MemberHouseDetail birth={birth} house={+house} />;
+  if (pathname === '/data-quality') return <MemberDataQuality birth={birth} />;
+  if (pathname === '/bagua-reading') return <BaguaReading input={{ ...toChartInput(birth), sex: kuaSex(birth.sex) }} />;
+  if (pathname === '/feng-shui/flying-stars') return <MemberFengShui birth={birth} focus="stars" />;
+  if (pathname === '/feng-shui' || pathname.startsWith('/feng-shui/') || pathname === '/bagua' || pathname === '/masterbook/bagua-wheel') return <MemberFengShui birth={birth} />;
   if (pathname === '/other-systems') return <MemberSystemsDashboard birth={birth} />;
   if (pathname === '/chinese') return <MemberSystem birth={birth} slug="chinese" />;
   const sys = pathname.match(/^\/other-systems\/([\w-]+)$/)?.[1];

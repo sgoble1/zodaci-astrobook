@@ -813,6 +813,42 @@ export type Database = {
           },
         ]
       }
+      contact_messages: {
+        Row: {
+          created_at: string
+          email: string
+          handled_at: string | null
+          id: string
+          message: string
+          name: string
+          sender_id: string | null
+          source_path: string
+          topic: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          handled_at?: string | null
+          id?: string
+          message: string
+          name: string
+          sender_id?: string | null
+          source_path?: string
+          topic?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          handled_at?: string | null
+          id?: string
+          message?: string
+          name?: string
+          sender_id?: string | null
+          source_path?: string
+          topic?: string
+        }
+        Relationships: []
+      }
       counselor_private_profiles: {
         Row: {
           content: string
@@ -945,6 +981,42 @@ export type Database = {
           created_at?: string
           edition?: string
           email?: string
+        }
+        Relationships: []
+      }
+      edition_shares: {
+        Row: {
+          area: string | null
+          chapter_id: string | null
+          chapter_title: string
+          created_at: string
+          created_by: string | null
+          edition: string
+          id: string
+          recipient_email: string
+          scope: string
+        }
+        Insert: {
+          area?: string | null
+          chapter_id?: string | null
+          chapter_title?: string
+          created_at?: string
+          created_by?: string | null
+          edition: string
+          id?: string
+          recipient_email: string
+          scope: string
+        }
+        Update: {
+          area?: string | null
+          chapter_id?: string | null
+          chapter_title?: string
+          created_at?: string
+          created_by?: string | null
+          edition?: string
+          id?: string
+          recipient_email?: string
+          scope?: string
         }
         Relationships: []
       }
@@ -2556,6 +2628,14 @@ export type Database = {
     Functions: {
       accept_space_invite: { Args: { _token: string }; Returns: string }
       active_grant_tier: { Args: { _user_id: string }; Returns: string }
+      admin_ai_pauses: {
+        Args: never
+        Returns: {
+          created_at: string
+          message: string
+          scope: string
+        }[]
+      }
       admin_april_events: {
         Args: { _kind?: string; _limit?: number }
         Returns: {
@@ -2596,6 +2676,7 @@ export type Database = {
           uses: number
         }[]
       }
+      admin_clear_ai_pause: { Args: { _scope: string }; Returns: boolean }
       admin_comic_manifest: {
         Args: never
         Returns: {
@@ -2702,6 +2783,11 @@ export type Database = {
           upgrade_clickers: number
         }[]
       }
+      can_open_chapter: {
+        Args: { _area: string; _chapter: string }
+        Returns: boolean
+      }
+      can_open_edition: { Args: { _edition: string }; Returns: boolean }
       can_read_shane_edition: { Args: never; Returns: boolean }
       can_read_zac_edition: { Args: never; Returns: boolean }
       can_view_investors: { Args: never; Returns: boolean }
@@ -2726,6 +2812,15 @@ export type Database = {
           tier: string
           unlimited: boolean
           used: number
+        }[]
+      }
+      edition_of_area: { Args: { _area: string }; Returns: string }
+      edition_owner_emails: { Args: { _edition: string }; Returns: string[] }
+      edition_share_targets: {
+        Args: { _edition: string }
+        Returns: {
+          display_name: string
+          target: string
         }[]
       }
       ensure_shared_main_conversation: { Args: never; Returns: string }
@@ -2767,6 +2862,19 @@ export type Database = {
       is_space_member: { Args: { _space_id: string }; Returns: boolean }
       is_space_owner: { Args: { _space_id: string }; Returns: boolean }
       monitored_account_id: { Args: never; Returns: string }
+      my_edition_shares: {
+        Args: { _edition: string }
+        Returns: {
+          area: string
+          chapter_id: string
+          chapter_title: string
+          created_at: string
+          ids: string[]
+          recipient: string
+          recipient_label: string
+          scope: string
+        }[]
+      }
       my_founder_edition: { Args: never; Returns: string }
       my_official_editions: {
         Args: never
@@ -2779,6 +2887,7 @@ export type Database = {
         }[]
       }
       my_referral_code: { Args: never; Returns: string }
+      my_shared_chapters: { Args: { _area: string }; Returns: string[] }
       owns_official_edition: { Args: { _edition: string }; Returns: boolean }
       plan_tier: { Args: { _user_id: string }; Returns: string }
       public_site_settings: {
@@ -2803,7 +2912,18 @@ export type Database = {
         Args: { p_order: string; p_owner: string }
         Returns: string
       }
+      revoke_edition_shares: { Args: { _ids: string[] }; Returns: number }
       reward_referral: { Args: { _referred: string }; Returns: boolean }
+      share_edition: {
+        Args: {
+          _area?: string
+          _chapter_id?: string
+          _chapter_title?: string
+          _edition: string
+          _target: string
+        }
+        Returns: number
+      }
       shared_member_directory: {
         Args: never
         Returns: {
@@ -2816,6 +2936,18 @@ export type Database = {
         Returns: {
           conversation_id: string
           unread_count: number
+        }[]
+      }
+      shared_with_me: {
+        Args: never
+        Returns: {
+          area: string
+          chapter_id: string
+          chapter_title: string
+          created_at: string
+          edition: string
+          owner_name: string
+          scope: string
         }[]
       }
       workspace_member_directory: {

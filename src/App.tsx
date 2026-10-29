@@ -130,6 +130,7 @@ const AstroBookPublic = lazy(() => import('./pages/PublicInfo').then(m => ({ def
 const BookPreview = lazy(() => import('./pages/BookPreview'));
 const Demo = lazy(() => import('./pages/Demo'));
 const AprilEdition = lazy(() => import('./pages/AprilEdition'));
+const SharedWithMe = lazy(() => import('./pages/SharedWithMe'));
 const ThemesIndex = lazy(() => import('./pages/PublicThemes').then(m => ({ default: m.ThemesIndex })));
 const ThemeDetail = lazy(() => import('./pages/PublicThemes').then(m => ({ default: m.ThemeDetail })));
 const FaqPage = lazy(() => import('./pages/PublicInfo').then(m => ({ default: m.FaqPage })));
@@ -279,6 +280,7 @@ export default function App() {
             <Route path="/explore" element={<ExploreDiscover />} />
             <Route path="/personal-context" element={<PersonalContext />} />
             <Route path="/workspaces" element={<Workspaces />} />
+            <Route path="/shared-with-me" element={<SharedWithMe />} />
             <Route path="/wonderings" element={<Wonderings />} />
             <Route path="/start" element={<Onboarding />} />
             <Route path="/my-chart" element={<MyChart />} />

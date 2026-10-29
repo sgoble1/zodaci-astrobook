@@ -1,44 +1,31 @@
 import { supabase } from '@/integrations/supabase/client';
 
-/** Each founder edition (April, Shane, Zac) has its own password; its unlock token opens only that edition. */
+/**
+ * Private editions (April, Shane, Zac) open by account only: the owner, or people the owner shared the whole
+ * edition or a single chapter with. The server checks every request; nothing is unlocked on the device.
+ */
 export type Edition = 'april' | 'shane' | 'zac';
 export type Area = 'masterbook' | 'library' | 'shane' | 'zac';
 export const AREA_EDITION: Record<Area, Edition> = { masterbook: 'april', library: 'april', shane: 'shane', zac: 'zac' };
 
-export const CONTENT_TOKENS_KEY = 'private-content-tokens-v2';
-export const CONTENT_UNLOCKED_EVENT = 'private-content-unlocked';
-// Tokens from the single shared password are no longer accepted.
-try { window.localStorage.removeItem('private-content-token-v1'); } catch { /* ignore */ }
+// Device unlock tokens from the retired password system are removed on load.
+try { ['private-content-token-v1', 'private-content-tokens-v2'].forEach(k => window.localStorage.removeItem(k)); } catch { /* ignore */ }
 
+export const NO_ACCESS_MESSAGE = 'This private edition opens only for its owner and the people they share it with.';
+/** Raised when the signed-in account may not open this edition or chapter (or nobody is signed in). */
 export class ContentLockedError extends Error {
-  constructor() {
-    super('Private content access has expired.');
+  constructor(public signedOut = false) {
+    super(signedOut ? 'Sign in to open your private edition.' : NO_ACCESS_MESSAGE);
     this.name = 'ContentLockedError';
   }
 }
 
-function readTokens(): Partial<Record<Edition, string>> {
-  try { return JSON.parse(window.localStorage.getItem(CONTENT_TOKENS_KEY) ?? '{}') ?? {}; } catch { return {}; }
-}
-/** The unlock token for one edition, or (without an edition) any unlock held on this device. */
-export const getContentToken = (edition?: Edition) => {
-  const tokens = readTokens();
-  return edition ? tokens[edition] ?? '' : Object.values(tokens).find(Boolean) ?? '';
-};
-export function setContentToken(edition: Edition, token: string) {
-  window.localStorage.setItem(CONTENT_TOKENS_KEY, JSON.stringify({ ...readTokens(), [edition]: token }));
-}
-export function clearContentToken(edition: Edition) {
-  const t = readTokens(); delete t[edition];
-  window.localStorage.setItem(CONTENT_TOKENS_KEY, JSON.stringify(t));
-}
-
-/** Files the server opens for the edition's authorized account without the password (titles and the workbook only). */
-export const OPEN_WITHOUT_UNLOCK = ['index.json', 'workbook.json'];
+/** Fired when an owner shares or revokes access, so cached chapter lists reload. */
+export const ACCESS_CHANGED_EVENT = 'private-content-access-changed';
 
 const cache = new Map<string, Promise<string>>();
-supabase.auth.onAuthStateChange(() => cache.clear());
-if (typeof window !== 'undefined') window.addEventListener(CONTENT_UNLOCKED_EVENT, () => cache.clear());
+supabase.auth.onAuthStateChange((event) => { if (event !== 'TOKEN_REFRESHED') cache.clear(); });
+if (typeof window !== 'undefined') window.addEventListener(ACCESS_CHANGED_EVENT, () => cache.clear());
 
 export function loadProtectedText(area: Area, file: string): Promise<string> {
   const key = `${area}/${file}`;
@@ -51,19 +38,13 @@ export function loadProtectedText(area: Area, file: string): Promise<string> {
 }
 
 async function fetchProtectedText(area: Area, file: string): Promise<string> {
-  const edition = AREA_EDITION[area];
-  // The admin's own unlock is accepted for the editions he can read (checked server-side).
-  const token = getContentToken(edition) || getContentToken('shane');
-  // Chapter lists (index.json) and Zac's workbook open for the edition's own account without the password.
-  if (!token && !OPEN_WITHOUT_UNLOCK.includes(file)) throw new ContentLockedError();
-  const { data, error } = await supabase.functions.invoke('protected-content', { body: { token, area, file } });
+  const { data: s } = await supabase.auth.getSession();
+  if (!s.session) throw new ContentLockedError(true);
+  const { data, error } = await supabase.functions.invoke('protected-content', { body: { area, file } });
   if (error || !data?.content) {
-    if (data?.code === 'LOCKED' || error?.context?.status === 401) {
-      if (getContentToken(edition)) clearContentToken(edition);
-      window.dispatchEvent(new CustomEvent('private-content-locked', { detail: { edition } }));
-      throw new ContentLockedError();
-    }
-    throw new Error(data?.error ?? error?.message ?? 'This document could not be opened.');
+    const status = (error as { context?: Response } | null)?.context?.status;
+    if (status === 401 || status === 403 || data?.code === 'NO_ACCESS' || data?.code === 'SIGNED_OUT') throw new ContentLockedError(status === 401);
+    throw new Error(data?.error ?? 'This document could not be opened. Please try again.');
   }
   return data.content as string;
 }

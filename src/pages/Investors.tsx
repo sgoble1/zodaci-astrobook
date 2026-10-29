@@ -11,7 +11,7 @@ const PRODUCTS = [
   ['AstroComic', 'A monthly illustrated comic in the original Lantern & Ink style, starring the member’s chart.'],
   ['Shop', 'Astrological posters, sticker sheets and notebooks, sold through a Shopify storefront.'],
 ];
-const MOAT = ['Charts calculated in-app and checked against Swiss Ephemeris reference values.', 'Private data enforced by the backend, not the browser: owner-only readings, separate edition passwords.', 'One source library behind readings, chat, podcasts and print — built once, sold in several formats.'];
+const MOAT = ['Charts calculated in-app and checked against Swiss Ephemeris reference values.', 'Private data enforced by the backend, not the browser: owner-only readings, and private Masterbooks that open only for their owner and the people they choose.', 'One source library behind readings, chat, podcasts and print — built once, sold in several formats.'];
 const STATUS = ['Live: member site, subscriptions, readings, counselors, podcasts and the shop.', 'In progress: automated print fulfilment, email sender domain, licensed source texts.', 'Not yet claimed: user counts, revenue or testimonials — none are shown until they are real.'];
 
 /** Invite-only investor overview. Access is decided by the backend (can_view_investors). */

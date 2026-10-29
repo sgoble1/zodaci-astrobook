@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import { onAccountChange } from '@/lib/authEvents';
 
 export type CustomPage = { id: string; owner_id: string; title: string; brief: string; menu_group: string; content: string; status: string; created_at: string };
 export const CUSTOM_PAGES_CHANGED = 'custom-pages-changed';
@@ -9,9 +10,9 @@ export function useCustomPages() {
   useEffect(() => {
     const load = () => supabase.from('custom_pages').select('*').order('created_at').then(({ data }) => setItems((data ?? []) as CustomPage[]));
     load();
-    const { data: sub } = supabase.auth.onAuthStateChange(() => load());
+    const stop = onAccountChange(() => load());
     window.addEventListener(CUSTOM_PAGES_CHANGED, load);
-    return () => { sub.subscription.unsubscribe(); window.removeEventListener(CUSTOM_PAGES_CHANGED, load); };
+    return () => { stop(); window.removeEventListener(CUSTOM_PAGES_CHANGED, load); };
   }, []);
   return items;
 }

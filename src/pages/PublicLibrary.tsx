@@ -2,16 +2,18 @@ import { withPlates } from '@/content/plates';
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useLocation, useParams } from 'react-router-dom';
 import { type MbEntry } from './Masterbook';
-import { loadProtectedJson, loadProtectedText } from '@/lib/protectedContent';
+import { ContentLockedError, loadProtectedJson, loadProtectedText } from '@/lib/protectedContent';
 import { supabase } from '@/integrations/supabase/client';
-import { SitePasswordGate } from '@/components/common/SitePasswordGate';
+import { NoEditionAccess, PrivateEditionGate } from '@/components/common/PrivateEditionGate';
+import { useOwnsEdition, useWholeEditionAccess } from '@/lib/editionSharing';
+import { ShareChapterButton, SharedByNote } from '@/components/sharing/EditionSharing';
 import { markdownSections, NavigatedProse } from '@/components/readings/NavigatedProse';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 
 export const slugify = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 
-/** Password-protected reading room backed by the extracted Masterbook files. */
+/** April's private reading room backed by the extracted Masterbook files: opens for her account and people she shared with. */
 function ProtectedRoom({ children }: { children: React.ReactNode }) {
   const [owner, setOwner] = useState<string | null | undefined>(undefined);
   const location = useLocation();
@@ -22,21 +24,22 @@ function ProtectedRoom({ children }: { children: React.ReactNode }) {
     return () => { active = false; data.subscription.unsubscribe(); };
   }, []);
   if (owner === undefined) return <Frame><p role="status">Opening the reading room…</p></Frame>;
-  if (!owner) return <Frame><h1 className="font-display text-3xl">Private reading room</h1><p className="mt-3 text-muted-foreground">Sign in with an approved account to open these sources.</p><Button asChild className="mt-6"><Link to={`/auth?next=${encodeURIComponent(location.pathname + location.search + location.hash)}`}>Sign in</Link></Button></Frame>;
-  return <SitePasswordGate key={owner} edition="april">{children}</SitePasswordGate>;
+  if (!owner) return <Frame><h1 className="font-display text-3xl">Private reading room</h1><p className="mt-3 text-muted-foreground">Sign in with your own account. These sources open only for their owner and the people she shares them with.</p><Button asChild className="mt-6"><Link to={`/auth?next=${encodeURIComponent(location.pathname + location.search + location.hash)}`}>Sign in</Link></Button></Frame>;
+  return <PrivateEditionGate key={owner}>{children}</PrivateEditionGate>;
 }
 
 function useRoomIndex() {
   const [entries, setEntries] = useState<MbEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [denied, setDenied] = useState(false);
   const [attempt, setAttempt] = useState(0);
   useEffect(() => {
-    let active = true; setLoading(true); setError(false);
-    void loadProtectedJson<MbEntry[]>('masterbook', 'index.json').then(rows => { if (active) setEntries(rows); }).catch(() => { if (active) setError(true); }).finally(() => { if (active) setLoading(false); });
+    let active = true; setLoading(true); setError(false); setDenied(false);
+    void loadProtectedJson<MbEntry[]>('masterbook', 'index.json').then(rows => { if (active) setEntries(rows); }).catch(e => { if (!active) return; if (e instanceof ContentLockedError) setDenied(true); else setError(true); }).finally(() => { if (active) setLoading(false); });
     return () => { active = false; };
   }, [attempt]);
-  return { entries, loading, error, retry: () => setAttempt(n => n + 1) };
+  return { entries, loading, error, denied, retry: () => setAttempt(n => n + 1) };
 }
 
 function Frame({ children }: { children: React.ReactNode }) {
@@ -55,7 +58,7 @@ export function PublicLibrary() {
   return <ProtectedRoom><LibraryInner /></ProtectedRoom>;
 }
 function LibraryInner() {
-  const { entries, loading, error, retry } = useRoomIndex();
+  const { entries, loading, error, denied, retry } = useRoomIndex();
   const [q, setQ] = useState('');
   const groups = useMemo(() => {
     const needle = q.trim().toLowerCase();
@@ -67,9 +70,10 @@ function LibraryInner() {
   return (
     <Frame>
       <h1 className="font-display text-4xl mb-2">Every source, chapter and section</h1>
-      <p className="text-muted-foreground mb-6">Browse and read all {entries.length} extracted chapters from the real Masterbook documents. The site password protects this room and every chapter.</p>
+      <p className="text-muted-foreground mb-6">{entries.length ? `Browse and read ${entries.length === 1 ? 'the 1 chapter' : `all ${entries.length} chapters`} open to your account. ` : ''}This room and every chapter open only for the edition’s owner and the people she shares it with.</p>
       <Input aria-label="Find a chapter or section" value={q} onChange={e => setQ(e.target.value)} placeholder="Find a chapter or section…" className="mb-8" />
       {loading && <p role="status">Opening the chapter index…</p>}
+      {denied && <NoEditionAccess owner="April" onRetry={retry} />}
       {error && <div className="space-y-3"><p role="alert">The chapter index couldn’t be opened.</p><Button variant="outline" onClick={retry}>Try again</Button></div>}
       {!loading && !error && !groups.length && <p className="text-muted-foreground">{q ? 'No chapters match your search.' : 'No chapters are available.'}</p>}
       <nav className="flex flex-wrap gap-2 mb-8 text-xs" aria-label="Reading room sections">
@@ -99,9 +103,12 @@ export function PublicReader() {
 function ReaderInner() {
   const { id = '' } = useParams();
   const { entries, error, retry: retryIndex } = useRoomIndex();
+  const owns = useOwnsEdition('april');
+  const whole = useWholeEditionAccess('april');
   const [text, setText] = useState<string | null>(null);
+  const [locked, setLocked] = useState(false);
   const [attempt, setAttempt] = useState(0);
-  useEffect(() => { let active = true; setText(null); if (!window.location.hash) window.scrollTo(0, 0); void loadProtectedText('masterbook', `${id}.md`).then(t => { if (active) setText(withPlates(t)); }).catch(() => { if (active) setText(''); }); return () => { active = false; }; }, [id, attempt]);
+  useEffect(() => { let active = true; setText(null); setLocked(false); if (!window.location.hash) window.scrollTo(0, 0); void loadProtectedText('masterbook', `${id}.md`).then(t => { if (active) setText(withPlates(t)); }).catch(err => { if (!active) return; if (err instanceof ContentLockedError) setLocked(true); setText(''); }); return () => { active = false; }; }, [id, attempt]);
   const i = entries.findIndex(e => e.id === id);
   const e = entries[i], prev = entries[i - 1], next = entries[i + 1];
   const body = (text ?? '').replace(/<!-- page (\d+) -->/g, (_m, n) => `\n\n###### Page ${n}\n\n`);
@@ -109,9 +116,10 @@ function ReaderInner() {
     <Frame>
       <Link to="/read" className="text-xs text-muted-foreground hover:text-foreground">← All sources</Link>
       {error && <Button variant="outline" className="mt-4" onClick={retryIndex}>Retry chapter index</Button>}
-      {text === '' ? <div className="mt-6 space-y-3"><p role="alert">This chapter couldn’t be opened.</p><Button variant="outline" onClick={() => setAttempt(n => n + 1)}>Try again</Button></div> : <>
+      {locked ? <div className="mt-6"><NoEditionAccess owner="April" onRetry={() => setAttempt(n => n + 1)} /></div> : text === '' ? <div className="mt-6 space-y-3"><p role="alert">This chapter couldn’t be opened. Check your connection and try again.</p><Button variant="outline" onClick={() => setAttempt(n => n + 1)}>Try again</Button></div> : <>
         {e && <div className="text-xs text-muted-foreground mt-4">{e.part}</div>}
         <h1 className="font-display text-3xl sm:text-4xl mt-2">{e?.label ?? 'Masterbook chapter'}</h1>
+        {e && owns !== undefined && <div className="mt-3">{owns ? <ShareChapterButton edition="april" chapter={{ id: e.id, title: e.title }} /> : <SharedByNote ownerName="April" scope={whole ? 'edition' : 'chapter'} />}</div>}
         <article className="mt-4">{text === null ? <p role="status">Loading chapter…</p> : <NavigatedProse content={body} path={`/read/${id}`} title={e?.title ?? 'Masterbook chapter'} headingLevel={markdownSections(body).length > 1 ? 2 : 3} />}</article>
         <div className="flex justify-between mt-10 text-sm">
           {prev ? <Link to={`/read/${prev.id}`} aria-label={`Previous chapter: ${prev.title}`} className="underline">← {prev.title}</Link> : <span />}
@@ -122,7 +130,7 @@ function ReaderInner() {
   );
 }
 
-/** One whole Masterbook document (every chapter of a part) on a single page; text loads through the password. */
+/** One whole Masterbook document (every chapter of a part) on a single page; text loads only for accounts with access. */
 export function PublicDocument() {
   return <ProtectedRoom><DocumentInner /></ProtectedRoom>;
 }

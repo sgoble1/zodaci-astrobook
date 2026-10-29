@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { canWriteAllReadings, loadMyTopicReadings, writeTopicReading, FREE_READINGS, CORE_THEMES, type TopicRow } from '@/lib/topicReadings';
 import { readingStatus } from '@/lib/readingExperience';
 import { supabase } from '@/integrations/supabase/client';
+import { onAccountChange } from '@/lib/authEvents';
 
 /** Core themes free members may preview (opening section only). */
 export const isPreviewTheme = (slug: string) => !FREE_READINGS.includes(slug) && CORE_THEMES.some(t => t.slug === slug);
@@ -16,9 +17,9 @@ export function useOnDemandReading(slug: string | undefined) {
   const [attempt, setAttempt] = useState(0);
   useEffect(() => {
     const changed = () => { setRow(undefined); setWriting(false); setAttempt(n => n + 1); };
-    const { data } = supabase.auth.onAuthStateChange(changed);
+    const stop = onAccountChange(changed);
     window.addEventListener('astrobook-birth-saved', changed);
-    return () => { data.subscription.unsubscribe(); window.removeEventListener('astrobook-birth-saved', changed); };
+    return () => { stop(); window.removeEventListener('astrobook-birth-saved', changed); };
   }, []);
   useEffect(() => {
     if (!slug) return;

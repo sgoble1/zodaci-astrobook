@@ -3,12 +3,17 @@ import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Input } from '@/components/ui/input';
 import { useLibrary } from '@/hooks/useLibrary';
-import { loadProtectedJson } from '@/lib/protectedContent';
+import { ACCESS_CHANGED_EVENT, loadProtectedJson } from '@/lib/protectedContent';
+import { onAccountChange } from '@/lib/authEvents';
+import { useOwnsEdition } from '@/lib/editionSharing';
+import { EditionSharingPanel, SharedByNote } from '@/components/sharing/EditionSharing';
 
 export type MbEntry = { id: string; label: string; title: string; part: string; words: number; sections: string[]; excerpt: string; doc?: string; page?: number };
 
 let cache: Promise<MbEntry[]> | null = null;
 export const loadIndex = () => (cache ??= loadProtectedJson<MbEntry[]>('masterbook', 'index.json').catch(e => { cache = null; throw e; }));
+onAccountChange(() => { cache = null; });
+if (typeof window !== 'undefined') window.addEventListener(ACCESS_CHANGED_EVENT, () => { cache = null; });
 
 export const CATEGORIES: [string, RegExp][] = [
   ['Planets & Points', /\b(sun|moon|mercury|venus|mars|jupiter|saturn|uranus|neptune|pluto|node|chiron|lilith|vertex|ascendant|rising|midheaven|fortune|stellium)\b/i],
@@ -41,6 +46,7 @@ export default function Masterbook() {
     return view === 'parts' ? [...m.entries()] : [...m.entries()].sort((a, b) => { const o = (k: string) => { const i = CATEGORIES.findIndex(c => c[0] === k); return i < 0 ? 99 : i; }; return o(a[0]) - o(b[0]); });
   }, [entries, q, cat, view]);
   const uploads = useLibrary('masterbook');
+  const owns = useOwnsEdition('april');
   const total = entries.reduce((a, e) => a + e.words, 0);
 
   return (
@@ -48,6 +54,7 @@ export default function Masterbook() {
       <header>
         <div className="font-smallcaps text-xs text-gold">The Masterbook · complete text</div>
         <h1 className="text-4xl sm:text-5xl mt-2">April’s Astrological Masterbook</h1>
+        {owns === false && <div className="mt-3"><SharedByNote ownerName="April" scope="edition" /></div>}
         <p className="text-muted-foreground mt-3 max-w-2xl">Every chapter, appendix, extended analysis and illustration plate from the Masterbook, reproduced in full{entries.length ? ` — ${entries.length} sections, about ${Math.round(total / 1000)}k words` : ''}. Pick any entry to read it.</p>
         <div className="flex flex-wrap gap-4 text-sm mt-3"><Link to="/masterbook/index" className="underline">Document index — every source & section</Link><Link to="/masterbook/upload" className="underline">Upload your own PDFs & spreadsheets</Link><Link to="/reading" className="underline">The complete reading</Link><Link to="/chart-calculator" className="underline">Chart calculator</Link><Link to="/feng-shui/bagua" className="underline">Feng Shui · Bagua & home</Link><Link to="/feng-shui/flying-stars" className="underline">Feng Shui · Flying Stars</Link></div>
         <Input placeholder="Search chapter titles and section headings…" value={q} onChange={e => setQ(e.target.value)} className="max-w-md mt-4" />
@@ -60,6 +67,7 @@ export default function Masterbook() {
           {CATEGORIES.map(([c]) => <button key={c} onClick={() => setCat(cat === c ? null : c)} className={`px-3 py-1 rounded-full border ${cat === c ? 'border-accent bg-accent/15' : 'border-border hover:bg-muted'}`}>{c} <span className="text-muted-foreground">{entries.filter(e => catsFor(e).includes(c)).length}</span></button>)}
         </div>
       </header>
+      {owns && <EditionSharingPanel edition="april" />}
       {failed && <LoadFailed what="The Masterbook contents" onRetry={() => setAttempt(a => a + 1)} />}
       {!failed && entries.length > 0 && parts.length === 0 && <p className="text-sm text-muted-foreground">No sections match. Clear the search or choose another topic.</p>}
       {parts.map(([part, list], idx) => (

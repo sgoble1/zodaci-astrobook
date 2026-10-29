@@ -13,8 +13,21 @@ import { usePageMeta } from '@/hooks/usePageMeta';
 import { useJsonLd } from '@/hooks/useJsonLd';
 
 type Geo = { name: string; admin1?: string; country?: string; latitude: number; longitude: number; timezone: string };
-type Person = { name: string; mode: 'birth' | 'signs'; date: string; time: string; place: string; lat: number | null; lon: number | null; tz: string; signs: CompatSigns };
+type Person = { name: string; mode: 'birth' | 'signs'; date: string; time: string; place: string; lat: number | null; lon: number | null; tz: string; signs: CompatSigns; edited?: boolean };
 const blank = (name: string): Person => ({ name, mode: 'birth', date: '', time: '', place: '', lat: null, lon: null, tz: '', signs: {} });
+
+/** What's typed survives moving between pages in this tab only (never saved to an account or sent anywhere). */
+export const COMPAT_DRAFT_KEY = 'zodaci-compat-draft-v1';
+const isPerson = (x: unknown): x is Person => !!x && typeof x === 'object' && typeof (x as Person).name === 'string' && ((x as Person).mode === 'birth' || (x as Person).mode === 'signs') && typeof (x as Person).date === 'string';
+export function readCompatDraft(): { a: Person; b: Person } | null {
+  try {
+    const raw = sessionStorage.getItem(COMPAT_DRAFT_KEY);
+    if (!raw) return null;
+    const d = JSON.parse(raw) as { a?: unknown; b?: unknown };
+    return isPerson(d.a) && isPerson(d.b) ? { a: d.a, b: d.b } : null;
+  } catch { return null; }
+}
+const writeDraft = (a: Person, b: Person) => { try { sessionStorage.setItem(COMPAT_DRAFT_KEY, JSON.stringify({ a, b })); } catch { /* storage full or blocked */ } };
 const KEYS = Object.keys(PLANET_WEIGHTS) as CompatKey[];
 const glyph = (sign: string) => SIGN_GLYPH[(SIGNS as readonly string[]).indexOf(sign)] ?? '';
 const KEY_LABEL: Record<CompatKey, string> = { sun: 'Sun', moon: 'Moon', venus: 'Venus', mars: 'Mars', rising: 'Rising' };
@@ -28,7 +41,7 @@ export const COMPAT_FAQ: QA[] = [
   { q: 'How is the compatibility score calculated?', a: 'Each of five placements — Sun, Moon, Venus, Mars and Rising — is compared by element (fire, earth, air, water) and by modality (cardinal, fixed, mutable). Element harmony counts for three times its table value and modality for two and a half times, capped at 100 per placement. The five results are then averaged with weights: Sun and Moon 1.0, Venus 0.9, Mars 0.8, Rising 0.7.' },
   { q: 'Do we need birth times?', a: 'No. Without a birth time the Moon can shift sign during the day and the Rising sign can’t be known, so both are left out rather than guessed. The score is then based on Sun, Venus and Mars.' },
   { q: 'Is a low score bad news?', a: 'No. The score describes how alike two people’s chart styles are, not whether a relationship will work. Contrasting elements often describe the most interesting partnerships — they simply need more explaining out loud.' },
-  { q: 'Is anything saved?', a: 'Nothing you type here is stored. Members can save a partner’s chart privately in People & charts for a full chart-to-chart comparison.' },
+  { q: 'Is anything saved?', a: 'Nothing is saved to an account or sent anywhere. What you type stays only in this browser tab, so it survives moving between pages; closing the tab or choosing Start over clears it. Members can save a partner’s chart privately in People & charts for a full chart-to-chart comparison.' },
 ];
 
 function signsOf(p: Person): { signs: CompatSigns; note: string } | null {
@@ -44,21 +57,24 @@ function signsOf(p: Person): { signs: CompatSigns; note: string } | null {
   } catch { return null; }
 }
 
-/** Public compatibility score (Master Build formula). Calculated in the browser; nothing is stored. */
+/** Public compatibility score (Master Build formula). Calculated in the browser; the form is kept only in this tab. */
 export default function Compatibility() {
   usePageMeta('Astrology compatibility score — Sun, Moon, Venus, Mars & Rising | Zodaci', 'Compare two birth charts by element and modality across five placements. Free, calculated in your browser, with the method shown.');
   useJsonLd('compat-app', { '@type': 'WebApplication', name: 'Zodaci compatibility score', applicationCategory: 'LifestyleApplication', operatingSystem: 'Web', offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' }, url: 'https://zodaci.com/compatibility' });
   const session = useSession();
   const birth = useMyBirth();
-  const [a, setA] = useState<Person>(blank('You'));
-  const [b, setB] = useState<Person>(blank('Them'));
+  const [a, setA] = useState<Person>(() => readCompatDraft()?.a ?? blank('You'));
+  const [b, setB] = useState<Person>(() => readCompatDraft()?.b ?? blank('Them'));
   const [shown, setShown] = useState(false);
-  // Signed-in members start from their own saved chart.
+  useEffect(() => { writeDraft(a, b); }, [a, b]);
+  // Signed-in members start from their own saved chart, unless they changed the first person themselves.
   useEffect(() => {
     if (!birth) return;
     const i = toChartInput(birth);
-    setA(p => p.date ? p : { ...p, name: birth.name || 'You', date: i.date, time: i.time ?? '', place: i.placeLabel, lat: i.lat, lon: i.lon, tz: i.tz });
+    setA(p => p.edited ? p : { ...p, mode: 'birth', name: birth.name || 'You', date: i.date, time: i.time ?? '', place: i.placeLabel, lat: i.lat, lon: i.lon, tz: i.tz });
   }, [birth]);
+  const editA = (p: Person) => setA({ ...p, edited: true });
+  const reset = () => { try { sessionStorage.removeItem(COMPAT_DRAFT_KEY); } catch { /* ignore */ } setShown(false); setB(blank('Them')); setA(birth ? (() => { const i = toChartInput(birth); return { ...blank(birth.name || 'You'), date: i.date, time: i.time ?? '', place: i.placeLabel, lat: i.lat, lon: i.lon, tz: i.tz }; })() : blank('You')); };
   const sa = useMemo(() => signsOf(a), [a]);
   const sb = useMemo(() => signsOf(b), [b]);
   const result = useMemo(() => sa && sb ? compatibility(sa.signs, sb.signs) : null, [sa, sb]);
@@ -67,7 +83,7 @@ export default function Compatibility() {
     <article className="space-y-16">
       <header className="max-w-3xl"><p className="font-smallcaps text-xs text-gold">Compatibility</p><h1 className="mt-3 font-display text-5xl leading-[0.95]">Two charts, side by side.</h1><p className="mt-4 text-lg text-muted-foreground">Compare Sun, Moon, Venus, Mars and Rising by element and modality. Use birth details for the most complete picture, or just the signs you know.</p></header>
       <section className="grid gap-8 lg:grid-cols-[1fr_1fr_1.1fr]" aria-label="Compatibility calculator">
-        <PersonCard person={a} onChange={setA} id="a" derived={sa} />
+        <PersonCard person={a} onChange={editA} id="a" derived={sa} />
         <PersonCard person={b} onChange={setB} id="b" derived={sb} />
         <div className="lg:sticky lg:top-6 lg:self-start">
           {!shown || !ready ? (
@@ -77,6 +93,7 @@ export default function Compatibility() {
               <Button size="lg" disabled={!ready} onClick={() => setShown(true)}>Reveal compatibility</Button>
             </div>
           ) : <ResultCard nameA={a.name || 'You'} nameB={b.name || 'Them'} result={result!} />}
+          {(b.date || b.signs.sun || a.edited) && <Button variant="ghost" size="sm" className="mt-3" onClick={reset}>Start over</Button>}
         </div>
       </section>
       {shown && ready && <section className="vellum flex flex-wrap items-center justify-between gap-4 p-6"><div><h2 className="font-display text-2xl">Go deeper than signs</h2><p className="mt-1 text-sm text-muted-foreground">Pro members compare the full charts — every planet-to-planet aspect, house overlays and a written reading — and keep partners’ charts private to their account.</p></div><Button asChild><Link to={session ? '/relationships' : `/auth?mode=signup&next=${encodeURIComponent('/relationships')}`}>{session ? 'Open People & charts' : 'Create your free account'}<ArrowRight /></Link></Button></section>}
@@ -116,7 +133,7 @@ function PersonCard({ person: p, onChange, id, derived }: { person: Person; onCh
         </div>
         <div>
           <Label htmlFor={`${id}-place`}>Birth place (optional)</Label>
-          <form className="flex gap-2" onSubmit={e => { e.preventDefault(); void search(); }}><Input id={`${id}-place`} value={q} placeholder="City" onChange={e => { setQ(e.target.value); if (p.lat != null) set({ lat: null, lon: null, tz: '', place: '' }); }} /><Button type="submit" variant="outline" size="icon" aria-label="Search places" disabled={busy}>{busy ? <Loader2 className="h-4 w-4 animate-spin" /> : <Search className="h-4 w-4" />}</Button></form>
+          <div className="flex gap-2"><Input id={`${id}-place`} value={q} placeholder="City" onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); void search(); } }} onChange={e => { setQ(e.target.value); if (p.lat != null) set({ lat: null, lon: null, tz: '', place: '' }); }} /><Button type="button" variant="outline" size="icon" aria-label="Search places" disabled={busy} onClick={() => void search()}>{busy ? <Loader2 className="h-4 w-4 animate-spin" /> : <Search className="h-4 w-4" />}</Button></div>
           {geo.length > 0 && <ul className="mt-1 divide-y divide-border rounded border border-border bg-background">{geo.map((g, i) => { const label = [g.name, g.admin1, g.country].filter(Boolean).join(', '); return <li key={i}><button type="button" className="w-full px-3 py-1.5 text-left text-sm hover:bg-muted" onClick={() => { set({ place: label, lat: g.latitude, lon: g.longitude, tz: g.timezone }); setGeo([]); }}>{label}</button></li>; })}</ul>}
           {p.lat != null && <p className="mt-1 flex items-center gap-1 text-xs text-muted-foreground"><MapPin aria-hidden className="h-3 w-3" />{p.place}</p>}
           {geoErr && <p className="mt-1 text-xs text-muted-foreground">{geoErr}</p>}

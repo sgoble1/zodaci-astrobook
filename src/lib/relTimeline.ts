@@ -42,6 +42,6 @@ export function relationshipTimeline(A: ChartResult, B: ChartResult, nameA: stri
     }
     if (cur) out.push(cur);
   })));
-  out.forEach(w => { w.text = `Transiting ${w.planet} ${w.aspect.toLowerCase()} ${w.whose === 'Composite' ? 'the composite' : `${w.whose}’s`} ${w.target}: ${TONE[w.planetKey]} around ${TARGET_THEME[w.targetKey] ?? w.target}${w.aspect === 'Trine' ? ' — a supportive, easy flow' : w.aspect === 'Conjunction' ? ' — a new chapter begins' : ' — pressure that asks for adjustment'}.`; });
+  out.forEach(w => { w.text = `Transiting ${w.planet} ${w.aspect.toLowerCase()} ${w.whose === 'Composite' ? 'the composite' : w.whose === 'You' ? 'your' : `${w.whose}’s`} ${w.target}: ${TONE[w.planetKey]} around ${TARGET_THEME[w.targetKey] ?? w.target}${w.aspect === 'Trine' ? ' — a supportive, easy flow' : w.aspect === 'Conjunction' ? ' — a new chapter begins' : ' — pressure that asks for adjustment'}.`; });
   return out.sort((a, b) => a.exact.getTime() - b.exact.getTime());
 }

@@ -31,7 +31,7 @@ export function MasterbookContents() {
   return (
     <Shell>
       <h1 className="text-4xl">Masterbook Contents</h1>
-      <p className="mt-2 text-muted-foreground">Every chapter and section. Browsing is open; reading the full text needs the site password.</p>
+      <p className="mt-2 text-muted-foreground">Every chapter and section. The full text opens only for the edition's owner and the people she shares it with.</p>
       <Input className="mt-6" aria-label="Search chapters and sections" placeholder="Search chapters and sections…" value={q} onChange={e => setQ(e.target.value)} />
       <p className="mt-2 text-sm text-muted-foreground" aria-live="polite">{groups.reduce((n, [, l]) => n + l.length, 0)} entries</p>
       {groups.map(([part, list]) => (

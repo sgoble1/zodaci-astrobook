@@ -15,7 +15,7 @@ import { domainFor } from '@/content/memberNav';
 import { useShaneAccount } from '@/hooks/useShaneAccount';
 import { loadEditionIndex } from '@/pages/ShaneEdition';
 import { useZacAccount } from '@/hooks/useZacAccount';
-import { viewingZacAsAdmin } from '@/hooks/useAprilSpace';
+import { viewingSharedEdition } from '@/hooks/useAprilSpace';
 import { useSession } from '@/hooks/useLibrary';
 import { useAprilSpace, useAprilSpaceError, retryAprilSpace, useClassicView, setClassicView } from '@/hooks/useAprilSpace';
 
@@ -182,8 +182,7 @@ export function AppShell() {
   const editionFailed = useAprilSpaceError();
   const shane = useShaneAccount();
   const zacOwn = useZacAccount();
-  const zacSession = useSession();
-  const zac = zacOwn || viewingZacAsAdmin(zacSession?.user.email);
+  const zac = zacOwn || viewingSharedEdition() === 'zac';
   // April and Shane's joint pages and admin tools keep real names; elsewhere April-written copy reads as "you".
   const founderState = useSharedSpaceMember();
   // Wait for the membership answer so names are never rewritten before it arrives.
@@ -432,7 +431,7 @@ function SidebarInner({ mobile = false, onNavigate }: { mobile?: boolean; onNavi
       </nav>
 
       <div className="mt-auto text-[11px] text-muted-foreground leading-relaxed">
-        {edition !== 'april' ? "Every chapter is listed here; opening one asks once for your own Masterbook password on this device." : "Every planet, house, aspect and phase in this site is drawn verbatim from April's uploaded reports."} {edition !== 'april' ? null : ' Click any element in a chart, table, timeline or bagua for the full interpretation.'}
+        {edition !== 'april' ? "Every chapter is listed here. Your Masterbook is private to your account; share it, or single chapters, from the edition home." : "Every planet, house, aspect and phase in this site is drawn verbatim from April's uploaded reports."} {edition !== 'april' ? null : ' Click any element in a chart, table, timeline or bagua for the full interpretation.'}
       </div>
     </div>
   );

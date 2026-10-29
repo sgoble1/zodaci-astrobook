@@ -11,11 +11,14 @@ import { BUILT_IN_SOURCES } from '@/content/sources';
 import { loadLibraryIndex } from '@/lib/corpus';
 import { SummarisePanel, toPassages } from '@/components/common/SummarisePanel';
 import { loadProtectedText } from '@/lib/protectedContent';
+import { useOwnsEdition } from '@/lib/editionSharing';
+import { ShareChapterButton, SharedByNote } from '@/components/sharing/EditionSharing';
 
 const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 60);
 
 export default function MasterbookChapter() {
   const { id = '' } = useParams();
+  const owns = useOwnsEdition('april');
   const [entries, setEntries] = useState<MbEntry[]>([]);
   const [text, setText] = useState<string | null>(null);
   useEffect(() => { loadIndex().then(setEntries).catch(() => setEntries([])); }, []);
@@ -47,6 +50,7 @@ export default function MasterbookChapter() {
             <h1 className="text-3xl sm:text-4xl mt-2">{e.title}</h1>
             <CopyLinkButton />
           </div>
+          {owns !== undefined && <div className="mt-3">{owns ? <ShareChapterButton edition="april" chapter={{ id: e.id, title: e.title }} /> : <SharedByNote ownerName="April" scope="edition" />}</div>}
         </>}
         <div className="gold-rule my-6" />
         {text && e && <SummarisePanel key={id} title={e.title} passages={toPassages(text, src?.title ?? 'Masterbook', `${e.label} · ${e.title}`)} />}
