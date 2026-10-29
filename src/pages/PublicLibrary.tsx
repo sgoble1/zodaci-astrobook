@@ -5,7 +5,7 @@ import { type MbEntry } from './Masterbook';
 import { ContentLockedError, loadProtectedJson, loadProtectedText } from '@/lib/protectedContent';
 import { supabase } from '@/integrations/supabase/client';
 import { NoEditionAccess, PrivateEditionGate } from '@/components/common/PrivateEditionGate';
-import { useOwnsEdition } from '@/lib/editionSharing';
+import { useOwnsEdition, useWholeEditionAccess } from '@/lib/editionSharing';
 import { ShareChapterButton, SharedByNote } from '@/components/sharing/EditionSharing';
 import { markdownSections, NavigatedProse } from '@/components/readings/NavigatedProse';
 import { Button } from '@/components/ui/button';
@@ -104,6 +104,7 @@ function ReaderInner() {
   const { id = '' } = useParams();
   const { entries, error, retry: retryIndex } = useRoomIndex();
   const owns = useOwnsEdition('april');
+  const whole = useWholeEditionAccess('april');
   const [text, setText] = useState<string | null>(null);
   const [locked, setLocked] = useState(false);
   const [attempt, setAttempt] = useState(0);
@@ -118,7 +119,7 @@ function ReaderInner() {
       {locked ? <div className="mt-6"><NoEditionAccess owner="April" onRetry={() => setAttempt(n => n + 1)} /></div> : text === '' ? <div className="mt-6 space-y-3"><p role="alert">This chapter couldn’t be opened. Check your connection and try again.</p><Button variant="outline" onClick={() => setAttempt(n => n + 1)}>Try again</Button></div> : <>
         {e && <div className="text-xs text-muted-foreground mt-4">{e.part}</div>}
         <h1 className="font-display text-3xl sm:text-4xl mt-2">{e?.label ?? 'Masterbook chapter'}</h1>
-        {e && owns !== undefined && <div className="mt-3">{owns ? <ShareChapterButton edition="april" chapter={{ id: e.id, title: e.title }} /> : <SharedByNote ownerName="April" scope="chapter" />}</div>}
+        {e && owns !== undefined && <div className="mt-3">{owns ? <ShareChapterButton edition="april" chapter={{ id: e.id, title: e.title }} /> : <SharedByNote ownerName="April" scope={whole ? 'edition' : 'chapter'} />}</div>}
         <article className="mt-4">{text === null ? <p role="status">Loading chapter…</p> : <NavigatedProse content={body} path={`/read/${id}`} title={e?.title ?? 'Masterbook chapter'} headingLevel={markdownSections(body).length > 1 ? 2 : 3} />}</article>
         <div className="flex justify-between mt-10 text-sm">
           {prev ? <Link to={`/read/${prev.id}`} aria-label={`Previous chapter: ${prev.title}`} className="underline">← {prev.title}</Link> : <span />}

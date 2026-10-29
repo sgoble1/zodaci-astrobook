@@ -12,7 +12,7 @@ import { FounderAccuracy } from '@/components/readings/FounderAccuracy';
 import { useSession } from '@/hooks/useLibrary';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { onAccountChange } from '@/lib/authEvents';
-import { useOwnsEdition } from '@/lib/editionSharing';
+import { useOwnsEdition, useWholeEditionAccess } from '@/lib/editionSharing';
 import { EditionSharingPanel, ShareChapterButton, SharedByNote } from '@/components/sharing/EditionSharing';
 import { officialChartInput, useOfficialEditions } from '@/lib/officialEditions';
 import { computeChart, fmtLon, type ChartResult } from '@/lib/astro';
@@ -68,23 +68,6 @@ export const EDITION_COPY: Record<EditionKey, { name: string; base: string; titl
 export default function ShaneEdition() { return <PrivateEditionGate><EditionInner area="shane" /></PrivateEditionGate>; }
 export function ZacEdition() { return <PrivateEditionGate><EditionInner area="zac" /></PrivateEditionGate>; }
 
-/** Whole-edition access for this account (owner or shared the whole book); chapter-only readers get false. */
-function useFullAccess(area: EditionKey) {
-  const [full, setFull] = useState<boolean | undefined>(undefined);
-  const [attempt, setAttempt] = useState(0);
-  useEffect(() => {
-    let on = true;
-    void supabase.rpc('can_open_edition', { _edition: area }).then(({ data, error }) => { if (on) setFull(!error && data === true); });
-    return () => { on = false; };
-  }, [area, attempt]);
-  useEffect(() => {
-    const reload = () => setAttempt(a => a + 1);
-    window.addEventListener(ACCESS_CHANGED_EVENT, reload);
-    return () => window.removeEventListener(ACCESS_CHANGED_EVENT, reload);
-  }, []);
-  return full;
-}
-
 /** The edition's chart, calculated from its saved birth facts (only returned to people allowed to read the whole edition). */
 function useEditionChart(area: EditionKey, enabled: boolean): ChartResult | null {
   const { rows } = useOfficialEditions();
@@ -100,7 +83,7 @@ function EditionInner({ area }: { area: EditionKey }) {
   const session = useSession();
   const { id } = useParams();
   const owns = useOwnsEdition(area);
-  const full = useFullAccess(area);
+  const full = useWholeEditionAccess(area);
   const [entries, setEntries] = useState<MbEntry[] | null>(null);
   const [denied, setDenied] = useState(false);
   const [err, setErr] = useState('');

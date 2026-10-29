@@ -131,3 +131,17 @@ export function useSharedEditions() {
   const { items } = useSharedWithMe();
   return (items ?? []).filter(i => i.scope === 'edition').map(i => i.edition);
 }
+
+/** Whether this account may read the whole edition (owner, or shared the whole book). Chapter-only readers get false. */
+export function useWholeEditionAccess(edition: Edition) {
+  const [full, setFull] = useState<boolean | undefined>(undefined);
+  const [attempt, setAttempt] = useState(0);
+  useEffect(() => {
+    let on = true;
+    void supabase.rpc('can_open_edition', { _edition: edition }).then(({ data, error }) => { if (on) setFull(!error && data === true); });
+    return () => { on = false; };
+  }, [edition, attempt]);
+  const reload = useCallback(() => setAttempt(a => a + 1), []);
+  useReloadOnAccess(reload);
+  return full;
+}
