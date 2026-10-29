@@ -10,7 +10,7 @@ const fmt = (iso: string) => new Date(iso).toLocaleDateString(undefined, { month
 
 /** Everything other people have shared with this account: whole editions and single chapters, grouped by who shared them. */
 export default function SharedWithMe() {
-  usePageMeta('Shared with me · Zodaci', 'Masterbooks and chapters other people have shared with you.', { noindex: true });
+  usePageMeta('Shared with me · Zodaci', 'Masterbooks and chapters other people have shared with you.');
   const session = useSession();
   const { items, error, retry } = useSharedWithMe();
   if (!session) return (
@@ -45,9 +45,9 @@ export default function SharedWithMe() {
           <section key={owner} aria-labelledby={`from-${owner}`} className="space-y-4">
             <h2 id={`from-${owner}`} className="text-2xl">From {owner}</h2>
             <div className="grid gap-3 md:grid-cols-2">
-              {whole.map(i => <EditionCard key={i.id} item={i} owner={owner} />)}
+              {whole.map(i => <EditionCard key={i.key} item={i} owner={owner} />)}
               {chapters.map(i => (
-                <Link key={i.id} to={sharedHref(i)} className="parchment flex items-start gap-3 p-4 transition-colors hover:border-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+                <Link key={i.key} to={sharedHref(i)} className="parchment flex items-start gap-3 p-4 transition-colors hover:border-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
                   <FileText className="mt-0.5 h-5 w-5 shrink-0 text-gold" aria-hidden="true" />
                   <span className="min-w-0"><span className="block font-medium">{i.chapter_title || 'Shared chapter'}</span><span className="block text-xs text-muted-foreground">One chapter of {owner}’s Masterbook · shared {fmt(i.created_at)}</span></span>
                 </Link>
