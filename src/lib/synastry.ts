@@ -46,8 +46,13 @@ function describe(a: Pt, b: Pt, d: typeof DEFS[number], aLabel: string, bLabel: 
     'asc-sun': 'Strong recognition — one person “sees” the other immediately.', 'pluto-venus': 'Magnetic, intense attraction with power themes.',
   };
   const tone = d.tone === 'harmony' ? 'flows easily between' : d.tone === 'tension' ? 'creates a productive growth edge between' : 'fuses';
-  return `${aLabel}’s ${a.name} ${d.type.toLowerCase()} ${bLabel}’s ${b.name}: ${tone} ${ta} and ${tb}. ${special[pair] ?? ''}`.trim();
+  return `${possessive(aLabel)} ${a.name} ${d.type.toLowerCase()} ${possessive(bLabel)} ${b.name}: ${tone} ${ta} and ${tb}. ${special[pair] ?? ''}`.trim();
 }
+
+/** "Your" for the signed-in person without a saved name, otherwise "Name’s". */
+export const possessive = (label: string) => (label === 'You' ? 'Your' : `${label}’s`);
+const tends = (label: string) => (label === 'You' ? 'tend' : 'tends');
+const can = (label: string) => label;
 
 export function interAspects(A: ChartResult, B: ChartResult, aLabel: string, bLabel: string): InterAspect[] {
   const out: InterAspect[] = [];
@@ -108,10 +113,10 @@ const GEN: Record<string, string> = { Wood: 'Fire', Fire: 'Earth', Earth: 'Metal
 const CTRL: Record<string, string> = { Wood: 'Earth', Earth: 'Water', Water: 'Fire', Fire: 'Metal', Metal: 'Wood' };
 export function dayMasterRelation(a: string, b: string, aLabel: string, bLabel: string) {
   if (a === b) return `Both Day Masters are ${a}: peers and companions (比劫) — understanding, sometimes competitive.`;
-  if (GEN[a] === b) return `${aLabel}’s ${a} nourishes ${bLabel}’s ${b} (generating cycle): ${aLabel} tends to support and feed ${bLabel}.`;
-  if (GEN[b] === a) return `${bLabel}’s ${b} nourishes ${aLabel}’s ${a} (generating cycle): ${bLabel} tends to support and feed ${aLabel}.`;
-  if (CTRL[a] === b) return `${aLabel}’s ${a} guides ${bLabel}’s ${b} in the controlling cycle: ${aLabel} can bring focus and shape, with room needed for ${bLabel}’s autonomy.`;
-  return `${bLabel}’s ${b} guides ${aLabel}’s ${a} in the controlling cycle: ${bLabel} can bring focus and shape, with room needed for ${aLabel}’s autonomy.`;
+  if (GEN[a] === b) return `${possessive(aLabel)} ${a} nourishes ${possessive(bLabel)} ${b} (generating cycle): ${can(aLabel)} ${tends(aLabel)} to support and feed ${bLabel === 'You' ? 'you' : bLabel}.`;
+  if (GEN[b] === a) return `${possessive(bLabel)} ${b} nourishes ${possessive(aLabel)} ${a} (generating cycle): ${can(bLabel)} ${tends(bLabel)} to support and feed ${aLabel === 'You' ? 'you' : aLabel}.`;
+  if (CTRL[a] === b) return `${possessive(aLabel)} ${a} guides ${possessive(bLabel)} ${b} in the controlling cycle: ${aLabel} can bring focus and shape, with room needed for ${possessive(bLabel).replace(/^Your$/, 'your')} autonomy.`;
+  return `${possessive(bLabel)} ${b} guides ${possessive(aLabel)} ${a} in the controlling cycle: ${bLabel} can bring focus and shape, with room needed for ${possessive(aLabel).replace(/^Your$/, 'your')} autonomy.`;
 }
 
 // ---- Numerology ----
