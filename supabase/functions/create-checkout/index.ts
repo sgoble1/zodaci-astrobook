@@ -4,15 +4,9 @@ import type Stripe from "https://esm.sh/stripe@22.0.2";
 import { type StripeEnv, createStripeClient } from "../_shared/stripe.ts";
 
 import { snapshotBookPdf } from '../_shared/book-delivery.ts';
+import { MEMBERSHIP, isPreviewOrigin, matchesAdvertised } from '../_shared/billing.ts';
 
-/** Mirrors SELLABLE_PRICES / PLAN_AMOUNT in src/lib/plans.ts (cents, billing interval). Checkout refuses any provider price that differs. */
-const MEMBERSHIP: Record<string, { amount: number; interval: 'month' | 'year' }> = {
-  pro_monthly: { amount: 900, interval: 'month' }, pro_yearly: { amount: 8900, interval: 'year' },
-  cosmic_monthly: { amount: 1900, interval: 'month' }, cosmic_yearly: { amount: 17900, interval: 'year' },
-};
 const ALLOWED = new Set(Object.keys(MEMBERSHIP));
-/** Preview and local builds may only ever open test checkouts, so a preview can never take a real payment. */
-const isPreviewOrigin = (origin: string) => { try { const h = new URL(origin).hostname; return h === 'localhost' || h === '127.0.0.1' || h.startsWith('id-preview--') || h.endsWith('.lovableproject.com'); } catch { return true; } };
 /** Mirrors BOOK_VERSIONS in src/lib/books.ts (price in cents, lookup key, format). */
 const BOOK_VERSION: Record<string, { lookup: string; price: number; format: 'print' | 'digital' }> = {
   digital: { lookup: 'astrobook_digital_v2', price: 2499, format: 'digital' },
@@ -171,9 +165,8 @@ Deno.serve(async (req) => {
     if (current?.length) return json({ error: 'You already have a membership. Change or cancel it from Manage billing.', code: 'already_subscribed' }, 409);
     const prices = await stripe.prices.list({ lookup_keys: [priceId] });
     if (!prices.data.length) return json({ error: "Price not found" }, 404);
-    const advertised = MEMBERSHIP[priceId];
     const live = prices.data[0];
-    if (live.currency !== 'usd' || live.unit_amount !== advertised.amount || live.recurring?.interval !== advertised.interval) {
+    if (!matchesAdvertised(priceId, live)) {
       console.error('Membership price mismatch', priceId, live.unit_amount, live.currency, live.recurring?.interval);
       return json({ error: 'Checkout prices do not match the advertised plan prices. Please contact support.' }, 409);
     }

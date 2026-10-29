@@ -6,6 +6,7 @@ import { PLAN_NAME, PRICE_TIER } from '@/lib/plans';
 
 type Row = { id: string; user_id: string; visit_id: string; kind: string; path: string; label: string; detail: Record<string, unknown>; duration_seconds: number | null; device: string; created_at: string };
 type Member = { user_id: string; display_name: string };
+const EVERYONE = 'all';
 type Made = { when: string; what: string; title: string };
 
 const fmtDur = (s: number) => s < 60 ? `${s}s` : s < 3600 ? `${Math.floor(s / 60)}m ${s % 60}s` : `${Math.floor(s / 3600)}h ${Math.floor((s % 3600) / 60)}m`;
@@ -14,7 +15,7 @@ const KIND: Record<string, string> = { page_view: 'Opened page', page_leave: 'Le
 
 export function ActivityFeed() {
   const [members, setMembers] = useState<Member[]>([]);
-  const [who, setWho] = useState<string>('');
+  const [who, setWho] = useState<string>(EVERYONE);
   const [days, setDays] = useState(7);
   const [rows, setRows] = useState<Row[]>([]);
   const [made, setMade] = useState<Made[]>([]);
@@ -24,34 +25,45 @@ export function ActivityFeed() {
   const [subs, setSubs] = useState<{ user_id: string; price_id: string; status: string; environment: string; created_at: string; current_period_end: string | null }[]>([]);
   useEffect(() => { supabase.from('billing_subscriptions').select('user_id,price_id,status,environment,created_at,current_period_end').order('created_at', { ascending: false }).limit(200).then(({ data }) => setSubs(data ?? [])); }, []);
 
-  useEffect(() => { supabase.rpc('shared_member_directory').then(({ data }) => {
-    const list = (data ?? []) as Member[]; setMembers(list);
-    setWho(list.find(m => m.display_name === 'April')?.user_id ?? list[0]?.user_id ?? '');
-  }); }, []);
+  // Anyone active in the last 90 days, labelled by email (admin-only lookup). Opens on everyone, never on one person.
+  useEffect(() => { void (async () => {
+    const since = new Date(Date.now() - 90 * 864e5).toISOString();
+    const { data } = await supabase.from('activity_events').select('user_id').gte('created_at', since).order('created_at', { ascending: false }).limit(1000);
+    const ids = [...new Set((data ?? []).map(r => r.user_id as string))].slice(0, 500);
+    const { data: emails } = ids.length ? await supabase.rpc('admin_member_emails', { _ids: ids }) : { data: [] };
+    const byId = new Map(((emails ?? []) as { id: string; email: string }[]).map(e => [e.id, e.email]));
+    setMembers(ids.map(id => ({ user_id: id, display_name: byId.get(id) ?? 'Member' })).sort((a, b) => a.display_name.localeCompare(b.display_name)));
+  })(); }, []);
+  const nameOf = (id: string) => members.find(m => m.user_id === id)?.display_name ?? id.slice(0, 6);
 
   const load = async () => {
-    if (!who) return; setLoading(true);
+    if (document.visibilityState !== 'visible') return;
+    setLoading(true);
+    const everyone = who === EVERYONE;
     const since = new Date(Date.now() - days * 864e5).toISOString();
-    // The backend returns at most 1000 rows per request, so page through everything.
+    const scoped = <T,>(q: T): T => (everyone ? q : (q as any).eq('user_id', who));
+    // The backend returns at most 1000 rows per request, so page through (everyone is capped at 5,000 recent events).
     const all: Row[] = [];
-    for (let from = 0; from < 20000; from += 1000) {
-      const { data } = await supabase.from('activity_events').select('*').eq('user_id', who).gte('created_at', since).order('created_at', { ascending: false }).range(from, from + 999);
+    for (let from = 0; from < (everyone ? 5000 : 20000); from += 1000) {
+      const { data } = await scoped(supabase.from('activity_events').select('*')).gte('created_at', since).order('created_at', { ascending: false }).range(from, from + 999);
       all.push(...((data ?? []) as Row[]));
       if (!data || data.length < 1000) break;
     }
     setRows(all);
-    const { data: aiRows } = await supabase.from('ai_usage').select('feature').eq('user_id', who).gte('created_at', since).limit(1000);
+    const { data: aiRows } = await scoped(supabase.from('ai_usage').select('feature')).gte('created_at', since).limit(1000);
     setAi((aiRows ?? []) as { feature: string }[]);
     const sources: [string, string, string][] = [['generated_pages', 'Masterbook chapter', 'owner_id'], ['book_orders', 'Book order', 'user_id'], ['custom_pages', 'Created page', 'owner_id'], ['library_items', 'Added item', 'owner_id'], ['shared_posts', 'Posted', 'author_id'], ['shared_recommendations', 'Recommended', 'author_id'], ['shared_media', 'Uploaded media', 'uploaded_by'], ['shared_wonderings', 'Wondering', 'author_id'], ['workbook_entries', 'Workbook answer', 'owner_id']];
     const out: Made[] = [];
     await Promise.all(sources.map(async ([t, what, col]) => {
-      const { data: d } = await (supabase.from(t as never) as any).select('*').eq(col, who).gte('created_at', since).limit(100);
-      (d ?? []).forEach((r: any) => out.push({ when: r.created_at, what: t === 'library_items' ? (r.kind === 'podcast' ? 'Made podcast' : 'Added file') : what, title: t === 'book_orders' ? `${r.edition} · ${r.status}` : r.title || r.caption || r.file_name || 'Saved item' }));
+      const base = (supabase.from(t as never) as any).select('*');
+      const { data: d } = await (everyone ? base : base.eq(col, who)).gte('created_at', since).order('created_at', { ascending: false }).limit(100);
+      (d ?? []).forEach((r: any) => out.push({ when: r.created_at, what: t === 'library_items' ? (r.kind === 'podcast' ? 'Made podcast' : 'Added file') : what, title: `${t === 'book_orders' ? `${r.edition} · ${r.status}` : r.title || r.caption || r.file_name || 'Saved item'}${everyone && r[col] ? ` · ${nameOf(r[col])}` : ''}` }));
     }));
     setMade(out.sort((a, b) => b.when.localeCompare(a.when)));
     setLoading(false);
   };
-  useEffect(() => { void load(); const timer = window.setInterval(load,15000); return () => window.clearInterval(timer); }, [who, days]);
+  // Refresh every 30 seconds while this tab is on screen.
+  useEffect(() => { void load(); const timer = window.setInterval(load, 30000); return () => window.clearInterval(timer); }, [who, days, members.length]);
 
   const stats = useMemo(() => {
     const leaves = rows.filter(r => r.kind === 'page_leave');
@@ -64,7 +76,9 @@ export function ActivityFeed() {
     rows.filter(r => r.kind.startsWith('media_')).forEach(r => { const m = media.get(r.label) ?? { plays: 0, finished: 0, furthest: 0, length: null }; if (r.kind === 'media_play') m.plays++; if (r.kind === 'media_ended') m.finished++; m.furthest = Math.max(m.furthest, Number(r.detail?.position_s ?? 0)); m.length = (r.detail?.length_s as number) ?? m.length; media.set(r.label, m); });
     const tools = new Map<string, number>();
     rows.filter(r => r.kind === 'click' || r.kind === 'submit').forEach(r => tools.set(r.label, (tools.get(r.label) ?? 0) + 1));
-    return { active, pages: [...byPage].sort((a, b) => b[1].secs - a[1].secs), visits: [...visits].sort((a, b) => b[1].last.localeCompare(a[1].last)), media: [...media], tools: [...tools].sort((a, b) => b[1] - a[1]).slice(0, 25), last: rows[0]?.created_at };
+    const people = new Map<string, number>();
+    leaves.forEach(r => people.set(r.user_id, (people.get(r.user_id) ?? 0) + (r.duration_seconds ?? 0)));
+    return { people: [...people].sort((a, b) => b[1] - a[1]).slice(0, 25), active, pages: [...byPage].sort((a, b) => b[1].secs - a[1].secs), visits: [...visits].sort((a, b) => b[1].last.localeCompare(a[1].last)), media: [...media], tools: [...tools].sort((a, b) => b[1] - a[1]).slice(0, 25), last: rows[0]?.created_at };
   }, [rows]);
 
   const feed = rows.filter(r => filter === 'all' ? true : filter === 'pages' ? r.kind.startsWith('page') : filter === 'clicks' ? r.kind === 'click' || r.kind === 'submit' : filter === 'media' ? r.kind.startsWith('media') : r.kind === 'away' || r.kind === 'back');
@@ -73,13 +87,13 @@ export function ActivityFeed() {
     <div className="space-y-5">
       <div className="flex flex-wrap gap-2 items-center text-sm">
         <label className="flex items-center gap-2">Person
-          <select className="border border-border rounded px-2 py-1 bg-background" value={who} onChange={e => setWho(e.target.value)}>{members.map(m => <option key={m.user_id} value={m.user_id}>{m.display_name} · {m.user_id.slice(0, 6)}</option>)}</select>
+          <select className="border border-border rounded px-2 py-1 bg-background" value={who} onChange={e => setWho(e.target.value)}><option value={EVERYONE}>Everyone</option>{members.map(m => <option key={m.user_id} value={m.user_id}>{m.display_name}</option>)}</select>
         </label>
         <label className="flex items-center gap-2">Period
           <select className="border border-border rounded px-2 py-1 bg-background" value={days} onChange={e => setDays(Number(e.target.value))}>{[1, 7, 30, 90].map(d => <option key={d} value={d}>Last {d} day{d > 1 ? 's' : ''}</option>)}</select>
         </label>
         <Button size="sm" variant="outline" onClick={load} disabled={loading}><RefreshCw className="w-3 h-3 mr-1" />{loading ? 'Loading…' : 'Refresh'}</Button>
-        <span className="text-muted-foreground text-xs">Admin only. Private counselor chats are counted as visits, but what she types is never recorded.</span>
+        <span className="text-muted-foreground text-xs">Admin only. Private counselor chats are counted as visits, but what anyone types is never recorded.</span>
       </div>
 
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
@@ -93,7 +107,8 @@ export function ActivityFeed() {
         <Box title="Most-used buttons & tools">{stats.tools.length ? stats.tools.map(([t, n]) => <Line key={t} a={t} b={`${n}×`} />) : <Empty />}</Box>
         <Box title="AI replies used (credits)">{ai.length ? [...ai.reduce((m, r) => m.set(r.feature, (m.get(r.feature) ?? 0) + 1), new Map<string, number>())].map(([f, n]) => <Line key={f} a={f === 'oracle' ? 'The Oracle Within' : f === 'social-counselor' ? 'Social Counselor' : f} b={`${n} replies`} />) : <Empty />}</Box>
         <Box title="Subscriptions (all members)">{subs.length ? subs.map((r, i) => <Line key={i} a={`${PRICE_TIER[r.price_id] ? PLAN_NAME[PRICE_TIER[r.price_id]] : r.price_id.startsWith('comic_') ? 'AstroComic' : r.price_id} · ${r.status}${r.environment === 'sandbox' ? ' · test' : ''} · ${r.user_id.slice(0, 6)}`} b={fmtTime(r.created_at)} />) : <Empty />}</Box>
-        <Box title="Things she created">{made.length ? made.slice(0, 40).map((m, i) => <Line key={i} a={`${m.what}: ${m.title}`} b={fmtTime(m.when)} />) : <Empty />}</Box>
+        {who === EVERYONE && <Box title="Most active people (active time)">{stats.people.length ? stats.people.map(([id, secs]) => <button key={id} type="button" onClick={() => setWho(id)} className="flex w-full justify-between gap-3 py-1 text-left hover:text-gold"><span className="min-w-0 break-words">{nameOf(id)}</span><span className="text-muted-foreground text-xs shrink-0">{fmtDur(secs)}</span></button>) : <Empty />}</Box>}
+        <Box title={who === EVERYONE ? 'Things people created' : 'Things they created'}>{made.length ? made.slice(0, 40).map((m, i) => <Line key={i} a={`${m.what}: ${m.title}`} b={fmtTime(m.when)} />) : <Empty />}</Box>
       </div>
 
       <section className="parchment p-4 space-y-3">
@@ -103,7 +118,7 @@ export function ActivityFeed() {
             <li key={r.id} className="py-1.5 grid grid-cols-[7.5rem_5.5rem_1fr] gap-2">
               <span className="text-muted-foreground text-xs">{fmtTime(r.created_at)}</span>
               <span className="text-xs">{KIND[r.kind] ?? r.kind}</span>
-              <span className="min-w-0 break-words">{r.label || r.path} {r.kind !== 'page_view' && r.kind !== 'page_leave' ? <span className="text-muted-foreground text-xs">on {r.path}</span> : <span className="text-muted-foreground text-xs">{r.path}</span>}{r.duration_seconds != null && <span className="text-xs"> · {fmtDur(r.duration_seconds)} active{r.detail?.reason ? ` (${r.detail.reason})` : ''}</span>}</span>
+              <span className="min-w-0 break-words">{r.label || r.path} {r.kind !== 'page_view' && r.kind !== 'page_leave' ? <span className="text-muted-foreground text-xs">on {r.path}</span> : <span className="text-muted-foreground text-xs">{r.path}</span>}{r.duration_seconds != null && <span className="text-xs"> · {fmtDur(r.duration_seconds)} active{r.detail?.reason ? ` (${r.detail.reason})` : ''}</span>}{who === EVERYONE && <span className="text-xs text-gold"> · {nameOf(r.user_id)}</span>}</span>
             </li>
           ))}
           {!feed.length && <Empty />}

@@ -7,8 +7,8 @@ import { ComicPageView } from '@/components/comic/ComicPageView';
 import { confirmAction } from '@/components/common/ConfirmHost';
 import { streamImage } from '@/lib/streamImage';
 import type { ComicIssue } from '@/lib/comic';
-import { MIN_DPI, describeReport, effectiveDpi, panelPlan, preflight, type Measure, type PanelSlot } from '@/lib/comicPrint';
-import { composeComicPdf, fontMeasure, type ComicArt } from '@/lib/comicPdf';
+import { MIN_DPI, describeReport, effectiveDpi, panelPlan, preflight, type Measure, type PanelSlot, type PrintReport } from '@/lib/comicPrint';
+import { composeComicPdf, composePreflightPdf, fontMeasure, type ComicArt } from '@/lib/comicPdf';
 import type { Tables } from '@/integrations/supabase/types';
 import fontUrl from '@/assets/fonts/manuscript.ttf?url';
 
@@ -53,7 +53,11 @@ export function ComicProduction({ issue, onChanged }: { issue: Issue; onChanged:
   const [busy, setBusy] = useState<'' | 'draw' | 'proof' | 'print'>('');
   const [progress, setProgress] = useState<{ done: number; total: number; key: string } | null>(null);
   const [live, setLive] = useState<{ url: string; final: boolean } | null>(null);
-  const [lines, setLines] = useState<string[]>([]);
+  // The last preflight is saved on the issue, so reopening production shows it again.
+  const saved = (issue.print_report && typeof issue.print_report === 'object' && 'checkedAt' in (issue.print_report as object)) ? issue.print_report as unknown as PrintReport : null;
+  const [report, setReport] = useState<PrintReport | null>(saved);
+  const lines = useMemo(() => (report ? describeReport(report, k => `page ${k.split('-')[0]}`) : []), [report]);
+  useEffect(() => { setReport(saved); }, [issue.id, issue.print_report]); // eslint-disable-line react-hooks/exhaustive-deps
   const stop = useRef(false);
 
   const load = useCallback(async () => {
@@ -106,7 +110,7 @@ export function ComicProduction({ issue, onChanged }: { issue: Issue; onChanged:
     if (!slots.length || busy) return;
     const n = slots.length;
     if (!(await confirmAction(`Illustrate ${n} panel${n === 1 ? '' : 's'}? Each panel is one AI image generation billed to your workspace credits. Panels are drawn one at a time; you can stop after the current one.`, `Illustrate ${n}`))) return;
-    stop.current = false; setBusy('draw'); setErr(''); setLines([]);
+    stop.current = false; setBusy('draw'); setErr('');
     let done = 0;
     try {
       for (const s of slots) {
@@ -145,8 +149,12 @@ export function ComicProduction({ issue, onChanged }: { issue: Issue; onChanged:
   const print = async () => {
     if (!font || busy || !art) return;
     const report = preflight(script, art, font.measure);
-    setLines(describeReport(report, k => `page ${k.split('-')[0]}`));
-    if (!report.ok) return;
+    setReport(report);
+    if (!report.ok) {
+      // Keep the failed check too, without touching the last good print file.
+      await supabase.from('comic_issues').update({ print_report: report as never }).eq('id', issue.id);
+      return;
+    }
     setBusy('print'); setErr('');
     try {
       const { bytes } = await composeComicPdf({ issue: script, fontBytes: font.bytes, art: await collectArt(), mode: 'print' });
@@ -161,6 +169,14 @@ export function ComicProduction({ issue, onChanged }: { issue: Issue; onChanged:
       toast.success('Print file ready');
       onChanged();
     } catch (e) { setErr(readableError(e)); } finally { setBusy(''); }
+  };
+
+  const downloadReport = async () => {
+    if (!report || !font) return;
+    try {
+      const bytes = await composePreflightPdf({ title: script.title, issueNumber: issue.issue_number, reader: script.reader || 'reader', month: issue.issue_month.slice(0, 7), report, lines, fontBytes: font.bytes, printFileBuilt: report.ok ? issue.print_pdf_at : null });
+      saveBlob(new Blob([bytes as BlobPart], { type: 'application/pdf' }), `${fileBase}-preflight.pdf`);
+    } catch { toast.error('The report could not be built. Try again.'); }
   };
 
   const downloadPrint = async () => {
@@ -191,7 +207,15 @@ export function ComicProduction({ issue, onChanged }: { issue: Issue; onChanged:
       </div>
       {issue.print_pdf_at && <p className={`text-xs ${pdfOutdated ? 'text-destructive' : 'text-muted-foreground'}`}>{pdfOutdated ? 'Artwork changed after the print file was built — rebuild it before printing.' : `Print file built ${new Date(issue.print_pdf_at).toLocaleString()}.`}</p>}
       {err && <p role="alert" className="text-sm text-destructive">{err}</p>}
-      {lines.length > 0 && <ul role="status" className="space-y-1 text-sm">{lines.map(l => <li key={l}>{l}</li>)}</ul>}
+      {report && (
+        <div role="status" className={`space-y-2 rounded-lg border p-3 text-sm ${report.ok ? 'border-gold/50' : 'border-destructive/50'}`}>
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <p className="font-medium">{report.ok ? 'Preflight passed' : 'Preflight found problems'} <span className="font-normal text-muted-foreground">· checked {new Date(report.checkedAt).toLocaleString()}</span></p>
+            <Button size="sm" variant="ghost" onClick={() => void downloadReport()} disabled={!font}><Download className="h-4 w-4" />Report PDF</Button>
+          </div>
+          <ul className="space-y-1">{lines.map(l => <li key={l}>{l}</li>)}</ul>
+        </div>
+      )}
       {progress && (
         <div role="status" className="flex flex-wrap items-center gap-4 rounded-lg border border-border p-3">
           <div className="h-24 w-24 overflow-hidden rounded bg-muted">{live && <img loading="lazy" decoding="async" src={live.url} alt="Artwork in progress" className={`h-full w-full object-cover transition-[filter] ${live.final ? '' : 'blur-md'}`} />}</div>

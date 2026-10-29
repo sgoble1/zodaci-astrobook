@@ -33,13 +33,24 @@ import { MemberGrants } from '@/components/admin/MemberGrants';
 import { ComicQueue } from '@/components/admin/ComicQueue';
 import { StripeOverview } from '@/components/admin/StripeOverview';
 import { AccessManager } from '@/components/admin/AccessManager';
+import { ShopAdmin } from '@/components/admin/ShopAdmin';
+import { AiStudioAdmin } from '@/components/admin/AiStudioAdmin';
 import { ADMIN_TAB_GROUPS, resolveAdminTab, type AdminTab } from '@/lib/adminTabs';
 
 export default function Admin() {
   const session = useSession();
   const isAdmin = useIsAdmin(session);
   const [roleChecked, setRoleChecked] = useState<boolean | null>(null);
-  useEffect(() => { let on = true; setRoleChecked(null); if (!session) { setRoleChecked(false); return; } void supabase.rpc('has_role', { _user_id: session.user.id, _role: 'admin' }).then(({ data }) => { if (on) setRoleChecked(data === true); }); return () => { on = false; }; }, [session?.user.id]); // eslint-disable-line react-hooks/exhaustive-deps
+  // Read the stored session directly: on a fresh load the session hook starts empty, which used to bounce admins to the dashboard.
+  useEffect(() => {
+    let on = true; setRoleChecked(null);
+    void supabase.auth.getSession().then(async ({ data: { session: s } }) => {
+      if (!s) { if (on) setRoleChecked(false); return; }
+      const { data } = await supabase.rpc('has_role', { _user_id: s.user.id, _role: 'admin' });
+      if (on) setRoleChecked(data === true);
+    });
+    return () => { on = false; };
+  }, [session?.user.id]);
   const [params, setParams] = useSearchParams();
   const tab = resolveAdminTab(params.get('tab'), isAdmin);
   const go = (t: AdminTab, extra: Record<string, string> = {}) => setParams({ tab: t, ...extra }, { replace: false });
@@ -80,6 +91,8 @@ export default function Admin() {
             {tab === 'activity' && <ActivityFeed />}
             {tab === 'charts' && <MemberCharts />}
             {tab === 'orders' && <PrintOrders />}
+            {tab === 'shop' && <ShopAdmin />}
+            {tab === 'studio' && <AiStudioAdmin />}
             {tab === 'comic' && <ComicQueue />}
             {tab === 'stripe' && <StripeOverview />}
             {tab === 'newsletter' && <NewsletterManager />}

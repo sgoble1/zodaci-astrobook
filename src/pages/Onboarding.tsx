@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { computeChart } from '@/lib/astro';
-import { saveMyBirth, toChartInput, type MyBirth } from '@/lib/myBirth';
+import { saveMyBirth, savedChart, toChartInput, type MyBirth } from '@/lib/myBirth';
 
 type Geo = { name: string; admin1?: string; country?: string; latitude: number; longitude: number; timezone: string };
 const STEPS = ['Your name', 'Birth date', 'Birth time', 'Birthplace', 'Review'];
@@ -57,7 +57,7 @@ export default function Onboarding() {
       const birth = { ...b, time: unknownTime ? null : b.time };
       const chart = computeChart(toChartInput(birth));
       setStage('Saving to your account…');
-      const res = await saveMyBirth(birth, { bodies: chart.bodies, asc: unknownTime ? null : chart.asc, mc: unknownTime ? null : chart.mc, aspects: chart.aspects, cusps: chart.cusps, bazi: chart.bazi, elements: chart.elements, flags: chart.flags });
+      const res = await saveMyBirth(birth, savedChart(chart, !unknownTime));
       if (res.error) { setErr('Your chart is saved on this device, but your account could not save it. Please try again.'); return; }
       const { data: u } = await supabase.auth.getUser();
       // eslint-disable-next-line @typescript-eslint/no-explicit-any

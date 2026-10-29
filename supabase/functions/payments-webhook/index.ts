@@ -4,6 +4,7 @@ import { verifiedBookAmount } from '../_shared/book-payment-rules.ts';
 import { isPaidBook } from '../_shared/book-delivery-rules.ts';
 
 import { finalizeBookPdf } from '../_shared/book-delivery.ts';
+import { subscriptionFields } from '../_shared/billing.ts';
 
 let _supabase: ReturnType<typeof createClient> | null = null;
 function db() {
@@ -11,21 +12,7 @@ function db() {
   return _supabase;
 }
 
-function fields(subscription: any) {
-  const item = subscription.items?.data?.[0];
-  const priceId = item?.price?.lookup_key || item?.price?.metadata?.lovable_external_id || item?.price?.id;
-  const periodStart = item?.current_period_start ?? subscription.current_period_start;
-  const periodEnd = item?.current_period_end ?? subscription.current_period_end;
-  return {
-    product_id: typeof item?.price?.product === "string" ? item.price.product : item?.price?.product?.id ?? "",
-    price_id: priceId ?? "",
-    status: subscription.status,
-    current_period_start: periodStart ? new Date(periodStart * 1000).toISOString() : null,
-    current_period_end: periodEnd ? new Date(periodEnd * 1000).toISOString() : null,
-    cancel_at_period_end: subscription.cancel_at_period_end || false,
-    updated_at: new Date().toISOString(),
-  };
-}
+const fields = subscriptionFields;
 
 /** Mirrors PRICE_TIER in src/lib/plans.ts: only these prices are Zodaci plans (and can earn a referral reward). */
 const PLAN_PRICES = new Set(['pro_monthly', 'pro_yearly', 'cosmic_monthly', 'cosmic_yearly', 'full_access_monthly', 'full_access_yearly', 'creator_monthly', 'creator_yearly']);

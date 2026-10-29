@@ -13,11 +13,15 @@ describe('chartTitle', () => {
     expect(chartTitle({ sun: 'Aries', moon: 'Cancer' }).subtitle).toBe('Aries Sun · Cancer Moon');
   });
   it('matches Air charts to Violet Dusk', () => {
-    expect(COVER_DESIGNS[COVER_FOR_ELEMENT.Air.index].label).toBe('Violet Dusk');
+    expect(COVER_DESIGNS.find(d => d.key === COVER_FOR_ELEMENT.Air.key)?.label).toBe('Violet Dusk');
+  });
+  it('recommends only covers that are still offered', () => {
+    for (const m of Object.values(COVER_FOR_ELEMENT)) expect(COVER_DESIGNS.some(d => d.key === m.key)).toBe(true);
   });
   it('offers no retired covers', () => {
     expect(COVER_DESIGNS.map(d => d.key)).not.toContain('blue-cosmos');
     expect(COVER_DESIGNS.map(d => d.key)).not.toContain('gold-aurora');
+    for (const k of ['solid-ivory', 'solid-violet', 'gradient-deep-sea']) expect(COVER_DESIGNS.map(d => d.key)).not.toContain(k);
     expect(COVER_DESIGNS[0].label).toBe('Midnight Stars');
   });
 });

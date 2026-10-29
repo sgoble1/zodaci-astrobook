@@ -36,10 +36,10 @@ export function dominantElement(counts: Partial<Record<Element, number>>): Eleme
   return sorted[0][0];
 }
 
-/** Cover design matched to the chart's leading element. Indexes follow COVER_DESIGNS order (Midnight Stars, Midnight Ember, solids, then gradients). */
-export const COVER_FOR_ELEMENT: Record<Element, { index: number; reason: string }> = {
-  Fire: { index: 1, reason: 'Midnight Ember echoes the warmth of a Fire-led chart.' },
-  Earth: { index: 0, reason: 'Midnight Stars suits the steady, grounded tone of an Earth-led chart.' },
-  Air: { index: 5, reason: 'Violet Dusk matches the open evening sky of an Air-led chart.' },
-  Water: { index: 7, reason: 'Deep Sea reflects the depth of a Water-led chart.' },
+/** Cover design matched to the chart's leading element, by design key (see COVER_DESIGNS). */
+export const COVER_FOR_ELEMENT: Record<Element, { key: string; reason: string }> = {
+  Fire: { key: 'midnight-ember', reason: 'Midnight Ember echoes the warmth of a Fire-led chart.' },
+  Earth: { key: 'midnight-stars', reason: 'Midnight Stars suits the steady, grounded tone of an Earth-led chart.' },
+  Air: { key: 'gradient-violet-dusk', reason: 'Violet Dusk matches the open evening sky of an Air-led chart.' },
+  Water: { key: 'solid-midnight', reason: 'Solid Midnight’s deep, quiet night suits a Water-led chart.' },
 };

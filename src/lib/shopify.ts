@@ -7,7 +7,7 @@ export const SHOPIFY_STOREFRONT_TOKEN = 'c01053a374f63c388088f3af943e9680';
 
 export interface ShopifyProduct {
   node: {
-    id: string; title: string; description: string; handle: string; productType?: string;
+    id: string; title: string; description: string; handle: string; productType?: string; availableForSale?: boolean; createdAt?: string; tags?: string[];
     priceRange: { minVariantPrice: { amount: string; currencyCode: string } };
     images: { edges: Array<{ node: { url: string; altText: string | null } }> };
     variants: { edges: Array<{ node: { id: string; title: string; price: { amount: string; currencyCode: string }; availableForSale: boolean; selectedOptions: Array<{ name: string; value: string }> } }> };
@@ -15,13 +15,33 @@ export interface ShopifyProduct {
   };
 }
 
-const PRODUCT_FIELDS = `id title description handle productType
+const PRODUCT_FIELDS = `id title description handle productType availableForSale createdAt tags
   priceRange { minVariantPrice { amount currencyCode } }
-  images(first: 5) { edges { node { url altText } } }
+  images(first: 10) { edges { node { url altText } } }
   variants(first: 20) { edges { node { id title price { amount currencyCode } availableForSale selectedOptions { name value } } } }
   options { name values }`;
 
-export const PRODUCTS_QUERY = `query GetProducts($first: Int!, $query: String) { products(first: $first, query: $query) { edges { node { ${PRODUCT_FIELDS} } } } }`;
+export const PRODUCTS_QUERY = `query GetProducts($first: Int!, $query: String, $after: String) { products(first: $first, query: $query, after: $after) { pageInfo { hasNextPage endCursor } edges { node { ${PRODUCT_FIELDS} } } } }`;
+
+/** Raised when the shop can't be reached (plan lapsed, network, or Shopify error) so pages can show a calm message. */
+export class ShopUnavailableError extends Error {}
+
+/** Every product in the shop, page by page (no 50-item ceiling). Stops after 20 pages as a safety net. */
+export async function fetchAllProducts(): Promise<ShopifyProduct[]> {
+  const out: ShopifyProduct[] = []; let after: string | null = null;
+  for (let page = 0; page < 20; page++) {
+    const d = await storefrontApiRequest(PRODUCTS_QUERY, { first: 100, after });
+    const conn = d?.data?.products;
+    if (!conn) throw new ShopUnavailableError('The shop is unavailable');
+    out.push(...conn.edges);
+    if (!conn.pageInfo?.hasNextPage) break;
+    after = conn.pageInfo.endCursor;
+  }
+  return out;
+}
+
+/** True when at least one variant can be bought. */
+export const inStock = (p: ShopifyProduct) => p.node.availableForSale ?? p.node.variants.edges.some(e => e.node.availableForSale);
 export const PRODUCT_BY_HANDLE_QUERY = `query GetProduct($handle: String!) { product(handle: $handle) { ${PRODUCT_FIELDS} } }`;
 
 export async function storefrontApiRequest(query: string, variables: Record<string, unknown> = {}) {

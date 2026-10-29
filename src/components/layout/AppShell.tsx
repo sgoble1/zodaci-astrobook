@@ -15,6 +15,7 @@ import { domainFor } from '@/content/memberNav';
 import { useShaneAccount } from '@/hooks/useShaneAccount';
 import { loadEditionIndex } from '@/pages/ShaneEdition';
 import { useZacAccount } from '@/hooks/useZacAccount';
+import { useSharedEditions } from '@/lib/editionSharing';
 import { viewingSharedEdition } from '@/hooks/useAprilSpace';
 import { useSession } from '@/hooks/useLibrary';
 import { useAprilSpace, useAprilSpaceError, retryAprilSpace, useClassicView, setClassicView } from '@/hooks/useAprilSpace';
@@ -42,6 +43,7 @@ function useFounderGroups(): NavGroup[] {
 function useShaneGroups(enabled: boolean, area: 'shane' | 'zac' = 'shane'): NavGroup[] {
   const { items: rels } = useRelationships();
   const badges = useSharedBadges();
+  const sharedEditions = useSharedEditions();
   const [chapters, setChapters] = useState<{ id: string; label: string; title?: string; part: string }[] | null>(null);
   const { pathname } = useLocation();
   const listed = !!chapters?.length;
@@ -52,10 +54,14 @@ function useShaneGroups(enabled: boolean, area: 'shane' | 'zac' = 'shane'): NavG
     for (const c of chapters ?? []) parts.set(c.part || 'Chapters', [...(parts.get(c.part || 'Chapters') ?? []), { to: `/${area}/${c.id}`, label: c.title || c.label }]);
     const shared = { ...SHARED_GROUP, items: SHARED_GROUP.items.map(item => ({ ...item, badge: item.to === '/shared/conversations' ? badges.chat : item.to === '/shared/wonderings' ? badges.wonderings : undefined })) };
     const relationships = { ...RELATIONSHIPS_GROUP, items: [...RELATIONSHIPS_GROUP.items, ...rels.map(r => ({ to: `/relationships/${r.id}`, label: `↳ ${r.name}${r.relation ? ` · ${r.relation}` : ''}` }))] };
+    const sharedLinks: NavItem[] = sharedEditions.filter(e => e !== area).map(e => e === 'april' ? { to: '/april', label: 'April’s Masterbook' } : e === 'shane' ? { to: '/shane', label: 'Shane’s Masterbook' } : { to: '/zac', label: 'Zac’s Astrological Library' });
     const chapterGroup = { title: area === 'zac' ? 'Library Chapters' : 'Masterbook Chapters', items: chapters === null ? [{ to: `/${area}`, label: 'Loading chapters…' }] : chapters.length ? [] : [{ to: `/${area}`, label: 'Chapters couldn’t load — open the edition' }], submenus: [...parts.entries()].map(([label, items]) => ({ label, items })) } as NavGroup;
     if (area === 'zac') return [
-      { title: 'My Edition', items: [{ to: '/dashboard', label: 'Home' }, { to: '/zac', label: 'My Astrological Library' }, { to: '/zac/workbook', label: 'My Workbook' }, { to: '/my-chart', label: 'My chart' }, { to: '/transits', label: 'Transits' }, { to: '/counselors', label: 'Counselors' }] },
+      { title: 'My Edition', items: [{ to: '/dashboard', label: 'Home' }, { to: '/zac', label: 'My Astrological Library' }, { to: '/zac/workbook', label: 'My Workbook' }, { to: '/my-chart', label: 'My chart' }, { to: '/my-readings', label: 'My readings' }, { to: '/counselors', label: 'Counselors' }] },
       chapterGroup,
+      { title: 'Explore', items: [{ to: '/explore', label: 'Explore everything' }, { to: '/transits', label: 'Transits' }, { to: '/timeline', label: 'Timeline' }, { to: '/profection', label: 'Year of life' }, { to: '/other-systems', label: 'Other systems' }] },
+      relationships,
+      ...(sharedLinks.length ? [{ title: 'Shared with me', items: sharedLinks }] : []),
       { title: 'Official AstroBook', items: [{ to: '/official-astrobook', label: 'My Official AstroBook' }, { to: '/official-astrobook/comic/zac', label: 'My Official AstroComic' }, { to: '/investors', label: 'Investor overview' }, { to: '/store', label: 'Shop' }] },
     ] as NavGroup[];
     return [
@@ -64,10 +70,10 @@ function useShaneGroups(enabled: boolean, area: 'shane' | 'zac' = 'shane'): NavG
       shared, relationships,
       { title: 'Official AstroBook', items: [{ to: '/official-astrobook', label: 'All Official AstroBooks' }, { to: '/official-astrobook/comic/shane', label: 'My Official AstroComic' }, { to: '/official-astrobook/illustrated', label: 'Zodaci Illustrated · Oct 2026' }] },
       { title: 'Together & Media', items: [{ to: '/our-charts', label: 'Our charts' }, { to: '/podcasts', label: 'Podcasts' }, { to: '/investors', label: 'Investor overview' }, { to: '/store', label: 'Shop' }] },
-      { title: 'Family Editions', items: [{ to: '/zac', label: 'Zac’s Astrological Library' }, { to: '/zac/workbook', label: 'Zac’s Workbook' }, { to: '/official-astrobook/comic/zac', label: 'Zac’s AstroComic' }, { to: '/official-astrobook/comic/april', label: 'April’s AstroComic' }] },
+      { title: 'Family Editions', items: [...sharedLinks.filter(l => l.to !== '/zac'), { to: '/zac', label: 'Zac’s Astrological Library' }, { to: '/zac/workbook', label: 'Zac’s Workbook' }, { to: '/official-astrobook/comic/zac', label: 'Zac’s AstroComic' }, { to: '/official-astrobook/comic/april', label: 'April’s AstroComic' }] },
       { title: 'Admin', items: [{ to: '/admin', label: 'Admin dashboard' }, { to: '/dispatch', label: 'Dispatch' }] },
     ] as NavGroup[];
-  }, [chapters, rels, badges.chat, badges.wonderings, area]);
+  }, [chapters, rels, badges.chat, badges.wonderings, area, sharedEditions]);
 }
 type FounderEditionName = 'april' | 'shane' | 'zac';
 const EditionContext = createContext<FounderEditionName>('april');
@@ -321,7 +327,7 @@ function AprilShell({ children, edition = 'april' }: { children: ReactNode; edit
       <a href="#main-content" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded focus:bg-primary focus:px-4 focus:py-2 focus:text-primary-foreground">Skip to content</a>
       <ScrollProgress /><FirstViewReveal />
       <ParticleField />
-      <aside ref={asideRef} className="hidden lg:flex w-72 shrink-0 flex-col border-r border-border/60 bg-card/40 backdrop-blur-xl sticky top-0 h-screen z-10">
+      <aside ref={asideRef} data-keep-wording={edition !== 'april' || undefined} className="hidden lg:flex w-72 shrink-0 flex-col border-r border-border/60 bg-card/40 backdrop-blur-xl sticky top-0 h-screen z-10">
         <SidebarInner />
       </aside>
       <div ref={headerRef} className="lg:hidden fixed top-0 inset-x-0 z-50 flex min-h-[64px] items-center justify-between gap-2 border-b border-border bg-background/95 px-3 py-2 backdrop-blur-xl pt-[max(0.5rem,env(safe-area-inset-top))]">
@@ -331,7 +337,7 @@ function AprilShell({ children, edition = 'april' }: { children: ReactNode; edit
         </Button></div>
       </div>
       {open && (
-        <div ref={mobileMenuRef} id="mobile-menu" role="dialog" aria-modal="true" aria-label="Zodaci menu" className="lg:hidden fixed inset-x-0 bottom-0 top-[var(--founder-header-h,64px)] z-40 overflow-y-auto overscroll-contain bg-background pb-[env(safe-area-inset-bottom)]">
+        <div ref={mobileMenuRef} id="mobile-menu" data-keep-wording={edition !== 'april' || undefined} role="dialog" aria-modal="true" aria-label="Zodaci menu" className="lg:hidden fixed inset-x-0 bottom-0 top-[var(--founder-header-h,64px)] z-40 overflow-y-auto overscroll-contain bg-background pb-[env(safe-area-inset-bottom)]">
           <div className="sticky top-0 z-10 flex justify-end border-b border-border/60 bg-background/95 px-3 py-2 backdrop-blur-xl">
             <Button type="button" variant="ghost" size="sm" className="min-h-11" onClick={() => setOpen(false)}><X className="h-4 w-4" aria-hidden="true" />Close menu</Button>
           </div>

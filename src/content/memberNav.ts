@@ -18,7 +18,7 @@ import { planAllows, requiredPlan, type Plan } from '@/content/navigation';
 export type DomainId = 'chart' | 'readings' | 'book' | 'explore' | 'learn';
 /** Who may see an item. Founder/admin audiences mirror checks the database already enforces; they only hide links. */
 export type Audience = 'all' | 'shane' | 'shared';
-export type MemberNavItem = { to: string; label: string; description: string; icon: LucideIcon; badge?: 'New' | 'Popular' | 'Free'; audience?: Audience };
+export type MemberNavItem = { to: string; label: string; description: string; icon: LucideIcon; badge?: 'New' | 'Popular' | 'Free'; audience?: Audience; /** Keeps real names (a shared edition's owner) instead of the "you" wording. */ keepName?: boolean };
 export type MemberNavColumn = { title: string; items: MemberNavItem[]; more?: { to: string; label: string } };
 export type MemberDomain = {
   id: DomainId; label: string; hub: string; hubLabel: string; description: string; icon: LucideIcon;
@@ -91,7 +91,7 @@ export const MEMBER_DOMAINS: MemberDomain[] = [
     id: 'book', label: 'Book', hub: '/my-astrobook', hubLabel: 'Open my library', icon: BookHeart,
     description: 'Your Masterbook, printed AstroBook, audio and keepsakes.',
     tabs: ['/my-astrobook', '/my-masterbook', '/books', '/orders', '/podcasts', '/my-comic'],
-    prefixes: ['/shane'],
+    prefixes: ['/shane', '/april', '/zac'],
     columns: [
       { title: 'My AstroBook', items: [
         { to: '/my-masterbook', label: 'My Masterbook', description: 'Your foundational chapters', icon: BookHeart, badge: 'Popular' },
@@ -191,6 +191,21 @@ export const ADMIN_PATHS = ['/admin', '/dispatch', '/data-quality'];
 
 export type NavContext = { shane?: boolean; shared?: boolean };
 const allowed = (item: MemberNavItem, ctx: NavContext) => !item.audience || item.audience === 'all' || (item.audience === 'shane' ? !!ctx.shane : !!ctx.shared);
+
+/** Menu links for whole editions someone has shared with this account (the database decides; links only follow it). */
+const SHARED_EDITION_LINK: Record<string, Omit<MemberNavItem, 'icon'>> = {
+  april: { to: '/april', label: 'April’s Masterbook', description: 'Shared with you by April' },
+  shane: { to: '/shane', label: 'Shane’s Masterbook', description: 'Shared with you by Shane' },
+  zac: { to: '/zac', label: 'Zac’s Astrological Library', description: 'Shared with you by Zac' },
+};
+export function withSharedEditions(columns: MemberNavColumn[], editions: string[]): MemberNavColumn[] {
+  const links = [...new Set(editions)].map(e => SHARED_EDITION_LINK[e]).filter(Boolean).map(l => ({ ...l, icon: Crown, keepName: true }));
+  if (!links.length) return columns;
+  const at = columns.findIndex(c => c.title === 'Editions');
+  if (at < 0) return [...columns, { title: 'Editions', items: links }];
+  const have = new Set(columns[at].items.map(i => i.to));
+  return columns.map((c, i) => i === at ? { ...c, items: [...c.items, ...links.filter(l => !have.has(l.to))] } : c);
+}
 
 /** Columns a person may see; empty columns (e.g. Editions for non-founders) drop out. */
 export function visibleColumns(domain: MemberDomain, ctx: NavContext): MemberNavColumn[] {

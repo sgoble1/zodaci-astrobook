@@ -19,20 +19,22 @@ Every item is checked against the code first; findings already fixed or proven w
 
 ### 4. Shop, orders and admin (agent)
 Audit Oct 29: already done — same-tab cart checkout, Dispatch print-only filter (correct: digital needs no dispatch), Orders final-PDF bucket, subscriber comic PDF, Creator plan check (tier id is 'creator'). Remaining below.
-- [ ] Store admin tab with Shopify deep links; product page in house style with gallery/specs/shipping; search, sort, sold-out; friendly store-offline message; no 50-item cap.
-- [ ] Dispatch + AstroBook orders include every format (digital too); Lulu submit from Dispatch; Lulu errors shown; Orders bucket, polling, missing address.
-- [ ] AstroComic preflight report restored on reopen + downloadable PDF; subscriber print PDF download.
-- [ ] Admin: AI pause view/clear, Mystic Ink prompt builder, print-partner matrix (UNVERIFIED tags) also on /investors, Activity default, plan-check fix in Cosmic Studio.
-- [ ] Pricing shows grandfathered plans; checkout return retry/recovery; subscription polling only when needed; referral links use current site; custom page delete confirmation.
+- [x] Admin → Shop & print: Shopify deep links, live product/stock table, print partner matrix; product page with gallery, specs, shipping, sold-out; shop search/sort/type filter in the link; calm offline message; every product loaded (no 50 cap). Browser-checked as admin.
+- [x] Dispatch sends/previews/refreshes Lulu jobs and shows Lulu errors and connection; missing address warned instead of crashing (Dispatch + Orders); Orders refreshes every 15s only while an order is moving and the page is visible. Digital orders correctly stay out of Dispatch.
+- [x] AstroComic preflight saved on every check (pass or fail), restored on reopen, downloadable as a one-page report PDF (tested); subscriber PDF download already in place.
+- [x] Admin → AI & illustrations: AI pause status + Resume (audited); Mystic Ink prompt builder with palette/checklist/copy; print partner matrix with UNVERIFIED tags on admin and /investors; Activity opens on Everyone with any active member selectable; Cosmic Studio plan check already correct. Admin no longer bounces to the dashboard on a fresh load.
+- [x] Pricing shows grandfathered plans; checkout return retry/recovery; subscription polling only when needed; invite links use the current site (previews fall back to zodaci.com); custom page delete asks first.
 
 ### 5. AstroBook (agent)
 Audit Oct 29: payment already waits for a real manuscript (server-checked); remaining below.
-- [ ] Covers: retire Solid Ivory, Solid Violet, Deep Sea; textured colour covers; cover editor (6×9 crop, pan, zoom, safe zone); title = your name, "Your exact placement in print" beneath, AstroBook bottom right — same on preview, 3D book, PDF and print file.
-- [ ] AstroBook as a personal Masterbook (six volumes) per edition; baseline manuscript from the chart so payment never deadlocks; Linen synastry fallback; JPEG covers saved as JPEG; demo/spec/public page updated, retired cover images removed.
+- [x] Covers: five curated designs (Midnight Stars, Midnight Ember, Solid Midnight, Violet Dusk, Gold Dawn); textured colour covers; cover editor (crop, pan, zoom, safe zone, print-sharpness check); title = your name, "Your exact placement in print" beneath, AstroBook bottom right — same on chooser, 3D book, PDF page 1 and print file. Artwork redrawn at print resolution with 2:3, US Letter and square reframes (all versions ≥150 ppi; test). 3D-book cover chips now choose the real cover.
+- [x] AstroBook as a personal Masterbook: six volumes (I Celestial Matrix · II Twelve Temples · III Planetary Geometry & Aspect Harmonics · IV Esoteric Points · V World Systems · VI Cycles of Time) written from the chart; finished readings woven into their volume; no readings required (verified: Digital and Linen composed in preview). Linen without saved people gets "Your Synastry Keys". Version lists, comparison table, FAQ, public page and sample book updated.
+- [ ] Decision for owner: World Systems (Volume V) currently starts at Classic; Digital/Pocket have five volumes. Confirm or change (one setting: WORLD_SYSTEMS_FROM).
+- [ ] Page depth: every version now adds an opening letter, dignities, aspect patterns, shadow and breakthrough and ephemeris life cycles (Signature+ midpoints). With no finished readings Digital composes ~38 pages (aim 60–80); Linen ~154 with 12 readings (aim 200–250). Next: per-house ruler aspects and decan/term chapters, or revise targets with the owner.
 
 ### 6. Founder editions & member design (agent)
 - [x] Shane and Zac edition homes match April's depth (hero, chart title, planet orbs, wheel, volume shelves, module cards).
-- [ ] ChartWheel gets the illuminated style, larger tap targets, reduced-motion.
+- [x] ChartWheel gets the illuminated style, larger tap targets (17px hit circles), keyboard selection, reduced-motion.
 - [ ] Sidebars: Zac gets readings/explore/home; Shane gets April's Masterbook link; member menu Editions lists family editions for Shane; mobile tab active state; Zac workbook autosave without duplicates.
 
 ### 7. Public site & member flow (agent)
@@ -42,8 +44,8 @@ Audit Oct 29: payment already waits for a real manuscript (server-checked); rema
 
 ### 8. AI & payments functions (lead)
 Audit Oct 29: Chat/counselors already use the member's chart; podcast/custom page prompts still April-only; checkout lacks membership amount check; webhook lacks checkout activation + invoice events; portal falls back to fixed domain. Podcast assignment is a label, access stays workspace membership (as designed).
-- [ ] Podcasts for Cosmic members on their own chart + personal context + credits; custom pages for everyone on their own chart; Ask/Chat stay on the member's chart with citations; neutral pronouns in workbook/safety prompts; Zac counselor profile; shared podcast audio by assignment.
-- [ ] Subscription checkout amount check; billing portal return to current site; webhook activates subscriptions on checkout and handles renewals/failures; Cosmic synthesis and tone in readings; longer book PDF links.
+- [x] Podcasts for Cosmic members on their own chart + personal context + credits (Cosmic studio + founder podcast maker, which no longer depends on April's chart); custom pages for everyone on their own chart (verified live); Ask/Chat stay on the member's chart; neutral pronouns in workbook/safety prompts; Zac's verified birth saved to his account on first sign-in so counselors use his chart; podcast assignment stays a label.
+- [x] Subscription checkout amount check (test prices verified), previews can't take live payments, one membership per account; in-place plan upgrades/switches with proration; checkout return confirms with the provider and retries; billing portal returns to the current site; webhook activates on checkout and syncs renewals/failures; plan status polls only when live updates drop; Cosmic synthesis + chosen tone in readings. Book PDF links stay 60s (fresh link per click, safer). Full paid test purchase not run.
 
 ### 9. Wrap-up
 - [ ] docs/updates-verification.md; regression tests for each rule; browser checks at 393/1280; build clean.

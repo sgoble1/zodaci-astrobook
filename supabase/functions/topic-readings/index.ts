@@ -86,6 +86,13 @@ const placementsTable = (p: any) => {
 };
 const RULES = 'Use ONLY the placements listed. Never invent placements, aspects, relatives, events or biography. Explain each technical term in everyday words right after using it. Present meanings as reflective interpretation, not prediction. For sex and attraction, focus on consent, boundaries, communication and non-graphic adult reflection; never infer orientation, history, trauma or consent from a chart. Never sexualize minors. Every claim must name the exact placement it comes from. Do not write generic sun-sign content: combine sign + house + aspects + rulers so the reading could only belong to this chart.';
 
+/** Mirrors TONES in src/lib/perception.ts: the voice each member chose for their readings. */
+const TONE_NOTE: Record<string, string> = {
+  oracle: 'warm, evocative and personal, like a wise astrologer speaking to you — still precise about every placement.',
+  educational: 'clear and teacherly: briefly explain each technique and term in brackets the first time it appears.',
+  professional: 'concise and technical, written in the third person ("the native") like a practitioner\'s natal report, overriding the second-person address; minimal imagery.',
+};
+
 Deno.serve(async req => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
   if (req.method !== 'POST') return json({ error: 'Method not allowed' }, 405);
@@ -104,11 +111,14 @@ Deno.serve(async req => {
       ownerId = targetUserId;
     }
     // Free plan: only the spotlight readings are written, so free sign-ups cost very few AI credits.
-    const [{ data: paid }, { data: isAdminUser }, { data: shared }] = await Promise.all([
+    const [{ data: paid }, { data: isAdminUser }, { data: shared }, { data: tier }] = await Promise.all([
       admin.rpc('has_paid_plan', { _user_id: ownerId }),
       admin.rpc('has_role', { _user_id: user.id, _role: 'admin' }),
       admin.rpc('is_shared_space_user_id', { _user_id: ownerId }),
+      admin.rpc('plan_tier', { _user_id: ownerId }),
     ]);
+    // Cosmic (tier id 'creator') readings add a synthesis section and run longer than Pro.
+    const cosmic = tier === 'creator' || !!shared;
     const fullAccess = !!(paid || isAdminUser || shared);
     // Free members get a short opening-section preview of every core theme; the full reading needs a paid plan.
     const teaser = !fullAccess && !FREE_READINGS.includes(slug) && slug in CORE_TOPICS;
@@ -153,7 +163,10 @@ Deno.serve(async req => {
     const job = (async () => {
       try {
         await ensureCurrent();
-        const call = createResponsesCall(req, { apiKey, background: true, signal: controller.signal, effort: 'low', instructions: `You are a master astrologer, psychologist and plain-language writer creating one chapter of a personal astrology book for ${profile.display_name || 'the reader'}, addressed as "you". The depth must match a professional printed natal report.\nTheir calculated chart:\n${chartFacts(profile)}\n${RULES}\nUser-reported life examples (optional, never override chart facts):\n${(ctx ?? []).map(c => `- ${c.title.slice(0,160)}: ${c.body.slice(0,2500)}`).join('\n') || 'none'}\n\nTopic focus: ${topic.focus}.${sysSlug ? `\nSystem facts (calculated, authoritative):\n${(() => { const f = systemFacts(sysSlug, profile.birth_date, profile.chart?.bodies ?? [], profile.chart?.bazi ?? []); return f ? `${f.summary}\nMethod: ${f.method}\n${f.rows.map(r => `${r[0]}: ${r[1]}`).join('\n')}` : 'none'; })()}` : ''}\n${teaser ? 'Write ONLY the opening section: 250–350 dense, specific words in Markdown under one level-2 heading, analysing the single most important placement for this theme and ending with a one-line "In plain words:" summary. A placements table is added automatically, so do not write one.\n' : `Write 900–1,200 dense, specific words in Markdown (depth over padding; no repetition, no generic filler). A placements table is added automatically, so do not write one:\n1. A short opening overview in plain words.\n2. 4–5 substantial sections, each analysing a specific placement or combination (sign, house, ruler, aspects), each ending with a one-line "In plain words:" summary.\n3. "How this shows up in daily life" with concrete examples.\n4. "Strengths" and "Watch-outs" bullet lists.\n5. "Practices to try" (3).\n6. "Reflection questions" (3–4).\n7. A one-line note on what astrology can and cannot tell you.\n`}Do not start with a level-1 heading.` }, [{ role: 'user', content: `Write the "${topic.title}" chapter.` }]);
+        const toneNote = TONE_NOTE[profile.reading_tone as string] ?? TONE_NOTE.oracle;
+        const length = cosmic ? '1,300–1,600' : '900–1,200';
+        const synthesis = cosmic ? '8. "Cosmic synthesis" (200–300 words): tie this theme to the chart ruler, the dominant element and modality, and the house the current annual profection activates, naming each placement used.\n' : '';
+        const call = createResponsesCall(req, { apiKey, background: true, signal: controller.signal, effort: 'low', instructions: `You are a master astrologer, psychologist and plain-language writer creating one chapter of a personal astrology book for ${profile.display_name || 'the reader'}, addressed as "you". The depth must match a professional printed natal report.\nTheir calculated chart:\n${chartFacts(profile)}\n${RULES}\nUser-reported life examples (optional, never override chart facts):\n${(ctx ?? []).map(c => `- ${c.title.slice(0,160)}: ${c.body.slice(0,2500)}`).join('\n') || 'none'}\n\nTopic focus: ${topic.focus}.${sysSlug ? `\nSystem facts (calculated, authoritative):\n${(() => { const f = systemFacts(sysSlug, profile.birth_date, profile.chart?.bodies ?? [], profile.chart?.bazi ?? []); return f ? `${f.summary}\nMethod: ${f.method}\n${f.rows.map(r => `${r[0]}: ${r[1]}`).join('\n')}` : 'none'; })()}` : ''}\n${teaser ? 'Write ONLY the opening section: 250–350 dense, specific words in Markdown under one level-2 heading, analysing the single most important placement for this theme and ending with a one-line "In plain words:" summary. A placements table is added automatically, so do not write one.\n' : `Write ${length} dense, specific words in Markdown (depth over padding; no repetition, no generic filler). A placements table is added automatically, so do not write one:\n1. A short opening overview in plain words.\n2. 4–5 substantial sections, each analysing a specific placement or combination (sign, house, ruler, aspects), each ending with a one-line "In plain words:" summary.\n3. "How this shows up in daily life" with concrete examples.\n4. "Strengths" and "Watch-outs" bullet lists.\n5. "Practices to try" (3).\n6. "Reflection questions" (3–4).\n7. A one-line note on what astrology can and cannot tell you.\n${synthesis}`}Voice: ${toneNote}\nDo not start with a level-1 heading.` }, [{ role: 'user', content: `Write the "${topic.title}" chapter.` }]);
         let content = (await call.result.text).trim();
         let wrong = wrongPlacements(content, profile.chart);
         if (wrong.length) {

@@ -1,7 +1,7 @@
 import { CinematicVideo } from '@/components/fx/CinematicVideo';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { Book3D } from '@/components/books/Book3D';
-import { useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { BookOpen, Check, Truck, Plus, Trash2, Sparkles, Upload, Lock, Gift } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -18,15 +18,20 @@ import { streamImage } from '@/lib/streamImage';
 import { BOOK_SECTIONS, BOOK_VERSIONS, CHAPTER_TABS, COVER_STYLES, EXTRA_SECTION_PRICE, bookTotal, isEdition, money, versionOf, type Edition } from '@/lib/books';
 import { validateBookOrder } from '@/lib/bookOrder';
 import bookPhoto from '@/assets/astrobook-public.jpg';
-import { COVER_DESIGNS, coverSrc } from '@/content/coverDesigns';
+import { COVER_DESIGNS } from '@/content/coverDesigns';
+import { CoverEditor } from '@/components/books/CoverEditor';
+import { useCoverImage } from '@/hooks/useCoverImage';
+import { DEFAULT_CROP, type CoverCrop } from '@/lib/coverLayout';
+import { coverSpecKey, renderCoverJpeg, type CoverSpec } from '@/lib/coverRender';
 import { ManuscriptPreview } from '@/components/books/ManuscriptPreview';
 import { VersionCompare } from '@/components/books/VersionCompare';
 import { Faq, ASTROBOOK_FAQ } from '@/components/brand/Faq';
 
-const aiCoverIdentity = (covers: Record<string, { url: string; final: boolean }>, choice: string) => covers[choice.slice(3)]?.url;
-
-/** Free cover designs every visitor can use, no account or credits needed. */
-const UNIVERSAL_COVERS = COVER_DESIGNS.map(d => ({ ...d, get src() { return coverSrc(d); } }));
+/** A small finished-cover thumbnail (artwork plus the reader's name), drawn by the same code as the print cover. */
+function CoverThumb({ spec, alt, blur = false }: { spec: CoverSpec; alt: string; blur?: boolean }) {
+  const url = useCoverImage(spec, 40);
+  return url ? <img src={url} alt={alt} className={`h-full w-full object-cover ${blur ? 'blur-lg' : ''}`} /> : <div className="h-full w-full animate-pulse bg-muted motion-reduce:animate-none" aria-hidden />;
+}
 
 export default function Books() {
   usePageMeta('AstroBook · Your personal astrology book in five versions', 'Order AstroBook, written from your own birth chart: Digital PDF $24.99, Pocket $34.99, Classic $59.99, Signature Hardcover $97 or Collector’s Linen $149. Free US shipping.');
@@ -42,18 +47,41 @@ export default function Books() {
   const [covers, setCovers] = useState<Record<string, { url: string; final: boolean }>>({});
   // Cover choice: 'design:<key>' for the free universal designs, 'upload' for the visitor's own image, 'ai:<style>' for chart-based previews.
   const [choice, setChoice] = useState('');
-  const [uploaded, setUploaded] = useState<{ path: string; url: string } | null>(null);
+  const [uploaded, setUploaded] = useState<{ url: string; name: string } | null>(null);
+  const [crop, setCrop] = useState<CoverCrop>(DEFAULT_CROP);
+  const [coverName, setCoverName] = useState<string | null>(null);
+  const nameOnCover = coverName ?? birth?.name ?? '';
   const fileRef = useRef<HTMLInputElement>(null);
   const [busy, setBusy] = useState(''); const [error, setError] = useState('');
   const [address, setAddress] = useState({ name: '', line1: '', line2: '', city: '', state: '', postal_code: '', country: 'US' });
   const [manuscript, setManuscript] = useState<{ blob: Blob; pages: number; config: string } | null>(null);
-  const config = JSON.stringify([edition, extras, choice, uploaded?.path, aiCoverIdentity(covers, choice), birth]);
-  const manuscriptReady = manuscript?.config === config;
-  const design = choice.startsWith('design:') ? UNIVERSAL_COVERS.find(d => d.key === choice.slice(7)) : undefined;
+  const design = choice.startsWith('design:') ? COVER_DESIGNS.find(d => d.key === choice.slice(7)) : undefined;
   const aiStyle = choice.startsWith('ai:') ? choice.slice(3) : '';
   const aiCover = aiStyle ? covers[aiStyle] : undefined;
-  const coverReady = !!design || (choice === 'upload' && !!uploaded) || !!aiCover?.final;
-  const coverPreviewUrl = design?.src ?? (choice === 'upload' ? uploaded?.url : aiCover?.url);
+  // The cover as designed: artwork source, position/zoom, the name, and this version's trim.
+  const spec = useMemo<CoverSpec | null>(() => {
+    const source = design ? { kind: 'design' as const, key: design.key } : choice === 'upload' && uploaded ? { kind: 'image' as const, url: uploaded.url } : aiCover?.final ? { kind: 'image' as const, url: aiCover.url } : null;
+    return source ? { source, crop, name: nameOnCover, trimPt: version.trimPt } : null;
+  }, [design, choice, uploaded, aiCover?.final, aiCover?.url, crop, nameOnCover, version.trimPt]);
+  const specKey = spec ? coverSpecKey(spec) : '';
+  // The print-resolution cover (300 ppi) is rebuilt shortly after you stop adjusting; it is page 1 of the book.
+  const [composed, setComposed] = useState<{ key: string; blob: Blob; url: string } | null>(null);
+  const [composing, setComposing] = useState(false);
+  useEffect(() => {
+    if (!spec) return;
+    let on = true; setComposing(true);
+    const t = window.setTimeout(() => {
+      renderCoverJpeg(spec).then(r => { if (!on) return; setComposed(prev => { if (prev) URL.revokeObjectURL(prev.url); return { key: specKey, blob: r.blob, url: URL.createObjectURL(r.blob) }; }); })
+        .catch(e => { if (on) setError(e instanceof Error ? e.message : 'The cover could not be prepared.'); })
+        .finally(() => { if (on) setComposing(false); });
+    }, 600);
+    return () => { on = false; window.clearTimeout(t); };
+  }, [specKey]); // eslint-disable-line react-hooks/exhaustive-deps
+  const pick = (next: string) => { if (next !== choice) setCrop(DEFAULT_CROP); setChoice(next); };
+  const coverReady = !!spec && composed?.key === specKey;
+  const coverPreviewUrl = coverReady ? composed?.url : undefined;
+  const config = JSON.stringify([edition, extras, specKey, birth]);
+  const manuscriptReady = manuscript?.config === config;
   const canUseAiCovers = usePlan().plan !== 'free';
   const certificate = edition === 'linen' ? orderId.slice(0, 8).toUpperCase() : undefined;
   const generate = async () => {
@@ -77,13 +105,13 @@ export default function Books() {
       if (!['image/png', 'image/jpeg'].includes(file.type)) throw new Error('Please choose an image file (JPG or PNG).');
       if (file.size > 10 * 1024 * 1024) throw new Error('Please choose an image under 10 MB.');
       const decoded = await createImageBitmap(file);
+      const small = Math.min(decoded.width, decoded.height) < 600;
       decoded.close();
-      const ext = file.type === 'image/png' ? 'png' : 'jpg';
-      const path = `${sub.userId}/book-covers/upload-${crypto.randomUUID()}.${ext}`;
-      const { error: err } = await supabase.storage.from('library').upload(path, file, { contentType: file.type });
-      if (err) throw err;
-      setUploaded({ path, url: URL.createObjectURL(file) });
-      setChoice('upload');
+      if (small) throw new Error('That image is too small to print well. Please choose one at least 600 pixels on its shortest side.');
+      // The picture stays in this browser while you design; only the finished cover is saved with your order.
+      if (uploaded) URL.revokeObjectURL(uploaded.url);
+      setUploaded({ url: URL.createObjectURL(file), name: file.name });
+      setCrop(DEFAULT_CROP); setChoice('upload');
     } catch (e) { setError(e instanceof Error ? e.message : 'Could not upload your cover.'); }
     finally { setBusy(''); if (fileRef.current) fileRef.current.value = ''; }
   };
@@ -94,22 +122,12 @@ export default function Books() {
       if (invalid || !manuscript) throw new Error(invalid ?? 'Choose a finished cover and compose your manuscript first.');
       if (gift && giftMessage.length > 500) throw new Error('Keep the gift message under 500 characters.');
       const id = orderId;
-      let path: string; let coverStyleLabel: string;
-      if (design) {
-        path = `${sub.userId}/book-covers/${id}.png`; coverStyleLabel = design.label;
-        const blob = await fetch(design.src).then(r => r.blob());
-        const upload = await supabase.storage.from('library').upload(path, blob, { contentType: 'image/png', upsert: true });
-        if (upload.error) throw upload.error;
-      } else if (choice === 'upload' && uploaded) {
-        path = uploaded.path; coverStyleLabel = 'Your own upload';
-      } else {
-        const cover = covers[aiStyle];
-        if (!cover?.final) throw new Error('Choose a finished cover first.');
-        path = `${sub.userId}/book-covers/${id}.png`; coverStyleLabel = aiStyle;
-        const blob = await fetch(cover.url).then(r => r.blob());
-        const upload = await supabase.storage.from('library').upload(path, blob, { contentType: 'image/png', upsert: true });
-        if (upload.error) throw upload.error;
-      }
+      if (!composed || composed.key !== specKey) throw new Error('Your cover is still being prepared. Try again in a moment.');
+      // The saved cover is exactly the designed front cover, as a print-resolution JPEG.
+      const path = `${sub.userId}/book-covers/${id}.jpg`;
+      const coverStyleLabel = design ? design.label : choice === 'upload' ? 'Your own upload' : aiStyle;
+      const upload = await supabase.storage.from('library').upload(path, composed.blob, { contentType: 'image/jpeg', upsert: true });
+      if (upload.error) throw upload.error;
       const manuscriptPath = `${sub.userId}/manuscripts/${id}.pdf`;
       const uploadedPdf = await supabase.storage.from('library').upload(manuscriptPath, manuscript.blob, { contentType: 'application/pdf', upsert: true });
       if (uploadedPdf.error) throw uploadedPdf.error;
@@ -119,7 +137,6 @@ export default function Books() {
     } catch (e) { setError(e instanceof Error ? e.message : 'Could not save your order.'); }
     finally { setBusy(''); }
   };
-  const nameOnCover = birth?.name ? `${birth.name}’s AstroBook` : 'My AstroBook';
   return <article className="space-y-12">
     <header className="relative isolate overflow-hidden rounded min-h-[360px] flex items-end"><CinematicVideo poster={bookPhoto} /><div className="absolute inset-0 -z-10 bg-background/65" /><div className="p-6 sm:p-10"><p className="font-smallcaps text-gold text-xs">Made for your birth chart</p><h1 className="text-4xl mt-2">AstroBook</h1><p className="mt-4 max-w-lg">Your chart, written into a book. Five versions, from an instant PDF to a linen-bound collector’s edition, all built from your exact birth moment.</p><p className="text-sm text-muted-foreground mt-3">Illustrative sample · your own cover is previewed below.</p></div></header>
 
@@ -136,7 +153,7 @@ export default function Books() {
         </button>)}
       </div>
       <div className="grid gap-6 lg:grid-cols-2 items-center">
-        <div className="rounded border border-border p-4"><Book3D pages={version.pages[1]} trimPt={version.trimPt} hardcover={edition === 'signature' || edition === 'linen'} label={`${version.trim ?? '6″ × 9″ PDF'} · ${version.binding}`} coverSrc={coverReady ? coverPreviewUrl : undefined} /></div>
+        <div className="rounded border border-border p-4"><Book3D pages={version.pages[1]} trimPt={version.trimPt} hardcover={edition === 'signature' || edition === 'linen'} label={`${version.trim ?? '6″ × 9″ PDF'} · ${version.binding}`} coverSrc={spec ? composed?.url : undefined} name={nameOnCover} design={design?.key} onPick={k => pick(`design:${k}`)} /></div>
         <div className="space-y-3">
           <h3 className="text-xl">What’s inside the {version.name}</h3>
           <ul className="space-y-2 text-sm">{version.inside.map(x => <li key={x} className="flex gap-2"><Check className="h-4 w-4 shrink-0 text-gold" aria-hidden />{x}</li>)}</ul>
@@ -158,8 +175,26 @@ export default function Books() {
 
     <section><div className="flex flex-wrap items-center justify-between gap-3"><h2 className="text-2xl">Make it more yours</h2><Button variant="outline" disabled={extras.length >= 2} onClick={() => setExtras(e => [...e, ''])}><Plus />Add section · {money(EXTRA_SECTION_PRICE)}</Button></div><p className="text-sm text-muted-foreground mt-2">Up to two extra sections from readings you have already finished, for example creativity, communication or a life theme.</p>{extras.map((s, i) => <div className="flex gap-2 mt-3" key={i}><Input aria-label={`Extra section ${i + 1}`} maxLength={160} value={s} onChange={e => setExtras(x => x.map((v, n) => n === i ? e.target.value : v))} placeholder="Section title, as it appears in My Masterbook" /><Button size="icon" variant="ghost" aria-label={`Remove extra section ${i + 1}`} onClick={() => setExtras(x => x.filter((_, n) => n !== i))}><Trash2 /></Button></div>)}</section>
 
-    <section><h2 id="personal-cover" className="text-2xl">Choose your cover</h2><p className="text-sm text-muted-foreground mt-2">Pick one of our designs, a solid color or gradient, use your own image, or with Pro create previews drawn from your chart. Your name and the title are added on top of whichever cover you choose.</p><div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-5">{UNIVERSAL_COVERS.map(d => <Button key={d.key} variant="outline" aria-pressed={choice === `design:${d.key}`} onClick={() => setChoice(`design:${d.key}`)} className={`h-auto flex-col p-0 overflow-hidden ${choice === `design:${d.key}` ? 'ring-2 ring-primary' : ''}`}><div className="aspect-[2/3] w-full relative"><img src={d.src} alt={`${d.label} AstroBook cover design`} width={768} height={1152} loading="lazy" className="w-full h-full object-cover" /><span className="absolute top-5 inset-x-2 font-display text-xl text-foreground bg-background/70 py-2">{nameOnCover}</span></div><span className="p-3 whitespace-normal text-sm">{d.label}{choice === `design:${d.key}` && ' · Selected'}<span className="block text-xs text-muted-foreground mt-1">{d.detail}</span></span></Button>)}<Button variant="outline" aria-pressed={choice === 'upload'} onClick={() => fileRef.current?.click()} disabled={!!busy} className={`h-auto flex-col p-0 overflow-hidden ${choice === 'upload' ? 'ring-2 ring-primary' : ''}`}><div className="aspect-[2/3] w-full relative bg-muted flex items-center justify-center">{uploaded ? <img loading="lazy" decoding="async" src={uploaded.url} alt="Your uploaded book cover" className="w-full h-full object-cover" /> : <span className="flex flex-col items-center gap-2 text-muted-foreground"><Upload className="w-10 h-10" /><span className="text-sm">Upload your own</span></span>}<span className="absolute top-5 inset-x-2 font-display text-xl text-foreground bg-background/70 py-2">{nameOnCover}</span></div><span className="p-3 whitespace-normal text-sm">Your own image{choice === 'upload' && ' · Selected'}<span className="block text-xs text-muted-foreground mt-1">JPG or PNG, up to 10 MB.</span></span></Button></div><input ref={fileRef} type="file" accept="image/png,image/jpeg" className="hidden" aria-label="Upload your own cover image" onChange={e => { const f = e.target.files?.[0]; if (f) void uploadCover(f); }} /></section>
-    <section><div className="flex flex-wrap justify-between gap-3"><h2 className="text-2xl">Personal covers from your chart</h2>{canUseAiCovers ? <Button disabled={!!busy || !sub.userId || !birth} onClick={generate}><Sparkles />Create three cover previews</Button> : <Button asChild variant="outline"><Link to="/pricing"><Lock />Included with Pro</Link></Button>}</div><p className="text-sm text-muted-foreground mt-3">{canUseAiCovers ? 'Artwork draws on your saved planetary signs; it is symbolic, not a calculated chart diagram. Each cover preview uses 3 AI credits from your monthly balance (9 for all three).' : 'Chart-based cover previews use AI and are included with Pro. The three designs above and your own upload are free for everyone.'}</p>{canUseAiCovers && <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-5">{COVER_STYLES.map(style => <Button key={style} variant="outline" disabled={!covers[style]?.final || !!busy} aria-pressed={choice === `ai:${style}`} onClick={() => setChoice(`ai:${style}`)} className={`h-auto flex-col p-0 overflow-hidden ${choice === `ai:${style}` ? 'ring-2 ring-primary' : ''}`}><div className="aspect-[2/3] w-full bg-muted flex items-center justify-center relative">{covers[style] ? <img loading="lazy" decoding="async" src={covers[style].url} alt={`${style} personal book cover`} className={`w-full h-full object-cover ${covers[style].final ? '' : 'blur-lg'}`} /> : <BookOpen className="w-12 h-12 text-muted-foreground" />}<span className="absolute top-5 inset-x-2 font-display text-xl text-foreground bg-background/70 py-2">{nameOnCover}</span></div><span className="p-4 whitespace-normal">{style}{choice === `ai:${style}` && ' · Selected'}</span></Button>)}</div>}{!sub.userId && <p className="mt-3"><Link to="/auth?next=/books" className="underline text-gold">Sign in</Link> to save your cover and order.</p>}{sub.userId && !birth && <Link to="/start" className="underline text-gold">Add your birth details first</Link>}</section>
+    <section aria-labelledby="personal-cover" className="space-y-5">
+      <div><h2 id="personal-cover" className="text-2xl">Choose your cover</h2><p className="mt-2 text-sm text-muted-foreground">Pick one of our designs, use your own picture, or with Pro create covers drawn from your chart. Your name is the title, with “Your exact placement in print” beneath it and AstroBook at the bottom right.</p></div>
+      <div role="radiogroup" aria-label="Cover" className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
+        {COVER_DESIGNS.map(d => { const key = `design:${d.key}`; const on = choice === key; return (
+          <button key={d.key} type="button" role="radio" aria-checked={on} onClick={() => pick(key)} className={`flex flex-col overflow-hidden rounded-lg border text-left transition-colors duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${on ? 'border-gold ring-1 ring-gold/40' : 'border-border hover:border-primary/60'}`}>
+            <div className="w-full" style={{ aspectRatio: `${version.trimPt[0]} / ${version.trimPt[1]}` }}><CoverThumb spec={{ source: { kind: 'design', key: d.key }, crop: DEFAULT_CROP, name: nameOnCover, trimPt: version.trimPt }} alt={`${d.label} cover design with your name`} /></div>
+            <span className="p-3 text-sm"><span className="flex items-center justify-between gap-1">{d.label}{on && <Check className="h-4 w-4 shrink-0 text-gold" aria-hidden />}</span><span className="mt-1 block text-xs text-muted-foreground">{d.detail}</span></span>
+          </button>); })}
+        <button type="button" role="radio" aria-checked={choice === 'upload'} disabled={!!busy} onClick={() => uploaded ? pick('upload') : fileRef.current?.click()} className={`flex flex-col overflow-hidden rounded-lg border text-left transition-colors duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${choice === 'upload' ? 'border-gold ring-1 ring-gold/40' : 'border-border hover:border-primary/60'}`}>
+          <div className="flex w-full items-center justify-center bg-muted" style={{ aspectRatio: `${version.trimPt[0]} / ${version.trimPt[1]}` }}>{uploaded ? <CoverThumb spec={{ source: { kind: 'image', url: uploaded.url }, crop: choice === 'upload' ? crop : DEFAULT_CROP, name: nameOnCover, trimPt: version.trimPt }} alt="Your own picture as a cover" /> : <span className="flex flex-col items-center gap-2 text-muted-foreground"><Upload className="h-10 w-10" aria-hidden /><span className="text-sm">Upload your own</span></span>}</div>
+          <span className="p-3 text-sm"><span className="flex items-center justify-between gap-1">Your own picture{choice === 'upload' && <Check className="h-4 w-4 shrink-0 text-gold" aria-hidden />}</span><span className="mt-1 block text-xs text-muted-foreground">JPG or PNG, up to 10 MB. Crop and position it below.</span></span>
+        </button>
+      </div>
+      <input ref={fileRef} type="file" accept="image/png,image/jpeg" className="hidden" aria-label="Upload your own cover image" onChange={e => { const f = e.target.files?.[0]; if (f) void uploadCover(f); }} />
+      {uploaded && <Button type="button" variant="ghost" size="sm" onClick={() => fileRef.current?.click()} disabled={!!busy}><Upload />Replace your picture</Button>}
+      {spec
+        ? <div className="vellum space-y-4 p-5"><h3 className="text-xl">Design your cover</h3><CoverEditor spec={spec} onChange={s => { setCrop(s.crop); setCoverName(s.name); }} trimLabel={`${version.name} · ${version.trim ?? '6 × 9 in PDF'}`} />{composing && <p role="status" className="text-xs text-muted-foreground">Preparing the print-quality cover…</p>}</div>
+        : <p className="text-sm text-muted-foreground">Choose a cover above to design it.</p>}
+    </section>
+    <section><div className="flex flex-wrap justify-between gap-3"><h2 className="text-2xl">Personal covers from your chart</h2>{canUseAiCovers ? <Button disabled={!!busy || !sub.userId || !birth} onClick={generate}><Sparkles />Create three cover previews</Button> : <Button asChild variant="outline"><Link to="/pricing"><Lock />Included with Pro</Link></Button>}</div><p className="text-sm text-muted-foreground mt-3">{canUseAiCovers ? 'Artwork draws on your saved planetary signs; it is symbolic, not a calculated chart diagram. Each cover preview uses 3 AI credits from your monthly balance (9 for all three).' : 'Chart-based cover previews use AI and are included with Pro. Our designs and your own picture are free for everyone.'}</p>{canUseAiCovers && <div role="radiogroup" aria-label="Chart covers" className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-5">{COVER_STYLES.map(style => { const c = covers[style]; const on = choice === `ai:${style}`; return <button key={style} type="button" role="radio" aria-checked={on} disabled={!c?.final || !!busy} onClick={() => pick(`ai:${style}`)} className={`flex flex-col overflow-hidden rounded-lg border text-left transition-colors duration-500 disabled:opacity-70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${on ? 'border-gold ring-1 ring-gold/40' : 'border-border hover:border-primary/60'}`}><div className="flex w-full items-center justify-center bg-muted" style={{ aspectRatio: `${version.trimPt[0]} / ${version.trimPt[1]}` }}>{c ? (c.final ? <CoverThumb spec={{ source: { kind: 'image', url: c.url }, crop: on ? crop : DEFAULT_CROP, name: nameOnCover, trimPt: version.trimPt }} alt={`${style} cover with your name`} /> : <img src={c.url} alt="" className="h-full w-full object-cover blur-lg" />) : <BookOpen className="h-12 w-12 text-muted-foreground" aria-hidden />}</div><span className="flex items-center justify-between gap-1 p-4">{style}{on && <Check className="h-4 w-4 text-gold" aria-hidden />}</span></button>; })}</div>}{!sub.userId && <p className="mt-3"><Link to="/auth?next=/books" className="underline text-gold">Sign in</Link> to save your cover and order.</p>}{sub.userId && !birth && <Link to="/start" className="underline text-gold">Add your birth details first</Link>}</section>
     {birth && <ManuscriptPreview key={config} birth={birth} edition={edition} extras={extras} certificate={certificate} coverUrl={coverReady ? coverPreviewUrl : undefined} onReady={file => setManuscript({ ...file, config })} />}
 
     <section aria-labelledby="specs"><h2 id="specs" className="text-2xl">How your {version.name} is made</h2>{digital ? <p className="text-sm text-muted-foreground mt-2">A full-color PDF laid out at 6 × 9 inches, ready to read on screen or print at home. It downloads from My orders as soon as payment is confirmed.</p> : <><p className="text-sm text-muted-foreground mt-2">Printed on demand by <a className="underline" href="https://www.lulu.com/" target="_blank" rel="noreferrer">Lulu</a>, one copy at a time, after we review your manuscript.</p><dl className="grid sm:grid-cols-2 gap-4 mt-4">{[['Trim size', version.trim], ['Binding', version.binding], ['Interior', version.paper], ['Cover', version.cover]].map(([t, v]) => <div key={t} className="rounded border border-border bg-card p-4"><dt className="font-smallcaps text-xs text-gold">{t}</dt><dd className="mt-2 text-sm">{v}</dd></div>)}</dl></>}</section>

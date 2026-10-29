@@ -1,9 +1,11 @@
 import { computeChart } from '@/lib/astro';
 import { toChartInput, type MyBirth } from '@/lib/myBirth';
 import { composeManuscript } from '@/lib/bookManuscript';
-import { editionExtras } from '@/lib/bookExtras';
+import { buildVolumes } from '@/lib/bookVolumes';
 import fontUrl from '@/assets/fonts/manuscript.ttf?url';
-import sampleCover from '@/assets/cover-design-midnight-stars.jpg';
+import { renderCoverJpeg } from '@/lib/coverRender';
+import { DEFAULT_CROP } from '@/lib/coverLayout';
+import { versionOf } from '@/lib/books';
 
 /** A fictional reader used for the public sample book, so visitors can see the real format. */
 export const SAMPLE_BIRTH: MyBirth = {
@@ -101,14 +103,16 @@ Take the single sentence from this chapter that felt most true and copy it somew
 export async function composeSampleBook() {
   const { chartFacts, bigThree, chart } = chartFactsFor(SAMPLE_BIRTH);
   const fontBuffer: ArrayBuffer = await (await fetch(fontUrl)).arrayBuffer();
-  const coverBuffer: ArrayBuffer = await (await fetch(sampleCover)).arrayBuffer();
+  // The same composed cover a reader approves: Midnight Stars with the name, subtitle and AstroBook wordmark (screen resolution is enough here).
+  const cover = await renderCoverJpeg({ source: { kind: 'design', key: 'midnight-stars' }, crop: DEFAULT_CROP, name: SAMPLE_BIRTH.name, trimPt: versionOf('classic')!.trimPt }, 150);
+  const coverBuffer: ArrayBuffer = await cover.blob.arrayBuffer();
   const result = await composeManuscript({
     name: SAMPLE_BIRTH.name,
     birthFacts: `${SAMPLE_BIRTH.date} · ${SAMPLE_BIRTH.time} · ${SAMPLE_BIRTH.placeLabel} · ${SAMPLE_BIRTH.tz} · ${SAMPLE_BIRTH.houseSystem}`,
     chartFacts,
     chapters: SAMPLE_CHAPTERS,
     edition: 'classic',
-    editionChapters: editionExtras('classic', chart, SAMPLE_BIRTH.name, { today: new Date('2026-01-01T00:00:00Z') }),
+    volumes: buildVolumes({ edition: 'classic', chart, name: SAMPLE_BIRTH.name, saved: SAMPLE_CHAPTERS, facts: chartFacts, today: new Date('2026-01-01T00:00:00Z') }),
     chart,
     extras: [],
     fontBytes: new Uint8Array(fontBuffer),

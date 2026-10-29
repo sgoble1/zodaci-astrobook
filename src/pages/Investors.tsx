@@ -4,6 +4,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { PLAN_PRICE } from '@/lib/plans';
 import { Button } from '@/components/ui/button';
 import { usePageMeta } from '@/hooks/usePageMeta';
+import { PrintPartnerMatrix } from '@/components/common/PrintPartnerMatrix';
 
 const PRODUCTS = [
   ['Subscriptions', `Pro ${PLAN_PRICE.full.month} and Cosmic ${PLAN_PRICE.creator.month}: personal readings, counselors, workbook, podcasts and a Masterbook written from each member’s own chart.`],
@@ -31,6 +32,7 @@ export default function Investors() {
       <section aria-labelledby="inv-p" className="space-y-4"><h2 id="inv-p" className="text-2xl">What we sell</h2>
         <div className="grid gap-4 sm:grid-cols-2">{PRODUCTS.map(([t, d]) => <div key={t} className="parchment p-5"><h3 className="text-xl">{t}</h3><p className="mt-2 text-sm text-muted-foreground">{d}</p></div>)}</div>
       </section>
+      <PrintPartnerMatrix />
       <section aria-labelledby="inv-m" className="space-y-3"><h2 id="inv-m" className="text-2xl">Why it’s hard to copy</h2><ul className="list-disc space-y-2 pl-5 text-muted-foreground">{MOAT.map(m => <li key={m}>{m}</li>)}</ul></section>
       <section aria-labelledby="inv-s" className="space-y-3"><h2 id="inv-s" className="text-2xl">Where things stand</h2><ul className="list-disc space-y-2 pl-5 text-muted-foreground">{STATUS.map(m => <li key={m}>{m}</li>)}</ul></section>
       <div className="flex flex-wrap gap-3"><Button asChild><Link to="/welcome">See the public site</Link></Button><Button asChild variant="outline"><Link to="/store">Visit the shop</Link></Button><Button asChild variant="outline"><a href="mailto:shanegoble@gmail.com">Contact Shane</a></Button></div>

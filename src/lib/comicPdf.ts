@@ -213,3 +213,43 @@ export async function composeComicPdf({ issue, fontBytes, art, mode, now = new D
   const bytes = await pdf.save();
   return { bytes, pages: pdf.getPageCount() };
 }
+
+/** One-page preflight report for the printer or the archive: issue facts, the check result and every problem found. */
+export async function composePreflightPdf(input: { title: string; issueNumber: number | string; reader: string; month: string; report: import('@/lib/comicPrint').PrintReport; lines: string[]; fontBytes: Uint8Array; printFileBuilt?: string | null }): Promise<Uint8Array> {
+  const doc = await PDFDocument.create();
+  doc.registerFontkit(fontkit);
+  const font = await doc.embedFont(input.fontBytes, { subset: true });
+  const has = (cp: number) => { try { font.encodeText(String.fromCodePoint(cp)); return true; } catch { return false; } };
+  const clean = (t: string) => fitCharset(t, has);
+  doc.setTitle(clean(`Preflight report - ${input.title}`)); doc.setAuthor('Zodaci'); doc.setCreationDate(new Date());
+  const page = doc.addPage([612, 792]);
+  const left = 54; const width = 612 - left * 2; let y = 738;
+  const text = (t: string, size: number, color = INK, gap = 6) => {
+    for (const line of wrapText(clean(t), width, size, (s, z) => font.widthOfTextAtSize(s, z))) { page.drawText(line, { x: left, y, size, font, color }); y -= size + 3; }
+    y -= gap;
+  };
+  text('AstroComic preflight report', 22, NAVY, 4);
+  text(`${input.title} - issue ${input.issueNumber} - ${input.reader} - ${input.month}`, 11, INK, 14);
+  page.drawRectangle({ x: left, y: y - 6, width, height: 30, color: input.report.ok ? rgb(0.88, 0.95, 0.88) : rgb(0.98, 0.9, 0.88) });
+  page.drawText(clean(input.report.ok ? 'PASSED - ready for print' : 'NOT READY - fix the items below before printing'), { x: left + 10, y: y + 4, size: 13, font, color: input.report.ok ? rgb(0.1, 0.4, 0.15) : rgb(0.6, 0.12, 0.08) });
+  y -= 44;
+  const r = input.report;
+  const facts: [string, string][] = [
+    ['Checked', new Date(r.checkedAt).toLocaleString('en-US')], ['Pages', String(r.pages)], ['Panels illustrated', `${r.illustrated} of ${r.panels}`],
+    ['Lowest resolution', r.minDpi != null ? `${r.minDpi} DPI` : '-'], ['Trim and bleed', '5.5 x 8.5 in, 0.125 in bleed, font embedded'],
+    ['Print file', input.printFileBuilt ? `Built ${new Date(input.printFileBuilt).toLocaleString('en-US')}` : 'Not built from this check'],
+  ];
+  for (const [k, v] of facts) { page.drawText(clean(k), { x: left, y, size: 10, font, color: GOLD }); page.drawText(clean(v), { x: left + 140, y, size: 10, font, color: INK }); y -= 16; }
+  y -= 10;
+  text('Findings', 14, NAVY, 2);
+  for (const l of input.lines.length ? input.lines : ['No findings.']) text(`- ${l}`, 10, INK, 2);
+  const details: string[] = [
+    ...r.missing.map(k => `Missing artwork: page ${k.split('-')[0]}, panel ${Number(k.split('-')[1]) + 1}`),
+    ...r.stale.map(k => `Older script: page ${k.split('-')[0]}, panel ${Number(k.split('-')[1]) + 1}`),
+    ...r.lowDpi.map(x => `Low resolution (${x.dpi} DPI): page ${x.key.split('-')[0]}, panel ${Number(x.key.split('-')[1]) + 1}`),
+    ...r.overflow.map(n => `Text overflow: page ${n}`),
+  ];
+  if (details.length) { y -= 8; text('Panel by panel', 12, NAVY, 2); for (const d of details.slice(0, 40)) text(d, 9, INK, 0); if (details.length > 40) text(`...and ${details.length - 40} more`, 9, INK, 0); }
+  page.drawText(clean('Colour is RGB; the printer converts to CMYK in their own preflight.'), { x: left, y: 40, size: 8, font, color: rgb(0.4, 0.4, 0.45) });
+  return doc.save();
+}

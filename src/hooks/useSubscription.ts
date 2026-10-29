@@ -6,7 +6,11 @@ import { getStripeEnvironment } from '@/lib/stripe';
 export type Tier = 'free' | 'full' | 'creator';
 const TIER: Record<string, Tier> = PRICE_TIER;
 
-export interface SubState { loading: boolean; userId: string | null; tier: Tier; status?: string; periodEnd?: string | null; cancelAtEnd?: boolean; grantReason?: string }
+export interface SubState { loading: boolean; userId: string | null; tier: Tier; status?: string; periodEnd?: string | null; cancelAtEnd?: boolean; grantReason?: string; priceId?: string }
+
+const REFRESH = 'zodaci:billing-refresh';
+/** Ask every mounted plan reader to reload now (after checkout sync or a plan change). */
+export const refreshSubscription = () => window.dispatchEvent(new Event(REFRESH));
 
 function envOrNull() { try { return getStripeEnvironment(); } catch { return null; } }
 
@@ -19,7 +23,7 @@ function isActive(r: { status: string; current_period_end: string | null }) {
 export function useSubscription(): SubState {
   const [s, setS] = useState<SubState>({ loading: true, userId: null, tier: 'free' });
   useEffect(() => {
-    let revision = 0; let currentUid: string | null = null; let alive = true; let channel: ReturnType<typeof supabase.channel> | null = null;
+    let revision = 0; let currentUid: string | null = null; let alive = true; let live = false; let bound = false; let channel: ReturnType<typeof supabase.channel> | null = null;
     const load = async (uid: string | null) => {
       const version = ++revision;
       const env = envOrNull();
@@ -37,19 +41,27 @@ export function useSubscription(): SubState {
       const grantTier: Tier = grant ? (grant.tier as Tier) : 'free';
       const rank = { free: 0, full: 1, creator: 2 } as const;
       const useGrant = rank[grantTier] > rank[subTier];
-      if (alive && version === revision && uid === currentUid) setS({ loading: false, userId: uid, tier: useGrant ? grantTier : subTier, status: useGrant ? 'granted' : row?.status, periodEnd: useGrant ? grant!.expires_at : row?.current_period_end, cancelAtEnd: useGrant ? false : !!row?.cancel_at_period_end, grantReason: useGrant ? grant!.reason : undefined });
+      if (alive && version === revision && uid === currentUid) setS({ loading: false, userId: uid, tier: useGrant ? grantTier : subTier, status: useGrant ? 'granted' : row?.status, periodEnd: useGrant ? grant!.expires_at : row?.current_period_end, cancelAtEnd: useGrant ? false : !!row?.cancel_at_period_end, grantReason: useGrant ? grant!.reason : undefined, priceId: useGrant ? undefined : row?.price_id });
     };
     const bind = (uid: string | null) => {
-      currentUid = uid; revision++; setS({ loading: true, userId: uid, tier: 'free' });
+      bound = true; currentUid = uid; revision++; setS({ loading: true, userId: uid, tier: 'free' });
       if (channel) { void supabase.removeChannel(channel); channel = null; }
+      live = false;
       void load(uid);
       if (uid) channel = supabase.channel(`billing-${uid}-${Math.random().toString(36).slice(2)}`)
-        .on('postgres_changes', { event: '*', schema: 'public', table: 'billing_subscriptions', filter: `user_id=eq.${uid}` }, () => load(uid)).subscribe();
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'billing_subscriptions', filter: `user_id=eq.${uid}` }, () => load(uid))
+        .subscribe(status => { live = status === 'SUBSCRIBED'; });
     };
-    supabase.auth.getUser().then(({ data }) => { if(alive) bind(data.user?.id ?? null); });
-    const { data: auth } = supabase.auth.onAuthStateChange((_event, session) => { setTimeout(() => { if(alive) bind(session?.user.id ?? null); },0); });
-    const timer = window.setInterval(() => { void supabase.auth.getUser().then(({ data }) => { if(alive) void load(data.user?.id ?? null); }); },15000);
-    return () => { alive = false; window.clearInterval(timer); auth.subscription.unsubscribe(); if (channel) void supabase.removeChannel(channel); };
+    const reload = () => { if (alive) void load(currentUid); };
+    supabase.auth.getUser().then(({ data }) => { const uid = data.user?.id ?? null; if (alive && (!bound || uid !== currentUid)) bind(uid); });
+    // Routine token refreshes keep the same account, so only a real sign-in/out or account switch rebinds.
+    const { data: auth } = supabase.auth.onAuthStateChange((_event, session) => { setTimeout(() => { const uid = session?.user.id ?? null; if (alive && (!bound || uid !== currentUid)) bind(uid); },0); });
+    // Live updates normally carry plan changes; poll only while that connection is down.
+    const timer = window.setInterval(() => { if (!live && currentUid && document.visibilityState === 'visible') reload(); }, 15000);
+    const onFocus = () => { if (currentUid) reload(); };
+    window.addEventListener(REFRESH, reload);
+    window.addEventListener('focus', onFocus);
+    return () => { alive = false; window.clearInterval(timer); window.removeEventListener(REFRESH, reload); window.removeEventListener('focus', onFocus); auth.subscription.unsubscribe(); if (channel) void supabase.removeChannel(channel); };
   }, []);
   return s;
 }

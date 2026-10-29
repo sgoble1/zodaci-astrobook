@@ -3,7 +3,7 @@ import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import {
   ACCOUNT_MENU, ADMIN_MENU, ADMIN_PATHS, MEMBER_DOMAINS, ROUTE_INVENTORY, breadcrumbsFor, domainFor, domainForMenuGroup,
-  domainItems, itemLock, memberDestinations, nextStepsFor, visibleColumns,
+  domainItems, itemLock, memberDestinations, nextStepsFor, visibleColumns, withSharedEditions,
 } from './memberNav';
 import { NAV_GROUPS, RELATIONSHIPS_GROUP } from './navigation';
 import { CORE_THEMES, TOPIC_READINGS } from '@/lib/topicReadings';
@@ -113,5 +113,25 @@ describe('member navigation architecture', () => {
   it('gives Academy lessons and theme pages a three-level breadcrumb', () => {
     expect(breadcrumbsFor('/academy/houses-101')?.map(c => c.label)).toEqual(['Learn', 'Academy', 'Houses 101']);
     expect(breadcrumbsFor('/themes/core-emotions')).toHaveLength(3);
+  });
+});
+
+describe('shared editions in the Book menu', () => {
+  const book = MEMBER_DOMAINS.find(d => d.id === 'book')!;
+  it('a regular member with nothing shared sees no Editions column', () => {
+    expect(withSharedEditions(visibleColumns(book, {}), []).some(c => c.title === 'Editions')).toBe(false);
+  });
+  it('a member April shared her book with gets one link to it, in an Editions column', () => {
+    const cols = withSharedEditions(visibleColumns(book, {}), ['april', 'april']);
+    const ed = cols.find(c => c.title === 'Editions')!;
+    expect(ed.items.map(i => i.to)).toEqual(['/april']);
+  });
+  it('Shane keeps his own edition and gains the books shared with him', () => {
+    const ed = withSharedEditions(visibleColumns(book, { shane: true }), ['april', 'zac']).find(c => c.title === 'Editions')!;
+    expect(ed.items.map(i => i.to)).toEqual(['/shane', '/topics', '/april', '/zac']);
+  });
+  it('shared edition pages light up the Book tab', () => {
+    expect(domainFor('/zac/vol-1-ch-2')).toBe('book');
+    expect(domainFor('/april')).toBe('book');
   });
 });

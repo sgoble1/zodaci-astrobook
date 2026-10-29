@@ -6,13 +6,14 @@ import { usePlan } from '@/hooks/usePlan';
 import { useShaneAccount } from '@/hooks/useShaneAccount';
 import { useSharedSpaceMember } from '@/hooks/useSharedSpaceMember';
 import { useRelationships } from '@/hooks/useRelationships';
+import { useSharedEditions } from '@/lib/editionSharing';
 import { useCustomPages, NEW_PAGE_HIGHLIGHT_KEY, type CustomPage } from '@/hooks/useCustomPages';
 import { useMyBirth, toChartInput, type MyBirth } from '@/lib/myBirth';
 import { computeChart } from '@/lib/astro';
 import { readingVisitKey, type ReadingVisit } from '@/lib/readingExperience';
 import type { Plan } from '@/content/navigation';
 import {
-  ACCOUNT_MENU, ADMIN_MENU, ADMIN_PATHS, MEMBER_DOMAINS, domainById, domainFor, domainForMenuGroup, itemLock, memberDestinations, visibleColumns,
+  ACCOUNT_MENU, ADMIN_MENU, ADMIN_PATHS, MEMBER_DOMAINS, domainById, domainFor, domainForMenuGroup, itemLock, memberDestinations, visibleColumns, withSharedEditions,
   type DomainId, type MemberDomain, type MemberNavColumn, type MemberNavItem,
 } from '@/content/memberNav';
 import { ZodaciLogo } from '@/components/brand/ZodaciLogo';
@@ -26,7 +27,7 @@ import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '
 type Rel = { id: string; name: string; relation?: string | null };
 type NavState = {
   plan: Plan; planLoading: boolean; admin: boolean; shane: boolean; shared: boolean; signedIn: boolean;
-  birth: MyBirth | null | undefined; moonSign?: string; rels: Rel[]; custom: CustomPage[]; lastVisit: ReadingVisit | null;
+  birth: MyBirth | null | undefined; moonSign?: string; rels: Rel[]; custom: CustomPage[]; lastVisit: ReadingVisit | null; sharedEditions: string[];
   openMenu: DomainId | null; setOpenMenu: (id: DomainId | null) => void;
   sheet: DomainId | 'account' | null; setSheet: (id: DomainId | 'account' | null) => void;
   newPageId: string | null;
@@ -50,6 +51,7 @@ export function MemberNavProvider({ children }: { children: ReactNode }) {
   const birth = useMyBirth();
   const { items: rels } = useRelationships();
   const custom = useCustomPages();
+  const sharedEditions = useSharedEditions();
   const [openMenu, setOpenMenu] = useState<DomainId | null>(null);
   const [sheet, setSheet] = useState<DomainId | 'account' | null>(null);
   const [lastVisit, setLastVisit] = useState<ReadingVisit | null>(null);
@@ -68,7 +70,7 @@ export function MemberNavProvider({ children }: { children: ReactNode }) {
     if (id && pathname === `/p/${id}`) { sessionStorage.removeItem(NEW_PAGE_HIGHLIGHT_KEY); setNewPageId(null); }
   }, [custom, pathname]);
   const lock = useCallback((to: string) => planLoading ? null : itemLock(plan, to), [plan, planLoading]);
-  const value: NavState = { plan, planLoading, admin, shane, shared, signedIn: !!session, birth, moonSign, rels: rels as Rel[], custom, lastVisit, openMenu, setOpenMenu, sheet, setSheet, newPageId, lock };
+  const value: NavState = { plan, planLoading, admin, shane, shared, signedIn: !!session, birth, moonSign, rels: rels as Rel[], custom, lastVisit, sharedEditions, openMenu, setOpenMenu, sheet, setSheet, newPageId, lock };
   useMenuTitleFallback(useMemo(() => [...memberDestinations({ shane, shared }), ...custom.map(c => ({ to: `/p/${c.id}`, label: c.title }))], [shane, shared, custom]));
   return <NavStateContext.Provider value={value}>{children}</NavStateContext.Provider>;
 }
@@ -106,10 +108,11 @@ function useDomainColumns(domain: MemberDomain): MemberNavColumn[] {
     const cols = visibleColumns(domain, { shane: s.shane, shared: s.shared }).map(c => c.title === 'Relationships'
       ? { ...c, items: [...c.items, ...s.rels.slice(0, 3).map(r => ({ to: `/relationships/${r.id}`, label: r.name, description: r.relation ? `${r.relation} · chart and reading` : 'Chart, reading and timeline', icon: c.items[0].icon }))], more: s.rels.length > 3 ? { to: '/relationships', label: `All ${s.rels.length} people` } : c.more }
       : c);
+    if (domain.id === 'book' && s.sharedEditions.length) cols.splice(0, cols.length, ...withSharedEditions(cols, s.sharedEditions));
     const mine = s.custom.filter(p => domainForMenuGroup(p.menu_group) === domain.id);
     if (mine.length) cols.push({ title: 'Your pages', more: mine.length > 5 ? { to: '/my-astrobook', label: `All ${mine.length} created pages` } : undefined, items: mine.slice(0, 5).map(p => ({ to: `/p/${p.id}`, label: p.status === 'generating' ? `${p.title} · writing…` : p.title, description: 'A page you created', icon: domain.icon, badge: p.id === s.newPageId ? 'New' : undefined })) });
     return cols;
-  }, [domain, s.shane, s.shared, s.rels, s.custom, s.newPageId]);
+  }, [domain, s.shane, s.shared, s.rels, s.custom, s.newPageId, s.sharedEditions]);
 }
 
 function MenuItemLink({ item, onNavigate, dense }: { item: MemberNavItem; onNavigate?: () => void; dense?: boolean }) {
@@ -117,7 +120,7 @@ function MenuItemLink({ item, onNavigate, dense }: { item: MemberNavItem; onNavi
   const Icon = item.icon;
   const glowing = !!newPageId && item.to === `/p/${newPageId}`;
   return (
-    <NavLink to={item.to} end onClick={onNavigate} data-mega-item
+    <NavLink to={item.to} end onClick={onNavigate} data-mega-item data-keep-wording={item.keepName || undefined}
       className={({ isActive }) => `group flex min-h-11 items-start gap-3 rounded-lg border border-transparent ${dense ? 'p-2' : 'p-2.5'} transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${isActive ? 'border-primary/30 bg-primary/10' : 'hover:bg-muted/60'}${glowing ? ' nav-new-glow' : ''}${lock(item.to) ? ' opacity-75' : ''}`}>
       {({ isActive }) => <>
         <span className="mt-0.5 grid h-8 w-8 shrink-0 place-items-center rounded-md border border-border bg-card/70 text-gold"><Icon className="h-4 w-4" aria-hidden="true" /></span>
