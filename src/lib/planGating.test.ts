@@ -37,13 +37,13 @@ describe("plan gating", () => {
     expect(requiredPlan("/start")).toBe("free");
   });
 
-  it("a plan only unlocks its own rank and below", () => {
+  it("Pro unlocks every feature, including Cosmic ones; Free does not", () => {
     expect(planAllows("free", "free")).toBe(true);
     expect(planAllows("free", "full")).toBe(false);
     expect(planAllows("free", "creator")).toBe(false);
     expect(planAllows("full", "free")).toBe(true);
     expect(planAllows("full", "full")).toBe(true);
-    expect(planAllows("full", "creator")).toBe(false);
+    expect(planAllows("full", "creator")).toBe(true);
     expect(planAllows("creator", "creator")).toBe(true);
   });
 });
