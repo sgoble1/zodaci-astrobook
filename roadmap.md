@@ -222,3 +222,12 @@ Audit Oct 29: Chat/counselors already use the member's chart; podcast/custom pag
 - [x] Chart accuracy tests re-run (51 passed)
 - [x] Pro gets every feature; Cosmic differs only by credits
 - [x] Creator Studio: wallpapers, posters, journal pages, affirmation cards — download + save to private library
+
+## Credits, developer dashboard, comic shop (Oct 29, late)
+- [ ] Credit packs $15/$20/$25/$30/$50/$100 (one-time purchase → credits)
+- [ ] Developer dashboard (admin): live stats, costs, implemented, gaps, bugs, plans, editable list (Shane only)
+- [ ] Developer timeline from original "zodaci" project to this build
+- [ ] Investor page: Creator Studio income analysis
+- [ ] AstroComic shop: pre-order page, print specs, real delivery timeline
+- [ ] AstroBook/AstroComic purchase gaps
+- [ ] Re-check founders' birth data vs content
