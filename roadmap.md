@@ -42,8 +42,8 @@ Audit Oct 29: payment already waits for a real manuscript (server-checked); rema
 
 ### 8. AI & payments functions (lead)
 Audit Oct 29: Chat/counselors already use the member's chart; podcast/custom page prompts still April-only; checkout lacks membership amount check; webhook lacks checkout activation + invoice events; portal falls back to fixed domain. Podcast assignment is a label, access stays workspace membership (as designed).
-- [ ] Podcasts for Cosmic members on their own chart + personal context + credits; custom pages for everyone on their own chart; Ask/Chat stay on the member's chart with citations; neutral pronouns in workbook/safety prompts; Zac counselor profile; shared podcast audio by assignment.
-- [ ] Subscription checkout amount check; billing portal return to current site; webhook activates subscriptions on checkout and handles renewals/failures; Cosmic synthesis and tone in readings; longer book PDF links.
+- [x] Podcasts for Cosmic members on their own chart + personal context + credits (Cosmic studio + founder podcast maker, which no longer depends on April's chart); custom pages for everyone on their own chart (verified live); Ask/Chat stay on the member's chart; neutral pronouns in workbook/safety prompts; Zac's verified birth saved to his account on first sign-in so counselors use his chart; podcast assignment stays a label.
+- [x] Subscription checkout amount check (test prices verified), previews can't take live payments, one membership per account; in-place plan upgrades/switches with proration; checkout return confirms with the provider and retries; billing portal returns to the current site; webhook activates on checkout and syncs renewals/failures; plan status polls only when live updates drop; Cosmic synthesis + chosen tone in readings. Book PDF links stay 60s (fresh link per click, safer). Full paid test purchase not run.
 
 ### 9. Wrap-up
 - [ ] docs/updates-verification.md; regression tests for each rule; browser checks at 393/1280; build clean.
