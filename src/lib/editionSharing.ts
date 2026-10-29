@@ -15,7 +15,7 @@ export function sharedHref(s: Pick<SharedWithMe, 'edition' | 'scope' | 'chapter_
     if (s.edition === 'april') return `/read/${s.chapter_id}`;
     return `/${s.edition}/${s.chapter_id}`;
   }
-  if (s.edition === 'april') return '/april-edition';
+  if (s.edition === 'april') return '/april';
   return `/${s.edition}`;
 }
 
