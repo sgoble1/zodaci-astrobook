@@ -4,7 +4,7 @@ import { verifiedBookAmount } from '../_shared/book-payment-rules.ts';
 import { isPaidBook } from '../_shared/book-delivery-rules.ts';
 
 import { finalizeBookPdf } from '../_shared/book-delivery.ts';
-import { subscriptionFields } from '../_shared/billing.ts';
+import { subscriptionFields, CREDIT_PACKS } from '../_shared/billing.ts';
 
 let _supabase: ReturnType<typeof createClient> | null = null;
 function db() {
@@ -18,6 +18,16 @@ const fields = subscriptionFields;
 const PLAN_PRICES = new Set(['pro_monthly', 'pro_yearly', 'cosmic_monthly', 'cosmic_yearly', 'full_access_monthly', 'full_access_yearly', 'creator_monthly', 'creator_yearly']);
 /** Mirrors COMIC_PLANS in src/lib/comic.ts. */
 const COMIC_CENTS: Record<string, number> = { monthly: 1499, yearly: 14999, single: 1899 };
+
+/** Credit pack paid: add credits once per checkout session, only for the advertised amount. */
+async function creditsPaid(session: any, env: StripeEnv) {
+  if (session.payment_status === 'unpaid') return;
+  const pack = CREDIT_PACKS[session.metadata?.pack ?? '']; const userId = session.metadata?.userId;
+  if (!pack || !userId) { console.error('credits: missing pack/user', session.id); return; }
+  if ((session.amount_subtotal ?? 0) !== pack.amount) { console.error('credits: amount mismatch', session.id); return; }
+  const { error } = await db().from('credit_ledger').insert({ user_id: userId, delta: pack.credits, reason: `purchase:${session.metadata.pack}`, ref: session.id, environment: env, amount_cents: pack.amount });
+  if (error && error.code !== '23505') throw error;
+}
 
 async function created(subscription: any, env: StripeEnv) {
   const userId = subscription.metadata?.userId;
@@ -149,7 +159,8 @@ Deno.serve(async (req) => {
       case 'checkout.session.completed':
       case 'checkout.session.async_payment_succeeded': {
         const session = event.data.object;
-        if (session.metadata?.kind === 'comic') await comicPaid(session, env);
+        if (session.metadata?.kind === 'credits') await creditsPaid(session, env);
+        else if (session.metadata?.kind === 'comic') await comicPaid(session, env);
         else if (session.mode === 'subscription') await membershipPaid(session, env);
         else await bookPaid(session, env);
         break;

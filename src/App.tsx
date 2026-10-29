@@ -106,6 +106,8 @@ const MyReadings = lazy(() => import('./pages/MyReadings'));
 const MyLibrary = lazy(() => import('./pages/MyLibrary'));
 const Auth = lazy(() => import('./pages/Auth'));
 const Pricing = lazy(() => import('./pages/Pricing'));
+const Credits = lazy(() => import('./pages/Credits'));
+const Developer = lazy(() => import('./pages/Developer'));
 const CheckoutReturn = lazy(() => import('./pages/CheckoutReturn'));
 const MyMasterbook = lazy(() => import('./pages/MyMasterbook'));
 const Books = lazy(() => import('./pages/Books'));
@@ -299,6 +301,9 @@ export default function App() {
             <Route path="/auth" element={<Auth />} />
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/pricing" element={<Pricing />} />
+            <Route path="/credits" element={<Credits />} />
+            <Route path="/developer" element={<Developer />} />
+            <Route path="/developer/timeline" element={<Developer view="timeline" />} />
             <Route path="/creator" element={<CreatorDashboard />} />
             <Route path="/my-comic" element={<FeatureGate flag="astrocomic"><MyComic /></FeatureGate>} />
             <Route path="/referrals" element={<FeatureGate flag="referrals"><Referrals /></FeatureGate>} />

@@ -34,3 +34,9 @@ export function subscriptionFields(subscription: any) {
 export function isPreviewOrigin(origin: string) {
   try { const h = new URL(origin).hostname; return h === 'localhost' || h === '127.0.0.1' || h.startsWith('id-preview--') || h.endsWith('.lovableproject.com'); } catch { return true; }
 }
+
+/** Mirrors CREDIT_PACKS in src/lib/plans.ts: one-time AI credit packs (price cents → credits). */
+export const CREDIT_PACKS: Record<string, { amount: number; credits: number }> = {
+  credits_15: { amount: 1500, credits: 150 }, credits_20: { amount: 2000, credits: 210 }, credits_25: { amount: 2500, credits: 275 },
+  credits_30: { amount: 3000, credits: 340 }, credits_50: { amount: 5000, credits: 600 }, credits_100: { amount: 10000, credits: 1300 },
+};

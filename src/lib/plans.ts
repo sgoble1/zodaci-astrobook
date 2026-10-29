@@ -34,3 +34,9 @@ export const CREDIT_ALLOWANCE: Record<Tier, number> = { free: 5, full: 60, creat
 export const SIGNUP_BONUS_CREDITS = 10;
 /** Days a member can request a full refund after their first subscription payment. */
 export const REFUND_WINDOW_DAYS = 7;
+
+/** One-time AI credit packs. Purchased credits never expire and are used only after the monthly allowance. Server mirror: _shared/billing.ts CREDIT_PACKS. */
+export const CREDIT_PACKS = [
+  { id: 'credits_15', price: 15, credits: 150 }, { id: 'credits_20', price: 20, credits: 210 }, { id: 'credits_25', price: 25, credits: 275 },
+  { id: 'credits_30', price: 30, credits: 340 }, { id: 'credits_50', price: 50, credits: 600 }, { id: 'credits_100', price: 100, credits: 1300 },
+] as const;
