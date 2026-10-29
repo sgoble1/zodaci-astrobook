@@ -11,15 +11,15 @@ const FORMATS = [
   { name: 'Cover art print', size: '11 × 17 in (279 × 432 mm)', pages: 'Single sheet', binding: 'Unbound, matte poster stock', file: '11.25 × 17.25 in with bleed · 3375 × 5175 px at 300 DPI' },
 ];
 
-/** Issue 1 page plan: finished pages are drawn; the rest follow the standard 24-page issue map. */
-const PLAN: [string, string, boolean][] = [
-  ['1', 'Cover — The Alchemist of Williamsville', true],
-  ['2–3', 'Act I · The Lantern at the Gate (Leo Rising)', true],
-  ['4–7', 'Act II · The Cardinal Spark (Sun in Aries)', true],
-  ['8–10', 'Act III · The Steady Hearth (Moon in Taurus)', true],
-  ['11–21', 'Retrograde Watch, Lunar Calendar, House Focus, Reflection Prompts, Constellation', false],
-  ['22', 'Next issue: The Starry Compass', false],
-  ['23–24', 'About Zodaci · Back cover', false],
+/** Issue 1 page plan: cover drawn, three acts scripted with one finished illustration each; the rest follow the standard 24-page issue map. */
+const PLAN: [string, string, 'Drawn' | 'Scripted' | 'Planned'][] = [
+  ['1', 'Cover — The Alchemist of Williamsville', 'Drawn'],
+  ['2–3', 'Act I · The Lantern at the Gate (Leo Rising)', 'Scripted'],
+  ['4–7', 'Act II · The Cardinal Spark (Sun in Aries)', 'Scripted'],
+  ['8–10', 'Act III · The Steady Hearth (Moon in Taurus)', 'Scripted'],
+  ['11–21', 'Retrograde Watch, Lunar Calendar, House Focus, Reflection Prompts, Constellation', 'Planned'],
+  ['22', 'Next issue: The Starry Compass', 'Planned'],
+  ['23–24', 'About Zodaci · Back cover', 'Planned'],
 ];
 
 export default function ComicIssuePrint() {
@@ -54,7 +54,7 @@ export default function ComicIssuePrint() {
         <div>
           <h2 id="plan-h" className="font-display text-3xl">Page count: 24</h2>
           <p className="mt-2 text-muted-foreground">Saddle-stitched books are printed in multiples of four. Here is how Issue #1 fills its 24 pages.</p>
-          <ol className="mt-6 divide-y divide-border border-y border-border">{PLAN.map(([n, t, done]) => <li key={n} className="grid grid-cols-[4.5rem_1fr_auto] gap-3 py-2.5 text-sm"><span className="text-gold">p. {n}</span><span>{t}</span><span className={done ? 'text-gold' : 'text-muted-foreground'}>{done ? 'Drawn' : 'In production'}</span></li>)}</ol>
+          <ol className="mt-6 divide-y divide-border border-y border-border">{PLAN.map(([n, t, done]) => <li key={n} className="grid grid-cols-[4.5rem_1fr_auto] gap-3 py-2.5 text-sm"><span className="text-gold">p. {n}</span><span>{t}</span><span className={done === 'Drawn' ? 'text-gold' : 'text-muted-foreground'}>{done}</span></li>)}</ol>
         </div>
         <div>
           <h2 className="font-display text-3xl">Print specification</h2>
