@@ -61,24 +61,24 @@ const VOLUMES = [
 ];
 
 const MASTER_SAMPLE = [
-  'Volume I · Chapter 2 — The Moon in Pisces in the Twelfth House',
-  'Your Moon sits at 18° Pisces in the twelfth house, the most private room in the chart. Pisces is a mutable water sign ruled by Neptune, and the twelfth house is where we keep what we have not yet put into words. Together they describe an emotional life that runs deep and mostly out of sight: you take in atmospheres, other people’s moods and the unspoken weather of a room long before you can name any of it.',
-  'The Moon’s ruler, Neptune, decides how this plays out. In Jules’s chart Neptune trines the Virgo Sun, so the softness has a practical outlet: care becomes something you do, not just something you feel. The square from Saturn adds the lesson. Feelings that never get named become tiredness. This chapter ends with three practices matched to these placements, and the next one follows the same Moon through the houses it rules.',
+  'Volume I · Chapter 2 — The Moon in Pisces in the Fifth House',
+  'Your Moon sits at 18° Pisces in the fifth house, the room of play, romance and making things. Pisces is a mutable water sign ruled by Neptune, so feelings here want somewhere to go: music, drawing, a story, someone to care for. You take in atmospheres and other people’s moods long before you can name them, and making something is how you work out which of them are yours.',
+  'The Moon’s ruler, Neptune, decides how this plays out. In Jules’s chart Neptune trines the Virgo Sun, so the softness has a practical outlet: care becomes something you do, not just something you feel. The square from Saturn adds the lesson. Feelings that never get named turn into tiredness. This chapter ends with three practices matched to these placements, and the next one follows the same Moon through the houses it rules.',
 ];
 
 export default function Demo() {
   usePageMeta('Try Zodaci Pro — Interactive Demo | Zodaci', 'Explore a full-length sample reading, compare Free and Pro depth, listen to a sample podcast and turn a 3D AstroBook — no sign-up needed.');
-  const [full, setFull] = useState(true);
-  const shown = full ? SECTIONS : SECTIONS.slice(0, 1);
+  const [tier, setTier] = useState<DemoTier>('creator');
+  const shown = SECTIONS.slice(0, TIER_SHOWS[tier].sections);
   const words = shown.reduce((n, s) => n + s.body.split(/\s+/).length + s.title.split(/\s+/).length, 0);
 
   return (
     <main className="mx-auto max-w-5xl space-y-16 px-5 py-12">
       <header className="space-y-3">
         <div className="font-smallcaps text-xs text-gold">Interactive demo · fictional sample chart</div>
-        <h1 className="text-4xl md:text-5xl">See everything Pro unlocks</h1>
+        <h1 className="text-4xl md:text-5xl">See every plan, inside and out</h1>
         <p className="max-w-2xl text-muted-foreground">This demo uses a made-up person, {SAMPLE.name} ({SAMPLE.facts}). Your own readings are written from your exact birth time and place.</p>
-        <div className="flex flex-wrap gap-2"><Button asChild><Link to="/auth">Start free with your chart</Link></Button><Button asChild variant="outline"><Link to="/pricing">Compare plans</Link></Button></div>
+        <div className="flex flex-wrap gap-2"><Button asChild><Link to="/auth?mode=signup&next=/start">Start free with your chart</Link></Button><Button asChild variant="outline"><Link to="/pricing">Compare plans</Link></Button></div>
       </header>
 
       <section aria-label="Zodaci in 24 seconds"><PromoVideo /></section>
@@ -88,24 +88,39 @@ export default function Demo() {
       <section className="space-y-5" aria-labelledby="reading-h">
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div><div className="font-smallcaps text-xs text-gold">Core theme reading</div><h2 id="reading-h" className="text-3xl">Emotional World</h2></div>
-          <label className="flex items-center gap-3 text-sm"><span className={!full ? 'text-foreground' : 'text-muted-foreground'}>Free preview</span><Switch checked={full} onCheckedChange={setFull} aria-label="Toggle Pro view" /><span className={full ? 'text-foreground' : 'text-muted-foreground'}>Pro</span></label>
+          <div role="radiogroup" aria-label="Show the demo as" className="flex rounded-full border border-border p-1">{(['free', 'full', 'creator'] as DemoTier[]).map(t => <button key={t} type="button" role="radio" aria-checked={tier === t} onClick={() => setTier(t)} className={`rounded-full px-4 py-1.5 text-sm transition-colors duration-500 ${tier === t ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:text-foreground'}`}>{PLAN_NAME[t]}{t !== 'free' && <span className="ml-1 opacity-75">{PLAN_PRICE[t].month.replace('/month', '')}</span>}</button>)}</div>
         </div>
         <div className="grid gap-6 md:grid-cols-[200px_1fr]">
           <nav aria-label="Sections" className="space-y-2 text-sm">
             <div className="text-muted-foreground">{shown.length} of {SECTIONS.length} sections · {words} words shown</div>
             <ol className="space-y-1">{SECTIONS.map((s, i) => <li key={s.title} className={i < shown.length ? '' : 'text-muted-foreground line-through'}>{i + 1}. {s.title}</li>)}</ol>
             <p className="text-xs text-muted-foreground">Real member readings run about 900–1,200 words, with placement tables.</p>
+            <ul className="space-y-1 border-t border-border pt-3 text-xs">{TIER_SHOWS[tier].points.map(p => <li key={p}>✦ {p}</li>)}</ul>
           </nav>
           <article className="space-y-6">
             {shown.map(s => <div key={s.title} className="space-y-2"><h3 className="text-xl">{s.title}</h3><p className="leading-relaxed text-muted-foreground">{s.body}</p></div>)}
-            {!full && <div className="rounded-lg border border-primary/40 bg-primary/5 p-5"><p className="font-medium">Six more sections are locked on Free.</p><p className="text-sm text-muted-foreground">Pro writes the complete reading for every core theme.</p><Button asChild size="sm" className="mt-3"><Link to="/pricing">Unlock Pro</Link></Button></div>}
+            {tier === 'free' && <div className="rounded-lg border border-primary/40 bg-primary/5 p-5"><p className="font-medium">Six more sections are locked on Free.</p><p className="text-sm text-muted-foreground">Pro writes the complete reading for every core theme.</p><Button asChild size="sm" className="mt-3"><Link to="/pricing">Unlock Pro</Link></Button></div>}
           </article>
         </div>
       </section>
 
+      <section className="space-y-6" aria-labelledby="mb-h">
+        <div><div className="font-smallcaps text-xs text-gold">Pro and Cosmic · your Masterbook</div><h2 id="mb-h" className="text-3xl">A whole book about one chart</h2><p className="max-w-2xl text-muted-foreground">Every member Masterbook follows the same six volumes as our founders’ own editions, written from your placements. Pro opens it to read; Cosmic adds new chapters on any topic you choose.</p></div>
+        <ol className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{VOLUMES.map(v => <li key={v.n} className="vellum overflow-hidden"><img src={v.art} alt={`Illustrated plate for Volume ${v.n}, ${v.title}`} width={800} height={1000} loading="lazy" className="aspect-[4/3] w-full object-cover" /><div className="p-4"><p className="font-smallcaps text-[10px] text-gold">Volume {v.n}</p><h3 className="text-xl">{v.title}</h3><p className="mt-1 text-sm text-muted-foreground">{v.text}</p></div></li>)}</ol>
+        <article className="parchment grid gap-6 p-6 md:grid-cols-[240px_1fr]" aria-label="Sample Masterbook chapter">
+          <img src={pisces} alt="Storybook illustration for the Moon in Pisces" width={800} height={1000} loading="lazy" className="w-full rounded-sm border border-border object-cover" />
+          <div className="space-y-3"><p className="font-smallcaps text-xs text-gold">Sample chapter · Jules Harbor</p><h3 className="text-2xl">{MASTER_SAMPLE[0]}</h3>{MASTER_SAMPLE.slice(1).map(t => <p key={t.slice(0, 20)} className="leading-relaxed">{t}</p>)}<p className="text-xs text-muted-foreground">Jules is fictional. In your Masterbook every degree, house and aspect is calculated from your own birth moment.</p></div>
+        </article>
+      </section>
+
       <section className="space-y-5" aria-labelledby="pod-h">
         <div><div className="font-smallcaps text-xs text-gold">Cosmic plan</div><h2 id="pod-h" className="text-3xl">Podcast studio</h2><p className="text-muted-foreground">Turn any reading into a narrated episode saved to your library.</p></div>
-        <PodcastSimulator />
+        <PodcastPlayer />
+      </section>
+
+      <section className="space-y-5" aria-labelledby="comic-h">
+        <div><div className="font-smallcaps text-xs text-gold">AstroComic · sold separately</div><h2 id="comic-h" className="text-3xl">Your month, as a comic</h2></div>
+        <ComicFlipbook issue={ISSUE_1} />
       </section>
 
       <section className="space-y-5" aria-labelledby="book-h">
