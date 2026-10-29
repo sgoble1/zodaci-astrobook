@@ -11,11 +11,11 @@ Every item is checked against the code first; findings already fixed or proven w
 - [x] Zac in official_editions owners. Zac stays out of April & Shane's private shared space (privacy); client list matches server.
 
 ### 2. Personal chart pages (agent)
-- [ ] Planet/house detail, birth chart, chart guide/elements, reading, data quality, profection, purpose, numerology, Chinese, Feng Shui/Bagua/Flying Stars/Bagua reading/wheel, Other Systems, Volume II, Compendium, uploads routes: signed-in people see their own chart; April keeps her archive pages; no blank-page crashes.
-- [ ] Transit report print / Save as PDF; Chiron pre-1940 note; Zac chart accuracy test; Kua 2005 regression test (formula already correct).
+- [x] Planet/house detail, birth chart, chart guide/elements, reading, data quality, profection, purpose, numerology, Chinese, Feng Shui/Bagua/Flying Stars/Bagua reading/wheel, Other Systems, Volume II, Compendium, uploads routes: signed-in people see their own chart; April keeps her archive pages; no blank-page crashes. (Browser-checked as a regular member.)
+- [x] Transit report print / Save as PDF; Chiron pre-1940 note; Zac chart accuracy test; Kua 2005 regression test (formula already correct); lord of the year on profection.
 
 ### 3. Relationships (agent)
-- [ ] Relationship detail/reading/timeline/synastry/Our charts compare against the signed-in person's chart and Kua; Compatibility keeps entered data.
+- [x] Relationship detail/reading/timeline/synastry/Our charts compare against the signed-in person's chart and Kua; Compatibility keeps entered data. (Browser-checked with a temporary partner; no April data shown.)
 
 ### 4. Shop, orders and admin (agent)
 - [ ] Store admin tab with Shopify deep links; product page in house style with gallery/specs/shipping; search, sort, sold-out; friendly store-offline message; no 50-item cap.
