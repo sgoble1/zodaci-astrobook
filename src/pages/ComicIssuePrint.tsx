@@ -14,10 +14,9 @@ const FORMATS = [
 /** Issue 1 page plan: cover drawn, three acts scripted with one finished illustration each; the rest follow the standard 24-page issue map. */
 const PLAN: [string, string, 'Drawn' | 'Scripted' | 'Planned'][] = [
   ['1', 'Cover — The Alchemist of the Mill Valley', 'Drawn'],
-  ['2–3', 'Act I · The Lantern at the Gate (Leo Rising)', 'Scripted'],
-  ['4–7', 'Act II · The Cardinal Spark (Sun in Aries)', 'Scripted'],
-  ['8–10', 'Act III · The Steady Hearth (Moon in Taurus)', 'Scripted'],
-  ['11–21', 'Retrograde Watch, Lunar Calendar, House Focus, Reflection Prompts, Constellation', 'Planned'],
+  ...ISSUE_1.pages.map(p => [String(p.pageNumber + 1), `${p.actTitle} (${p.placement})`, 'Drawn'] as [string, string, 'Drawn']),
+  ...ISSUE_1_SCRIPTED.map(p => [String(p.pageNumber + 1), `${p.title} (${p.placement})`, 'Scripted'] as [string, string, 'Scripted']),
+  ['14–21', 'Retrograde Watch, Lunar Calendar, House Focus, Reflection Prompts, Constellation', 'Planned'],
   ['22', 'Next issue: The Starry Compass', 'Planned'],
   ['23–24', 'About Zodaci · Back cover', 'Planned'],
 ];
