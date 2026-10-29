@@ -40,7 +40,7 @@ const SOCIAL = [
   ['Explain every match', 'Each score shows the exact aspects behind it, so members see why they connect and where they may clash.'],
 ];
 const FUTURE = [
-  ['Chart-matched shop', 'Each member sees posters, stickers, notebooks, crystals-style gifts and print editions picked from their own placements — a Leo Rising gets gold-leaf Leo art, a Capricorn Moon a structured planner. Recommendations come from the chart the member already has, so no extra data is needed.'],
+  ['Chart-matched shop', 'Each member sees posters, stickers, notebooks, gifts and print editions picked from their own placements — a Leo Rising gets gold-leaf Leo art, a Capricorn Moon a structured planner. Recommendations come from the chart the member already has, so no extra data is needed.'],
   ['Make your own comic hero', 'Members design their AstroComic character: face, hair, skin tone, build, clothing and signature colours, saved once and reused in every monthly issue.'],
   ['Three illustration styles', 'Choose how each issue is drawn: Lantern & Ink (storybook ink and lamplight), Celestial Manga (clean line and screen tones) or Painted Myth (rich painted fantasy). Same chart story, three looks.'],
   ['Creator Studio downloads', 'Members make and keep their own pieces — phone wallpapers, printable chart posters, affirmation cards, journal pages, podcast episodes and comic panels — saved to their library.'],
