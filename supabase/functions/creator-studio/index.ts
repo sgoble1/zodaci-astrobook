@@ -1,10 +1,10 @@
 import { readingJobIsCurrent } from '../_shared/reading-job-rules.ts';
 import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors';
+import { speakAll, SPOKEN_STYLE } from '../_shared/speech.ts';
 import { createClient } from 'npm:@supabase/supabase-js@2';
 import { z } from 'npm:zod@3';
 import { createResponsesCall, gatewayError, GATEWAY_URL } from '../_shared/responses.ts';
 
-const TTS_MODEL = 'google/gemini-3.1-flash-tts-preview';
 const json = (b: unknown, status = 200) => new Response(JSON.stringify(b), { status, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
 
 const Body = z.object({
@@ -46,7 +46,6 @@ function wav(pcm: Uint8Array, rate = 24000): Uint8Array {
 
 const RULES = 'Use ONLY the placements listed. Never invent placements, aspects, relatives, events or biography. Explain each technical term in everyday words right after using it. Present meanings as reflective interpretation, not prediction. For sex, desire and attraction, focus on consent, boundaries, communication and non-graphic adult reflection. Never infer sexual orientation, libido, sexual history, preferences, trauma or consent from a chart. A Venus/Mars contact is symbolism, not evidence of mutual attraction. Never sexualize minors.';
 
-import { speakAll } from '../_shared/speech.ts';
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
   if (req.method !== 'POST') return json({ error: 'Method not allowed' }, 405);
@@ -134,7 +133,7 @@ Deno.serve(async (req) => {
     }
 
     const words = { short: '220–300', standard: '450–550', long: '900–1,100' }[duration];
-    const call = createResponsesCall(req, { apiKey, effort: 'low', instructions: `You write a spoken single-host podcast episode for ${profile.display_name || 'the listener'} about their own chart, addressed as "you".\nTheir calculated chart:\n${facts}\n${RULES}\n${knowledge}\nWrite ${words} words of plain spoken prose: a one-line hook, short spoken sections, one practical takeaway. No headings, bullets, stage directions or emoji.` },
+    const call = createResponsesCall(req, { apiKey, effort: 'low', instructions: `You write a spoken single-host podcast episode for ${profile.display_name || 'the listener'} about their own chart, addressed as "you".\nTheir calculated chart:\n${facts}\n${RULES}\n${knowledge}\nWrite ${words} words of plain spoken prose: a one-line hook, short spoken sections, one practical takeaway. No headings, bullets, stage directions or emoji. ${SPOKEN_STYLE}` },
       [{ role: 'user', content: `Episode topic: ${topic}` }]);
     const script = (await call.result.text).trim();
     if (!script) return json({ error: 'The script came back empty. Please try again.' }, 502);
