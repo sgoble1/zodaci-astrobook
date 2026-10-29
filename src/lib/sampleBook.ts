@@ -3,7 +3,7 @@ import { toChartInput, type MyBirth } from '@/lib/myBirth';
 import { composeManuscript } from '@/lib/bookManuscript';
 import { buildVolumes } from '@/lib/bookVolumes';
 import fontUrl from '@/assets/fonts/manuscript.ttf?url';
-import sampleCover from '@/assets/cover-design-midnight-stars.jpg';
+import sampleCover from '@/assets/cover-design-midnight-stars-hd.jpg';
 
 /** A fictional reader used for the public sample book, so visitors can see the real format. */
 export const SAMPLE_BIRTH: MyBirth = {

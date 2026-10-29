@@ -23,7 +23,7 @@ export function CoverEditor({ spec, onChange, trimLabel }: { spec: CoverSpec; on
   const [w, h] = coverPixels(spec.trimPt, ppi);
   const trimIn: [number, number] = [spec.trimPt[0] / 72, spec.trimPt[1] / 72];
 
-  useEffect(() => { let on = true; setSize(null); sourceSize(spec.source).then(s => { if (on) setSize(s); }).catch(() => { if (on) setSize(null); }); return () => { on = false; }; }, [spec.source]);
+  useEffect(() => { let on = true; setSize(null); sourceSize(spec.source, spec.trimPt).then(s => { if (on) setSize(s); }).catch(() => { if (on) setSize(null); }); return () => { on = false; }; }, [spec.source, spec.trimPt]);
 
   // Redraw on every change; a newer draw always wins over a slower older one.
   const drawId = useRef(0);

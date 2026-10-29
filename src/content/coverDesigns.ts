@@ -1,16 +1,19 @@
-import coverMidnightStars from '@/assets/cover-design-midnight-stars.jpg';
-import coverMidnightEmber from '@/assets/cover-design-midnight-ember.jpg';
+import coverMidnightStars from '@/assets/cover-design-midnight-stars-hd.jpg';
+import coverMidnightEmber from '@/assets/cover-design-midnight-ember-hd.jpg';
+import coverMidnightStarsSquare from '@/assets/cover-design-midnight-stars-square.jpg';
+import coverMidnightEmberSquare from '@/assets/cover-design-midnight-ember-square.jpg';
 
 /**
  * Free AstroBook cover designs. Artwork covers use an image; solid and gradient covers are painted from print
  * colours with a fine paper grain, a scatter of faint stars and a thin gold inset line, so they read as finished
  * book cloth rather than flat swatches. Painting is seeded, so the same design always paints identically.
  */
-export type CoverDesign = { key: string; label: string; kind: 'art' | 'solid' | 'gradient'; detail: string; src?: string; colors?: string[]; accent?: string };
+/** Artwork is 1280×1920 (portrait trims) with a 1920×1920 reframe for the square Signature trim, so print stays sharp. */
+export type CoverDesign = { key: string; label: string; kind: 'art' | 'solid' | 'gradient'; detail: string; src?: string; srcSquare?: string; colors?: string[]; accent?: string };
 
 export const COVER_DESIGNS: CoverDesign[] = [
-  { key: 'midnight-stars', label: 'Midnight Stars', kind: 'art', detail: 'Black night sky with fine gold stars and a faint violet glow.', src: coverMidnightStars },
-  { key: 'midnight-ember', label: 'Midnight Ember', kind: 'art', detail: 'The Midnight Stars design in wine-plum with rose-gold stars.', src: coverMidnightEmber },
+  { key: 'midnight-stars', label: 'Midnight Stars', kind: 'art', detail: 'Black night sky with fine gold stars and a faint violet glow.', src: coverMidnightStars, srcSquare: coverMidnightStarsSquare },
+  { key: 'midnight-ember', label: 'Midnight Ember', kind: 'art', detail: 'The Midnight Stars design in wine-plum with rose-gold stars.', src: coverMidnightEmber, srcSquare: coverMidnightEmberSquare },
   { key: 'solid-midnight', label: 'Solid Midnight', kind: 'solid', detail: 'Deep-midnight cloth with a fine grain, faint stars and a gold inset line.', colors: ['#0D1028'], accent: '#D4A853' },
   { key: 'gradient-violet-dusk', label: 'Violet Dusk', kind: 'gradient', detail: 'Midnight fading into violet, with grain and a scatter of stars.', colors: ['#07080F', '#2A1458', '#8B5CF6'], accent: '#E9D9A6' },
   { key: 'gradient-gold-dawn', label: 'Gold Dawn', kind: 'gradient', detail: 'Midnight rising into soft gold, with grain and a scatter of stars.', colors: ['#07080F', '#3A2A12', '#D4A853'], accent: '#F4E3B5' },
@@ -20,6 +23,12 @@ export const COVER_DESIGNS: CoverDesign[] = [
 export const RETIRED_COVER_KEYS = ['blue-cosmos', 'gold-aurora', 'solid-ivory', 'solid-violet', 'gradient-deep-sea'];
 
 export const coverByKey = (key: string) => COVER_DESIGNS.find(d => d.key === key);
+
+/** The artwork file for a trim: the square reframe for near-square trims, the portrait art otherwise. */
+export function designSrc(d: CoverDesign, trimPt?: [number, number]) {
+  const ratio = trimPt ? trimPt[0] / trimPt[1] : 0;
+  return d.srcSquare && ratio > 0.9 && ratio < 1.1 ? d.srcSquare : d.src;
+}
 
 /** CSS background for a painted cover (used for small swatches). */
 export function coverBackground(d: CoverDesign) {

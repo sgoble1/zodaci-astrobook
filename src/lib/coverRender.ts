@@ -33,8 +33,8 @@ export function loadImage(url: string) {
 export const coverPixels = (trimPt: [number, number], ppi: number) => [Math.round((trimPt[0] / 72) * ppi), Math.round((trimPt[1] / 72) * ppi)] as const;
 
 /** The intrinsic size of the artwork, or null for painted designs (which have no resolution limit). */
-export async function sourceSize(source: CoverSource): Promise<{ width: number; height: number } | null> {
-  if (source.kind === 'design') { const d = coverByKey(source.key); if (!d?.src) return null; const im = await loadImage(d.src); return { width: im.naturalWidth, height: im.naturalHeight }; }
+export async function sourceSize(source: CoverSource, trimPt?: [number, number]): Promise<{ width: number; height: number } | null> {
+  if (source.kind === 'design') { const d = coverByKey(source.key); const src = d && designSrc(d, trimPt); if (!src) return null; const im = await loadImage(src); return { width: im.naturalWidth, height: im.naturalHeight }; }
   const im = await loadImage(source.url); return { width: im.naturalWidth, height: im.naturalHeight };
 }
 
@@ -67,7 +67,7 @@ export async function drawCover(ctx: CanvasRenderingContext2D, spec: CoverSpec, 
     paintCover(off.getContext('2d')!, design, w, h);
     const p = placeArt(w, h, w, h, spec.crop); ctx.drawImage(off, p.x, p.y, p.width, p.height);
   } else {
-    const im = await loadImage(design?.src ?? (spec.source as { url: string }).url);
+    const im = await loadImage((design && designSrc(design, spec.trimPt)) ?? (spec.source as { url: string }).url);
     const p = placeArt(im.naturalWidth, im.naturalHeight, w, h, spec.crop);
     ctx.fillStyle = '#07080F'; ctx.fillRect(0, 0, w, h);
     ctx.drawImage(im, p.x, p.y, p.width, p.height);

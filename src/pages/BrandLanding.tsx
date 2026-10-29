@@ -15,7 +15,7 @@ import { PLAN_NAME, PLAN_PRICE, CREDIT_ALLOWANCE } from '@/lib/plans';
 import { BOOK_VERSIONS, money } from '@/lib/books';
 import { COMIC_PLANS } from '@/lib/comic';
 import hero from '@/assets/zodaci-brand-hero.jpg';
-import bookCover from '@/assets/cover-design-midnight-stars.jpg';
+import bookCover from '@/assets/cover-design-midnight-stars-hd.jpg';
 import comicCover from '@/assets/astrocomic-cover.jpg';
 import { ALL_READINGS } from '@/lib/topicReadings';
 import { ACADEMY } from '@/content/academy';
