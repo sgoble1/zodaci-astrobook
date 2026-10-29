@@ -20,8 +20,8 @@ import { logActivity } from '@/components/common/ActivityTracker';
 type Card = { tier: Tier; slug: 'free' | 'pro' | 'cosmic'; cta: string; blurb: string; items: string[] };
 const CARDS: Card[] = [
   { tier: 'free', slug: 'free', cta: 'Start for free', blurb: 'Everything you need to meet your chart.', items: ['Your calculated birth chart wheel', 'Sun, Moon and Rising with exact degrees', 'Two full readings: Your Big Three and Personality & Strengths', 'A preview section of all 12 core themes', 'RetroGOOD rating and your Blueprint', `${CREDIT_ALLOWANCE.free} AI credits every month`] },
-  { tier: 'full', slug: 'pro', cta: 'Get Pro', blurb: 'Every reading, written from your chart.', items: ['All 38 readings at full length', 'Every planet, house explorer and aspect grid', 'Timing: transits, retrogrades and a 90-day timeline', 'Numerology, Ba Zi and Feng Shui in depth', 'Your own Masterbook', `${CREDIT_ALLOWANCE.full} AI credits every month`] },
-  { tier: 'creator', slug: 'cosmic', cta: 'Become Cosmic', blurb: 'Make new things from your chart.', items: ['Everything in Pro', 'Personal podcasts voiced from your chart', 'New Masterbook chapters on topics you choose', 'Hermetic lots, profections and bridge numbers', 'Your Cosmic dashboard', `${CREDIT_ALLOWANCE.creator} AI credits every month`] },
+  { tier: 'full', slug: 'pro', cta: 'Get Pro', blurb: 'Every feature, written from your chart.', items: ['All 38 readings at full, in-depth length', 'Every planet, house explorer, aspect grid, Hermetic lots and profections', 'Timing, Other Systems, counselors and workbook', 'Personal podcasts and the Creator Studio', 'Your own Masterbook with new chapters on any topic', `${CREDIT_ALLOWANCE.full} AI credits every month`] },
+  { tier: 'creator', slug: 'cosmic', cta: 'Become Cosmic', blurb: 'Everything in Pro, with room to make more.', items: ['Everything in Pro — every feature', `${CREDIT_ALLOWANCE.creator} AI credits every month (vs ${CREDIT_ALLOWANCE.full})`, 'More podcasts, chapters and creations each month'] },
 ];
 const rank: Record<Tier, number> = { free: 0, full: 1, creator: 2 };
 const Y = true, N = false;
