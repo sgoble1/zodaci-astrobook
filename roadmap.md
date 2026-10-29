@@ -224,10 +224,11 @@ Audit Oct 29: Chat/counselors already use the member's chart; podcast/custom pag
 - [x] Creator Studio: wallpapers, posters, journal pages, affirmation cards — download + save to private library
 
 ## Credits, developer dashboard, comic shop (Oct 29, late)
-- [ ] Credit packs $15/$20/$25/$30/$50/$100 (one-time purchase → credits)
-- [ ] Developer dashboard (admin): live stats, costs, implemented, gaps, bugs, plans, editable list (Shane only)
-- [ ] Developer timeline from original "zodaci" project to this build
-- [ ] Investor page: Creator Studio income analysis
-- [ ] AstroComic shop: pre-order page, print specs, real delivery timeline
-- [ ] AstroBook/AstroComic purchase gaps
-- [ ] Re-check founders' birth data vs content
+- [x] Credit packs $15/$20/$25/$30/$50/$100 (one-time purchase → credits)
+- [x] Developer dashboard (admin): live stats, costs, implemented, gaps, bugs, plans, editable list (Shane only)
+- [x] Developer timeline from original "zodaci" project to this build
+- [x] Investor page: Creator Studio income analysis
+- [x] AstroComic shop: pre-order page, print specs, real delivery timeline
+- [ ] AstroBook/AstroComic purchase gaps — comic pre-order done; full purchase-flow audit still open
+- [ ] Shane Masterbook: 23 chapters use Moon Capricorn/Venus Pisces etc. vs calculated chart — waiting on owner to confirm birth details
+- [x] Re-check founders' birth data vs content

@@ -43,6 +43,8 @@
 - Founder illustrated showcases are showcase.json + plates in private storage, served by protected-content; the public sample edition (content/sampleEdition.ts) uses a real chart under an invented name, checked by test.
 - Feature gates (meetsPlan/planAllows and server checks) treat Pro and Cosmic alike; Cosmic differs only in credits.
 - Creator Studio designs are drawn client-side from the saved chart (lib/creations.ts) and saved as library_items kind 'creation' under {uid}/creation/, insertable only with has_paid_plan.
+- Credit packs are one-time purchases recorded in credit_ledger by the verified webhook (ref = checkout session, live only); usage beyond the monthly allowance draws them down once via an ai_usage trigger.
+- Developer dashboard (/developer) reads dev_items/dev_stats for admins; writes require is_developer() (Shane's emails + admin), enforced by RLS.
 - Box grids use BoxArt(seed,label). One logo; print products keep names.
 - /welcome stays separate/private routes unchanged. CinematicVideo: WebM/MP4, matching frame for accessibility/errors.
 - Samples cannot be ordered; landing text is public. Root boundary catches lazy failures; bounded reloads precede App.
