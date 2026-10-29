@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { SitePasswordGate } from '@/components/common/SitePasswordGate';
-import { getContentToken } from '@/lib/protectedContent';
+import { PrivateEditionGate } from '@/components/common/PrivateEditionGate';
 import { readPrivateModule } from '@/lib/privateEditionStore';
 import { Button } from '@/components/ui/button';
 import { ThemeArt } from '@/components/common/ThemeArt';
@@ -62,11 +61,9 @@ function AprilEditionInner() {
   const load = useCallback(async () => {
     setError('');
     try {
-      const token = getContentToken('april');
-      const { data, error: err } = await supabase.functions.invoke('private-edition', {
-        body: { share: true },
-        headers: { 'X-Content-Token': token },
-      });
+      const { data, error: err } = await supabase.functions.invoke('private-edition', { body: {} });
+      const status = (err as { context?: Response } | null)?.context?.status;
+      if (status === 403) throw new Error("April's edition is private. It opens only for April and the people she shares it with — ask her to share it with the email you signed in with.");
       if (err || typeof data?.url !== 'string') throw new Error(data?.error || 'The shared edition could not load.');
       const download = await fetch(data.url, { signal: AbortSignal.timeout(20000) });
       if (!download.ok) throw new Error('The shared edition download failed.');
@@ -255,14 +252,14 @@ function AprilEditionInner() {
       )}
 
       <footer className="border-t border-border pt-6 text-center text-xs text-muted-foreground">
-        <p>Prepared by Zodaci · April's private edition · please do not share beyond invited clients.</p>
+        <p>Prepared by Zodaci · April's private edition · opens only for April and the people she shares it with.</p>
         <p className="mt-1">Astrology is a tool for reflection, not prediction.</p>
       </footer>
     </article>
   );
 }
 
-/** Password-gated shareable page: April can send the link and site password to clients. */
+/** April's shared report: opens for April's own account and the accounts she shared her edition with (no password). */
 export default function AprilEdition() {
-  return <SitePasswordGate edition="april"><AprilEditionInner /></SitePasswordGate>;
+  return <PrivateEditionGate standalone><AprilEditionInner /></PrivateEditionGate>;
 }
