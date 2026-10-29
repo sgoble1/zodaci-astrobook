@@ -6,7 +6,8 @@ import { PLAN_NAME } from '@/lib/plans';
 import type { Plan } from '@/content/navigation';
 
 export const PLAN_RANK: Record<Plan, number> = { free: 0, full: 1, creator: 2 };
-export const meetsPlan = (plan: Plan, need: Plan) => PLAN_RANK[plan] >= PLAN_RANK[need];
+// Pro and Cosmic share every feature; Cosmic differs only by credits.
+export const meetsPlan = (plan: Plan, need: Plan) => PLAN_RANK[plan] >= Math.min(PLAN_RANK[need], 1);
 
 /**
  * Rank-based gate: free=0, Pro=1, Cosmic=2. Renders children when the member's plan meets `need`.

@@ -220,5 +220,5 @@ Audit Oct 29: Chat/counselors already use the member's chart; podcast/custom pag
 - [x] Investor page: live numbers, trust section, chart-matched shop, comic character creator, 3 comic styles, income projection, social+shop upside
 - [x] April can open investor page; menu renamed "Founder Editions"
 - [x] Chart accuracy tests re-run (51 passed)
-- [ ] Pro gets full access like founders — waiting on owner decision (affects Cosmic tier)
-- [ ] Creator Studio expansion (wallpapers, posters, cards, journal pages, saved library) — waiting on scope choice
+- [x] Pro gets every feature; Cosmic differs only by credits
+- [x] Creator Studio: wallpapers, posters, journal pages, affirmation cards — download + save to private library

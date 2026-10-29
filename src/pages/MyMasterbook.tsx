@@ -106,7 +106,7 @@ export default function MyMasterbook() {
         <section aria-labelledby="ch-h" className="space-y-3">
           <h2 id="ch-h" className="text-2xl">Chapters</h2>
           {chapters.length ? <ul className="grid gap-3 sm:grid-cols-2">{chapters.map(c => <li key={c.id}><button onClick={() => setOpen(c.id)} className="parchment w-full p-4 text-left hover:border-gold focus-visible:outline focus-visible:outline-2"><div className="font-medium">{c.title}</div><div className="text-xs text-muted-foreground">{new Date(c.created_at).toLocaleDateString()}</div></button></li>)}</ul>
-            : <p className="text-sm text-muted-foreground">No chapters yet.{sub.tier === 'creator' ? ' Write your first one above.' : ''}</p>}
+            : <p className="text-sm text-muted-foreground">No chapters yet.{sub.tier && sub.tier !== 'free' ? ' Write your first one above.' : ''}</p>}
         </section>
       )}
       {episodes.length > 0 && <section aria-labelledby="ep-h" className="space-y-3"><h2 id="ep-h" className="text-2xl">My episodes</h2><p className="text-sm text-muted-foreground">Also in <Link to="/podcasts" className="underline">Podcasts</Link> → your private library, with queue and speed controls.</p>

@@ -505,6 +505,13 @@
       "when": 1793312156033,
       "tag": "0071_investor_metrics_and_april_access",
       "breakpoints": true
+    },
+    {
+      "idx": 72,
+      "version": "7",
+      "when": 1793312429936,
+      "tag": "0072_creator_studio_creations",
+      "breakpoints": true
     }
   ]
 }

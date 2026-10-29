@@ -117,8 +117,8 @@ Deno.serve(async req => {
       admin.rpc('is_shared_space_user_id', { _user_id: ownerId }),
       admin.rpc('plan_tier', { _user_id: ownerId }),
     ]);
-    // Cosmic (tier id 'creator') readings add a synthesis section and run longer than Pro.
-    const cosmic = tier === 'creator' || !!shared;
+    // Pro and Cosmic readings add a synthesis section and run longer than Pro.
+    const cosmic = tier === 'creator' || tier === 'full' || !!shared;
     const fullAccess = !!(paid || isAdminUser || shared);
     // Free members get a short opening-section preview of every core theme; the full reading needs a paid plan.
     const teaser = !fullAccess && !FREE_READINGS.includes(slug) && slug in CORE_TOPICS;

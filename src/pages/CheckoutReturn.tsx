@@ -55,7 +55,7 @@ export default function CheckoutReturn() {
       {paid ? <CheckCircle2 className="mx-auto h-12 w-12 text-gold" aria-hidden /> : <Loader2 className={`mx-auto h-12 w-12 text-gold ${stuck ? '' : 'animate-spin motion-reduce:animate-none'}`} aria-hidden />}
       <h1 className="font-display text-3xl">{paid ? `Welcome to ${name}` : stuck ? 'Still confirming your payment' : 'Confirming your payment…'}</h1>
       <p className="text-muted-foreground">{paid
-        ? `Your plan is active. Your own Masterbook and full readings are unlocked. Starting readings are created after birth details are saved; other readings are written when opened. Generation is subject to availability and usage limits.${sub.tier === 'creator' ? ' You can now generate podcasts and new chapters from your chart.' : ''}`
+        ? `Your plan is active. Your own Masterbook and full readings are unlocked. Starting readings are created after birth details are saved; other readings are written when opened. Generation is subject to availability and usage limits.${sub.tier ? ' You can now generate podcasts and new chapters from your chart.' : ''}`
         : stuck ? 'Your bank or the payment provider hasn’t confirmed it yet. Please don’t pay again — check again in a minute, or open your account. Some payment methods take longer to settle.' : 'We’re checking with the payment provider. Access changes only after the payment is verified.'}</p>
       {stuck && message && <p role="alert" className="text-sm text-destructive">{message}</p>}
       {stuck && <div className="flex flex-wrap justify-center gap-3"><Button onClick={retry}>Check again</Button><Button asChild variant="outline"><Link to="/dashboard">Open my account</Link></Button></div>}
