@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { PromoVideo } from '@/components/brand/PromoVideo';
@@ -67,7 +67,7 @@ const MASTER_SAMPLE = [
 ];
 
 export default function Demo() {
-  usePageMeta('Try Zodaci Pro — Interactive Demo | Zodaci', 'Explore a full-length sample reading, compare Free and Pro depth, listen to a sample podcast and turn a 3D AstroBook — no sign-up needed.');
+  usePageMeta('Interactive Demo — Free, Pro and Cosmic | Zodaci', 'Switch between Free, Pro and Cosmic on a sample chart, read an illustrated Masterbook chapter, hear a studio-voiced podcast and flip through AstroComic and AstroBook — no sign-up needed.');
   const [tier, setTier] = useState<DemoTier>('creator');
   const shown = SECTIONS.slice(0, TIER_SHOWS[tier].sections);
   const words = shown.reduce((n, s) => n + s.body.split(/\s+/).length + s.title.split(/\s+/).length, 0);
@@ -105,7 +105,7 @@ export default function Demo() {
       </section>
 
       <section className="space-y-6" aria-labelledby="mb-h">
-        <div><div className="font-smallcaps text-xs text-gold">Pro and Cosmic · your Masterbook</div><h2 id="mb-h" className="text-3xl">A whole book about one chart</h2><p className="max-w-2xl text-muted-foreground">Every member Masterbook follows the same six volumes as our founders’ own editions, written from your placements. Pro opens it to read; Cosmic adds new chapters on any topic you choose.</p></div>
+        <div><div className="font-smallcaps text-xs text-gold">AstroBook and Masterbook</div><h2 id="mb-h" className="text-3xl">A whole book about one chart</h2><p className="max-w-2xl text-muted-foreground">Your AstroBook is written in the same six volumes as our founders’ own editions, calculated from your placements. On Pro you read your Masterbook chapters online; Cosmic adds new chapters on any topic you choose.</p></div>
         <ol className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{VOLUMES.map(v => <li key={v.n} className="vellum overflow-hidden"><img src={v.art} alt={`Illustrated plate for Volume ${v.n}, ${v.title}`} width={800} height={1000} loading="lazy" className="aspect-[4/3] w-full object-cover" /><div className="p-4"><p className="font-smallcaps text-[10px] text-gold">Volume {v.n}</p><h3 className="text-xl">{v.title}</h3><p className="mt-1 text-sm text-muted-foreground">{v.text}</p></div></li>)}</ol>
         <article className="parchment grid gap-6 p-6 md:grid-cols-[240px_1fr]" aria-label="Sample Masterbook chapter">
           <img src={pisces} alt="Storybook illustration for the Moon in Pisces" width={800} height={1000} loading="lazy" className="w-full rounded-sm border border-border object-cover" />
