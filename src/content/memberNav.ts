@@ -91,7 +91,7 @@ export const MEMBER_DOMAINS: MemberDomain[] = [
     id: 'book', label: 'Book', hub: '/my-astrobook', hubLabel: 'Open my library', icon: BookHeart,
     description: 'Your Masterbook, printed AstroBook, audio and keepsakes.',
     tabs: ['/my-astrobook', '/my-masterbook', '/books', '/orders', '/podcasts', '/my-comic'],
-    prefixes: ['/shane'],
+    prefixes: ['/shane', '/april', '/zac'],
     columns: [
       { title: 'My AstroBook', items: [
         { to: '/my-masterbook', label: 'My Masterbook', description: 'Your foundational chapters', icon: BookHeart, badge: 'Popular' },
