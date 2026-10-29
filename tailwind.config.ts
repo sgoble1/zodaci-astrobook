@@ -12,7 +12,7 @@ export default {
     },
     extend: {
       fontFamily: {
-        display: ['DM Serif Display', 'Georgia', 'serif'],
+        display: ['Instrument Serif', 'DM Serif Display', 'Georgia', 'serif'],
         smallcaps: ['Fira Sans', 'sans-serif'],
         sans: ['Fira Sans', 'ui-sans-serif', 'system-ui', 'sans-serif'],
       },
