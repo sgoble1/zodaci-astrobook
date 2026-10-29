@@ -52,7 +52,6 @@ function describe(a: Pt, b: Pt, d: typeof DEFS[number], aLabel: string, bLabel: 
 /** "Your" for the signed-in person without a saved name, otherwise "Name’s". */
 export const possessive = (label: string) => (label === 'You' ? 'Your' : `${label}’s`);
 const tends = (label: string) => (label === 'You' ? 'tend' : 'tends');
-const can = (label: string) => label;
 
 export function interAspects(A: ChartResult, B: ChartResult, aLabel: string, bLabel: string): InterAspect[] {
   const out: InterAspect[] = [];
@@ -113,8 +112,8 @@ const GEN: Record<string, string> = { Wood: 'Fire', Fire: 'Earth', Earth: 'Metal
 const CTRL: Record<string, string> = { Wood: 'Earth', Earth: 'Water', Water: 'Fire', Fire: 'Metal', Metal: 'Wood' };
 export function dayMasterRelation(a: string, b: string, aLabel: string, bLabel: string) {
   if (a === b) return `Both Day Masters are ${a}: peers and companions (比劫) — understanding, sometimes competitive.`;
-  if (GEN[a] === b) return `${possessive(aLabel)} ${a} nourishes ${possessive(bLabel)} ${b} (generating cycle): ${can(aLabel)} ${tends(aLabel)} to support and feed ${bLabel === 'You' ? 'you' : bLabel}.`;
-  if (GEN[b] === a) return `${possessive(bLabel)} ${b} nourishes ${possessive(aLabel)} ${a} (generating cycle): ${can(bLabel)} ${tends(bLabel)} to support and feed ${aLabel === 'You' ? 'you' : aLabel}.`;
+  if (GEN[a] === b) return `${possessive(aLabel)} ${a} nourishes ${possessive(bLabel)} ${b} (generating cycle): ${aLabel} ${tends(aLabel)} to support and feed ${bLabel === 'You' ? 'you' : bLabel}.`;
+  if (GEN[b] === a) return `${possessive(bLabel)} ${b} nourishes ${possessive(aLabel)} ${a} (generating cycle): ${bLabel} ${tends(bLabel)} to support and feed ${aLabel === 'You' ? 'you' : aLabel}.`;
   if (CTRL[a] === b) return `${possessive(aLabel)} ${a} guides ${possessive(bLabel)} ${b} in the controlling cycle: ${aLabel} can bring focus and shape, with room needed for ${possessive(bLabel).replace(/^Your$/, 'your')} autonomy.`;
   return `${possessive(bLabel)} ${b} guides ${possessive(aLabel)} ${a} in the controlling cycle: ${bLabel} can bring focus and shape, with room needed for ${possessive(aLabel).replace(/^Your$/, 'your')} autonomy.`;
 }
@@ -152,4 +151,18 @@ export function scoreSummary(ia: InterAspect[]) {
   const t = ia.filter(x => x.tone === 'tension').reduce((s, x) => s + x.weight, 0);
   const f = ia.filter(x => x.tone === 'fusion').reduce((s, x) => s + x.weight, 0);
   return { harmony: Math.round(h), tension: Math.round(t), fusion: Math.round(f) };
+}
+
+/** Straight-line distance between two birthplaces (great-circle, km). Geography only — never read as a trait. */
+export function distanceKm(lat1: number, lon1: number, lat2: number, lon2: number) {
+  const rad = (v: number) => (v * Math.PI) / 180;
+  const dLat = rad(lat2 - lat1), dLon = rad(lon2 - lon1);
+  const h = Math.sin(dLat / 2) ** 2 + Math.cos(rad(lat1)) * Math.cos(rad(lat2)) * Math.sin(dLon / 2) ** 2;
+  return Math.round(6371 * 2 * Math.atan2(Math.sqrt(h), Math.sqrt(1 - h)));
+}
+
+/** The four good Eight Mansions directions two Kua numbers share. */
+export function sharedGoodDirections(kuaA: number, kuaB: number) {
+  const good = (k: number) => Object.values(KUA_TABLE[k]).slice(0, 4);
+  return good(kuaA).filter(d => good(kuaB).includes(d));
 }
