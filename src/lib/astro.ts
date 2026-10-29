@@ -291,4 +291,5 @@ export const BODY_KEYWORDS: Record<string, string> = {
   sun: 'core identity & vitality', moon: 'emotional needs & instinct', mercury: 'mind & communication', venus: 'love, value & taste',
   mars: 'drive & assertion', jupiter: 'growth & faith', saturn: 'structure & mastery', uranus: 'awakening & freedom',
   neptune: 'dream & transcendence', pluto: 'power & transformation', northNode: 'soul direction', southNode: 'inherited gifts & habits',
+  ceres: 'nurture & sustenance', pallas: 'strategy & pattern-sight', juno: 'commitment & partnership', vesta: 'devotion & focus',
 };
