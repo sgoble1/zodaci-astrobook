@@ -16,6 +16,11 @@ import { Fragment } from 'react';
 import FounderTopics from '@/pages/FounderTopics';
 import { useShaneAccount } from '@/hooks/useShaneAccount';
 import ShaneEdition from '@/pages/ShaneEdition';
+import { MemberHouseDetail, MemberPlanetDetail } from '@/pages/MemberPlacement';
+import MemberFengShui from '@/pages/MemberFengShui';
+import MemberDataQuality from '@/pages/MemberDataQuality';
+import BaguaReading from '@/pages/BaguaReading';
+import { kuaSex, toChartInput } from '@/lib/myBirth';
 
 const TIMING = { '/transits': 'transits', '/retrogrades': 'retrogrades', '/timeline': 'timeline', '/profection': 'profection' } as const;
 const TOPIC_ROUTES: Record<string, string> = { '/numerology': 'numerology', '/purpose': 'purpose', '/family-home': 'family-home', '/love': 'love', '/career': 'career', '/health': 'health' };
@@ -47,6 +52,15 @@ export function PublicChartFallback() {
   if (shane && pathname === '/topics') return <FounderTopics />;
   if (shane && (pathname === '/masterbook' || pathname === '/reading' || pathname === '/compendium')) return <ShaneEdition />;
   if (timing) return <><PersonalTiming birth={birth} focus={timing} /><FounderSourcePanel theme="timing" /></>;
+  // Detail pages come before the overview fallbacks so /planets/venus never collapses into the planet list.
+  const planet = pathname.match(/^\/planets\/([\w-]+)$/)?.[1];
+  if (planet) return <MemberPlanetDetail birth={birth} planetKey={planet} />;
+  const house = pathname.match(/^\/houses\/(\d+)$/)?.[1];
+  if (house) return <MemberHouseDetail birth={birth} house={+house} />;
+  if (pathname === '/data-quality') return <MemberDataQuality birth={birth} />;
+  if (pathname === '/bagua-reading') return <BaguaReading input={{ ...toChartInput(birth), sex: kuaSex(birth.sex) }} />;
+  if (pathname === '/feng-shui/flying-stars') return <MemberFengShui birth={birth} focus="stars" />;
+  if (pathname === '/feng-shui' || pathname.startsWith('/feng-shui/') || pathname === '/bagua' || pathname === '/masterbook/bagua-wheel') return <MemberFengShui birth={birth} />;
   if (pathname === '/other-systems') return <MemberSystemsDashboard birth={birth} />;
   if (pathname === '/chinese') return <MemberSystem birth={birth} slug="chinese" />;
   const sys = pathname.match(/^\/other-systems\/([\w-]+)$/)?.[1];
