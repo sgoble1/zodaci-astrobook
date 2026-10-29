@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { computeChart } from '@/lib/astro';
-import { saveMyBirth, toChartInput, type MyBirth } from '@/lib/myBirth';
+import { saveMyBirth, savedChart, toChartInput, type MyBirth } from '@/lib/myBirth';
 
 type Geo = { name: string; admin1?: string; country?: string; latitude: number; longitude: number; timezone: string };
 const STEPS = ['Your name', 'Birth date', 'Birth time', 'Birthplace', 'Review'];

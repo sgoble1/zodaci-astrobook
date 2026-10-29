@@ -1,3 +1,4 @@
+import { EditionBirthSeed } from '@/components/common/EditionBirthSeed';
 import { BrowserRouter, Navigate, Routes, Route } from 'react-router-dom';
 import { Toaster } from '@/components/ui/sonner';
 import { lazy, Suspense, useMemo, type ReactNode } from 'react';
@@ -237,6 +238,7 @@ export default function App() {
         <ActivityTracker />
         <CartSync />
         <ReferralCapture />
+        <EditionBirthSeed />
         <SiteNotice />
         <AutomaticChapters />
         <Suspense fallback={<div role="status" aria-label="Loading page" className="mx-auto mt-10 h-40 max-w-3xl animate-pulse rounded-lg bg-muted" />}>
