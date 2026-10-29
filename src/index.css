@@ -411,8 +411,6 @@ body:has(#mobile-menu) [data-generation-notice] { display: none; }
       linear-gradient(90deg, hsl(var(--primary) / .7), hsl(var(--accent) / .7), hsl(var(--glow-teal, 190 80% 50%) / .7)) border-box;
   }
 }
-@keyframes cloud-arrive { from { opacity: 0; transform: rotate(-120deg) scale(1.5); } to { opacity: 1; transform: rotate(0) scale(1); } }
-@keyframes cloud-orbit { to { transform: rotate(360deg); } }
-.logo-clouds { transform-origin: 50% 50%; animation: cloud-orbit 90s linear infinite; }
-.logo-clouds--arrive { animation: cloud-arrive 3.2s cubic-bezier(.2,.7,.2,1) both, cloud-orbit 90s linear 3.2s infinite; }
+@keyframes cloud-arrive { 0% { opacity: 0; transform: translateX(-18%); } 100% { opacity: 1; transform: translateX(0); } }
+.logo-clouds--arrive { animation: cloud-arrive 1.8s cubic-bezier(.2,.7,.2,1) both; }
 @media (prefers-reduced-motion: reduce) { .logo-clouds, .logo-clouds--arrive { animation: none; } }
