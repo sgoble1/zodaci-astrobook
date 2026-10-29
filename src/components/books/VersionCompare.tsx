@@ -3,23 +3,28 @@ import { Link } from 'react-router-dom';
 import { BOOK_VERSIONS, money } from '@/lib/books';
 
 const Y = true, N = false;
-/** Rows mirror BOOK_VERSIONS[].inside and editionExtras() so the table never promises more than the book contains. */
+/** Rows mirror BOOK_VERSIONS[].inside and buildVolumes() so the table never promises more than the book contains. */
 const ROWS: [string, ...(boolean | string)[]][] = [
   ['Price', ...BOOK_VERSIONS.map(v => money(v.price))],
   ['Format', ...BOOK_VERSIONS.map(v => v.trim ?? 'PDF')],
   ['Binding', 'Download', 'Paperback', 'Paperback', 'Hardcover', 'Linen hardcover'],
   ['Pages (target)', ...BOOK_VERSIONS.map(v => `${v.pages[0]}–${v.pages[1]}`)],
+  ['Volumes written from your chart', '5', '5', '6', '6', '6'],
   ['Planet table, Big Three and aspects', Y, Y, Y, Y, Y],
-  ['Your readings as chapters', Y, Y, Y, Y, Y],
-  ['Birth Moon phase and rulership summary', Y, Y, Y, Y, Y],
+  ['All 12 houses and every planet, one by one', Y, Y, Y, Y, Y],
+  ['Your readings woven into the volumes', Y, Y, Y, Y, Y],
+  ['Birth Moon phase, North Node and profection year', Y, Y, Y, Y, Y],
   ['Birth-moment verse', N, Y, Y, Y, Y],
+  ['World Systems: Vedic, Chinese year, Life Path', N, N, Y, Y, Y],
   ['Your topic readings (extra chapters)', N, N, Y, Y, Y],
   ['Birth-sky wheel and aspect grid', N, N, Y, Y, Y],
   ['Chiron, Nodes and sensitive points', N, N, Y, Y, Y],
   ['RetroGOOD retrograde chapter', N, N, Y, Y, Y],
   ['Solar return preview', N, N, Y, Y, Y],
   ['Personal letter and The Story of Your Sky', N, N, N, Y, Y],
-  ['Element balance, relationship primer, North Node', N, N, N, Y, Y],
+  ['Element balance and relationship primer', N, N, N, Y, Y],
+  ['Aspects included', '8', '12', '24', '36', 'Up to 60'],
+  ['Hermetic lots and fixed stars', N, N, N, N, Y],
   ['Planet mythology', N, N, N, N, Y],
   ['12-month sky forecast', N, N, N, N, Y],
   ['12 affirmations', N, N, N, N, Y],
