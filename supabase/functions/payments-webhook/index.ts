@@ -84,6 +84,24 @@ async function updated(subscription: any, env: StripeEnv) {
   await created(subscription, env);
 }
 
+/** Re-read a subscription from the provider and store its current state (status, period, plan). */
+async function syncSubscription(subscriptionId: string | undefined, env: StripeEnv) {
+  if (!subscriptionId) return;
+  const subscription = await createStripeClient(env).subscriptions.retrieve(subscriptionId);
+  await created(subscription, env);
+}
+const invoiceSubscription = (invoice: any): string | undefined => {
+  const s = invoice.parent?.subscription_details?.subscription ?? invoice.subscription;
+  return typeof s === 'string' ? s : s?.id;
+};
+
+/** Membership checkout finished: activate straight away instead of waiting for the separate subscription event. */
+async function membershipPaid(session: any, env: StripeEnv) {
+  if (session.mode !== 'subscription' || session.metadata?.kind === 'comic') return;
+  if (session.payment_status === 'unpaid') return;
+  await syncSubscription(typeof session.subscription === 'string' ? session.subscription : session.subscription?.id, env);
+}
+
 async function bookPaid(session: any, env: StripeEnv) {
   const orderId = session.metadata?.orderId; const userId = session.metadata?.userId;
   if (!orderId || !userId || session.payment_status !== 'paid') return;
@@ -142,7 +160,16 @@ Deno.serve(async (req) => {
     const event = await verifyWebhook(req, env);
     switch (event.type) {
       case 'checkout.session.completed':
-      case 'checkout.session.async_payment_succeeded': if (event.data.object.metadata?.kind === 'comic') await comicPaid(event.data.object, env); else await bookPaid(event.data.object,env); break;
+      case 'checkout.session.async_payment_succeeded': {
+        const session = event.data.object;
+        if (session.metadata?.kind === 'comic') await comicPaid(session, env);
+        else if (session.mode === 'subscription') await membershipPaid(session, env);
+        else await bookPaid(session, env);
+        break;
+      }
+      // Renewals and failed renewals: refresh the stored status and period from the provider.
+      case 'invoice.paid':
+      case 'invoice.payment_failed': await syncSubscription(invoiceSubscription(event.data.object), env); break;
       case 'checkout.session.async_payment_failed':
       case 'checkout.session.expired': await retrySession(event.data.object, env); break;
       case 'charge.refunded':
