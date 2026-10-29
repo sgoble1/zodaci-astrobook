@@ -14,7 +14,7 @@ import leoHeroine from '@/assets/mystic/leo-heroine.jpg';
 /** Mystic Ink plates placed inside guides, after the second paragraph. */
 const PLATES: Record<string, { src: string; alt: string; caption: string }> = {
   'your-sun-moon-and-rising': { src: leoHeroine, alt: 'A heroine crowned by a lion of stars, lit by a single golden sun', caption: 'The Sun as the main character of your story.' },
-  'transits-how-today-s-sky-touches-your-chart': { src: geminiObservatory, alt: 'Twin figures at a brass telescope in a starlit observatory', caption: 'Watching today’s sky meet the sky you were born under.' },
+  'transits': { src: geminiObservatory, alt: 'Twin figures at a brass telescope in a starlit observatory', caption: 'Watching today’s sky meet the sky you were born under.' },
 };
 
 /** Public Reading Room: seven storybook-illustrated guides to reading a chart. */
