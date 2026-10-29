@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { computeChart, fmtLon, SIGNS, SIGN_KEYWORDS, BODY_KEYWORDS, type BodyPos } from '@/lib/astro';
+import { computeChart, fmtLon, SIGN_KEYWORDS, BODY_KEYWORDS, type BodyPos } from '@/lib/astro';
 import { toChartInput, type MyBirth } from '@/lib/myBirth';
 import { PlanetOrb } from '@/components/chart/PlanetOrb';
 import { ConfidenceBadge } from '@/components/common/ConfidenceBadge';
@@ -111,7 +111,6 @@ export function MemberHouseDetail({ birth, house }: { birth: MyBirth; house: num
   const modernBody = ruler.modern ? chart.bodies.find(x => x.key === ruler.modern) : undefined;
   const inside = chart.bodies.filter(x => x.house === house);
   const reading = HOUSE_READING[house];
-  const signIndex = SIGNS.indexOf(cusp.sign as typeof SIGNS[number]);
   return (
     <article className="space-y-8">
       <Link to="/houses" className="font-smallcaps text-xs text-muted-foreground hover:text-foreground">← Your houses</Link>
@@ -138,7 +137,6 @@ export function MemberHouseDetail({ birth, house }: { birth: MyBirth; house: num
         <Button asChild><Link to={`/my-readings/topic/${reading.slug}`}>Read: {reading.title}</Link></Button>
         <Button asChild variant="outline"><Link to="/my-chart">Your full chart</Link></Button>
       </div>
-      <p className="sr-only">Sign number {signIndex + 1} of 12.</p>
       <nav className="flex justify-between gap-4" aria-label="Houses">
         {house > 1 ? <Link to={`/houses/${house - 1}`} className="parchment flex items-center gap-2 p-3 text-sm"><ChevronLeft className="h-4 w-4" aria-hidden="true" />{ordinal(house - 1)} house</Link> : <span />}
         {house < 12 && <Link to={`/houses/${house + 1}`} className="parchment flex items-center gap-2 p-3 text-sm">{ordinal(house + 1)} house<ChevronRight className="h-4 w-4" aria-hidden="true" /></Link>}
