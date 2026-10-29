@@ -65,7 +65,7 @@ export default function BrandLanding() {
         <div className="mx-auto w-full max-w-7xl px-5 sm:px-10 py-16 sm:py-20">
           <Link to="/demo" className="pill-note mb-6">See a full sample edition <ArrowRight className="h-3.5 w-3.5" /></Link>
           <h1 className="text-silver font-display text-6xl sm:text-8xl leading-[0.95]">An encyclopedia<br />of you</h1>
-          <p className="mt-6 text-lg sm:text-xl leading-relaxed max-w-xl text-muted-foreground">The planets, stars and points of the sky at the minute you were born, calculated to the arc-minute and written up in depth. Many readers find it names things they have tried to put into words for years.</p>
+          <p className="mt-6 text-lg sm:text-xl leading-relaxed max-w-xl text-muted-foreground">The planets, stars and points of the sky at the minute you were born, calculated to the arc-minute and written up in depth. Written to name the things you have been trying to put into words your whole life.</p>
           <div className="mt-8 flex flex-col sm:flex-row gap-3"><Button asChild size="lg"><Link to="/start">Get started</Link></Button><Button asChild variant="ghost" size="lg"><Link to="/demo">See what’s inside</Link></Button></div>
           <p className="mt-6 text-sm text-muted-foreground">Free to begin · Personal by design · Private by default</p>
         </div>

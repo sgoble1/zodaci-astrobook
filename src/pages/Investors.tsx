@@ -94,7 +94,7 @@ export default function Investors() {
         <div>
           <div className="font-smallcaps text-xs text-gold">Private · Investor overview</div>
           <h1 className="text-5xl sm:text-7xl">An encyclopedia of each person’s sky</h1>
-          <p className="mt-4 max-w-2xl text-lg text-muted-foreground">Zodaci calculates the planets, stars and sensitive points at a member’s exact time of birth and builds an expansive, cross-referenced body of writing from them — readings, a six-volume book, comics and podcasts. The depth is the product: people describe it as finally having words for things they had always felt. Later, the same calculations let members find each other.</p>
+          <p className="mt-4 max-w-2xl text-lg text-muted-foreground">Zodaci calculates the planets, stars and sensitive points at a member’s exact time of birth and builds an expansive, cross-referenced body of writing from them — readings, a six-volume book, comics and podcasts. The depth is the product: our founders’ own editions gave them words for things they had always felt. Later, the same calculations let members find each other.</p>
           <div className="mt-6 flex flex-wrap gap-3"><Button asChild><Link to="/astrobook">See the AstroBook pages</Link></Button><Button asChild variant="outline"><Link to="/astrocomic">Read the comic</Link></Button><Button asChild variant="outline"><Link to="/demo">Try the demo</Link></Button></div>
         </div>
         <div className="grid grid-cols-2 gap-3"><img src={plate} alt="Illuminated AstroBook plate" width={1024} height={1280} className="rounded border border-gold/40" /><img src={comic} alt="AstroComic Issue 1 cover" width={1024} height={1536} className="rounded border border-gold/40" /></div>
