@@ -526,6 +526,13 @@
       "when": 1793312891541,
       "tag": "0074_credit_ledger_live_only",
       "breakpoints": true
+    },
+    {
+      "idx": 75,
+      "version": "7",
+      "when": 1793312985194,
+      "tag": "0075_developer_dashboard",
+      "breakpoints": true
     }
   ]
 }

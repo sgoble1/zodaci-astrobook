@@ -972,6 +972,51 @@ export type Database = {
         }
         Relationships: []
       }
+      dev_items: {
+        Row: {
+          area: string
+          blocker: string
+          cost_cents: number | null
+          created_at: string
+          details: string
+          done_at: string | null
+          id: string
+          kind: string
+          priority: number
+          status: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          area?: string
+          blocker?: string
+          cost_cents?: number | null
+          created_at?: string
+          details?: string
+          done_at?: string | null
+          id?: string
+          kind?: string
+          priority?: number
+          status?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          area?: string
+          blocker?: string
+          cost_cents?: number | null
+          created_at?: string
+          details?: string
+          done_at?: string | null
+          id?: string
+          kind?: string
+          priority?: number
+          status?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       document_overrides: {
         Row: {
           doc_key: string
@@ -2855,6 +2900,25 @@ export type Database = {
           used: number
         }[]
       }
+      dev_stats: {
+        Args: never
+        Returns: {
+          ai_credits_month: number
+          ai_uses_month: number
+          book_orders: number
+          comic_subs: number
+          contact_open: number
+          creations: number
+          credit_packs_cents: number
+          events_24h: number
+          members: number
+          members_7d: number
+          paid_live: number
+          podcasts: number
+          readings: number
+          readings_7d: number
+        }[]
+      }
       edition_of_area: { Args: { _area: string }; Returns: string }
       edition_owner_emails: { Args: { _edition: string }; Returns: string[] }
       edition_share_targets: {
@@ -2910,6 +2974,7 @@ export type Database = {
           readings: number
         }[]
       }
+      is_developer: { Args: never; Returns: boolean }
       is_shared_space_member: { Args: never; Returns: boolean }
       is_shared_space_user_id: { Args: { _user_id: string }; Returns: boolean }
       is_space_member: { Args: { _space_id: string }; Returns: boolean }
