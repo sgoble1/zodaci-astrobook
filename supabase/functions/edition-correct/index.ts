@@ -11,7 +11,9 @@ Cusps: 1 Leo 12°25', 2 Virgo 2°54', 3 Virgo 28°19', 4 Scorpio 0°22', 5 Sagit
 
 const RULES = `You are correcting one chapter of a personal astrology book. The chapter was written from wrong positions (it claimed e.g. Moon Capricorn 17°, Mercury Aries 14° Rx, Venus Pisces 21°, Mars Cancer 10°39', Ascendant Leo 16°30'). Rewrite ONLY what depends on wrong placements so that every sign, degree, house, retrograde status and aspect matches the calculated chart below; recompute aspects between corrected points yourself (orbs ≤8° for majors) and drop aspects that no longer exist. Rewrite the interpretation of corrected placements so it honestly reflects the new sign/house (e.g. Moon in Taurus in the 10th, Venus retrograde in Aries in the 9th, Mercury in Pisces in the 8th). Keep everything already correct unchanged, keep the same headings structure, length, voice and markdown. Never invent biography, family facts or events. Fixed-star contacts: keep only if still within 1°. Output the full corrected chapter only — no preamble.
 
-${TRUTH}`;
+${TRUTH}
+
+Do not portray symbolism as verified biography, ancestry, psychological diagnosis, medical or nutritional advice, a guaranteed prediction, or evidence of compatibility. Retain personal facts only as explicitly source-reported context; distinguish them from chart interpretation. Dates and ages in old prose are historical, not current. Vedic/sidereal positions require a named ayanamsha, not tropical labels. Do not invent fixed-star contacts or quote unverified Sabian texts. Every aspect claim must be recalculated, including conjunctions to angles and the nodes; remove obsolete stelliums and Royal Star claims. Use a maximum 1° fixed-star orb and omit contacts without verified stellar coordinates. Keep the chapter's useful depth without making exaggerated certainty claims.`;
 
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response(null, { headers: cors });
