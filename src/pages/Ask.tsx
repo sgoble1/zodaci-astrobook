@@ -5,6 +5,7 @@ import { loadCorpus, rank, type Passage } from '@/lib/corpus';
 import ReactMarkdown from 'react-markdown';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
+import { sourceResponse } from '@/components/common/sourceResponse';
 
 const SUGGESTIONS = [
   'What does my anaretic Sagittarius Ascendant mean?',
@@ -43,8 +44,9 @@ export default function Ask() {
         headers: { 'Content-Type': 'application/json', apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY, Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}` },
         body: JSON.stringify({ question, passages: top.map((p, i) => ({ n: i + 1, source: p.source, loc: p.loc, text: p.text })) }),
       });
-      if (!res.ok || !res.body) { const j = await res.json().catch(() => ({})); throw new Error(j.error ?? 'Something went wrong.'); }
-      const reader = res.body.getReader(); const dec = new TextDecoder();
+      const result = await sourceResponse(res);
+      if (!result.body) { setErr(result.error); setBusy(false); return; }
+      const reader = result.body.getReader(); const dec = new TextDecoder();
       while (true) { const { done, value } = await reader.read(); if (done) break; setAnswer(a => a + dec.decode(value, { stream: true })); }
     } catch (e) { if ((e as Error).name !== 'AbortError') setErr((e as Error).message); }
     setBusy(false);
@@ -91,7 +93,7 @@ export default function Ask() {
             <div className="font-smallcaps text-[10px] text-gold">Question</div>
             <p className="font-display text-xl">{asked}</p>
           </div>
-          {err && <p className="text-destructive text-sm">{err}</p>}
+          {err && <p role="alert" className="text-destructive text-sm">{err}</p>}
           {(answer || busy) && <div className="parchment p-5 leading-relaxed">{answer ? renderAnswer(answer) : <span className="text-muted-foreground italic">Reading the passages…</span>}</div>}
           {hits.length > 0 && (
             <div>

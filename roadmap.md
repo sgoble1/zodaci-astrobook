@@ -1,5 +1,8 @@
 # Zodaci — Active Project Index
 
+## Source-answer credit denial (Oct 30)
+- [x] Handle expected HTTP denials as inline state across Ask, SmartChat and source summaries; do not throw or save failed requests as answers. AI generation remains blocked until workspace credits are available.
+
 ## Finish interrupted corrections (Oct 30)
 - [ ] Save and validate Shane's corrected private chapters and chapter titles; preserve original backup. BLOCKED: rewrite drafts did not survive the earlier session; AI Gateway returned insufficient credits (402). No replacement chapters were published; original and backup remain private.
 - [x] Verify affected Relationships and removal of the self-relationship (Shane account: Zac visible, no self-friend; Zac's saved Shane birth facts match corrected profile; 57 chart/relationship/reader tests pass).

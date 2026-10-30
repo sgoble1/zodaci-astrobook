@@ -11,6 +11,7 @@ import { AuthGate } from '@/components/common/AuthGate';
 import { LoadError } from '@/components/common/LoadError';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
+import { sourceResponse } from '@/components/common/sourceResponse';
 
 type Convo = { id: string; title: string; updated_at: string };
 type Cited = { n: number; source: string; loc: string; href: string; text: string };
@@ -39,6 +40,7 @@ function ChatInner() {
   const april = useAprilSpace();
   const [q, setQ] = useState('');
   const [busy, setBusy] = useState(false);
+  const [answerError, setAnswerError] = useState<string | null>(null);
   const abort = useRef<AbortController | null>(null);
   const endRef = useRef<HTMLDivElement>(null);
 
@@ -67,7 +69,7 @@ function ChatInner() {
     // Members without the source library still get chart-based answers from their own saved chart.
     const top = corpus && april ? rank(corpus, `${question} ${prevUser}`, 12) : [];
     const cited: Cited[] = top.map((p, i) => ({ n: i + 1, source: p.source, loc: p.loc, href: p.href, text: p.text.slice(0, 1200) }));
-    setBusy(true); setQ('');
+    setBusy(true); setQ(''); setAnswerError(null);
     let convoId = id;
     if (!convoId) {
       const { data, error } = await supabase.from('chat_conversations').insert({ title: question.slice(0, 80) }).select('id').single();
@@ -86,21 +88,27 @@ function ChatInner() {
         headers: { 'Content-Type': 'application/json', apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY, Authorization: `Bearer ${(await supabase.auth.getSession()).data.session?.access_token ?? import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}` },
         body: JSON.stringify({ question, history, passages: cited.map(c => ({ n: c.n, source: c.source, loc: c.loc, text: top[c.n - 1].text })) }),
       });
-      if (!res.ok || !res.body) { const j = await res.json().catch(() => ({})); throw new Error(j.error ?? 'Something went wrong.'); }
-      const reader = res.body.getReader(); const dec = new TextDecoder();
+      const result = await sourceResponse(res);
+      if (!result.body) {
+        setAnswerError(result.error);
+        setMsgs(m => m.filter(x => x.id !== 'pending'));
+        setBusy(false);
+        return;
+      }
+      const reader = result.body.getReader(); const dec = new TextDecoder();
       while (true) {
         const { done, value } = await reader.read(); if (done) break;
         answer += dec.decode(value, { stream: true });
         setMsgs(m => m.map(x => x.id === 'pending' ? { ...x, content: answer } : x));
       }
     } catch (e) {
-      if ((e as Error).name !== 'AbortError') { toast.error((e as Error).message); answer = answer || `_${(e as Error).message}_`; }
+      if ((e as Error).name !== 'AbortError') setAnswerError((e as Error).message);
     }
     if (answer) {
       await supabase.from('chat_messages').insert({ conversation_id: convoId, role: 'assistant', content: answer, passages: cited as unknown as never });
-      await supabase.from('chat_conversations').update({ updated_at: new Date().toISOString() }).eq('id', convoId!);
+      await supabase.from('chat_conversations').update({ updated_at: new Date().toISOString() }).eq('id', convoId);
     }
-    setMsgs(m => m.map(x => x.id === 'pending' ? { ...x, id: crypto.randomUUID() } : x));
+    setMsgs(m => answer ? m.map(x => x.id === 'pending' ? { ...x, id: crypto.randomUUID() } : x) : m.filter(x => x.id !== 'pending'));
     setBusy(false); loadConvos();
   };
 
@@ -162,6 +170,7 @@ function ChatInner() {
           ))}
           <div ref={endRef} />
         </div>
+        {answerError && <p role="alert" className="mt-4 text-sm text-destructive">{answerError}</p>}
         <form onSubmit={e => { e.preventDefault(); send(); }} className="mt-4 flex gap-2 items-end">
           <Textarea rows={2} aria-label="Ask SmartChat" aria-describedby="smartchat-keyboard-hint" value={q} onChange={e => setQ(e.target.value)} placeholder={corpus || april === false ? 'Ask a question or follow up…' : 'Loading sources…'}
             onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); } }} className="flex-1" />
