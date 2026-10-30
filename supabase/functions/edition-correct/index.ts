@@ -33,6 +33,7 @@ Deno.serve(async (req) => {
     };
     const body = await req.json();
     const ed = await load();
+    if (body.action === 'snapshot') return json({ edition: ed });
     if (body.action === 'list') return json({ keys: Object.keys(ed).map(k => [k, ed[k].length]) });
     if (body.action === 'get') return json({ content: ed[body.key] });
     if (body.action === 'backup') {

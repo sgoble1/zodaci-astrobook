@@ -1,5 +1,10 @@
 # Zodaci — Active Project Index
 
+## Finish interrupted corrections (Oct 30)
+- [ ] Save and validate Shane's corrected private chapters and chapter titles; preserve original backup.
+- [ ] Verify affected Relationships and removal of the self-relationship.
+- [ ] Verify the restored horizontal-cloud logo and remove the temporary correction function after publishing.
+
 ## Showcase request (Oct 29, evening)
 - [x] AstroBook page + AstroComic page: three fully illustrated sample book pages written from Shane's placements under a different name (no personal context)
 - [x] Example comic: 8 drawn pages (cover + 7), title moved off the character's face, full read-through
