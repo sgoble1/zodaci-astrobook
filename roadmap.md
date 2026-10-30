@@ -1,5 +1,10 @@
 # Zodaci — Active Project Index
 
+## Finish interrupted corrections (Oct 30)
+- [ ] Save and validate Shane's corrected private chapters and chapter titles; preserve original backup. BLOCKED: rewrite drafts did not survive the earlier session; AI Gateway returned insufficient credits (402). No replacement chapters were published; original and backup remain private.
+- [x] Verify affected Relationships and removal of the self-relationship (Shane account: Zac visible, no self-friend; Zac's saved Shane birth facts match corrected profile; 57 chart/relationship/reader tests pass).
+- [x] Verify restored horizontal-cloud logo (one arrival animation, no rotation; browser checked) and remove temporary correction function from deployment and source. Recreate only when the blocked rewrite is resumed.
+
 ## Showcase request (Oct 29, evening)
 - [x] AstroBook page + AstroComic page: three fully illustrated sample book pages written from Shane's placements under a different name (no personal context)
 - [x] Example comic: 8 drawn pages (cover + 7), title moved off the character's face, full read-through
