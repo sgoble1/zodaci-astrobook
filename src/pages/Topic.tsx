@@ -9,6 +9,7 @@ import ReactMarkdown from 'react-markdown';
 import { loadCorpus, rank, aprilOnly, SHANE_RE, type Passage } from '@/lib/corpus';
 import { loadProtectedJson } from '@/lib/protectedContent';
 import { Button } from '@/components/ui/button';
+import { sourceResponse } from '@/components/common/sourceResponse';
 
 type Entry = { id: string; label: string; title: string };
 
@@ -57,8 +58,9 @@ export default function Topic() {
         method: 'POST', headers: { 'Content-Type': 'application/json', apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY, Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}` },
         body: JSON.stringify({ question: `Write a clear, well-organised overview of "${topic.label}" for April only. Use only April's verified birth-chart placements and the supplied passages. Never infer or mention named relatives, surnames, ancestry, family lineage, inherited trauma, or biographical family events. For Family & Home, discuss only chart symbolism and home-setting ideas. Use short headed sections: key placements, recurring patterns, challenges, and practical guidance.`, passages: top.map((p, i) => ({ n: i + 1, source: p.source, loc: p.loc, text: p.text })) }),
       });
-      if (!res.ok || !res.body) { const j = await res.json().catch(() => ({})); throw new Error(j.error ?? 'Something went wrong.'); }
-      const r = res.body.getReader(); const d = new TextDecoder();
+      const result = await sourceResponse(res);
+      if (!result.body) { setErr(result.error); setBusy(false); return; }
+      const r = result.body.getReader(); const d = new TextDecoder();
       while (true) { const { done, value } = await r.read(); if (done) break; setSum(a => a + d.decode(value, { stream: true })); }
     } catch (e) { setErr((e as Error).message); }
     setBusy(false);
@@ -123,7 +125,7 @@ export default function Topic() {
           <Button onClick={summarize} disabled={busy || !passages || !hits.length} title={passages && !hits.length ? 'No source passages to summarise for this theme yet.' : undefined} size="sm">{busy ? 'Writing…' : sum ? 'Rewrite' : 'Summarise from the sources'}</Button>
         </div>
         {!sum && !err && <p className="text-sm text-muted-foreground">A cited overview written only from the passages below. Numbers like [3] match passage 3.</p>}
-        {err && <p className="text-sm text-destructive">{err}</p>}
+        {err && <p role="alert" className="text-sm text-destructive">{err}</p>}
         {sum && <div className="mb-prose text-sm"><ReactMarkdown>{sum}</ReactMarkdown></div>}
       </section>
 

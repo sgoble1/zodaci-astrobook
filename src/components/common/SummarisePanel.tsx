@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
+import { sourceResponse } from './sourceResponse';
 
 export type SumPassage = { source: string; loc: string; text: string };
 
@@ -14,8 +15,9 @@ export function SummarisePanel({ title, passages, prompt }: { title: string; pas
         method: 'POST', headers: { 'Content-Type': 'application/json', apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY, Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}` },
         body: JSON.stringify({ question: prompt ?? `Summarise "${title}" for April in clear headed sections: key points, patterns, challenges, and practical guidance. Use only the passages.`, passages: passages.slice(0, 14).map((p, i) => ({ n: i + 1, ...p })) }),
       });
-      if (!res.ok || !res.body) { const j = await res.json().catch(() => ({})); throw new Error(j.error ?? 'Something went wrong.'); }
-      const r = res.body.getReader(); const d = new TextDecoder();
+      const result = await sourceResponse(res);
+      if (!result.body) { setErr(result.error); setBusy(false); return; }
+      const r = result.body.getReader(); const d = new TextDecoder();
       while (true) { const { done, value } = await r.read(); if (done) break; setSum(a => a + d.decode(value, { stream: true })); }
     } catch (e) { setErr((e as Error).message); }
     setBusy(false);
@@ -27,7 +29,7 @@ export function SummarisePanel({ title, passages, prompt }: { title: string; pas
         <button onClick={run} disabled={busy || !passages.length} className="px-3 py-1.5 rounded bg-primary text-primary-foreground text-sm disabled:opacity-50">{busy ? 'Writing…' : sum ? 'Rewrite' : 'Summarise from the sources'}</button>
       </div>
       {!sum && !err && <p className="text-xs text-muted-foreground">A short overview written only from this text. Numbers like [3] point to the passage it came from.</p>}
-      {err && <p className="text-sm text-destructive">{err}</p>}
+      {err && <p role="alert" className="text-sm text-destructive">{err}</p>}
       {sum && <div className="mb-prose text-sm"><ReactMarkdown>{sum}</ReactMarkdown></div>}
     </section>
   );

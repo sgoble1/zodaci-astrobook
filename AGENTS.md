@@ -26,6 +26,7 @@
 - Navigation, member search and Instructions share a registry; search never loads private text. Topics share a renderer separating facts, interpretations and protected links.
 - custom_pages stores menu_group/source-ranked content; sidebar merges dynamically.
 - Ask the Sources uses protected-loader BM25 and ask-sources for streamed cited answers.
+- Source-answer clients use sourceResponse for expected HTTP denials; render errors separately and never save denials as assistant answers, so exhausted credits cannot become a page crash or fabricated history.
 - Free core-theme previews use status 'preview' for the first section; paid opens rewrite fully.
 - Reading failures offer retry; missing rows are not writing; freshness compares birth onboarding time.
 - Claim jobs before AI; token-fence terminal writes against retries/chart changes to prevent stale publication and duplicate spend.
