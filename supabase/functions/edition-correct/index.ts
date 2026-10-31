@@ -44,6 +44,21 @@ Deno.serve(async (req) => {
 
   const body = await req.json().catch(() => ({}));
   // Zac's workbook text: the developer can read it and save an edited version (backed up once first).
+  if (body.action === 'zac-search' || body.action === 'zac-chapter-save') {
+    if (dev.data !== true) return json({ error: 'Developer only.' }, 403);
+    const zac = await load('zac/edition.json');
+    if (!zac) return json({ error: 'Zac edition unavailable.' }, 500);
+    if (body.action === 'zac-search') {
+      const q = String(body.q ?? '').toLowerCase();
+      return json({ hits: Object.entries(zac).filter(([, v]) => typeof v === 'string' && v.toLowerCase().includes(q)).map(([k, v]) => ({ id: k, length: v.length, text: body.full ? v : v.slice(Math.max(0, v.toLowerCase().indexOf(q) - 300), v.toLowerCase().indexOf(q) + 600) })) });
+    }
+    const cid = String(body.id ?? ''); const text = String(body.text ?? '').trim();
+    if (!zac[cid] || text.length < 200) return json({ error: 'Unknown chapter or empty text.' }, 422);
+    if (!(await load('zac/edition.original.json'))) await bucket.upload('zac/edition.original.json', new Blob([JSON.stringify(zac)], { type: 'application/json' }));
+    zac[cid] = text;
+    const saved = await bucket.upload('zac/edition.json', new Blob([JSON.stringify(zac)], { type: 'application/json' }), { upsert: true });
+    return saved.error ? json({ error: saved.error.message }, 500) : json({ saved: true });
+  }
   if (body.action === 'zac-workbook-get' || body.action === 'zac-workbook-save') {
     if (dev.data !== true) return json({ error: 'Developer only.' }, 403);
     const wb = await bucket.download('zac/workbook.json');
