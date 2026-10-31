@@ -1,4 +1,5 @@
 import { shortChapterLabel } from '@/lib/chapterLabels';
+import { groupChaptersByTopic } from '@/lib/founderTopics';
 import { AdminEditionSwitch } from '@/components/common/AdminEditionSwitch';
 import { PageErrorBoundary } from '@/components/common/PageErrorBoundary';
 import { VerifySources } from '@/components/common/VerifySources';
@@ -18,7 +19,7 @@ import { useShaneAccount } from '@/hooks/useShaneAccount';
 import { loadEditionIndex } from '@/pages/ShaneEdition';
 import { useZacAccount } from '@/hooks/useZacAccount';
 import { useSharedEditions } from '@/lib/editionSharing';
-import { viewingSharedEdition } from '@/hooks/useAprilSpace';
+import { leaveAprilEdition, viewingSharedEdition } from '@/hooks/useAprilSpace';
 import { useSession } from '@/hooks/useLibrary';
 import { useAprilSpace, useAprilSpaceError, retryAprilSpace, useClassicView, setClassicView } from '@/hooks/useAprilSpace';
 
@@ -32,7 +33,8 @@ function useFounderGroups(): NavGroup[] {
   const aprilGroups = APRIL_NAV_GROUPS; // private payload; re-read each render so late registration shows up
   return useMemo(() => {
     const shared = { ...SHARED_GROUP, items: SHARED_GROUP.items.map(item => ({ ...item, badge: item.to === '/shared/conversations' ? badges.chat : item.to === '/shared/wonderings' ? badges.wonderings : undefined })) };
-    const relationships = { ...RELATIONSHIPS_GROUP, items: [...RELATIONSHIPS_GROUP.items, ...rels.map(r => ({ to: `/relationships/${r.id}`, label: `↳ ${r.name}${r.relation ? ` · ${r.relation}` : ''}` }))] };
+    // A shared viewer (Shane opening April's edition) never sees his own relationships in her menu.
+    const relationships = { ...RELATIONSHIPS_GROUP, items: [...RELATIONSHIPS_GROUP.items, ...(viewingSharedEdition() !== null ? [] : rels.map(r => ({ to: `/relationships/${r.id}`, label: `↳ ${r.name}${r.relation ? ` · ${r.relation}` : ''}` })))] };
     // Admin pages never appear in April's menu; the admin opens her edition from his own account.
     const noAdmin = (gs: NavGroup[]) => gs.map(g => ({ ...g, items: g.items.filter(i => !ADMIN_ONLY.includes(i.to)), submenus: g.submenus?.map(sm => ({ ...sm, items: sm.items.filter(i => !ADMIN_ONLY.includes(i.to)) })) })).filter(g => g.items.length || g.submenus?.length);
     // Her own Official AstroBook section: only her Masterbook and her AstroComic (the server lists nothing else for her).
@@ -52,12 +54,14 @@ function useShaneGroups(enabled: boolean, area: 'shane' | 'zac' = 'shane'): NavG
   // Retry after navigation so chapters appear once the edition is unlocked.
   useEffect(() => { if (!enabled || listed) return; let on = true; loadEditionIndex(area).then(e => { if (on) setChapters(e); }).catch(() => { if (on) setChapters([]); }); return () => { on = false; }; }, [enabled, listed, pathname, area]);
   return useMemo(() => {
-    const parts = new Map<string, NavItem[]>();
-    for (const c of chapters ?? []) parts.set(c.part || 'Chapters', [...(parts.get(c.part || 'Chapters') ?? []), { to: `/${area}/${c.id}`, label: shortChapterLabel(c.id, c.title || c.label) }]);
+    // Topic-led, like April's menu: every chapter sits under one plain life topic; nothing is removed.
+    const topics = groupChaptersByTopic(chapters ?? [], c => shortChapterLabel(c.id, c.title || c.label));
+    // While viewing someone else's edition, never list the viewer's own relationships in their menu.
+    const viewingOther = viewingSharedEdition() !== null;
     const shared = { ...SHARED_GROUP, items: SHARED_GROUP.items.map(item => ({ ...item, badge: item.to === '/shared/conversations' ? badges.chat : item.to === '/shared/wonderings' ? badges.wonderings : undefined })) };
-    const relationships = { ...RELATIONSHIPS_GROUP, items: [...RELATIONSHIPS_GROUP.items, ...rels.map(r => ({ to: `/relationships/${r.id}`, label: `↳ ${r.name}${r.relation ? ` · ${r.relation}` : ''}` }))] };
+    const relationships = { ...RELATIONSHIPS_GROUP, items: [...RELATIONSHIPS_GROUP.items, ...(viewingOther ? [] : rels.map(r => ({ to: `/relationships/${r.id}`, label: `↳ ${r.name}${r.relation ? ` · ${r.relation}` : ''}` })))] };
     const sharedLinks: NavItem[] = sharedEditions.filter(e => e !== area).map(e => e === 'april' ? { to: '/april', label: 'April’s Masterbook' } : e === 'shane' ? { to: '/shane', label: 'Shane’s Masterbook' } : { to: '/zac', label: 'Zac’s Astrological Library' });
-    const chapterGroup = { title: area === 'zac' ? 'Library Chapters' : 'Masterbook Chapters', items: chapters === null ? [{ to: `/${area}`, label: 'Loading chapters…' }] : chapters.length ? [] : [{ to: `/${area}`, label: 'Chapters couldn’t load — open the edition' }], submenus: [...parts.entries()].map(([label, items]) => ({ label, items })) } as NavGroup;
+    const chapterGroup = { title: area === 'zac' ? 'Zac’s Library by Topic' : 'Masterbook by Topic', items: chapters === null ? [{ to: `/${area}`, label: 'Loading chapters…' }] : chapters.length ? [] : [{ to: `/${area}`, label: 'Chapters couldn’t load — open the edition' }], submenus: topics.map(t => ({ label: `${t.label} · ${t.items.length}`, items: t.items.map(c => ({ to: `/${area}/${c.id}`, label: shortChapterLabel(c.id, c.title || c.label) })) })) } as NavGroup;
     if (area === 'zac') return [
       { title: 'My Edition', items: [{ to: '/dashboard', label: 'Home' }, { to: '/zac', label: 'My Astrological Library' }, { to: '/zac/workbook', label: 'My Workbook' }, { to: '/my-chart', label: 'My chart' }, { to: '/my-readings', label: 'My readings' }, { to: '/counselors', label: 'Counselors' }] },
       chapterGroup,
@@ -391,6 +395,7 @@ function SidebarInner({ mobile = false, onNavigate }: { mobile?: boolean; onNavi
   }, [custom]);
   const allGroups = useContext(FounderGroupsContext) ?? APRIL_NAV_GROUPS;
   const edition = useContext(EditionContext);
+  const { pathname } = useLocation();
   useMenuTitleFallback(useMemo(() => allGroups.flatMap(g => [...g.items, ...(g.footer ?? []), ...(g.submenus ?? []).flatMap(s => s.items)]), [allGroups]));
   return (
     <div className={`founder-sidebar flex min-h-full flex-col gap-6 overflow-x-hidden ${mobile ? 'px-4 pb-8 pt-4' : 'h-full overflow-y-auto p-6'}`}>
@@ -399,6 +404,7 @@ function SidebarInner({ mobile = false, onNavigate }: { mobile?: boolean; onNavi
         <div className="mt-3"><AdminEditionSwitch fullEdition /></div>
         <div className="font-display text-2xl leading-tight mt-1">{edition === 'shane' ? 'Shane' : edition === 'zac' ? 'Zac' : 'April'}</div>
         <div className="text-xs text-muted-foreground mt-1">Private edition</div>
+        {viewingSharedEdition() && <div role="status" className="mt-3 rounded-xl border border-gold/40 bg-gold/10 p-3 text-xs"><p>You're seeing {edition === 'zac' ? 'Zac' : 'April'}'s menu exactly as they see it. Your own pages are hidden here.</p><Button size="sm" variant="outline" className="mt-2" onClick={leaveAprilEdition}>Back to my edition</Button></div>}
         <div className="gold-rule my-4" />
       </div>
       <div className="pt-1 space-y-2"><CommandPaletteTrigger label="Search the compendium" /><BookmarkButton /></div>
@@ -416,9 +422,8 @@ function SidebarInner({ mobile = false, onNavigate }: { mobile?: boolean; onNavi
                 }
               ><span>{n.label}{n.created ? <span className="sr-only"> (created page)</span> : null}{glowId && n.to === `/p/${glowId}` ? <span className="sr-only"> — just added</span> : null}</span>{n.badge ? <span className="min-w-5 rounded-full bg-primary px-1.5 text-center text-[10px] text-primary-foreground" aria-label={`${n.badge} new`}>{n.badge}</span> : null}</NavLink>
             ))}
-            {g.submenus?.map(submenu => (
-                <div key={submenu.label}>
-                  <p className="px-3 py-2 text-xs font-medium text-muted-foreground">{submenu.label}</p>
+            {g.submenus?.map(submenu => {
+              const links = (
                   <div className="ml-3 flex flex-col gap-0.5 border-l border-border/70 pl-2">
                     {submenu.items.map(n => (
                       <NavLink
@@ -431,8 +436,23 @@ function SidebarInner({ mobile = false, onNavigate }: { mobile?: boolean; onNavi
                       ><span>{n.label}</span></NavLink>
                     ))}
                   </div>
+              );
+              // Shane's and Zac's long topic lists fold away; the topic holding the open page stays open.
+              if (edition !== 'april') return (
+                <details key={submenu.label} open={submenu.items.some(n => n.to === pathname)} className="group">
+                  <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between rounded px-3 py-2 text-xs font-medium text-muted-foreground hover:bg-muted/60 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+                    <span>{submenu.label}</span><span aria-hidden="true" className="transition-transform group-open:rotate-90">›</span>
+                  </summary>
+                  {links}
+                </details>
+              );
+              return (
+                <div key={submenu.label}>
+                  <p className="px-3 py-2 text-xs font-medium text-muted-foreground">{submenu.label}</p>
+                  {links}
                 </div>
-            ))}
+              );
+            })}
             {g.footer?.map(n => <NavLink key={n.to} to={n.to} onClick={onNavigate} className="mt-1 flex min-h-11 items-center gap-2 rounded border border-transparent px-3 py-2 text-muted-foreground hover:text-foreground nav-create-glow"><span>{n.label}</span></NavLink>)}
           </div>
         ))}
