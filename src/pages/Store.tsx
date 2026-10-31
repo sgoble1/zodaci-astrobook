@@ -53,9 +53,13 @@ export default function Store() {
     return () => { on = false; };
   }, [attempt]);
   const types = useMemo(() => ['All', ...new Set((products ?? []).map(p => p.node.productType).filter(Boolean) as string[])], [products]);
+  const sign = params.get('sign') ?? 'All';
+  const signOf = (p: ShopifyProduct) => (p.node.tags ?? []).find(t => t.startsWith('sign:'))?.slice(5);
+  const signs = useMemo(() => ['All', ...new Set((products ?? []).map(signOf).filter(Boolean).map(s => s![0].toUpperCase() + s!.slice(1)))], [products]);
   const shown = useMemo(() => {
     const words = q.toLowerCase().split(/\s+/).filter(Boolean);
     const list = (products ?? []).filter(p => (type === 'All' || p.node.productType === type)
+      && (sign === 'All' || signOf(p) === sign.toLowerCase())
       && words.every(w => `${p.node.title} ${p.node.description} ${p.node.productType ?? ''} ${(p.node.tags ?? []).join(' ')}`.toLowerCase().includes(w)));
     const sorted = [...list];
     if (sort === 'price-asc') sorted.sort((a, b) => priceOf(a) - priceOf(b));
@@ -79,6 +83,7 @@ export default function Store() {
           </label>
         </div>
         {types.length > 2 && <div className="flex flex-wrap gap-2" role="group" aria-label="Product type">{types.map(t => <Button key={t} size="sm" aria-pressed={t === type} variant={t === type ? 'default' : 'outline'} onClick={() => set('type', t, 'All')}>{t}</Button>)}</div>}
+        {signs.length > 2 && <div className="flex flex-wrap gap-2" role="group" aria-label="Sign edition">{signs.map(s => <Button key={s} size="sm" aria-pressed={s === sign} variant={s === sign ? 'default' : 'outline'} onClick={() => set('sign', s, 'All')}>{s === 'All' ? 'All signs' : s}</Button>)}</div>}
         {!products && <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3" aria-busy="true" aria-label="Loading the shop">{Array.from({ length: 6 }, (_, i) => <li key={i} className="parchment overflow-hidden"><div className="aspect-square animate-pulse bg-muted motion-reduce:animate-none" /><div className="space-y-2 p-4"><div className="h-5 w-2/3 rounded bg-muted" /><div className="h-4 w-full rounded bg-muted" /></div></li>)}</ul>}
         {products && <p className="text-sm text-muted-foreground" aria-live="polite">{shown.length} {shown.length === 1 ? 'item' : 'items'}{q && ` matching “${q}”`}</p>}
         {products && shown.length === 0 && <div className="parchment space-y-3 p-8 text-center"><p className="text-muted-foreground">{products.length ? 'Nothing matches that search.' : 'New pieces are on their way — check back soon.'}</p>{(q || type !== 'All') && <Button variant="outline" size="sm" onClick={() => setParams(new URLSearchParams(), { replace: true })}>Clear search and filters</Button>}</div>}
