@@ -21,7 +21,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { SaveWondering } from '@/components/relationships/SaveWondering';
 import { wonderingSuggestions } from '@/lib/wonderingSuggestions';
 import { useRelationships } from '@/hooks/useRelationships';
-import { useSharedSpaceMember } from '@/hooks/useSharedSpaceMember';
+import { SHARED_SPACE_LABEL, useSharedSpaces, type SharedSpaceKey } from '@/hooks/useSharedSpaces';
 import PublicWonderings from '@/pages/Wonderings';
 
 type Conversation = { id: string; title: string; kind: 'main' | 'topic'; created_by: string; created_at: string; updated_at: string };
