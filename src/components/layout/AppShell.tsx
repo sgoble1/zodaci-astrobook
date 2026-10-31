@@ -395,6 +395,7 @@ function SidebarInner({ mobile = false, onNavigate }: { mobile?: boolean; onNavi
   }, [custom]);
   const allGroups = useContext(FounderGroupsContext) ?? APRIL_NAV_GROUPS;
   const edition = useContext(EditionContext);
+  const { pathname } = useLocation();
   useMenuTitleFallback(useMemo(() => allGroups.flatMap(g => [...g.items, ...(g.footer ?? []), ...(g.submenus ?? []).flatMap(s => s.items)]), [allGroups]));
   return (
     <div className={`founder-sidebar flex min-h-full flex-col gap-6 overflow-x-hidden ${mobile ? 'px-4 pb-8 pt-4' : 'h-full overflow-y-auto p-6'}`}>
@@ -420,9 +421,8 @@ function SidebarInner({ mobile = false, onNavigate }: { mobile?: boolean; onNavi
                 }
               ><span>{n.label}{n.created ? <span className="sr-only"> (created page)</span> : null}{glowId && n.to === `/p/${glowId}` ? <span className="sr-only"> — just added</span> : null}</span>{n.badge ? <span className="min-w-5 rounded-full bg-primary px-1.5 text-center text-[10px] text-primary-foreground" aria-label={`${n.badge} new`}>{n.badge}</span> : null}</NavLink>
             ))}
-            {g.submenus?.map(submenu => (
-                <div key={submenu.label}>
-                  <p className="px-3 py-2 text-xs font-medium text-muted-foreground">{submenu.label}</p>
+            {g.submenus?.map(submenu => {
+              const links = (
                   <div className="ml-3 flex flex-col gap-0.5 border-l border-border/70 pl-2">
                     {submenu.items.map(n => (
                       <NavLink
@@ -435,8 +435,23 @@ function SidebarInner({ mobile = false, onNavigate }: { mobile?: boolean; onNavi
                       ><span>{n.label}</span></NavLink>
                     ))}
                   </div>
+              );
+              // Shane's and Zac's long topic lists fold away; the topic holding the open page stays open.
+              if (edition !== 'april') return (
+                <details key={submenu.label} open={submenu.items.some(n => n.to === pathname)} className="group">
+                  <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between rounded px-3 py-2 text-xs font-medium text-muted-foreground hover:bg-muted/60 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+                    <span>{submenu.label}</span><span aria-hidden="true" className="transition-transform group-open:rotate-90">›</span>
+                  </summary>
+                  {links}
+                </details>
+              );
+              return (
+                <div key={submenu.label}>
+                  <p className="px-3 py-2 text-xs font-medium text-muted-foreground">{submenu.label}</p>
+                  {links}
                 </div>
-            ))}
+              );
+            })}
             {g.footer?.map(n => <NavLink key={n.to} to={n.to} onClick={onNavigate} className="mt-1 flex min-h-11 items-center gap-2 rounded border border-transparent px-3 py-2 text-muted-foreground hover:text-foreground nav-create-glow"><span>{n.label}</span></NavLink>)}
           </div>
         ))}
