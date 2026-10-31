@@ -4,6 +4,8 @@ import type { ChartInput, ChartResult, HouseSystem } from '@/lib/astro';
 import { birthFingerprint } from '@/lib/birthFingerprint';
 import { onAccountChange } from '@/lib/authEvents';
 export { birthFingerprint };
+import { viewingSharedEdition } from '@/hooks/useAprilSpace';
+import { EDITION_OWNER_NAME } from '@/lib/editionSharing';
 
 export type MyBirth = { name: string; date: string; time: string | null; placeLabel: string; lat: number; lon: number; tz: string; houseSystem: HouseSystem; sex?: string | null };
 /** Feng Shui Kua uses birth sex; other answers leave it unspecified. */
@@ -43,6 +45,13 @@ export function useMyBirth() {
       const { data: u } = await supabase.auth.getUser();
       if (!active || version !== revision) return;
       if (u.user) {
+        // Viewing someone else's shared edition: show their chart (the database only returns editions this account may open).
+        const viewing = viewingSharedEdition();
+        if (viewing) {
+          const { data: eds } = await supabase.rpc('my_official_editions');
+          const b = (eds ?? []).find((e: { edition: string }) => e.edition === viewing)?.birth as Record<string, unknown> | undefined;
+          if (b?.date && active && version === revision) return setBirth({ name: EDITION_OWNER_NAME[viewing], date: String(b.date), time: (b.time as string) ?? null, placeLabel: String(b.place_label ?? ''), lat: Number(b.lat), lon: Number(b.lon), tz: String(b.tz), houseSystem: ((b.house_system as HouseSystem) ?? 'placidus'), sex: null });
+        }
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const { data } = await (supabase as any).from('profiles').select('*').eq('id', u.user.id).maybeSingle();
         if (data?.birth_date && active && version === revision) return setBirth({ name: data.display_name, date: data.birth_date, time: data.birth_time, placeLabel: data.place_label, lat: data.lat, lon: data.lon, tz: data.tz, houseSystem: data.house_system, sex: data.sex || null });

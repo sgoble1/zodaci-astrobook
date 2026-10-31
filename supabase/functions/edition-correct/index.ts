@@ -43,11 +43,46 @@ Deno.serve(async (req) => {
   if (!edition) return json({ error: 'Edition unavailable.' }, 500);
 
   const body = await req.json().catch(() => ({}));
+  // Zac's workbook text: the developer can read it and save an edited version (backed up once first).
+  if (body.action === 'zac-search' || body.action === 'zac-chapter-save') {
+    if (dev.data !== true) return json({ error: 'Developer only.' }, 403);
+    const zac = await load('zac/edition.json');
+    if (!zac) return json({ error: 'Zac edition unavailable.' }, 500);
+    if (body.action === 'zac-search') {
+      const q = String(body.q ?? '').toLowerCase();
+      return json({ hits: Object.entries(zac).filter(([, v]) => typeof v === 'string' && v.toLowerCase().includes(q)).map(([k, v]) => ({ id: k, length: v.length, text: body.full ? v : v.slice(Math.max(0, v.toLowerCase().indexOf(q) - 300), v.toLowerCase().indexOf(q) + 600) })) });
+    }
+    const cid = String(body.id ?? ''); const text = String(body.text ?? '').trim();
+    if (!zac[cid] || text.length < 200) return json({ error: 'Unknown chapter or empty text.' }, 422);
+    if (!(await load('zac/edition.original.json'))) await bucket.upload('zac/edition.original.json', new Blob([JSON.stringify(zac)], { type: 'application/json' }));
+    zac[cid] = text;
+    const saved = await bucket.upload('zac/edition.json', new Blob([JSON.stringify(zac)], { type: 'application/json' }), { upsert: true });
+    return saved.error ? json({ error: saved.error.message }, 500) : json({ saved: true });
+  }
+  if (body.action === 'zac-workbook-get' || body.action === 'zac-workbook-save') {
+    if (dev.data !== true) return json({ error: 'Developer only.' }, 403);
+    const wb = await bucket.download('zac/workbook.json');
+    if (wb.error || !wb.data) return json({ error: 'Workbook unavailable.' }, 500);
+    const raw = await wb.data.text();
+    if (body.action === 'zac-workbook-get') return json({ content: raw });
+    const next = String(body.content ?? '');
+    try { JSON.parse(next); } catch { return json({ error: 'Not valid JSON.' }, 422); }
+    const hasBackup = await bucket.download('zac/workbook.original.json');
+    if (hasBackup.error) await bucket.upload('zac/workbook.original.json', new Blob([raw], { type: 'application/json' }));
+    const saved = await bucket.upload('zac/workbook.json', new Blob([next], { type: 'application/json' }), { upsert: true });
+    return saved.error ? json({ error: saved.error.message }, 500) : json({ saved: true });
+  }
   if (body.action === 'list') return json({ ids: Object.keys(edition).filter(k => !k.endsWith('.json')) });
   const id = String(body.id ?? '');
   const original = edition[id];
   if (!original || id.endsWith('.json')) return json({ error: 'Unknown chapter.' }, 404);
 
+  // Save a reviewed correction produced by an earlier dry run (owner only; same length guard).
+  if (body.action === 'save') {
+    const text = String(body.text ?? '').trim();
+    if (text.length < original.length * 0.7) return json({ error: 'Correction looked incomplete; original kept.' }, 422);
+    return await persist(id, text, original.length);
+  }
   const apiKey = Deno.env.get('LOVABLE_API_KEY')!;
   const provider = createOpenAI({ baseURL: GATEWAY_URL, apiKey, headers: { 'Lovable-API-Key': apiKey, 'X-Lovable-AIG-SDK': 'vercel-ai-sdk' } });
   let text = '';
@@ -64,13 +99,17 @@ Deno.serve(async (req) => {
   if (text.length < original.length * 0.7) return json({ error: 'Rewrite looked incomplete; original kept.', id, before: original.length, after: text.length }, 422);
 
   if (body.dryRun) return json({ id, before: original.length, after: text.length, text });
-  if (!(await load('shane/edition.original.json'))) {
-    const backup = await bucket.upload('shane/edition.original.json', new Blob([JSON.stringify(edition)], { type: 'application/json' }), { upsert: false });
-    if (backup.error && !/exists/i.test(backup.error.message)) return json({ error: 'Backup failed; nothing saved.' }, 500);
+  return await persist(id, text, original.length);
+
+  async function persist(id: string, text: string, before: number) {
+    if (!(await load('shane/edition.original.json'))) {
+      const backup = await bucket.upload('shane/edition.original.json', new Blob([JSON.stringify(edition)], { type: 'application/json' }), { upsert: false });
+      if (backup.error && !/exists/i.test(backup.error.message)) return json({ error: 'Backup failed; nothing saved.' }, 500);
+    }
+    const fresh = (await load('shane/edition.json')) ?? edition; // re-read so earlier saves are kept
+    fresh[id] = text;
+    const saved = await bucket.upload('shane/edition.json', new Blob([JSON.stringify(fresh)], { type: 'application/json' }), { upsert: true });
+    if (saved.error) return json({ error: saved.error.message }, 500);
+    return json({ id, before, after: text.length, saved: true });
   }
-  const fresh = (await load('shane/edition.json')) ?? edition; // re-read to avoid overwriting other saves
-  fresh[id] = text;
-  const saved = await bucket.upload('shane/edition.json', new Blob([JSON.stringify(fresh)], { type: 'application/json' }), { upsert: true });
-  if (saved.error) return json({ error: saved.error.message }, 500);
-  return json({ id, before: original.length, after: text.length, saved: true });
 });
