@@ -19,7 +19,7 @@ import { useShaneAccount } from '@/hooks/useShaneAccount';
 import { loadEditionIndex } from '@/pages/ShaneEdition';
 import { useZacAccount } from '@/hooks/useZacAccount';
 import { useSharedEditions } from '@/lib/editionSharing';
-import { viewingSharedEdition } from '@/hooks/useAprilSpace';
+import { leaveAprilEdition, viewingSharedEdition } from '@/hooks/useAprilSpace';
 import { useSession } from '@/hooks/useLibrary';
 import { useAprilSpace, useAprilSpaceError, retryAprilSpace, useClassicView, setClassicView } from '@/hooks/useAprilSpace';
 
