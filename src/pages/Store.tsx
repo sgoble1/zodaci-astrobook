@@ -68,11 +68,11 @@ export default function Store() {
     if (sort === 'newest') sorted.sort((a, b) => (b.node.createdAt ?? '').localeCompare(a.node.createdAt ?? ''));
     // Sold-out items stay visible but sink below what can be bought today.
     return sorted.sort((a, b) => Number(inStock(b)) - Number(inStock(a)));
-  }, [products, type, q, sort]);
+  }, [products, type, sign, q, sort]);
   return (
     <div className="mx-auto max-w-6xl space-y-8 px-4 py-10">
       <header className="flex flex-wrap items-end justify-between gap-4">
-        <div><p className="font-smallcaps text-xs text-gold">The Zodaci Shop</p><h1 className="mt-2 text-4xl sm:text-5xl">Posters, stickers & notebooks</h1><p className="mt-3 max-w-xl text-muted-foreground">Astrology art for your walls, laptop and journal, printed to order.</p></div>
+        <div><p className="font-smallcaps text-xs text-gold">The Zodaci Shop</p><h1 className="mt-2 text-4xl sm:text-5xl">Posters, apparel & stationery</h1><p className="mt-3 max-w-xl text-muted-foreground">Posters, tees, mugs, totes, stickers and notebooks — a core collection plus sign editions.</p></div>
         <CartDrawer />
       </header>
       {failed ? <ShopOffline onRetry={() => setAttempt(a => a + 1)} /> : <>
