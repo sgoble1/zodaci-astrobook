@@ -81,6 +81,7 @@ const Relationships = lazy(() => import('./pages/Relationships'));
 const RelationshipDetail = lazy(() => import('./pages/RelationshipDetail'));
 const Reading = lazy(() => import('./pages/Reading'));
 const SharedSpace = lazy(() => import('./pages/SharedSpace'));
+const OpenSharedSpace = lazy(() => import('./pages/SharedSpace').then(m => ({ default: m.OpenSharedSpace })));
 const Verify = lazy(() => import('./pages/Verify'));
 const OtherSystemsDashboard = lazy(() => import('./pages/OtherSystems').then(m => ({ default: m.OtherSystemsDashboard })));
 const OtherSystemDetail = lazy(() => import('./pages/OtherSystems').then(m => ({ default: m.OtherSystemDetail })));
@@ -371,6 +372,8 @@ export default function App() {
             <Route path="/chat" element={<Chat />} />
             <Route path="/chat/:id" element={<Chat />} />
             <Route path="/shared" element={<SharedSpace section="overview" />} />
+            <Route path="/shared/april" element={<OpenSharedSpace space="april" />} />
+            <Route path="/shared/zac" element={<OpenSharedSpace space="zac" />} />
             <Route path="/shared/conversations" element={<SharedSpace />} />
             <Route path="/shared/chat/:id" element={<SharedSpace />} />
             <Route path="/shared/posts" element={<SharedSpace section="posts" />} />
