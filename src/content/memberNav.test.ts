@@ -67,7 +67,7 @@ describe('member navigation architecture', () => {
   it('shows plan locks instead of hiding gated items', () => {
     expect(itemLock('free', '/timeline')).toBe('full');
     expect(itemLock('free', '/podcasts')).toBe('creator');
-    expect(itemLock('full', '/podcasts')).toBe('creator');
+    expect(itemLock('full', '/podcasts')).toBeNull(); // Pro and Cosmic share every feature
     expect(itemLock('creator', '/podcasts')).toBeNull();
     expect(itemLock('free', '/my-readings/topic/big-three')).toBeNull();
     expect(menuPaths.has('/timeline')).toBe(true);

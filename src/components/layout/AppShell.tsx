@@ -58,7 +58,10 @@ function useShaneGroups(enabled: boolean, area: 'shane' | 'zac' = 'shane'): NavG
     const topics = groupChaptersByTopic(chapters ?? [], c => shortChapterLabel(c.id, c.title || c.label));
     // While viewing someone else's edition, never list the viewer's own relationships in their menu.
     const viewingOther = viewingSharedEdition() !== null;
-    const shared = { ...SHARED_GROUP, items: SHARED_GROUP.items.map(item => ({ ...item, badge: item.to === '/shared/conversations' ? badges.chat : item.to === '/shared/wonderings' ? badges.wonderings : undefined })) };
+    const sharedItems = SHARED_GROUP.items.filter(item => area !== 'zac' || item.to !== '/our-charts').map(item => ({ ...item, badge: item.to === '/shared/conversations' ? badges.chat : item.to === '/shared/wonderings' ? badges.wonderings : undefined }));
+    // Shane belongs to two separate spaces; Zac only to his. Each link opens that space first.
+    const spaceLinks: NavItem[] = area === 'zac' ? [{ to: '/shared/zac', label: 'Open Zac & Shane space' }] : [{ to: '/shared/april', label: 'Open space with April' }, { to: '/shared/zac', label: 'Open space with Zac' }];
+    const shared = { ...SHARED_GROUP, items: [...spaceLinks, ...sharedItems] };
     const relationships = { ...RELATIONSHIPS_GROUP, items: [...RELATIONSHIPS_GROUP.items, ...(viewingOther ? [] : rels.map(r => ({ to: `/relationships/${r.id}`, label: `↳ ${r.name}${r.relation ? ` · ${r.relation}` : ''}` })))] };
     const sharedLinks: NavItem[] = sharedEditions.filter(e => e !== area).map(e => e === 'april' ? { to: '/april', label: 'April’s Masterbook' } : e === 'shane' ? { to: '/shane', label: 'Shane’s Masterbook' } : { to: '/zac', label: 'Zac’s Astrological Library' });
     const chapterGroup = { title: area === 'zac' ? 'Zac’s Library by Topic' : 'Masterbook by Topic', items: chapters === null ? [{ to: `/${area}`, label: 'Loading chapters…' }] : chapters.length ? [] : [{ to: `/${area}`, label: 'Chapters couldn’t load — open the edition' }], submenus: topics.map(t => ({ label: `${t.label} · ${t.items.length}`, items: t.items.map(c => ({ to: `/${area}/${c.id}`, label: shortChapterLabel(c.id, c.title || c.label) })) })) } as NavGroup;
@@ -66,7 +69,7 @@ function useShaneGroups(enabled: boolean, area: 'shane' | 'zac' = 'shane'): NavG
       { title: 'My Edition', items: [{ to: '/dashboard', label: 'Home' }, { to: '/zac', label: 'My Astrological Library' }, { to: '/zac/workbook', label: 'My Workbook' }, { to: '/my-chart', label: 'My chart' }, { to: '/my-readings', label: 'My readings' }, { to: '/counselors', label: 'Counselors' }] },
       chapterGroup,
       { title: 'Explore', items: [{ to: '/explore', label: 'Explore everything' }, { to: '/transits', label: 'Transits' }, { to: '/timeline', label: 'Timeline' }, { to: '/profection', label: 'Year of life' }, { to: '/other-systems', label: 'Other systems' }] },
-      relationships,
+      shared, relationships,
       ...(sharedLinks.length ? [{ title: 'Shared with me', items: sharedLinks }] : []),
       { title: 'Official AstroBook', items: [{ to: '/official-astrobook', label: 'My Official AstroBook' }, { to: '/official-astrobook/comic/zac', label: 'My Official AstroComic' }, { to: '/official-astrobook/showcase/zac', label: 'My Illustrated Pages' }, { to: '/investors', label: 'Investor overview' }, { to: '/store', label: 'Shop' }] },
     ] as NavGroup[];
