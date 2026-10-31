@@ -1698,6 +1698,7 @@ export type Database = {
           id: string
           notes: string
           service_name: string
+          space_key: string
           updated_at: string
           url: string
           username: string
@@ -1709,6 +1710,7 @@ export type Database = {
           id?: string
           notes?: string
           service_name: string
+          space_key?: string
           updated_at?: string
           url?: string
           username?: string
@@ -1720,6 +1722,7 @@ export type Database = {
           id?: string
           notes?: string
           service_name?: string
+          space_key?: string
           updated_at?: string
           url?: string
           username?: string
@@ -1736,6 +1739,7 @@ export type Database = {
           note: string
           page: number | null
           quote: string
+          space_key: string
         }
         Insert: {
           author_id: string
@@ -1746,6 +1750,7 @@ export type Database = {
           note: string
           page?: number | null
           quote?: string
+          space_key?: string
         }
         Update: {
           author_id?: string
@@ -1756,6 +1761,7 @@ export type Database = {
           note?: string
           page?: number | null
           quote?: string
+          space_key?: string
         }
         Relationships: [
           {
@@ -1777,6 +1783,7 @@ export type Database = {
           mime_type: string | null
           post_id: string | null
           size_bytes: number | null
+          space_key: string
           uploaded_by: string
         }
         Insert: {
@@ -1788,6 +1795,7 @@ export type Database = {
           mime_type?: string | null
           post_id?: string | null
           size_bytes?: number | null
+          space_key?: string
           uploaded_by?: string
         }
         Update: {
@@ -1799,6 +1807,7 @@ export type Database = {
           mime_type?: string | null
           post_id?: string | null
           size_bytes?: number | null
+          space_key?: string
           uploaded_by?: string
         }
         Relationships: [
@@ -1822,16 +1831,19 @@ export type Database = {
         Row: {
           conversation_id: string
           last_read_at: string
+          space_key: string
           user_id: string
         }
         Insert: {
           conversation_id: string
           last_read_at?: string
+          space_key?: string
           user_id?: string
         }
         Update: {
           conversation_id?: string
           last_read_at?: string
+          space_key?: string
           user_id?: string
         }
         Relationships: [
@@ -1850,6 +1862,7 @@ export type Database = {
           created_by: string
           id: string
           kind: string
+          space_key: string
           title: string
           updated_at: string
         }
@@ -1858,6 +1871,7 @@ export type Database = {
           created_by?: string
           id?: string
           kind?: string
+          space_key?: string
           title: string
           updated_at?: string
         }
@@ -1866,6 +1880,7 @@ export type Database = {
           created_by?: string
           id?: string
           kind?: string
+          space_key?: string
           title?: string
           updated_at?: string
         }
@@ -1880,6 +1895,7 @@ export type Database = {
           id: string
           mime_type: string | null
           size_bytes: number | null
+          space_key: string
           title: string
           updated_at: string
           uploaded_by: string
@@ -1892,6 +1908,7 @@ export type Database = {
           id?: string
           mime_type?: string | null
           size_bytes?: number | null
+          space_key?: string
           title: string
           updated_at?: string
           uploaded_by: string
@@ -1904,6 +1921,7 @@ export type Database = {
           id?: string
           mime_type?: string | null
           size_bytes?: number | null
+          space_key?: string
           title?: string
           updated_at?: string
           uploaded_by?: string
@@ -1916,6 +1934,7 @@ export type Database = {
           created_by: string
           details: string
           id: string
+          space_key: string
           status: string
           title: string
           updated_at: string
@@ -1925,6 +1944,7 @@ export type Database = {
           created_by?: string
           details?: string
           id?: string
+          space_key?: string
           status?: string
           title: string
           updated_at?: string
@@ -1934,6 +1954,7 @@ export type Database = {
           created_by?: string
           details?: string
           id?: string
+          space_key?: string
           status?: string
           title?: string
           updated_at?: string
@@ -1948,6 +1969,7 @@ export type Database = {
           id: string
           item_id: string
           item_type: string
+          space_key: string
         }
         Insert: {
           author_id?: string
@@ -1956,6 +1978,7 @@ export type Database = {
           id?: string
           item_id: string
           item_type: string
+          space_key?: string
         }
         Update: {
           author_id?: string
@@ -1964,6 +1987,7 @@ export type Database = {
           id?: string
           item_id?: string
           item_type?: string
+          space_key?: string
         }
         Relationships: []
       }
@@ -1974,6 +1998,7 @@ export type Database = {
           id: string
           item_id: string
           item_type: string
+          space_key: string
           user_id: string
         }
         Insert: {
@@ -1982,6 +2007,7 @@ export type Database = {
           id?: string
           item_id: string
           item_type: string
+          space_key?: string
           user_id?: string
         }
         Update: {
@@ -1990,6 +2016,7 @@ export type Database = {
           id?: string
           item_id?: string
           item_type?: string
+          space_key?: string
           user_id?: string
         }
         Relationships: []
@@ -2004,6 +2031,7 @@ export type Database = {
           id: string
           mime_type: string | null
           size_bytes: number | null
+          space_key: string
           uploaded_by: string
         }
         Insert: {
@@ -2015,6 +2043,7 @@ export type Database = {
           id?: string
           mime_type?: string | null
           size_bytes?: number | null
+          space_key?: string
           uploaded_by?: string
         }
         Update: {
@@ -2026,6 +2055,7 @@ export type Database = {
           id?: string
           mime_type?: string | null
           size_bytes?: number | null
+          space_key?: string
           uploaded_by?: string
         }
         Relationships: [
@@ -2044,18 +2074,21 @@ export type Database = {
           created_by: string
           id: string
           name: string
+          space_key: string
         }
         Insert: {
           created_at?: string
           created_by: string
           id?: string
           name: string
+          space_key?: string
         }
         Update: {
           created_at?: string
           created_by?: string
           id?: string
           name?: string
+          space_key?: string
         }
         Relationships: []
       }
@@ -2065,6 +2098,7 @@ export type Database = {
           emoji: string
           id: string
           message_id: string
+          space_key: string
           user_id: string
         }
         Insert: {
@@ -2072,6 +2106,7 @@ export type Database = {
           emoji: string
           id?: string
           message_id: string
+          space_key?: string
           user_id?: string
         }
         Update: {
@@ -2079,6 +2114,7 @@ export type Database = {
           emoji?: string
           id?: string
           message_id?: string
+          space_key?: string
           user_id?: string
         }
         Relationships: [
@@ -2100,6 +2136,7 @@ export type Database = {
           id: string
           reply_to_id: string | null
           sender_id: string
+          space_key: string
         }
         Insert: {
           body?: string
@@ -2109,6 +2146,7 @@ export type Database = {
           id?: string
           reply_to_id?: string | null
           sender_id?: string
+          space_key?: string
         }
         Update: {
           body?: string
@@ -2118,6 +2156,7 @@ export type Database = {
           id?: string
           reply_to_id?: string | null
           sender_id?: string
+          space_key?: string
         }
         Relationships: [
           {
@@ -2142,6 +2181,7 @@ export type Database = {
           created_at: string
           created_by: string
           id: string
+          space_key: string
           title: string
           updated_at: string
           updated_by: string
@@ -2151,6 +2191,7 @@ export type Database = {
           created_at?: string
           created_by?: string
           id?: string
+          space_key?: string
           title: string
           updated_at?: string
           updated_by?: string
@@ -2160,6 +2201,7 @@ export type Database = {
           created_at?: string
           created_by?: string
           id?: string
+          space_key?: string
           title?: string
           updated_at?: string
           updated_by?: string
@@ -2172,6 +2214,7 @@ export type Database = {
           body: string
           created_at: string
           id: string
+          space_key: string
           title: string
           updated_at: string
         }
@@ -2180,6 +2223,7 @@ export type Database = {
           body: string
           created_at?: string
           id?: string
+          space_key?: string
           title?: string
           updated_at?: string
         }
@@ -2188,6 +2232,7 @@ export type Database = {
           body?: string
           created_at?: string
           id?: string
+          space_key?: string
           title?: string
           updated_at?: string
         }
@@ -2201,6 +2246,7 @@ export type Database = {
           id: string
           link: string
           note: string
+          space_key: string
           title: string
         }
         Insert: {
@@ -2210,6 +2256,7 @@ export type Database = {
           id?: string
           link?: string
           note?: string
+          space_key?: string
           title: string
         }
         Update: {
@@ -2219,7 +2266,26 @@ export type Database = {
           id?: string
           link?: string
           note?: string
+          space_key?: string
           title?: string
+        }
+        Relationships: []
+      }
+      shared_space_prefs: {
+        Row: {
+          active_space: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          active_space: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          active_space?: string
+          updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }
@@ -2230,6 +2296,7 @@ export type Database = {
           created_at: string
           edited_at: string | null
           id: string
+          space_key: string
           wondering_id: string
         }
         Insert: {
@@ -2238,6 +2305,7 @@ export type Database = {
           created_at?: string
           edited_at?: string | null
           id?: string
+          space_key?: string
           wondering_id: string
         }
         Update: {
@@ -2246,6 +2314,7 @@ export type Database = {
           created_at?: string
           edited_at?: string | null
           id?: string
+          space_key?: string
           wondering_id?: string
         }
         Relationships: [
@@ -2263,6 +2332,7 @@ export type Database = {
           created_at: string
           emoji: string
           id: string
+          space_key: string
           user_id: string
           wondering_id: string
         }
@@ -2270,6 +2340,7 @@ export type Database = {
           created_at?: string
           emoji: string
           id?: string
+          space_key?: string
           user_id?: string
           wondering_id: string
         }
@@ -2277,6 +2348,7 @@ export type Database = {
           created_at?: string
           emoji?: string
           id?: string
+          space_key?: string
           user_id?: string
           wondering_id?: string
         }
@@ -2293,14 +2365,17 @@ export type Database = {
       shared_wondering_reads: {
         Row: {
           last_read_at: string
+          space_key: string
           user_id: string
         }
         Insert: {
           last_read_at?: string
+          space_key?: string
           user_id?: string
         }
         Update: {
           last_read_at?: string
+          space_key?: string
           user_id?: string
         }
         Relationships: []
@@ -2311,6 +2386,7 @@ export type Database = {
           body: string
           created_at: string
           id: string
+          space_key: string
           status: string
           target_user_id: string
           updated_at: string
@@ -2320,6 +2396,7 @@ export type Database = {
           body: string
           created_at?: string
           id?: string
+          space_key?: string
           status?: string
           target_user_id: string
           updated_at?: string
@@ -2329,6 +2406,7 @@ export type Database = {
           body?: string
           created_at?: string
           id?: string
+          space_key?: string
           status?: string
           target_user_id?: string
           updated_at?: string
@@ -2900,6 +2978,7 @@ export type Database = {
           used: number
         }[]
       }
+      current_shared_space: { Args: never; Returns: string }
       dev_stats: {
         Args: never
         Returns: {
@@ -2962,6 +3041,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      in_shared_space: { Args: { _space: string }; Returns: boolean }
       investor_metrics: {
         Args: never
         Returns: {
@@ -3007,6 +3087,7 @@ export type Database = {
       }
       my_referral_code: { Args: never; Returns: string }
       my_shared_chapters: { Args: { _area: string }; Returns: string[] }
+      my_shared_spaces: { Args: never; Returns: string[] }
       owns_official_edition: { Args: { _edition: string }; Returns: boolean }
       plan_tier: { Args: { _user_id: string }; Returns: string }
       public_site_settings: {
@@ -3033,6 +3114,7 @@ export type Database = {
       }
       revoke_edition_shares: { Args: { _ids: string[] }; Returns: number }
       reward_referral: { Args: { _referred: string }; Returns: boolean }
+      set_shared_space: { Args: { _space: string }; Returns: string }
       share_edition: {
         Args: {
           _area?: string
