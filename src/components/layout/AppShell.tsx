@@ -404,6 +404,7 @@ function SidebarInner({ mobile = false, onNavigate }: { mobile?: boolean; onNavi
         <div className="mt-3"><AdminEditionSwitch fullEdition /></div>
         <div className="font-display text-2xl leading-tight mt-1">{edition === 'shane' ? 'Shane' : edition === 'zac' ? 'Zac' : 'April'}</div>
         <div className="text-xs text-muted-foreground mt-1">Private edition</div>
+        {viewingSharedEdition() && <div role="status" className="mt-3 rounded-xl border border-gold/40 bg-gold/10 p-3 text-xs"><p>You're seeing {edition === 'zac' ? 'Zac' : 'April'}'s menu exactly as they see it. Your own pages are hidden here.</p><Button size="sm" variant="outline" className="mt-2" onClick={leaveAprilEdition}>Back to my edition</Button></div>}
         <div className="gold-rule my-4" />
       </div>
       <div className="pt-1 space-y-2"><CommandPaletteTrigger label="Search the compendium" /><BookmarkButton /></div>
