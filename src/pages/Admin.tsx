@@ -64,19 +64,21 @@ export default function Admin() {
     <div className="space-y-8" data-keep-wording>
       <header className="space-y-3">
         <div className="font-smallcaps text-xs text-gold flex items-center gap-1"><ShieldCheck className="w-3 h-3" />{isAdmin ? 'Admin' : 'Workspace'}</div>
-        <div className="flex flex-wrap items-end justify-between gap-4"><h1 className="text-4xl sm:text-5xl">{isAdmin ? 'Admin Dashboard' : 'My Workspace'}</h1>{isAdmin && <div className="flex flex-wrap items-center gap-2"><a href="/developer" className="rounded-md border border-gold/40 px-3 py-2 text-sm text-gold">Developer dashboard</a><AdminSearch onOpen={go} /></div>}</div>
+        <div className="flex flex-wrap items-end justify-between gap-4"><h1 className="text-4xl sm:text-5xl">{isAdmin ? 'Admin Dashboard' : 'My Workspace'}</h1>{isAdmin && <div className="flex flex-wrap items-center gap-2"><Link to="/developer" className="rounded-md border border-gold/40 px-3 py-2 text-sm text-gold">Developer dashboard</Link><AdminSearch onOpen={go} /></div>}</div>
         <p className="text-muted-foreground max-w-2xl">{isAdmin ? 'Run Zodaci from one place: content, orders and payments, members, and platform settings. Every admin change is written to the audit log.' : 'Your saved documents and relationships. Built-in source books remain unchanged.'}</p>
-        {isAdmin && <div className="flex flex-wrap items-center gap-3"><Button asChild variant="outline"><Link to="/orders?all=1">Book order management</Link></Button><Button asChild variant="outline"><Link to="/dispatch">Dispatch books</Link></Button><Button asChild variant="outline"><Link to="/brand-launch">Brand launch & email list</Link></Button><div className="w-full sm:w-auto sm:max-w-xs"><AdminEditionSwitch /></div></div>}
-        {isAdmin && <p className="text-sm text-muted-foreground max-w-2xl">April's original account and its full private edition open in their own tab, so your own content is never mixed with hers.</p>}
+        {isAdmin && <div className="flex flex-wrap items-center gap-3"><Button asChild variant="outline"><Link to="/orders?all=1">Book order management</Link></Button><Button asChild variant="outline"><Link to="/dispatch">Dispatch books</Link></Button><Button asChild variant="outline"><Link to="/brand-launch">Brand launch & email list</Link></Button></div>}
+        {isAdmin && <p className="text-sm text-muted-foreground max-w-2xl">Switch to April's or Zac's edition from your account menu (top right) — it is the one place for changing views.</p>}
       </header>
       <AuthGate what="open your workspace">{() => (
         <div className="space-y-6">
-          <nav aria-label="Admin sections" className="-mx-1 overflow-x-auto pb-2">
-            <div className="flex items-center gap-1 whitespace-nowrap px-1 text-sm">
-              {groups.map((g, gi) => (
+          <nav aria-label="Admin sections" className="pb-2">
+            <div className="grid gap-3 text-sm sm:grid-cols-2 xl:grid-cols-3">
+              {groups.map(g => (
                 <Fragment key={g.label}>
-                  <span className={`px-2 font-smallcaps text-[10px] text-muted-foreground ${gi ? 'ml-2 border-l border-border pl-3' : ''}`}>{g.label}</span>
+                  <div role="group" aria-label={g.label} className="flex flex-wrap items-center gap-1 rounded-lg border border-border/60 bg-card/40 p-2">
+                  <span className="w-full px-2 font-smallcaps text-[10px] text-muted-foreground">{g.label}</span>
                   {g.tabs.map(t => <Button key={t.id} id={`admin-tab-${t.id}`} size="sm" variant={tab === t.id ? 'secondary' : 'ghost'} aria-current={tab === t.id ? 'page' : undefined} onClick={() => go(t.id)} className={`rounded-full border ${tab === t.id ? 'border-accent bg-accent/15' : 'border-transparent'}`}>{t.label}</Button>)}
+                  </div>
                 </Fragment>
               ))}
             </div>
