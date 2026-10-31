@@ -43,6 +43,20 @@ Deno.serve(async (req) => {
   if (!edition) return json({ error: 'Edition unavailable.' }, 500);
 
   const body = await req.json().catch(() => ({}));
+  // Zac's workbook text: the developer can read it and save an edited version (backed up once first).
+  if (body.action === 'zac-workbook-get' || body.action === 'zac-workbook-save') {
+    if (dev.data !== true) return json({ error: 'Developer only.' }, 403);
+    const wb = await bucket.download('zac/workbook.json');
+    if (wb.error || !wb.data) return json({ error: 'Workbook unavailable.' }, 500);
+    const raw = await wb.data.text();
+    if (body.action === 'zac-workbook-get') return json({ content: raw });
+    const next = String(body.content ?? '');
+    try { JSON.parse(next); } catch { return json({ error: 'Not valid JSON.' }, 422); }
+    const hasBackup = await bucket.download('zac/workbook.original.json');
+    if (hasBackup.error) await bucket.upload('zac/workbook.original.json', new Blob([raw], { type: 'application/json' }));
+    const saved = await bucket.upload('zac/workbook.json', new Blob([next], { type: 'application/json' }), { upsert: true });
+    return saved.error ? json({ error: saved.error.message }, 500) : json({ saved: true });
+  }
   if (body.action === 'list') return json({ ids: Object.keys(edition).filter(k => !k.endsWith('.json')) });
   const id = String(body.id ?? '');
   const original = edition[id];
