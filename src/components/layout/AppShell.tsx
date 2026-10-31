@@ -33,7 +33,8 @@ function useFounderGroups(): NavGroup[] {
   const aprilGroups = APRIL_NAV_GROUPS; // private payload; re-read each render so late registration shows up
   return useMemo(() => {
     const shared = { ...SHARED_GROUP, items: SHARED_GROUP.items.map(item => ({ ...item, badge: item.to === '/shared/conversations' ? badges.chat : item.to === '/shared/wonderings' ? badges.wonderings : undefined })) };
-    const relationships = { ...RELATIONSHIPS_GROUP, items: [...RELATIONSHIPS_GROUP.items, ...rels.map(r => ({ to: `/relationships/${r.id}`, label: `↳ ${r.name}${r.relation ? ` · ${r.relation}` : ''}` }))] };
+    // A shared viewer (Shane opening April's edition) never sees his own relationships in her menu.
+    const relationships = { ...RELATIONSHIPS_GROUP, items: [...RELATIONSHIPS_GROUP.items, ...(viewingSharedEdition() !== null ? [] : rels.map(r => ({ to: `/relationships/${r.id}`, label: `↳ ${r.name}${r.relation ? ` · ${r.relation}` : ''}` })))] };
     // Admin pages never appear in April's menu; the admin opens her edition from his own account.
     const noAdmin = (gs: NavGroup[]) => gs.map(g => ({ ...g, items: g.items.filter(i => !ADMIN_ONLY.includes(i.to)), submenus: g.submenus?.map(sm => ({ ...sm, items: sm.items.filter(i => !ADMIN_ONLY.includes(i.to)) })) })).filter(g => g.items.length || g.submenus?.length);
     // Her own Official AstroBook section: only her Masterbook and her AstroComic (the server lists nothing else for her).
