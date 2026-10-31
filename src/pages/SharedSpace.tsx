@@ -37,7 +37,6 @@ type WonderingComment = { id: string; wondering_id: string; author_id: string; b
 type WonderingReaction = { id: string; wondering_id: string; user_id: string; emoji: string };
 type Directory = Record<string, string>;
 
-const ALLOWED = new Set(['shanealecompte@gmail.com', 'shanegoble@gmail.com', 'babybluepuppet@gmail.com']);
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const db = (name: string): any => supabase.from(name as never); // generated table names are runtime-safe; helper keeps CRUD concise.
 const person = (directory: Directory, id: string) => directory[id] ?? 'Shared member';
@@ -57,8 +56,6 @@ async function uploadAttachments(files: File[], parent: { message_id?: string; p
 function SharedSpaceGate({ children }: { children: (userId: string) => React.ReactNode }) {
   const session = useSession();
   if (!session) return <AuthGate what="open your private shared space">{children}</AuthGate>;
-  const email = session.user.email?.toLowerCase() ?? '';
-  if (!ALLOWED.has(email)) return <div className="parchment p-6 max-w-xl"><h2 className="text-2xl">Private shared space</h2><p className="mt-2 text-sm text-muted-foreground">This area is only available to April and Shane.</p></div>;
   return <>{children(session.user.id)}</>;
 }
 
@@ -213,7 +210,7 @@ function Wonderings({ userId }: { userId: string }) {
     const [w, c, r] = await Promise.all([db('shared_wonderings').select('*').order('updated_at', { ascending: false }), db('shared_wondering_comments').select('*').order('created_at'), db('shared_wondering_reactions').select('*')]);
     if (w.error || c.error || r.error) toast.error('Wonderings could not be refreshed.');
     setItems((w.data ?? []) as Wondering[]); setComments((c.data ?? []) as WonderingComment[]); setReactions((r.data ?? []) as WonderingReaction[]);
-    await db('shared_wondering_reads').upsert({ user_id: userId, last_read_at: new Date().toISOString() });
+    await db('shared_wondering_reads').upsert({ user_id: userId, last_read_at: new Date().toISOString() }, { onConflict: 'user_id,space_key' });
   }, [userId]);
   useEffect(() => { load(); const channel = supabase.channel(`shared-wonderings:${userId}`).on('postgres_changes', { event: '*', schema: 'public', table: 'shared_wonderings' }, load).on('postgres_changes', { event: '*', schema: 'public', table: 'shared_wondering_comments' }, load).on('postgres_changes', { event: '*', schema: 'public', table: 'shared_wondering_reactions' }, load).subscribe(); return () => { supabase.removeChannel(channel); }; }, [load, userId]);
   const add = async () => { if (!body.trim() || !otherId) return; const { error } = await db('shared_wonderings').insert({ body: body.trim(), author_id: userId, target_user_id: otherId }); if (error) toast.error(error.message); else { setBody(''); load(); } };
