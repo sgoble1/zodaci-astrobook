@@ -1,4 +1,5 @@
 import { shortChapterLabel } from '@/lib/chapterLabels';
+import { groupChaptersByTopic } from '@/lib/founderTopics';
 import { AdminEditionSwitch } from '@/components/common/AdminEditionSwitch';
 import { PageErrorBoundary } from '@/components/common/PageErrorBoundary';
 import { VerifySources } from '@/components/common/VerifySources';
@@ -52,12 +53,14 @@ function useShaneGroups(enabled: boolean, area: 'shane' | 'zac' = 'shane'): NavG
   // Retry after navigation so chapters appear once the edition is unlocked.
   useEffect(() => { if (!enabled || listed) return; let on = true; loadEditionIndex(area).then(e => { if (on) setChapters(e); }).catch(() => { if (on) setChapters([]); }); return () => { on = false; }; }, [enabled, listed, pathname, area]);
   return useMemo(() => {
-    const parts = new Map<string, NavItem[]>();
-    for (const c of chapters ?? []) parts.set(c.part || 'Chapters', [...(parts.get(c.part || 'Chapters') ?? []), { to: `/${area}/${c.id}`, label: shortChapterLabel(c.id, c.title || c.label) }]);
+    // Topic-led, like April's menu: every chapter sits under one plain life topic; nothing is removed.
+    const topics = groupChaptersByTopic(chapters ?? [], c => shortChapterLabel(c.id, c.title || c.label));
+    // While viewing someone else's edition, never list the viewer's own relationships in their menu.
+    const viewingOther = viewingSharedEdition() !== null;
     const shared = { ...SHARED_GROUP, items: SHARED_GROUP.items.map(item => ({ ...item, badge: item.to === '/shared/conversations' ? badges.chat : item.to === '/shared/wonderings' ? badges.wonderings : undefined })) };
-    const relationships = { ...RELATIONSHIPS_GROUP, items: [...RELATIONSHIPS_GROUP.items, ...rels.map(r => ({ to: `/relationships/${r.id}`, label: `↳ ${r.name}${r.relation ? ` · ${r.relation}` : ''}` }))] };
+    const relationships = { ...RELATIONSHIPS_GROUP, items: [...RELATIONSHIPS_GROUP.items, ...(viewingOther ? [] : rels.map(r => ({ to: `/relationships/${r.id}`, label: `↳ ${r.name}${r.relation ? ` · ${r.relation}` : ''}` })))] };
     const sharedLinks: NavItem[] = sharedEditions.filter(e => e !== area).map(e => e === 'april' ? { to: '/april', label: 'April’s Masterbook' } : e === 'shane' ? { to: '/shane', label: 'Shane’s Masterbook' } : { to: '/zac', label: 'Zac’s Astrological Library' });
-    const chapterGroup = { title: area === 'zac' ? 'Library Chapters' : 'Masterbook Chapters', items: chapters === null ? [{ to: `/${area}`, label: 'Loading chapters…' }] : chapters.length ? [] : [{ to: `/${area}`, label: 'Chapters couldn’t load — open the edition' }], submenus: [...parts.entries()].map(([label, items]) => ({ label, items })) } as NavGroup;
+    const chapterGroup = { title: area === 'zac' ? 'Zac’s Library by Topic' : 'Masterbook by Topic', items: chapters === null ? [{ to: `/${area}`, label: 'Loading chapters…' }] : chapters.length ? [] : [{ to: `/${area}`, label: 'Chapters couldn’t load — open the edition' }], submenus: topics.map(t => ({ label: `${t.label} · ${t.items.length}`, items: t.items.map(c => ({ to: `/${area}/${c.id}`, label: shortChapterLabel(c.id, c.title || c.label) })) })) } as NavGroup;
     if (area === 'zac') return [
       { title: 'My Edition', items: [{ to: '/dashboard', label: 'Home' }, { to: '/zac', label: 'My Astrological Library' }, { to: '/zac/workbook', label: 'My Workbook' }, { to: '/my-chart', label: 'My chart' }, { to: '/my-readings', label: 'My readings' }, { to: '/counselors', label: 'Counselors' }] },
       chapterGroup,
