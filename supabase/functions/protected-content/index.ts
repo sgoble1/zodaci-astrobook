@@ -20,6 +20,8 @@ function loadStored(folder: 'shane' | 'zac') {
       return JSON.parse(await data.text()) as Record<string, string>;
     })().catch(e => { editionCache.delete(folder); throw e; });
     editionCache.set(folder, p);
+    // Corrections are saved to storage; refresh the cached copy every few minutes so they appear.
+    setTimeout(() => { if (editionCache.get(folder) === p) editionCache.delete(folder); }, 5 * 60 * 1000);
   }
   return p;
 }
