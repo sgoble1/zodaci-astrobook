@@ -1,5 +1,8 @@
 # Zodaci — Active Project Index
 
+## Shop catalog (Oct 31)
+- [x] Replaced shop with the 44-product catalog (core, apparel & home, six sign editions); sign filter on the Store page. Product photos still to add.
+
 ## Menus, view switch & brand refresh (Oct 31)
 - [x] View switch isolation: while Shane views April's or Zac's edition, his own relationships never appear in their menu; a "viewing as" notice with "Back to my edition" shows in the sidebar.
 - [x] Shane & Zac menus by plain life topic (Start Here, Past Lives & Karma, Love & Relationships, Family & Brotherhood, Career/Money/Purpose, Shadow Work, Health, Mind & Personality, Spiritual Gifts, Timing, World Systems, Stars & Degrees, More); every chapter listed once, topics fold open/closed, the open page's topic stays open. April's menu unchanged.
