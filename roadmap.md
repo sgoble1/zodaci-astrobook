@@ -1,15 +1,16 @@
 # Zodaci — Active Project Index
 
 ## Shop catalog (Oct 31)
-- [x] Replaced shop with the 44-product catalog (core, apparel & home, six sign editions); sign filter on the Store page. Product photos still to add.
+- [x] Replaced shop with the 44-product catalog (core, apparel & home, six sign editions); sign filter on the Store page. All 44 listings now carry their catalog photo (extracted from the uploaded catalog PDF).
 
 ## Menus, view switch & brand refresh (Oct 31)
 - [x] View switch isolation: while Shane views April's or Zac's edition, his own relationships never appear in their menu; a "viewing as" notice with "Back to my edition" shows in the sidebar.
 - [x] Shane & Zac menus by plain life topic (Start Here, Past Lives & Karma, Love & Relationships, Family & Brotherhood, Career/Money/Purpose, Shadow Work, Health, Mind & Personality, Spiritual Gifts, Timing, World Systems, Stars & Degrees, More); every chapter listed once, topics fold open/closed, the open page's topic stays open. April's menu unchanged.
 - [ ] Full "view as" data: pages like My chart / Dashboard still show the viewer's own chart while viewing another edition (needs read-only server access to the other person's profile).
 - [ ] One place for account switching: merge the edition switch from Admin, account menu and sidebar into one control.
-- [ ] Separate shared workspaces: April & Shane, Zac & Shane, both under the Shared Spaces button.
-- [ ] Admin page: group 20 tabs into sections; Developer link without full reload; register 5 missing routes; update /podcasts plan-lock test.
+- [x] Separate shared workspaces: April & Shane and Zac & Shane, enforced by the database (space_key + current_shared_space); switcher on /shared, links /shared/april and /shared/zac in Shane's and Zac's menus.
+- [x] Registered missing routes; updated /podcasts plan-lock test (Pro = Cosmic features).
+- [ ] Admin page: group 20 tabs into sections; Developer link without full reload.
 - [ ] Zac workbook: replace the informal "dad" letter text with a proper 33/6 Life Path section (needs Zac-owned file rewrite).
 - [ ] Brother synastry hub for Shane & Zac; accurate Zac illustrations; Zac's official AstroComic updated art.
 - [ ] AstroComic: personalised Issue #1 for each buyer, Issue #2, shop delivery dates; fix Issue #1 title/link mismatch.

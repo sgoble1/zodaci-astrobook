@@ -9,7 +9,7 @@
 - Founder classic view: member-listed routes render the member version; routes only in April's menu keep their original renderer (onlyInFullEdition), so classic never substitutes unrelated pages. Founder trail/next use the same normalized groups the sidebar renders (FounderGroupsContext).
 - Edition ownership for Zac is assigned by admins in edition_access; investor access in investor_access (email-keyed, RLS admin-only); can_view_investors() checks investors. Admin role never opens another person's edition by itself.
 - Admin uses user_roles + has_role(); claim_admin() grants the verified owner on sign-in. No auth-schema triggers.
-- Database/storage enforce Shane/April shared access, never client-only. SharedChatFeed is hidden when signed out/unapproved, including dashboards.
+- Shared spaces ('april' = April & Shane, 'zac' = Zac & Shane) are separated by space_key on every shared_* table; RLS compares it to current_shared_space() (per-user saved choice, set via set_shared_space) so client queries need no filters. Database/storage enforce access, never client-only. SharedChatFeed is hidden when signed out/unapproved, including dashboards.
 - April pages use aprilOnly(): Shane chart/family/home appears only in Relationships. Never infer family/ancestry/childhood from symbolism; use verified placements/home guidance.
 - Social Integration has owner-only conversations and a separate counselor; history never enters shared chat or therapy.
 - Counselors replay full sessions with verified profiles; retain session corrections, never claim hidden cross-session learning.
