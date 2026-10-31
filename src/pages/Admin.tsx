@@ -23,7 +23,6 @@ import { MarketingPages } from '@/components/admin/MarketingPages';
 import { PrintOrders } from '@/components/admin/PrintOrders';
 import { GrowthStats } from '@/components/admin/GrowthStats';
 import { UpgradeFunnel } from '@/components/admin/UpgradeFunnel';
-import { AdminEditionSwitch } from '@/components/common/AdminEditionSwitch';
 import { AdminSearch } from '@/components/admin/AdminSearch';
 import { AuditLog } from '@/components/admin/AuditLog';
 import { PlatformSettings } from '@/components/admin/PlatformSettings';
