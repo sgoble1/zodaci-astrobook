@@ -65,19 +65,40 @@ function useDirectory() {
   return directory;
 }
 
-function SharedNav({ value }: { value: string }) {
+function SharedNav({ value, space }: { value: string; space: SharedSpaceKey }) {
+  const books = space === 'zac'
+    ? [['shane', '/shane', 'Shane’s Masterbook', BookOpen], ['zac', '/zac', 'Zac’s Masterbook', BookOpen]] as const
+    : [['shane', '/shane', 'Shane’s Masterbook', BookOpen], ['april', '/masterbook', 'April’s Masterbook', BookOpen]] as const;
   const links = [
     ['overview', '/shared', 'Dashboard', Users], ['chat', '/shared/conversations', 'Conversations', MessageCircle], ['posts', '/shared/posts', 'Posts', FileText], ['notes', '/shared/notes', 'Notes', StickyNote],
-    ['wonderings', '/shared/wonderings', 'Wonderings', Heart], ['reading', '/shared/reading', 'Reading Together', BookOpen], ['media', '/shared/media', 'Media Library', ImageIcon], ['recs', '/shared/recommendations', 'Recommendations', Clapperboard], ['later', '/shared/later', 'Talk Later', Archive], ['accounts', '/shared/accounts', 'Accounts', Link2], ['shane', '/shane', 'Shane’s Masterbook', BookOpen], ['april', '/masterbook', 'April’s Masterbook', BookOpen],
+    ['wonderings', '/shared/wonderings', 'Wonderings', Heart], ['reading', '/shared/reading', 'Reading Together', BookOpen], ['media', '/shared/media', 'Media Library', ImageIcon], ['recs', '/shared/recommendations', 'Recommendations', Clapperboard], ['later', '/shared/later', 'Talk Later', Archive], ['accounts', '/shared/accounts', 'Accounts', Link2], ...books,
   ] as const;
   return <nav className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap" aria-label="Shared space sections">{links.map(([id, to, label, Icon]) => <Button key={id} asChild variant={value === id ? 'default' : 'outline'} size="sm"><Link to={to} aria-current={value === id ? 'page' : undefined}><Icon className="h-4 w-4" />{label}</Link></Button>)}</nav>;
 }
 
+function SpaceSwitcher({ spaces, active, onSwitch }: { spaces: SharedSpaceKey[]; active: SharedSpaceKey; onSwitch: (s: SharedSpaceKey) => void }) {
+  if (spaces.length < 2) return null;
+  return <div role="group" aria-label="Choose shared space" className="inline-flex rounded-full border border-border bg-card/60 p-1">{spaces.map(s => <Button key={s} size="sm" variant={s === active ? 'default' : 'ghost'} className="rounded-full" aria-pressed={s === active} onClick={() => onSwitch(s)}>{SHARED_SPACE_LABEL[s]}</Button>)}</div>;
+}
+
+/** /shared/april and /shared/zac open that space, then show its dashboard. */
+export function OpenSharedSpace({ space }: { space: SharedSpaceKey }) {
+  const { switchTo, spaces, loading } = useSharedSpaces();
+  const nav = useNavigate();
+  useEffect(() => {
+    if (loading) return;
+    if (!spaces.includes(space)) { nav('/shared', { replace: true }); return; }
+    switchTo(space).then(() => nav('/shared', { replace: true }), () => nav('/shared', { replace: true }));
+  }, [loading, spaces, space, switchTo, nav]);
+  return <p role="status">Opening {SHARED_SPACE_LABEL[space]}…</p>;
+}
+
 export default function SharedSpace({ section = 'chat' }: { section?: 'overview' | 'media' | 'recs' | 'chat' | 'posts' | 'wonderings' | 'reading' | 'notes' | 'later' | 'accounts' }) {
-  const member = useSharedSpaceMember();
-  if (member === undefined) return <p role="status">Checking workspace access…</p>;
-  if (!member) return section === 'wonderings' ? <PublicWonderings /> : <div className="space-y-4"><h1 className="text-3xl">Your workspaces</h1><Button asChild><Link to="/workspaces">Open invited workspaces</Link></Button></div>;
-  return <div className="space-y-6"><header className="space-y-2"><div className="font-smallcaps text-xs text-gold">Private · April & Shane</div><h1 className="text-4xl sm:text-5xl">Our Shared Space</h1><p className="max-w-2xl text-muted-foreground">Messages, posts, notes, files, things to revisit, and useful account references in one private place.</p></header><SharedNav value={section} /><SharedSpaceGate>{userId => section === 'overview' ? <div className="space-y-5"><SharedOverview /><Recommendations userId={userId} compact /></div> : section === 'media' ? <MediaLibrary userId={userId} /> : section === 'recs' ? <Recommendations userId={userId} /> : section === 'chat' ? <Conversations userId={userId} /> : section === 'posts' ? <Posts userId={userId} /> : section === 'wonderings' ? <Wonderings userId={userId} /> : section === 'reading' ? <SharedReading userId={userId} /> : section === 'notes' ? <Notes userId={userId} /> : section === 'later' ? <TalkLater userId={userId} /> : <Accounts userId={userId} />}</SharedSpaceGate></div>;
+  const { loading, spaces, active, switchTo } = useSharedSpaces();
+  if (loading) return <p role="status">Checking workspace access…</p>;
+  if (!active) return section === 'wonderings' ? <PublicWonderings /> : <div className="space-y-4"><h1 className="text-3xl">Your workspaces</h1><Button asChild><Link to="/workspaces">Open invited workspaces</Link></Button></div>;
+  const onSwitch = (s: SharedSpaceKey) => { switchTo(s).catch(() => toast.error('That shared space could not be opened.')); };
+  return <div className="space-y-6"><header className="space-y-3"><div className="font-smallcaps text-xs text-gold">Private · {SHARED_SPACE_LABEL[active]}</div><h1 className="text-4xl sm:text-5xl">Our Shared Space</h1><p className="max-w-2xl text-muted-foreground">Messages, posts, notes, files, things to revisit, and useful account references in one private place. Each space is separate — nothing here appears in the other.</p><SpaceSwitcher spaces={spaces} active={active} onSwitch={onSwitch} /></header><SharedNav value={section} space={active} /><SharedSpaceGate>{userId => <div key={active}>{section === 'overview' ? <div className="space-y-5"><SharedOverview /><Recommendations userId={userId} compact /></div> : section === 'media' ? <MediaLibrary userId={userId} /> : section === 'recs' ? <Recommendations userId={userId} /> : section === 'chat' ? <Conversations userId={userId} /> : section === 'posts' ? <Posts userId={userId} /> : section === 'wonderings' ? <Wonderings userId={userId} /> : section === 'reading' ? <SharedReading userId={userId} /> : section === 'notes' ? <Notes userId={userId} /> : section === 'later' ? <TalkLater userId={userId} /> : <Accounts userId={userId} />}</div>}</SharedSpaceGate></div>;
 }
 
 function SharedOverview() {
