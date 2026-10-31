@@ -50,7 +50,7 @@ export function useMyBirth() {
         if (viewing) {
           const { data: eds } = await supabase.rpc('my_official_editions');
           const b = (eds ?? []).find((e: { edition: string }) => e.edition === viewing)?.birth as Record<string, unknown> | undefined;
-          if (b?.date && active && version === revision) return setBirth({ name: EDITION_OWNER_NAME[viewing], date: String(b.date), time: (b.time as string) ?? null, placeLabel: String(b.place_label ?? ''), lat: Number(b.lat), lon: Number(b.lon), tz: String(b.tz), houseSystem: ((b.house_system as string) === 'whole' ? 'whole-sign' : (b.house_system as HouseSystem)) ?? 'placidus', sex: null });
+          if (b?.date && active && version === revision) return setBirth({ name: EDITION_OWNER_NAME[viewing], date: String(b.date), time: (b.time as string) ?? null, placeLabel: String(b.place_label ?? ''), lat: Number(b.lat), lon: Number(b.lon), tz: String(b.tz), houseSystem: ((b.house_system as HouseSystem) ?? 'placidus'), sex: null });
         }
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const { data } = await (supabase as any).from('profiles').select('*').eq('id', u.user.id).maybeSingle();
