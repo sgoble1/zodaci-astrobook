@@ -1,5 +1,11 @@
 # Zodaci — Active Project Index
 
+## Edition views, Zac passage & home (Nov 1)
+- [ ] Locate the quoted dad / 33/6 passage in Zac's private library, rewrite only that passage, and verify the save under Zac's account.
+- [ ] My chart and Dashboard use the authorized selected edition's birth chart; never fall back to the viewer's chart or expose their private account data in a shared view.
+- [ ] Organize Admin into Editions, Products, Orders, Shared Spaces and supporting sections.
+- [ ] Refresh the public Zodaci home with new artwork and April's polished visual style.
+
 ## Shop catalog (Oct 31)
 - [x] Replaced shop with the 44-product catalog (core, apparel & home, six sign editions); sign filter on the Store page. All 44 listings now carry their catalog photo (extracted from the uploaded catalog PDF).
 
