@@ -19,6 +19,7 @@
 
 
 ## Source-answer credit denial (Oct 30)
+- [x] Private edition sign-in denial (Nov 1): handle 401/SIGNED_OUT as an access state, offer sign-in on the shared report, and keep denied downloads out of private state.
 - [x] Handle expected HTTP denials as inline state across Ask, SmartChat and source summaries; do not throw or save failed requests as answers. AI generation remains blocked until workspace credits are available.
 
 ## Finish interrupted corrections (Oct 30)

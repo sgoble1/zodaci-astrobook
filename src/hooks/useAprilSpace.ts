@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { clearPrivateEdition, hydratePrivateEdition } from '@/lib/privateEditionStore';
 import { isShaneAccount } from '@/lib/founderEdition';
+import { downloadPrivateEdition } from '@/lib/privateEditionLoader';
+import { ContentLockedError } from '@/lib/protectedContent';
 
 /**
  * April's edition opens by account only: April's own account always sees it; anyone she shared her whole edition
@@ -60,13 +62,7 @@ async function check() {
     // A shared reader (not the owner) sees April's edition only after choosing it for this tab.
     const ok = !open.error && open.data === true && ((!own.error && own.data === true) || view === 'april');
     if (ok) {
-      const response = await supabase.functions.invoke('private-edition', { body: {} });
-      if (response.error || typeof response.data?.url !== 'string') throw new Error('Private edition unavailable');
-      const download = await fetch(response.data.url, { signal: AbortSignal.timeout(20000) });
-      if (!download.ok) throw new Error('Private edition download failed');
-      const blob = await download.blob();
-      const stream = blob.stream().pipeThrough(new DecompressionStream('gzip'));
-      const edition = JSON.parse(await new Response(stream).text());
+      const edition = await downloadPrivateEdition();
       const current = await supabase.auth.getSession();
       if (!valid() || current.data.session?.user.id !== uid) return;
       hydratePrivateEdition(edition);
@@ -75,12 +71,12 @@ async function check() {
     setFailed(false);
     cached = { uid, view, ok };
     listeners.forEach(l => l(ok));
-  } catch {
+  } catch (error) {
     if (!valid()) return;
     cached = null;
     checkingUid = null;
     clearPrivateEdition();
-    setFailed(true);
+    setFailed(!(error instanceof ContentLockedError));
     listeners.forEach(l => l(false));
   }
 }

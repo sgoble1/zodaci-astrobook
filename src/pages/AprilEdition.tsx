@@ -2,6 +2,9 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { PrivateEditionGate } from '@/components/common/PrivateEditionGate';
 import { readPrivateModule } from '@/lib/privateEditionStore';
+import { downloadPrivateEdition } from '@/lib/privateEditionLoader';
+import { ContentLockedError } from '@/lib/protectedContent';
+import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ThemeArt } from '@/components/common/ThemeArt';
 import { ZodaciLogo } from '@/components/brand/ZodaciLogo';
@@ -48,6 +51,7 @@ function Section({ id, title, kicker, children }: { id: string; title: string; k
 function AprilEditionInner() {
   const [ed, setEd] = useState<Edition | null>(null);
   const [error, setError] = useState('');
+  const [signedOut, setSignedOut] = useState(false);
 
   useEffect(() => {
     document.title = "April's Edition · Zodaci";
@@ -57,20 +61,19 @@ function AprilEditionInner() {
   }, []);
 
   const active = useRef(true);
-  useEffect(() => () => { active.current = false; }, []);
+  useEffect(() => { active.current = true; return () => { active.current = false; }; }, []);
   const load = useCallback(async () => {
     setError('');
+    setSignedOut(false);
+    setEd(null);
     try {
-      const { data, error: err } = await supabase.functions.invoke('private-edition', { body: {} });
-      const status = (err as { context?: Response } | null)?.context?.status;
-      if (status === 403) throw new Error("April's edition is private. It opens only for April and the people she shares it with — ask her to share it with the email you signed in with.");
-      if (err || typeof data?.url !== 'string') throw new Error(data?.error || 'The shared edition could not load.');
-      const download = await fetch(data.url, { signal: AbortSignal.timeout(20000) });
-      if (!download.ok) throw new Error('The shared edition download failed.');
-      const stream = download.body!.pipeThrough(new DecompressionStream('gzip'));
-      const payload = JSON.parse(await new Response(stream).text());
+      const { data: before } = await supabase.auth.getSession();
+      const payload = await downloadPrivateEdition();
+      const { data: after } = await supabase.auth.getSession();
+      if (!before.session || before.session.user.id !== after.session?.user.id) return;
       if (active.current) setEd(fromPayload(payload));
     } catch (e) {
+      if (active.current) setSignedOut(e instanceof ContentLockedError && e.signedOut);
       if (active.current) setError((e as Error).message || 'The shared edition could not load. Please try again.');
     }
   }, []);
@@ -78,9 +81,9 @@ function AprilEditionInner() {
 
   if (error) {
     return (
-      <div className="mx-auto max-w-2xl space-y-4 p-8 text-center">
+      <div role="alert" className="mx-auto max-w-2xl space-y-4 p-8 text-center">
         <p className="text-muted-foreground">{error}</p>
-        <Button onClick={() => void load()}>Try again</Button>
+        {signedOut ? <Button asChild><Link to="/auth?next=%2Fapril">Sign in</Link></Button> : <Button onClick={() => void load()}>Try again</Button>}
       </div>
     );
   }

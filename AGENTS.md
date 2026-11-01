@@ -6,6 +6,7 @@
 ## Privacy and access
 - Private editions (April/Shane/Zac) open by account only: owner (owns_official_edition) or an owner-created edition_shares row (whole edition or single chapter, keyed by recipient email). protected-content/private-edition check can_open_edition/can_open_chapter with the caller's JWT and filter index.json to shared chapters; no passwords or device tokens. Public bundles contain no archived payload.
 - private-edition retains authorized data for lazy registrations; clear retained data and setters on auth changes to prevent stale-account exposure. The /april shared report reads its payload locally (readPrivateModule) and never hydrates the app-wide store, so late responses can't refill private state.
+- Private edition downloads use privateEditionLoader with the current session JWT; 401/403 become caught access states rather than failed-page exceptions, and account checks fence hydration.
 - Founder classic view: member-listed routes render the member version; routes only in April's menu keep their original renderer (onlyInFullEdition), so classic never substitutes unrelated pages. Founder trail/next use the same normalized groups the sidebar renders (FounderGroupsContext).
 - Edition ownership for Zac is assigned by admins in edition_access; investor access in investor_access (email-keyed, RLS admin-only); can_view_investors() checks investors. Admin role never opens another person's edition by itself.
 - Admin uses user_roles + has_role(); claim_admin() grants the verified owner on sign-in. No auth-schema triggers.
