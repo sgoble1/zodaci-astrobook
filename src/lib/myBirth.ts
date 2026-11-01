@@ -19,6 +19,7 @@ export const savedChart = (chart: ChartResult, timed: boolean) => ({ bodies: cha
 
 /** Saves to the member's profile; keeps a device copy so a chart works before sign-in finishes. */
 export async function saveMyBirth(b: MyBirth, chart: unknown) {
+  if (viewingSharedEdition()) return { saved: 'device' as const, error: new Error('Return to your own edition before editing birth details.'), readingsKept: true };
   localStorage.setItem(LOCAL, JSON.stringify(b));
   const { data: u } = await supabase.auth.getUser();
   if (!u.user) return { saved: 'device' as const };
@@ -50,7 +51,10 @@ export function useMyBirth() {
         if (viewing) {
           const { data: eds } = await supabase.rpc('my_official_editions');
           const b = (eds ?? []).find((e: { edition: string }) => e.edition === viewing)?.birth as Record<string, unknown> | undefined;
-          if (b?.date && active && version === revision) return setBirth({ name: EDITION_OWNER_NAME[viewing], date: String(b.date), time: (b.time as string) ?? null, placeLabel: String(b.place_label ?? ''), lat: Number(b.lat), lon: Number(b.lon), tz: String(b.tz), houseSystem: ((b.house_system as HouseSystem) ?? 'placidus'), sex: null });
+          if (!active || version !== revision) return;
+          if (b?.date && Number.isFinite(b.lat) && Number.isFinite(b.lon)) return setBirth({ name: EDITION_OWNER_NAME[viewing], date: String(b.date), time: (b.time as string) ?? null, placeLabel: String(b.place_label ?? ''), lat: Number(b.lat), lon: Number(b.lon), tz: String(b.tz), houseSystem: ((b.house_system as HouseSystem) ?? 'placidus'), sex: null });
+          setBirth(null);
+          return;
         }
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const { data } = await (supabase as any).from('profiles').select('*').eq('id', u.user.id).maybeSingle();
@@ -61,8 +65,9 @@ export function useMyBirth() {
       const raw = localStorage.getItem(LOCAL);
       try { if (active) setBirth(raw ? JSON.parse(raw) : null); } catch { if (active && version === revision) setBirth(null); }
     };
-    void load();
-    const refresh = () => { void load(); };
+    const safelyLoad = () => { void load().catch(() => { if (active) setBirth(null); }); };
+    safelyLoad();
+    const refresh = safelyLoad;
     window.addEventListener('astrobook-birth-saved', refresh);
     const stop = onAccountChange(() => { revision++; if (active) setBirth(undefined); setTimeout(refresh, 0); });
     return () => { active = false; window.removeEventListener('astrobook-birth-saved', refresh); stop(); };

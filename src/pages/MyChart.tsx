@@ -13,6 +13,7 @@ import { chartTitle, dominantElement } from "@/lib/chartTitle";
 import { balance } from '@/lib/resultsEngine';
 import { Button } from '@/components/ui/button';
 import { HouseRulers } from '@/components/chart/HouseRulers';
+import { viewingSharedEdition } from '@/hooks/useAprilSpace';
 
 const BODY: Record<string, string> = { sun: 'your basic identity and sense of purpose', moon: 'your feelings, instincts and need for safety', mercury: 'how you think, learn and talk', venus: 'how you love and what you value', mars: 'how you act and go after what you want', jupiter: 'where confidence and opportunity grow', saturn: 'where effort, limits and maturity build', uranus: 'where you need freedom', neptune: 'where imagination and sensitivity live', pluto: 'where deep change happens', chiron: 'an old sore spot that can become a gift for helping others', northNode: 'qualities you are learning to grow into', southNode: 'familiar talents to use without getting stuck' };
 const HOUSE_AREA = ['', 'self, body and first impressions', 'money, possessions and self-worth', 'thinking, siblings and your neighbourhood', 'home, family life and inner foundations', 'creativity, romance, play and children', 'daily routine, work habits and health', 'partners and one-to-one relationships', 'shared resources, intimacy and deep change', 'beliefs, study and travel', 'career, reputation and public life', 'friends, groups and hopes', 'rest, solitude and the hidden inner life'];
@@ -22,6 +23,7 @@ const ASPECT: Record<string, string> = { Conjunction: 'These two act as one.', O
 /** A member's own chart, calculated live from their saved birth details. */
 export default function MyChart() {
   const birth = useMyBirth();
+  const shared = viewingSharedEdition();
   const [hs, setHs] = useState<HouseSystem | null>(null);
   const [params] = useSearchParams();
   const [sel, setSel] = useState<BodyPos | null>(null);
@@ -48,13 +50,14 @@ export default function MyChart() {
       )}
       <header>
         <p className="font-smallcaps text-xs text-gold">{birth.name ? `${birth.name}'s chart` : 'Your chart'}</p>
-        <h1 className="font-display mt-1 text-4xl">Your birth chart</h1>
+        <h1 className="font-display mt-1 text-4xl">{shared ? `${birth.name}’s birth chart` : 'Your birth chart'}</h1>
+        {shared && <p className="mt-2 text-sm text-gold">Shared edition · Read only</p>}
         <p className="mt-2 text-muted-foreground">{birth.date}{birth.time ? ` · ${birth.time}` : ' · time unknown'} · {birth.placeLabel}</p>
         <p className="mt-3 font-display text-2xl text-gold">{named.title}</p>
         <p className="text-sm text-muted-foreground" title={named.why}>{named.subtitle}. {named.why}</p>
         <p className="mt-3 text-lg">{big3.map(b => `${b!.name} in ${b!.sign}`).join(', ')}{rising ? `, ${rising.sign} rising` : ''}.</p>
         <div className="mt-4 flex flex-wrap gap-3">
-          <Button asChild variant="outline"><Link to="/start">Edit birth details</Link></Button>
+          {!shared && <Button asChild variant="outline"><Link to="/start">Edit birth details</Link></Button>}
           <Button type="button" variant="outline" onClick={() => window.print()}><Printer className="h-4 w-4" aria-hidden />Print</Button>
           {birth.time && <label className="flex items-center gap-2 text-sm">House system
             <select aria-label="House system" className="rounded border border-border bg-background px-2 py-1" value={hs ?? birth.houseSystem} onChange={e => setHs(e.target.value as HouseSystem)}>{HOUSE_SYSTEMS.map(h => <option key={h.id} value={h.id}>{h.label}</option>)}</select></label>}
@@ -90,7 +93,7 @@ export default function MyChart() {
               {sel.retro && <section><h3 className="font-smallcaps text-xs text-gold">Retrograde</h3><p>From Earth it appeared to move backwards when you were born. Traditionally this turns the planet's energy inward: more reflective, reworked and personal.</p></section>}
               <section><h3 className="font-smallcaps text-xs text-gold">Links to other planets ({asp.length})</h3>{asp.length ? <ul className="list-disc pl-5 space-y-1">{asp.map((a, i) => <li key={i}>{a.a} {a.type.toLowerCase()} {a.b} ({a.orb.toFixed(1)}°) — {ASPECT[a.type] ?? ''}</li>)}</ul> : <p>No major aspects within orb.</p>}</section>
               <section><h3 className="font-smallcaps text-xs text-gold">In plain words</h3><p>Your {BODY[sel.key] ?? sel.name} works in a {SIGN_KEYWORDS[sel.sign].split(', ').slice(0, 2).join(' and ')} way{sel.house && birth.time ? `, mostly through ${HOUSE_AREA[sel.house].split(',')[0]}` : ''}.</p></section>
-              {TOPIC[sel.key] && <Button asChild size="sm"><Link to={`/my-readings/topic/${TOPIC[sel.key]}`}>Read the full chapter →</Link></Button>}
+              {!shared && TOPIC[sel.key] && <Button asChild size="sm"><Link to={`/my-readings/topic/${TOPIC[sel.key]}`}>Read the full chapter →</Link></Button>}
             </div>
           </>;
         })()}</DialogContent>
