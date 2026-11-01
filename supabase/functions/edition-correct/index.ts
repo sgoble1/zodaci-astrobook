@@ -31,9 +31,32 @@ const json = (body: unknown, status = 200) => new Response(JSON.stringify(body),
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
   const auth = req.headers.get('Authorization') ?? '';
+  const body = await req.json().catch(() => ({}));
   const url = Deno.env.get('SUPABASE_URL')!;
   const user = createClient(url, Deno.env.get('SUPABASE_ANON_KEY')!, { global: { headers: { Authorization: auth } } });
-  const [owns, dev] = await Promise.all([user.rpc('owns_official_edition', { _edition: 'shane' }), user.rpc('is_developer')]);
+  const [owns, dev, zacOwns] = await Promise.all([user.rpc('owns_official_edition', { _edition: 'shane' }), user.rpc('is_developer'), user.rpc('owns_official_edition', { _edition: 'zac' })]);
+  if (body.action === 'zac-chapter-save' && zacOwns.data === true) {
+    const admin = createClient(url, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!);
+    const bucket = admin.storage.from('private-content');
+    const { data: file, error } = await bucket.download('zac/edition.json');
+    if (error || !file) return json({ error: 'Edition unavailable.' }, 500);
+    const zac = JSON.parse(await file.text()) as Record<string, string>;
+    const id = String(body.id ?? ''); const text = String(body.text ?? '').trim();
+    if (!/^zac-\d+\.md$/.test(id) || !zac[id] || text.length < zac[id].length * 0.7) return json({ error: 'Unknown chapter or incomplete correction.' }, 422);
+    const backup = await bucket.download('zac/edition.original.json');
+    if (!backup.data) {
+      const saved = await bucket.upload('zac/edition.original.json', new Blob([JSON.stringify(zac)], { type: 'application/json' }), { upsert: false });
+      if (saved.error) return json({ error: 'Backup failed; nothing saved.' }, 500);
+    }
+    zac[id] = text;
+    if (body.indexTitle && zac['index.json']) {
+      const index = JSON.parse(zac['index.json']);
+      for (const row of index) if (row.id === id.replace(/\.md$/, '')) { row.title = String(body.indexTitle); row.excerpt = text.slice(0, 260); row.words = text.split(/\s+/).length; }
+      zac['index.json'] = JSON.stringify(index);
+    }
+    const saved = await bucket.upload('zac/edition.json', new Blob([JSON.stringify(zac)], { type: 'application/json' }), { upsert: true });
+    return saved.error ? json({ error: 'Save failed.' }, 500) : json({ id, saved: true });
+  }
   if (owns.data !== true && dev.data !== true) return json({ error: 'Only Shane can correct this edition.' }, 403);
 
   const admin = createClient(url, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!);
@@ -42,7 +65,6 @@ Deno.serve(async (req) => {
   const edition = await load('shane/edition.json');
   if (!edition) return json({ error: 'Edition unavailable.' }, 500);
 
-  const body = await req.json().catch(() => ({}));
   // Zac's workbook text: the developer can read it and save an edited version (backed up once first).
   if (body.action === 'zac-search' || body.action === 'zac-chapter-save') {
     if (dev.data !== true) return json({ error: 'Developer only.' }, 403);

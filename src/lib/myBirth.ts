@@ -49,6 +49,9 @@ export function useMyBirth() {
         // Viewing someone else's shared edition: show their chart (the database only returns editions this account may open).
         const viewing = viewingSharedEdition();
         if (viewing) {
+          const { data: allowed, error: denied } = await supabase.rpc('can_open_edition', { _edition: viewing });
+          if (!active || version !== revision) return;
+          if (denied || allowed !== true) { setBirth(null); return; }
           const { data: eds } = await supabase.rpc('my_official_editions');
           const b = (eds ?? []).find((e: { edition: string }) => e.edition === viewing)?.birth as Record<string, unknown> | undefined;
           if (!active || version !== revision) return;
