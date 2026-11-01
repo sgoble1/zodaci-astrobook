@@ -15,7 +15,7 @@
 - [ ] Brother synastry hub for Shane & Zac; accurate Zac illustrations; Zac's official AstroComic updated art.
 - [ ] AstroComic: personalised Issue #1 for each buyer, Issue #2, shop delivery dates; fix Issue #1 title/link mismatch.
 - [ ] Refine home page top section and artwork to the new serif/quiet-button brand.
-- [ ] Shane's chapter corrections — BLOCKED on AI credits.
+- [ ] Shane's chapter corrections — BLOCKED: Nov 1 credit check confirms 0.00 spendable AI credits. Requested remaining six: sm-10, sm-30, sm-33, sm-45, sm-47, sm-60; earlier 57 temporary drafts are absent, so completing all 63 requires recovering or regenerating those drafts too. No correction requests or saves run on Nov 1.
 
 
 ## Source-answer credit denial (Oct 30)
