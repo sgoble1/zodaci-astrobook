@@ -35,6 +35,7 @@ import { AccessManager } from '@/components/admin/AccessManager';
 import { ShopAdmin } from '@/components/admin/ShopAdmin';
 import { AiStudioAdmin } from '@/components/admin/AiStudioAdmin';
 import { ADMIN_TAB_GROUPS, resolveAdminTab, type AdminTab } from '@/lib/adminTabs';
+import { SharedSpacesPanel } from '@/components/admin/SharedSpacesPanel';
 
 export default function Admin() {
   const session = useSession();
@@ -71,12 +72,12 @@ export default function Admin() {
       <AuthGate what="open your workspace">{() => (
         <div className="space-y-6">
           <nav aria-label="Admin sections" className="pb-2">
-            <div className="grid gap-3 text-sm sm:grid-cols-2 xl:grid-cols-3">
+            <div className="grid gap-x-6 gap-y-4 text-sm sm:grid-cols-2 xl:grid-cols-3">
               {groups.map(g => (
                 <Fragment key={g.label}>
-                  <div role="group" aria-label={g.label} className="flex flex-wrap items-center gap-1 rounded-lg border border-border/60 bg-card/40 p-2">
-                  <span className="w-full px-2 font-smallcaps text-[10px] text-muted-foreground">{g.label}</span>
-                  {g.tabs.map(t => <Button key={t.id} id={`admin-tab-${t.id}`} size="sm" variant={tab === t.id ? 'secondary' : 'ghost'} aria-current={tab === t.id ? 'page' : undefined} onClick={() => go(t.id)} className={`rounded-full border ${tab === t.id ? 'border-accent bg-accent/15' : 'border-transparent'}`}>{t.label}</Button>)}
+                  <div role="group" aria-label={g.label} className="flex flex-wrap items-center gap-1 border-t border-border py-3">
+                  <span className="w-full px-2 pb-2 font-medium text-gold">{g.label}</span>
+                  {g.tabs.map(t => <Button key={t.id} id={`admin-tab-${t.id}`} size="sm" variant={tab === t.id ? 'secondary' : 'ghost'} aria-current={tab === t.id ? 'page' : undefined} onClick={() => go(t.id)}>{t.label}</Button>)}
                   </div>
                 </Fragment>
               ))}
@@ -103,6 +104,7 @@ export default function Admin() {
             {tab === 'settings' && <PlatformSettings />}
             {tab === 'launch' && <LaunchChecklist />}
             {tab === 'access' && <AccessManager />}
+            {tab === 'shared' && <SharedSpacesPanel />}
           </>}
         </div>
       )}</AuthGate>

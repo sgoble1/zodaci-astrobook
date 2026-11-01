@@ -7,6 +7,8 @@ import { useBookmarks } from '@/hooks/useBookmarks';
 import { useRelationships } from '@/hooks/useRelationships';
 import { Button } from '@/components/ui/button';
 import { SharedChatFeed } from '@/components/shared/SharedChatFeed';
+import { viewingSharedEdition } from '@/hooks/useAprilSpace';
+import { SharedEditionDashboard } from '@/components/common/SharedEditionDashboard';
 
 function Inner() {
   const { items, remove, setNote } = useBookmarks();
@@ -58,6 +60,7 @@ function Inner() {
 
 export default function Dashboard() {
   const april = useAprilSpace();
+  if (viewingSharedEdition()) return <SharedEditionDashboard />;
   if (april === undefined) return <p role="status" className="text-muted-foreground">Opening your dashboard…</p>;
   if (april === false) return <MemberDashboard />;
   return (

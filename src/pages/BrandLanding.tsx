@@ -1,4 +1,3 @@
-import { CinematicVideo } from '@/components/fx/CinematicVideo';
 import { Link } from 'react-router-dom';
 import { ArrowUpRight, ArrowRight, Orbit, PenLine, Scale, ShieldCheck, Check } from 'lucide-react';
 import { PublicHeader } from '@/components/brand/PublicHeader';
@@ -15,7 +14,7 @@ import { usePageMeta } from '@/hooks/usePageMeta';
 import { PLAN_NAME, PLAN_PRICE, CREDIT_ALLOWANCE } from '@/lib/plans';
 import { BOOK_VERSIONS, money } from '@/lib/books';
 import { COMIC_PLANS } from '@/lib/comic';
-import hero from '@/assets/zodaci-brand-hero.jpg';
+import hero from '@/assets/zodaci-reading-room.jpg';
 import bookCover from '@/assets/cover-design-midnight-stars-hd.jpg';
 import comicCover from '@/assets/comic-issue1-cover-v2.jpg';
 import { ALL_READINGS } from '@/lib/topicReadings';
@@ -60,12 +59,13 @@ export default function BrandLanding() {
     <PublicHeader sections={navigation} />
     <main id="brand-main">
       <section className="relative isolate min-h-[520px] sm:min-h-[600px] overflow-hidden flex items-center border-b border-border">
-        <CinematicVideo poster={hero} />
+        <img src={hero} alt="An open celestial book beneath a luminous moon and golden astrolabe" width={1536} height={1024} fetchPriority="high" className="absolute inset-0 -z-20 h-full w-full object-cover object-right" />
         <div className="absolute inset-0 -z-10 bg-gradient-to-r from-background/90 via-background/60 to-background/20" />
         <div className="mx-auto w-full max-w-7xl px-5 sm:px-10 py-16 sm:py-20">
           <Link to="/demo" className="pill-note mb-6">See a full sample edition <ArrowRight className="h-3.5 w-3.5" /></Link>
-          <h1 className="text-silver font-display text-6xl sm:text-8xl leading-[0.95]">An encyclopedia<br />of you</h1>
-          <p className="mt-6 text-lg sm:text-xl leading-relaxed max-w-xl text-muted-foreground">The planets, stars and points of the sky at the minute you were born, calculated to the arc-minute and written up in depth. Written to name the things you have been trying to put into words your whole life.</p>
+          <h1 className="text-silver font-display text-6xl sm:text-8xl leading-[0.95]">Zodaci</h1>
+          <p className="mt-4 font-display text-3xl sm:text-4xl text-foreground">An encyclopedia of you.</p>
+          <p className="mt-6 text-lg leading-relaxed max-w-lg text-muted-foreground">The sky at your exact birth moment, made into a personal reading library. Explore measured placements, thoughtful interpretations, and the questions you want to return to.</p>
           <div className="mt-8 flex flex-col sm:flex-row gap-3"><Button asChild size="lg"><Link to="/start">Get started</Link></Button><Button asChild variant="ghost" size="lg"><Link to="/demo">See what’s inside</Link></Button></div>
           <p className="mt-6 text-sm text-muted-foreground">Free to begin · Personal by design · Private by default</p>
         </div>
