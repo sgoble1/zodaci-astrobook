@@ -1,5 +1,11 @@
 # Zodaci — Active Project Index
 
+## Completion pass (Nov 2)
+- [ ] Brighten the new home artwork overlay while preserving readable text.
+- [ ] Verify the interrupted edition-view, Admin and home changes; reconcile completed items below.
+- [ ] Continue remaining book/comic, brother comparison and member-flow implementations; keep externally blocked work explicit.
+- [ ] Run regression tests and signed-in/public desktop and phone checks.
+
 ## Edition views, Zac passage & home (Nov 1)
 - [ ] Locate the quoted dad / 33/6 passage in Zac's private library, rewrite only that passage, and verify the save under Zac's account.
 - [ ] My chart and Dashboard use the authorized selected edition's birth chart; never fall back to the viewer's chart or expose their private account data in a shared view.
