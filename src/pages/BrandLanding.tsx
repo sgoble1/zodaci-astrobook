@@ -60,7 +60,7 @@ export default function BrandLanding() {
     <main id="brand-main">
       <section className="relative isolate min-h-[520px] sm:min-h-[600px] overflow-hidden flex items-center border-b border-border">
         <img src={hero} alt="An open celestial book beneath a luminous moon and golden astrolabe" width={1536} height={1024} fetchPriority="high" className="absolute inset-0 -z-20 h-full w-full object-cover object-right" />
-        <div className="absolute inset-0 -z-10 bg-gradient-to-r from-background/90 via-background/60 to-background/20" />
+        <div className="absolute inset-0 -z-10 brand-artwork-overlay" />
         <div className="mx-auto w-full max-w-7xl px-5 sm:px-10 py-16 sm:py-20">
           <Link to="/demo" className="pill-note mb-6">See a full sample edition <ArrowRight className="h-3.5 w-3.5" /></Link>
           <h1 className="text-silver font-display text-6xl sm:text-8xl leading-[0.95]">Zodaci</h1>

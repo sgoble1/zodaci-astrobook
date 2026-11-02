@@ -71,6 +71,12 @@
 .brand-site .brand-wordmark { font-size: 5rem; background: none; color: hsl(var(--foreground)); }
 .brand-site h1, .brand-site h2, .brand-site h3 { letter-spacing: 0; }
 .brand-site h2 { font-size: 2.75rem; }
+.brand-artwork-overlay {
+  background: linear-gradient(90deg, hsl(var(--background) / .78) 0%, hsl(var(--background) / .52) 32%, hsl(var(--background) / .12) 58%, hsl(var(--background) / .02) 100%);
+}
+@media (max-width: 639px) {
+  .brand-artwork-overlay { background: linear-gradient(90deg, hsl(var(--background) / .76), hsl(var(--background) / .48) 65%, hsl(var(--background) / .24)); }
+}
 .brand-band { max-width: 80rem; margin-inline: auto; padding: 4.5rem 2.5rem; scroll-margin-top: 1rem; }
 @media (max-width: 639px) {
   .brand-site .brand-wordmark { font-size: 3.5rem; }
