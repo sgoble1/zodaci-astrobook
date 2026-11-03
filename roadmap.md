@@ -271,3 +271,4 @@ Audit Oct 29: Chat/counselors already use the member's chart; podcast/custom pag
 - [ ] AstroBook/AstroComic purchase gaps — comic pre-order done; full purchase-flow audit still open
 - [ ] Shane Masterbook: 23 chapters use Moon Capricorn/Venus Pisces etc. vs calculated chart — waiting on owner to confirm birth details
 - [x] Re-check founders' birth data vs content
+- [ ] Unified 'Indigo Signal' theme + new logo (indigo/yellow/red/black, Apple/NatGeo/Printful feel)
