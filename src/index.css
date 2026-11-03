@@ -9,49 +9,49 @@
 @tailwind utilities;
 
 /*
- * Design tokens — the "Digital Sanctuary" theme: deep night background and surfaces, violet primary,
- * gold accents, soft blue glow, DM Serif Display headings and Fira Sans body. These tokens are the single
+ * Design tokens — the "Indigo Signal" theme (product colours): black/deep-indigo surfaces, yellow primary,
+ * red accent, indigo glow, DM Serif Display headings and Fira Sans body. These tokens are the single
  * source of truth for interface colour; illustrations (planet orbs, cover art) keep their own pigments.
  * Legacy names kept for compatibility: --glow-teal holds the blue glow, --shadow-gold is a violet halo.
  */
 :root {
   --font-size: 16px;
   /* Digital Sanctuary — deep night, violet + blue glow, gold accents */
-  --background: 230 37% 4%;
-  --foreground: 270 33% 91%;
-  --card: 233 51% 10%;
-  --card-foreground: 270 33% 91%;
-  --popover: 233 51% 10%;
-  --popover-foreground: 270 33% 91%;
-  --primary: 258 90% 66%;
-  --primary-foreground: 0 0% 100%;
-  --secondary: 233 40% 16%;
-  --secondary-foreground: 270 33% 91%;
-  --muted: 233 35% 13%;
-  --muted-foreground: 258 22% 69%;
-  --accent: 40 60% 58%;
-  --accent-foreground: 230 37% 4%;
+  --background: 240 40% 5%;
+  --foreground: 40 20% 96%;
+  --card: 238 52% 12%;
+  --card-foreground: 40 20% 96%;
+  --popover: 238 52% 12%;
+  --popover-foreground: 40 20% 96%;
+  --primary: 47 100% 52%;
+  --primary-foreground: 240 40% 5%;
+  --secondary: 238 45% 18%;
+  --secondary-foreground: 40 20% 96%;
+  --muted: 238 38% 14%;
+  --muted-foreground: 235 18% 72%;
+  --accent: 356 82% 55%;
+  --accent-foreground: 0 0% 100%;
   --destructive: 0 84% 60%;
   --destructive-foreground: 210 40% 98%;
-  --border: 233 30% 20%;
-  --input: 233 30% 17%;
-  --input-background: 233 51% 10%;
+  --border: 238 32% 22%;
+  --input: 238 32% 18%;
+  --input-background: 238 52% 12%;
   --switch-background: 228 15% 22%;
-  --ring: 258 90% 66%;
+  --ring: 47 100% 52%;
   --info: 217 91% 60%;
 
   /* Legacy names remapped to the new palette */
-  --ink: 270 33% 91%;
-  --vellum: 230 37% 4%;
-  --gold: 40 60% 58%;
-  --gold-bright: 42 70% 68%;
-  --oxblood: 340 82% 62%;
+  --ink: 40 20% 96%;
+  --vellum: 240 40% 5%;
+  --gold: 47 100% 52%;
+  --gold-bright: 50 100% 62%;
+  --oxblood: 356 82% 55%;
   --created: 50 95% 55%;
-  --candle: 40 60% 58%;
+  --candle: 47 100% 52%;
   --starlight: 252 100% 92%;
   --midnight: 230 40% 3%;
-  --glow-violet: 258 90% 66%;
-  --glow-teal: 217 91% 60%;
+  --glow-violet: 240 70% 45%;
+  --glow-teal: 356 82% 55%;
 
   /* Mystic Ink illustration palette (style guide section 4): art sections, sign cards and art direction tools */
   --mi-indigo: 235 47% 20%;
@@ -62,9 +62,9 @@
   --mi-parchment: 39 57% 88%;
   --mi-ink: 18 37% 12%;
 
-  --radius: 0.5rem;
-  --shadow-ink: 0 20px 50px -25px hsl(263 70% 30% / 0.6);
-  --shadow-gold: 0 0 40px -10px hsl(263 70% 58% / 0.45);
+  --radius: 0.875rem;
+  --shadow-ink: 0 20px 50px -25px hsl(240 70% 8% / 0.7);
+  --shadow-gold: 0 0 40px -10px hsl(47 100% 52% / 0.35);
 }
 .dark { }
 
