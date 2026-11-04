@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { ADMIN_TAB_GROUPS, resolveAdminTab } from './adminTabs';
 
 describe('admin tabs', () => {
-  it('groups tabs as Content, Operations and Platform', () => expect(ADMIN_TAB_GROUPS.map(g => g.label)).toEqual(['Content', 'Operations', 'Platform']));
+  it('groups tabs as Editions, Products, Orders, Shared Spaces, Members & growth and Platform', () => expect(ADMIN_TAB_GROUPS.map(g => g.label)).toEqual(['Editions', 'Products', 'Orders', 'Shared Spaces', 'Members & growth', 'Platform']));
   it('opens Growth by default for admins', () => expect(resolveAdminTab(null, true)).toBe('growth'));
   it('opens Edit sections by default for members', () => expect(resolveAdminTab(null, false)).toBe('sections'));
   it('keeps the tab from the link', () => expect(resolveAdminTab('audit', true)).toBe('audit'));
