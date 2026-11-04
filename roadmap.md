@@ -1,3 +1,11 @@
+## Nov 4 evening requests
+- [x] Projector: white tripod screen in a dark room, lamp falloff, flying dust, wheel fits inside.
+- [x] 32 cheerful atomic-zodiac box illustrations (src/assets/spots).
+- [ ] Use box illustrations on every feature/pillar box (ThemeArt/BoxArt + About/home boxes); slow 50s box animations.
+- [ ] Icons restyled to the same atomic style.
+- [ ] Merge Blog into Learn: one Learn page, /blog redirects; expanded content and article illustrations.
+- [ ] Shop: sidebar navigation by category/sign; easier product browsing.
+
 # Zodaci — Active Project Index
 
 ## Visual completion pass (Nov 4, late)
