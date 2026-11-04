@@ -182,11 +182,11 @@ function EditionHome({ area, entries, owns, full }: { area: EditionKey; entries:
   return (
     <div className="space-y-14">
       {full === true && chart && <>
-        <DashboardMosaic chart={chart} name={copy.name} hasTime={Boolean(birth?.time)} primary={{ to: `${copy.base}#${area}-contents`, label: 'Browse the volumes' }} secondary={{ to: '/my-chart', label: 'View chart' }} onAir={{ cta: { to: '#edition-broadcast', label: 'Tune in' } }} press={{ book: { to: '/official-astrobook', label: 'Official AstroBook' }, comic: { to: '/official-astrocomic', label: 'Official AstroComic' } }} destinations={[
-          { to: `${copy.base}#${area}-contents`, label: 'Edition library', Icon: LibraryIcon },
-          { to: '#edition-broadcast', label: 'Broadcast Studio', Icon: TelevisionIcon },
-          { to: '/my-chart', label: 'Calculated chart', Icon: ChartWheelIcon },
-          { to: '/store', label: 'Gift shop', Icon: StorefrontIcon },
+        <DashboardMosaic chart={chart} name={copy.name} hasTime={Boolean(birth?.time)} primary={{ to: `${copy.base}#${area}-contents`, label: 'Browse the volumes' }} secondary={{ to: '/my-chart', label: 'View chart' }} onAir={{ cta: { to: '#edition-broadcast', label: 'Tune in' } }} press={{ book: { to: '/official-astrobook', label: 'Official AstroBook' }, comic: { to: `/official-astrobook/comic/${area}`, label: 'Official AstroComic' } }} destinations={[
+          { to: `${copy.base}#${area}-contents`, title: 'Edition library', text: '', cta: 'Open', icon: LibraryIcon },
+          { to: '#edition-broadcast', title: 'Broadcast Studio', text: '', cta: 'Open', icon: TelevisionIcon },
+          { to: '/my-chart', title: 'Calculated chart', text: '', cta: 'Open', icon: ChartWheelIcon },
+          { to: '/store', title: 'Gift shop', text: '', cta: 'Open', icon: StorefrontIcon },
         ]} />
         <div id="edition-broadcast" className="scroll-mt-24"><CurrentChapterPanel chart={chart} name={copy.name} /></div>
       </>}

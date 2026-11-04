@@ -12,11 +12,11 @@ export function EditionTV({ opening = false }: { opening?: boolean }) {
   if (!chart) return null;
   return <>
     {opening && <DashboardMosaic chart={chart} name={birth?.name} hasTime={Boolean(birth?.time)} primary={{ to: '/masterbook', label: 'Read the edition' }} secondary={{ to: '/my-chart', label: 'My chart' }} onAir={{ cta: { to: '#broadcast-studio', label: 'Tune in' } }} destinations={[
-      { to: '/my-chart', label: 'My chart', Icon: ChartWheelIcon },
-      { to: '#broadcast-studio', label: 'Broadcast Studio', Icon: TelevisionIcon },
-      { to: '/masterbook', label: 'Edition library', Icon: LibraryIcon },
-      { to: '/shared/april', label: 'Reading Together', Icon: RingsIcon },
-      { to: '/store', label: 'Gift shop', Icon: StorefrontIcon },
+      { to: '/my-chart', title: 'My chart', text: '', cta: 'Open', icon: ChartWheelIcon },
+      { to: '#broadcast-studio', title: 'Broadcast Studio', text: '', cta: 'Open', icon: TelevisionIcon },
+      { to: '/masterbook', title: 'Edition library', text: '', cta: 'Open', icon: LibraryIcon },
+      { to: '/shared/april', title: 'Reading Together', text: '', cta: 'Open', icon: RingsIcon },
+      { to: '/store', title: 'Gift shop', text: '', cta: 'Open', icon: StorefrontIcon },
     ]} />}
     <div id="broadcast-studio" className="scroll-mt-24"><CurrentChapterPanel chart={chart} name={birth?.name} /></div>
   </>;

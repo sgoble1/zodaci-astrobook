@@ -19,10 +19,10 @@ export function SharedEditionDashboard() {
   const placements = [['Sun', chart.bodies.find(b => b.key === 'sun')?.sign], ['Moon', chart.bodies.find(b => b.key === 'moon')?.sign], ['Rising', chart.asc !== null && birth.time ? fmtLon(chart.asc).sign : 'Time unknown']];
   return <article className="space-y-10">
     <DashboardMosaic chart={chart} name={birth.name} hasTime={Boolean(birth.time)} primary={{ to: edition === 'zac' ? '/zac' : '/masterbook', label: 'Read the edition' }} secondary={{ to: '/my-chart', label: 'View chart' }} onAir={{ cta: { to: '#broadcast-studio', label: 'Tune in' } }} destinations={[
-      { to: '/my-chart', label: 'Shared chart', Icon: ChartWheelIcon },
-      { to: '#broadcast-studio', label: 'Broadcast Studio', Icon: TelevisionIcon },
-      { to: edition === 'zac' ? '/zac' : '/masterbook', label: 'Edition library', Icon: LibraryIcon },
-      { to: edition === 'zac' ? '/shared/zac' : '/shared/april', label: 'Reading Together', Icon: RingsIcon },
+      { to: '/my-chart', title: 'Shared chart', text: '', cta: 'Open', icon: ChartWheelIcon },
+      { to: '#broadcast-studio', title: 'Broadcast Studio', text: '', cta: 'Open', icon: TelevisionIcon },
+      { to: edition === 'zac' ? '/zac' : '/masterbook', title: 'Edition library', text: '', cta: 'Open', icon: LibraryIcon },
+      { to: edition === 'zac' ? '/shared/zac' : '/shared/april', title: 'Reading Together', text: '', cta: 'Open', icon: RingsIcon },
     ]} />
     <p className="text-sm text-gold">Shared edition · Read only · {birth.date} · {birth.time ?? 'Time unknown'} · {birth.placeLabel}</p>
     <div id="broadcast-studio" className="scroll-mt-24"><CurrentChapterPanel chart={chart} name={birth.name} /></div>

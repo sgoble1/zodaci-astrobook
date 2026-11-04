@@ -49,11 +49,11 @@ export function MemberDashboard() {
   const destination = !birth ? '/start' : visit?.path.startsWith('/my-readings/topic/') ? `${visit.path}${visit.section ? `#${visit.section}` : ''}` : '/my-readings/topic/big-three';
   return <article className="space-y-12">
     <DashboardMosaic chart={chart} name={birth?.name} hasTime={Boolean(birth?.time)} primary={{ to: destination, label: birth ? 'Continue reading' : 'Set up my chart' }} secondary={{ to: '/my-chart', label: 'My chart' }} onAir={{ cta: { to: '#broadcast-studio', label: 'Tune in' } }} press={{ book: { to: '/my-astrobook', label: 'My AstroBook' }, comic: { to: '/astrocomic', label: 'AstroComic' } }} destinations={[
-      { to: '/my-chart', label: 'My chart', Icon: ChartWheelIcon },
-      { to: '#broadcast-studio', label: 'Broadcast Studio', Icon: TelevisionIcon },
-      { to: '/my-readings', label: 'Reading shelf', Icon: LibraryIcon },
-      { to: '/relationships', label: 'Relationships', Icon: RingsIcon },
-      { to: '/store', label: 'Gift shop', Icon: StorefrontIcon },
+      { to: '/my-chart', title: 'My chart', text: '', cta: 'Open', icon: ChartWheelIcon },
+      { to: '#broadcast-studio', title: 'Broadcast Studio', text: '', cta: 'Open', icon: TelevisionIcon },
+      { to: '/my-readings', title: 'Reading shelf', text: '', cta: 'Open', icon: LibraryIcon },
+      { to: '/relationships', title: 'Relationships', text: '', cta: 'Open', icon: RingsIcon },
+      { to: '/store', title: 'Gift shop', text: '', cta: 'Open', icon: StorefrontIcon },
     ]} />
     {chart && <div id="broadcast-studio" className="scroll-mt-24"><CurrentChapterPanel chart={chart} name={birth?.name} /></div>}
     <CreditBalance />
