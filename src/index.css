@@ -512,3 +512,12 @@ body {
 .vellum:hover, .parchment:hover, .member-experience .vellum:hover, .member-experience .parchment:hover { border-color: hsl(var(--brass) / .75); box-shadow: 5px 5px 0 hsl(var(--accent) / .35); }
 .font-smallcaps, .member-experience .font-smallcaps { font-family: 'Bebas Neue', 'Libre Franklin', sans-serif; font-weight: 400; letter-spacing: .14em; text-transform: uppercase; }
 @media (max-width: 639px) { .parchment, .vellum { border-radius: 1rem; } }
+/* Channel change: a soft burst of static that fades out slowly. */
+@keyframes obs-static-burst { 0% { opacity: .95 } 100% { opacity: 0 } }
+.obs-static-burst {
+  pointer-events: none;
+  background-image: repeating-radial-gradient(circle at 17% 32%, hsl(var(--foreground) / .5) 0 1px, transparent 1px 3px), repeating-linear-gradient(0deg, hsl(var(--foreground) / .25) 0 1px, transparent 1px 2px);
+  background-size: 7px 9px, 100% 3px; mix-blend-mode: screen;
+  animation: obs-static-burst .7s ease-out forwards, obs-static .2s steps(4) infinite;
+}
+@media (prefers-reduced-motion: reduce) { .obs-static-burst { display: none; } }
