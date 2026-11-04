@@ -1,6 +1,7 @@
 # Zodaci — Active Project Index
 
 ## Visual completion pass (Nov 4, late)
+- [x] About and Investors artwork refined into explicit atomic-age zodiac murals; home hero preserved (Nov 4).
 - [ ] TV channels: open on desktop and phone; each channel wired to its specialist's real sky data (live positions, contacts and upcoming events for that channel), no placeholder text (tested).
 - [ ] Projector look: stronger slow flicker, film scratches, dust, hand-drawn 1950s poster finish matching the hero; ink-on-paper finish to match.
 - [ ] Phone check of both wheel looks at 393px; fix cramped wheel or text.
