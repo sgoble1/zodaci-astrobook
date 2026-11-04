@@ -33,12 +33,12 @@ export function AcademyLesson() {
   const lesson = lessonBySlug(slug);
   usePageMeta(lesson ? `${lesson.title} — Zodaci Academy` : 'Lesson not found — Zodaci Academy', lesson?.summary ?? 'Zodaci Academy lessons');
   useJsonLd('lesson-schema', lesson ? { '@type': 'Article', headline: lesson.title, description: lesson.summary, isPartOf: { '@type': 'Course', name: 'Zodaci Academy' }, author: { '@type': 'Organization', name: 'Zodaci' }, mainEntityOfPage: `https://zodaci.com/academy/${lesson.slug}` } : null);
-  if (!lesson) return <div className="space-y-4"><h1 className="text-3xl">Lesson not found</h1><Link to="/academy" className="underline">Back to the Academy</Link></div>;
+  if (!lesson) return <div className="space-y-4"><h1 className="text-3xl">Lesson not found</h1><Link to="/learn#lessons" className="underline">Back to Learn</Link></div>;
   const i = ALL_LESSONS.findIndex(l => l.slug === lesson.slug);
   const prev = ALL_LESSONS[i - 1], next = ALL_LESSONS[i + 1];
   return (
     <article className="mx-auto max-w-3xl">
-      <Link to="/academy" className="inline-flex items-center gap-1.5 text-sm text-accent underline-offset-4 hover:underline"><ArrowLeft aria-hidden className="h-4 w-4" />Academy</Link>
+      <Link to="/learn#lessons" className="inline-flex items-center gap-1.5 text-sm text-accent underline-offset-4 hover:underline"><ArrowLeft aria-hidden className="h-4 w-4" />Lessons in Learn</Link>
       <p className="mt-8 text-sm text-muted-foreground">{lesson.path.title} · {lesson.minutes} min read</p>
       <h1 className="mt-3 font-display text-4xl sm:text-5xl">{lesson.title}</h1>
       <p className="mt-4 text-lg text-muted-foreground">{lesson.summary}</p>

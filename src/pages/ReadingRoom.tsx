@@ -72,7 +72,7 @@ export function ReadingRoomArticle() {
     return () => window.removeEventListener('scroll', on);
   }, [slug]);
   const related = useMemo(() => READING_ROOM.filter(x => x.slug !== slug).sort((x, y) => Number(y.category === a?.category) - Number(x.category === a?.category)).slice(0, 3), [slug, a?.category]);
-  if (!a) return <div><h1 className="text-3xl">Article not found</h1><Link to="/reading-room" className="underline">Back to the Reading Room</Link></div>;
+  if (!a) return <div><h1 className="text-3xl">Article not found</h1><Link to="/learn#guides" className="underline">Back to Learn</Link></div>;
   const share = async () => { try { await navigator.clipboard.writeText(window.location.href); setCopied(true); setTimeout(() => setCopied(false), 2000); } catch { /* ignore */ } };
   const save = async () => {
     if (!session) return;
@@ -84,7 +84,7 @@ export function ReadingRoomArticle() {
     <>
       <div aria-hidden="true" className="fixed left-0 top-0 z-50 h-1 bg-gold" style={{ width: `${progress * 100}%` }} />
       <article className="mx-auto max-w-[68ch] space-y-8">
-        <Link to="/reading-room" className="text-sm text-accent underline">← The Reading Room</Link>
+        <Link to="/learn#guides" className="text-sm text-accent underline">← Guides in Learn</Link>
         <img src={a.image} alt="" width={1600} height={900} className="aspect-video w-full rounded-2xl object-cover" />
         <header className="space-y-2">
           <div className="font-smallcaps text-xs text-gold">{a.category} · {a.minutes} min read</div>
@@ -107,7 +107,7 @@ export function ReadingRoomArticle() {
         <div className="flex flex-wrap gap-3"><Button asChild><Link to={session ? '/my-chart' : '/start'}>See this in your own chart</Link></Button></div>
         <section aria-labelledby="rel-h" className="border-t border-border pt-8"><h2 id="rel-h" className="text-2xl">Keep reading</h2>
           <ul className="mt-5 grid gap-4 sm:grid-cols-3">{related.map(r => <li key={r.slug}><ArticleCard a={r} /></li>)}</ul>
-          <p className="mt-6 text-sm text-muted-foreground">Want longer essays? <Link to="/blog" className="text-accent underline underline-offset-2">Visit the Zodaci journal</Link>.</p>
+          <p className="mt-6 text-sm text-muted-foreground">Want longer essays? <Link to="/learn#articles" className="text-accent underline underline-offset-2">Read the articles in Learn</Link>.</p>
         </section>
       </article>
     </>
