@@ -12,7 +12,8 @@ export default {
     },
     extend: {
       fontFamily: {
-        display: ['Instrument Serif', 'DM Serif Display', 'Georgia', 'serif'],
+        display: ['DM Serif Display', 'Georgia', 'serif'],
+        label: ['Oswald', 'Fira Sans', 'sans-serif'],
         smallcaps: ['Fira Sans', 'sans-serif'],
         sans: ['Fira Sans', 'ui-sans-serif', 'system-ui', 'sans-serif'],
       },
