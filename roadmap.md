@@ -331,6 +331,7 @@ Audit Oct 29: Chat/counselors already use the member's chart; podcast/custom pag
 - [ ] Public header as panel plates (logo, nav plate, tagline plate); footer as a navy bar.
 - [x] Global panel look: obs-panel = navy plate with mustard inset rule; obs-paper = aged cream paper.
 - [ ] Member, founder (April/Shane/Zac) and shared dashboards open with the same mosaic: personal hero slideshow from their own chart, destination tiles, then the TV and existing content.
+- [ ] Preserve animated TVs below the mosaic and verify Zac edition access is restricted to Zac and explicitly authorized Shane accounts (Nov 4 request).
 - [~] Verify home and dashboards at 393px and 1280px (home verified Nov 4; dashboards pending).
 - [x] Preview fonts: package font files were blocked by the preview server, so headings showed a fallback serif; the server now serves them (Nov 4).
 - [x] Projector additions (kept the existing look): lamp warm-up on first appearance, faint wall glow behind the screen; hero dial gets lamp beam + dust.

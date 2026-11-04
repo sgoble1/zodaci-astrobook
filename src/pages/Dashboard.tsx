@@ -66,10 +66,7 @@ export default function Dashboard() {
   if (april === false) return <MemberDashboard />;
   return (
     <div className="space-y-6">
-      <p className="font-label text-xs text-primary">Personal Observatory</p>
-      <h1 className="font-display text-4xl">My Current Chapter</h1>
-      <p className="text-muted-foreground">Your bookmarks, notes and relationships — private to your account.</p>
-      <EditionTV />
+      <EditionTV opening />
       <AuthGate what="see your dashboard">{() => <Inner />}</AuthGate>
       <SharedChatFeed />
       <UpdatesFeed limit={4} />

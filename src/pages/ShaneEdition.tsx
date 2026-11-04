@@ -21,6 +21,9 @@ import { ChartWheel } from '@/components/chart/ChartWheel';
 import { PlanetOrb } from '@/components/chart/PlanetOrb';
 import { ThemeArt, artFor } from '@/components/common/ThemeArt';
 import { BoxArt } from '@/components/common/BoxArt';
+import { DashboardMosaic } from '@/components/observatory/DashboardMosaic';
+import { CurrentChapterPanel } from '@/components/observatory/CurrentChapterPanel';
+import { ChartWheelIcon, TelevisionIcon, LibraryIcon, StorefrontIcon } from '@/components/icons/RetroIcons';
 
 type EditionKey = 'shane' | 'zac';
 const caches: Partial<Record<EditionKey, Promise<MbEntry[]>>> = {};
@@ -178,10 +181,19 @@ function EditionHome({ area, entries, owns, full }: { area: EditionKey; entries:
 
   return (
     <div className="space-y-14">
+      {full === true && chart && <>
+        <DashboardMosaic chart={chart} name={copy.name} hasTime={Boolean(birth?.time)} primary={{ to: `${copy.base}#${area}-contents`, label: 'Browse the volumes' }} secondary={{ to: '/my-chart', label: 'View chart' }} onAir={{ cta: { to: '#edition-broadcast', label: 'Tune in' } }} press={{ book: { to: '/official-astrobook', label: 'Official AstroBook' }, comic: { to: `/official-astrobook/comic/${area}`, label: 'Official AstroComic' } }} destinations={[
+          { to: `${copy.base}#${area}-contents`, title: 'Edition library', text: '', cta: 'Open', icon: LibraryIcon },
+          { to: '#edition-broadcast', title: 'Broadcast Studio', text: '', cta: 'Open', icon: TelevisionIcon },
+          { to: '/my-chart', title: 'Calculated chart', text: '', cta: 'Open', icon: ChartWheelIcon },
+          { to: '/store', title: 'Gift shop', text: '', cta: 'Open', icon: StorefrontIcon },
+        ]} />
+        <div id="edition-broadcast" className="scroll-mt-24"><CurrentChapterPanel chart={chart} name={copy.name} /></div>
+      </>}
       <section className="gentle-fade grid items-center gap-10 lg:grid-cols-[1.1fr,0.9fr]">
         <div>
           <div className="mb-4 font-smallcaps text-[11px] text-gold">{copy.eyebrow}</div>
-          <h1 className="font-display leading-[0.95]">{copy.name}.<br /><span className="italic text-muted-foreground">{copy.tagline}</span></h1>
+          <h2 className="font-display leading-[0.95]">{copy.name}.<br /><span className="font-script text-primary">{copy.tagline}</span></h2>
           <div className="gold-rule my-6 max-w-md" />
           {!owns && <div className="mb-4"><SharedByNote ownerName={copy.name} scope="edition" /></div>}
           <p className="max-w-xl text-lg leading-relaxed text-foreground/85">The complete book{entries ? ` — ${entries.length} chapters, about ${Math.round(total / 1000)}k words —` : ''} {copy.blurb}</p>
@@ -214,13 +226,13 @@ function EditionHome({ area, entries, owns, full }: { area: EditionKey; entries:
           <h2 id={`${area}-planets`} className="font-display mt-1">Every placement, and where the book discusses it.</h2>
           <p className="mt-2 max-w-2xl text-sm text-muted-foreground">Tap a planet to show the chapters that mention it. Placements are calculated from {copy.name}’s saved birth details.</p>
           <ul className="mt-6 grid grid-cols-3 gap-3 sm:grid-cols-4 lg:grid-cols-6">
-            {ORB_KEYS.map(k => chart.bodies.find(b => b.key === k)).filter(Boolean).map(b => (
-              <li key={b!.key}>
-                <button type="button" onClick={() => { setQ(b!.name); setCat(null); document.getElementById(`${area}-contents`)?.scrollIntoView({ behavior: 'smooth' }); }} aria-label={`Show chapters about ${b!.name} in ${b!.sign}`} className="flex w-full flex-col items-center gap-2 rounded-xl border border-border bg-card/60 p-3 text-center transition-colors hover:border-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
-                  <PlanetOrb planet={b!.key} size={48} />
-                  <span className="text-sm">{b!.name}</span>
-                  <span className="text-xs text-muted-foreground">{b!.sign} {b!.deg}°{b!.house ? ` · H${b!.house}` : ''}{b!.retro && b!.key !== 'northNode' ? ' ℞' : ''}</span>
-                </button>
+            {ORB_KEYS.flatMap(k => { const b = chart.bodies.find(body => body.key === k); return b ? [b] : []; }).map(b => (
+              <li key={b.key}>
+                <Button variant="outline" onClick={() => { setQ(b.name); setCat(null); document.getElementById(`${area}-contents`)?.scrollIntoView({ behavior: 'smooth' }); }} aria-label={`Show chapters about ${b.name} in ${b.sign}`} className="h-auto w-full flex-col gap-2 whitespace-normal p-3 text-center">
+                  <PlanetOrb planet={b.key} size={48} />
+                  <span className="text-sm">{b.name}</span>
+                  <span className="text-xs text-muted-foreground">{b.sign} {b.deg}°{b.house ? ` · H${b.house}` : ''}{b.retro && b.key !== 'northNode' ? ' ℞' : ''}</span>
+                </Button>
               </li>
             ))}
           </ul>
