@@ -9,6 +9,9 @@
 - [ ] Restyle My Chart, AstroBook reader, comics, shop, podcasts, Admin in projector / ink-on-paper style.
 - [ ] Observation Log: owner-only sky observations (date, time, location, notes, tags) with the real sky for that day; shown in Timeline Hall (tested).
 - [ ] Logo/wordmark lockup check against the 1950s look.
+- [x] Founder dashboards (April, Shane, Zac) show the same Broadcast Studio TV from the open edition's chart.
+- [x] About and Investors 1950s artwork placed.
+- [ ] Unify April/Shane/Zac menus into one shared layout (same groups and order) while keeping each edition's chapters private.
 
 ## Zodaci OS redesign — Astral Research Authority (Nov 4, 12-phase plan)
 - [x] P1.1 Blend palette (cream, deep indigo, yellow, red, brass), poster label font, panels/paper/CRT textures, slow reduced-motion animations; selected buttons clearly marked.
