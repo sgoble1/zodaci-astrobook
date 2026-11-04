@@ -34,7 +34,7 @@ export function CreationMaker() {
     bg.addColorStop(0, a); bg.addColorStop(1, b2); g.fillStyle = bg; g.fillRect(0, 0, w, h);
     for (let i = 0; i < 220; i++) { const x = (Math.sin(i * 91.7) * 0.5 + 0.5) * w, y = (Math.cos(i * 47.3) * 0.5 + 0.5) * h; g.fillStyle = tok('foreground', 0.15 + (i % 5) / 12); g.fillRect(x, y, 2 * u, 2 * u); }
     g.strokeStyle = tok('gold', 0.7); g.lineWidth = 3 * u; g.strokeRect(30 * u, 30 * u, w - 60 * u, h - 60 * u);
-    const text = (t: string, x: number, y: number, size: number, color = tok('foreground'), font = 'DM Serif Display, serif', align: CanvasTextAlign = 'center') => { g.font = `${size * u}px ${font}`; g.fillStyle = color; g.textAlign = align; g.fillText(t, x, y); };
+    const text = (t: string, x: number, y: number, size: number, color = tok('foreground'), font = 'Alfa Slab One, serif', align: CanvasTextAlign = 'center') => { g.font = `${size * u}px ${font}`; g.fillStyle = color; g.textAlign = align; g.fillText(t, x, y); };
     const wheel = (cx: number, cy: number, r: number) => {
       g.strokeStyle = tok('gold', 0.8); g.lineWidth = 2 * u;
       [r, r * 0.8].forEach(rr => { g.beginPath(); g.arc(cx, cy, rr, 0, Math.PI * 2); g.stroke(); });
@@ -47,16 +47,16 @@ export function CreationMaker() {
     };
     const get = (k: string) => chart.bodies.find(b => b.key === k)!;
     const big3 = [get('sun'), get('moon')].map(b => `${b.name} ${b.sign}`).concat(timed && chart.asc != null ? [`Rising ${['Aries', 'Taurus', 'Gemini', 'Cancer', 'Leo', 'Virgo', 'Libra', 'Scorpio', 'Sagittarius', 'Capricorn', 'Aquarius', 'Pisces'][Math.floor(chart.asc / 30)]}`] : []).join('  ·  ');
-    if (kind === 'wallpaper') { wheel(w / 2, h * 0.55, 380 * u); text(birth.name, w / 2, h * 0.2, 80); text(big3, w / 2, h * 0.24, 34, tok('gold'), 'Fira Sans, sans-serif'); text('ZODACI', w / 2, h * 0.93, 26, tok('muted-foreground'), 'Fira Sans, sans-serif'); }
-    if (kind === 'poster') { text(birth.name, w / 2, 220 * u, 90); text(big3, w / 2, 290 * u, 30, tok('gold'), 'Fira Sans, sans-serif'); wheel(w / 2, 680 * u, 330 * u);
-      chart.bodies.filter(b => CARD_PLANETS.concat(['uranus', 'neptune', 'pluto', 'chiron', 'northNode']).includes(b.key)).forEach((b, i) => text(placementLine(timed ? b : { ...b, house: null }), i % 2 ? 540 * u : 90 * u, 1080 * u + Math.floor(i / 2) * 52 * u, 26, tok('foreground'), 'Fira Sans, sans-serif', 'left'));
-      text(`Born ${birth.date}${timed ? ` · ${birth.time}` : ' · time unknown'}`, w / 2, h - 80 * u, 22, tok('muted-foreground'), 'Fira Sans, sans-serif'); }
-    if (kind === 'journal') { text(`${birth.name}’s chart journal`, 90 * u, 150 * u, 54, tok('foreground'), 'DM Serif Display, serif', 'left'); text('Date ____________', w - 90 * u, 150 * u, 24, tok('muted-foreground'), 'Fira Sans, sans-serif', 'right');
-      journalPrompts(chart, timed).forEach((p, i) => { const y = 260 * u + i * 230 * u; text(p, 90 * u, y, 26, tok('gold'), 'Fira Sans, sans-serif', 'left'); g.strokeStyle = tok('foreground', 0.25); g.lineWidth = 1 * u; for (let l = 1; l <= 3; l++) { g.beginPath(); g.moveTo(90 * u, y + l * 55 * u); g.lineTo(w - 90 * u, y + l * 55 * u); g.stroke(); } }); }
+    if (kind === 'wallpaper') { wheel(w / 2, h * 0.55, 380 * u); text(birth.name, w / 2, h * 0.2, 80); text(big3, w / 2, h * 0.24, 34, tok('gold'), 'Libre Franklin, sans-serif'); text('ZODACI', w / 2, h * 0.93, 26, tok('muted-foreground'), 'Libre Franklin, sans-serif'); }
+    if (kind === 'poster') { text(birth.name, w / 2, 220 * u, 90); text(big3, w / 2, 290 * u, 30, tok('gold'), 'Libre Franklin, sans-serif'); wheel(w / 2, 680 * u, 330 * u);
+      chart.bodies.filter(b => CARD_PLANETS.concat(['uranus', 'neptune', 'pluto', 'chiron', 'northNode']).includes(b.key)).forEach((b, i) => text(placementLine(timed ? b : { ...b, house: null }), i % 2 ? 540 * u : 90 * u, 1080 * u + Math.floor(i / 2) * 52 * u, 26, tok('foreground'), 'Libre Franklin, sans-serif', 'left'));
+      text(`Born ${birth.date}${timed ? ` · ${birth.time}` : ' · time unknown'}`, w / 2, h - 80 * u, 22, tok('muted-foreground'), 'Libre Franklin, sans-serif'); }
+    if (kind === 'journal') { text(`${birth.name}’s chart journal`, 90 * u, 150 * u, 54, tok('foreground'), 'Alfa Slab One, serif', 'left'); text('Date ____________', w - 90 * u, 150 * u, 24, tok('muted-foreground'), 'Libre Franklin, sans-serif', 'right');
+      journalPrompts(chart, timed).forEach((p, i) => { const y = 260 * u + i * 230 * u; text(p, 90 * u, y, 26, tok('gold'), 'Libre Franklin, sans-serif', 'left'); g.strokeStyle = tok('foreground', 0.25); g.lineWidth = 1 * u; for (let l = 1; l <= 3; l++) { g.beginPath(); g.moveTo(90 * u, y + l * 55 * u); g.lineTo(w - 90 * u, y + l * 55 * u); g.stroke(); } }); }
     if (kind === 'card') { const b = get(planet); text(b.glyph, w / 2, 420 * u, 260, tok('gold'), 'serif'); text(`${b.name} in ${b.sign}`, w / 2, 620 * u, 70);
-      const words = affirmationFor(b.name, b.sign).split(' '); let line = '', y = 800 * u; g.font = `${40 * u}px DM Serif Display, serif`;
+      const words = affirmationFor(b.name, b.sign).split(' '); let line = '', y = 800 * u; g.font = `${40 * u}px Alfa Slab One, serif`;
       words.forEach(wd => { if (g.measureText(`${line} ${wd}`).width > w - 220 * u) { text(line.trim(), w / 2, y, 40); line = ''; y += 60 * u; } line += ` ${wd}`; }); text(line.trim(), w / 2, y, 40);
-      text(`${birth.name} · ${b.deg}° ${b.sign}`, w / 2, h - 110 * u, 24, tok('muted-foreground'), 'Fira Sans, sans-serif'); }
+      text(`${birth.name} · ${b.deg}° ${b.sign}`, w / 2, h - 110 * u, 24, tok('muted-foreground'), 'Libre Franklin, sans-serif'); }
   }, [chart, birth, kind, style, planet, timed]);
 
   const blob = () => new Promise<Blob>((res, rej) => canvas.current!.toBlob(b => (b ? res(b) : rej(new Error('Could not draw'))), 'image/png'));

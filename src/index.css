@@ -1,9 +1,9 @@
-@import '@fontsource/instrument-serif/400.css';
-@import '@fontsource/dm-serif-display/400.css';
-@import '@fontsource/fira-sans/400.css';
-@import '@fontsource/fira-sans/500.css';
-@import '@fontsource/fira-sans/600.css';
-@import '@fontsource/oswald/500.css';
+@import '@fontsource/alfa-slab-one/400.css';
+@import '@fontsource/bebas-neue/400.css';
+@import '@fontsource/yellowtail/400.css';
+@import '@fontsource/libre-franklin/400.css';
+@import '@fontsource/libre-franklin/500.css';
+@import '@fontsource/libre-franklin/600.css';
 
 @tailwind base;
 @tailwind components;
@@ -135,17 +135,17 @@
       radial-gradient(ellipse at 90% 90%, hsl(var(--glow-teal) / 0.12), transparent 55%),
       hsl(var(--background));
     background-attachment: fixed;
-    font-family: 'Fira Sans', ui-sans-serif, system-ui, sans-serif;
+    font-family: 'Libre Franklin', ui-sans-serif, system-ui, sans-serif;
     font-feature-settings: "ss01", "cv02", "cv11";
     overflow-x: hidden;
   }
   h1, h2, h3, h4, .font-display {
-    font-family: 'Instrument Serif', 'DM Serif Display', Georgia, serif;
+    font-family: 'Alfa Slab One', 'Rockwell', Georgia, serif;
     font-weight: 400;
     letter-spacing: 0;
   }
   .font-smallcaps {
-    font-family: 'Fira Sans', ui-sans-serif, sans-serif;
+    font-family: 'Libre Franklin', ui-sans-serif, sans-serif;
     font-weight: 500;
     letter-spacing: 0.16em;
     text-transform: uppercase;
@@ -340,7 +340,7 @@ svg.fv-shown circle, svg.fv-shown path, svg.fv-shown line { animation: fv-draw 1
 .reading-prose h2 { counter-increment: rsec; position: relative; font-size: clamp(1.6rem, 2.4vw, 2.1rem); line-height: 1.2; margin-top: 2.6em; padding-top: 1.4em; border-top: 1px solid hsl(var(--border)); scroll-margin-top: 6rem; }
 .reading-prose h2:first-child { margin-top: 0; }
 .reading-prose h3 { font-size: 1.3rem; margin-top: 1.9em; color: hsl(var(--gold-bright)); }
-.reading-prose h4 { font-family: 'Fira Sans', sans-serif; font-size: .8rem; letter-spacing: .14em; text-transform: uppercase; margin-top: 1.6em; color: hsl(var(--muted-foreground)); }
+.reading-prose h4 { font-family: 'Libre Franklin', sans-serif; font-size: .8rem; letter-spacing: .14em; text-transform: uppercase; margin-top: 1.6em; color: hsl(var(--muted-foreground)); }
 .reading-prose strong { color: hsl(var(--foreground)); font-weight: 600; }
 .reading-prose em { color: hsl(var(--starlight)); }
 .reading-prose a { color: hsl(var(--gold)); text-decoration: underline; text-underline-offset: 3px; }
@@ -351,7 +351,7 @@ svg.fv-shown circle, svg.fv-shown path, svg.fv-shown line { animation: fv-draw 1
 .reading-prose ol { list-style: decimal; }
 .reading-prose ol > li::marker { color: hsl(var(--gold)); font-weight: 600; }
 .reading-prose li + li { margin-top: .5em; }
-.reading-prose blockquote { margin: 1.8em 0; padding: 1.1em 1.4em; border-left: 3px solid hsl(var(--primary)); border-radius: 0 var(--radius) var(--radius) 0; background: hsl(var(--primary) / 0.1); font-family: 'DM Serif Display', serif; font-size: 1.2rem; line-height: 1.5; color: hsl(var(--foreground)); }
+.reading-prose blockquote { margin: 1.8em 0; padding: 1.1em 1.4em; border-left: 3px solid hsl(var(--primary)); border-radius: 0 var(--radius) var(--radius) 0; background: hsl(var(--primary) / 0.1); font-family: 'Alfa Slab One', serif; font-size: 1.2rem; line-height: 1.5; color: hsl(var(--foreground)); }
 .reading-prose hr { border: 0; height: 1px; margin: 2.5em 0; background: linear-gradient(to right, transparent, hsl(var(--gold) / .6), transparent); }
 .reading-prose table { display: block; overflow-x: auto; width: 100%; border-collapse: collapse; font-size: .92rem; margin: 1.6em 0; }
 .reading-prose th, .reading-prose td { border: 1px solid hsl(var(--border)); padding: .55em .8em; text-align: left; vertical-align: top; }
@@ -436,7 +436,7 @@ body {
     radial-gradient(ellipse at 90% 110%, hsl(var(--constellation) / .12), transparent 55%);
   background-attachment: fixed;
 }
-.font-label { font-family: 'Oswald', 'Fira Sans', sans-serif; text-transform: uppercase; letter-spacing: .08em; font-weight: 500; }
+.font-label { font-family: 'Bebas Neue', 'Libre Franklin', sans-serif; text-transform: uppercase; letter-spacing: .08em; font-weight: 500; }
 .obs-panel {
   position: relative; border-radius: .5rem;
   border: 1px solid hsl(var(--brass) / .55);
@@ -456,7 +456,7 @@ body {
 .obs-stamp {
   display: inline-block; padding: .15rem .5rem; border: 2px solid hsl(var(--accent));
   color: hsl(var(--accent)); border-radius: .25rem; transform: rotate(-4deg);
-  font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: .12em; font-size: .7rem;
+  font-family: 'Bebas Neue', sans-serif; text-transform: uppercase; letter-spacing: .12em; font-size: .7rem;
 }
 .obs-crt { position: relative; overflow: hidden; border-radius: 1.25rem / 1rem; background: hsl(var(--midnight)); }
 .obs-crt::after {
@@ -477,3 +477,5 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .obs-tv-on, .obs-sweep, .obs-light, .obs-deploy, .obs-draw { animation: none !important; stroke-dashoffset: 0; clip-path: none; }
 }
+
+.font-script { font-family: 'Yellowtail', cursive; font-weight: 400; }
