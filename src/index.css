@@ -500,3 +500,5 @@ body {
 @keyframes retro-twinkle { 0%,100% { transform: scale(.85) rotate(0); opacity: .6 } 50% { transform: scale(1) rotate(20deg); opacity: 1 } }
 .retro-twinkle { animation: retro-twinkle 7s ease-in-out infinite; }
 @media (prefers-reduced-motion: reduce) { .retro-twinkle { animation: none; } }
+.retro-portrait { border: 2px solid hsl(var(--brass)); box-shadow: 0 0 0 3px hsl(var(--background)), 0 0 0 4px hsl(var(--brass) / .5), 3px 3px 0 4px hsl(var(--accent) / .35); }
+.retro-place-banner { border-radius: 1.25rem; border: 1px solid hsl(var(--brass) / .5); background: linear-gradient(100deg, hsl(var(--card)), hsl(var(--indigo-deep, var(--card)) / .6)); box-shadow: 4px 4px 0 hsl(var(--accent) / .3); background-image: radial-gradient(hsl(var(--foreground) / .04) 1px, transparent 1.2px), linear-gradient(100deg, hsl(var(--card)), hsl(var(--background))); background-size: 6px 6px, 100% 100%; }
