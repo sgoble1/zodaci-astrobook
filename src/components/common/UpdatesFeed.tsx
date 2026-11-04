@@ -19,7 +19,7 @@ export function UpdatesFeed({ limit = 6 }: { limit?: number }) {
         supabase.from('blog_posts').select('id,title,author_name,created_at').eq('published',true).order('created_at',{ ascending:false }).limit(10),
       ]);
       setLive([
-        ...(posts.data ?? []).map(p => ({ date:p.created_at,kind:'Content' as UpdateKind,title:`New article: ${p.title}`,body:`Published by ${p.author_name}.`,to:'/blog' })),
+        ...(posts.data ?? []).map(p => ({ date:p.created_at,kind:'Content' as UpdateKind,title:`New article: ${p.title}`,body:`Published by ${p.author_name}.`,to:'/learn#journal' })),
         ...(lib.data ?? []).map(d => ({
           date: d.created_at, kind: 'Content' as UpdateKind,
           title: d.kind === 'podcast' ? `New podcast: ${d.title}` : `New document: ${d.title}`,

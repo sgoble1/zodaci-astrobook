@@ -22,7 +22,7 @@ export function AcademyHome() {
           ))}</ol>
         </section>
       ))}
-      <section aria-labelledby="rr-h" className="border-t border-border pt-10"><h2 id="rr-h" className="font-display text-3xl">From the Reading Room</h2><div className="mt-6 grid gap-4 sm:grid-cols-3">{PUBLIC_ARTICLES.map(a => <Link key={a.slug} to={`/blog/learn/${a.slug}`} className="vellum p-5"><p className="font-smallcaps text-[10px] text-gold">{a.category}</p><h3 className="mt-2 text-lg">{a.title}</h3><p className="mt-2 text-sm text-muted-foreground">{a.summary}</p></Link>)}</div></section>
+      <section aria-labelledby="rr-h" className="border-t border-border pt-10"><h2 id="rr-h" className="font-display text-3xl">From the Reading Room</h2><div className="mt-6 grid gap-4 sm:grid-cols-3">{PUBLIC_ARTICLES.map(a => <Link key={a.slug} to={`/learn/${a.slug}`} className="vellum p-5"><p className="font-smallcaps text-[10px] text-gold">{a.category}</p><h3 className="mt-2 text-lg">{a.title}</h3><p className="mt-2 text-sm text-muted-foreground">{a.summary}</p></Link>)}</div></section>
       <section className="vellum p-6 text-center sm:p-10"><h2 className="font-display text-3xl">Ready to look at your own chart?</h2><p className="mt-3 text-muted-foreground">Free to begin. No birth time needed to start.</p><div className="mt-6 flex flex-wrap justify-center gap-3"><Button asChild><Link to="/start">Explore your chart</Link></Button><Button asChild variant="outline"><Link to="/compatibility">Try the compatibility score</Link></Button></div></section>
     </article>
   );

@@ -53,7 +53,7 @@ const FEATURE_ART: SpotKind[] = ['book', 'year', 'radio', 'compass', 'astrobook'
 const STEP_ART: SpotKind[] = ['birth', 'explore', 'book'];
 const RULE_ART: SpotKind[] = ['magnifier', 'source', 'honest'];
 const FEATURES: [string, string, string][] = [
-  [`${ALL_READINGS.length}+ readings`, 'Chapters written from your exact placements.', '/reading-room'],
+  [`${ALL_READINGS.length}+ readings`, 'Chapters written from your exact placements.', '/learn#guides'],
   ['Personal forecasts', 'Transits and timing for the road ahead.', '/start'],
   ['AI Observatory', 'Ask questions answered from your own chart, with sources.', '/start'],
   ['Life Compass', 'Career, relationships, finances, purpose, health and creativity signals.', '/start'],
@@ -119,8 +119,8 @@ export default function BrandLanding() {
 
       <section aria-labelledby="tx-h" className="grid gap-6 lg:grid-cols-2">
         <div className="obs-panel p-5 sm:p-8"><PanelTitle eyebrow="Research Library" live><span id="tx-h">Latest transmissions</span></PanelTitle>
-          <ul className="divide-y divide-border">{PUBLIC_ARTICLES.map(a => <li key={a.slug}><Link to={`/blog/learn/${a.slug}`} className="flex items-start gap-4 py-4 hover:text-primary"><img src={a.image} alt="" width={1024} height={768} loading="lazy" className="h-16 w-20 shrink-0 rounded object-cover" /><span><span className="font-label text-[0.65rem] text-accent">{a.category}</span><span className="block text-lg leading-snug">{a.title}</span></span><ArrowUpRight className="ml-auto h-4 w-4 shrink-0" /></Link></li>)}</ul>
-          <div className="mt-4 flex gap-2"><Button asChild variant="outline" size="sm"><Link to="/academy">Open the Academy</Link></Button><Button asChild variant="ghost" size="sm"><Link to="/blog">All transmissions</Link></Button></div>
+          <ul className="divide-y divide-border">{PUBLIC_ARTICLES.map(a => <li key={a.slug}><Link to={`/learn/${a.slug}`} className="flex items-start gap-4 py-4 hover:text-primary"><img src={a.image} alt="" width={1024} height={768} loading="lazy" className="h-16 w-20 shrink-0 rounded object-cover" /><span><span className="font-label text-[0.65rem] text-accent">{a.category}</span><span className="block text-lg leading-snug">{a.title}</span></span><ArrowUpRight className="ml-auto h-4 w-4 shrink-0" /></Link></li>)}</ul>
+          <div className="mt-4 flex gap-2"><Button asChild variant="outline" size="sm"><Link to="/learn">Open Learn</Link></Button><Button asChild variant="ghost" size="sm"><Link to="/learn#articles">All transmissions</Link></Button></div>
         </div>
         <div className="obs-panel p-5 sm:p-8"><PanelTitle eyebrow="Our working rules"><span>How every reading is made</span></PanelTitle><ul className="space-y-4 leading-relaxed">{[['Check the sky twice.', 'Positions come from an astronomy engine and are cross-checked against a second calculation.'], ['Name the source.', 'Every interpretation points to the placement it came from.'], ['Never invent a life.', 'Readings never claim facts about your family, past or future.']].map(([t, d], i) => <li key={t} className="flex items-start gap-4"><SpotArt kind={RULE_ART[i]} className="h-16 w-16" /><div><p className="font-semibold">{t}</p><p className="text-muted-foreground">{d}</p></div></li>)}</ul></div>
       </section>
