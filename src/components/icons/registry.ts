@@ -2,7 +2,7 @@ import type { ChannelId } from '@/lib/currentChapter';
 import type { PlaceScene } from '@/lib/observatory';
 import type { AdminTab } from '@/lib/adminTabs';
 import {
-  ArchiveIcon, BagIcon, BinIcon, BookIcon, ChartWheelIcon, ClipboardIcon, CoinIcon, ComicIcon, ConsoleIcon, ConversationIcon, CrateIcon, EditionsIcon,
+  ArchiveIcon, BagIcon, BookIcon, ChartWheelIcon, ClipboardIcon, CoinIcon, ComicIcon, ConsoleIcon, ConversationIcon, CrateIcon, EditionsIcon,
   EnvelopeIcon, EyeIcon, GearIcon, GiftIcon, HourglassIcon, LedgerIcon, LibraryIcon, LockIcon, MapIcon, MicrophoneIcon, MugIcon, ObservatoryIcon,
   OrbitPairIcon, PeopleIcon, PenIcon, PressIcon, PrintIcon, RadioIcon, RingsIcon, RisingIcon, RocketIcon, SearchIcon, ShieldIcon, ShipWheelIcon,
   ShirtIcon, SparkIcon, SproutIcon, StampIcon, StorefrontIcon, SummitIcon, TagIcon, TelescopeIcon, TelevisionIcon, UploadIcon, type RetroIconComponent,
@@ -45,5 +45,3 @@ export function iconForProductType(type: string): RetroIconComponent {
   return TagIcon;
 }
 
-export { BinIcon, PenIcon, SearchIcon, LogbookIconExport as LogbookIcon };
-import { LogbookIcon as LogbookIconExport } from './RetroIcons';
