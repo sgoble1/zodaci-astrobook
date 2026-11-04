@@ -502,3 +502,13 @@ body {
 @media (prefers-reduced-motion: reduce) { .retro-twinkle { animation: none; } }
 .retro-portrait { border: 2px solid hsl(var(--brass)); box-shadow: 0 0 0 3px hsl(var(--background)), 0 0 0 4px hsl(var(--brass) / .5), 3px 3px 0 4px hsl(var(--accent) / .35); }
 .retro-place-banner { border-radius: 1.25rem; border: 1px solid hsl(var(--brass) / .5); background: linear-gradient(100deg, hsl(var(--card)), hsl(var(--indigo-deep, var(--card)) / .6)); box-shadow: 4px 4px 0 hsl(var(--accent) / .3); background-image: radial-gradient(hsl(var(--foreground) / .04) 1px, transparent 1.2px), linear-gradient(100deg, hsl(var(--card)), hsl(var(--background))); background-size: 6px 6px, 100% 100%; }
+/* Retro surfaces everywhere, including the member atlas (overrides the flat legacy glass). */
+.vellum, .parchment, .member-experience .vellum, .member-experience .parchment {
+  border: 1px solid hsl(var(--brass) / .45); border-radius: 1.25rem;
+  background-color: hsl(var(--card) / .85); backdrop-filter: none; -webkit-backdrop-filter: none;
+  background-image: radial-gradient(hsl(var(--foreground) / .035) 1px, transparent 1.2px); background-size: 6px 6px;
+  box-shadow: 4px 4px 0 hsl(var(--brass) / .22);
+}
+.vellum:hover, .parchment:hover, .member-experience .vellum:hover, .member-experience .parchment:hover { border-color: hsl(var(--brass) / .75); box-shadow: 5px 5px 0 hsl(var(--accent) / .35); }
+.font-smallcaps, .member-experience .font-smallcaps { font-family: 'Bebas Neue', 'Libre Franklin', sans-serif; font-weight: 400; letter-spacing: .14em; text-transform: uppercase; font-size: max(.8rem, 1em); }
+@media (max-width: 639px) { .parchment, .vellum { border-radius: 1rem; } }
