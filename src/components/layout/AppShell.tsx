@@ -28,10 +28,10 @@ const ADMIN_ONLY = ['/admin', '/dispatch', '/data-quality'];
 const FounderGroupsContext = createContext<NavGroup[] | null>(null);
 const editionLink = (e: string): NavItem => e === 'april' ? { to: '/april', label: 'April’s Masterbook' } : e === 'shane' ? { to: '/shane', label: 'Shane’s Masterbook' } : { to: '/zac', label: 'Zac’s Astrological Library' };
 /** Sections every founder edition shares, in the same place for April, Shane and Zac. */
-const frameGroups = () => ({
+const frameGroups = (area: 'april' | 'shane' | 'zac' = 'april') => ({
   observatory: { title: 'Observatory', items: [{ to: '/dashboard', label: 'Broadcast Studio · Home' }, { to: '/my-chart', label: 'My chart' }, { to: '/my-readings', label: 'My readings' }, { to: '/counselors', label: 'Counselors' }] } as NavGroup,
   explore: { title: 'Explore', items: [{ to: '/explore', label: 'Explore everything' }, { to: '/transits', label: 'Transits' }, { to: '/timeline', label: 'Timeline' }, { to: '/profection', label: 'Year of life' }, { to: '/other-systems', label: 'Other systems' }] } as NavGroup,
-  media: { title: 'Together & Media', items: [{ to: '/our-charts', label: 'Our charts' }, { to: '/podcasts', label: 'Podcasts' }, { to: '/investors', label: 'Investor overview' }, { to: '/store', label: 'Shop' }] } as NavGroup,
+  media: { title: 'Together & Media', items: [...(area === 'zac' ? [] : [{ to: '/our-charts', label: 'Our charts' }]), { to: '/podcasts', label: 'Podcasts' }, { to: '/investors', label: 'Investor overview' }, { to: '/store', label: 'Shop' }] } as NavGroup,
 });
 function useFounderGroups(): NavGroup[] {
   const { items: rels } = useRelationships();
@@ -80,14 +80,14 @@ function useShaneGroups(enabled: boolean, area: 'shane' | 'zac' = 'shane'): NavG
     const sharedLinks: NavItem[] = sharedEditions.filter(e => e !== area).map(editionLink);
     const chapterGroup = { title: area === 'zac' ? 'Zac’s Library by Topic' : 'Masterbook by Topic', items: chapters === null ? [{ to: `/${area}`, label: 'Loading chapters…' }] : chapters.length ? [] : [{ to: `/${area}`, label: 'Chapters couldn’t load — open the edition' }], submenus: topics.map(t => ({ label: `${t.label} · ${t.items.length}`, items: t.items.map(c => ({ to: `/${area}/${c.id}`, label: shortChapterLabel(c.id, c.title || c.label) })) })) } as NavGroup;
     if (area === 'zac') return universalFounderMenu<NavGroup>({
-      ...frameGroups(),
+      ...frameGroups('zac'),
       edition: [{ title: 'My Edition', items: [{ to: '/zac', label: 'My Astrological Library' }, { to: '/zac/workbook', label: 'My Workbook' }] }, chapterGroup],
       shared, relationships,
       sharedWithMe: sharedLinks.length ? { title: 'Shared with me', items: sharedLinks } : undefined,
       official: { title: 'Official AstroBook', items: [{ to: '/official-astrobook', label: 'My Official AstroBook' }, { to: '/official-astrobook/comic/zac', label: 'My Official AstroComic' }, { to: '/official-astrobook/showcase/zac', label: 'My Illustrated Pages' }] },
     });
     return universalFounderMenu<NavGroup>({
-      ...frameGroups(),
+      ...frameGroups('shane'),
       edition: [{ title: 'My Edition', items: [{ to: '/shane', label: 'My Masterbook' }] }, chapterGroup],
       shared, relationships,
       official: { title: 'Official AstroBook', items: [{ to: '/official-astrobook', label: 'All Official AstroBooks' }, { to: '/official-astrobook/comic/shane', label: 'My Official AstroComic' }, { to: '/official-astrobook/illustrated', label: 'Zodaci Illustrated · Oct 2026' }, { to: '/official-astrobook/showcase/shane', label: 'My Illustrated Pages' }] },
