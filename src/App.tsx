@@ -103,6 +103,7 @@ const Deductions = lazy(() => import('./pages/Deductions'));
 const Results = lazy(() => import('./pages/Results'));
 const LandingPage = lazy(() => import('./pages/LandingPage'));
 const About = lazy(() => import('./pages/About'));
+const Characters = lazy(() => import('./pages/Characters'));
 const MyReadings = lazy(() => import('./pages/MyReadings'));
 const MyLibrary = lazy(() => import('./pages/MyLibrary'));
 const Auth = lazy(() => import('./pages/Auth'));
@@ -253,6 +254,7 @@ export default function App() {
           <Route path="/april" element={<AprilEdition />} />
           <Route element={<PublicSiteLayout />}>
             <Route path="/about" element={<About />} />
+            <Route path="/characters" element={<Characters />} />
             <Route path="/lp/:slug" element={<LandingPage />} />
             <Route path="/blog" element={<Blog />} />
             <Route path="/blog/learn/:slug" element={<PublicArticle />} />
