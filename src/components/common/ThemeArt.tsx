@@ -1,5 +1,6 @@
 import { useId } from 'react';
 import { cn } from '@/lib/utils';
+import { SpotArt } from '@/components/art/SpotArt';
 
 /** Small hand-drawn style illustrations in the logo palette (purple planet, yellow land, white clouds). */
 export type ArtKind = 'chart' | 'self' | 'love' | 'purpose' | 'healing' | 'year' | 'planet' | 'sign' | 'house' | 'aspect' | 'fire' | 'earth' | 'air' | 'water';
@@ -14,7 +15,7 @@ export const artFor = (label: string): ArtKind => RULES.find(([re]) => re.test(l
 
 const P = 'hsl(var(--primary))', Y = 'hsl(var(--candle))', W = 'hsl(var(--foreground))', D = 'hsl(var(--background))';
 
-function Scene({ kind }: { kind: ArtKind }) {
+export function Scene({ kind }: { kind: ArtKind }) {
   switch (kind) {
     case 'chart': return <g><circle cx="50" cy="50" r="30" fill="none" stroke={W} strokeOpacity=".7" /><circle cx="50" cy="50" r="18" fill="none" stroke={P} strokeWidth="2" />{Array.from({ length: 12 }, (_, i) => { const a = (i * Math.PI) / 6; return <line key={i} x1={50 + 18 * Math.cos(a)} y1={50 + 18 * Math.sin(a)} x2={50 + 30 * Math.cos(a)} y2={50 + 30 * Math.sin(a)} stroke={W} strokeOpacity=".5" />; })}<circle cx="72" cy="36" r="4" fill={Y} /><circle cx="34" cy="68" r="3" fill={W} /></g>;
     case 'self': return <g><circle cx="38" cy="54" r="16" fill={Y} /><path d="M66 30a14 14 0 1 0 8 24a11 11 0 1 1-8-24z" fill={W} /><path d="M20 82h60" stroke={P} strokeWidth="2.5" /><path d="M30 82l20-14 20 14" fill="none" stroke={W} strokeOpacity=".8" /></g>;
@@ -34,17 +35,7 @@ function Scene({ kind }: { kind: ArtKind }) {
 }
 
 export function ThemeArt({ kind, label, className, badge }: { kind?: ArtKind; label?: string; className?: string; badge?: string | number }) {
-  const id = `ta${useId().replace(/:/g, '')}`;
+  // Raster 1950s atomic-zodiac spot art; the hand-drawn SVG scenes above remain for print/inline use.
   const k = kind ?? artFor(label ?? '');
-  return (
-    <div className={cn('relative h-20 w-20 shrink-0', className)}>
-      <svg viewBox="0 0 100 100" className="h-full w-full" aria-hidden="true">
-        <defs><radialGradient id={id} cx=".35" cy=".3" r=".8"><stop offset="0" stopColor={P} stopOpacity=".35" /><stop offset="1" stopColor={D} stopOpacity="0" /></radialGradient></defs>
-        <rect width="100" height="100" rx="22" fill={`url(#${id})`} />
-        {[[14, 16], [86, 84], [88, 14]].map(([x, y]) => <circle key={`${x}${y}`} cx={x} cy={y} r="1.3" fill={W} fillOpacity=".7" />)}
-        <Scene kind={k} />
-      </svg>
-      {badge !== undefined && <span className="absolute -bottom-1 -right-1 rounded-full border border-candle/60 bg-background px-2 py-0.5 font-display text-xs text-candle">{badge}</span>}
-    </div>
-  );
+  return <SpotArt kind={k} className={cn('h-20 w-20', className)} badge={badge} />;
 }

@@ -37,7 +37,7 @@ export const PLACES: [string, Place][] = [
   ['/siblings', { name: 'Relationship Bureau', host: 'curator', motto: 'Brothers and sisters, side by side', scene: 'relationship-bureau' }],
   ['/compatibility', { name: 'Relationship Bureau', host: 'curator', motto: 'Charts side by side', scene: 'relationship-bureau' }],
   ['/academy', { name: 'Research Library', host: 'researcher', motto: 'Learn how the sky is read', scene: 'research-library' }],
-  ['/blog', { name: 'Research Library', host: 'researcher', motto: 'Latest transmissions', scene: 'research-library' }],
+  ['/learn', { name: 'Research Library', host: 'researcher', motto: 'Lessons, guides, forecasts and articles', scene: 'research-library' }],
   ['/reading-room', { name: 'Research Library', host: 'researcher', motto: 'Readings and guides', scene: 'research-library' }],
   ['/timeline', { name: 'Timeline Hall', host: 'historian', motto: 'Past, current and emerging chapters', scene: 'timeline-hall' }],
   ['/podcasts', { name: 'Radio Room', host: 'broadcaster', motto: 'Your chart, read aloud', scene: 'radio-room' }],

@@ -5,6 +5,7 @@
 - [ ] Icons restyled to the same atomic style.
 - [ ] Merge Blog into Learn: one Learn page, /blog redirects; expanded content and article illustrations.
 - [ ] Shop: sidebar navigation by category/sign; easier product browsing.
+- [ ] Forecasts page and content placed under a Learn submenu (not a separate overwhelming top item).
 
 # Zodaci — Active Project Index
 

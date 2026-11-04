@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 
-const PUBLIC_PATHS = ['/welcome', '/about', '/astrobook', '/astrocomic', '/academy', '/compatibility', '/book-preview', '/pricing', '/blog', '/faq', '/privacy', '/terms', '/demo', '/themes', '/community', '/community/guidelines'];
+const PUBLIC_PATHS = ['/welcome', '/about', '/astrobook', '/astrocomic', '/academy', '/learn', '/compatibility', '/book-preview', '/pricing', '/blog', '/faq', '/privacy', '/terms', '/demo', '/themes', '/community', '/community/guidelines'];
 export function isIndexablePage(path: string) {
   return PUBLIC_PATHS.includes(path) || /^\/(themes|academy|blog|lp)\/[^/]+(?:\/[^/]+)?\/?$/.test(path);
 }

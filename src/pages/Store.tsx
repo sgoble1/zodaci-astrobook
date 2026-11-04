@@ -1,17 +1,17 @@
 import { Fragment, useEffect, useMemo, useState } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
-import { Loader2, Search, Store as StoreIcon } from 'lucide-react';
+import { Loader2, Search, SlidersHorizontal, Store as StoreIcon, X } from 'lucide-react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { CartDrawer } from '@/components/store/CartDrawer';
+import { PRICE_BANDS, ShopSidebar, type PriceBand, type ShopFilters } from '@/components/store/ShopSidebar';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { PRODUCT_BY_HANDLE_QUERY, storefrontApiRequest, fetchAllProducts, formatMoney, inStock, type ShopifyProduct } from '@/lib/shopify';
 import { useCartStore } from '@/stores/cartStore';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { StaffPortrait } from '@/components/observatory/StaffPortrait';
 import heads from '@/assets/home-heads-hero.jpg';
-
-const TOP_TYPES = 11;
 
 function useAdd() {
   const addItem = useCartStore(s => s.addItem);
@@ -56,21 +56,35 @@ export default function Store() {
     fetchAllProducts().then(list => { if (on) setProducts(list); }).catch(() => { if (on) setFailed(true); });
     return () => { on = false; };
   }, [attempt]);
-  const [allTypes, setAllTypes] = useState(false);
-  // Categories ordered by how many pieces they hold, so the biggest collections lead.
+  const [sheet, setSheet] = useState(false);
+  // Departments ordered by how many pieces they hold, so the biggest collections lead.
   const types = useMemo(() => {
     const count = new Map<string, number>();
     for (const p of products ?? []) if (p.node.productType) count.set(p.node.productType, (count.get(p.node.productType) ?? 0) + 1);
-    return ['All', ...[...count.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0])).map(([t]) => t)];
+    return [...count.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0])).map(([name, n]) => ({ name, count: n }));
   }, [products]);
-  const visibleTypes = allTypes ? types : types.slice(0, TOP_TYPES + 1).concat(types.indexOf(type) > TOP_TYPES ? [type] : []);
   const sign = params.get('sign') ?? 'All';
+  const priceParam = params.get('price');
+  const price: PriceBand | 'all' = PRICE_BANDS.some(b => b.id === priceParam) ? (priceParam as PriceBand) : 'all';
+  const inStockOnly = params.get('stock') === '1';
   const signOf = (p: ShopifyProduct) => (p.node.tags ?? []).find(t => t.startsWith('sign:'))?.slice(5);
-  const signs = useMemo(() => ['All', ...new Set((products ?? []).map(signOf).filter(Boolean).map(s => s![0].toUpperCase() + s!.slice(1)))], [products]);
+  const signs = useMemo(() => {
+    const count = new Map<string, number>();
+    for (const p of products ?? []) { const s = signOf(p); if (s) { const n = s[0].toUpperCase() + s.slice(1); count.set(n, (count.get(n) ?? 0) + 1); } }
+    return [...count.entries()].map(([name, n]) => ({ name, count: n }));
+  }, [products]);
+  const filters: ShopFilters = { type, sign, price, inStock: inStockOnly };
+  const change = (k: keyof ShopFilters, v: string | boolean) => {
+    if (k === 'inStock') set('stock', v ? '1' : '', ''); else set(k, String(v), k === 'price' ? 'all' : 'All');
+  };
+  const clearFilters = () => { const n = new URLSearchParams(); if (q) n.set('q', q); if (sort !== 'featured') n.set('sort', sort); setParams(n, { replace: true }); };
+  const band = PRICE_BANDS.find(b => b.id === price);
   const shown = useMemo(() => {
     const words = q.toLowerCase().split(/\s+/).filter(Boolean);
     const list = (products ?? []).filter(p => (type === 'All' || p.node.productType === type)
       && (sign === 'All' || signOf(p) === sign.toLowerCase())
+      && (!band || (priceOf(p) >= band.min && priceOf(p) < band.max))
+      && (!inStockOnly || inStock(p))
       && words.every(w => `${p.node.title} ${p.node.description} ${p.node.productType ?? ''} ${(p.node.tags ?? []).join(' ')}`.toLowerCase().includes(w)));
     const sorted = [...list];
     if (sort === 'price-asc') sorted.sort((a, b) => priceOf(a) - priceOf(b));
@@ -79,9 +93,9 @@ export default function Store() {
     if (sort === 'newest') sorted.sort((a, b) => (b.node.createdAt ?? '').localeCompare(a.node.createdAt ?? ''));
     // Sold-out items stay visible but sink below what can be bought today.
     return sorted.sort((a, b) => Number(inStock(b)) - Number(inStock(a)));
-  }, [products, type, sign, q, sort]);
+  }, [products, type, sign, q, sort, band, inStockOnly]);
   return (
-    <div className="mx-auto max-w-6xl space-y-8 px-4 py-10">
+    <div className="mx-auto max-w-7xl space-y-8 px-4 py-10">
       <header className="obs-panel relative isolate overflow-hidden">
         <img src={heads} alt="" aria-hidden width={1920} height={1088} className="absolute inset-x-0 bottom-0 -z-20 h-full w-full object-cover object-bottom opacity-70" />
         <div aria-hidden className="absolute inset-0 -z-10 bg-gradient-to-b from-background via-background/80 to-background/10" />
@@ -93,20 +107,32 @@ export default function Store() {
           </div>
         </div>
       </header>
-      {failed ? <ShopOffline onRetry={() => setAttempt(a => a + 1)} /> : <>
+      {failed ? <ShopOffline onRetry={() => setAttempt(a => a + 1)} /> : <div className="grid gap-8 lg:grid-cols-[15rem_minmax(0,1fr)]">
+        <aside className="hidden lg:block"><div className="obs-panel sticky top-24 max-h-[calc(100vh-7rem)] overflow-y-auto p-4">{products ? <ShopSidebar types={types} signs={signs} total={products.length} filters={filters} onChange={change} onClear={clearFilters} /> : <div className="space-y-3" aria-hidden>{Array.from({ length: 8 }, (_, i) => <div key={i} className="h-8 animate-pulse rounded-full bg-muted motion-reduce:animate-none" />)}</div>}</div></aside>
+        <div className="min-w-0 space-y-6">
         <div className="flex flex-wrap items-center gap-3">
-          <label className="relative min-w-[220px] flex-1"><span className="sr-only">Search the shop</span><Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" aria-hidden /><Input type="search" value={q} onChange={e => set('q', e.target.value, '')} placeholder="Search posters, signs, notebooks…" className="pl-9" /></label>
+          <Sheet open={sheet} onOpenChange={setSheet}>
+            <SheetTrigger asChild><Button variant="outline" className="lg:hidden" disabled={!products}><SlidersHorizontal />Departments</Button></SheetTrigger>
+            <SheetContent side="left" className="w-[85vw] max-w-sm overflow-y-auto">
+              <SheetHeader><SheetTitle className="font-display">Browse the shop</SheetTitle></SheetHeader>
+              {products && <div className="mt-5"><ShopSidebar types={types} signs={signs} total={products.length} filters={filters} onChange={change} onClear={clearFilters} onPick={() => setSheet(false)} /></div>}
+            </SheetContent>
+          </Sheet>
+          <label className="relative min-w-[200px] flex-1"><span className="sr-only">Search the shop</span><Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" aria-hidden /><Input type="search" value={q} onChange={e => set('q', e.target.value, '')} placeholder="Search posters, signs, notebooks…" className="pl-9" /></label>
           <label className="flex items-center gap-2 text-sm"><span className="text-muted-foreground">Sort</span>
             <select value={sort} onChange={e => set('sort', e.target.value, 'featured')} className="h-10 rounded-md border border-input bg-background px-3 text-sm">{(Object.keys(SORTS) as Sort[]).map(k => <option key={k} value={k}>{SORTS[k]}</option>)}</select>
           </label>
         </div>
-        {types.length > 2 && <div className="flex flex-wrap gap-2" role="group" aria-label="Product type">{visibleTypes.map(t => <Button key={t} size="sm" aria-pressed={t === type} variant={t === type ? 'secondary' : 'outline'} onClick={() => set('type', t, 'All')}>{t}</Button>)}
-          {types.length > TOP_TYPES + 1 && <Button size="sm" variant="ghost" aria-expanded={allTypes} onClick={() => setAllTypes(v => !v)}>{allTypes ? 'Fewer categories' : `More categories (${types.length - TOP_TYPES - 1})`}</Button>}</div>}
-        {signs.length > 2 && <div className="flex flex-wrap gap-2" role="group" aria-label="Sign edition">{signs.map(s => <Button key={s} size="sm" aria-pressed={s === sign} variant={s === sign ? 'secondary' : 'outline'} onClick={() => set('sign', s, 'All')}>{s === 'All' ? 'All signs' : s}</Button>)}</div>}
-        {!products && <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3" aria-busy="true" aria-label="Loading the shop">{Array.from({ length: 6 }, (_, i) => <li key={i} className="parchment overflow-hidden"><div className="aspect-square animate-pulse bg-muted motion-reduce:animate-none" /><div className="space-y-2 p-4"><div className="h-5 w-2/3 rounded bg-muted" /><div className="h-4 w-full rounded bg-muted" /></div></li>)}</ul>}
+        {(type !== 'All' || sign !== 'All' || band || inStockOnly) && <div className="flex flex-wrap items-center gap-2" aria-label="Active filters">
+          {type !== 'All' && <Chip label={type} onClear={() => change('type', 'All')} />}
+          {sign !== 'All' && <Chip label={`${sign} edition`} onClear={() => change('sign', 'All')} />}
+          {band && <Chip label={band.label} onClear={() => change('price', 'all')} />}
+          {inStockOnly && <Chip label="Ready to order" onClear={() => change('inStock', false)} />}
+        </div>}
+        {!products && <ul className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3" aria-busy="true" aria-label="Loading the shop">{Array.from({ length: 6 }, (_, i) => <li key={i} className="parchment overflow-hidden"><div className="aspect-square animate-pulse bg-muted motion-reduce:animate-none" /><div className="space-y-2 p-4"><div className="h-5 w-2/3 rounded bg-muted" /><div className="h-4 w-full rounded bg-muted" /></div></li>)}</ul>}
         {products && <p className="text-sm text-muted-foreground" aria-live="polite">{shown.length} {shown.length === 1 ? 'item' : 'items'}{q && ` matching “${q}”`}</p>}
-        {products && shown.length === 0 && <div className="parchment space-y-3 p-8 text-center"><p className="text-muted-foreground">{products.length ? 'Nothing matches that search.' : 'New pieces are on their way — check back soon.'}</p>{(q || type !== 'All') && <Button variant="outline" size="sm" onClick={() => setParams(new URLSearchParams(), { replace: true })}>Clear search and filters</Button>}</div>}
-        <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {products && shown.length === 0 && <div className="parchment space-y-3 p-8 text-center"><p className="text-muted-foreground">{products.length ? 'Nothing matches that search.' : 'New pieces are on their way — check back soon.'}</p>{(q || type !== 'All' || sign !== 'All' || band || inStockOnly) && <Button variant="outline" size="sm" onClick={() => setParams(new URLSearchParams(), { replace: true })}>Clear search and filters</Button>}</div>}
+        <ul className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
           {shown.map(p => {
             const available = inStock(p);
             return (
@@ -126,9 +152,14 @@ export default function Store() {
             );
           })}
         </ul>
-      </>}
+        </div>
+      </div>}
     </div>
   );
+}
+
+function Chip({ label, onClear }: { label: string; onClear: () => void }) {
+  return <button type="button" onClick={onClear} className="inline-flex items-center gap-1.5 rounded-full border border-[hsl(var(--brass)/0.6)] bg-secondary px-3 py-1 text-sm transition-colors duration-700 hover:border-accent" aria-label={`Remove filter: ${label}`}>{label}<X aria-hidden className="h-3.5 w-3.5" /></button>;
 }
 
 export function ProductDetail() {

@@ -30,7 +30,7 @@ export const ACADEMY: Path[] = [
       { title: 'The astronomy', text: 'From Earth, a planet appears to reverse for a while when Earth overtakes it (outer planets) or it overtakes Earth (Mercury and Venus). Nothing actually changes direction; it is a matter of viewpoint.' },
       { title: 'The tradition', text: 'Astrologers read retrograde periods as times to review, revise and return. In a birth chart, a retrograde planet is often described as working inward first — thinking before speaking, reconsidering before acting.' },
       { title: 'RetroGOOD', text: 'Zodaci’s RetroGOOD scores each retrograde planet in your chart by dignity and placement and frames it as a strength to understand, never a malfunction.' } ] },
-    { slug: 'moon-cycle', title: 'The lunar cycle', summary: 'New, quarter and full Moons — a monthly rhythm for reflection.', minutes: 3, tryIt: { to: '/blog/learn/moon-phases-explained', label: 'Read the Moon phases guide' }, sections: [
+    { slug: 'moon-cycle', title: 'The lunar cycle', summary: 'New, quarter and full Moons — a monthly rhythm for reflection.', minutes: 3, tryIt: { to: '/learn/moon-phases-explained', label: 'Read the Moon phases guide' }, sections: [
       { title: 'What changes', text: 'Moon phases come from the changing angle between the Sun and Moon as seen from Earth: about 29.5 days from one New Moon to the next.' },
       { title: 'A simple practice', text: 'Many people use the New Moon to set an intention and the Full Moon to notice what has come to light. The phases are measured; the practice is a reflective habit, not a mechanism.' } ] },
     { slug: 'solar-return', title: 'Solar returns and profections', summary: 'Two traditional ways to frame your year ahead.', minutes: 4, tryIt: { to: '/profection', label: 'See your profection year' }, sections: [
@@ -50,7 +50,7 @@ export const ACADEMY: Path[] = [
       { title: 'Using it at home', text: 'Practitioners suggest facing a favorable direction at a desk or sleeping with your head toward one. Treat it as a design prompt for arranging a space you already enjoy.' } ] },
   ] },
   { slug: 'practice', title: 'Reading responsibly', intro: 'Getting real value from a reading without letting it write your story for you.', lessons: [
-    { slug: 'reflection', title: 'Reflection, not prediction', summary: 'A grounded way to work with any reading.', minutes: 3, tryIt: { to: '/blog/learn/reflection-not-prediction', label: 'Read the full guide' }, sections: [
+    { slug: 'reflection', title: 'Reflection, not prediction', summary: 'A grounded way to work with any reading.', minutes: 3, tryIt: { to: '/learn/reflection-not-prediction', label: 'Read the full guide' }, sections: [
       { title: 'Ask, don’t accept', text: 'Read each statement as a question: does this fit? Where does it not? The parts that don’t fit are as informative as the parts that do.' },
       { title: 'What astrology is not', text: 'Astrology is not a scientifically validated way to predict personality or events, and it is never a substitute for medical, legal, financial or mental-health advice.' } ] },
     { slug: 'birth-time', title: 'When you don’t know your birth time', summary: 'What still works, what changes, and how to find it.', minutes: 3, tryIt: { to: '/start', label: 'Start your chart' }, sections: [

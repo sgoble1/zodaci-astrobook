@@ -146,13 +146,13 @@ export const MEMBER_DOMAINS: MemberDomain[] = [
     ],
   },
   {
-    id: 'learn', label: 'Research Library', hub: '/academy', hubLabel: 'Open the Academy', icon: GraduationCap,
+    id: 'learn', label: 'Research Library', hub: '/learn', hubLabel: 'Open Learn', icon: GraduationCap,
     description: 'Lessons, plain-language guides and articles.',
-    tabs: ['/academy', '/themes', '/blog', '/instructions', '/faq', '/verify'],
-    prefixes: ['/academy', '/themes', '/blog', '/reading-room'],
+    tabs: ['/learn', '/themes', '/instructions', '/faq', '/verify'],
+    prefixes: ['/learn', '/academy', '/themes', '/blog', '/reading-room'],
     columns: [
       { title: 'Academy', items: [
-        { to: '/academy', label: 'Zodaci Academy', description: 'Short lessons from first steps up', icon: GraduationCap, badge: 'New' },
+        { to: '/learn', label: 'Learn', description: 'Lessons, guides, sky forecasts and articles', icon: GraduationCap, badge: 'New' },
         { to: '/themes', label: 'Core themes explained', description: 'The twelve themes, in plain words', icon: Sparkles },
       ] },
       { title: 'Reference & help', items: [
@@ -162,7 +162,7 @@ export const MEMBER_DOMAINS: MemberDomain[] = [
         { to: '/demo', label: 'Interactive demo', description: 'See a full sample reading', icon: PlayCircle },
       ] },
       { title: 'Read', items: [
-        { to: '/blog', label: 'Community Journal', description: 'Articles and member reflections', icon: ScrollText },
+        { to: '/learn#journal', label: 'Community Journal', description: 'Articles and member reflections', icon: ScrollText },
         { to: '/about', label: 'About Zodaci', description: 'Who we are and how it works', icon: Info },
         { to: '/characters', label: 'Choose your character', description: 'Meet the observatory staff and pick your member', icon: Users },
       ] },
@@ -283,7 +283,7 @@ export function breadcrumbsFor(path: string, names: CrumbNames = {}): Crumb[] | 
     const sys = SYSTEM_READINGS.find(s => s.route === path);
     return [hubCrumb('explore'), { label: 'Other systems', to: '/other-systems' }, { label: sys?.title ?? titleCase(m[1]) }];
   }
-  if ((m = path.match(/^\/academy\/([\w-]+)$/))) return [hubCrumb('learn'), { label: 'Academy', to: '/academy' }, { label: titleCase(m[1]) }];
+  if ((m = path.match(/^\/academy\/([\w-]+)$/))) return [hubCrumb('learn'), { label: 'Lessons', to: '/learn#lessons' }, { label: titleCase(m[1]) }];
   if ((m = path.match(/^\/themes\/([\w-]+)$/))) return [hubCrumb('learn'), { label: 'Core themes', to: '/themes' }, { label: titleCase(m[1]) }];
   if ((m = path.match(/^\/workbook\/module\/([\w-]+)$/))) return [hubCrumb('readings'), { label: 'Workbook', to: '/workbook' }, { label: titleCase(m[1]) }];
   if (path.match(/^\/workbook\/companion\/[\w-]+$/)) return [hubCrumb('readings'), { label: 'The Oracle Within', to: '/workbook/companion' }, { label: 'Session' }];
@@ -353,7 +353,7 @@ export function nextStepsFor(path: string, ctx: NextStepContext): NextStep[] {
   if (!ctx.hasChart) return [
     { label: 'Create your chart', description: 'Two minutes of birth details', to: '/start', badge: 'For you' },
     { label: 'Try the interactive demo', description: 'A full sample reading', to: '/demo' },
-    { label: 'Learn the basics', description: 'Short Academy lessons', to: '/academy' },
+    { label: 'Learn the basics', description: 'Short lessons in Learn', to: '/learn#lessons' },
   ];
   const steps: NextStep[] = [];
   const domain = domainFor(path);
@@ -392,7 +392,7 @@ const P = (domain: Placement['domain'], level: Placement['level'], note?: string
  */
 export const ROUTE_INVENTORY: Record<string, Placement> = {
   '/index': P('public', 'utility', 'redirects to /welcome'), '/welcome': P('public', 'primary'), '/april': P('public', 'utility', 'April’s shared report; opens for her account and people she shared her edition with'), '/shared-with-me': P('account', 'utility'),
-  '/about': P('learn', 'secondary'), '/characters': P('learn', 'secondary', 'character selection'), '/lp/:slug': P('public', 'utility', 'campaign pages'), '/blog': P('learn', 'secondary'), '/blog/learn/:slug': P('learn', 'tertiary', 'from the Journal'),
+  '/about': P('learn', 'secondary'), '/characters': P('learn', 'secondary', 'character selection'), '/lp/:slug': P('public', 'utility', 'campaign pages'), '/learn': P('learn', 'primary'), '/learn/:slug': P('learn', 'tertiary', 'Learn article'), '/blog': P('learn', 'utility', 'redirects to /learn#journal'), '/blog/learn/:slug': P('learn', 'tertiary', 'from the Journal'),
   '/community': P('explore', 'secondary'), '/community/guidelines': P('explore', 'tertiary', 'from Community'), '/community/:id': P('explore', 'tertiary', 'from Community'),
   '/astrobook': P('public', 'utility', 'public product page; members use /books'), '/book-preview': P('book', 'secondary'), '/demo': P('learn', 'secondary'),
   '/themes': P('learn', 'secondary'), '/themes/:slug': P('learn', 'tertiary', 'from Core themes explained'), '/faq': P('learn', 'secondary'), '/privacy': P('public', 'utility', 'footer'), '/terms': P('public', 'utility', 'footer'),

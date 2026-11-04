@@ -16,11 +16,11 @@ function Ico({ size = 22, title, className, children, ...rest }: IconProps & { c
     </svg>
   );
 }
-/** Printed tint fill used inside shapes. */
-const T = { fill: 'currentColor', fillOpacity: 0.16 } as const;
-/** Four-point sparkle, the set's signature accent. */
+/** Printed spot-colour tint inside shapes (yellow ink, styled in index.css). */
+const T = { className: 'retro-tint' } as const;
+/** Four-point sparkle in red ink, the set's signature accent. */
 const Spark = ({ x, y, r = 2.2 }: { x: number; y: number; r?: number }) => (
-  <path d={`M${x} ${y - r}Q${x} ${y} ${x + r} ${y}Q${x} ${y} ${x} ${y + r}Q${x} ${y} ${x - r} ${y}Q${x} ${y} ${x} ${y - r}Z`} fill="currentColor" stroke="none" />
+  <path d={`M${x} ${y - r}Q${x} ${y} ${x + r} ${y}Q${x} ${y} ${x} ${y + r}Q${x} ${y} ${x - r} ${y}Q${x} ${y} ${x} ${y - r}Z`} className="retro-spark" stroke="none" />
 );
 
 export type RetroIconComponent = (p: IconProps) => JSX.Element;

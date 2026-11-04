@@ -4,7 +4,7 @@ import heads from '@/assets/home-heads-hero.jpg';
 
 const COLUMNS: { heading: string; links: [string, string][] }[] = [
   { heading: 'Zodaci', links: [['/auth', 'Free chart'], ['/pricing', 'Pricing'], ['/compatibility', 'Compatibility'], ['/astrobook', 'AstroBook'], ['/astrocomic', 'AstroComic'], ['/referrals', 'Invite a friend']] },
-  { heading: 'Learn', links: [['/academy', 'Zodaci Academy'], ['/blog/learn/reading-your-birth-chart', 'Reading your birth chart'], ['/blog/learn/moon-phases-explained', 'Moon phases'], ['/blog/learn/reflection-not-prediction', 'Reflection practice'], ['/blog', 'Blog']] },
+  { heading: 'Learn', links: [['/learn', 'Learn'], ['/learn/reading-your-birth-chart', 'Reading your birth chart'], ['/learn/moon-phases-explained', 'Moon phases'], ['/learn/reflection-not-prediction', 'Reflection practice'], ['/learn#journal', 'Community journal']] },
   { heading: 'Company', links: [['/about', 'About'], ['/faq', 'FAQ'], ['/demo', 'Interactive demo'], ['/themes', 'Core themes'], ['/community', 'Community'], ['/privacy', 'Privacy Policy'], ['/terms', 'Terms of Service']] },
 ];
 
