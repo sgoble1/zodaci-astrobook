@@ -1348,6 +1348,24 @@ export type Database = {
         }
         Relationships: []
       }
+      member_characters: {
+        Row: {
+          character_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          character_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          character_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       newsletter_campaigns: {
         Row: {
           body_md: string

@@ -21,6 +21,7 @@ import { useZacAccount } from '@/hooks/useZacAccount';
 import { useSharedEditions } from '@/lib/editionSharing';
 import { leaveAprilEdition, viewingSharedEdition } from '@/hooks/useAprilSpace';
 import { useSession } from '@/hooks/useLibrary';
+import { placeFor, STAFF } from '@/lib/observatory';
 import { useAprilSpace, useAprilSpaceError, retryAprilSpace, useClassicView, setClassicView } from '@/hooks/useAprilSpace';
 
 /** April's full menu exactly as the sidebar shows it: her sections plus Shared, Relationships and pages she created. */
@@ -252,6 +253,7 @@ function MemberShell({ children }: { children: ReactNode }) {
       <MemberHeader />
       <main id="main-content" tabIndex={-1} className={`relative z-10 flex-1 outline-none ${tabs ? 'pb-[calc(4rem+env(safe-area-inset-bottom))] md:pb-0' : ''}`}>
         <div className="mx-auto max-w-5xl px-4 py-6 sm:px-8 sm:py-10 lg:py-12">
+          <PlaceStrip pathname={location.pathname} />
           <WayfindingTop />
           <motion.div key={location.pathname} initial={reduceMotion ? false : { opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: reduceMotion ? 0 : 0.9, ease: [0.2, 0.7, 0.2, 1] }}>
             {children}
@@ -336,7 +338,7 @@ function AprilShell({ children, edition = 'april' }: { children: ReactNode; edit
       <a href="#main-content" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded focus:bg-primary focus:px-4 focus:py-2 focus:text-primary-foreground">Skip to content</a>
       <ScrollProgress /><FirstViewReveal />
       <ParticleField />
-      <aside ref={asideRef} data-keep-wording={edition !== 'april' || undefined} className="hidden lg:flex w-72 shrink-0 flex-col border-r border-border/60 bg-card/40 backdrop-blur-xl sticky top-0 h-screen z-10">
+      <aside ref={asideRef} data-keep-wording={edition !== 'april' || undefined} className="hidden lg:flex w-72 shrink-0 flex-col border-r-2 border-[hsl(var(--brass)/0.55)] bg-card/70 backdrop-blur-xl sticky top-0 h-screen z-10">
         <SidebarInner />
       </aside>
       <div ref={headerRef} className="lg:hidden fixed top-0 inset-x-0 z-50 flex min-h-[64px] items-center justify-between gap-2 border-b border-border bg-background/95 px-3 py-2 backdrop-blur-xl pt-[max(0.5rem,env(safe-area-inset-top))]">
@@ -404,6 +406,7 @@ function SidebarInner({ mobile = false, onNavigate }: { mobile?: boolean; onNavi
     <div className={`founder-sidebar flex min-h-full flex-col gap-6 overflow-x-hidden ${mobile ? 'px-4 pb-8 pt-4' : 'h-full overflow-y-auto p-6'}`}>
       <div>
         <div className="flex items-center justify-between gap-2"><ZodaciLogo />{!mobile && <AccountButton compact />}</div>
+        <p className="mt-3 flex items-center gap-2 font-label text-[0.65rem] text-primary"><span aria-hidden className="obs-light h-2 w-2 rounded-full bg-primary" />Observatory Console · Online</p>
         <div className="mt-3"><AdminEditionSwitch fullEdition /></div>
         <div className="font-display text-2xl leading-tight mt-1">{edition === 'shane' ? 'Shane' : edition === 'zac' ? 'Zac' : 'April'}</div>
         <div className="text-xs text-muted-foreground mt-1">Private edition</div>
@@ -420,7 +423,7 @@ function SidebarInner({ mobile = false, onNavigate }: { mobile?: boolean; onNavi
                 key={n.to} to={n.to} onClick={onNavigate} data-nav-to={n.to} end={n.to === '/' || n.to === '/masterbook' || n.to === '/relationships' || n.to === '/workbook' || n.to === '/shared'}
                 className={({ isActive }) =>
                   `flex min-h-11 items-center justify-between gap-2 rounded border border-transparent px-3 py-2 transition-colors ${
-                    isActive ? 'bg-accent/15 border-accent/30 text-foreground' : 'text-muted-foreground hover:text-foreground hover:bg-muted/60'
+                    isActive ? 'bg-primary/10 border-primary/50 border-l-4 border-l-primary text-foreground' : 'text-muted-foreground hover:text-foreground hover:bg-muted/60'
                   }${n.created ? ' bg-created/20 text-foreground' : ''}${n.to === '/create' ? ' nav-create-glow' : ''}${glowId && n.to === `/p/${glowId}` ? ' nav-new-glow' : ''}`
                 }
               ><span>{n.label}{n.created ? <span className="sr-only"> (created page)</span> : null}{glowId && n.to === `/p/${glowId}` ? <span className="sr-only"> — just added</span> : null}</span>{n.badge ? <span className="min-w-5 rounded-full bg-primary px-1.5 text-center text-[10px] text-primary-foreground" aria-label={`${n.badge} new`}>{n.badge}</span> : null}</NavLink>
@@ -433,7 +436,7 @@ function SidebarInner({ mobile = false, onNavigate }: { mobile?: boolean; onNavi
                         key={n.to} to={n.to} onClick={onNavigate} end={n.to === '/feng-shui'}
                         className={({ isActive }) =>
                           `flex min-h-11 items-center rounded border border-transparent px-3 py-2 text-xs transition-colors ${
-                            isActive ? 'bg-accent/15 border-accent/30 text-foreground' : 'text-muted-foreground hover:text-foreground hover:bg-muted/60'
+                            isActive ? 'bg-primary/10 border-primary/50 border-l-4 border-l-primary text-foreground' : 'text-muted-foreground hover:text-foreground hover:bg-muted/60'
                           }`
                         }
                       ><span>{n.label}</span></NavLink>
@@ -469,3 +472,9 @@ function SidebarInner({ mobile = false, onNavigate }: { mobile?: boolean; onNavi
 }
 
 export { MENU_SECTIONS } from '@/content/navigation';
+
+/** Which observatory place the current page belongs to, with its staff host (Astral Research Authority world). */
+function PlaceStrip({ pathname }: { pathname: string }) {
+  const place = placeFor(pathname);
+  return <p className="mb-4 flex flex-wrap items-center gap-x-3 gap-y-1 border-b border-[hsl(var(--brass)/0.4)] pb-2 font-label text-[0.65rem] text-muted-foreground"><span className="flex items-center gap-1.5 text-primary"><span aria-hidden className="obs-light h-1.5 w-1.5 rounded-full bg-primary" />{place.name}</span><span>Host: {STAFF[place.host].title}</span><span className="hidden sm:inline">{place.motto}</span></p>;
+}

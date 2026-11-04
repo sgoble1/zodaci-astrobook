@@ -3,68 +3,74 @@
 @import '@fontsource/fira-sans/400.css';
 @import '@fontsource/fira-sans/500.css';
 @import '@fontsource/fira-sans/600.css';
+@import '@fontsource/oswald/500.css';
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 /*
- * Design tokens — the "Indigo Signal" theme (product colours): black/deep-indigo surfaces, yellow primary,
- * red accent, indigo glow, DM Serif Display headings and Fira Sans body. These tokens are the single
- * source of truth for interface colour; illustrations (planet orbs, cover art) keep their own pigments.
- * Legacy names kept for compatibility: --glow-teal holds the blue glow, --shadow-gold is a violet halo.
+ * Design tokens — "Astral Research Authority" (Blend palette, Nov 2026): deep indigo structure,
+ * archive cream text and paper panels, shop yellow primary, shop red accent, brass frames and
+ * constellation-blue diagrams. Single source of truth for interface colour.
+ * Legacy names kept for compatibility.
  */
 :root {
   --font-size: 16px;
-  /* Indigo Signal — black + deep indigo, yellow primary, red accent */
-  --background: 240 40% 5%;
-  --foreground: 40 20% 96%;
-  --card: 238 52% 12%;
-  --card-foreground: 40 20% 96%;
-  --popover: 238 52% 12%;
-  --popover-foreground: 40 20% 96%;
-  --primary: 47 100% 52%;
-  --primary-foreground: 240 40% 5%;
-  --secondary: 238 45% 18%;
-  --secondary-foreground: 40 20% 96%;
-  --muted: 238 38% 14%;
-  --muted-foreground: 235 18% 72%;
-  --accent: 356 82% 55%;
-  --accent-foreground: 0 0% 100%;
-  --destructive: 0 84% 60%;
-  --destructive-foreground: 210 40% 98%;
-  --border: 238 32% 22%;
-  --input: 238 32% 18%;
-  --input-background: 238 52% 12%;
-  --switch-background: 228 15% 22%;
-  --ring: 47 100% 52%;
-  --info: 217 91% 60%;
+  --background: 240 46% 11%;
+  --foreground: 41 58% 88%;
+  --card: 240 44% 16%;
+  --card-foreground: 41 58% 88%;
+  --popover: 240 44% 15%;
+  --popover-foreground: 41 58% 88%;
+  --primary: 45 100% 55%;
+  --primary-foreground: 240 50% 12%;
+  --secondary: 240 40% 21%;
+  --secondary-foreground: 41 58% 88%;
+  --muted: 240 38% 18%;
+  --muted-foreground: 38 22% 70%;
+  --accent: 357 74% 56%;
+  --accent-foreground: 41 70% 96%;
+  --destructive: 0 80% 58%;
+  --destructive-foreground: 41 70% 96%;
+  --border: 42 30% 36%;
+  --input: 240 36% 22%;
+  --input-background: 240 44% 16%;
+  --switch-background: 240 25% 26%;
+  --ring: 45 100% 55%;
+  --info: 207 45% 58%;
 
-  /* Legacy names remapped to the new palette */
-  --ink: 40 20% 96%;
-  --vellum: 240 40% 5%;
-  --gold: 47 100% 52%;
-  --gold-bright: 50 100% 62%;
-  --oxblood: 356 82% 55%;
-  --created: 50 95% 55%;
-  --candle: 47 100% 52%;
-  --starlight: 252 100% 92%;
-  --midnight: 230 40% 3%;
-  --glow-violet: 240 70% 45%;
-  --glow-teal: 356 82% 55%;
+  /* Observatory materials */
+  --paper: 41 58% 86%;
+  --paper-ink: 240 50% 18%;
+  --brass: 42 52% 54%;
+  --constellation: 207 40% 55%;
+  --indigo-deep: 240 50% 24%;
 
-  /* Mystic Ink illustration palette (style guide section 4): art sections, sign cards and art direction tools */
-  --mi-indigo: 235 47% 20%;
+  /* Legacy names remapped */
+  --ink: 41 58% 88%;
+  --vellum: 240 46% 11%;
+  --gold: 42 60% 58%;
+  --gold-bright: 45 100% 62%;
+  --oxblood: 357 74% 56%;
+  --created: 45 95% 55%;
+  --candle: 45 100% 55%;
+  --starlight: 41 70% 94%;
+  --midnight: 240 50% 6%;
+  --glow-violet: 240 55% 40%;
+  --glow-teal: 207 40% 55%;
+
+  --mi-indigo: 240 50% 24%;
   --mi-plum: 276 36% 27%;
-  --mi-teal: 189 55% 27%;
-  --mi-gold: 41 54% 54%;
-  --mi-rose: 346 40% 64%;
-  --mi-parchment: 39 57% 88%;
-  --mi-ink: 18 37% 12%;
+  --mi-teal: 207 40% 40%;
+  --mi-gold: 42 52% 54%;
+  --mi-rose: 357 60% 64%;
+  --mi-parchment: 41 58% 86%;
+  --mi-ink: 240 50% 12%;
 
-  --radius: 0.875rem;
-  --shadow-ink: 0 20px 50px -25px hsl(240 70% 8% / 0.7);
-  --shadow-gold: 0 0 40px -10px hsl(47 100% 52% / 0.35);
+  --radius: 0.5rem;
+  --shadow-ink: 0 20px 50px -25px hsl(240 60% 4% / 0.8);
+  --shadow-gold: 0 0 30px -12px hsl(45 100% 55% / 0.35);
 }
 .dark { }
 
@@ -189,7 +195,7 @@ button, a, input, textarea, select { max-width: 100%; }
   background-image: linear-gradient(135deg, hsl(var(--glow-violet)), hsl(280 80% 68%) 45%, hsl(var(--glow-teal)));
   -webkit-background-clip: text; background-clip: text; color: transparent;
 }
-h1 { background-image: linear-gradient(135deg, hsl(var(--foreground)) 30%, hsl(280 80% 75%) 70%, hsl(var(--glow-teal))); -webkit-background-clip: text; background-clip: text; color: transparent; }
+h1 { color: hsl(var(--foreground)); }
 
 .gold-rule {
   height: 1px;
@@ -420,3 +426,54 @@ body:has(#mobile-menu) [data-generation-notice] { display: none; }
 @keyframes cloud-arrive { 0% { opacity: 0; transform: translateX(-18%); } 100% { opacity: 1; transform: translateX(0); } }
 .logo-clouds--arrive { animation: cloud-arrive 1.8s cubic-bezier(.2,.7,.2,1) both; }
 @media (prefers-reduced-motion: reduce) { .logo-clouds, .logo-clouds--arrive { animation: none; } }
+
+
+/* ── Astral Research Authority: observatory materials and motion ── */
+body {
+  background-color: hsl(var(--background));
+  background-image:
+    radial-gradient(ellipse at 20% -10%, hsl(var(--indigo-deep) / .7), transparent 60%),
+    radial-gradient(ellipse at 90% 110%, hsl(var(--constellation) / .12), transparent 55%);
+  background-attachment: fixed;
+}
+.font-label { font-family: 'Oswald', 'Fira Sans', sans-serif; text-transform: uppercase; letter-spacing: .08em; font-weight: 500; }
+.obs-panel {
+  position: relative; border-radius: .5rem;
+  border: 1px solid hsl(var(--brass) / .55);
+  background: linear-gradient(180deg, hsl(var(--card)), hsl(var(--background) / .9));
+  box-shadow: inset 0 0 0 3px hsl(var(--background)), inset 0 0 0 4px hsl(var(--brass) / .25), var(--shadow-ink);
+}
+.obs-paper {
+  border-radius: .5rem; color: hsl(var(--paper-ink));
+  border: 1px solid hsl(var(--brass) / .7);
+  background-color: hsl(var(--paper));
+  background-image: radial-gradient(hsl(var(--brass) / .10) 1px, transparent 1px), linear-gradient(180deg, hsl(41 60% 90%), hsl(var(--paper)));
+  background-size: 6px 6px, 100% 100%;
+  box-shadow: inset 0 0 40px hsl(30 40% 50% / .18), var(--shadow-ink);
+}
+.obs-paper h1, .obs-paper h2, .obs-paper h3 { color: hsl(var(--paper-ink)); background: none; -webkit-text-fill-color: currentColor; }
+.obs-paper .text-muted-foreground { color: hsl(var(--paper-ink) / .72); }
+.obs-stamp {
+  display: inline-block; padding: .15rem .5rem; border: 2px solid hsl(var(--accent));
+  color: hsl(var(--accent)); border-radius: .25rem; transform: rotate(-4deg);
+  font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: .12em; font-size: .7rem;
+}
+.obs-crt { position: relative; overflow: hidden; border-radius: 1.25rem / 1rem; background: hsl(var(--midnight)); }
+.obs-crt::after {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background: repeating-linear-gradient(0deg, hsl(0 0% 0% / .18) 0 1px, transparent 1px 3px), radial-gradient(ellipse at center, transparent 55%, hsl(0 0% 0% / .55));
+}
+@keyframes obs-tv-on { 0% { transform: scaleY(.01) scaleX(.6); filter: brightness(3); opacity: .2 } 40% { transform: scaleY(.04) scaleX(1); } 100% { transform: none; filter: none; opacity: 1 } }
+@keyframes obs-sweep { from { transform: rotate(0deg) } to { transform: rotate(360deg) } }
+@keyframes obs-signal { 0%,100% { opacity: .35 } 50% { opacity: 1 } }
+@keyframes obs-deploy { from { opacity: 0; transform: translateY(10px); clip-path: inset(0 0 100% 0) } to { opacity: 1; transform: none; clip-path: inset(0) } }
+@keyframes obs-draw { to { stroke-dashoffset: 0 } }
+@keyframes obs-static { 0% { background-position: 0 0 } 100% { background-position: 100px 60px } }
+.obs-tv-on { animation: obs-tv-on 1.4s cubic-bezier(.2,.7,.2,1) both; transform-origin: center; }
+.obs-sweep { animation: obs-sweep 24s linear infinite; }
+.obs-light { animation: obs-signal 4s ease-in-out infinite; }
+.obs-deploy { animation: obs-deploy 1.2s cubic-bezier(.2,.7,.2,1) both; }
+.obs-draw { stroke-dasharray: 1200; stroke-dashoffset: 1200; animation: obs-draw 6s ease-out forwards; }
+@media (prefers-reduced-motion: reduce) {
+  .obs-tv-on, .obs-sweep, .obs-light, .obs-deploy, .obs-draw { animation: none !important; stroke-dashoffset: 0; clip-path: none; }
+}

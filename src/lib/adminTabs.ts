@@ -1,4 +1,4 @@
-/** Admin dashboard sections, grouped Content / Operations / Platform. The open tab lives in ?tab= so links and reloads keep it. */
+/** Admin dashboard sections: Editions, Products, Orders, Shared Spaces, Members & growth, Platform. The open tab lives in ?tab= so links and reloads keep it. */
 export type AdminTab = 'upload' | 'sections' | 'index' | 'relationships' | 'marketing' | 'growth' | 'activity' | 'charts' | 'orders' | 'shop' | 'comic' | 'stripe' | 'studio' | 'newsletter' | 'april' | 'credits' | 'audit' | 'settings' | 'launch' | 'access' | 'shared';
 export type AdminTabGroup = { label: string; tabs: { id: AdminTab; label: string; adminOnly?: boolean }[] };
 

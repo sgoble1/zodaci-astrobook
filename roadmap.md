@@ -1,5 +1,17 @@
 # Zodaci — Active Project Index
 
+## Zodaci OS redesign — Astral Research Authority (Nov 4, 12-phase plan)
+- [x] P1.1 Blend palette (cream, deep indigo, yellow, red, brass), poster label font, panels/paper/CRT textures, slow reduced-motion animations; selected buttons clearly marked.
+- [x] P1.2 New logo icon (star in orbit lens), header logo, favicon.
+- [x] P1.3 Observatory pieces: retro TV, signal meter, status light, stamp, constellation draw.
+- [x] P1.4 Public header (Charts, AstroBooks, Relationships, Forecasts, Learn, About, Blog, Shop + Generate your chart); member menu renamed to observatory places; Observatory Console sidebar styling; place + staff host strip on every member page.
+- [x] P1.5 Observatory home (hero, live chart, how it works, features, Cosmic Archive, pricing, zodiac cards, transmissions, join). Testimonials stay hidden until real ones are supplied.
+- [x] P1.6 Current Chapter + Life Compass on the member landing, from real transits only (tested).
+- [x] P1.8 Character selection page (/characters) with 12 members (Stargazer featured) and 9 staff; choice saved owner-only.
+- [ ] P1.7 Restyle remaining pages into their places (My Chart, readings, AstroBook reader 3-column + product page, AstroComic, shop, podcasts, counselors, workbooks, editions, admin).
+- [ ] P1.9 Phone/desktop signed-in checks across pages.
+- [ ] P2 Context Engine · P3 Intelligence Layer (AI credits) · P4 Living AstroBooks · P5 AstroComics (AI credits; Issue #1 title/link fix, delivery dates, Zac art) · P6 Portraits · P7 Relationship Bureau + brother hub · P8 Broadcast Engine · P9 Timeline Hall · P10 Founder Command · P11 Event system · P12 AI Observatory.
+
 ## Completion pass (Nov 2)
 - [ ] Brighten the new home artwork overlay while preserving readable text.
 - [ ] Verify the interrupted edition-view, Admin and home changes; reconcile completed items below.
