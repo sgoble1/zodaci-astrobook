@@ -500,3 +500,24 @@ body {
 @keyframes retro-twinkle { 0%,100% { transform: scale(.85) rotate(0); opacity: .6 } 50% { transform: scale(1) rotate(20deg); opacity: 1 } }
 .retro-twinkle { animation: retro-twinkle 7s ease-in-out infinite; }
 @media (prefers-reduced-motion: reduce) { .retro-twinkle { animation: none; } }
+.retro-portrait { border: 2px solid hsl(var(--brass)); box-shadow: 0 0 0 3px hsl(var(--background)), 0 0 0 4px hsl(var(--brass) / .5), 3px 3px 0 4px hsl(var(--accent) / .35); }
+.retro-place-banner { border-radius: 1.25rem; border: 1px solid hsl(var(--brass) / .5); background: linear-gradient(100deg, hsl(var(--card)), hsl(var(--indigo-deep, var(--card)) / .6)); box-shadow: 4px 4px 0 hsl(var(--accent) / .3); background-image: radial-gradient(hsl(var(--foreground) / .04) 1px, transparent 1.2px), linear-gradient(100deg, hsl(var(--card)), hsl(var(--background))); background-size: 6px 6px, 100% 100%; }
+/* Retro surfaces everywhere, including the member atlas (overrides the flat legacy glass). */
+.vellum, .parchment, .member-experience .vellum, .member-experience .parchment {
+  border: 1px solid hsl(var(--brass) / .45); border-radius: 1.25rem;
+  background-color: hsl(var(--card) / .85); backdrop-filter: none; -webkit-backdrop-filter: none;
+  background-image: radial-gradient(hsl(var(--foreground) / .035) 1px, transparent 1.2px); background-size: 6px 6px;
+  box-shadow: 4px 4px 0 hsl(var(--brass) / .22);
+}
+.vellum:hover, .parchment:hover, .member-experience .vellum:hover, .member-experience .parchment:hover { border-color: hsl(var(--brass) / .75); box-shadow: 5px 5px 0 hsl(var(--accent) / .35); }
+.font-smallcaps, .member-experience .font-smallcaps { font-family: 'Bebas Neue', 'Libre Franklin', sans-serif; font-weight: 400; letter-spacing: .14em; text-transform: uppercase; }
+@media (max-width: 639px) { .parchment, .vellum { border-radius: 1rem; } }
+/* Channel change: a soft burst of static that fades out slowly. */
+@keyframes obs-static-burst { 0% { opacity: .95 } 100% { opacity: 0 } }
+.obs-static-burst {
+  pointer-events: none;
+  background-image: repeating-radial-gradient(circle at 17% 32%, hsl(var(--foreground) / .5) 0 1px, transparent 1px 3px), repeating-linear-gradient(0deg, hsl(var(--foreground) / .25) 0 1px, transparent 1px 2px);
+  background-size: 7px 9px, 100% 3px; mix-blend-mode: screen;
+  animation: obs-static-burst .7s ease-out forwards, obs-static .2s steps(4) infinite;
+}
+@media (prefers-reduced-motion: reduce) { .obs-static-burst { display: none; } }

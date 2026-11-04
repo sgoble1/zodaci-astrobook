@@ -37,7 +37,7 @@ export const MEMBER_DOMAINS: MemberDomain[] = [
     id: 'chart', label: 'Mapping Center', hub: '/my-chart', hubLabel: 'Open my chart', icon: Orbit,
     description: 'Everything calculated from your own birth details.',
     tabs: ['/my-chart', '/planets', '/houses', '/aspects', '/star-map', '/results', '/findings', '/chart-elements', '/chart-calculator'],
-    prefixes: ['/birth-chart', '/chart-guide'],
+    prefixes: ['/birth-chart', '/chart-guide', '/compendium', '/volume-2'],
     columns: [
       { title: 'Your chart', items: [
         { to: '/my-chart', label: 'My Chart', description: 'Your wheel, placements and strongest aspects', icon: Orbit, badge: 'Popular' },
@@ -60,7 +60,7 @@ export const MEMBER_DOMAINS: MemberDomain[] = [
     id: 'readings', label: 'Readings', hub: '/my-readings', hubLabel: 'All my readings', icon: BookOpenText,
     description: 'Readings written only from your own placements.',
     tabs: ['/my-readings', '/chat', '/wonderings', '/counselors', '/workbook', '/retrogood', '/create'],
-    prefixes: ['/my-readings', '/workbook', '/counselors', '/chat', '/topics'],
+    prefixes: ['/my-readings', '/workbook', '/counselors', '/chat', '/topics', '/readings', '/reading', '/p', '/ask', '/sources'],
     columns: [
       { title: 'My readings', more: { to: '/my-readings#topics', label: `All ${TOPIC_READINGS.length} topics & ${CORE_THEMES.length} core themes` }, items: [
         { to: '/my-readings', label: 'All my readings', description: 'Topics, core themes and quick readings', icon: BookOpenText },
@@ -91,7 +91,7 @@ export const MEMBER_DOMAINS: MemberDomain[] = [
     id: 'book', label: 'Cosmic Archive', hub: '/my-astrobook', hubLabel: 'Open my library', icon: BookHeart,
     description: 'Your Masterbook, printed AstroBook, audio and keepsakes.',
     tabs: ['/my-astrobook', '/my-masterbook', '/books', '/orders', '/podcasts', '/my-comic'],
-    prefixes: ['/shane', '/april', '/zac'],
+    prefixes: ['/shane', '/april', '/zac', '/astrobook', '/astrocomic', '/official-astrobook', '/masterbook', '/library', '/shared-with-me', '/contents', '/read'],
     columns: [
       { title: 'My AstroBook', items: [
         { to: '/my-masterbook', label: 'My Masterbook', description: 'Your foundational chapters', icon: BookHeart, badge: 'Popular' },
@@ -115,7 +115,7 @@ export const MEMBER_DOMAINS: MemberDomain[] = [
     id: 'explore', label: 'Navigation', hub: '/explore', hubLabel: 'Open Explore', icon: Telescope,
     description: 'Timing, relationships, other traditions and community.',
     tabs: ['/explore', '/transits', '/timeline', '/retrogrades', '/profection', '/relationships', '/other-systems'],
-    prefixes: ['/relationships', '/other-systems', '/shared', '/community'],
+    prefixes: ['/relationships', '/other-systems', '/shared', '/community', '/feng-shui', '/bagua-reading'],
     columns: [
       { title: 'Forecast Center', items: [
         { to: '/transits', label: 'Transits', description: 'What is moving through your chart now', icon: CalendarClock, badge: 'Popular' },
@@ -127,6 +127,7 @@ export const MEMBER_DOMAINS: MemberDomain[] = [
       { title: 'Relationship Bureau', items: [
         { to: '/relationships', label: 'All relationships', description: 'Add people and compare charts', icon: Heart },
         { to: '/compatibility', label: 'Quick Compatibility Score', description: 'Two birthdays, one score', icon: HeartHandshake },
+        { to: '/siblings', label: 'Sibling Bureau', description: 'Brothers and sisters, channel by channel', icon: Users },
       ] },
       { title: 'Other systems', more: { to: '/other-systems', label: `All ${SYSTEM_READINGS.length} traditions` }, items: [
         { to: '/other-systems', label: 'Other Systems · Dashboard', description: 'Eight traditions from your birth details', icon: Globe2 },
@@ -148,7 +149,7 @@ export const MEMBER_DOMAINS: MemberDomain[] = [
     id: 'learn', label: 'Research Library', hub: '/academy', hubLabel: 'Open the Academy', icon: GraduationCap,
     description: 'Lessons, plain-language guides and articles.',
     tabs: ['/academy', '/themes', '/blog', '/instructions', '/faq', '/verify'],
-    prefixes: ['/academy', '/themes', '/blog'],
+    prefixes: ['/academy', '/themes', '/blog', '/reading-room'],
     columns: [
       { title: 'Academy', items: [
         { to: '/academy', label: 'Zodaci Academy', description: 'Short lessons from first steps up', icon: GraduationCap, badge: 'New' },
@@ -228,7 +229,7 @@ const under = (path: string, base: string) => path === base || path.startsWith(`
 
 /** Which domain a path belongs to; 'account' for account utilities, null for pages outside the member menu. */
 export function domainFor(path: string): DomainId | 'account' | null {
-  if (['/dashboard', '/personal-context', '/pricing', '/creator', '/checkout/return', '/'].includes(path) || ADMIN_PATHS.some(p => under(path, p))) return 'account';
+  if (['/dashboard', '/personal-context', '/pricing', '/creator', '/checkout/return', '/credits', '/investors', '/'].includes(path) || under(path, '/developer') || ADMIN_PATHS.some(p => under(path, p))) return 'account';
   const hub = MEMBER_DOMAINS.find(d => d.hub === path); if (hub) return hub.id;
   // Exact menu items first (e.g. Key Years lives in Explore although it is a reading).
   for (const d of MEMBER_DOMAINS) if (d.columns.some(c => c.items.some(i => pathOnly(i.to) === path))) return d.id;
@@ -398,7 +399,7 @@ export const ROUTE_INVENTORY: Record<string, Placement> = {
   '/astrocomic': P('public', 'utility', 'public product page; members use /my-comic'), '/store': P('public', 'utility', 'public shop'), '/product/:handle': P('public', 'tertiary', 'from the shop'), '/academy': P('learn', 'primary'), '/academy/:slug': P('learn', 'tertiary', 'from the Academy'), '/compatibility': P('explore', 'secondary'),
   '/brand-launch': P('public', 'utility', 'launch kit'), '/contents': P('april', 'utility'), '/contents/:id': P('april', 'utility'), '/read': P('april', 'utility'), '/read/document/:slug': P('april', 'utility'), '/read/:id': P('april', 'utility'),
   '/': P('account', 'duplicate', 'members are sent to /dashboard'), '/explore': P('explore', 'primary'), '/personal-context': P('account', 'utility'), '/workspaces': P('explore', 'secondary'),
-  '/wonderings': P('readings', 'secondary'), '/start': P('chart', 'secondary'), '/my-chart': P('chart', 'primary'), '/retrogood': P('readings', 'secondary'), '/our-charts': P('chart', 'secondary', 'shared-space accounts'),
+  '/wonderings': P('readings', 'secondary'), '/start': P('chart', 'secondary'), '/my-chart': P('chart', 'primary'), '/retrogood': P('readings', 'secondary'), '/our-charts': P('chart', 'secondary', 'shared-space accounts'), '/siblings': P('explore', 'secondary'),
   '/findings': P('chart', 'secondary'), '/results': P('chart', 'secondary'), '/my-readings': P('readings', 'primary'), '/my-readings/topic/:slug': P('readings', 'tertiary', 'every topic and core theme is listed on the Readings hub'),
   '/my-astrobook': P('book', 'primary'), '/auth': P('account', 'utility'), '/reset-password': P('account', 'utility'), '/pricing': P('account', 'utility'), '/creator': P('account', 'utility', 'Cosmic Studio'),
   '/my-comic': P('book', 'secondary'), '/referrals': P('explore', 'secondary'), '/checkout/return': P('account', 'utility'), '/my-masterbook': P('book', 'secondary'), '/books': P('book', 'secondary'), '/orders': P('book', 'secondary'),

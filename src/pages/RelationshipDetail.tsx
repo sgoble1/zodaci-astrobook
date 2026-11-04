@@ -17,7 +17,7 @@ import { PersonForm } from '@/components/relationships/PersonForm';
 import type { ConfidenceLevel } from '@/content/confidence';
 import { kuaNumber, groupOf, KUA_TABLE, KUA_ELEMENT } from '@/lib/kua';
 import { DIR_NAME } from '@/content/fengshui';
-import { interAspects, overlays, composite, balance, signPair, animalRelation, dayMasterRelation, lifePath, LP_MEANING, lifePathPair, scoreSummary, HOUSE_THEME, possessive, distanceKm, sharedGoodDirections } from '@/lib/synastry';
+import { interAspects, overlays, composite, balance, signPair, animalRelation, dayMasterRelation, lifePath, LP_MEANING, lifePathPair, scoreSummary, HOUSE_THEME, possessive, distanceKm, sharedGoodDirections, isSiblingRelation } from '@/lib/synastry';
 import { SelfGate } from '@/components/relationships/SelfGate';
 import type { RelationshipSelf } from '@/hooks/useRelationshipSelf';
 import { usePageMeta } from '@/hooks/usePageMeta';
@@ -105,6 +105,7 @@ function Detail({ rel, self }: { rel: Relationship; self: RelationshipSelf }) {
         <div className="flex flex-wrap gap-2 pt-2"><Button size="sm" variant="outline" onClick={() => setEditing(true)}>Edit details</Button>
           <Button size="sm" asChild><Link to={`/relationships/${rel.id}/reading`}>Relationship reading</Link></Button>
           <Button size="sm" variant="outline" asChild><Link to={`/relationships/${rel.id}/timeline`}>Timeline</Link></Button>
+          {isSiblingRelation(rel.relation) && <Button size="sm" variant="secondary" asChild><Link to={`/siblings?with=${rel.id}`}>Sibling Bureau</Link></Button>}
           {self.isApril && <Button size="sm" variant="outline" asChild><Link to="/guides/relationships">Relationship sources</Link></Button>}
           <Button size="sm" variant="outline" asChild><Link to={`/reading?${toParams(toInput(rel))}`}>{N}’s full reading</Link></Button>
           <Button size="sm" variant="ghost" onClick={async () => { if (await confirmAction(`Delete ${N}?`)) { await deleteRelationship(rel.id); nav('/relationships'); } }}>Delete</Button></div>

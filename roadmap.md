@@ -8,21 +8,32 @@
 - [x] P1.5 Observatory home (hero, live chart, how it works, features, Cosmic Archive, pricing, zodiac cards, transmissions, join). Testimonials stay hidden until real ones are supplied.
 - [x] P1.6 Current Chapter + Life Compass on the member landing, from real transits only (tested).
 - [x] P1.8 Character selection page (/characters) with 12 members (Stargazer featured) and 9 staff; choice saved owner-only.
-- [~] P1.7 (global 1950s layer done: fonts, pill buttons, print-offset cards/panels, halftone, faces footer band) Restyle remaining pages into their places (My Chart, readings, AstroBook reader 3-column + product page, AstroComic, shop, podcasts, counselors, workbooks, editions, admin).
-- [ ] P1.9 Phone/desktop signed-in checks across pages.
-- [ ] P2 Context Engine · P3 Intelligence Layer (AI credits) · P4 Living AstroBooks · P5 AstroComics (AI credits; Issue #1 title/link fix, delivery dates, Zac art) · P6 Portraits · P7 Relationship Bureau + brother hub · P8 Broadcast Engine · P9 Timeline Hall · P10 Founder Command · P11 Event system · P12 AI Observatory.
+- [x] P1.7a Global 1950s layer: fonts (Alfa Slab One / Libre Franklin / Bebas Neue / Yellowtail), pill buttons, print-offset cards and panels, halftone, faces-looking-up footer band, poster eyebrow labels on every card.
+- [x] P1.7b Specialist portrait banner (place + host) on every member page; Observatory Gift Shop restyle with grouped categories.
+- [ ] P1.7c Page-specific layouts: AstroBook reader three columns (chapters · reading · insights), AstroBook product page as collector artifact, AstroComic pages, podcasts, counselors, workbooks, private editions, Admin/Developer.
+- [ ] P1.4b Phone "Field Observatory" dock styling.
+- [~] P1.9 Signed-in checks at 393/1280 done for dashboard, My Chart, AstroBook, library, relationships, forecast, shop, Sibling Bureau (no overflow, no errors). Admin and founder editions still need an admin/founder session.
+- [x] P7a Sibling Bureau (/siblings): brother/sister comparison by channel (talk, home, drive, roles, encouragement) with a practice per channel and third-house overlays; linked from sibling relationships (tested).
+- [x] Phone tabs highlight the right section on every member sub-route (tested).
+- [x] Issue #1 title/link: shop listing, print page and reader all read "The Alchemist of the Mill Valley" (the shop link's web address keeps its original wording and works).
+- [ ] P8 Broadcast Engine: channels 01–05 on the Current Chapter TV from real transits, with a slow static change.
+- [ ] P3a Observation Log: owner-only journal entries with tags; patterns from your own entries and the sky on those days (no AI).
+- [ ] P2 Context Engine: edit the owner-only personal context from Current Chapter.
+- [ ] P9 Timeline Hall restyle as an archive wall with retro TVs.
+- [ ] P10 Founder Command restyle of Admin/Developer.
+- [ ] P3b Intelligence Layer · P5 AstroComics personal issues · P12 AI Observatory — need AI credits. P4 Living AstroBooks · P6 Portraits · P11 Event system — later phases.
 
 ## Completion pass (Nov 2)
-- [ ] Brighten the new home artwork overlay while preserving readable text.
+- [x] Brighten the home artwork overlay (replaced by the faces-looking-up hero).
 - [ ] Verify the interrupted edition-view, Admin and home changes; reconcile completed items below.
 - [ ] Continue remaining book/comic, brother comparison and member-flow implementations; keep externally blocked work explicit.
 - [ ] Run regression tests and signed-in/public desktop and phone checks.
 
 ## Edition views, Zac passage & home (Nov 1)
-- [ ] Locate the quoted dad / 33/6 passage in Zac's private library, rewrite only that passage, and verify the save under Zac's account.
-- [ ] My chart and Dashboard use the authorized selected edition's birth chart; never fall back to the viewer's chart or expose their private account data in a shared view.
-- [ ] Organize Admin into Editions, Products, Orders, Shared Spaces and supporting sections.
-- [ ] Refresh the public Zodaci home with new artwork and April's polished visual style.
+- [x] Located the dad / 33/6 passage (zac-153) and saved the rewrite under Zac's account (verified Nov 1).
+- [x] My chart and Dashboard use the authorized selected edition's birth chart (read-only), never the viewer's.
+- [x] Admin grouped into Editions, Products, Orders, Shared Spaces, Members & growth, Platform.
+- [x] Public home refreshed (observatory redesign, Nov 4).
 
 ## Shop catalog (Oct 31)
 - [x] Replaced shop with the 44-product catalog (core, apparel & home, six sign editions); sign filter on the Store page. All 44 listings now carry their catalog photo (extracted from the uploaded catalog PDF).
@@ -30,15 +41,15 @@
 ## Menus, view switch & brand refresh (Oct 31)
 - [x] View switch isolation: while Shane views April's or Zac's edition, his own relationships never appear in their menu; a "viewing as" notice with "Back to my edition" shows in the sidebar.
 - [x] Shane & Zac menus by plain life topic (Start Here, Past Lives & Karma, Love & Relationships, Family & Brotherhood, Career/Money/Purpose, Shadow Work, Health, Mind & Personality, Spiritual Gifts, Timing, World Systems, Stars & Degrees, More); every chapter listed once, topics fold open/closed, the open page's topic stays open. April's menu unchanged.
-- [ ] Full "view as" data: pages like My chart / Dashboard still show the viewer's own chart while viewing another edition (needs read-only server access to the other person's profile).
+- [x] Full "view as" for My chart / Dashboard (Nov 1).
 - [ ] One place for account switching: merge the edition switch from Admin, account menu and sidebar into one control.
 - [x] Separate shared workspaces: April & Shane and Zac & Shane, enforced by the database (space_key + current_shared_space); switcher on /shared, links /shared/april and /shared/zac in Shane's and Zac's menus.
 - [x] Registered missing routes; updated /podcasts plan-lock test (Pro = Cosmic features).
-- [ ] Admin page: group 20 tabs into sections; Developer link without full reload.
-- [ ] Zac workbook: replace the informal "dad" letter text with a proper 33/6 Life Path section (needs Zac-owned file rewrite).
-- [ ] Brother synastry hub for Shane & Zac; accurate Zac illustrations; Zac's official AstroComic updated art.
-- [ ] AstroComic: personalised Issue #1 for each buyer, Issue #2, shop delivery dates; fix Issue #1 title/link mismatch.
-- [ ] Refine home page top section and artwork to the new serif/quiet-button brand.
+- [x] Admin tabs grouped; Developer link without full reload.
+- [x] Zac 33/6 rewrite saved (Nov 1).
+- [x] Brother comparison: Sibling Bureau (Nov 4). [ ] Zac illustrations and comic art — need AI credits.
+- [ ] AstroComic: personalised Issue #1 for each buyer, Issue #2 — need AI credits. Title/link mismatch fixed.
+- [x] Home top section replaced by the 1950s faces hero.
 - [ ] Shane's chapter corrections — BLOCKED: Nov 1 credit check confirms 0.00 spendable AI credits. Requested remaining six: sm-10, sm-30, sm-33, sm-45, sm-47, sm-60; earlier 57 temporary drafts are absent, so completing all 63 requires recovering or regenerating those drafts too. No correction requests or saves run on Nov 1.
 
 
@@ -94,7 +105,7 @@ Audit Oct 29: payment already waits for a real manuscript (server-checked); rema
 - [x] Shane and Zac edition homes match April's depth (hero, chart title, planet orbs, wheel, volume shelves, module cards).
 - [x] ChartWheel gets the illuminated style, larger tap targets (17px hit circles), keyboard selection, reduced-motion.
 - [x] Sidebars: Zac has Home/readings/Explore; Shane's Family Editions + shared April link; Zac workbook autosave debounced per question (audited Oct 29).
-- [ ] Mobile tab active state on member sub-routes.
+- [x] Mobile tab active state on member sub-routes (Nov 4, tested).
 
 ### 7. Public site & member flow (agent)
 - [x] Reading Room: Leo Heroine in Big Three, Gemini Observatory in Transits; Blog ↔ Reading Room links; contact form on /welcome (validation checked at 393px; no test message sent).
@@ -283,4 +294,4 @@ Audit Oct 29: Chat/counselors already use the member's chart; podcast/custom pag
 - [ ] AstroBook/AstroComic purchase gaps — comic pre-order done; full purchase-flow audit still open
 - [ ] Shane Masterbook: 23 chapters use Moon Capricorn/Venus Pisces etc. vs calculated chart — waiting on owner to confirm birth details
 - [x] Re-check founders' birth data vs content
-- [ ] Unified 'Indigo Signal' theme + new logo (indigo/yellow/red/black, Apple/NatGeo/Printful feel)
+- [x] Theme superseded by the Astral Research Authority 1950s redesign (Nov 4).
