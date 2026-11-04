@@ -916,3 +916,23 @@ li:hover > .zodiac-coin { transform: rotate(-10deg); }
   .astro-dial-ring, .hero-projection::before, .hero-projection::after { animation: none; }
   .explore-poster img, .shelf-book, .shelf-cover, .zodiac-coin, .dest-tile:hover .retro-emblem-ink { transition: none; transform: none; }
 }
+
+/* Mosaic layout: plates fitted together with narrow seams, like the concept's weathered panel board. */
+.mosaic { display: flex; flex-direction: column; gap: .9rem; }
+.mosaic-top { display: grid; gap: .9rem; grid-template-columns: minmax(0, 1fr); }
+.mosaic-rail { display: none; }
+.mosaic-poster { min-height: 18rem; }
+.mosaic-split-1-2, .mosaic-split-2-1, .mosaic-split-1-1 { display: grid; gap: .9rem; grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 768px) {
+  .mosaic-top { grid-template-columns: minmax(0, 1fr) 14rem; }
+  .mosaic-poster { min-height: 0; }
+  .mosaic-split-1-1 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (min-width: 1024px) {
+  .mosaic-split-1-2 { grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); }
+  .mosaic-split-2-1 { grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr); }
+}
+@media (min-width: 1280px) {
+  .mosaic-top { grid-template-columns: 10.5rem minmax(0, 1fr) 15rem; }
+  .mosaic-rail { display: flex; }
+}
