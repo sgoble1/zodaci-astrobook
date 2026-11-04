@@ -324,3 +324,11 @@ Audit Oct 29: Chat/counselors already use the member's chart; podcast/custom pag
 - [ ] Shane Masterbook: 23 chapters use Moon Capricorn/Venus Pisces etc. vs calculated chart — waiting on owner to confirm birth details
 - [x] Re-check founders' birth data vs content
 - [x] Theme superseded by the Astral Research Authority 1950s redesign (Nov 4).
+
+## Concept mosaic redesign (Nov 4 2026, from the user's Designer concept)
+- [ ] Home: weathered panel mosaic (motto rail, hero slideshow, observatory poster, five destination tiles, quote plate, Cosmic Archive shelf, How astrology works, Explore the Zodiac, Latest transmissions, Join the observatory).
+- [ ] Hero slideshow: slide 1 the Cartographer (a woman, never a Vault Boy-like boy) pointing at a zodiac wheel with planet meanings; slide 2 keeps the current faces hero; slide 3 AstroBook/AstroComic. Keep the Yellowtail script line as the subheading.
+- [ ] Public header as panel plates (logo, nav plate, tagline plate); footer as a navy bar.
+- [ ] Global panel look: obs-panel = navy plate with mustard inset rule; obs-paper = aged cream paper.
+- [ ] Member, founder (April/Shane/Zac) and shared dashboards open with the same mosaic: personal hero slideshow from their own chart, destination tiles, then the TV and existing content.
+- [ ] Verify home and dashboards at 393px and 1280px.
