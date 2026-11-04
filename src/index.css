@@ -759,3 +759,16 @@ body {
 .atomic-box:hover .spot-art-medallion { animation-duration: 6s; }
 .atomic-box-art { width: 5.5rem; height: 5.5rem; }
 @media (prefers-reduced-motion: reduce) { .spot-art-medallion, .box-plate-spark { animation: none; } .atomic-box { transition: none; } .atomic-box:hover { transform: none; } }
+
+/* ── Gift-shop sidebar: departments with printed medallions, sign tiles, price bands ── */
+.shop-sidebar-h { font-family: 'Bebas Neue', sans-serif; letter-spacing: .16em; font-size: .95rem; color: hsl(var(--primary)); border-bottom: 1px dashed hsl(var(--brass) / .5); padding-bottom: .35rem; }
+.shop-dept { display: flex; width: 100%; align-items: center; gap: .65rem; min-height: 2.6rem; padding: .3rem .6rem .3rem .35rem; border-radius: 999px; font-size: .9rem; color: hsl(var(--foreground) / .88); transition: background-color .7s ease, color .7s ease; }
+.shop-dept:hover { background: hsl(var(--secondary)); color: hsl(var(--foreground)); }
+.shop-dept:focus-visible, .shop-sign:focus-visible { outline: none; box-shadow: 0 0 0 2px hsl(var(--ring)); }
+.shop-dept-on { background: hsl(var(--primary) / .14); color: hsl(var(--primary)); }
+.shop-dot { width: .7rem; height: .7rem; margin-inline: .55rem .2rem; border-radius: 999px; border: 2px solid hsl(var(--brass)); }
+.shop-dept-on .shop-dot { background: hsl(var(--accent)); border-color: hsl(var(--accent)); }
+.shop-sign { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .2rem; aspect-ratio: 1; border-radius: .7rem; border: 1px solid hsl(var(--brass) / .45); color: hsl(var(--foreground) / .85); font-family: 'Bebas Neue', sans-serif; letter-spacing: .08em; transition: background-color .7s ease, border-color .7s ease, color .7s ease; }
+.shop-sign:hover { border-color: hsl(var(--brass)); color: hsl(var(--foreground)); }
+.shop-sign-on { background: hsl(var(--primary)); border-color: hsl(var(--primary)); color: hsl(var(--primary-foreground)); box-shadow: 2px 2px 0 hsl(var(--accent)); }
+@media (prefers-reduced-motion: reduce) { .shop-dept, .shop-sign { transition: none; } }
