@@ -85,12 +85,12 @@ export default function Store() {
       <header className="obs-panel relative isolate overflow-hidden">
         <img src={heads} alt="" aria-hidden width={1920} height={1088} className="absolute inset-x-0 bottom-0 -z-20 h-full w-full object-cover object-bottom opacity-70" />
         <div aria-hidden className="absolute inset-0 -z-10 bg-gradient-to-b from-background via-background/80 to-background/10" />
-        <div className="flex flex-wrap items-start justify-between gap-4 px-5 pb-28 pt-8 sm:px-10 sm:pb-40 sm:pt-10">
+        <div className="absolute right-4 top-4 sm:right-6 sm:top-6"><CartDrawer /></div>
+        <div className="px-5 pb-28 pt-8 pr-16 sm:px-10 sm:pb-40 sm:pt-10 sm:pr-20">
           <div className="flex items-start gap-4">
             <StaffPortrait id="curator" size={64} className="hidden sm:block" />
             <div><p className="font-label text-sm tracking-[0.2em] text-primary">The Observatory Gift Shop</p><h1 className="mt-2 font-display text-4xl uppercase leading-none sm:text-6xl">Posters, apparel &amp; stationery</h1><p className="mt-2 font-script text-2xl text-primary sm:text-3xl">Souvenirs from your own sky</p><p className="mt-3 max-w-xl text-foreground/85">Posters, tees, mugs, totes, stickers and notebooks — a core collection plus sign editions.</p></div>
           </div>
-          <CartDrawer />
         </div>
       </header>
       {failed ? <ShopOffline onRetry={() => setAttempt(a => a + 1)} /> : <>
