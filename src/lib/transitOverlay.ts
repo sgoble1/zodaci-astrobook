@@ -25,7 +25,8 @@ const DAY = 864e5;
 
 export type TransitPos = { key: string; name: string; glyph: string; lon: number; sign: string; deg: number; retro: boolean };
 export type TransitHit = { transit: TransitPos; natalKey: string; natalName: string; natalRetro: boolean; type: string; symbol: string; orb: number; applying: boolean; weight: number; text: string };
-export type TransitEvent = { date: Date; kind: 'exact' | 'station' | 'ingress'; title: string; detail: string; retro: boolean; doubleRx: boolean; weight: number };
+/** `planet` is the moving body's key; `natalKey` is the natal point an exact contact touches (exact events only). */
+export type TransitEvent = { date: Date; kind: 'exact' | 'station' | 'ingress'; title: string; detail: string; retro: boolean; doubleRx: boolean; weight: number; planet?: string; natalKey?: string };
 
 export function transitPositions(d: Date): TransitPos[] {
   return T_BODIES.map(([key, name, glyph, body]) => {
@@ -79,9 +80,9 @@ export function upcomingEvents(natal: ChartResult, from: Date, days = 90): Trans
     const prev = series[d - 1], cur = series[d], nxt = series[d + 1];
     cur.forEach((t, i) => {
       if (t.key === 'moon' || t.key === 'sun') return;
-      if (prev[i].retro !== t.retro) out.push({ date, kind: 'station', title: `${t.name} turns ${t.retro ? 'retrograde' : 'direct'}`, detail: `${t.name} stations ${t.retro ? 'retrograde' : 'direct'} at ${t.deg}° ${t.sign}. ${t.retro ? 'A review period begins for ' + THEME[t.key] + '.' : 'Plans around ' + THEME[t.key] + ' can move forward again.'}`, retro: t.retro, doubleRx: t.retro && natalRx.has(t.key), weight: WEIGHT[t.key] + 2 });
+      if (prev[i].retro !== t.retro) out.push({ date, kind: 'station', title: `${t.name} turns ${t.retro ? 'retrograde' : 'direct'}`, detail: `${t.name} stations ${t.retro ? 'retrograde' : 'direct'} at ${t.deg}° ${t.sign}. ${t.retro ? 'A review period begins for ' + THEME[t.key] + '.' : 'Plans around ' + THEME[t.key] + ' can move forward again.'}`, retro: t.retro, doubleRx: t.retro && natalRx.has(t.key), weight: WEIGHT[t.key] + 2, planet: t.key });
       if (Math.floor(prev[i].lon / 30) !== Math.floor(t.lon / 30) && SLOW.includes(t.key) || (Math.floor(prev[i].lon / 30) !== Math.floor(t.lon / 30) && ['mercury', 'venus'].includes(t.key)))
-        out.push({ date, kind: 'ingress', title: `${t.name} enters ${t.sign}`, detail: `${t.name} moves into ${t.sign}, shifting the tone of ${THEME[t.key]}.`, retro: t.retro, doubleRx: false, weight: WEIGHT[t.key] });
+        out.push({ date, kind: 'ingress', title: `${t.name} enters ${t.sign}`, detail: `${t.name} moves into ${t.sign}, shifting the tone of ${THEME[t.key]}.`, retro: t.retro, doubleRx: false, weight: WEIGHT[t.key], planet: t.key });
     });
     SLOW.forEach(k => {
       const i = T_BODIES.findIndex(b => b[0] === k);
@@ -90,7 +91,7 @@ export function upcomingEvents(natal: ChartResult, from: Date, days = 90): Trans
         const oc = o(cur);
         if (oc < 1.2 && oc <= o(prev) && oc < o(nxt)) {
           const t = cur[i]; const label = n.key === 'asc' ? 'Ascendant' : n.key === 'mc' ? 'Midheaven' : n.name;
-          out.push({ date, kind: 'exact', title: `${t.name} ${a.symbol} natal ${label}`, detail: hitText(THEME[t.key], a.type, THEME[n.key] ?? label, t.retro), retro: t.retro, doubleRx: t.retro && natalRx.has(n.key), weight: WEIGHT[k] + (['sun', 'moon', 'asc', 'mc'].includes(n.key) ? 2 : 0) });
+          out.push({ date, kind: 'exact', title: `${t.name} ${a.symbol} natal ${label}`, detail: hitText(THEME[t.key], a.type, THEME[n.key] ?? label, t.retro), retro: t.retro, doubleRx: t.retro && natalRx.has(n.key), weight: WEIGHT[k] + (['sun', 'moon', 'asc', 'mc'].includes(n.key) ? 2 : 0), planet: k, natalKey: n.key });
         }
       }));
     });
