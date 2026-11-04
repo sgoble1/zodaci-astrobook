@@ -200,16 +200,16 @@ export function LookUpSlide({ heading = 'h2', title, script, text, cta, secondar
 export function PressSlide({ heading = 'h2', title, script, text, book, comic }: { heading?: Heading; title: ReactNode; script: string; text: ReactNode; book: Cta; comic: Cta }) {
   const H = heading;
   return (
-    <div className="hero-night relative grid min-h-full items-center gap-8 px-6 py-10 sm:px-12 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+    <div className="hero-night press-slide">
       <div>
         <H className="hero-headline">{title}</H>
         <p className="mt-2 font-script text-3xl text-primary sm:text-4xl">{script}</p>
         <div className="mt-4 max-w-md text-lg leading-relaxed text-foreground/90">{text}</div>
         <div className="mt-6 flex flex-wrap gap-3"><Button asChild variant="signal" size="lg"><Link to={book.to}>{book.label}<ArrowRight /></Link></Button><Button asChild variant="outline" size="lg"><Link to={comic.to}>{comic.label}</Link></Button></div>
       </div>
-      <div className="flex items-end justify-center gap-4 sm:gap-6">
-        <img src={bookCover} alt="An AstroBook with the Midnight Stars cover" width={1280} height={1920} loading="lazy" className="hero-press-cover w-32 -rotate-3 sm:w-44" />
-        <img src={comicCover} alt="AstroComic Issue 1 cover" width={1024} height={1536} loading="lazy" className="hero-press-cover w-36 rotate-2 sm:w-52" />
+      <div className="flex min-w-0 items-end justify-center gap-4 sm:gap-6">
+        <img src={bookCover} alt="An AstroBook with the Midnight Stars cover" width={1280} height={1920} loading="lazy" className="hero-press-cover w-[42%] max-w-[11rem] -rotate-3" />
+        <img src={comicCover} alt="AstroComic Issue 1 cover" width={1024} height={1536} loading="lazy" className="hero-press-cover w-[48%] max-w-[13rem] rotate-2" />
       </div>
     </div>
   );

@@ -53,9 +53,10 @@ export function ExplorePoster({ to, title = 'Explore a brighter tomorrow', class
   );
 }
 
-export function QuotePlate({ quote, by, className }: { quote: string; by: string; className?: string }) {
+export function QuotePlate({ quote, by, art, className }: { quote: string; by: string; art?: SpotKind; className?: string }) {
   return (
     <figure className={cn('obs-paper flex flex-col justify-center gap-3 p-6', className)}>
+      {art && <SpotArt kind={art} className="mb-2 h-28 w-28" />}
       <blockquote className="font-label text-lg leading-snug tracking-[0.08em]">“{quote}”</blockquote>
       <figcaption className="text-right font-label text-sm tracking-[0.14em] text-accent">— {by}</figcaption>
     </figure>
@@ -144,9 +145,10 @@ export function HowItWorks({ id = 'how-h', className }: { id?: string; className
   );
 }
 
-const ZODIAC: [string, string][] = [
-  ['♈', 'Aries'], ['♉', 'Taurus'], ['♊', 'Gemini'], ['♋', 'Cancer'], ['♌', 'Leo'], ['♍', 'Virgo'],
-  ['♎', 'Libra'], ['♏', 'Scorpio'], ['♐', 'Sagittarius'], ['♑', 'Capricorn'], ['♒', 'Aquarius'], ['♓', 'Pisces'],
+const ZODIAC: [string, string, string][] = [
+  ['♈', 'Aries', 'The first spark'], ['♉', 'Taurus', 'The steady ground'], ['♊', 'Gemini', 'The two voices'], ['♋', 'Cancer', 'The shelter'],
+  ['♌', 'Leo', 'The solar heart'], ['♍', 'Virgo', 'The careful hand'], ['♎', 'Libra', 'The balance'], ['♏', 'Scorpio', 'The deep water'],
+  ['♐', 'Sagittarius', 'The far road'], ['♑', 'Capricorn', 'The mountain observatory'], ['♒', 'Aquarius', 'The inventor'], ['♓', 'Pisces', 'The cosmic ocean'],
 ];
 
 export function ZodiacPlate({ id = 'zodiac-h', highlight, className }: { id?: string; highlight?: string; className?: string }) {
@@ -154,10 +156,11 @@ export function ZodiacPlate({ id = 'zodiac-h', highlight, className }: { id?: st
     <section aria-labelledby={id} className={cn('obs-paper p-5 sm:p-6', className)}>
       <PlateHead id={id} title="Explore the zodiac" sub="Twelve archetypes. Endless possibilities." />
       <ul className="grid grid-cols-4 gap-x-2 gap-y-4 sm:grid-cols-6 xl:grid-cols-12">
-        {ZODIAC.map(([g, n]) => (
+        {ZODIAC.map(([g, n, motto]) => (
           <li key={n} className="text-center">
             <span aria-hidden className={cn('zodiac-coin', n === highlight && 'zodiac-coin-on')}>{g + '\uFE0E'}</span>
             <span className="mt-1.5 block font-label text-[0.68rem] tracking-[0.1em]">{n}{n === highlight && <span className="sr-only"> (your Sun sign)</span>}</span>
+            <span className="block text-[0.68rem] leading-tight text-muted-foreground">{motto}</span>
           </li>
         ))}
       </ul>

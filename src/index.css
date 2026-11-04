@@ -972,3 +972,7 @@ li:hover > .zodiac-coin { transform: rotate(-10deg); }
   .chartmap-copy { padding-top: 2.75rem; }
   .chartmap-body { grid-template-columns: minmax(0, 1fr) minmax(0, 15rem); }
 }
+.press-slide { position: relative; display: grid; min-height: 100%; align-items: center; gap: 2rem; padding: 2.5rem 1.5rem 4.5rem; }
+@container hero (min-width: 40rem) { .press-slide { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 2.5rem; padding: 2.5rem 2.5rem 4.5rem; } }
+.explore-poster { container-type: inline-size; }
+.explore-poster-title { font-size: clamp(1.4rem, 12.5cqi, 2.2rem); overflow-wrap: anywhere; }
