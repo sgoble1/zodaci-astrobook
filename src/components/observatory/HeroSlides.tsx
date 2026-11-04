@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { ArrowRight, ChevronLeft, ChevronRight, Pause, Play } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { FilmFx } from '@/components/observatory/FilmFx';
 import cartographer from '@/assets/home/cartographer-guide.jpg';
 import facesHero from '@/assets/home-heads-hero.jpg';
 import sunFace from '@/assets/spots/self.jpg';
@@ -160,7 +161,10 @@ export function ChartMapSlide({ heading = 'h1', title, script, lines, cta, secon
               {secondary && <Button asChild variant="outline" size="lg"><Link to={secondary.to}>{secondary.label}</Link></Button>}
             </div>
           </div>
-          <AstroDial highlight={highlight} className="mx-auto w-full max-w-[15rem] lg:max-w-[17rem]" />
+          <div className="hero-projection mx-auto w-full max-w-[15rem] lg:max-w-[17rem]">
+            <AstroDial highlight={highlight} className="w-full" />
+            <FilmFx motes={14} specks={5} tone="glow" />
+          </div>
         </div>
         <ul aria-label="What each planet describes" className="hidden grid-cols-2 gap-x-6 gap-y-1.5 sm:grid xl:grid-cols-5">
           {planets.map(p => (
