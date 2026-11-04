@@ -901,7 +901,7 @@ body {
 .zodiac-coin { display: flex; margin: 0 auto; width: 2.9rem; height: 2.9rem; align-items: center; justify-content: center; border-radius: 999px; font-size: 1.45rem; color: hsl(var(--spot-paper)); background: radial-gradient(circle at 35% 30%, hsl(222 45% 30%), hsl(var(--comic-navy)) 70%); box-shadow: 0 0 0 2px hsl(var(--comic-mustard)), 0 0 0 3.5px hsl(var(--spot-paper)), 0 0 0 4.5px hsl(var(--comic-navy) / .5); transition: transform 1.2s cubic-bezier(.22,1,.36,1); }
 li:hover > .zodiac-coin { transform: rotate(-10deg); }
 .zodiac-coin-on { background: radial-gradient(circle at 35% 30%, hsl(9 60% 55%), hsl(var(--comic-brick)) 70%); }
-.join-plate-art { position: absolute; right: 0; bottom: 0; width: 46%; height: 82%; object-fit: cover; object-position: 18% 100%; border-radius: 0 0 .4rem 0; -webkit-mask-image: linear-gradient(to left, #000 55%, transparent); mask-image: linear-gradient(to left, #000 55%, transparent); }
+.join-plate-art { position: absolute; right: 0; bottom: 0; width: 46%; height: calc(100% - 7rem); object-fit: cover; object-position: 18% 100%; border-radius: 0 0 .4rem 0; -webkit-mask-image: linear-gradient(to left, #000 55%, transparent); mask-image: linear-gradient(to left, #000 55%, transparent); }
 @media (max-width: 639px) { .join-plate-art { display: none; } }
 
 /* Public header as fitted plates: logo, cream nav plate, navy tagline plate. */
