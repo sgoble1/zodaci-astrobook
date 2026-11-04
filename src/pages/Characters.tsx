@@ -5,7 +5,8 @@ import { useSession } from '@/hooks/useLibrary';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { Button } from '@/components/ui/button';
 import { PanelTitle, Stamp } from '@/components/observatory/Observatory';
-import { MEMBER_CHARACTERS, STAFF } from '@/lib/observatory';
+import { MEMBER_CHARACTERS, STAFF, type StaffId } from '@/lib/observatory';
+import { StaffPortrait } from '@/components/observatory/StaffPortrait';
 import { toast } from 'sonner';
 import members from '@/assets/observatory-members.jpg';
 import staff from '@/assets/observatory-staff.jpg';
@@ -55,7 +56,7 @@ export default function Characters() {
       <section aria-labelledby="staff-h" className="obs-panel p-5 sm:p-6">
         <PanelTitle eyebrow="Astral Research Authority"><span id="staff-h">Observatory staff</span></PanelTitle>
         <img src={staff} alt="The nine observatory staff standing before the Grand Observatory" width={1920} height={1088} loading="lazy" className="w-full rounded-md" />
-        <ul className="mt-4 grid gap-2 text-sm sm:grid-cols-3">{Object.values(STAFF).map(s => <li key={s.title}><span className="font-label">{s.title}</span> <span className="text-muted-foreground">· {s.department}</span></li>)}</ul>
+        <ul className="mt-5 grid gap-4 text-sm sm:grid-cols-3">{(Object.entries(STAFF) as [StaffId, (typeof STAFF)[StaffId]][]).map(([id, s]) => <li key={id} className="flex items-center gap-3"><StaffPortrait id={id} size={56} /><span><span className="block font-label text-base">{s.title}</span><span className="text-muted-foreground">{s.department}</span></span></li>)}</ul>
       </section>
     </div>
   );
