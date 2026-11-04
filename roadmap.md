@@ -11,6 +11,7 @@
 - [x] P1.7a Global 1950s layer: fonts (Alfa Slab One / Libre Franklin / Bebas Neue / Yellowtail), pill buttons, print-offset cards and panels, halftone, faces-looking-up footer band, poster eyebrow labels on every card.
 - [x] P1.7b Specialist portrait banner (place + host) on every member page; Observatory Gift Shop restyle with grouped categories.
 - [ ] P1.7c Page-specific layouts: AstroBook reader three columns (chapters · reading · insights), AstroBook product page as collector artifact, AstroComic pages, podcasts, counselors, workbooks, private editions, Admin/Developer.
+- [~] Zodiac wheels: apply shared 1950s projector-screen styling across calculated charts and founder wheels; preserve positions and interactions; verify desktop/phone.
 - [ ] P1.4b Phone "Field Observatory" dock styling.
 - [~] P1.9 Signed-in checks at 393/1280 done for dashboard, My Chart, AstroBook, library, relationships, forecast, shop, Sibling Bureau (no overflow, no errors). Admin and founder editions still need an admin/founder session.
 - [x] P7a Sibling Bureau (/siblings): brother/sister comparison by channel (talk, home, drive, roles, encouragement) with a practice per channel and third-house overlays; linked from sibling relationships (tested).
