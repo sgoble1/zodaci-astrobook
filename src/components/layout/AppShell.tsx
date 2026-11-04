@@ -11,7 +11,7 @@ import ParticleField from '@/components/fx/ParticleField';
 import ScrollProgress from '@/components/fx/ScrollProgress';
 import { FirstViewReveal } from '@/components/fx/FirstViewReveal';
 import { createContext, useContext, useEffect, useMemo, useRef, useState } from 'react';
-import { Menu, X } from 'lucide-react';
+import { BookOpen, Menu, Orbit, Tv, X } from 'lucide-react';
 import { GenerationProgress } from '@/components/readings/GenerationProgress';
 import { founderPlace, onlyInFullEdition, orderFounderGroups, universalFounderMenu } from '@/lib/founderEdition';
 import { domainFor } from '@/content/memberNav';
@@ -367,7 +367,8 @@ function AprilShell({ children, edition = 'april' }: { children: ReactNode; edit
           <SidebarInner mobile onNavigate={() => { navigatedRef.current = true; setOpen(false); }} />
         </div>
       )}
-      <main ref={mainRef} id="main-content" tabIndex={-1} className="flex-1 min-w-0 lg:pt-0 pt-[var(--founder-header-h,64px)] relative z-10 outline-none">
+      <FounderDock edition={edition} menuOpen={open} onMenu={() => setOpen(v => !v)} />
+      <main ref={mainRef} id="main-content" tabIndex={-1} className="flex-1 min-w-0 lg:pt-0 pt-[var(--founder-header-h,64px)] pb-20 lg:pb-0 relative z-10 outline-none">
         <div className="mx-auto max-w-5xl px-4 sm:px-8 py-8 sm:py-10 lg:py-14">
           <motion.div key={location.pathname} initial={reduceMotion ? false : { opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: reduceMotion ? 0 : 0.9, ease: [0.2, 0.7, 0.2, 1] }}>
             <FounderTrail />
@@ -389,6 +390,29 @@ function AprilShell({ children, edition = 'april' }: { children: ReactNode; edit
     </PlayerProvider>
     </FounderGroupsContext.Provider>
     </EditionContext.Provider>
+  );
+}
+
+/** Phone dock shared by April's, Shane's and Zac's editions: same four places in the same order. */
+function FounderDock({ edition, menuOpen, onMenu }: { edition: FounderEditionName; menuOpen: boolean; onMenu: () => void }) {
+  const { pathname } = useLocation();
+  const home = `/${edition}`;
+  const tabs = [
+    { to: '/dashboard', label: 'Studio', Icon: Tv },
+    { to: '/my-chart', label: 'My chart', Icon: Orbit },
+    { to: home, label: edition === 'zac' ? 'Library' : 'Masterbook', Icon: BookOpen },
+  ];
+  const cls = (on: boolean) => `flex h-16 flex-col items-center justify-center gap-1 font-label text-[0.7rem] tracking-wider focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring ${on ? 'text-primary' : 'text-muted-foreground'}`;
+  return (
+    <nav aria-label="Edition tabs" className="lg:hidden fixed inset-x-0 bottom-0 z-50 border-t-2 border-[hsl(var(--brass)/0.55)] bg-background/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-xl print:hidden">
+      <ul className="grid h-16 grid-cols-4">
+        {tabs.map(({ to, label, Icon }) => {
+          const on = !menuOpen && (pathname === to || (to !== '/dashboard' && pathname.startsWith(`${to}/`)));
+          return <li key={to} className="contents"><NavLink to={to} aria-current={on ? 'page' : undefined} className={cls(on)}><Icon className="h-5 w-5" aria-hidden="true" />{label}</NavLink></li>;
+        })}
+        <li className="contents"><button type="button" onClick={onMenu} aria-expanded={menuOpen} aria-controls="mobile-menu" className={cls(menuOpen)}><Menu className="h-5 w-5" aria-hidden="true" />Menu</button></li>
+      </ul>
+    </nav>
   );
 }
 
