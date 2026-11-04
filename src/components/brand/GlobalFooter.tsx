@@ -13,7 +13,6 @@ export function GlobalFooter() {
   return (
     <footer className="border-t-4 border-double border-[hsl(var(--brass)/0.6)]">
       <div aria-hidden className="retro-heads-band" style={{ backgroundImage: `url(${heads})` }} />
-      <p className="sr-only">Footer</p>
       <div className="mx-auto grid max-w-7xl gap-10 px-5 py-12 sm:grid-cols-2 sm:px-10 lg:grid-cols-4">
         <div className="space-y-3">
           <Link to="/welcome" aria-label="Zodaci home"><ZodaciLogo compact /></Link>
