@@ -12,10 +12,11 @@ export default {
     },
     extend: {
       fontFamily: {
-        display: ['DM Serif Display', 'Georgia', 'serif'],
-        label: ['Oswald', 'Fira Sans', 'sans-serif'],
-        smallcaps: ['Fira Sans', 'sans-serif'],
-        sans: ['Fira Sans', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        display: ['Alfa Slab One', 'Rockwell', 'Georgia', 'serif'],
+        script: ['Yellowtail', 'cursive'],
+        label: ['Bebas Neue', 'Libre Franklin', 'sans-serif'],
+        smallcaps: ['Libre Franklin', 'sans-serif'],
+        sans: ['Libre Franklin', 'ui-sans-serif', 'system-ui', 'sans-serif'],
       },
       colors: {
         border: "hsl(var(--border))",
