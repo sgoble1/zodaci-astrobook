@@ -102,7 +102,7 @@ export function ChartWheel({ r, sourcesFor }: { r: ChartResult; sourcesFor?: (ke
             return <g key={s} {...press({ kind: 'sign', id: String(i) })} aria-label={s}>
               <path className="hit" d={`M${a1x},${a1y} A185,185 0 0 0 ${a2x},${a2y} L${b1x},${b1y} A155,155 0 0 1 ${b2x},${b2y} Z`} fill={on ? 'hsl(var(--chart-ink) / .18)' : 'transparent'} stroke="transparent" />
               <line x1={x1} y1={y1} x2={x2} y2={y2} stroke="hsl(var(--chart-ink) / .7)" strokeWidth={0.8} />
-              <text x={tx} y={ty + 5} textAnchor="middle" fontSize="20" fill={on ? 'hsl(var(--chart-signal))' : 'hsl(var(--chart-ink))'} className="font-display">{SIGN_GLYPH[i]}</text>
+              <text x={tx} y={ty + 5} textAnchor="middle" fontSize="20" fill={on ? 'hsl(var(--chart-signal))' : 'hsl(var(--chart-ink))'}>{`${SIGN_GLYPH[i]}\uFE0E`}</text>
             </g>; })}
           {r.cusps?.map((c, i) => { const [x1, y1] = xy(c, 95), [x2, y2] = xy(c, 155), [tx, ty] = xy(c + 4, 102); const angle = i % 3 === 0;
             return <g key={i}><line x1={x1} y1={y1} x2={x2} y2={y2} stroke={angle ? 'hsl(var(--chart-ink))' : 'hsl(var(--chart-line) / .55)'} strokeWidth={angle ? 1.6 : 0.6} strokeDasharray={angle ? undefined : '2 3'} /><text x={tx} y={ty + 3} fontSize="8" textAnchor="middle" fill="hsl(var(--chart-line) / .8)">{i + 1}</text></g>; })}

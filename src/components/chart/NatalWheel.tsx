@@ -78,7 +78,7 @@ export function NatalWheel({ size = 640, showAspects = true, interactive = true 
               <line x1={start.x} y1={start.y} x2={inner.x} y2={inner.y} stroke={gold} strokeWidth={0.6} opacity={0.7} />
               <text x={mid.x} y={mid.y} textAnchor="middle" dominantBaseline="central"
                     fontSize={size * 0.04} fill={gold} className="font-display">
-                {z.glyph}
+                {`${z.glyph}\uFE0E`}
               </text>
             </g>
           );
