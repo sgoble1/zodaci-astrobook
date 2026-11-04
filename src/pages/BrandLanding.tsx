@@ -10,7 +10,7 @@ import { PUBLIC_ARTICLES } from '@/content/publicArticles';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { PLAN_NAME, PLAN_PRICE, CREDIT_ALLOWANCE } from '@/lib/plans';
 import { BOOK_VERSIONS, money } from '@/lib/books';
-import hero from '@/assets/observatory-hero.jpg';
+import hero from '@/assets/home-heads-hero.jpg';
 import { RetroTV, PanelTitle, Stamp, ConstellationDraw, StatusLight } from '@/components/observatory/Observatory';
 import bookCover from '@/assets/cover-design-midnight-stars-hd.jpg';
 import comicCover from '@/assets/comic-issue1-cover-v2.jpg';
@@ -69,16 +69,15 @@ export default function BrandLanding() {
     <a href="#brand-main" className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:bg-background focus:p-3">Skip to content</a>
     <PublicHeader />
     <main id="brand-main" className="mx-auto max-w-7xl space-y-6 px-3 py-6 sm:px-6">
-      <section className="obs-panel relative isolate overflow-hidden min-h-[520px] sm:min-h-[600px] flex items-center">
-        <img src={hero} alt="The Stargazer, an observatory apprentice, points to a projected zodiac wheel beside a retro television showing a birth chart" width={1920} height={1088} fetchPriority="high" className="absolute inset-0 -z-20 h-full w-full object-cover object-right" />
-        <div className="absolute inset-0 -z-10 brand-artwork-overlay" />
-        <div className="obs-deploy w-full px-6 py-14 sm:px-12">
-          <p className="font-label text-xs text-primary">Zodaci · Astral Research Authority</p>
-          <h1 className="mt-4 font-display text-5xl leading-[1.02] sm:text-7xl">Discover your cosmic blueprint.</h1>
-          <p className="mt-3 font-display text-2xl text-[hsl(var(--brass))] sm:text-3xl">Understand your story. Build your future.</p>
-          <p className="mt-5 max-w-lg text-lg leading-relaxed text-foreground/85">Your personal observatory: the sky at your exact birth moment, mapped, read and kept in your own archive.</p>
+      <section className="obs-panel relative isolate overflow-hidden min-h-[640px] sm:min-h-[720px]">
+        <img src={hero} alt="A row of 1950s-style faces at the bottom of the frame gaze up at a zodiac wheel, planets and starbursts in an indigo night sky" width={1920} height={1088} fetchPriority="high" className="absolute inset-0 -z-20 h-full w-full object-cover object-[30%_100%] sm:object-bottom" />
+        <div className="absolute inset-0 -z-10 bg-gradient-to-b from-background/85 via-background/40 to-transparent sm:bg-gradient-to-r sm:from-background/85 sm:via-background/30 sm:to-transparent" />
+        <div className="obs-deploy w-full px-6 pb-48 pt-12 sm:px-12 sm:pb-64 sm:pt-16">
+          <p className="font-label text-sm tracking-[0.2em] text-primary">Zodaci · Astral Research Authority</p>
+          <h1 className="mt-3 max-w-2xl font-display text-5xl uppercase leading-[0.95] sm:text-7xl">Look up. It's all written there.</h1>
+          <p className="mt-3 font-script text-3xl text-primary sm:text-4xl">Your cosmic blueprint, mapped.</p>
+          <p className="mt-5 max-w-lg text-lg leading-relaxed text-foreground/90">The sky at your exact birth moment, calculated, read and kept in your own archive.</p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row"><Button asChild size="lg" variant="signal"><Link to="/start">Generate your birth chart<ArrowRight /></Link></Button><Button asChild variant="outline" size="lg"><Link to="/demo">See a sample edition</Link></Button></div>
-          <p className="mt-6 font-label text-xs text-muted-foreground">Same skies. Brighter answers.</p>
         </div>
       </section>
 

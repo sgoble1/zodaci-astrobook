@@ -351,7 +351,7 @@ svg.fv-shown circle, svg.fv-shown path, svg.fv-shown line { animation: fv-draw 1
 .reading-prose ol { list-style: decimal; }
 .reading-prose ol > li::marker { color: hsl(var(--gold)); font-weight: 600; }
 .reading-prose li + li { margin-top: .5em; }
-.reading-prose blockquote { margin: 1.8em 0; padding: 1.1em 1.4em; border-left: 3px solid hsl(var(--primary)); border-radius: 0 var(--radius) var(--radius) 0; background: hsl(var(--primary) / 0.1); font-family: 'DM Serif Display', serif; font-size: 1.2rem; line-height: 1.5; color: hsl(var(--foreground)); }
+.reading-prose blockquote { margin: 1.8em 0; padding: 1.1em 1.4em; border-left: 3px solid hsl(var(--primary)); border-radius: 0 var(--radius) var(--radius) 0; background: hsl(var(--primary) / 0.1); font-family: 'Alfa Slab One', serif; font-size: 1.2rem; line-height: 1.5; color: hsl(var(--foreground)); }
 .reading-prose hr { border: 0; height: 1px; margin: 2.5em 0; background: linear-gradient(to right, transparent, hsl(var(--gold) / .6), transparent); }
 .reading-prose table { display: block; overflow-x: auto; width: 100%; border-collapse: collapse; font-size: .92rem; margin: 1.6em 0; }
 .reading-prose th, .reading-prose td { border: 1px solid hsl(var(--border)); padding: .55em .8em; text-align: left; vertical-align: top; }

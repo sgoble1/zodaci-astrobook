@@ -8,8 +8,8 @@ export type CoverSpec = { source: CoverSource; crop: CoverCrop; name: string; tr
 /** Print colours for type on the cover (fixed ink values, independent of the site theme). */
 const IVORY = '#F4ECDD';
 const GOLD = '#D4A853';
-const SERIF = '"DM Serif Display", Georgia, serif';
-const SANS = '"Fira Sans", system-ui, sans-serif';
+const SERIF = '"Alfa Slab One", Georgia, serif';
+const SANS = '"Libre Franklin", system-ui, sans-serif';
 const SPACING = 0.18; // subtitle letter spacing, as a fraction of its size
 
 let fontsReady: Promise<void> | null = null;
