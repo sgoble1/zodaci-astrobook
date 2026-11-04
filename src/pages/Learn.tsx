@@ -41,8 +41,8 @@ export default function Learn() {
 
   return (
     <article className="space-y-14">
-      <header className="learn-hero relative -mx-5 overflow-hidden rounded-2xl border border-[hsl(var(--brass)/0.5)] sm:-mx-10">
-        <img src={READING_ROOM_HERO} alt="A lamp-lit 1950s home library with a telescope at the window and a zodiac wheel on the wall" width={1280} height={717} fetchPriority="high" className="h-80 w-full object-cover sm:h-[26rem]" />
+      <header className="learn-hero relative overflow-hidden rounded-2xl border border-[hsl(var(--brass)/0.5)]">
+        <img src={READING_ROOM_HERO} alt="A lamp-lit 1950s home library with a telescope at the window and a zodiac wheel on the wall" width={1280} height={717} {...{ fetchpriority: 'high' }} className="h-80 w-full object-cover sm:h-[26rem]" />
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/55 to-transparent" />
         <div className="absolute bottom-0 max-w-2xl p-6 sm:p-10">
           <p className="font-label text-sm tracking-[0.2em] text-primary">Zodaci · Research Library</p>
@@ -52,7 +52,7 @@ export default function Learn() {
         </div>
       </header>
 
-      <nav aria-label="Learn sections" className="learn-subnav sticky top-16 z-30 -mx-2 flex gap-2 overflow-x-auto rounded-full border border-[hsl(var(--brass)/0.5)] bg-background/90 p-1.5 backdrop-blur lg:top-20">
+      <nav aria-label="Learn sections" className="learn-subnav sticky top-16 z-30 -mx-2 flex gap-2 overflow-x-auto rounded-full border border-[hsl(var(--brass)/0.5)] bg-background p-1.5 shadow-lg lg:top-20">
         {sections.map(s => <a key={s.id} href={`#${s.id}`} aria-current={hash === `#${s.id}` ? 'true' : undefined} className={cn('flex shrink-0 items-center gap-2 rounded-full px-3 py-1.5 font-label text-sm transition-colors duration-700 hover:bg-secondary', hash === `#${s.id}` && 'bg-primary text-primary-foreground')}><SpotArt kind={s.art} className="h-6 w-6" />{s.label}</a>)}
       </nav>
 
@@ -72,15 +72,15 @@ export default function Learn() {
       <section id="forecasts" aria-labelledby="forecasts-h" className="scroll-mt-36 space-y-6">
         <SectionHead id="forecasts-h" eyebrow="Forecast Center" title="Today’s sky and the next 30 days" text="Calculated live from planetary positions. This is the general sky everyone shares; how it touches your own chart is in your personal forecast." art="year" />
         <div className="grid gap-6 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]">
-          <div className="obs-paper p-5 sm:p-6">
-            <div className="flex items-center gap-4"><SpotArt kind="dream" className="h-16 w-16" /><div><p className="font-label text-xs text-accent">Moon phase</p><p className="text-2xl">{sky.phase.name}</p><p className="text-sm text-muted-foreground">{sky.phase.lit}% lit · {sky.phase.waxing ? 'waxing' : 'waning'}</p></div></div>
+          <div className="obs-paper self-start p-5 sm:p-6">
+            <div className="flex items-center gap-4"><SpotArt kind="moon" className="h-16 w-16" /><div><p className="font-label text-xs text-accent">Moon phase</p><p className="text-2xl">{sky.phase.name}</p><p className="text-sm text-muted-foreground">{sky.phase.lit}% lit · {sky.phase.waxing ? 'waxing' : 'waning'}</p></div></div>
             <ul className="mt-5 grid grid-cols-2 gap-x-4 gap-y-2 text-sm">{sky.bodies.filter(b => !/node|chiron|lilith/i.test(b.key)).map(b => <li key={b.key} className="flex items-baseline justify-between gap-2 border-b border-[hsl(var(--paper-ink)/0.15)] pb-1"><span><span aria-hidden className="mr-1.5">{b.glyph}{'\uFE0E'}</span>{b.name}</span><span className="tabular-nums">{Math.floor(b.deg)}° {b.sign}{b.retro && <span title="Retrograde" className="ml-1 text-accent">℞</span>}</span></li>)}</ul>
             <p className="mt-4 text-xs text-muted-foreground">{sky.retrograde.length ? `Retrograde now: ${sky.retrograde.map(b => b.name).join(', ')}.` : 'No planets are retrograde right now.'} Positions at {sky.at.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })}, your time.</p>
           </div>
           <div className="obs-panel p-5 sm:p-6">
             <h3 className="font-label text-lg">Sky calendar</h3>
             {events.length === 0 ? <p className="mt-3 text-sm text-muted-foreground">A quiet month: no Moon phases, sign changes or stations in the next 30 days.</p> :
-              <ol className="mt-3 divide-y divide-border">{events.map(e => <li key={`${e.title}-${e.date.toISOString()}`} className="flex items-start gap-3 py-3"><SpotArt kind={e.kind === 'station' ? 'planet' : e.kind === 'ingress' ? 'sign' : 'dream'} className="h-10 w-10" /><div className="min-w-0 flex-1"><p className="font-medium">{e.title}</p><p className="text-sm text-muted-foreground">{e.detail}</p></div><time dateTime={e.date.toISOString().slice(0, 10)} className="shrink-0 font-label text-xs text-primary">{fmtDay(e.date)}</time></li>)}</ol>}
+              <ol className="mt-3 divide-y divide-border">{events.map(e => <li key={`${e.title}-${e.date.toISOString()}`} className="flex items-start gap-3 py-3"><SpotArt kind={e.kind === 'station' ? 'planet' : e.kind === 'ingress' ? 'sign' : 'moon'} className="h-10 w-10" /><div className="min-w-0 flex-1"><p className="font-medium">{e.title}</p><p className="text-sm text-muted-foreground">{e.detail}</p></div><time dateTime={e.date.toISOString().slice(0, 10)} className="shrink-0 font-label text-xs text-primary">{fmtDay(e.date)}</time></li>)}</ol>}
             <div className="mt-5 flex flex-wrap gap-2"><Button asChild variant="signal" size="sm"><Link to={session ? '/transits' : '/start'}>{session ? 'See how it touches your chart' : 'Get your personal forecast'}<ArrowRight /></Link></Button><Button asChild variant="outline" size="sm"><Link to="/reading-room/transits">How transits work</Link></Button></div>
           </div>
         </div>

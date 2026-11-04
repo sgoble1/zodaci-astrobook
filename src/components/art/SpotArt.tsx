@@ -31,11 +31,12 @@ import aspect from '@/assets/spots/aspect.jpg';
 import sign from '@/assets/spots/sign.jpg';
 import numbers from '@/assets/spots/numbers.jpg';
 import shop from '@/assets/spots/shop.jpg';
+import moon from '@/assets/spots/moon.jpg';
 
 /** Cheerful 1950s atomic-zodiac spot illustrations, one per box topic. */
 export const SPOTS = {
   chart, self, love, purpose, healing, year, planet, house, written, honest, private: privateBox, birth, explore, book,
-  tv, radio, compass, astrobook, source, podcast, counsel, dream, growth, magnifier, fire, earth, air, water, aspect, sign, numbers, shop,
+  tv, radio, compass, astrobook, source, podcast, counsel, dream, growth, magnifier, fire, earth, air, water, aspect, sign, numbers, shop, moon,
 } as const;
 export type SpotKind = keyof typeof SPOTS;
 
@@ -50,7 +51,7 @@ const ALT: Record<SpotKind, string> = {
   dream: 'A quilted bed under an open moonlit window', growth: 'A tree with planets hanging like fruit', magnifier: 'A magnifying glass over a constellation map',
   fire: 'A starburst fire in a brick hearth', earth: 'Rolling hills, wheat and a garden fence under the sun', air: 'A kite and paper airplane on swirling wind',
   water: 'A curling wave with a crescent moon and a sailboat', aspect: 'Planets joined by geometric dotted lines', sign: 'A zodiac medallion with the twelve sign animals',
-  numbers: 'An abacus whose beads are planets', shop: 'A striped gift shop counter with a gift and a mug',
+  numbers: 'An abacus whose beads are planets', shop: 'A striped gift shop counter with a gift and a mug', moon: 'A smiling crescent moon beneath an arc of Moon phases',
 };
 
 /** Keyword → spot. First match wins, so specific topics come before broad ones. */
@@ -73,7 +74,8 @@ const RULES: [RegExp, SpotKind][] = [
   [/purpose|career|work|money|midheaven|path|node|calling/i, 'purpose'],
   [/heal|chiron|health|shadow|growth work/i, 'healing'],
   [/grow|jupiter|luck|expan/i, 'growth'],
-  [/dream|neptune|sleep|moon|lunar|spirit|past li/i, 'dream'],
+  [/moon phase|lunar|new moon|full moon|moon cycle|the moon/i, 'moon'],
+  [/dream|neptune|sleep|moon|spirit|past li/i, 'dream'],
   [/home|house|feng|bagua|kua|flying star/i, 'house'],
   [/numerolog|number|ba zi|chinese|pillar/i, 'numbers'],
   [/aspect|pattern|geometry/i, 'aspect'],
