@@ -95,12 +95,20 @@ export function spotFor(label: string): SpotKind {
   return RULES.find(([re]) => re.test(label))?.[1] ?? 'planet';
 }
 
-/** Round, brass-ringed printed medallion (default) or a wide printed plate for box headers. */
-export function SpotArt({ kind, label, className, shape = 'medallion', badge, decorative = true }: { kind?: SpotKind; label?: string; className?: string; shape?: 'medallion' | 'plate'; badge?: string | number; decorative?: boolean }) {
+/**
+ * Printed medallion in the AstroBook cover style: cream disc, navy ink rule, mustard ring,
+ * and (by default) a gold atomic orbit with a small brick-red planet crossing it.
+ * Pass `orbit={false}` for icon-sized uses where the ring would crowd the label.
+ */
+export function SpotArt({ kind, label, className, shape = 'medallion', badge, decorative = true, orbit = true }: { kind?: SpotKind; label?: string; className?: string; shape?: 'medallion' | 'plate'; badge?: string | number; decorative?: boolean; orbit?: boolean }) {
   const k = kind ?? spotFor(label ?? '');
+  const medallion = shape !== 'plate';
   return (
-    <span className={cn('spot-art', shape === 'plate' ? 'spot-art-plate' : 'spot-art-medallion', className)}>
-      <img src={SPOTS[k]} alt={decorative ? '' : ALT[k]} aria-hidden={decorative || undefined} width={512} height={512} loading="lazy" decoding="async" />
+    <span className={cn('spot-art', medallion ? 'spot-art-medallion' : 'spot-art-plate', className)}>
+      <span className="spot-art-disc">
+        <img src={SPOTS[k]} alt={decorative ? '' : ALT[k]} aria-hidden={decorative || undefined} width={512} height={512} loading="lazy" decoding="async" />
+      </span>
+      {medallion && orbit && <span className="spot-art-orbit" aria-hidden="true" />}
       {badge !== undefined && <span className="spot-art-badge">{badge}</span>}
     </span>
   );

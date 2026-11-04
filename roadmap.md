@@ -3,9 +3,13 @@
 - [x] 32 cheerful atomic-zodiac box illustrations (src/assets/spots).
 - [ ] Use box illustrations on every feature/pillar box (ThemeArt/BoxArt + About/home boxes); slow 50s box animations.
 - [ ] Icons restyled to the same atomic style.
-- [ ] Merge Blog into Learn: one Learn page, /blog redirects; expanded content and article illustrations.
-- [ ] Shop: sidebar navigation by category/sign; easier product browsing.
-- [ ] Forecasts page and content placed under a Learn submenu (not a separate overwhelming top item).
+- [x] Merge Blog into Learn: one Learn page, /blog redirects; expanded content and article illustrations.
+- [x] Shop: sidebar navigation by category/sign; easier product browsing.
+- [x] Forecasts page and content placed under a Learn submenu (not a separate overwhelming top item).
+- [ ] Restyle recent art to the AstroComic / AstroBook product look (cream paper, navy ink outlines, mustard-gold atomic orbits, brick red, halftone): 33 box spots, Learn articles, Reading Room guides, then channel/place art. Keep home hero and About mural.
+- [ ] Box styles and animations in the same product-cover style (cream cover cards, navy rule border, orbit rings, slow ink-in reveal); icons recoloured to match.
+- [ ] Shop sidebar: group the ~57 product types into a few departments so the list is short.
+- [ ] Learn page: fix 24px sideways scroll on phones.
 
 # Zodaci — Active Project Index
 

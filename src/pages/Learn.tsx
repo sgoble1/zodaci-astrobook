@@ -53,7 +53,7 @@ export default function Learn() {
       </header>
 
       <nav aria-label="Learn sections" className="learn-subnav sticky top-16 z-30 -mx-2 flex gap-2 overflow-x-auto rounded-full border border-[hsl(var(--brass)/0.5)] bg-background p-1.5 shadow-lg lg:top-20">
-        {sections.map(s => <a key={s.id} href={`#${s.id}`} aria-current={hash === `#${s.id}` ? 'true' : undefined} className={cn('flex shrink-0 items-center gap-2 rounded-full px-3 py-1.5 font-label text-sm transition-colors duration-700 hover:bg-secondary', hash === `#${s.id}` && 'bg-primary text-primary-foreground')}><SpotArt kind={s.art} className="h-6 w-6" />{s.label}</a>)}
+        {sections.map(s => <a key={s.id} href={`#${s.id}`} aria-current={hash === `#${s.id}` ? 'true' : undefined} className={cn('flex shrink-0 items-center gap-2 rounded-full px-3 py-1.5 font-label text-sm transition-colors duration-700 hover:bg-secondary', hash === `#${s.id}` && 'bg-primary text-primary-foreground')}><SpotArt kind={s.art} className="h-6 w-6" orbit={false} />{s.label}</a>)}
       </nav>
 
       {showLessons && <section id="lessons" aria-labelledby="lessons-h" className="scroll-mt-36 space-y-10">
@@ -80,7 +80,7 @@ export default function Learn() {
           <div className="obs-panel p-5 sm:p-6">
             <h3 className="font-label text-lg">Sky calendar</h3>
             {events.length === 0 ? <p className="mt-3 text-sm text-muted-foreground">A quiet month: no Moon phases, sign changes or stations in the next 30 days.</p> :
-              <ol className="mt-3 divide-y divide-border">{events.map(e => <li key={`${e.title}-${e.date.toISOString()}`} className="flex items-start gap-3 py-3"><SpotArt kind={e.kind === 'station' ? 'planet' : e.kind === 'ingress' ? 'sign' : 'moon'} className="h-10 w-10" /><div className="min-w-0 flex-1"><p className="font-medium">{e.title}</p><p className="text-sm text-muted-foreground">{e.detail}</p></div><time dateTime={e.date.toISOString().slice(0, 10)} className="shrink-0 font-label text-xs text-primary">{fmtDay(e.date)}</time></li>)}</ol>}
+              <ol className="mt-3 divide-y divide-border">{events.map(e => <li key={`${e.title}-${e.date.toISOString()}`} className="flex items-start gap-3 py-3"><SpotArt kind={e.kind === 'station' ? 'planet' : e.kind === 'ingress' ? 'sign' : 'moon'} className="h-10 w-10" orbit={false} /><div className="min-w-0 flex-1"><p className="font-medium">{e.title}</p><p className="text-sm text-muted-foreground">{e.detail}</p></div><time dateTime={e.date.toISOString().slice(0, 10)} className="shrink-0 font-label text-xs text-primary">{fmtDay(e.date)}</time></li>)}</ol>}
             <div className="mt-5 flex flex-wrap gap-2"><Button asChild variant="signal" size="sm"><Link to={session ? '/transits' : '/start'}>{session ? 'See how it touches your chart' : 'Get your personal forecast'}<ArrowRight /></Link></Button><Button asChild variant="outline" size="sm"><Link to="/reading-room/transits">How transits work</Link></Button></div>
           </div>
         </div>
