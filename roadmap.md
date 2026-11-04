@@ -8,7 +8,7 @@
 - [x] P1.5 Observatory home (hero, live chart, how it works, features, Cosmic Archive, pricing, zodiac cards, transmissions, join). Testimonials stay hidden until real ones are supplied.
 - [x] P1.6 Current Chapter + Life Compass on the member landing, from real transits only (tested).
 - [x] P1.8 Character selection page (/characters) with 12 members (Stargazer featured) and 9 staff; choice saved owner-only.
-- [ ] P1.7 Restyle remaining pages into their places (My Chart, readings, AstroBook reader 3-column + product page, AstroComic, shop, podcasts, counselors, workbooks, editions, admin).
+- [~] P1.7 (global 1950s layer done: fonts, pill buttons, print-offset cards/panels, halftone, faces footer band) Restyle remaining pages into their places (My Chart, readings, AstroBook reader 3-column + product page, AstroComic, shop, podcasts, counselors, workbooks, editions, admin).
 - [ ] P1.9 Phone/desktop signed-in checks across pages.
 - [ ] P2 Context Engine · P3 Intelligence Layer (AI credits) · P4 Living AstroBooks · P5 AstroComics (AI credits; Issue #1 title/link fix, delivery dates, Zac art) · P6 Portraits · P7 Relationship Bureau + brother hub · P8 Broadcast Engine · P9 Timeline Hall · P10 Founder Command · P11 Event system · P12 AI Observatory.
 
