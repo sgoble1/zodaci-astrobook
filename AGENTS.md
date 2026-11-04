@@ -66,3 +66,5 @@
 
 ## Page metadata
 - usePageMeta owns route-aware titles, descriptions, self-referencing social URLs/canonicals and indexing boundaries; member discussions remain noindex and private-subdomain exclusions are preserved. Static head remains the social-crawler fallback.
+- Astral Research Authority world: place/staff/member-character registry lives in src/lib/observatory.ts and shared observatory pieces in src/components/observatory/; pages read their place from the registry so the world stays consistent.
+- Current Chapter and Life Compass derive only from today's transits (src/lib/currentChapter.ts), never AI or biography, so the landing stays truthful without credits.
