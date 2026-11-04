@@ -1,4 +1,5 @@
 ## Nov 4 evening requests
+- [ ] Current product presentation: use latest shop AstroBook/AstroComic artwork across promotional displays and product pages; rebalance home left rail, add a forecast plate below it and fill the space above the Cartographer without changing projector/TV effects.
 - [x] Projector: white tripod screen in a dark room, lamp falloff, flying dust, wheel fits inside.
 - [x] 32 cheerful atomic-zodiac box illustrations (src/assets/spots).
 - [ ] Use box illustrations on every feature/pillar box (ThemeArt/BoxArt + About/home boxes); slow 50s box animations.
