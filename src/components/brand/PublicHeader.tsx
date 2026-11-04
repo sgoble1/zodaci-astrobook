@@ -8,8 +8,8 @@ import { useSession } from '@/hooks/useLibrary';
 
 /** The one public menu every signed-out page uses. */
 export const PUBLIC_NAV: [string, string][] = [
-  ['/academy', 'Learn'], ['/reading-room', 'Reading Room'], ['/compatibility', 'Compatibility'],
-  ['/astrobook', 'AstroBook'], ['/astrocomic', 'AstroComic'], ['/store', 'Shop'], ['/pricing', 'Pricing'],
+  ['/start', 'Charts'], ['/astrobook', 'AstroBooks'], ['/compatibility', 'Relationships'], ['/reading-room', 'Forecasts'],
+  ['/academy', 'Learn'], ['/about', 'About'], ['/blog', 'Blog'], ['/store', 'Shop'], ['/pricing', 'Pricing'],
 ];
 
 export function PublicHeader({ sections }: { sections?: string[] }) {

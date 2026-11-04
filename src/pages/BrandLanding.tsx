@@ -2,17 +2,14 @@ import { Link } from 'react-router-dom';
 import { ArrowUpRight, ArrowRight, Orbit, PenLine, Scale, ShieldCheck, Check } from 'lucide-react';
 import { PublicHeader } from '@/components/brand/PublicHeader';
 import { Button } from '@/components/ui/button';
-import { ZodaciLogo } from '@/components/brand/ZodaciLogo';
 import { SampleChartDemo } from '@/components/brand/SampleChartDemo';
 import { GlobalFooter } from '@/components/brand/GlobalFooter';
 import { NewsletterSignup } from '@/components/brand/NewsletterSignup';
 import { ContactForm } from '@/components/brand/ContactForm';
 import { PUBLIC_ARTICLES } from '@/content/publicArticles';
-import { ThemeArt } from '@/components/common/ThemeArt';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { PLAN_NAME, PLAN_PRICE, CREDIT_ALLOWANCE } from '@/lib/plans';
 import { BOOK_VERSIONS, money } from '@/lib/books';
-import { COMIC_PLANS } from '@/lib/comic';
 import hero from '@/assets/observatory-hero.jpg';
 import { RetroTV, PanelTitle, Stamp, ConstellationDraw, StatusLight } from '@/components/observatory/Observatory';
 import bookCover from '@/assets/cover-design-midnight-stars-hd.jpg';
@@ -80,7 +77,7 @@ export default function BrandLanding() {
           <h1 className="mt-4 font-display text-5xl leading-[1.02] sm:text-7xl">Discover your cosmic blueprint.</h1>
           <p className="mt-3 font-display text-2xl text-[hsl(var(--brass))] sm:text-3xl">Understand your story. Build your future.</p>
           <p className="mt-5 max-w-lg text-lg leading-relaxed text-foreground/85">Your personal observatory: the sky at your exact birth moment, mapped, read and kept in your own archive.</p>
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row"><Button asChild size="lg" variant="destructive" className="bg-accent text-accent-foreground hover:bg-accent/90 font-label"><Link to="/start">Generate your birth chart<ArrowRight /></Link></Button><Button asChild variant="outline" size="lg"><Link to="/demo">See a sample edition</Link></Button></div>
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row"><Button asChild size="lg" variant="signal"><Link to="/start">Generate your birth chart<ArrowRight /></Link></Button><Button asChild variant="outline" size="lg"><Link to="/demo">See a sample edition</Link></Button></div>
           <p className="mt-6 font-label text-xs text-muted-foreground">Same skies. Brighter answers.</p>
         </div>
       </section>
@@ -103,7 +100,7 @@ export default function BrandLanding() {
       <section aria-labelledby="book-h" className="grid gap-6 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]">
         <div className="obs-paper grid gap-6 p-6 sm:grid-cols-[180px_1fr] sm:p-8">
           <img src={bookCover} alt="AstroBook cover design, Midnight Stars" width={280} height={420} loading="lazy" className="mx-auto w-40 rounded shadow-xl sm:w-full aspect-[2/3] object-cover" />
-          <div><Stamp>Issued by the Authority</Stamp><h2 id="book-h" className="mt-4 font-display text-4xl">The Cosmic Archive</h2><p className="mt-3 leading-relaxed text-muted-foreground">Every AstroBook is an astral dossier: your natal wheel, planetary diagrams and chapter-by-chapter readings, calculated from your chart and written for you alone. Five versions, from a {money(fromBook)} PDF to a linen-bound collector’s edition.</p><div className="mt-6 flex flex-wrap gap-3"><Button asChild variant="destructive" className="bg-accent text-accent-foreground hover:bg-accent/90"><Link to="/astrobook">Browse AstroBooks<ArrowRight /></Link></Button><Button asChild variant="outline" className="border-[hsl(var(--paper-ink)/0.3)] text-[hsl(var(--paper-ink))]"><Link to="/astrocomic">AstroComic</Link></Button></div></div>
+          <div><Stamp>Issued by the Authority</Stamp><h2 id="book-h" className="mt-4 font-display text-4xl">The Cosmic Archive</h2><p className="mt-3 leading-relaxed text-muted-foreground">Every AstroBook is an astral dossier: your natal wheel, planetary diagrams and chapter-by-chapter readings, calculated from your chart and written for you alone. Five versions, from a {money(fromBook)} PDF to a linen-bound collector’s edition.</p><div className="mt-6 flex flex-wrap gap-3"><Button asChild variant="signal"><Link to="/astrobook">Browse AstroBooks<ArrowRight /></Link></Button><Button asChild variant="outline" className="border-[hsl(var(--paper-ink)/0.3)] text-[hsl(var(--paper-ink))]"><Link to="/astrocomic">AstroComic</Link></Button></div></div>
         </div>
         <RetroTV channel="Channel 01" label="AstroComic · Issue 1"><img src={comicCover} alt="AstroComic Issue 1 cover" width={280} height={420} loading="lazy" className="h-full w-full object-cover" /></RetroTV>
       </section>
