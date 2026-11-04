@@ -21,7 +21,6 @@ import { useZacAccount } from '@/hooks/useZacAccount';
 import { useSharedEditions } from '@/lib/editionSharing';
 import { leaveAprilEdition, viewingSharedEdition } from '@/hooks/useAprilSpace';
 import { useSession } from '@/hooks/useLibrary';
-import { placeFor, STAFF } from '@/lib/observatory';
 import { useAprilSpace, useAprilSpaceError, retryAprilSpace, useClassicView, setClassicView } from '@/hooks/useAprilSpace';
 
 /** April's full menu exactly as the sidebar shows it: her sections plus Shared, Relationships and pages she created. */
