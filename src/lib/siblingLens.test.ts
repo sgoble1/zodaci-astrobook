@@ -25,6 +25,6 @@ describe('sibling lens', () => {
     expect(isSiblingRelation('Brother')).toBe(true);
     expect(isSiblingRelation('older sister')).toBe(true);
     expect(isSiblingRelation('Friend')).toBe(false);
-    expect(isSiblingRelation('Brother-in-law')).toBe(true);
+    expect(isSiblingRelation('Brother-in-law')).toBe(false);
   });
 });

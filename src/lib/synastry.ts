@@ -226,4 +226,4 @@ export function siblingLens(A: ChartResult, B: ChartResult, aLabel: string, bLab
   return { channels, thirdHouse: { aInB: third(A, B), bInA: third(B, A) }, summary: scoreSummary(ia) };
 }
 
-export const isSiblingRelation = (relation: string) => /\b(brother|sister|sibling|twin)s?\b/i.test(relation);
+export const isSiblingRelation = (relation: string) => /\b(brother|sister|sibling|twin)s?\b/i.test(relation) && !/in-law/i.test(relation);
