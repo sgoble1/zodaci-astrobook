@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { chapterFrom, compassFrom } from './currentChapter';
-import type { TransitHit } from './transitOverlay';
+import { broadcastChannels, chapterFrom, compassFrom } from './currentChapter';
+import type { TransitEvent, TransitHit } from './transitOverlay';
 
 const hit = (t: string, natal: string, weight: number, orb = 1): TransitHit => ({
   transit: { key: t, name: t, glyph: '', lon: 0, sign: 'Aries', deg: 0, retro: false },
@@ -22,8 +22,6 @@ describe('current chapter', () => {
   });
 });
 
-import { broadcastChannels } from './currentChapter';
-import type { TransitEvent } from './transitOverlay';
 
 const ev = (daysFromNow: number, weight: number, title = `e${daysFromNow}`): TransitEvent => ({ date: new Date(Date.UTC(2026, 10, 4) + daysFromNow * 864e5), kind: 'exact', title, detail: title, retro: false, doubleRx: false, weight });
 const NOW = new Date(Date.UTC(2026, 10, 4));
