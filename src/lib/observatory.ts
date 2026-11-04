@@ -28,6 +28,7 @@ export const PLACES: [string, Place][] = [
   ['/astrobook', { name: 'Cosmic Archive', host: 'archivist', motto: 'Astral dossiers, issued to you' }],
   ['/library', { name: 'Cosmic Archive', host: 'archivist', motto: 'Everything you have collected' }],
   ['/relationships', { name: 'Relationship Bureau', host: 'curator', motto: 'Charts side by side' }],
+  ['/siblings', { name: 'Relationship Bureau', host: 'curator', motto: 'Brothers and sisters, side by side' }],
   ['/compatibility', { name: 'Relationship Bureau', host: 'curator', motto: 'Charts side by side' }],
   ['/academy', { name: 'Research Library', host: 'researcher', motto: 'Learn how the sky is read' }],
   ['/blog', { name: 'Research Library', host: 'researcher', motto: 'Latest transmissions' }],

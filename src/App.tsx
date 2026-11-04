@@ -99,6 +99,7 @@ const MyTopicReading = lazy(() => import('./pages/MyTopicReading'));
 const MyChart = lazy(() => import('./pages/MyChart'));
 const RetroGood = lazy(() => import('./pages/RetroGood'));
 const OurCharts = lazy(() => import('./pages/OurCharts'));
+const Siblings = lazy(() => import('./pages/Siblings'));
 const Deductions = lazy(() => import('./pages/Deductions'));
 const Results = lazy(() => import('./pages/Results'));
 const LandingPage = lazy(() => import('./pages/LandingPage'));
@@ -296,6 +297,7 @@ export default function App() {
             <Route path="/my-chart" element={<MyChart />} />
             <Route path="/retrogood" element={<RetroGood />} />
             <Route path="/our-charts" element={<OurCharts />} />
+            <Route path="/siblings" element={<Siblings />} />
             <Route path="/findings" element={<Deductions />} />
             <Route path="/results" element={<Results />} />
             <Route path="/my-readings" element={<MyReadings />} />

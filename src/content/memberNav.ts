@@ -127,6 +127,7 @@ export const MEMBER_DOMAINS: MemberDomain[] = [
       { title: 'Relationship Bureau', items: [
         { to: '/relationships', label: 'All relationships', description: 'Add people and compare charts', icon: Heart },
         { to: '/compatibility', label: 'Quick Compatibility Score', description: 'Two birthdays, one score', icon: HeartHandshake },
+        { to: '/siblings', label: 'Sibling Bureau', description: 'Brothers and sisters, channel by channel', icon: Users },
       ] },
       { title: 'Other systems', more: { to: '/other-systems', label: `All ${SYSTEM_READINGS.length} traditions` }, items: [
         { to: '/other-systems', label: 'Other Systems · Dashboard', description: 'Eight traditions from your birth details', icon: Globe2 },
@@ -398,7 +399,7 @@ export const ROUTE_INVENTORY: Record<string, Placement> = {
   '/astrocomic': P('public', 'utility', 'public product page; members use /my-comic'), '/store': P('public', 'utility', 'public shop'), '/product/:handle': P('public', 'tertiary', 'from the shop'), '/academy': P('learn', 'primary'), '/academy/:slug': P('learn', 'tertiary', 'from the Academy'), '/compatibility': P('explore', 'secondary'),
   '/brand-launch': P('public', 'utility', 'launch kit'), '/contents': P('april', 'utility'), '/contents/:id': P('april', 'utility'), '/read': P('april', 'utility'), '/read/document/:slug': P('april', 'utility'), '/read/:id': P('april', 'utility'),
   '/': P('account', 'duplicate', 'members are sent to /dashboard'), '/explore': P('explore', 'primary'), '/personal-context': P('account', 'utility'), '/workspaces': P('explore', 'secondary'),
-  '/wonderings': P('readings', 'secondary'), '/start': P('chart', 'secondary'), '/my-chart': P('chart', 'primary'), '/retrogood': P('readings', 'secondary'), '/our-charts': P('chart', 'secondary', 'shared-space accounts'),
+  '/wonderings': P('readings', 'secondary'), '/start': P('chart', 'secondary'), '/my-chart': P('chart', 'primary'), '/retrogood': P('readings', 'secondary'), '/our-charts': P('chart', 'secondary', 'shared-space accounts'), '/siblings': P('explore', 'secondary'),
   '/findings': P('chart', 'secondary'), '/results': P('chart', 'secondary'), '/my-readings': P('readings', 'primary'), '/my-readings/topic/:slug': P('readings', 'tertiary', 'every topic and core theme is listed on the Readings hub'),
   '/my-astrobook': P('book', 'primary'), '/auth': P('account', 'utility'), '/reset-password': P('account', 'utility'), '/pricing': P('account', 'utility'), '/creator': P('account', 'utility', 'Cosmic Studio'),
   '/my-comic': P('book', 'secondary'), '/referrals': P('explore', 'secondary'), '/checkout/return': P('account', 'utility'), '/my-masterbook': P('book', 'secondary'), '/books': P('book', 'secondary'), '/orders': P('book', 'secondary'),
