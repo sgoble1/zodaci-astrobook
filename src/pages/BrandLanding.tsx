@@ -115,7 +115,7 @@ export default function BrandLanding() {
         <JoinPlate />
       </div>
 
-      <section id="contact" aria-labelledby="contact-h" className="obs-panel p-5 sm:p-8"><div className="grid gap-10 md:grid-cols-2"><div><StatusLight label="Desk open" /><h2 id="contact-h" className="mt-3 font-label text-2xl">Write to the observatory</h2><p className="mt-4 max-w-md leading-relaxed text-muted-foreground">Questions about your chart, an AstroBook order or the shop? Send a note and a person at Zodaci will read it.</p></div><ContactForm /></div></section>
+      <section id="contact" aria-labelledby="contact-h" className="obs-panel p-5 sm:p-8"><div className="grid gap-10 md:grid-cols-2"><div><StatusLight label="Desk open" /><h2 id="contact-h" className="mt-3 font-label text-2xl">Write to the observatory</h2><p className="mt-4 max-w-md leading-relaxed text-muted-foreground">Questions about your chart, an AstroBook order or the shop? Send a note to the Zodaci team.</p></div><ContactForm /></div></section>
     </main><GlobalFooter />
   </div>;
 }
