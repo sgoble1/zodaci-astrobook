@@ -4,7 +4,7 @@ import { transitsTo, upcomingEvents } from './transitOverlay';
 
 describe('forecast uncertainty', () => {
   it('omits Moon and angle contacts when the saved birth time is unknown', () => {
-    const chart = computeChart({ date: '1987-07-10', time: null, lat: 39.9567, lon: -83.0144, tz: 'America/New_York', houseSystem: 'whole', placeLabel: 'Columbus' });
+    const chart = computeChart({ date: '1987-07-10', time: null, lat: 39.9567, lon: -83.0144, tz: 'America/New_York', houseSystem: 'whole', placeLabel: 'Columbus', placeSource: 'geocoded' });
     const now = new Date('2026-11-04T23:28:00Z');
     const hits = transitsTo(chart, now);
     const events = upcomingEvents(chart, now, 30);
