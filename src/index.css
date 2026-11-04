@@ -993,3 +993,10 @@ li:hover > .zodiac-coin { transform: rotate(-10deg); }
 .mosaic-dash-top { display: grid; gap: .9rem; grid-template-columns: minmax(0, 1fr); }
 .mosaic-dash-poster { display: none; }
 @media (min-width: 1280px) { .mosaic-dash-top { grid-template-columns: minmax(0, 1fr) 13rem; } .mosaic-dash-poster { display: flex; } }
+
+/* Forecast Center: original AstroComic plates, retaining TV film and projector effects. */
+.forecast-hero { min-height: 27rem; }
+.forecast-hero-shade { background: linear-gradient(90deg, hsl(var(--background) / .94), hsl(var(--background) / .65) 45%, hsl(var(--background) / .06) 85%); }
+.forecast-reel-frame { position: relative; display: flex; align-items: end; min-height: 25rem; height: 100%; }
+.forecast-reel-copy { width: 100%; padding: 7rem 2rem 2rem; background: linear-gradient(0deg, hsl(var(--background)), hsl(var(--background) / .88) 65%, transparent); }
+@media (max-width: 639px) { .forecast-hero-shade { background: linear-gradient(90deg, hsl(var(--background) / .94), hsl(var(--background) / .65)); } .forecast-reel-frame { min-height: 29rem; } .forecast-reel-copy { padding: 7rem 1.25rem 1.5rem; } }

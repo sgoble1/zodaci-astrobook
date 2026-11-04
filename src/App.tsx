@@ -46,6 +46,7 @@ const StarMap = lazy(() => import('./pages/StarMap'));
 const Profection = lazy(() => import('./pages/Profection'));
 const Numerology = lazy(() => import('./pages/Numerology'));
 const Transits = lazy(() => import('./pages/Transits'));
+const Forecast = lazy(() => import('./pages/Forecast'));
 const Chinese = lazy(() => import('./pages/Chinese'));
 const Volume2 = lazy(() => import('./pages/Volume2'));
 const DataQuality = lazy(() => import('./pages/DataQuality'));
@@ -258,6 +259,7 @@ export default function App() {
             <Route path="/characters" element={<Characters />} />
             <Route path="/lp/:slug" element={<LandingPage />} />
             <Route path="/learn" element={<Learn />} />
+            <Route path="/forecast" element={<Forecast />} />
             <Route path="/learn/:slug" element={<PublicArticle />} />
             <Route path="/blog" element={<Navigate to={{ pathname: '/learn', hash: '#journal' }} replace />} />
             <Route path="/blog/learn/:slug" element={<LegacyArticleRedirect />} />

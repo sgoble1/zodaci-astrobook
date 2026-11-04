@@ -81,7 +81,7 @@ export default function Learn() {
             <h3 className="font-label text-lg">Sky calendar</h3>
             {events.length === 0 ? <p className="mt-3 text-sm text-muted-foreground">A quiet month: no Moon phases, sign changes or stations in the next 30 days.</p> :
               <ol className="mt-3 divide-y divide-border">{events.map(e => <li key={`${e.title}-${e.date.toISOString()}`} className="flex items-start gap-3 py-3"><SpotArt kind={e.kind === 'station' ? 'planet' : e.kind === 'ingress' ? 'sign' : 'moon'} className="h-10 w-10" orbit={false} /><div className="min-w-0 flex-1"><p className="font-medium">{e.title}</p><p className="text-sm text-muted-foreground">{e.detail}</p></div><time dateTime={e.date.toISOString().slice(0, 10)} className="shrink-0 font-label text-xs text-primary">{fmtDay(e.date)}</time></li>)}</ol>}
-            <div className="mt-5 flex flex-wrap gap-2"><Button asChild variant="signal" size="sm"><Link to={session ? '/transits' : '/start'}>{session ? 'See how it touches your chart' : 'Get your personal forecast'}<ArrowRight /></Link></Button><Button asChild variant="outline" size="sm"><Link to="/reading-room/transits">How transits work</Link></Button></div>
+            <div className="mt-5 flex flex-wrap gap-2"><Button asChild variant="signal" size="sm"><Link to="/forecast">Open the Forecast Center<ArrowRight /></Link></Button><Button asChild variant="outline" size="sm"><Link to="/reading-room/transits">How transits work</Link></Button></div>
           </div>
         </div>
       </section>
