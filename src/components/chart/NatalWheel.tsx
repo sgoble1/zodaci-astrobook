@@ -1,6 +1,7 @@
 import { BIRTH } from '@/content/april';
-import { useMemo, useState } from 'react';
+import { useId, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { ChartProjection } from './ChartProjection';
 import { PLACEMENTS, ZODIAC, ANGLES, ASPECTS, longitudeOf, signIndex, type Placement } from '@/content/april';
 
 interface Props {
@@ -39,28 +40,30 @@ export function NatalWheel({ size = 640, showAspects = true, interactive = true 
     return Array.from({ length: 12 }, (_, i) => ascLong + i * 30);
   }, [ascLong]);
 
-  const gold = 'hsl(var(--gold))';
-  const ink = 'hsl(var(--ink))';
-  const muted = 'hsl(var(--muted-foreground))';
+  const uid = useId().replace(/:/g, '');
+  const gold = 'hsl(var(--chart-ink))';
+  const ink = 'hsl(var(--chart-ink))';
+  const muted = 'hsl(var(--chart-line))';
 
   return (
     <div className="relative w-full max-w-[720px] mx-auto">
-      <svg viewBox={`0 0 ${size} ${size}`} className="w-full h-auto">
+      <ChartProjection>
+      <svg role="img" aria-label="April natal zodiac wheel" viewBox={`0 0 ${size} ${size}`} className="w-full h-auto">
         {/* Vellum background circle */}
         <defs>
-          <radialGradient id="parchment" cx="50%" cy="50%" r="60%">
-            <stop offset="0%" stopColor="hsl(var(--vellum))" />
-            <stop offset="100%" stopColor="hsl(var(--muted))" />
+          <radialGradient id={`parchment-${uid}`} cx="50%" cy="50%" r="60%">
+            <stop offset="0%" stopColor="hsl(var(--chart-soft))" />
+            <stop offset="100%" stopColor="hsl(var(--chart-screen))" />
           </radialGradient>
-          <radialGradient id="nightsky" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="hsl(var(--midnight))" />
-            <stop offset="100%" stopColor="hsl(230 40% 5%)" />
+          <radialGradient id={`nightsky-${uid}`} cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="hsl(var(--chart-soft))" />
+            <stop offset="100%" stopColor="hsl(var(--chart-screen))" />
           </radialGradient>
         </defs>
 
-        <circle cx={cx} cy={cy} r={rOuter} fill="url(#parchment)" stroke={gold} strokeWidth={1.5} />
+        <circle cx={cx} cy={cy} r={rOuter} fill={`url(#parchment-${uid})`} stroke={gold} strokeWidth={1.5} />
         <circle cx={cx} cy={cy} r={rZodiac} fill="none" stroke={ink} strokeWidth={0.5} opacity={0.5} />
-        <circle cx={cx} cy={cy} r={rHouse} fill="url(#nightsky)" stroke={gold} strokeWidth={0.8} />
+        <circle cx={cx} cy={cy} r={rHouse} fill={`url(#nightsky-${uid})`} stroke={gold} strokeWidth={0.8} />
         <circle cx={cx} cy={cy} r={rInner} fill="none" stroke={gold} strokeWidth={0.4} opacity={0.6} />
 
         {/* Zodiac ring — 12 signs */}
@@ -74,7 +77,7 @@ export function NatalWheel({ size = 640, showAspects = true, interactive = true 
             <g key={z.name}>
               <line x1={start.x} y1={start.y} x2={inner.x} y2={inner.y} stroke={gold} strokeWidth={0.6} opacity={0.7} />
               <text x={mid.x} y={mid.y} textAnchor="middle" dominantBaseline="central"
-                    fontSize={size * 0.032} fill={gold} className="font-display">
+                    fontSize={size * 0.04} fill={gold} className="font-display">
                 {z.glyph}
               </text>
             </g>
@@ -90,13 +93,13 @@ export function NatalWheel({ size = 640, showAspects = true, interactive = true 
           return (
             <g key={i}>
               <line x1={inner.x} y1={inner.y} x2={outer.x} y2={outer.y}
-                    stroke={isAngle ? gold : 'hsl(var(--starlight))'}
+                    stroke={isAngle ? gold : 'hsl(var(--chart-line))'}
                     strokeWidth={isAngle ? 1.2 : 0.4}
                     opacity={isAngle ? 0.9 : 0.5}
                     strokeDasharray={isAngle ? undefined : '2 3'} />
               <Link to={`/houses/${i + 1}`}>
                 <text x={labelPos.x} y={labelPos.y} textAnchor="middle" dominantBaseline="central"
-                      fontSize={size * 0.022} fill="hsl(var(--starlight))" opacity={0.75}
+                      fontSize={size * 0.022} fill="hsl(var(--chart-line))" opacity={0.75}
                       className="font-smallcaps cursor-pointer hover:fill-current"
                       style={{ letterSpacing: 0 }}>
                   {i + 1}
@@ -114,10 +117,10 @@ export function NatalWheel({ size = 640, showAspects = true, interactive = true 
           const pa = toXY(longitudeOf(A), rInner);
           const pb = toXY(longitudeOf(B), rInner);
           const color =
-            asp.type === 'Trine' ? 'hsl(140 40% 50%)' :
-            asp.type === 'Sextile' ? 'hsl(200 45% 55%)' :
-            asp.type === 'Square' ? 'hsl(0 55% 55%)' :
-            asp.type === 'Opposition' ? 'hsl(20 65% 55%)' :
+            asp.type === 'Trine' ? 'hsl(var(--chart-harmony))' :
+            asp.type === 'Sextile' ? 'hsl(var(--chart-harmony))' :
+            asp.type === 'Square' ? 'hsl(var(--chart-signal))' :
+            asp.type === 'Opposition' ? 'hsl(var(--chart-signal))' :
             'hsl(var(--gold))';
           return (
             <line key={idx} x1={pa.x} y1={pa.y} x2={pb.x} y2={pb.y}
@@ -136,7 +139,7 @@ export function NatalWheel({ size = 640, showAspects = true, interactive = true 
                style={{ cursor: interactive ? 'pointer' : 'default' }}>
               <Link to={`/planets/${p.key}`}>
                 <circle cx={pos.x} cy={pos.y} r={size * 0.024}
-                        fill="hsl(var(--vellum))"
+                        fill="hsl(var(--chart-soft))"
                         stroke={isHover ? gold : ink}
                         strokeWidth={isHover ? 1.5 : 0.8} />
                 <text x={pos.x} y={pos.y} textAnchor="middle" dominantBaseline="central"
@@ -152,6 +155,7 @@ export function NatalWheel({ size = 640, showAspects = true, interactive = true 
         <text x={cx} y={cy - 4} textAnchor="middle" fontSize={size * 0.028} fill={gold} className="font-smallcaps">April</text>
         <text x={cx} y={cy + size * 0.028} textAnchor="middle" fontSize={size * 0.02} fill={muted}>{BIRTH.date}</text>
       </svg>
+      </ChartProjection>
 
       {/* Hover legend */}
       <div className="mt-4 min-h-[64px] px-4 py-3 rounded border border-border bg-card/60 text-sm">
