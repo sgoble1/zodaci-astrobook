@@ -629,3 +629,45 @@ body {
 .chart-look-toggle button:focus-visible { outline: 2px solid hsl(var(--ring)); outline-offset: -3px; }
 @media print { .chart-look-toggle { display: none; } }
 @media (max-width: 420px) { .chart-projection-screen { padding: 8px 2px; } .chart-paper { padding: 12px 8px 8px; outline-offset: -6px; } }
+
+/* ── 1950s icon set: printed pictograms and brass medallions ── */
+.retro-icon { vertical-align: middle; }
+.retro-emblem {
+  display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; border-radius: 999px;
+  color: hsl(var(--primary)); background: radial-gradient(circle at 35% 30%, hsl(var(--indigo-deep)), hsl(var(--midnight)));
+  border: 2px solid hsl(var(--brass)); box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 3px hsl(var(--brass) / .45), 2px 2px 0 3px hsl(var(--accent) / .35);
+  transition: color .8s ease, box-shadow .8s ease;
+}
+.retro-emblem .retro-icon { filter: drop-shadow(0 0 4px hsl(var(--primary) / .45)); }
+.retro-emblem-active { color: hsl(var(--primary)); box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 3px hsl(var(--primary) / .7), 0 0 18px hsl(var(--primary) / .35); }
+
+/* ── Retro TV: rolling hold bar, curved glass, knobs ── */
+.retro-tv .obs-crt { box-shadow: inset 0 0 0 2px hsl(var(--midnight)), inset 0 0 30px hsl(var(--midnight) / .9); }
+.retro-tv-film { z-index: 3; }
+.retro-tv-roll { position: absolute; inset-inline: 0; top: -20%; height: 18%; z-index: 3; pointer-events: none; background: linear-gradient(180deg, transparent, hsl(var(--foreground) / .07) 45%, hsl(var(--foreground) / .1) 50%, transparent); animation: retro-tv-roll 13s linear infinite; }
+@keyframes retro-tv-roll { from { transform: translateY(0) } to { transform: translateY(700%) } }
+.retro-tv-glass { position: absolute; inset: 0; z-index: 4; pointer-events: none; border-radius: inherit; background: radial-gradient(ellipse at 28% 18%, hsl(var(--foreground) / .12), transparent 38%), radial-gradient(ellipse at center, transparent 62%, hsl(var(--midnight) / .6)); }
+.retro-tv-knob { width: .8rem; height: .8rem; border-radius: 999px; border: 1px solid hsl(var(--brass)); background: radial-gradient(circle at 35% 35%, hsl(var(--brass)), hsl(var(--secondary))); }
+.channel-art { animation: channel-art-in 1.6s cubic-bezier(.2,.7,.2,1) both; filter: saturate(1.05) contrast(1.04); }
+@keyframes channel-art-in { from { opacity: .2; filter: brightness(2) saturate(.4) blur(1px) } to { opacity: 1; filter: saturate(1.05) contrast(1.04) } }
+.channel-callsign { font-family: 'Bebas Neue', sans-serif; letter-spacing: .14em; font-size: .85rem; padding: .1rem .5rem; border-radius: .3rem; color: hsl(var(--primary-foreground)); background: hsl(var(--primary)); box-shadow: 2px 2px 0 hsl(var(--accent)); }
+.channel-tab {
+  display: inline-flex; min-height: 2.5rem; align-items: center; justify-content: center; gap: .35rem; padding: 0 .75rem; border-radius: 999px;
+  border: 1px solid hsl(var(--brass) / .45); color: hsl(var(--muted-foreground)); font-family: 'Bebas Neue', sans-serif; letter-spacing: .1em; font-size: .85rem;
+  transition: color .6s ease, background-color .6s ease, border-color .6s ease;
+}
+.channel-tab:hover { color: hsl(var(--foreground)); }
+.channel-tab:focus-visible { outline: none; box-shadow: 0 0 0 2px hsl(var(--ring)); }
+.channel-tab-active { border-color: hsl(var(--primary)); background: hsl(var(--primary) / .15); color: hsl(var(--primary)); }
+@media (max-width: 639px) { .channel-tab { padding: 0 .25rem; gap: .2rem; flex-direction: column; min-height: 3.1rem; border-radius: .9rem; font-size: .8rem; } }
+.sky-dial { position: relative; min-width: 0; padding: .55rem .75rem .6rem; border-radius: .9rem; border: 1px solid hsl(var(--brass) / .5); background: radial-gradient(circle at 15% 20%, hsl(var(--indigo-deep) / .7), hsl(var(--card))); box-shadow: inset 0 0 0 2px hsl(var(--background) / .6), 3px 3px 0 hsl(var(--brass) / .2); }
+.sky-dial dt { font-family: 'Bebas Neue', sans-serif; letter-spacing: .14em; font-size: .72rem; color: hsl(var(--primary)); }
+.sky-dial dd { margin-top: .1rem; font-family: 'Alfa Slab One', serif; font-size: .95rem; line-height: 1.25; color: hsl(var(--foreground)); overflow-wrap: anywhere; }
+@media (prefers-reduced-motion: reduce) { .retro-tv-roll, .channel-art { animation: none; } }
+
+/* ── Place banners: each place's 1950s scene behind the host plate ── */
+.place-banner-art { position: relative; isolation: isolate; overflow: hidden; padding: 0; min-height: 6.5rem; }
+.place-banner-scene { position: absolute; inset: 0; z-index: -2; width: 100%; height: 100%; object-fit: cover; object-position: 70% 45%; filter: saturate(1.05); }
+.place-banner-art::before { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(90deg, hsl(var(--background) / .94) 0%, hsl(var(--background) / .82) 38%, hsl(var(--background) / .3) 70%, hsl(var(--background) / .1)); }
+.place-banner-art::after { content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none; background-image: radial-gradient(hsl(var(--foreground) / .06) 1px, transparent 1.2px); background-size: 5px 5px; mix-blend-mode: overlay; }
+@media (max-width: 639px) { .place-banner-art::before { background: linear-gradient(90deg, hsl(var(--background) / .95), hsl(var(--background) / .78) 60%, hsl(var(--background) / .45)); } }
