@@ -8,8 +8,7 @@ import { NewsletterSignup } from '@/components/brand/NewsletterSignup';
 import { PUBLIC_ARTICLES } from '@/content/publicArticles';
 import { CHAPTER_TABS } from '@/lib/books';
 import poster from '@/assets/home/observatory-poster.jpg';
-import bookCover from '@/assets/cover-design-midnight-stars-hd.jpg';
-import comicCover from '@/assets/comic-issue1-cover-v2.jpg';
+import { PRODUCT_ART } from '@/content/productArtwork';
 
 /**
  * Weathered panel mosaic from the observatory concept: navy plates (obs-panel) and aged cream
@@ -40,6 +39,15 @@ export function MottoRail({ links, tagline, className }: { links: [string, strin
       </div>
     </nav>
   );
+}
+
+export function ForecastPlate() {
+  return <Link to="/forecast" className="obs-paper forecast-rail-plate">
+    <SpotArt kind="radio" className="mx-auto h-20 w-20" orbit={false} />
+    <span className="block font-label text-xl">Sky broadcasts</span>
+    <span className="mt-1 block text-xs text-muted-foreground">Today's planets &amp; the next 30 days</span>
+    <span className="mt-3 inline-flex items-center gap-1 font-label text-sm text-accent">Tune in<ArrowRight aria-hidden className="h-4 w-4" /></span>
+  </Link>;
 }
 
 /** Tall travel-poster plate: the observatory on its hill under the Moon. */
@@ -108,8 +116,8 @@ export function ArchiveShelf({ id = 'archive-h', to = '/astrobook', className }:
               </Link>
             </li>
           ))}
-          <li className="shelf-item"><Link to={to} className="shelf-cover" aria-label="AstroBook, Midnight Stars cover"><img src={bookCover} alt="" width={1280} height={1920} loading="lazy" className="h-full w-full object-cover" /></Link></li>
-          <li className="shelf-item"><Link to="/astrocomic" className="shelf-cover" aria-label="AstroComic Issue 1"><img src={comicCover} alt="" width={1024} height={1536} loading="lazy" className="h-full w-full object-cover" /></Link></li>
+          <li className="shelf-item"><Link to={to} className="shelf-cover shelf-product" aria-label="AstroBook, Collector Taurus shop sample"><img src={PRODUCT_ART.book.src} alt={PRODUCT_ART.book.alt} width={1024} height={1024} loading="lazy" className="h-full w-full object-contain" /><span className="font-label text-xs">Collector AstroBook</span></Link></li>
+          <li className="shelf-item"><Link to="/astrocomic" className="shelf-cover shelf-product" aria-label="AstroComic story preview"><img src={PRODUCT_ART.comic.src} alt={PRODUCT_ART.comic.alt} width={768} height={1145} loading="lazy" className="h-full w-full object-contain" /></Link></li>
         </ul>
         <button type="button" onClick={() => slide(-1)} className="shelf-arrow left-0" aria-label="Scroll the shelf left"><ChevronLeft aria-hidden className="h-5 w-5" /></button>
         <button type="button" onClick={() => slide(1)} className="shelf-arrow right-0" aria-label="Scroll the shelf right"><ChevronRight aria-hidden className="h-5 w-5" /></button>

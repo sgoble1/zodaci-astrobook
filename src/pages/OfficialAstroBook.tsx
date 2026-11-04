@@ -4,8 +4,7 @@ import { Book3D } from '@/components/books/Book3D';
 import { Button } from '@/components/ui/button';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { OFFICIAL_BOOKS, ownerLabel, useOfficialEditions, type OfficialEditionRow } from '@/lib/officialEditions';
-import comicCover from '@/assets/astrocomic-cover.jpg';
-import opener from '@/assets/mystic/pisces-opener.jpg';
+import { PRODUCT_ART } from '@/content/productArtwork';
 
 /**
  * The Official AstroBook section. Each founder sees only their own Masterbook and AstroComic; the admin sees every
@@ -27,7 +26,7 @@ export default function OfficialAstroBook() {
               : 'Your Masterbook and your own AstroComic, read in full here and printable as an AstroBook. Only you, and the people you share it with, can open it.'}
           </p>
         </div>
-        <img src={opener} alt="Mystic Ink chapter opener: two luminous fish circling a gold constellation inside an astrolabe frame" width={1200} height={1200} className="mx-auto w-56 rounded-full border border-mystic-gold/50 shadow-[0_0_60px_-20px_hsl(var(--mi-gold))] md:w-full" />
+        <figure><img src={PRODUCT_ART.collection.src} alt={PRODUCT_ART.collection.alt} width={1536} height={1024} className="w-full rounded-sm" /><figcaption className="mt-2 text-center text-xs text-muted-foreground">Illustrative shop collection</figcaption></figure>
       </header>
 
       {!rows && !error && <p role="status" className="text-muted-foreground">Checking your editions…</p>}
@@ -67,7 +66,7 @@ function EditionShelf({ row }: { row: OfficialEditionRow }) {
         </div>
         <div className="parchment flex flex-col gap-4 p-5 sm:flex-row">
           <Link to={comicTo} className="mx-auto block w-40 shrink-0 overflow-hidden rounded-sm border-2 border-foreground/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" aria-label={`Open ${row.is_own ? 'your' : `${row.display_name}’s`} Official AstroComic`}>
-            <img src={comicCover} alt="" width={1024} height={1584} loading="lazy" className="aspect-[11/17] w-full object-cover" />
+            <img src={PRODUCT_ART.comic.src} alt={PRODUCT_ART.comic.alt} width={768} height={1145} loading="lazy" className="aspect-[11/17] w-full object-contain" /><span className="block p-2 text-center text-xs text-muted-foreground">Shared story illustration</span>
           </Link>
           <div className="flex flex-1 flex-col gap-3">
             <div className="font-smallcaps text-xs text-gold">Official AstroComic</div>

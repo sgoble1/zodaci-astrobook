@@ -7,8 +7,7 @@ import { Button } from '@/components/ui/button';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { PrintPartnerMatrix } from '@/components/common/PrintPartnerMatrix';
 import { ThemeArt } from '@/components/common/ThemeArt';
-import plate from '@/assets/sample-plate-rising.jpg';
-import comic from '@/assets/comic-issue1-cover-v2.jpg';
+import { PRODUCT_ART } from '@/content/productArtwork';
 import launchArt from '@/assets/pages/investors-atomic-launch.jpg';
 
 const low = BOOK_VERSIONS[0]; const high = BOOK_VERSIONS[BOOK_VERSIONS.length - 1];
@@ -98,7 +97,7 @@ export default function Investors() {
           <p className="mt-4 max-w-2xl text-lg text-muted-foreground">Zodaci calculates the planets, stars and sensitive points at a member’s exact time of birth and builds an expansive, cross-referenced body of writing from them — readings, a six-volume book, comics and podcasts. The depth is the product: our founders’ own editions gave them words for things they had always felt. Later, the same calculations let members find each other.</p>
           <div className="mt-6 flex flex-wrap gap-3"><Button asChild><Link to="/astrobook">See the AstroBook pages</Link></Button><Button asChild variant="outline"><Link to="/astrocomic">Read the comic</Link></Button><Button asChild variant="outline"><Link to="/demo">Try the demo</Link></Button></div>
         </div>
-        <div className="grid grid-cols-2 gap-3"><img src={plate} alt="Illuminated AstroBook plate" width={1024} height={1280} className="rounded border border-gold/40" /><img src={comic} alt="AstroComic Issue 1 cover" width={1024} height={1536} className="rounded border border-gold/40" /></div>
+        <figure><img src={PRODUCT_ART.collection.src} alt={PRODUCT_ART.collection.alt} width={1536} height={1024} className="w-full rounded-sm border border-gold/40" /><figcaption className="mt-2 text-center text-xs text-muted-foreground">Illustrative AstroBook &amp; AstroComic shop collection</figcaption></figure>
       </header>
 
       <img src={launchArt} alt="A 1950s atomic-age zodiac disc above an observatory, with a red research rocket tracing a golden orbit toward Saturn." width={1536} height={768} loading="lazy" className="w-full rounded-lg border border-border" />

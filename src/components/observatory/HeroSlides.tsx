@@ -7,8 +7,7 @@ import { FilmFx } from '@/components/observatory/FilmFx';
 import cartographer from '@/assets/home/cartographer-guide.jpg';
 import facesHero from '@/assets/home-heads-hero.jpg';
 import sunFace from '@/assets/spots/self.jpg';
-import bookCover from '@/assets/cover-design-midnight-stars-hd.jpg';
-import comicCover from '@/assets/comic-issue1-cover-v2.jpg';
+import { PRODUCT_ART } from '@/content/productArtwork';
 
 export type HeroSlide = { id: string; label: string; content: ReactNode };
 
@@ -147,6 +146,7 @@ export function ChartMapSlide({ heading = 'h1', title, script, lines, cta, secon
   const H = heading;
   return (
     <div className="hero-night chartmap">
+      <Link to="/forecast" className="chartmap-signal"><span aria-hidden>✦</span><span className="font-label text-sm">Forecast Center</span><span className="font-script text-xl text-primary">Tune into today's sky</span><ArrowRight aria-hidden className="h-4 w-4" /></Link>
       <img src={cartographer} alt="The Cartographer, the observatory's chart specialist, points up toward the zodiac" width={820} height={1025} loading={eager ? 'eager' : 'lazy'} {...(eager ? { fetchpriority: 'high' } : {})} className="hero-cartographer chartmap-figure" />
       <div className="chartmap-copy">
         <div>
@@ -208,8 +208,8 @@ export function PressSlide({ heading = 'h2', title, script, text, book, comic }:
         <div className="mt-6 flex flex-wrap gap-3"><Button asChild variant="signal" size="lg"><Link to={book.to}>{book.label}<ArrowRight /></Link></Button><Button asChild variant="outline" size="lg"><Link to={comic.to}>{comic.label}</Link></Button></div>
       </div>
       <div className="flex min-w-0 items-end justify-center gap-4 sm:gap-6">
-        <img src={bookCover} alt="An AstroBook with the Midnight Stars cover" width={1280} height={1920} loading="lazy" className="hero-press-cover w-[42%] max-w-[11rem] -rotate-3" />
-        <img src={comicCover} alt="AstroComic Issue 1 cover" width={1024} height={1536} loading="lazy" className="hero-press-cover w-[48%] max-w-[13rem] rotate-2" />
+        <Link to={book.to} className="w-[48%] max-w-[15rem] -rotate-3"><img src={PRODUCT_ART.book.src} alt={PRODUCT_ART.book.alt} width={1024} height={1024} loading="lazy" className="hero-press-cover w-full object-contain" /><span className="mt-3 block text-center font-label text-sm text-primary">AstroBook · shop sample</span></Link>
+        <Link to={comic.to} className="w-[44%] max-w-[12rem] rotate-2"><img src={PRODUCT_ART.comic.src} alt={PRODUCT_ART.comic.alt} width={768} height={1145} loading="lazy" className="hero-press-cover w-full object-contain" /><span className="mt-3 block text-center font-label text-sm text-primary">AstroComic · story preview</span></Link>
       </div>
     </div>
   );

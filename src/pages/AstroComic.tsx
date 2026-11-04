@@ -18,11 +18,11 @@ import { useMyBirth, toChartInput } from '@/lib/myBirth';
 import { computeChart } from '@/lib/astro';
 import { SAMPLE_BIRTH } from '@/lib/sampleBook';
 import { ART_RULES, buildComicIssue, CAST, COMIC_FAQ, COMIC_PLANS, COMIC_SPEC, firstIssueMonth, isComicPlan, monthLabel, shipBy, type ComicPlan } from '@/lib/comic';
-import cover from '@/assets/comic-issue1-cover-v2.jpg';
 import cast from '@/assets/astrocomic-cast.jpg';
-import spread from '@/assets/astrocomic-spread.jpg';
 import skyPanel from '@/assets/astrocomic-sky-panel.jpg';
 import letterPanel from '@/assets/astrocomic-letter-panel.jpg';
+import { ProductArtworkGallery } from '@/components/books/ProductArtworkGallery';
+import { PRODUCT_ART } from '@/content/productArtwork';
 
 // These scenes are shared illustrations; chart positions and personal letters stay calculated below them.
 const PREVIEW_ART: Record<string, string> = { '2-0': skyPanel, '3-0': letterPanel };
@@ -62,16 +62,17 @@ export default function AstroComic() {
   return (
     <article className="space-y-20">
       <PaymentTestModeBanner />
-      <section className="grid items-center gap-10 lg:grid-cols-[1fr_380px]">
+      <section className="product-page-opening obs-panel">
         <div>
           <p className="font-smallcaps text-xs text-gold">AstroComic by Zodaci</p>
-          <h1 className="mt-3 text-silver font-display text-5xl leading-[0.95] sm:text-7xl">Your month,<br />drawn from your chart.</h1>
+          <h1 className="mt-3 hero-headline">AstroComic</h1>
+          <p className="mt-3 font-script text-3xl text-primary">Your sky becomes a story.</p>
           <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted-foreground">A printed 24-page digest every month. The planets become characters, your Sun, Moon and Rising drive the story, and that month’s real transits decide what happens.</p>
-          <div role="radiogroup" aria-label="Choose a plan" className="mt-8 grid gap-3 sm:grid-cols-3">
+          <div role="radiogroup" aria-label="Choose a plan" className="comic-product-plans mt-8 grid gap-3">
             {(Object.keys(COMIC_PLANS) as ComicPlan[]).map(k => { const p = COMIC_PLANS[k]; const on = plan === k; return (
               <button key={k} type="button" role="radio" aria-checked={on} onClick={() => { setPlan(k); setCheckout(false); }} className={`rounded-lg border p-4 text-left transition-colors duration-500 ${on ? 'border-primary bg-primary/10' : 'border-border hover:border-foreground/40'}`}>
                 <span className="flex items-center justify-between gap-2"><span className="font-semibold">{p.name}</span>{on && <Check aria-hidden className="h-4 w-4 text-gold" />}</span>
-                <span className="mt-1 block font-display text-2xl">{p.label}</span>
+                <span className="mt-1 block font-label text-xl">{p.label}</span>
                 <span className="mt-1 block text-xs text-muted-foreground">{p.blurb}</span>
               </button>
             ); })}
@@ -90,7 +91,7 @@ export default function AstroComic() {
           )}
           {session && <p className="mt-4 text-sm"><Link to="/my-comic" className="text-primary underline underline-offset-4">Already subscribed? Open My AstroComic</Link></p>}
         </div>
-        <img loading="lazy" decoding="async" src={cover} alt={ISSUE_1.coverAlt} width={1024} height={1536} className="mx-auto w-full max-w-sm rounded-sm border-2 border-foreground/80 shadow-2xl" />
+        <ProductArtworkGallery comic />
       </section>
 
       <section aria-labelledby="issue1-h">
@@ -117,7 +118,7 @@ export default function AstroComic() {
 
       <section aria-labelledby="inside-h" className="grid gap-10 lg:grid-cols-2">
         <div><h2 id="inside-h" className="font-display text-3xl">What’s in every issue</h2><ol className="mt-6 divide-y divide-border border-y border-border">{PAGE_MAP.map(([n, t]) => <li key={n} className="grid grid-cols-[4rem_1fr] gap-3 py-2.5 text-sm"><span className="text-gold">p. {n}</span><span>{t}</span></li>)}</ol></div>
-        <div><img src={spread} alt="Interior spread: the Moon character with a phase calendar and Mercury walking backwards with scrolls" width={1600} height={1040} loading="lazy" className="w-full rounded-sm border-2 border-foreground/80" /><p className="mt-3 text-sm text-muted-foreground">Retrograde Watch and the Lunar Calendar, in a sample spread.</p></div>
+        <div><img src={PRODUCT_ART.collection.src} alt={PRODUCT_ART.collection.alt} width={1536} height={1024} loading="lazy" className="w-full rounded-sm border-2 border-foreground/80" /><p className="mt-3 text-sm text-muted-foreground">Illustrative print collection · AstroComic alongside the AstroBook shop editions.</p></div>
       </section>
 
       <section aria-labelledby="cast-h">

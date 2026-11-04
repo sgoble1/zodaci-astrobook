@@ -11,7 +11,7 @@ import { PLAN_NAME, PLAN_PRICE, CREDIT_ALLOWANCE } from '@/lib/plans';
 import { BOOK_VERSIONS, money } from '@/lib/books';
 import { PanelTitle, StatusLight } from '@/components/observatory/Observatory';
 import { HeroSlideshow, ChartMapSlide, LookUpSlide, PressSlide } from '@/components/observatory/HeroSlides';
-import { MottoRail, ExplorePoster, DestinationTiles, QuotePlate, ArchiveShelf, HowItWorks, ZodiacPlate, TransmissionsPlate, JoinPlate, type Destination } from '@/components/observatory/Mosaic';
+import { MottoRail, ForecastPlate, ExplorePoster, DestinationTiles, QuotePlate, ArchiveShelf, HowItWorks, ZodiacPlate, TransmissionsPlate, JoinPlate, type Destination } from '@/components/observatory/Mosaic';
 import { BookIcon, ChartWheelIcon, RingsIcon, StorefrontIcon, TelescopeIcon } from '@/components/icons/RetroIcons';
 import { ALL_READINGS } from '@/lib/topicReadings';
 import { ACADEMY } from '@/content/academy';
@@ -80,7 +80,7 @@ export default function BrandLanding() {
     <PublicHeader />
     <main id="brand-main" className="mosaic mx-auto max-w-7xl px-3 py-4 sm:px-6 sm:py-6">
       <div className="mosaic-top">
-        <MottoRail className="mosaic-rail" links={MOTTO} tagline="Your personal guide to the stars — and to yourself." />
+        <div className="mosaic-left"><MottoRail className="mosaic-rail" links={MOTTO} tagline="Your personal guide to the stars — and to yourself." /><ForecastPlate /></div>
         <HeroSlideshow className="mosaic-hero" label="Zodaci highlights" slides={slides} />
         <ExplorePoster className="mosaic-poster" to="/learn" />
       </div>

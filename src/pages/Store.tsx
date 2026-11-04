@@ -138,7 +138,7 @@ export default function Store() {
             return (
               <li key={p.node.id} className="parchment flex flex-col overflow-hidden">
                 <Link to={`/product/${p.node.handle}`} className="relative block aspect-square bg-muted">
-                  {p.node.images.edges[0] && <img src={p.node.images.edges[0].node.url} alt={p.node.images.edges[0].node.altText ?? p.node.title} loading="lazy" width={600} height={600} className={`h-full w-full object-cover ${available ? '' : 'opacity-60 grayscale'}`} />}
+                  {p.node.images.edges[0] && <img src={p.node.images.edges[0].node.url} alt={p.node.images.edges[0].node.altText ?? p.node.title} loading="lazy" width={600} height={600} className={`h-full w-full object-contain ${available ? '' : 'opacity-60 grayscale'}`} />}
                   {!available && <span className="absolute left-3 top-3 rounded-full border border-border bg-background/90 px-2.5 py-0.5 text-xs">Sold out</span>}
                 </Link>
                 <div className="flex flex-1 flex-col gap-2 p-4">
@@ -200,7 +200,7 @@ export function ProductDetail() {
       <div className="flex items-center justify-between"><Link to="/store" className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline">← The shop</Link><CartDrawer /></div>
       <div className="grid gap-10 md:grid-cols-2">
         <div className="space-y-3">
-          <div className="parchment overflow-hidden rounded-lg">{main ? <img src={main.url} alt={main.altText ?? n.title} width={900} height={900} className="aspect-square w-full object-cover" /> : <div className="aspect-square bg-muted" />}</div>
+          <div className="parchment overflow-hidden rounded-md">{main ? <img src={main.url} alt={main.altText ?? n.title} width={900} height={900} className="aspect-square w-full object-contain" /> : <div className="aspect-square bg-muted" />}</div>
           {imgs.length > 1 && <div className="flex flex-wrap gap-2" role="group" aria-label="Product photos">{imgs.map((im, i) => <button key={i} type="button" onClick={() => setImage(i)} aria-label={`Photo ${i + 1} of ${imgs.length}`} aria-pressed={i === image} className={`h-16 w-16 overflow-hidden rounded border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${i === image ? 'border-gold' : 'border-border opacity-70 hover:opacity-100'}`}><img src={im.node.url} alt="" loading="lazy" width={64} height={64} className="h-full w-full object-cover" /></button>)}</div>}
         </div>
         <div className="space-y-5">

@@ -920,11 +920,20 @@ li:hover > .zodiac-coin { transform: rotate(-10deg); }
 /* Mosaic layout: plates fitted together with narrow seams, like the concept's weathered panel board. */
 .mosaic { display: flex; flex-direction: column; gap: .9rem; }
 .mosaic-top { display: grid; gap: .9rem; grid-template-columns: minmax(0, 1fr); }
-.mosaic-rail { display: none; }
+.mosaic-left { display: grid; grid-template-columns: minmax(0, 1fr); gap: .9rem; align-content: start; }
+.mosaic-rail { min-width: 0; }
+.mosaic-left .motto-link { display: block; font-size: 1.25rem; letter-spacing: .06em; }
+.mosaic-left .mosaic-rail { gap: 1.5rem; }
+.mosaic-left .mosaic-rail ul { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .5rem; }
+.mosaic-left .mosaic-rail ul li { margin: 0; }
+.mosaic-left .mosaic-rail > div { display: none; }
+.forecast-rail-plate { display: none; padding: 1.25rem; text-align: center; }
 .mosaic-poster { min-height: 18rem; }
 .mosaic-split-1-2, .mosaic-split-2-1, .mosaic-split-1-1 { display: grid; gap: .9rem; grid-template-columns: minmax(0, 1fr); }
 @media (min-width: 768px) {
   .mosaic-top { grid-template-columns: minmax(0, 1fr) 14rem; }
+  .mosaic-left { grid-column: 1 / -1; }
+  .mosaic-left .mosaic-rail ul { grid-template-columns: repeat(4, minmax(0, 1fr)); }
   .mosaic-poster { min-height: 0; }
   .mosaic-split-1-1 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
@@ -933,8 +942,12 @@ li:hover > .zodiac-coin { transform: rotate(-10deg); }
   .mosaic-split-2-1 { grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr); }
 }
 @media (min-width: 1280px) {
-  .mosaic-top { grid-template-columns: 10.5rem minmax(0, 1fr) 15rem; }
-  .mosaic-rail { display: flex; }
+  .mosaic-top { grid-template-columns: 10.5rem minmax(0, 1fr) 13rem; }
+  .mosaic-left { grid-column: auto; grid-template-rows: auto 1fr; align-content: stretch; }
+  .mosaic-left .mosaic-rail ul { grid-template-columns: minmax(0, 1fr); gap: .75rem; }
+  .mosaic-left .mosaic-rail > div { display: block; }
+  .mosaic-left .mosaic-rail > div .spot-art { display: none; }
+  .forecast-rail-plate { display: flex; flex-direction: column; align-items: center; justify-content: center; }
 }
 
 /* Projector additions (layered on top; the existing screen, lamp, dust and flicker are unchanged).
@@ -959,9 +972,13 @@ li:hover > .zodiac-coin { transform: rotate(-10deg); }
 .chartmap-body { display: grid; gap: 1.5rem; grid-template-columns: minmax(0, 1fr); }
 .chartmap-dial { width: 100%; max-width: 14rem; margin-inline: auto; }
 .chartmap-planets { display: none; gap: .4rem 1.25rem; grid-template-columns: repeat(auto-fill, minmax(8.25rem, 1fr)); }
-.hero-slides .hero-headline { font-size: clamp(2.1rem, 1rem + 5.2cqi, 4.4rem); }
+.hero-slides .hero-headline { font-size: 2.1rem; letter-spacing: 0; }
+.chartmap-signal { display: none; }
 @container hero (min-width: 30rem) { .chartmap-planets { display: grid; } }
 @container hero (min-width: 40rem) {
+  .hero-slides .hero-headline { font-size: 2.7rem; }
+  .chartmap-signal { position: absolute; z-index: 12; top: 2.5rem; left: 1.25rem; width: 29%; display: flex; flex-direction: column; align-items: center; gap: .5rem; padding: 1rem .5rem; text-align: center; border-block: 1px solid hsl(var(--brass) / .55); }
+  .chartmap-signal:hover { color: hsl(var(--primary)); }
   .chartmap { grid-template-columns: 37% minmax(0, 1fr); }
   .chartmap-figure { order: 0; justify-self: start; height: auto; width: 100%; max-height: 34rem; object-fit: contain; object-position: left bottom; }
   .chartmap-copy { margin-left: -1.5rem; padding: 2.25rem 1.75rem 4rem 0; }
@@ -969,6 +986,7 @@ li:hover > .zodiac-coin { transform: rotate(-10deg); }
   .chartmap-dial { max-width: none; }
 }
 @container hero (min-width: 56rem) {
+  .hero-slides .hero-headline { font-size: 3.4rem; }
   .chartmap-copy { padding-top: 2.75rem; }
   .chartmap-body { grid-template-columns: minmax(0, 1fr) minmax(0, 15rem); }
 }
@@ -1000,3 +1018,17 @@ li:hover > .zodiac-coin { transform: rotate(-10deg); }
 .forecast-reel-frame { position: relative; display: flex; align-items: end; min-height: 25rem; height: 100%; }
 .forecast-reel-copy { width: 100%; padding: 7rem 2rem 2rem; background: linear-gradient(0deg, hsl(var(--background)), hsl(var(--background) / .88) 65%, transparent); }
 @media (max-width: 639px) { .forecast-hero-shade { background: linear-gradient(90deg, hsl(var(--background) / .94), hsl(var(--background) / .65)); } .forecast-reel-frame { min-height: 29rem; } .forecast-reel-copy { padding: 7rem 1.25rem 1.5rem; } }
+
+/* Actual shop samples are shown whole, not cropped into replacement covers. */
+.product-page-opening { display: grid; align-items: center; gap: 2.5rem; padding: 2rem 1.25rem; }
+.product-page-opening > div { min-width: 0; }
+.comic-product-plans { grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr)); }
+.product-page-opening .hero-headline { font-size: 2.5rem; letter-spacing: 0; }
+.product-art-gallery { min-width: 0; width: 100%; max-width: 30rem; margin-inline: auto; }
+.product-art-stage { width: 100%; height: 24rem; padding: .75rem; border-radius: .375rem; background: hsl(var(--spot-paper)); border: 1px solid hsl(var(--brass)); box-shadow: var(--shadow-ink); }
+.product-art-thumb { flex-shrink: 0; width: 3.5rem; height: 3.5rem; padding: .2rem; background: hsl(var(--spot-paper)); border: 1px solid hsl(var(--brass) / .45); border-radius: .25rem; }
+.product-art-thumb[aria-pressed="true"] { outline: 2px solid hsl(var(--primary)); outline-offset: 2px; }
+.shelf-product { background: hsl(var(--spot-paper)); color: hsl(var(--comic-navy)); padding: .4rem; text-align: center; }
+.shelf-product img { min-height: 0; }
+@media (min-width: 1024px) { .product-page-opening { grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); padding: 2.5rem; } .product-page-opening .hero-headline { font-size: 3.5rem; } }
+@media (max-width: 639px) { .product-art-stage { height: 21rem; } .product-page-opening .product-art-gallery { order: -1; } }

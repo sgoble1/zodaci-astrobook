@@ -1,4 +1,3 @@
-import { CinematicVideo } from '@/components/fx/CinematicVideo';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { Book3D } from '@/components/books/Book3D';
 import { useEffect, useMemo, useRef, useState } from 'react';
@@ -17,7 +16,7 @@ import { useMyBirth } from '@/lib/myBirth';
 import { streamImage } from '@/lib/streamImage';
 import { BOOK_SECTIONS, BOOK_VERSIONS, CHAPTER_TABS, COVER_STYLES, EXTRA_SECTION_PRICE, bookTotal, isEdition, money, versionOf, type Edition } from '@/lib/books';
 import { validateBookOrder } from '@/lib/bookOrder';
-import bookPhoto from '@/assets/astrobook-public.jpg';
+import { ProductArtworkGallery } from '@/components/books/ProductArtworkGallery';
 import { COVER_DESIGNS } from '@/content/coverDesigns';
 import { CoverEditor } from '@/components/books/CoverEditor';
 import { useCoverImage } from '@/hooks/useCoverImage';
@@ -138,7 +137,7 @@ export default function Books() {
     finally { setBusy(''); }
   };
   return <article className="space-y-12">
-    <header className="relative isolate overflow-hidden rounded min-h-[360px] flex items-end"><CinematicVideo poster={bookPhoto} /><div className="absolute inset-0 -z-10 bg-background/65" /><div className="p-6 sm:p-10"><p className="font-smallcaps text-gold text-xs">Made for your birth chart</p><h1 className="text-4xl mt-2">AstroBook</h1><p className="mt-4 max-w-lg">Your chart, written into a book. Five versions, from an instant PDF to a linen-bound collector’s edition, all built from your exact birth moment.</p><p className="text-sm text-muted-foreground mt-3">Illustrative sample · your own cover is previewed below.</p></div></header>
+    <header className="product-page-opening obs-panel"><div><p className="font-label text-primary text-sm">Made for your birth chart</p><h1 className="hero-headline mt-2">AstroBook</h1><p className="mt-3 font-script text-3xl text-primary">Your stars, your story.</p><p className="mt-4 max-w-lg">Your chart, written into a book. Five versions, from an instant PDF to a linen-bound collector’s edition, all built from your exact birth moment.</p><p className="text-sm text-muted-foreground mt-3">Illustrative shop samples · your own cover is previewed below.</p></div><ProductArtworkGallery /></header>
 
     <nav aria-label="Book steps" className="flex flex-wrap gap-4 border-b border-border pb-4 text-sm"><a href="#versions" className="text-primary">Version</a><a href="#personal-cover" className="text-primary">Cover</a><a href="#book-review" className="text-primary">Review & payment</a><Button asChild variant="outline" size="sm"><Link to="/book-preview">Read the sample book</Link></Button></nav>
 
