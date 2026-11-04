@@ -16,12 +16,12 @@ export function PublicHeader({ sections }: { sections?: string[] }) {
   const [open, setOpen] = useState(false);
   const session = useSession();
   const { pathname } = useLocation();
-  const account: [string, string] = session ? ['/dashboard', 'Open my Zodaci'] : ['/auth', 'Sign in'];
+  const account: [string, string] = session ? ['/dashboard', 'My Zodaci'] : ['/auth', 'Sign in'];
   const active = (to: string) => pathname === to || pathname.startsWith(`${to}/`);
   return (
     <header className="sticky top-0 z-40 border-b-2 border-[hsl(var(--brass)/0.6)] bg-background/90 backdrop-blur-md">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-5 sm:px-10 lg:h-20">
-        <Link to="/welcome" aria-label="Zodaci home" className="shrink-0"><ZodaciLogo /></Link>
+        <Link to="/welcome" aria-label="Zodaci home" className="shrink-0"><span className="xl:hidden 2xl:inline"><ZodaciLogo /></span><span className="hidden xl:inline 2xl:hidden"><ZodaciLogo compact /></span></Link>
         <nav aria-label="Public pages" className="hidden items-center gap-0 xl:flex">
           {sections?.map(s => <Button key={s} asChild variant="ghost" size="sm"><a href={`#${s.toLowerCase()}`}>{s}</a></Button>)}
           {sections && <span aria-hidden="true" className="mx-1 h-5 w-px bg-border" />}
