@@ -231,9 +231,9 @@ export function MemberHeader() {
               <button key={d.id} ref={el => { triggers.current[d.id] = el; }} type="button" aria-expanded={isOpen} aria-controls={`mega-${d.id}`} aria-haspopup="true"
                 onClick={() => s.setOpenMenu(isOpen ? null : d.id)} onKeyDown={e => onTriggerKey(e, d.id, i)}
                 onPointerEnter={e => { if (e.pointerType === 'mouse' && open && open !== d.id) s.setOpenMenu(d.id); }}
-                className={`relative inline-flex min-h-11 items-center gap-1 rounded-md px-2.5 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring lg:px-3 ${isOpen ? 'bg-muted text-foreground' : isActive ? 'text-foreground' : 'text-muted-foreground hover:bg-muted/60 hover:text-foreground'}`}>
+                className={`relative inline-flex min-h-11 items-center gap-1 whitespace-nowrap rounded-full px-2.5 font-label text-[0.95rem] tracking-[0.08em] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring lg:px-3 ${isOpen ? 'bg-muted text-foreground' : isActive ? 'text-foreground' : 'text-muted-foreground hover:bg-muted/60 hover:text-foreground'}`}>
                 {d.label}<ChevronDown className={`h-3.5 w-3.5 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} aria-hidden="true" />
-                {isActive && <span className="absolute inset-x-2.5 -bottom-[13px] h-0.5 rounded-full bg-gold" aria-hidden="true" />}
+                {isActive && <span className="absolute inset-x-2.5 -bottom-[13px] h-0.5 rounded-full bg-primary" aria-hidden="true" />}
                 {isActive && <span className="sr-only">(current section)</span>}
                 {hasNew && <span className="absolute right-1 top-2 h-1.5 w-1.5 rounded-full bg-created" aria-label="new page added" />}
               </button>
