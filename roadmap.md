@@ -10,6 +10,7 @@
 - [x] P1.8 Character selection page (/characters) with 12 members (Stargazer featured) and 9 staff; choice saved owner-only.
 - [x] P1.7a Global 1950s layer: fonts (Alfa Slab One / Libre Franklin / Bebas Neue / Yellowtail), pill buttons, print-offset cards and panels, halftone, faces-looking-up footer band, poster eyebrow labels on every card.
 - [x] P1.7b Specialist portrait banner (place + host) on every member page; Observatory Gift Shop restyle with grouped categories.
+- [x] Chart looks: brighter projector (lamp halo, slow flicker, dust) and new Ink-on-paper plate; Projector / Ink on paper switch on My Chart (Nov 4).
 - [ ] P1.7c Page-specific layouts: AstroBook reader three columns (chapters · reading · insights), AstroBook product page as collector artifact, AstroComic pages, podcasts, counselors, workbooks, private editions, Admin/Developer.
 - [~] Zodiac wheels: shared dark projection screen with illuminated diagrams, visible light beam and slow dust across calculated charts and founder wheels; preserve positions and interactions; verify desktop/phone.
 - [ ] P1.4b Phone "Field Observatory" dock styling.

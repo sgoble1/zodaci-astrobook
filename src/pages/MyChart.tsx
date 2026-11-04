@@ -7,6 +7,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { toChartInput, useMyBirth } from '@/lib/myBirth';
 import { ChartWheel } from '@/components/chart/ChartWheel';
+import { ChartLookToggle } from '@/components/chart/ChartProjection';
 import { BoxArt } from '@/components/common/BoxArt';
 import { PlanetOrb } from '@/components/chart/PlanetOrb';
 import { chartTitle, dominantElement } from "@/lib/chartTitle";
@@ -64,6 +65,7 @@ export default function MyChart() {
         </div>
         {!birth.time && <p className="mt-3 rounded border border-border bg-muted/40 p-3 text-sm">Without a birth time, your Rising sign and houses can't be known, so they're hidden. Planet signs are still accurate (the Moon may be off by a sign if it changed signs that day).</p>}
       </header>
+      <div className="flex justify-end"><ChartLookToggle /></div>
       <ChartWheel r={chart} />
       <HouseRulers chart={chart} />
       <ChartSignatures chart={chart} timeKnown={!!birth.time} />
