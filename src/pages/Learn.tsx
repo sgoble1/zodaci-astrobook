@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { ArrowRight, Clock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { SpotArt, spotFor } from '@/components/art/SpotArt';
+import { SpotArt, type SpotKind } from '@/components/art/SpotArt';
 import { CommunityJournal } from '@/components/learn/CommunityJournal';
 import { ACADEMY, ALL_LESSONS } from '@/content/academy';
 import { PUBLIC_ARTICLES } from '@/content/publicArticles';
@@ -109,7 +109,7 @@ export default function Learn() {
   );
 }
 
-function SectionHead({ id, eyebrow, title, text, art }: { id: string; eyebrow: string; title: string; text: string; art: Parameters<typeof spotFor>[0] extends string ? import('@/components/art/SpotArt').SpotKind : never }) {
+function SectionHead({ id, eyebrow, title, text, art }: { id: string; eyebrow: string; title: string; text: string; art: SpotKind }) {
   return (
     <div className="flex items-start gap-5">
       <SpotArt kind={art} className="hidden h-20 w-20 sm:inline-flex" />

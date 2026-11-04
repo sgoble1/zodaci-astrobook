@@ -116,7 +116,7 @@ const MyMasterbook = lazy(() => import('./pages/MyMasterbook'));
 const Books = lazy(() => import('./pages/Books'));
 const Orders = lazy(() => import('./pages/Orders'));
 const Dispatch = lazy(() => import('./pages/Dispatch'));
-const Blog = lazy(() => import('./pages/Blog'));
+const Learn = lazy(() => import('./pages/Learn'));
 const PersonalContext = lazy(() => import('./pages/PersonalContext'));
 const Workspaces = lazy(() => import('./pages/Workspaces'));
 const Wonderings = lazy(() => import('./pages/Wonderings'));
@@ -257,8 +257,10 @@ export default function App() {
             <Route path="/about" element={<About />} />
             <Route path="/characters" element={<Characters />} />
             <Route path="/lp/:slug" element={<LandingPage />} />
-            <Route path="/blog" element={<Blog />} />
-            <Route path="/blog/learn/:slug" element={<PublicArticle />} />
+            <Route path="/learn" element={<Learn />} />
+            <Route path="/learn/:slug" element={<PublicArticle />} />
+            <Route path="/blog" element={<Navigate to={{ pathname: '/learn', hash: '#journal' }} replace />} />
+            <Route path="/blog/learn/:slug" element={<LegacyArticleRedirect />} />
             <Route path="/reading-room" element={<ReadingRoom />} />
             <Route path="/reading-room/:slug" element={<ReadingRoomArticle />} />
             <Route path="/community" element={<FeatureGate flag="community"><Community /></FeatureGate>} />
@@ -276,7 +278,7 @@ export default function App() {
             <Route path="/astrocomic/print-issue-1" element={<FeatureGate flag="astrocomic"><ComicIssuePrint /></FeatureGate>} />
             <Route path="/store" element={<Store />} />
             <Route path="/product/:handle" element={<ProductDetail />} />
-            <Route path="/academy" element={<FeatureGate flag="academy"><AcademyHome /></FeatureGate>} />
+            <Route path="/academy" element={<Navigate to={{ pathname: '/learn', hash: '#lessons' }} replace />} />
             <Route path="/academy/:slug" element={<FeatureGate flag="academy"><AcademyLesson /></FeatureGate>} />
             <Route path="/compatibility" element={<FeatureGate flag="compatibility"><Compatibility /></FeatureGate>} />
           </Route>
