@@ -37,7 +37,7 @@ export function SignalMeter({ label, value, note }: { label: string; value: numb
 
 /** Panel heading in the poster label style, with optional status light. */
 export function PanelTitle({ children, eyebrow, live }: { children: ReactNode; eyebrow?: string; live?: boolean }) {
-  return <div className="mb-4 flex items-start justify-between gap-3"><div>{eyebrow && <p className="font-label text-[0.65rem] text-primary">{eyebrow}</p>}<h2 className="font-label text-lg text-foreground">{children}</h2></div>{live && <StatusLight label="Online" />}</div>;
+  return <div className="mb-4 flex items-start justify-between gap-3"><div>{eyebrow && <p className="flex items-center gap-2 font-script text-xl normal-case text-primary"><span aria-hidden className="retro-starburst retro-twinkle text-sm text-accent" />{eyebrow}</p>}<h2 className="font-label text-lg text-foreground">{children}</h2></div>{live && <StatusLight label="Online" />}</div>;
 }
 
 /** Archive stamp, e.g. "Issued", "Classified: personal". */

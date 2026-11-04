@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { ZodaciLogo } from './ZodaciLogo';
+import heads from '@/assets/home-heads-hero.jpg';
 
 const COLUMNS: { heading: string; links: [string, string][] }[] = [
   { heading: 'Zodaci', links: [['/auth', 'Free chart'], ['/pricing', 'Pricing'], ['/compatibility', 'Compatibility'], ['/astrobook', 'AstroBook'], ['/astrocomic', 'AstroComic'], ['/referrals', 'Invite a friend']] },
@@ -10,7 +11,9 @@ const COLUMNS: { heading: string; links: [string, string][] }[] = [
 /** One footer for every public page: crawlable links, brand line and the reflection disclaimer. */
 export function GlobalFooter() {
   return (
-    <footer className="border-t border-border">
+    <footer className="border-t-4 border-double border-[hsl(var(--brass)/0.6)]">
+      <div aria-hidden className="retro-heads-band" style={{ backgroundImage: `url(${heads})` }} />
+      <p className="sr-only">Footer</p>
       <div className="mx-auto grid max-w-7xl gap-10 px-5 py-12 sm:grid-cols-2 sm:px-10 lg:grid-cols-4">
         <div className="space-y-3">
           <Link to="/welcome" aria-label="Zodaci home"><ZodaciLogo compact /></Link>

@@ -5,22 +5,22 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl text-sm font-medium ring-offset-background transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full text-sm font-medium ring-offset-background transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
   {
     variants: {
       variant: {
         default: "btn-quiet text-foreground",
-        primary: "bg-primary text-primary-foreground hover:bg-primary/90",
+        primary: "bg-primary font-label tracking-wider text-primary-foreground shadow-[var(--shadow-print)] hover:bg-primary/90",
         destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90",
         outline: "border border-foreground/15 bg-transparent text-foreground hover:border-foreground/30 hover:bg-foreground/5",
         secondary: "border border-primary/60 bg-primary/15 text-foreground hover:bg-primary/25",
         ghost: "text-muted-foreground hover:bg-foreground/5 hover:text-foreground",
-        signal: "bg-accent font-label tracking-wider text-accent-foreground shadow-[var(--shadow-ink)] hover:bg-accent/90",
+        signal: "bg-accent font-label text-base tracking-wider text-accent-foreground shadow-[var(--shadow-print)] hover:bg-accent/90",
         link: "text-foreground/80 underline-offset-4 hover:text-foreground hover:underline",
       },
       size: {
         default: "h-10 px-5 py-2",
-        sm: "h-9 rounded-lg px-3",
+        sm: "h-9 rounded-full px-4",
         lg: "h-12 px-7 text-base",
         icon: "h-10 w-10",
       },

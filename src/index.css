@@ -479,3 +479,24 @@ body {
 }
 
 .font-script { font-family: 'Yellowtail', cursive; font-weight: 400; }
+
+/* ── 1950s atomic-age layer: screen-print offsets, halftone, starbursts, slab type ── */
+:root { --shadow-print: 3px 3px 0 hsl(var(--brass) / .55); --radius: 1rem; }
+h1:not([class*="text-"]), .text-silver { background: none; -webkit-text-fill-color: currentColor; color: hsl(var(--foreground)); }
+h1, h2 { letter-spacing: .01em; }
+body {
+  background-image:
+    radial-gradient(hsl(var(--foreground) / .045) 1px, transparent 1.2px),
+    radial-gradient(ellipse at 20% -10%, hsl(var(--indigo-deep) / .7), transparent 60%),
+    radial-gradient(ellipse at 90% 110%, hsl(var(--accent) / .10), transparent 55%);
+  background-size: 7px 7px, 100% 100%, 100% 100%;
+}
+.obs-panel { border-radius: 1.25rem; box-shadow: inset 0 0 0 3px hsl(var(--background)), inset 0 0 0 4px hsl(var(--brass) / .3), 5px 5px 0 hsl(var(--accent) / .35); }
+.obs-paper { border-radius: 1.25rem; box-shadow: inset 0 0 40px hsl(30 40% 50% / .18), 5px 5px 0 hsl(var(--primary) / .45); }
+.retro-card { border-color: hsl(var(--brass) / .45); box-shadow: 4px 4px 0 hsl(var(--brass) / .25); background-image: radial-gradient(hsl(var(--foreground) / .035) 1px, transparent 1.2px); background-size: 6px 6px; }
+.obs-panel > :first-child h2.font-label, .font-label.text-lg { font-size: 1.35rem; letter-spacing: .1em; }
+.retro-heads-band { height: clamp(90px, 16vw, 200px); background-size: cover; background-position: center 100%; border-bottom: 4px double hsl(var(--brass) / .6); -webkit-mask-image: linear-gradient(to bottom, transparent, #000 45%); mask-image: linear-gradient(to bottom, transparent, #000 45%); }
+.retro-starburst { display: inline-block; width: 1em; height: 1em; background: currentColor; clip-path: polygon(50% 0,58% 40%,100% 50%,58% 60%,50% 100%,42% 60%,0 50%,42% 40%); }
+@keyframes retro-twinkle { 0%,100% { transform: scale(.85) rotate(0); opacity: .6 } 50% { transform: scale(1) rotate(20deg); opacity: 1 } }
+.retro-twinkle { animation: retro-twinkle 7s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) { .retro-twinkle { animation: none; } }
