@@ -166,3 +166,64 @@ export function sharedGoodDirections(kuaA: number, kuaB: number) {
   const good = (k: number) => Object.values(KUA_TABLE[k]).slice(0, 4);
   return good(kuaA).filter(d => good(kuaB).includes(d));
 }
+
+// ---- Siblings ----
+export type SiblingChannelId = 'talk' | 'home' | 'drive' | 'roles' | 'encourage';
+/** Sibling channels: which planet carries each everyday theme between two siblings. */
+export const SIBLING_CHANNELS: { id: SiblingChannelId; planet: string; label: string; about: string }[] = [
+  { id: 'talk', planet: 'mercury', label: 'How you talk', about: 'Mercury contacts: conversation, humour, how ideas pass between you.' },
+  { id: 'home', planet: 'moon', label: 'Feeling at home together', about: 'Moon contacts: comfort, mood and what makes time together feel safe.' },
+  { id: 'drive', planet: 'mars', label: 'Drive and friction', about: 'Mars contacts: competition, teamwork and how anger moves.' },
+  { id: 'roles', planet: 'saturn', label: 'Roles and responsibility', about: 'Saturn contacts: duty, limits and who carries what.' },
+  { id: 'encourage', planet: 'jupiter', label: 'Encouragement', about: 'Jupiter contacts: where one of you widens the other’s world.' },
+];
+
+/** Practices per channel and tone. Chart-derived prompts only; they never assume family history or events. */
+const SIBLING_PRACTICE: Record<SiblingChannelId, Record<'harmony' | 'tension' | 'fusion' | 'none', string>> = {
+  talk: {
+    harmony: 'Use the easy line between you: a standing weekly call or message thread where either of you can think out loud.',
+    tension: 'Before a hard conversation, each of you writes one sentence of what you mean. Read both before replying.',
+    fusion: 'You can finish each other’s thoughts. Pause once per talk to ask “is that what you meant?” so both voices stay separate.',
+    none: 'No tight Mercury contact: plan conversations deliberately (a set time, a topic) rather than waiting for them to happen.',
+  },
+  home: {
+    harmony: 'Shared comfort comes easily. Keep one simple ritual you both enjoy — a meal, a walk, a show.',
+    tension: 'Moods can collide. Name your own state first (“I’m tired today”) before reacting to the other’s.',
+    fusion: 'Feelings spread quickly between you. Agree that either of you can step away for a while without it meaning distance.',
+    none: 'No tight Moon contact: ask directly what feels supportive, because it may differ from what you would want.',
+  },
+  drive: {
+    harmony: 'You push each other well. Pick a shared goal or project with clear parts for each of you.',
+    tension: 'Competition runs hot. Agree on one rule: no decisions while angry; return to it within a day.',
+    fusion: 'Your energy combines strongly. Channel it outward — build, train or fix something together.',
+    none: 'No tight Mars contact: your drives run on separate tracks; cheer each other’s goals instead of merging them.',
+  },
+  roles: {
+    harmony: 'Responsibility can be shared fairly. Write down who handles what so it stays visible.',
+    tension: 'One of you may feel judged or held back. Swap roles on one small task and notice how it feels.',
+    fusion: 'Duty binds you. Check each season that the load is still fair and chosen, not just inherited.',
+    none: 'No tight Saturn contact: neither chart pulls the other into a duty role; agree openly on obligations you share.',
+  },
+  encourage: {
+    harmony: 'Encouragement flows. Tell each other one specific thing you admire this month.',
+    tension: 'Advice can feel like too much. Ask “do you want ideas or just someone listening?” first.',
+    fusion: 'You amplify each other’s hopes. Pair every big plan with one practical next step.',
+    none: 'No tight Jupiter contact: encouragement is something to offer on purpose rather than by habit.',
+  },
+};
+
+export interface SiblingChannel { id: SiblingChannelId; label: string; about: string; contacts: InterAspect[]; tone: 'harmony' | 'tension' | 'fusion' | 'none'; practice: string }
+
+/** The sibling lens: contacts by channel, each with a practice from the strongest contact's tone, plus third-house (siblings) overlays both ways. */
+export function siblingLens(A: ChartResult, B: ChartResult, aLabel: string, bLabel: string) {
+  const ia = interAspects(A, B, aLabel, bLabel);
+  const channels: SiblingChannel[] = SIBLING_CHANNELS.map(c => {
+    const contacts = ia.filter(x => x.aKey === c.planet || x.bKey === c.planet).slice(0, 3);
+    const tone = (contacts[0]?.tone ?? 'none') as SiblingChannel['tone'];
+    return { id: c.id, label: c.label, about: c.about, contacts, tone, practice: SIBLING_PRACTICE[c.id][tone] };
+  });
+  const third = (from: ChartResult, into: ChartResult) => overlays(from, into)?.filter(o => o.house === 3).map(o => o.body.name.replace(' (mean)', '')) ?? null;
+  return { channels, thirdHouse: { aInB: third(A, B), bInA: third(B, A) }, summary: scoreSummary(ia) };
+}
+
+export const isSiblingRelation = (relation: string) => /\b(brother|sister|sibling|twin)s?\b/i.test(relation);
