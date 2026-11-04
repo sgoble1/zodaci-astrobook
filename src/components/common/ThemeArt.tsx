@@ -34,8 +34,8 @@ export function Scene({ kind }: { kind: ArtKind }) {
   }
 }
 
-export function ThemeArt({ kind, label, className, badge }: { kind?: ArtKind; label?: string; className?: string; badge?: string | number }) {
+export function ThemeArt({ kind, label, className, badge, orbit }: { kind?: ArtKind; label?: string; className?: string; badge?: string | number; orbit?: boolean }) {
   // Raster 1950s atomic-zodiac spot art; the hand-drawn SVG scenes above remain for print/inline use.
   const k = kind ?? artFor(label ?? '');
-  return <SpotArt kind={k} className={cn('h-20 w-20', className)} badge={badge} />;
+  return <SpotArt kind={k} className={cn('h-20 w-20', className)} badge={badge} orbit={orbit} />;
 }

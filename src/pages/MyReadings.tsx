@@ -43,7 +43,7 @@ export default function MyReadings() {
         <p className="max-w-2xl text-sm text-muted-foreground">Twelve everyday themes read from your chart. {plan === 'free' ? 'Personality & Strengths is free in full; the others open with a free first section.' : 'Each one is written in full from your placements.'}</p>
         <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {CORE_THEMES.filter(t => readingMatches(t.slug, filter)).map(t => <li key={t.slug}><Link to={`/my-readings/topic/${t.slug}`} className="flex min-h-16 items-center gap-3 rounded-lg border border-border bg-card/60 p-3 transition-colors hover:border-primary/60 focus-visible:outline focus-visible:outline-2">
-            <ThemeArt label={t.title} className="h-10 w-10 shrink-0" />
+            <ThemeArt label={t.title} className="h-10 w-10 shrink-0" orbit={false} />
             <span className="min-w-0"><span className="block font-display text-base leading-tight">{t.title}</span>{plan === 'free' && <span className="text-xs text-muted-foreground">{FREE_READINGS.includes(t.slug) ? 'Free' : 'Free first section'}</span>}</span>
           </Link></li>)}
         </ul>

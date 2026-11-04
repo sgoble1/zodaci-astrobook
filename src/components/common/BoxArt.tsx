@@ -17,7 +17,7 @@ export function BoxArt({ seed, label, className = 'h-28 w-full' }: { seed: strin
   return (
     <span className={`box-plate box-plate-${side} ${className}`} aria-hidden="true">
       <i className="box-plate-orbit" /><i className="box-plate-spark" /><i className="box-plate-spark box-plate-spark-2" />
-      <SpotArt kind={spotFor(label ?? seed)} className="box-plate-spot" />
+      <SpotArt kind={spotFor(label ?? seed)} className="box-plate-spot" orbit={false} />
     </span>
   );
 }
