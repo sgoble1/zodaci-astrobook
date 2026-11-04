@@ -360,7 +360,7 @@ function AprilShell({ children, edition = 'april' }: { children: ReactNode; edit
         </Button></div>
       </div>
       {open && (
-        <div ref={mobileMenuRef} id="mobile-menu" data-keep-wording={edition !== 'april' || undefined} role="dialog" aria-modal="true" aria-label="Zodaci menu" className="lg:hidden fixed inset-x-0 bottom-0 top-[var(--founder-header-h,64px)] z-40 overflow-y-auto overscroll-contain bg-background pb-[env(safe-area-inset-bottom)]">
+        <div ref={mobileMenuRef} id="mobile-menu" data-keep-wording={edition !== 'april' || undefined} role="dialog" aria-modal="true" aria-label="Zodaci menu" className="lg:hidden fixed inset-x-0 bottom-0 top-[var(--founder-header-h,64px)] z-40 overflow-y-auto overscroll-contain bg-background pb-[calc(5rem+env(safe-area-inset-bottom))]">
           <div className="sticky top-0 z-10 flex justify-end border-b border-border/60 bg-background/95 px-3 py-2 backdrop-blur-xl">
             <Button type="button" variant="ghost" size="sm" className="min-h-11" onClick={() => setOpen(false)}><X className="h-4 w-4" aria-hidden="true" />Close menu</Button>
           </div>
