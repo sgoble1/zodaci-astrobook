@@ -1,5 +1,15 @@
 # Zodaci — Active Project Index
 
+## Visual completion pass (Nov 4, late)
+- [ ] TV channels: open on desktop and phone; each channel wired to its specialist's real sky data (live positions, contacts and upcoming events for that channel), no placeholder text (tested).
+- [ ] Projector look: stronger slow flicker, film scratches, dust, hand-drawn 1950s poster finish matching the hero; ink-on-paper finish to match.
+- [ ] Phone check of both wheel looks at 393px; fix cramped wheel or text.
+- [ ] 1950s icon set (channel logos, shop categories, admin controls, nav places) in the projector style; used on channel tabs, shop, Admin, sidebar.
+- [ ] More 1950s artwork: remaining explore, reading-room, guide and place illustrations; shop category art; empty states.
+- [ ] Restyle My Chart, AstroBook reader, comics, shop, podcasts, Admin in projector / ink-on-paper style.
+- [ ] Observation Log: owner-only sky observations (date, time, location, notes, tags) with the real sky for that day; shown in Timeline Hall (tested).
+- [ ] Logo/wordmark lockup check against the 1950s look.
+
 ## Zodaci OS redesign — Astral Research Authority (Nov 4, 12-phase plan)
 - [x] P1.1 Blend palette (cream, deep indigo, yellow, red, brass), poster label font, panels/paper/CRT textures, slow reduced-motion animations; selected buttons clearly marked.
 - [x] P1.2 New logo icon (star in orbit lens), header logo, favicon.
