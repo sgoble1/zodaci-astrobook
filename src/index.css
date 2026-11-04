@@ -510,5 +510,5 @@ body {
   box-shadow: 4px 4px 0 hsl(var(--brass) / .22);
 }
 .vellum:hover, .parchment:hover, .member-experience .vellum:hover, .member-experience .parchment:hover { border-color: hsl(var(--brass) / .75); box-shadow: 5px 5px 0 hsl(var(--accent) / .35); }
-.font-smallcaps, .member-experience .font-smallcaps { font-family: 'Bebas Neue', 'Libre Franklin', sans-serif; font-weight: 400; letter-spacing: .14em; text-transform: uppercase; font-size: max(.8rem, 1em); }
+.font-smallcaps, .member-experience .font-smallcaps { font-family: 'Bebas Neue', 'Libre Franklin', sans-serif; font-weight: 400; letter-spacing: .14em; text-transform: uppercase; }
 @media (max-width: 639px) { .parchment, .vellum { border-radius: 1rem; } }
