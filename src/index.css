@@ -941,7 +941,7 @@ li:hover > .zodiac-coin { transform: rotate(-10deg); }
    1. Wall spill: lamp light that misses the screen glows faintly on the dark wall behind it, breathing with the lamp.
    2. Lamp strike: when a chart first appears the room is dark, the bulb catches with two stutters, then warms up slowly. */
 .chart-projection { isolation: isolate; }
-.chart-projection::before { content: ''; position: absolute; z-index: -1; inset: -6% -14% 18%; pointer-events: none; border-radius: 50%;
+.chart-projection::before { content: ''; position: absolute; z-index: -1; inset: -5% 0 18%; pointer-events: none; border-radius: 50%;
   background: radial-gradient(ellipse 50% 46% at 50% 44%, hsl(var(--screen-lamp) / .16), hsl(var(--screen-lamp) / .05) 55%, transparent 72%);
   filter: blur(8px); animation: chart-lamp 9.7s steps(1) infinite; }
 .chart-projection-screen::after { content: ''; position: absolute; inset: 0; z-index: 6; pointer-events: none; background: hsl(var(--screen-shade));
