@@ -976,3 +976,21 @@ li:hover > .zodiac-coin { transform: rotate(-10deg); }
 @container hero (min-width: 40rem) { .press-slide { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 2.5rem; padding: 2.5rem 2.5rem 4.5rem; } }
 .explore-poster { container-type: inline-size; }
 .explore-poster-title { font-size: clamp(1.4rem, 12.5cqi, 2.2rem); }
+
+/* Destination tiles size to their own strip: one column on phones, two or three in narrow columns,
+   one row (with seams) when there is room for every tile. */
+.dest-tiles { container: tiles / inline-size; }
+.dest-grid { display: grid; grid-template-columns: minmax(0, 1fr); }
+.dest-grid > li + li { border-top: 1px solid hsl(var(--comic-navy) / .18); }
+@container tiles (min-width: 34rem) { .dest-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .dest-grid > li + li { border-top: 0; } }
+@container tiles (min-width: 50rem) { .dest-grid { grid-template-columns: repeat(min(var(--n), 3), minmax(0, 1fr)); } }
+@container tiles (min-width: 70rem) {
+  .dest-grid { grid-template-columns: repeat(var(--n), minmax(0, 1fr)); }
+  .dest-grid > li + li { border-left: 1px solid hsl(var(--comic-navy) / .18); }
+}
+
+/* Dashboard mosaic: slideshow with the poster beside it when the column is wide enough. */
+.mosaic-dash-top { container: dash / inline-size; display: grid; gap: .9rem; grid-template-columns: minmax(0, 1fr); }
+.mosaic-dash-poster { display: none; }
+@container dash (min-width: 62rem) { .mosaic-dash-top > .mosaic-hero { grid-column: 1; } }
+@media (min-width: 1280px) { .mosaic-dash-top { grid-template-columns: minmax(0, 1fr) 13rem; } .mosaic-dash-poster { display: flex; } }

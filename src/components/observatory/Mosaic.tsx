@@ -1,4 +1,4 @@
-import { useRef, type ReactNode } from 'react';
+import { useRef, type CSSProperties, type ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -68,8 +68,8 @@ export type Destination = { to: string; title: string; text: string; cta: string
 /** A row of cream destination tiles with navy medallions, like the concept's category strip. */
 export function DestinationTiles({ items, label, className }: { items: Destination[]; label: string; className?: string }) {
   return (
-    <nav aria-label={label} className={cn('obs-paper p-2', className)}>
-      <ul className="grid grid-cols-1 divide-y divide-[hsl(var(--comic-navy)/0.18)] sm:grid-cols-2 sm:divide-y-0 lg:grid-cols-5 lg:divide-x">
+    <nav aria-label={label} className={cn('obs-paper dest-tiles p-2', className)}>
+      <ul className="dest-grid" style={{ '--n': items.length } as CSSProperties}>
         {items.map(d => (
           <li key={d.to + d.title}>
             <Link to={d.to} className="dest-tile group">
