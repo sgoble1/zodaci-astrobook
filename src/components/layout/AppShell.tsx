@@ -21,6 +21,7 @@ import { useZacAccount } from '@/hooks/useZacAccount';
 import { useSharedEditions } from '@/lib/editionSharing';
 import { leaveAprilEdition, viewingSharedEdition } from '@/hooks/useAprilSpace';
 import { useSession } from '@/hooks/useLibrary';
+import { placeFor, STAFF } from '@/lib/observatory';
 import { useAprilSpace, useAprilSpaceError, retryAprilSpace, useClassicView, setClassicView } from '@/hooks/useAprilSpace';
 
 /** April's full menu exactly as the sidebar shows it: her sections plus Shared, Relationships and pages she created. */
@@ -252,6 +253,7 @@ function MemberShell({ children }: { children: ReactNode }) {
       <MemberHeader />
       <main id="main-content" tabIndex={-1} className={`relative z-10 flex-1 outline-none ${tabs ? 'pb-[calc(4rem+env(safe-area-inset-bottom))] md:pb-0' : ''}`}>
         <div className="mx-auto max-w-5xl px-4 py-6 sm:px-8 sm:py-10 lg:py-12">
+          <PlaceStrip pathname={location.pathname} />
           <WayfindingTop />
           <motion.div key={location.pathname} initial={reduceMotion ? false : { opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: reduceMotion ? 0 : 0.9, ease: [0.2, 0.7, 0.2, 1] }}>
             {children}
@@ -470,3 +472,9 @@ function SidebarInner({ mobile = false, onNavigate }: { mobile?: boolean; onNavi
 }
 
 export { MENU_SECTIONS } from '@/content/navigation';
+
+/** Which observatory place the current page belongs to, with its staff host (Astral Research Authority world). */
+function PlaceStrip({ pathname }: { pathname: string }) {
+  const place = placeFor(pathname);
+  return <p className="mb-4 flex flex-wrap items-center gap-x-3 gap-y-1 border-b border-[hsl(var(--brass)/0.4)] pb-2 font-label text-[0.65rem] text-muted-foreground"><span className="flex items-center gap-1.5 text-primary"><span aria-hidden className="obs-light h-1.5 w-1.5 rounded-full bg-primary" />{place.name}</span><span>Host: {STAFF[place.host].title}</span><span className="hidden sm:inline">{place.motto}</span></p>;
+}
