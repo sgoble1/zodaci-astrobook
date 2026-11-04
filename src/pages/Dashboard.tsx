@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { SharedChatFeed } from '@/components/shared/SharedChatFeed';
 import { viewingSharedEdition } from '@/hooks/useAprilSpace';
 import { SharedEditionDashboard } from '@/components/common/SharedEditionDashboard';
+import { EditionTV } from '@/components/observatory/EditionTV';
 
 function Inner() {
   const { items, remove, setNote } = useBookmarks();
@@ -68,6 +69,7 @@ export default function Dashboard() {
       <p className="font-label text-xs text-primary">Personal Observatory</p>
       <h1 className="font-display text-4xl">My Current Chapter</h1>
       <p className="text-muted-foreground">Your bookmarks, notes and relationships — private to your account.</p>
+      <EditionTV />
       <AuthGate what="see your dashboard">{() => <Inner />}</AuthGate>
       <SharedChatFeed />
       <UpdatesFeed limit={4} />
