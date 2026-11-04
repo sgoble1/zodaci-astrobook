@@ -188,7 +188,7 @@ export const ADMIN_MENU: AccountLink[] = [
   { to: '/admin', label: 'Admin', icon: ShieldCheck },
   { to: '/dispatch', label: 'Dispatch desk', icon: Truck },
 ];
-export const ADMIN_PATHS = ['/admin', '/dispatch', '/data-quality', '/developer'];
+export const ADMIN_PATHS = ['/admin', '/dispatch', '/data-quality'];
 
 export type NavContext = { shane?: boolean; shared?: boolean };
 const allowed = (item: MemberNavItem, ctx: NavContext) => !item.audience || item.audience === 'all' || (item.audience === 'shane' ? !!ctx.shane : !!ctx.shared);
@@ -228,7 +228,7 @@ const under = (path: string, base: string) => path === base || path.startsWith(`
 
 /** Which domain a path belongs to; 'account' for account utilities, null for pages outside the member menu. */
 export function domainFor(path: string): DomainId | 'account' | null {
-  if (['/dashboard', '/personal-context', '/pricing', '/creator', '/checkout/return', '/credits', '/investors', '/'].includes(path) || ADMIN_PATHS.some(p => under(path, p))) return 'account';
+  if (['/dashboard', '/personal-context', '/pricing', '/creator', '/checkout/return', '/credits', '/investors', '/'].includes(path) || under(path, '/developer') || ADMIN_PATHS.some(p => under(path, p))) return 'account';
   const hub = MEMBER_DOMAINS.find(d => d.hub === path); if (hub) return hub.id;
   // Exact menu items first (e.g. Key Years lives in Explore although it is a reading).
   for (const d of MEMBER_DOMAINS) if (d.columns.some(c => c.items.some(i => pathOnly(i.to) === path))) return d.id;

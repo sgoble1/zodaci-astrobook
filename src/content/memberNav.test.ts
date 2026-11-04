@@ -82,6 +82,13 @@ describe('member navigation architecture', () => {
     expect(domainFor('/other-systems/tarot-birth-cards')).toBe('explore');
     expect(domainFor('/admin')).toBe('account');
     expect(domainFor('/dashboard')).toBe('account');
+    // Phone tabs keep a highlighted section on sub-routes that are not menu items.
+    expect(domainFor('/astrobook/order')).toBe('book');
+    expect(domainFor('/library/some-item')).toBe('book');
+    expect(domainFor('/p/abc')).toBe('readings');
+    expect(domainFor('/feng-shui/flying-stars')).toBe('explore');
+    expect(domainFor('/reading-room')).toBe('learn');
+    expect(domainFor('/developer/timeline')).toBe('account');
     expect(domainForMenuGroup('The Natal Chart')).toBe('chart');
     expect(domainForMenuGroup('Library')).toBe('book');
   });
