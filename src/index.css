@@ -936,3 +936,16 @@ li:hover > .zodiac-coin { transform: rotate(-10deg); }
   .mosaic-top { grid-template-columns: 10.5rem minmax(0, 1fr) 15rem; }
   .mosaic-rail { display: flex; }
 }
+
+/* Projector additions (layered on top; the existing screen, lamp, dust and flicker are unchanged).
+   1. Wall spill: lamp light that misses the screen glows faintly on the dark wall behind it, breathing with the lamp.
+   2. Lamp strike: when a chart first appears the room is dark, the bulb catches with two stutters, then warms up slowly. */
+.chart-projection::before { content: ''; position: absolute; z-index: 0; inset: -6% -14% 18%; pointer-events: none; border-radius: 50%;
+  background: radial-gradient(ellipse 50% 46% at 50% 44%, hsl(var(--screen-lamp) / .16), hsl(var(--screen-lamp) / .05) 55%, transparent 72%);
+  filter: blur(8px); animation: chart-lamp 9.7s steps(1) infinite; }
+.chart-projection > * { position: relative; }
+.chart-projection-screen::after { content: ''; position: absolute; inset: 0; z-index: 6; pointer-events: none; background: hsl(var(--screen-shade));
+  animation: chart-lamp-strike 3.4s cubic-bezier(.3, 0, .2, 1) .15s both; }
+@keyframes chart-lamp-strike { 0% { opacity: 1 } 9% { opacity: .55 } 11% { opacity: 1 } 19% { opacity: .35 } 22% { opacity: .9 } 30% { opacity: .5 } 100% { opacity: 0 } }
+@media (prefers-reduced-motion: reduce) { .chart-projection::before { animation: none; } .chart-projection-screen::after { animation: none; opacity: 0; } }
+@media print { .chart-projection::before, .chart-projection-screen::after { display: none; } }
