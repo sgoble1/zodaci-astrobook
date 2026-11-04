@@ -1,15 +1,21 @@
 import type { ReactNode } from 'react';
 import { cn } from '@/lib/utils';
+import { FilmFx } from './FilmFx';
 
-/** Retro television: brass cabinet, curved CRT glass with scanlines, switch-on animation and dials. */
+/** Retro television: brass cabinet, curved CRT glass with scanlines, rolling hold bar, film flicker/dust, switch-on animation and dials. */
 export function RetroTV({ children, channel, label, className }: { children: ReactNode; channel?: string; label?: string; className?: string }) {
   return (
-    <figure className={cn('obs-panel p-3 sm:p-4', className)}>
-      <div className="obs-crt aspect-[4/3]"><div className="obs-tv-on h-full w-full">{children}</div></div>
+    <figure className={cn('obs-panel retro-tv p-3 sm:p-4', className)}>
+      <div className="obs-crt aspect-[4/3]">
+        <div className="obs-tv-on h-full w-full">{children}</div>
+        <FilmFx className="retro-tv-film" motes={10} specks={6} />
+        <div aria-hidden className="retro-tv-roll" />
+        <div aria-hidden className="retro-tv-glass" />
+      </div>
       {(channel || label) && <figcaption className="mt-3 flex items-center justify-between gap-3">
         <span className="font-label text-xs text-primary">{channel}</span>
         <span className="truncate font-label text-xs text-muted-foreground">{label}</span>
-        <span aria-hidden className="flex gap-1.5"><span className="h-3 w-3 rounded-full border border-[hsl(var(--brass))] bg-secondary" /><span className="h-3 w-3 rounded-full border border-[hsl(var(--brass))] bg-secondary" /></span>
+        <span aria-hidden className="flex gap-1.5"><span className="retro-tv-knob" /><span className="retro-tv-knob" /></span>
       </figcaption>}
     </figure>
   );
