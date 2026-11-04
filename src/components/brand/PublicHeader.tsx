@@ -29,7 +29,7 @@ export function PublicHeader({ sections }: { sections?: string[] }) {
         </nav>
         <div className="flex items-center gap-2">
           <Button asChild variant="outline" size="sm" className="hidden sm:inline-flex"><Link to={account[0]}>{account[1]}<ArrowUpRight /></Link></Button>
-          {!session && <Button asChild variant="signal" size="sm" className="hidden md:inline-flex"><Link to="/start">Generate your chart<ArrowRight /></Link></Button>}
+          {!session && <Button asChild variant="signal" size="sm" className="hidden 2xl:inline-flex"><Link to="/start">Generate your chart<ArrowRight /></Link></Button>}
           <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild><Button variant="ghost" size="icon" className="xl:hidden" aria-label="Open menu"><Menu /></Button></SheetTrigger>
             <SheetContent side="right" className="w-[85vw] max-w-sm overflow-y-auto bg-background">

@@ -195,7 +195,7 @@ button, a, input, textarea, select { max-width: 100%; }
   background-image: linear-gradient(135deg, hsl(var(--glow-violet)), hsl(280 80% 68%) 45%, hsl(var(--glow-teal)));
   -webkit-background-clip: text; background-clip: text; color: transparent;
 }
-h1 { background-image: linear-gradient(135deg, hsl(var(--foreground)) 30%, hsl(280 80% 75%) 70%, hsl(var(--glow-teal))); -webkit-background-clip: text; background-clip: text; color: transparent; }
+h1 { color: hsl(var(--foreground)); }
 
 .gold-rule {
   height: 1px;
