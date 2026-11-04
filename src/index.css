@@ -794,3 +794,125 @@ body {
 .shop-sign:hover { border-color: hsl(var(--brass)); color: hsl(var(--foreground)); }
 .shop-sign-on { background: hsl(var(--primary)); border-color: hsl(var(--primary)); color: hsl(var(--primary-foreground)); box-shadow: 2px 2px 0 hsl(var(--accent)); }
 @media (prefers-reduced-motion: reduce) { .shop-dept, .shop-sign { transition: none; } }
+
+/* ══ Concept mosaic (Nov 4 2026): weathered navy and cream plates fitted together, small square-ish corners ══ */
+:root {
+  --radius: .375rem;
+  --hero-night: 216 67% 15%;
+  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .25 0 0 0 0 .18 0 0 0 0 .1 0 0 0 .42 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+/* Navy plate: grain, inner mustard rule, dark bevel. */
+.obs-panel {
+  border-radius: .45rem; border: 1.5px solid hsl(var(--midnight));
+  background: var(--grain), radial-gradient(ellipse at 18% 0%, hsl(var(--indigo-deep) / .5), transparent 60%), linear-gradient(180deg, hsl(222 50% 17%), hsl(226 52% 12%));
+  box-shadow: inset 0 0 0 1px hsl(var(--brass) / .5), inset 0 0 0 5px hsl(226 52% 12% / .0), inset 0 0 60px hsl(var(--midnight) / .55), 0 2px 0 hsl(var(--midnight)), var(--shadow-ink);
+}
+/* Aged cream plate: grain, tea stains, inset navy rule. */
+.obs-paper {
+  border-radius: .45rem; color: hsl(var(--comic-navy)); border: 1.5px solid hsl(var(--midnight) / .8);
+  background: var(--grain), radial-gradient(ellipse at 12% 8%, hsl(36 55% 70% / .28), transparent 42%), radial-gradient(ellipse at 92% 96%, hsl(28 45% 52% / .22), transparent 46%), linear-gradient(175deg, hsl(42 70% 91%), hsl(var(--spot-paper)) 55%, hsl(38 48% 80%));
+  outline: 1px solid hsl(var(--comic-navy) / .38); outline-offset: -6px;
+  box-shadow: inset 0 0 46px hsl(30 45% 38% / .22), 0 2px 0 hsl(var(--midnight)), var(--shadow-ink);
+}
+.obs-paper h1, .obs-paper h2, .obs-paper h3, .obs-paper h4 { color: hsl(var(--comic-navy)); background: none; -webkit-text-fill-color: currentColor; }
+.obs-paper .text-muted-foreground { color: hsl(var(--comic-navy) / .74); }
+.obs-paper .text-primary { color: hsl(36 78% 30%); }
+.obs-paper .text-accent { color: hsl(var(--comic-brick)); }
+.obs-paper .text-foreground { color: hsl(var(--comic-navy)); }
+.atomic-box { border-radius: .45rem; }
+
+/* Hero type: slab capitals in cream, tight leading; Yellowtail script stays the subheading. */
+.hero-headline { font-family: 'Alfa Slab One', 'Rockwell', Georgia, serif; font-weight: 400; text-transform: uppercase; font-size: clamp(2.5rem, 1.4rem + 3vw, 4.5rem); line-height: .95; letter-spacing: .01em; color: hsl(var(--foreground)); background: none; -webkit-text-fill-color: currentColor; overflow-wrap: break-word; }
+.plate-title { font-family: 'Alfa Slab One', 'Rockwell', Georgia, serif; font-weight: 400; text-transform: uppercase; font-size: clamp(1.2rem, 1rem + .7vw, 1.55rem); line-height: 1.05; letter-spacing: .02em; }
+.plate-sub { margin-top: .2rem; font-family: 'Bebas Neue', sans-serif; letter-spacing: .18em; font-size: .85rem; opacity: .8; }
+
+/* Hero slideshow: slides stack in one grid cell and cross-fade slowly. */
+.hero-slides { display: flex; flex-direction: column; overflow: hidden; padding: 0; }
+.hero-slides-track { display: grid; flex: 1; }
+.hero-slide { grid-area: 1 / 1; min-width: 0; opacity: 0; visibility: hidden; transition: opacity 1.8s ease, visibility 0s linear 1.8s; }
+.hero-slide-on { opacity: 1; visibility: visible; transition: opacity 1.8s ease, visibility 0s; }
+.hero-slide > * { height: 100%; }
+@media (min-width: 768px) { .hero-slides-track { min-height: 34rem; } }
+.hero-night { isolation: isolate; background: radial-gradient(hsl(var(--spot-paper) / .5) .7px, transparent 1px) 0 0 / 46px 46px, radial-gradient(hsl(var(--spot-paper) / .3) .6px, transparent .9px) 23px 19px / 61px 61px, hsl(var(--hero-night)); }
+.hero-cartographer { position: relative; z-index: 1; }
+.hero-night .film-fx { z-index: 2; pointer-events: none; }
+.hero-slides-controls { position: absolute; right: .9rem; bottom: .9rem; z-index: 20; display: flex; align-items: center; gap: .25rem; padding: .2rem .4rem; border-radius: .4rem; background: hsl(var(--midnight) / .8); border: 1px solid hsl(var(--brass) / .5); backdrop-filter: blur(4px); }
+@media (max-width: 767px) { .hero-slides-controls { position: static; align-self: center; margin: .5rem auto .8rem; } }
+.hero-slides-btn { display: inline-flex; width: 2rem; height: 2rem; align-items: center; justify-content: center; border-radius: .3rem; color: hsl(var(--spot-paper)); transition: background-color .6s ease; }
+.hero-slides-btn:hover { background: hsl(var(--brass) / .2); }
+.hero-slides-btn:focus-visible, .hero-slides-dot:focus-visible { outline: 2px solid hsl(var(--ring)); outline-offset: 1px; }
+.hero-slides-dot { position: relative; width: 1.6rem; height: 2rem; border-radius: .3rem; }
+.hero-slides-dot::after { content: ''; position: absolute; left: 50%; top: 50%; width: .6rem; height: .6rem; translate: -50% -50%; border-radius: 999px; border: 1.5px solid hsl(var(--comic-mustard)); transition: width .8s ease, background-color .8s ease; }
+.hero-slides-dot-on::after { width: 1.2rem; background: hsl(var(--comic-mustard)); }
+.hero-planet-glyph { display: inline-flex; flex-shrink: 0; width: 1.6rem; height: 1.6rem; align-items: center; justify-content: center; border-radius: 999px; background: hsl(var(--comic-mustard)); color: hsl(var(--comic-navy)); font-size: .95rem; box-shadow: 0 0 0 1.5px hsl(var(--hero-night)), 0 0 0 2.5px hsl(var(--comic-mustard) / .6); }
+.hero-press-cover { border-radius: .25rem; box-shadow: 0 0 0 1.5px hsl(var(--comic-mustard)), 7px 9px 0 hsl(var(--midnight) / .65); }
+
+/* Projector light on the hero dial: a warm lamp cone, glow and drifting dust (FilmFx) — the projector look carried into the mosaic. */
+.hero-projection { position: relative; isolation: isolate; }
+.hero-projection::before { content: ''; position: absolute; z-index: -1; inset: -18% -22% -10% -40%; pointer-events: none; background: conic-gradient(from 118deg at 0% 0%, transparent 0deg, hsl(45 95% 75% / .16) 18deg, hsl(45 95% 75% / .05) 40deg, transparent 52deg); filter: blur(6px); animation: projector-flicker 7s steps(1) infinite; }
+.hero-projection::after { content: ''; position: absolute; z-index: -1; inset: 6%; border-radius: 999px; pointer-events: none; background: radial-gradient(circle, hsl(45 95% 70% / .2), transparent 68%); animation: projector-flicker 9s steps(1) infinite; }
+.hero-projection .film-fx { border-radius: 999px; }
+@keyframes projector-flicker { 0%, 100% { opacity: 1 } 12% { opacity: .86 } 13% { opacity: 1 } 47% { opacity: .92 } 48% { opacity: 1 } 71% { opacity: .82 } 72% { opacity: 1 } }
+
+/* Decorative zodiac dial. */
+.astro-dial { overflow: visible; filter: drop-shadow(0 0 6px hsl(45 95% 70% / .25)); }
+.astro-dial-line { fill: none; stroke: hsl(var(--spot-paper) / .6); stroke-width: 1; }
+.astro-dial-faint { stroke: hsl(var(--spot-paper) / .22); }
+.astro-dial-glyph { fill: hsl(var(--comic-mustard)); font-size: 17px; font-family: 'Noto Sans Symbols 2', 'Segoe UI Symbol', 'DejaVu Sans', serif; }
+.astro-dial-glyph-lit { fill: hsl(var(--hero-night)); }
+.astro-dial-lit { fill: hsl(var(--comic-mustard)); }
+.astro-dial-sun-ring { fill: none; stroke: hsl(var(--comic-mustard)); stroke-width: 2.5; }
+.astro-dial-ring { transform-box: view-box; transform-origin: 150px 150px; animation: dial-spin 420s linear infinite; }
+@keyframes dial-spin { to { transform: rotate(360deg) } }
+
+/* Mosaic pieces. */
+.motto-link { font-family: 'Bebas Neue', sans-serif; letter-spacing: .16em; font-size: 1.2rem; color: hsl(var(--spot-paper)); transition: color .8s ease; }
+.motto-link:hover, .motto-link:focus-visible { color: hsl(var(--primary)); }
+.explore-poster { position: relative; isolation: isolate; display: flex; flex-direction: column; overflow: hidden; min-height: 26rem; border-radius: .45rem; border: 2px solid hsl(var(--comic-mustard)); outline: 1px solid hsl(var(--comic-mustard) / .6); outline-offset: -8px; box-shadow: 0 2px 0 hsl(var(--midnight)), var(--shadow-ink); }
+.explore-poster img { z-index: -1; transition: transform 8s cubic-bezier(.22,1,.36,1); }
+.explore-poster:hover img { transform: scale(1.04); }
+.explore-poster-title { display: block; font-family: 'Alfa Slab One', serif; text-transform: uppercase; font-size: clamp(1.7rem, 1.2rem + 1vw, 2.2rem); line-height: .98; color: hsl(var(--comic-mustard)); text-shadow: 2px 2px 0 hsl(var(--midnight)); }
+.explore-poster:focus-visible { outline: 2px solid hsl(var(--ring)); outline-offset: 2px; }
+.dest-tile { display: flex; align-items: center; gap: .9rem; height: 100%; padding: .9rem 1rem; border-radius: .3rem; transition: background-color .8s ease; }
+.dest-tile:hover { background: hsl(var(--comic-navy) / .06); }
+.dest-tile:focus-visible { outline: 2px solid hsl(var(--comic-brick)); outline-offset: -2px; }
+.retro-emblem.retro-emblem-ink { color: hsl(var(--spot-paper)); background: radial-gradient(hsl(var(--spot-paper) / .08) .8px, transparent 1.1px) 0 0 / 4px 4px, radial-gradient(circle at 35% 30%, hsl(222 45% 30%), hsl(var(--comic-navy)) 65%); box-shadow: 0 0 0 2px hsl(var(--comic-mustard)), 0 0 0 3.5px hsl(var(--spot-paper)), 0 0 0 4.5px hsl(var(--comic-navy) / .6), 2px 3px 0 4px hsl(var(--comic-brick) / .35); }
+.retro-emblem-ink .retro-tint { fill: hsl(var(--comic-mustard)); fill-opacity: .85; }
+.retro-emblem-ink .retro-spark { fill: hsl(var(--accent)); }
+.retro-emblem-ink .retro-icon { filter: none; }
+.dest-tile:hover .retro-emblem-ink { transform: rotate(-6deg); }
+.shelf-track { display: flex; gap: 1rem; overflow-x: auto; scroll-snap-type: x mandatory; padding: .5rem 2.75rem 1rem; scrollbar-width: thin; scrollbar-color: hsl(var(--comic-navy) / .4) transparent; }
+.shelf-track:focus-visible { outline: 2px solid hsl(var(--comic-brick)); outline-offset: 2px; }
+.shelf-item { flex: 0 0 auto; scroll-snap-align: start; }
+.shelf-book, .shelf-cover { position: relative; display: flex; flex-direction: column; justify-content: space-between; width: 9rem; aspect-ratio: 2 / 3; border-radius: .15rem .4rem .4rem .15rem; box-shadow: inset 7px 0 0 hsl(var(--midnight) / .3), inset 8px 0 0 hsl(var(--spot-paper) / .14), 4px 5px 0 hsl(var(--comic-navy) / .32), 0 12px 18px -10px hsl(var(--midnight) / .7); transition: transform 1.2s cubic-bezier(.22,1,.36,1); }
+.shelf-book { padding: .9rem .7rem .6rem 1.1rem; }
+.shelf-cover { overflow: hidden; }
+.shelf-book:hover, .shelf-cover:hover, .shelf-book:focus-visible, .shelf-cover:focus-visible { transform: translateY(-6px) rotate(-1deg); }
+.shelf-book:focus-visible, .shelf-cover:focus-visible { outline: 2px solid hsl(var(--comic-brick)); outline-offset: 3px; }
+.shelf-book-navy { color: hsl(var(--comic-mustard)); background: var(--grain), linear-gradient(160deg, hsl(222 48% 25%), hsl(var(--comic-navy))); outline: 1px solid hsl(var(--comic-mustard) / .6); outline-offset: -5px; }
+.shelf-book-cream { color: hsl(var(--comic-navy)); background: var(--grain), linear-gradient(160deg, hsl(42 70% 92%), hsl(38 50% 80%)); outline: 1px solid hsl(var(--comic-navy) / .5); outline-offset: -5px; }
+.shelf-book-red { color: hsl(var(--spot-paper)); background: var(--grain), linear-gradient(160deg, hsl(9 58% 50%), hsl(9 60% 38%)); outline: 1px solid hsl(var(--spot-paper) / .6); outline-offset: -5px; }
+.shelf-book-title { font-family: 'Alfa Slab One', serif; text-transform: uppercase; font-size: .95rem; line-height: 1.05; text-align: center; }
+.shelf-book-foot { font-family: 'Bebas Neue', sans-serif; letter-spacing: .3em; font-size: .75rem; text-align: center; }
+.shelf-arrow { position: absolute; top: 45%; translate: 0 -50%; display: inline-flex; width: 2.25rem; height: 2.25rem; align-items: center; justify-content: center; border-radius: 999px; color: hsl(var(--spot-paper)); background: hsl(var(--comic-navy)); border: 1.5px solid hsl(var(--comic-mustard)); box-shadow: 2px 2px 0 hsl(var(--comic-brick) / .5); }
+.shelf-arrow:focus-visible { outline: 2px solid hsl(var(--comic-brick)); outline-offset: 2px; }
+.how-step { position: relative; text-align: center; }
+@media (min-width: 1024px) { .how-step:not(:last-child)::after { content: '→'; position: absolute; right: -1rem; top: 1.9rem; font-size: 1.3rem; color: hsl(var(--comic-navy) / .7); } }
+.zodiac-coin { display: flex; margin: 0 auto; width: 2.9rem; height: 2.9rem; align-items: center; justify-content: center; border-radius: 999px; font-size: 1.45rem; color: hsl(var(--spot-paper)); background: radial-gradient(circle at 35% 30%, hsl(222 45% 30%), hsl(var(--comic-navy)) 70%); box-shadow: 0 0 0 2px hsl(var(--comic-mustard)), 0 0 0 3.5px hsl(var(--spot-paper)), 0 0 0 4.5px hsl(var(--comic-navy) / .5); transition: transform 1.2s cubic-bezier(.22,1,.36,1); }
+li:hover > .zodiac-coin { transform: rotate(-10deg); }
+.zodiac-coin-on { background: radial-gradient(circle at 35% 30%, hsl(9 60% 55%), hsl(var(--comic-brick)) 70%); }
+.join-plate-art { position: absolute; right: 0; bottom: 0; width: 46%; height: 82%; object-fit: cover; object-position: 18% 100%; border-radius: 0 0 .4rem 0; -webkit-mask-image: linear-gradient(to left, #000 55%, transparent); mask-image: linear-gradient(to left, #000 55%, transparent); }
+@media (max-width: 639px) { .join-plate-art { display: none; } }
+
+/* Public header as fitted plates: logo, cream nav plate, navy tagline plate. */
+.header-plate { border-radius: .4rem; padding: .2rem .4rem; color: hsl(var(--comic-navy)); border: 1.5px solid hsl(var(--midnight) / .8); background: var(--grain), linear-gradient(175deg, hsl(42 70% 91%), hsl(var(--spot-paper)) 60%, hsl(38 48% 82%)); outline: 1px solid hsl(var(--comic-navy) / .35); outline-offset: -4px; box-shadow: 0 2px 0 hsl(var(--midnight)); }
+.header-plate a, .header-plate button { color: hsl(var(--comic-navy)); }
+.header-plate a:hover, .header-plate button:hover { background: hsl(var(--comic-navy) / .08); color: hsl(var(--comic-navy)); }
+.header-plate .text-primary, .header-plate [aria-current="page"] { color: hsl(var(--comic-brick)); }
+.header-tagline { font-family: 'Bebas Neue', sans-serif; letter-spacing: .18em; font-size: .95rem; line-height: 1.1; color: hsl(var(--spot-paper)); }
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-slide, .hero-slide-on { transition: none; }
+  .astro-dial-ring, .hero-projection::before, .hero-projection::after { animation: none; }
+  .explore-poster img, .shelf-book, .shelf-cover, .zodiac-coin, .dest-tile:hover .retro-emblem-ink { transition: none; transform: none; }
+}
