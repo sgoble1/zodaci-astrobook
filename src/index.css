@@ -540,7 +540,7 @@ body {
 }
 .chart-projection {
   /* Projected slide: dark ink, warm lamp, spot red and amber. Scoped so TVs keep their glow. */
-  --chart-screen: var(--screen-white); --chart-soft: 42 52% 93%; --chart-ink: 238 42% 17%; --chart-line: 28 20% 30%;
+  --chart-screen: var(--screen-white); --chart-soft: 42 52% 93%; --chart-ink: 238 50% 13%; --chart-line: 28 26% 25%;
   --chart-signal: 356 68% 42%; --chart-harmony: 34 85% 34%; --chart-select: 45 100% 55% / .55;
   position: relative; width: 100%; max-width: 480px; min-width: 0; margin-inline: auto; padding-top: 10px;
 }
@@ -555,7 +555,7 @@ body {
   border: 5px solid hsl(var(--midnight)); border-top-width: 3px; border-radius: 2px;
   background-color: hsl(var(--screen-white));
   background-image:
-    radial-gradient(hsl(28 30% 30% / .09) .55px, transparent .75px),
+    radial-gradient(hsl(28 30% 30% / .055) .55px, transparent .75px),
     repeating-linear-gradient(90deg, transparent 0 46px, hsl(28 25% 30% / .035) 46px 48px, transparent 48px 97px),
     linear-gradient(180deg, hsl(40 40% 92%), hsl(36 30% 80%));
   background-size: 3px 3px, 100% 100%, 100% 100%;
@@ -604,6 +604,7 @@ body {
   animation: film-dust-fly var(--d) ease-in-out var(--dl) infinite alternate, film-dust-glint var(--t) ease-in-out var(--dl) infinite; }
 .film-glint { background: hsl(var(--chart-ink) / .95); box-shadow: 0 0 4px 1px hsl(var(--chart-ink) / .55); }
 .film-mote { background: radial-gradient(circle, hsl(var(--chart-ink) / .8), hsl(var(--chart-ink) / .2) 60%, transparent 72%); filter: blur(.6px); }
+.film-bokeh { background: radial-gradient(circle, hsl(var(--chart-ink) / .5), hsl(var(--chart-ink) / .15) 55%, transparent 72%); filter: blur(1.5px); }
 .film-blob { background: radial-gradient(circle, hsl(var(--midnight) / .55), hsl(var(--midnight) / .2) 55%, transparent 72%); filter: blur(2px); animation-name: film-dust-fly, film-dust-blob !important; }
 @keyframes film-dust-fly {
   0% { transform: translate3d(0, 0, 0) rotate(0deg) }
@@ -617,6 +618,7 @@ body {
 /* On the pale projector screen, glints are lamp-lit specks with a dark rim so they read on cream. */
 .film-fx-screen .film-glint { background: hsl(48 100% 97%); box-shadow: 0 0 3px 1px hsl(var(--screen-lamp) / .9), 0 0 0 .5px hsl(var(--midnight) / .35); }
 .film-fx-screen .film-mote { background: radial-gradient(circle, hsl(48 100% 96% / .95), hsl(var(--screen-lamp) / .45) 55%, transparent 72%); box-shadow: 0 0 0 .5px hsl(var(--midnight) / .12); }
+.film-fx-screen .film-bokeh { background: radial-gradient(circle, hsl(48 100% 97% / .9), hsl(var(--screen-lamp) / .35) 50%, transparent 72%); mix-blend-mode: screen; }
 .film-fx-screen .film-flicker { background: hsl(var(--screen-shade) / .07); mix-blend-mode: multiply; }
 .film-fx-screen .film-haze { mix-blend-mode: soft-light; opacity: .8; background: radial-gradient(ellipse 30% 22% at 30% 40%, hsl(var(--screen-lamp) / .5), transparent 70%), radial-gradient(ellipse 26% 30% at 70% 62%, hsl(var(--screen-lamp) / .4), transparent 70%); }
 .film-fx-screen .film-scratches i { background: linear-gradient(180deg, transparent, hsl(var(--midnight) / .35) 18%, hsl(var(--midnight) / .12) 55%, hsl(var(--midnight) / .3) 80%, transparent); }
@@ -636,6 +638,7 @@ body {
 .film-specks span:nth-child(9) { left: 7%; top: 60%; animation-delay: -3.8s; animation-duration: 8.6s; }
 @keyframes film-speck { 0% { opacity: 0 } 50% { opacity: .9 } 52% { opacity: 0 } }
 .film-hair { position: absolute; inset: 0; width: 100%; height: 100%; fill: none; stroke: hsl(var(--midnight) / .55); stroke-width: .35; vector-effect: non-scaling-stroke; opacity: 0; animation: film-hair 19s steps(1) infinite; }
+.film-fx-screen .film-hair { stroke: hsl(var(--midnight) / .3); }
 .film-hair path:nth-child(2) { stroke: hsl(var(--chart-ink) / .35); }
 @keyframes film-hair { 0% { opacity: 0 } 31% { opacity: .9; transform: translate(0, 0) } 33% { transform: translate(2%, -1%) } 35% { opacity: 0 } 72% { opacity: .7; transform: translate(-3%, 2%) } 73% { opacity: 0 } }
 .film-vignette { position: absolute; inset: 0; background: radial-gradient(ellipse at 48% 42%, transparent 40%, hsl(var(--midnight) / .55)), repeating-linear-gradient(0deg, transparent 0 3px, hsl(var(--chart-ink) / .025) 3px 4px); }

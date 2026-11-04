@@ -13,7 +13,7 @@ import { cn } from '@/lib/utils';
  */
 export type FilmTone = 'glow' | 'screen';
 
-type Dust = { kind: 'glint' | 'mote' | 'blob'; style: CSSProperties };
+type Dust = { kind: 'glint' | 'mote' | 'bokeh' | 'blob'; style: CSSProperties };
 
 function seeded(seed: number) {
   return () => {
@@ -30,17 +30,19 @@ export function makeDust(count: number, tone: FilmTone): Dust[] {
   const blobs = tone === 'screen' ? Math.max(3, Math.round(count / 6)) : 0;
   const px = (n: number) => `${Math.round(n)}px`;
   const step = (span: number) => (r() * 2 - 1) * span;
-  return Array.from({ length: count + blobs }, (_, i) => {
-    const kind: Dust['kind'] = i >= count ? 'blob' : i % 3 === 0 ? 'mote' : 'glint';
-    const span = kind === 'blob' ? 70 : kind === 'mote' ? 120 : 150;
-    const size = kind === 'blob' ? 9 + r() * 12 : kind === 'mote' ? 2.6 + r() * 2.4 : 1 + r() * 1.6;
+  const bokeh = Math.max(2, Math.round(count / 8));
+  return Array.from({ length: count + bokeh + blobs }, (_, i) => {
+    const kind: Dust['kind'] = i >= count + bokeh ? 'blob' : i >= count ? 'bokeh' : i % 3 === 0 ? 'mote' : 'glint';
+    const span = kind === 'blob' ? 80 : kind === 'bokeh' ? 110 : kind === 'mote' ? 140 : 170;
+    const size = kind === 'blob' ? 9 + r() * 12 : kind === 'bokeh' ? 7 + r() * 6 : kind === 'mote' ? 3 + r() * 3 : 1.4 + r() * 1.8;
+    const slow = kind === 'blob' ? 60 : kind === 'bokeh' ? 34 : 22;
     const style = {
-      left: `${(4 + r() * 92).toFixed(1)}%`,
-      top: `${(4 + r() * 92).toFixed(1)}%`,
+      left: `${(3 + r() * 94).toFixed(1)}%`,
+      top: `${(3 + r() * 94).toFixed(1)}%`,
       '--s': px(size),
-      '--o': (kind === 'blob' ? 0.16 + r() * 0.12 : 0.55 + r() * 0.4).toFixed(2),
-      '--d': `${Math.round((kind === 'blob' ? 70 : 30) + r() * 36)}s`,
-      '--t': `${(4 + r() * 7).toFixed(1)}s`,
+      '--o': (kind === 'blob' ? 0.16 + r() * 0.12 : kind === 'bokeh' ? 0.3 + r() * 0.2 : 0.65 + r() * 0.35).toFixed(2),
+      '--d': `${Math.round(slow + r() * 26)}s`,
+      '--t': `${(3 + r() * 6).toFixed(1)}s`,
       '--dl': `${(-r() * 60).toFixed(1)}s`,
       '--ax': px(step(span)), '--ay': px(step(span)),
       '--bx': px(step(span)), '--by': px(step(span)),
