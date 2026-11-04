@@ -14,7 +14,7 @@ const accountPaths = new Set(ACCOUNT_MENU.map(a => a.to));
 
 describe('member navigation architecture', () => {
   it('has exactly five domains at the top level, plus the account menu (7-item cap)', () => {
-    expect(MEMBER_DOMAINS.map(d => d.label)).toEqual(['Chart', 'Readings', 'Book', 'Explore', 'Learn']);
+    expect(MEMBER_DOMAINS.map(d => d.label)).toEqual(['Mapping Center', 'Readings', 'Cosmic Archive', 'Navigation', 'Research Library']);
     expect(MEMBER_DOMAINS.length + 1).toBeLessThanOrEqual(7);
   });
 
@@ -87,7 +87,7 @@ describe('member navigation architecture', () => {
   });
 
   it('builds breadcrumbs for detail pages only, three levels at most', () => {
-    expect(breadcrumbsFor('/planets/venus')).toEqual([{ label: 'Chart', to: '/my-chart' }, { label: 'Planets', to: '/planets' }, { label: 'Venus' }]);
+    expect(breadcrumbsFor('/planets/venus')).toEqual([{ label: 'Mapping Center', to: '/my-chart' }, { label: 'Planets', to: '/planets' }, { label: 'Venus' }]);
     expect(breadcrumbsFor('/my-readings/topic/core-emotions')?.map(c => c.label)).toEqual(['Readings', 'Core themes', 'Emotional World']);
     expect(breadcrumbsFor('/relationships/r1/timeline', { relationship: () => 'Alex' })?.map(c => c.label)).toEqual(['Relationships', 'Alex', 'Timeline']);
     expect(breadcrumbsFor('/other-systems/celtic-tree-calendar')?.at(-1)?.label).toBe('Celtic Tree Calendar');

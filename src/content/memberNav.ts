@@ -34,7 +34,7 @@ const topicTitle = (slug: string) => [...TOPIC_READINGS, ...CORE_THEMES].find(t 
 
 export const MEMBER_DOMAINS: MemberDomain[] = [
   {
-    id: 'chart', label: 'Chart', hub: '/my-chart', hubLabel: 'Open my chart', icon: Orbit,
+    id: 'chart', label: 'Mapping Center', hub: '/my-chart', hubLabel: 'Open my chart', icon: Orbit,
     description: 'Everything calculated from your own birth details.',
     tabs: ['/my-chart', '/planets', '/houses', '/aspects', '/star-map', '/results', '/findings', '/chart-elements', '/chart-calculator'],
     prefixes: ['/birth-chart', '/chart-guide'],
@@ -77,7 +77,7 @@ export const MEMBER_DOMAINS: MemberDomain[] = [
         { to: '/workbook/social-integration', label: 'Social Counselor', description: 'Prepare words, boundaries and next steps', icon: HeartHandshake },
         { to: '/workbook/companion', label: 'The Oracle Within', description: 'A private, reflective conversation', icon: Moon },
       ] },
-      { title: 'Reflect', items: [
+      { title: 'Observation Log', items: [
         { to: '/workbook', label: 'Guided Workbook', description: 'Exercises for your placements', icon: NotebookPen },
         { to: '/workbook/check-in', label: 'Daily Check-in', description: 'Name what is happening today', icon: Activity },
         { to: '/workbook/reframe', label: 'Thought Reframe', description: 'Facts, alternatives and a kinder response', icon: RefreshCcw },
@@ -88,7 +88,7 @@ export const MEMBER_DOMAINS: MemberDomain[] = [
     ],
   },
   {
-    id: 'book', label: 'Book', hub: '/my-astrobook', hubLabel: 'Open my library', icon: BookHeart,
+    id: 'book', label: 'Cosmic Archive', hub: '/my-astrobook', hubLabel: 'Open my library', icon: BookHeart,
     description: 'Your Masterbook, printed AstroBook, audio and keepsakes.',
     tabs: ['/my-astrobook', '/my-masterbook', '/books', '/orders', '/podcasts', '/my-comic'],
     prefixes: ['/shane', '/april', '/zac'],
@@ -112,19 +112,19 @@ export const MEMBER_DOMAINS: MemberDomain[] = [
     ],
   },
   {
-    id: 'explore', label: 'Explore', hub: '/explore', hubLabel: 'Open Explore', icon: Telescope,
+    id: 'explore', label: 'Navigation', hub: '/explore', hubLabel: 'Open Explore', icon: Telescope,
     description: 'Timing, relationships, other traditions and community.',
     tabs: ['/explore', '/transits', '/timeline', '/retrogrades', '/profection', '/relationships', '/other-systems'],
     prefixes: ['/relationships', '/other-systems', '/shared', '/community'],
     columns: [
-      { title: 'Timing', items: [
+      { title: 'Forecast Center', items: [
         { to: '/transits', label: 'Transits', description: 'What is moving through your chart now', icon: CalendarClock, badge: 'Popular' },
-        { to: '/timeline', label: 'Personal Timeline', description: 'Your life phases at a glance', icon: CalendarRange },
+        { to: '/timeline', label: 'Timeline Hall', description: 'Your life phases at a glance', icon: CalendarRange },
         { to: '/retrogrades', label: 'Retrogrades', description: 'Inward periods, natal and coming', icon: Repeat },
         { to: '/profection', label: 'Year Ahead · Profection', description: 'This year’s focus house', icon: Sun },
         { to: topic('timing'), label: topicTitle('timing'), description: 'Turning points written for you', icon: Sparkles },
       ] },
-      { title: 'Relationships', items: [
+      { title: 'Relationship Bureau', items: [
         { to: '/relationships', label: 'All relationships', description: 'Add people and compare charts', icon: Heart },
         { to: '/compatibility', label: 'Quick Compatibility Score', description: 'Two birthdays, one score', icon: HeartHandshake },
       ] },
@@ -145,7 +145,7 @@ export const MEMBER_DOMAINS: MemberDomain[] = [
     ],
   },
   {
-    id: 'learn', label: 'Learn', hub: '/academy', hubLabel: 'Open the Academy', icon: GraduationCap,
+    id: 'learn', label: 'Research Library', hub: '/academy', hubLabel: 'Open the Academy', icon: GraduationCap,
     description: 'Lessons, plain-language guides and articles.',
     tabs: ['/academy', '/themes', '/blog', '/instructions', '/faq', '/verify'],
     prefixes: ['/academy', '/themes', '/blog'],
