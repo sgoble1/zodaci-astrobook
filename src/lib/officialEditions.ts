@@ -44,11 +44,16 @@ export function useOfficialEditions(): { rows: OfficialEditionRow[] | null; erro
   useEffect(() => {
     let on = true;
     setRows(null); setError('');
-    void supabase.rpc('my_official_editions').then(({ data, error: e }) => {
+    void (async () => {
+      // Signed-out visitors own no editions; skip the call instead of letting it fail.
+      const { data: s } = await supabase.auth.getSession();
+      if (!on) return;
+      if (!s.session) { setRows([]); return; }
+      const { data, error: e } = await supabase.rpc('my_official_editions');
       if (!on) return;
       if (e) { setError('Your editions couldn’t load.'); return; }
       setRows(((data ?? []) as OfficialEditionRow[]).filter(r => isOfficialEdition(r.edition)));
-    });
+    })().catch(() => { if (on) setError('Your editions couldn’t load.'); });
     return () => { on = false; };
   }, [attempt]);
   // A different account must never see the previous account's list.

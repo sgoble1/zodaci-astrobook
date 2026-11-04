@@ -1,20 +1,18 @@
 import { Link } from 'react-router-dom';
-import { ArrowUpRight, ArrowRight, Check } from 'lucide-react';
+import { ArrowRight, Check } from 'lucide-react';
 import { SpotArt, type SpotKind } from '@/components/art/SpotArt';
 import { PublicHeader } from '@/components/brand/PublicHeader';
 import { Button } from '@/components/ui/button';
 import { SampleChartDemo } from '@/components/brand/SampleChartDemo';
 import { GlobalFooter } from '@/components/brand/GlobalFooter';
-import { NewsletterSignup } from '@/components/brand/NewsletterSignup';
 import { ContactForm } from '@/components/brand/ContactForm';
-import { PUBLIC_ARTICLES } from '@/content/publicArticles';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { PLAN_NAME, PLAN_PRICE, CREDIT_ALLOWANCE } from '@/lib/plans';
 import { BOOK_VERSIONS, money } from '@/lib/books';
-import hero from '@/assets/home-heads-hero.jpg';
-import { RetroTV, PanelTitle, Stamp, ConstellationDraw, StatusLight } from '@/components/observatory/Observatory';
-import bookCover from '@/assets/cover-design-midnight-stars-hd.jpg';
-import comicCover from '@/assets/comic-issue1-cover-v2.jpg';
+import { PanelTitle, StatusLight } from '@/components/observatory/Observatory';
+import { HeroSlideshow, ChartMapSlide, LookUpSlide, PressSlide } from '@/components/observatory/HeroSlides';
+import { MottoRail, ExplorePoster, DestinationTiles, QuotePlate, ArchiveShelf, HowItWorks, ZodiacPlate, TransmissionsPlate, JoinPlate, type Destination } from '@/components/observatory/Mosaic';
+import { BookIcon, ChartWheelIcon, RingsIcon, StorefrontIcon, TelescopeIcon } from '@/components/icons/RetroIcons';
 import { ALL_READINGS } from '@/lib/topicReadings';
 import { ACADEMY } from '@/content/academy';
 import { HOUSE_SYSTEMS } from '@/lib/astro';
@@ -27,8 +25,6 @@ const FACTS: [string, string][] = [
   ['Free', 'to begin — no trial clock'],
 ];
 
-/** Section anchors, in the required order. */
-
 const PILLARS = [
   { art: 'chart' as SpotKind, title: 'Calculated, not guessed', text: 'Every planet, house and angle comes from astronomical data for your exact birth moment, time and place — never a sun-sign template.' },
   { art: 'written' as SpotKind, title: 'Written for one person', text: 'Readings combine your sign, house, aspects and rulers, and name the placement behind every sentence — so they could only be about you.' },
@@ -36,22 +32,7 @@ const PILLARS = [
   { art: 'private' as SpotKind, title: 'Private by design', text: 'Your chart, readings and conversations belong to your account. Nothing is shared unless you invite someone in.' },
 ];
 
-const STEPS = [
-  ['Save your birth details', 'Date, time and place. If the time is unknown, Zodaci keeps that uncertainty visible instead of guessing.'],
-  ['Explore the measured sky', 'Your chart is calculated live: planets, houses, aspects and patterns, each explained twice — technically and in everyday words.'],
-  ['Go deeper when you’re ready', 'Read full chapters, compare charts with people you love, turn readings into audio, or have your sky printed as an AstroBook.'],
-];
-
-
-const SIGNS: [string, string, string][] = [
-  ['♈', 'Aries', 'The first spark'], ['♉', 'Taurus', 'The steady ground'], ['♊', 'Gemini', 'The two voices'], ['♋', 'Cancer', 'The shelter'],
-  ['♌', 'Leo', 'The solar heart'], ['♍', 'Virgo', 'The careful hand'], ['♎', 'Libra', 'The balance'], ['♏', 'Scorpio', 'The deep water'],
-  ['♐', 'Sagittarius', 'The far road'], ['♑', 'Capricorn', 'The mountain observatory'], ['♒', 'Aquarius', 'The inventor'], ['♓', 'Pisces', 'The cosmic ocean'],
-];
-
 const FEATURE_ART: SpotKind[] = ['book', 'year', 'radio', 'compass', 'astrobook', 'tv'];
-const STEP_ART: SpotKind[] = ['birth', 'explore', 'book'];
-const RULE_ART: SpotKind[] = ['magnifier', 'source', 'honest'];
 const FEATURES: [string, string, string][] = [
   [`${ALL_READINGS.length}+ readings`, 'Chapters written from your exact placements.', '/learn#guides'],
   ['Personal forecasts', 'Transits and timing for the road ahead.', '/start'],
@@ -59,6 +40,17 @@ const FEATURES: [string, string, string][] = [
   ['Life Compass', 'Career, relationships, finances, purpose, health and creativity signals.', '/start'],
   ['AstroBooks', 'Your chart as a printed astral dossier.', '/astrobook'],
   ['Current Chapters', 'The theme your sky is working on now, on air.', '/start'],
+];
+
+/** Motto words on the left rail; each one opens a real page. */
+const MOTTO: [string, string][] = [['Discover', '/learn'], ['Explore', '/start'], ['Understand', '/demo'], ['Evolve', '/pricing']];
+
+const DESTINATIONS: Destination[] = [
+  { to: '/start', title: 'Birth charts', text: 'Your cosmic blueprint', cta: 'Explore charts', icon: ChartWheelIcon },
+  { to: '/astrobook', title: 'AstroBooks', text: 'Your personal astral dossier', cta: 'View AstroBooks', icon: BookIcon },
+  { to: '/compatibility', title: 'Relationships', text: 'Two charts, side by side', cta: 'Compare charts', icon: RingsIcon },
+  { to: '/learn#forecasts', title: 'Forecasts', text: 'Today’s sky and the month ahead', cta: 'See the sky', icon: TelescopeIcon },
+  { to: '/store', title: 'Gift Shop', text: 'Prints, books and keepsakes', cta: 'Visit the shop', icon: StorefrontIcon },
 ];
 
 export default function BrandLanding() {
@@ -69,43 +61,48 @@ export default function BrandLanding() {
     { key: 'full' as const, price: PLAN_PRICE.full.month, note: `or ${PLAN_PRICE.full.year}`, points: [`All ${ALL_READINGS.length} chapter readings`, 'Timing, numerology, Ba Zi and Feng Shui', `${CREDIT_ALLOWANCE.full} AI credits a month`] },
     { key: 'creator' as const, price: PLAN_PRICE.creator.month, note: `or ${PLAN_PRICE.creator.year}`, points: ['Everything in Pro', 'Personal podcasts and new chapters', `${CREDIT_ALLOWANCE.creator} AI credits a month`] },
   ];
+  const slides = [
+    {
+      id: 'map', label: 'Map the stars',
+      content: <ChartMapSlide heading="h1" eager title={<>Map the stars.<br />Understand yourself.</>} script="Your cosmic blueprint, mapped." lines={['Calculated from your exact birth moment', 'Read and written for you alone', 'Kept private in your own archive']} cta={{ to: '/start', label: 'Generate your birth chart' }} secondary={{ to: '/demo', label: 'See a sample edition' }} />,
+    },
+    {
+      id: 'look-up', label: 'Look up',
+      content: <LookUpSlide title="Look up. It's all written there." script="The sky at your birth, read for you." text="The sky at your exact birth moment, calculated, read and kept in your own archive." cta={{ to: '/start', label: 'Generate your birth chart' }} secondary={{ to: '/learn', label: 'Start learning' }} />,
+    },
+    {
+      id: 'press', label: 'AstroBooks and AstroComics',
+      content: <PressSlide title={<>Your chart,<br />in print.</>} script="Books and comics from your own sky." text={<>Every AstroBook is an astral dossier written from your chart — five versions, from a {money(fromBook)} PDF to a linen-bound collector’s edition. AstroComic turns the same chart into an illustrated serial.</>} book={{ to: '/astrobook', label: 'Browse AstroBooks' }} comic={{ to: '/astrocomic', label: 'AstroComic' }} />,
+    },
+  ];
   return <div className="brand-site min-h-screen text-foreground">
     <a href="#brand-main" className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:bg-background focus:p-3">Skip to content</a>
     <PublicHeader />
-    <main id="brand-main" className="mx-auto max-w-7xl space-y-6 px-3 py-6 sm:px-6">
-      <section className="obs-panel relative isolate overflow-hidden min-h-[640px] sm:min-h-[720px]">
-        <img src={hero} alt="A row of 1950s-style faces at the bottom of the frame gaze up at a zodiac wheel, planets and starbursts in an indigo night sky" width={1920} height={1088} fetchPriority="high" className="absolute inset-0 -z-20 h-full w-full object-cover object-[30%_100%] sm:object-bottom" />
-        <div className="absolute inset-0 -z-10 bg-gradient-to-b from-background/85 via-background/40 to-transparent sm:bg-gradient-to-r sm:from-background/85 sm:via-background/30 sm:to-transparent" />
-        <div className="obs-deploy w-full px-6 pb-48 pt-12 sm:px-12 sm:pb-64 sm:pt-16">
-          <p className="font-label text-sm tracking-[0.2em] text-primary">Zodaci · Astral Research Authority</p>
-          <h1 className="mt-3 max-w-2xl font-display text-5xl uppercase leading-[0.95] sm:text-7xl">Look up. It's all written there.</h1>
-          <p className="mt-3 font-script text-3xl text-primary sm:text-4xl">Your cosmic blueprint, mapped.</p>
-          <p className="mt-5 max-w-lg text-lg leading-relaxed text-foreground/90">The sky at your exact birth moment, calculated, read and kept in your own archive.</p>
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row"><Button asChild size="lg" variant="signal"><Link to="/start">Generate your birth chart<ArrowRight /></Link></Button><Button asChild variant="outline" size="lg"><Link to="/demo">See a sample edition</Link></Button></div>
-        </div>
-      </section>
+    <main id="brand-main" className="mosaic mx-auto max-w-7xl px-3 py-4 sm:px-6 sm:py-6">
+      <div className="mosaic-top">
+        <MottoRail className="mosaic-rail" links={MOTTO} tagline="Your personal guide to the stars — and to yourself." />
+        <HeroSlideshow className="mosaic-hero" label="Zodaci highlights" slides={slides} />
+        <ExplorePoster className="mosaic-poster" to="/learn" />
+      </div>
 
-      <section aria-label="Zodaci at a glance" className="obs-panel"><dl className="grid grid-cols-2 gap-5 px-5 py-6 lg:grid-cols-4">{FACTS.map(([n, l]) => <div key={l}><dt className="sr-only">{l}</dt><dd className="font-display text-3xl text-primary">{n}</dd><dd aria-hidden className="text-sm text-muted-foreground">{l}</dd></div>)}</dl></section>
+      <DestinationTiles label="Main destinations" items={DESTINATIONS} />
+
+      <div className="mosaic-split-1-2">
+        <QuotePlate art="magnifier" quote="Check the sky twice. Name the source. Never invent a life." by="The Authority’s working rules" />
+        <ArchiveShelf />
+      </div>
+
+      <HowItWorks />
+
+      <ZodiacPlate />
 
       <section aria-labelledby="live-h" className="obs-panel p-5 sm:p-8"><PanelTitle eyebrow="Astral Mapping Center" live><span id="live-h">Live chart</span></PanelTitle><SampleChartDemo /></section>
 
-      <section aria-labelledby="how-h" className="obs-paper p-6 sm:p-10">
-        <h2 id="how-h" className="font-label text-2xl">How it works</h2>
-        <ConstellationDraw className="my-4 h-16" />
-        <ol className="grid gap-6 md:grid-cols-3">{STEPS.map(([title, text], i) => <li key={title}><SpotArt kind={STEP_ART[i]} badge={i + 1} className="mb-4 h-24 w-24" /><p className="font-label text-sm text-accent">{['Birth data', 'Chart mapping', 'Personal insight'][i]}</p><h3 className="mt-2 text-2xl">{title}</h3><p className="mt-2 leading-relaxed text-muted-foreground">{text}</p></li>)}</ol>
-      </section>
+      <section aria-label="Zodaci at a glance" className="obs-panel"><dl className="grid grid-cols-2 gap-5 px-5 py-6 lg:grid-cols-4">{FACTS.map(([n, l]) => <div key={l}><dt className="sr-only">{l}</dt><dd className="font-display text-3xl text-primary">{n}</dd><dd aria-hidden className="text-sm text-muted-foreground">{l}</dd></div>)}</dl></section>
 
       <section aria-labelledby="feat-h" className="obs-panel p-5 sm:p-8"><PanelTitle eyebrow="Inside the observatory"><span id="feat-h">What you can do</span></PanelTitle>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{FEATURES.map(([t, d, to], i) => <Link key={t} to={to} className="atomic-box group"><SpotArt kind={FEATURE_ART[i]} className="atomic-box-art" /><h3 className="font-label text-lg">{t}</h3><p className="mt-2 text-sm text-muted-foreground">{d}</p><p className="mt-3 font-label text-xs text-accent">Explore →</p></Link>)}</div>
         <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">{PILLARS.map(({ art, title, text }) => <div key={title} className="atomic-box"><SpotArt kind={art} className="h-20 w-20" /><h3 className="text-lg">{title}</h3><p className="mt-1 text-sm text-muted-foreground">{text}</p></div>)}</div>
-      </section>
-
-      <section aria-labelledby="book-h" className="grid gap-6 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]">
-        <div className="obs-paper grid gap-6 p-6 sm:grid-cols-[180px_1fr] sm:p-8">
-          <img src={bookCover} alt="AstroBook cover design, Midnight Stars" width={280} height={420} loading="lazy" className="mx-auto w-40 rounded shadow-xl sm:w-full aspect-[2/3] object-cover" />
-          <div><Stamp>Issued by the Authority</Stamp><h2 id="book-h" className="mt-4 font-display text-4xl">The Cosmic Archive</h2><p className="mt-3 leading-relaxed text-muted-foreground">Every AstroBook is an astral dossier: your natal wheel, planetary diagrams and chapter-by-chapter readings, calculated from your chart and written for you alone. Five versions, from a {money(fromBook)} PDF to a linen-bound collector’s edition.</p><div className="mt-6 flex flex-wrap gap-3"><Button asChild variant="signal"><Link to="/astrobook">Browse AstroBooks<ArrowRight /></Link></Button><Button asChild variant="outline" className="border-[hsl(var(--paper-ink)/0.3)] text-[hsl(var(--paper-ink))]"><Link to="/astrocomic">AstroComic</Link></Button></div></div>
-        </div>
-        <RetroTV channel="Channel 01" label="AstroComic · Issue 1"><img src={comicCover} alt="AstroComic Issue 1 cover" width={280} height={420} loading="lazy" className="h-full w-full object-cover" /></RetroTV>
       </section>
 
       <section id="pricing" aria-labelledby="price-h" className="obs-panel p-5 sm:p-8">
@@ -113,19 +110,12 @@ export default function BrandLanding() {
         <div className="grid gap-5 md:grid-cols-3">{plans.map(p => <div key={p.key} className={`rounded-md border p-6 flex flex-col ${p.key === 'full' ? 'border-primary' : 'border-border'}`}><h3 className="font-label text-xl">{PLAN_NAME[p.key]}</h3><p className="mt-3"><span className="font-display text-3xl">{p.price.replace('/month', '')}</span>{p.key !== 'free' && <span className="text-muted-foreground"> /month</span>}</p><p className="text-xs text-muted-foreground">{p.note}</p><ul className="mt-5 flex-1 space-y-2 text-sm">{p.points.map(t => <li key={t} className="flex gap-2"><Check aria-hidden className="mt-0.5 h-4 w-4 shrink-0 text-primary" />{t}</li>)}</ul><Button asChild className="mt-6" variant={p.key === 'full' ? 'primary' : 'outline'}><Link to={p.key === 'free' ? '/start' : `/pricing?plan=${p.key === 'full' ? 'pro' : 'cosmic'}`}>{p.key === 'free' ? 'Start for free' : `Choose ${PLAN_NAME[p.key]}`}</Link></Button></div>)}</div>
       </section>
 
-      <section aria-labelledby="zodiac-h" className="obs-panel p-5 sm:p-8"><PanelTitle eyebrow="Twelve archetypes"><span id="zodiac-h">Explore the zodiac</span></PanelTitle>
-        <ul className="grid grid-cols-3 gap-3 sm:grid-cols-4 lg:grid-cols-6">{SIGNS.map(([g, n, d]) => <li key={n} className="obs-paper p-3 text-center"><span aria-hidden className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-[hsl(var(--paper-ink))] text-2xl text-[hsl(var(--brass))]">{g}</span><p className="mt-2 font-label text-sm">{n}</p><p className="text-xs text-muted-foreground">{d}</p></li>)}</ul>
-      </section>
+      <div className="mosaic-split-1-1">
+        <TransmissionsPlate />
+        <JoinPlate />
+      </div>
 
-      <section aria-labelledby="tx-h" className="grid gap-6 lg:grid-cols-2">
-        <div className="obs-panel p-5 sm:p-8"><PanelTitle eyebrow="Research Library" live><span id="tx-h">Latest transmissions</span></PanelTitle>
-          <ul className="divide-y divide-border">{PUBLIC_ARTICLES.map(a => <li key={a.slug}><Link to={`/learn/${a.slug}`} className="flex items-start gap-4 py-4 hover:text-primary"><img src={a.image} alt="" width={1024} height={768} loading="lazy" className="h-16 w-20 shrink-0 rounded object-cover" /><span><span className="font-label text-[0.65rem] text-accent">{a.category}</span><span className="block text-lg leading-snug">{a.title}</span></span><ArrowUpRight className="ml-auto h-4 w-4 shrink-0" /></Link></li>)}</ul>
-          <div className="mt-4 flex gap-2"><Button asChild variant="outline" size="sm"><Link to="/learn">Open Learn</Link></Button><Button asChild variant="ghost" size="sm"><Link to="/learn#articles">All transmissions</Link></Button></div>
-        </div>
-        <div className="obs-panel p-5 sm:p-8"><PanelTitle eyebrow="Our working rules"><span>How every reading is made</span></PanelTitle><ul className="space-y-4 leading-relaxed">{[['Check the sky twice.', 'Positions come from an astronomy engine and are cross-checked against a second calculation.'], ['Name the source.', 'Every interpretation points to the placement it came from.'], ['Never invent a life.', 'Readings never claim facts about your family, past or future.']].map(([t, d], i) => <li key={t} className="flex items-start gap-4"><SpotArt kind={RULE_ART[i]} className="h-16 w-16" /><div><p className="font-semibold">{t}</p><p className="text-muted-foreground">{d}</p></div></li>)}</ul></div>
-      </section>
-
-      <section id="contact" aria-labelledby="join-h" className="obs-panel p-5 sm:p-8"><div className="grid gap-10 md:grid-cols-2"><div><StatusLight label="Transmission pending" /><h2 id="join-h" className="mt-3 font-label text-2xl">Join the observatory</h2><p className="mt-4 max-w-md leading-relaxed text-muted-foreground">Join the interest list for sky notes and new AstroBooks. Email delivery has not launched yet.</p><div className="mt-6"><NewsletterSignup source="sky-notes" button="Join the interest list" /></div></div><ContactForm /></div></section>
+      <section id="contact" aria-labelledby="contact-h" className="obs-panel p-5 sm:p-8"><div className="grid gap-10 md:grid-cols-2"><div><StatusLight label="Desk open" /><h2 id="contact-h" className="mt-3 font-label text-2xl">Write to the observatory</h2><p className="mt-4 max-w-md leading-relaxed text-muted-foreground">Questions about your chart, an AstroBook order or the shop? Send a note to the Zodaci team.</p></div><ContactForm /></div></section>
     </main><GlobalFooter />
   </div>;
 }

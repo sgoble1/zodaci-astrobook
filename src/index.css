@@ -901,7 +901,7 @@ body {
 .zodiac-coin { display: flex; margin: 0 auto; width: 2.9rem; height: 2.9rem; align-items: center; justify-content: center; border-radius: 999px; font-size: 1.45rem; color: hsl(var(--spot-paper)); background: radial-gradient(circle at 35% 30%, hsl(222 45% 30%), hsl(var(--comic-navy)) 70%); box-shadow: 0 0 0 2px hsl(var(--comic-mustard)), 0 0 0 3.5px hsl(var(--spot-paper)), 0 0 0 4.5px hsl(var(--comic-navy) / .5); transition: transform 1.2s cubic-bezier(.22,1,.36,1); }
 li:hover > .zodiac-coin { transform: rotate(-10deg); }
 .zodiac-coin-on { background: radial-gradient(circle at 35% 30%, hsl(9 60% 55%), hsl(var(--comic-brick)) 70%); }
-.join-plate-art { position: absolute; right: 0; bottom: 0; width: 46%; height: 82%; object-fit: cover; object-position: 18% 100%; border-radius: 0 0 .4rem 0; -webkit-mask-image: linear-gradient(to left, #000 55%, transparent); mask-image: linear-gradient(to left, #000 55%, transparent); }
+.join-plate-art { position: absolute; right: 0; bottom: 0; width: 46%; height: calc(100% - 7rem); object-fit: cover; object-position: 18% 100%; border-radius: 0 0 .4rem 0; -webkit-mask-image: linear-gradient(to left, #000 55%, transparent); mask-image: linear-gradient(to left, #000 55%, transparent); }
 @media (max-width: 639px) { .join-plate-art { display: none; } }
 
 /* Public header as fitted plates: logo, cream nav plate, navy tagline plate. */
@@ -916,3 +916,80 @@ li:hover > .zodiac-coin { transform: rotate(-10deg); }
   .astro-dial-ring, .hero-projection::before, .hero-projection::after { animation: none; }
   .explore-poster img, .shelf-book, .shelf-cover, .zodiac-coin, .dest-tile:hover .retro-emblem-ink { transition: none; transform: none; }
 }
+
+/* Mosaic layout: plates fitted together with narrow seams, like the concept's weathered panel board. */
+.mosaic { display: flex; flex-direction: column; gap: .9rem; }
+.mosaic-top { display: grid; gap: .9rem; grid-template-columns: minmax(0, 1fr); }
+.mosaic-rail { display: none; }
+.mosaic-poster { min-height: 18rem; }
+.mosaic-split-1-2, .mosaic-split-2-1, .mosaic-split-1-1 { display: grid; gap: .9rem; grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 768px) {
+  .mosaic-top { grid-template-columns: minmax(0, 1fr) 14rem; }
+  .mosaic-poster { min-height: 0; }
+  .mosaic-split-1-1 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (min-width: 1024px) {
+  .mosaic-split-1-2 { grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); }
+  .mosaic-split-2-1 { grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr); }
+}
+@media (min-width: 1280px) {
+  .mosaic-top { grid-template-columns: 10.5rem minmax(0, 1fr) 15rem; }
+  .mosaic-rail { display: flex; }
+}
+
+/* Projector additions (layered on top; the existing screen, lamp, dust and flicker are unchanged).
+   1. Wall spill: lamp light that misses the screen glows faintly on the dark wall behind it, breathing with the lamp.
+   2. Lamp strike: when a chart first appears the room is dark, the bulb catches with two stutters, then warms up slowly. */
+.chart-projection { isolation: isolate; }
+.chart-projection::before { content: ''; position: absolute; z-index: -1; inset: -5% 0 18%; pointer-events: none; border-radius: 50%;
+  background: radial-gradient(ellipse 50% 46% at 50% 44%, hsl(var(--screen-lamp) / .16), hsl(var(--screen-lamp) / .05) 55%, transparent 72%);
+  filter: blur(8px); animation: chart-lamp 9.7s steps(1) infinite; }
+.chart-projection-screen::after { content: ''; position: absolute; inset: 0; z-index: 6; pointer-events: none; background: hsl(var(--screen-shade));
+  animation: chart-lamp-strike 3.4s cubic-bezier(.3, 0, .2, 1) .15s both; }
+@keyframes chart-lamp-strike { 0% { opacity: 1 } 9% { opacity: .55 } 11% { opacity: 1 } 19% { opacity: .35 } 22% { opacity: .9 } 30% { opacity: .5 } 100% { opacity: 0 } }
+@media (prefers-reduced-motion: reduce) { .chart-projection::before { animation: none; } .chart-projection-screen::after { animation: none; opacity: 0; } }
+@media print { .chart-projection::before, .chart-projection-screen::after { display: none; } }
+
+/* Slide 1 (Cartographer + dial) sizes itself to the slideshow's own width, not the window,
+   so it fits whether the slideshow fills a phone, a dashboard column or the mosaic's centre. */
+.hero-slides { container: hero / inline-size; }
+.chartmap { position: relative; display: grid; min-height: 100%; grid-template-columns: minmax(0, 1fr); }
+.chartmap-figure { order: 2; justify-self: center; align-self: end; height: 18rem; width: auto; }
+.chartmap-copy { position: relative; z-index: 10; display: flex; min-width: 0; flex-direction: column; gap: 1.5rem; padding: 2.25rem 1.5rem 1rem; }
+.chartmap-body { display: grid; gap: 1.5rem; grid-template-columns: minmax(0, 1fr); }
+.chartmap-dial { width: 100%; max-width: 14rem; margin-inline: auto; }
+.chartmap-planets { display: none; gap: .4rem 1.25rem; grid-template-columns: repeat(auto-fill, minmax(8.25rem, 1fr)); }
+.hero-slides .hero-headline { font-size: clamp(2.1rem, 1rem + 5.2cqi, 4.4rem); }
+@container hero (min-width: 30rem) { .chartmap-planets { display: grid; } }
+@container hero (min-width: 40rem) {
+  .chartmap { grid-template-columns: 37% minmax(0, 1fr); }
+  .chartmap-figure { order: 0; justify-self: start; height: auto; width: 100%; max-height: 34rem; object-fit: contain; object-position: left bottom; }
+  .chartmap-copy { margin-left: -1.5rem; padding: 2.25rem 1.75rem 4rem 0; }
+  .chartmap-body { grid-template-columns: minmax(0, 1fr) 9.5rem; align-items: center; }
+  .chartmap-dial { max-width: none; }
+}
+@container hero (min-width: 56rem) {
+  .chartmap-copy { padding-top: 2.75rem; }
+  .chartmap-body { grid-template-columns: minmax(0, 1fr) minmax(0, 15rem); }
+}
+.press-slide { position: relative; display: grid; min-height: 100%; align-items: center; gap: 2rem; padding: 2.5rem 1.5rem 4.5rem; }
+@container hero (min-width: 40rem) { .press-slide { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 2.5rem; padding: 2.5rem 2.5rem 4.5rem; } }
+.explore-poster { container-type: inline-size; }
+.explore-poster-title { font-size: clamp(1.4rem, 12.5cqi, 2.2rem); }
+
+/* Destination tiles size to their own strip: one column on phones, two or three in narrow columns,
+   one row (with seams) when there is room for every tile. */
+.dest-tiles { container: tiles / inline-size; }
+.dest-grid { display: grid; grid-template-columns: minmax(0, 1fr); }
+.dest-grid > li + li { border-top: 1px solid hsl(var(--comic-navy) / .18); }
+@container tiles (min-width: 34rem) { .dest-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .dest-grid > li + li { border-top: 0; } }
+@container tiles (min-width: 50rem) { .dest-grid { grid-template-columns: repeat(var(--n3), minmax(0, 1fr)); } }
+@container tiles (min-width: 70rem) {
+  .dest-grid { grid-template-columns: repeat(var(--n), minmax(0, 1fr)); }
+  .dest-grid > li + li { border-left: 1px solid hsl(var(--comic-navy) / .18); }
+}
+
+/* Dashboard mosaic: slideshow with the poster beside it when the column is wide enough. */
+.mosaic-dash-top { display: grid; gap: .9rem; grid-template-columns: minmax(0, 1fr); }
+.mosaic-dash-poster { display: none; }
+@media (min-width: 1280px) { .mosaic-dash-top { grid-template-columns: minmax(0, 1fr) 13rem; } .mosaic-dash-poster { display: flex; } }

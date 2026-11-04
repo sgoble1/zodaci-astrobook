@@ -146,27 +146,27 @@ type Heading = 'h1' | 'h2';
 export function ChartMapSlide({ heading = 'h1', title, script, lines, cta, secondary, planets = PLANET_MEANINGS, highlight, eager }: { heading?: Heading; title: ReactNode; script: string; lines: string[]; cta: Cta; secondary?: Cta; planets?: PlanetLine[]; highlight?: string; eager?: boolean }) {
   const H = heading;
   return (
-    <div className="hero-night relative grid min-h-full md:grid-cols-[auto_minmax(0,1fr)]">
-      <img src={cartographer} alt="The Cartographer, the observatory's chart specialist, points up toward the zodiac" width={820} height={1025} loading={eager ? 'eager' : 'lazy'} {...(eager ? { fetchpriority: 'high' } : {})} className="hero-cartographer order-last mx-auto h-72 w-auto self-end sm:h-96 md:order-none md:mx-0 md:h-[34rem]" />
-      <div className="relative z-10 flex flex-col gap-6 px-6 pb-4 pt-10 sm:px-10 md:-ml-16 md:py-10 md:pl-0 md:pr-8 lg:-ml-24">
+    <div className="hero-night chartmap">
+      <img src={cartographer} alt="The Cartographer, the observatory's chart specialist, points up toward the zodiac" width={820} height={1025} loading={eager ? 'eager' : 'lazy'} {...(eager ? { fetchpriority: 'high' } : {})} className="hero-cartographer chartmap-figure" />
+      <div className="chartmap-copy">
         <div>
           <H className="hero-headline">{title}</H>
           <p className="mt-2 font-script text-3xl text-primary sm:text-4xl">{script}</p>
         </div>
-        <div className="grid items-center gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
-          <div className="space-y-5">
+        <div className="chartmap-body">
+          <div className="min-w-0 space-y-5">
             <ul className="space-y-1 font-label text-sm tracking-[0.14em] text-foreground/85">{lines.map(l => <li key={l}>{l}</li>)}</ul>
             <div className="flex flex-wrap gap-3">
-              <Button asChild variant="signal" size="lg"><Link to={cta.to}>{cta.label}<ArrowRight /></Link></Button>
+              <Button asChild variant="signal" size="lg" className="max-w-full"><Link to={cta.to}>{cta.label}<ArrowRight /></Link></Button>
               {secondary && <Button asChild variant="outline" size="lg"><Link to={secondary.to}>{secondary.label}</Link></Button>}
             </div>
           </div>
-          <div className="hero-projection mx-auto w-full max-w-[15rem] lg:max-w-[17rem]">
+          <div className="hero-projection chartmap-dial">
             <AstroDial highlight={highlight} className="w-full" />
             <FilmFx motes={14} specks={5} tone="glow" />
           </div>
         </div>
-        <ul aria-label="What each planet describes" className="hidden grid-cols-2 gap-x-6 gap-y-1.5 sm:grid xl:grid-cols-5">
+        <ul aria-label="What each planet describes" className="chartmap-planets">
           {planets.map(p => (
             <li key={p.name} className="flex min-w-0 items-center gap-2">
               <span aria-hidden className="hero-planet-glyph">{p.glyph + TP}</span>
@@ -200,16 +200,16 @@ export function LookUpSlide({ heading = 'h2', title, script, text, cta, secondar
 export function PressSlide({ heading = 'h2', title, script, text, book, comic }: { heading?: Heading; title: ReactNode; script: string; text: ReactNode; book: Cta; comic: Cta }) {
   const H = heading;
   return (
-    <div className="hero-night relative grid min-h-full items-center gap-8 px-6 py-10 sm:px-12 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+    <div className="hero-night press-slide">
       <div>
         <H className="hero-headline">{title}</H>
         <p className="mt-2 font-script text-3xl text-primary sm:text-4xl">{script}</p>
         <div className="mt-4 max-w-md text-lg leading-relaxed text-foreground/90">{text}</div>
         <div className="mt-6 flex flex-wrap gap-3"><Button asChild variant="signal" size="lg"><Link to={book.to}>{book.label}<ArrowRight /></Link></Button><Button asChild variant="outline" size="lg"><Link to={comic.to}>{comic.label}</Link></Button></div>
       </div>
-      <div className="flex items-end justify-center gap-4 sm:gap-6">
-        <img src={bookCover} alt="An AstroBook with the Midnight Stars cover" width={1280} height={1920} loading="lazy" className="hero-press-cover w-32 -rotate-3 sm:w-44" />
-        <img src={comicCover} alt="AstroComic Issue 1 cover" width={1024} height={1536} loading="lazy" className="hero-press-cover w-36 rotate-2 sm:w-52" />
+      <div className="flex min-w-0 items-end justify-center gap-4 sm:gap-6">
+        <img src={bookCover} alt="An AstroBook with the Midnight Stars cover" width={1280} height={1920} loading="lazy" className="hero-press-cover w-[42%] max-w-[11rem] -rotate-3" />
+        <img src={comicCover} alt="AstroComic Issue 1 cover" width={1024} height={1536} loading="lazy" className="hero-press-cover w-[48%] max-w-[13rem] rotate-2" />
       </div>
     </div>
   );
