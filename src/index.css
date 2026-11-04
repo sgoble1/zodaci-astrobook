@@ -522,62 +522,111 @@ body {
 }
 @media (prefers-reduced-motion: reduce) { .obs-static-burst { display: none; } }
 
-/* ── Live zodiac slides: lamp light on a dark pull-down screen, or ink on a textbook plate. ── */
+/* ── Live zodiac slides: a lamp-lit tripod screen in a darkened room, or ink on a textbook plate. ── */
 :root {
+  /* Root chart tokens stay bright-on-dark for the retro TVs' film layer. */
   --chart-screen: 240 24% 8%;
   --chart-ink: 43 75% 80%;
   --chart-line: 41 32% 67%;
   --chart-soft: 240 21% 13%;
   --chart-signal: 357 80% 70%;
   --chart-harmony: 199 59% 70%;
+  --chart-select: 43 75% 80% / .32;
   --shadow-projection: 0 14px 30px -20px hsl(var(--midnight) / .8);
+  /* Lamp light on a white screen with the room lights off. */
+  --screen-white: 40 42% 87%;
+  --screen-lamp: 44 90% 82%;
+  --screen-shade: 248 34% 9%;
 }
-.chart-projection { position: relative; width: 100%; max-width: 480px; min-width: 0; margin-inline: auto; padding-block: 6px 18px; }
+.chart-projection {
+  /* Projected slide: dark ink, warm lamp, spot red and amber. Scoped so TVs keep their glow. */
+  --chart-screen: var(--screen-white); --chart-soft: 42 52% 93%; --chart-ink: 238 50% 13%; --chart-line: 28 26% 25%;
+  --chart-signal: 356 68% 42%; --chart-harmony: 34 85% 34%; --chart-select: 45 100% 55% / .55;
+  position: relative; width: 100%; max-width: 480px; min-width: 0; margin-inline: auto; padding-top: 10px;
+}
+/* Top bar hanging from the tripod pole's hook. */
+.chart-projection-top { position: relative; z-index: 2; height: 7px; margin-inline: -3px; border-radius: 3px; background: linear-gradient(180deg, hsl(240 12% 28%), hsl(var(--midnight))); box-shadow: 0 2px 4px hsl(var(--midnight) / .6); }
+.chart-projection-top i { position: absolute; left: 50%; bottom: 100%; width: 10px; height: 11px; transform: translateX(-50%); border: 2px solid hsl(var(--brass)); border-bottom: 0; border-radius: 6px 6px 0 0; }
 .chart-projection-screen {
-  position: relative; isolation: isolate; overflow: hidden; padding: 12px 6px;
-  background: hsl(var(--chart-screen)); color: hsl(var(--chart-ink));
-  border-inline: 1px solid hsl(var(--brass));
-  box-shadow: inset 0 0 50px hsl(var(--midnight) / .85), var(--shadow-projection);
-  background-image: radial-gradient(hsl(var(--chart-ink) / .07) .6px, transparent .8px);
-  background-size: 4px 4px;
+  position: relative; isolation: isolate; overflow: hidden;
+  padding: clamp(14px, 6.5%, 32px) clamp(12px, 6%, 30px);
+  color: hsl(var(--chart-ink));
+  /* Black masking border, a white bead screen, and light spilling onto the wall behind. */
+  border: 5px solid hsl(var(--midnight)); border-top-width: 3px; border-radius: 2px;
+  background-color: hsl(var(--screen-white));
+  background-image:
+    radial-gradient(hsl(28 30% 30% / .055) .55px, transparent .75px),
+    repeating-linear-gradient(90deg, transparent 0 46px, hsl(28 25% 30% / .035) 46px 48px, transparent 48px 97px),
+    linear-gradient(180deg, hsl(40 40% 92%), hsl(36 30% 80%));
+  background-size: 3px 3px, 100% 100%, 100% 100%;
+  box-shadow: 0 0 0 1px hsl(var(--brass) / .35), 0 0 46px 6px hsl(var(--screen-lamp) / .13), 0 22px 34px -22px hsl(var(--midnight));
 }
-/* Lamp halo: warm hot-spot where the projector bulb lands. */
-.chart-projection-screen::before { content: ''; position: absolute; inset: -20%; z-index: 0; pointer-events: none; background: radial-gradient(circle at 46% 42%, hsl(var(--chart-ink) / .13), hsl(var(--chart-ink) / .04) 38%, transparent 60%); }
-.chart-projection-beam { position: absolute; inset: 0; z-index: 1; pointer-events: none; mix-blend-mode: screen; background: conic-gradient(from 150deg at 8% -8%, transparent 0deg, hsl(var(--chart-ink) / .03) 2deg, hsl(var(--chart-ink) / .17) 19deg, hsl(var(--chart-ink) / .05) 40deg, transparent 47deg); animation: chart-beam-breathe 14s ease-in-out infinite; }
-@keyframes chart-beam-breathe { 0%,100% { opacity: .85 } 50% { opacity: 1 } }
-.chart-projection-ink { position: relative; z-index: 2; }
-.chart-projection-ink svg { position: relative; display: block; width: 100%; height: auto; overflow: visible; filter: drop-shadow(0 0 6px hsl(var(--chart-ink) / .3)) brightness(1.18); }
-.chart-projection-ink svg text { letter-spacing: 0; filter: drop-shadow(0 0 3px hsl(var(--chart-ink) / .4)); }
-.chart-projection-rail { position: relative; z-index: 1; height: 12px; margin-inline: -4px; border-radius: 4px; background: linear-gradient(180deg, hsl(var(--brass)), hsl(var(--brass) / .7)); border: 1px solid hsl(var(--chart-ink) / .8); display: flex; justify-content: space-between; align-items: center; box-shadow: var(--shadow-projection); }
-.chart-projection-rail span { width: 9px; height: 14px; background: hsl(var(--chart-ink)); border-radius: 2px; }
-.chart-projection-rail i { width: 28px; height: 4px; border: 1px solid hsl(var(--chart-ink)); border-radius: 3px; }
-.chart-projection-rail-bottom { height: 8px; }
-.chart-projection-pull { position: absolute; left: 50%; bottom: 0; width: 14px; height: 18px; transform: translateX(-50%); }
-.chart-projection-pull::before { content: ''; position: absolute; left: 50%; top: 0; width: 1px; height: 9px; background: hsl(var(--brass)); }
-.chart-projection-pull::after { content: ''; position: absolute; left: 1px; bottom: 0; width: 12px; height: 9px; border: 2px solid hsl(var(--brass)); border-radius: 50%; }
+.chart-projection-ink { position: relative; z-index: 1; animation: chart-gate-weave 13s steps(1) infinite; }
+.chart-projection-ink svg { position: relative; display: block; width: 100%; height: auto; overflow: visible; mix-blend-mode: multiply;
+  /* Lens fringe: a hair of red and blue either side of every projected line. */
+  filter: drop-shadow(.6px 0 0 hsl(356 70% 45% / .2)) drop-shadow(-.6px 0 0 hsl(222 60% 40% / .18)); }
+.chart-projection-ink svg text { letter-spacing: 0; }
+@keyframes chart-gate-weave { 0%,100% { transform: translate(0, 0) } 31% { transform: translate(.4px, -.3px) } 32% { transform: translate(0, 0) } 63% { transform: translate(-.3px, .4px) } 64% { transform: translate(.2px, 0) } 88% { transform: translate(0, -.4px) } }
+/* Lights off: the screen falls into dark shading away from where the lamp lands. */
+.chart-projection-falloff { position: absolute; inset: 0; z-index: 2; pointer-events: none; mix-blend-mode: multiply;
+  background:
+    radial-gradient(ellipse 74% 70% at 50% 46%, hsl(0 0% 100%) 0%, hsl(40 38% 90%) 34%, hsl(32 30% 66%) 60%, hsl(260 22% 30%) 86%, hsl(var(--screen-shade)) 104%),
+    linear-gradient(180deg, transparent 80%, hsl(30 25% 40% / .35)); }
+/* Lamp hot-spot: warm, slightly uneven, breathing and flickering very slowly. */
+.chart-projection-lamp { position: absolute; inset: -8%; z-index: 3; pointer-events: none; mix-blend-mode: soft-light;
+  background: radial-gradient(ellipse 46% 42% at 50% 45%, hsl(var(--screen-lamp) / .9), hsl(var(--screen-lamp) / .35) 55%, transparent 75%);
+  animation: chart-lamp 9.7s steps(1) infinite, chart-lamp-drift 38s ease-in-out infinite alternate; }
+@keyframes chart-lamp { 0% { opacity: .9 } 11% { opacity: .7 } 12% { opacity: .95 } 37% { opacity: .8 } 38% { opacity: .55 } 39% { opacity: .9 } 66% { opacity: .75 } 81% { opacity: 1 } 82% { opacity: .65 } 83% { opacity: .9 } }
+@keyframes chart-lamp-drift { from { transform: translate(-1.5%, -1%) } to { transform: translate(1.5%, 1%) } }
+/* Screen case on the tripod, with brass end caps and a maker's plate. */
+.chart-projection-case { position: relative; z-index: 2; height: 15px; margin-inline: -7px; border-radius: 8px; display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(180deg, hsl(240 14% 30%), hsl(var(--midnight)) 55%, hsl(240 14% 18%));
+  box-shadow: inset 12px 0 0 -2px hsl(var(--brass)), inset -12px 0 0 -2px hsl(var(--brass)), 0 6px 10px -6px hsl(var(--midnight)); }
+.chart-projection-case b { padding: 0 6px; border-radius: 2px; background: hsl(var(--brass)); color: hsl(var(--midnight)); font: 400 8px/11px 'Bebas Neue', sans-serif; letter-spacing: .22em; text-transform: uppercase; }
+.chart-projection-tripod { display: block; width: 100%; height: 30px; fill: hsl(var(--brass)); stroke: hsl(var(--brass) / .85); stroke-width: 1.6; stroke-linecap: round; }
 .chart-projection-detail { min-width: 0; padding: 1rem 0; border-top: 3px double hsl(var(--brass)); }
 
 /* Film layer (shared by projector screens and retro TVs). */
 .film-fx { position: absolute; inset: 0; z-index: 4; pointer-events: none; overflow: hidden; }
 .film-flicker { position: absolute; inset: 0; background: hsl(var(--chart-ink) / .05); mix-blend-mode: screen; animation: film-flicker 7.3s steps(1) infinite; }
 @keyframes film-flicker { 0% { opacity: .25 } 9% { opacity: .6 } 10% { opacity: .1 } 23% { opacity: .45 } 24% { opacity: .2 } 41% { opacity: .7 } 42% { opacity: .15 } 58% { opacity: .35 } 77% { opacity: .55 } 78% { opacity: .05 } 90% { opacity: .4 } }
+/* Haze in the beam: two soft clouds of light drifting very slowly across each other. */
+.film-haze { position: absolute; inset: -30%; opacity: .5; mix-blend-mode: screen; pointer-events: none;
+  background: radial-gradient(ellipse 30% 22% at 30% 40%, hsl(var(--chart-ink) / .07), transparent 70%), radial-gradient(ellipse 26% 30% at 70% 62%, hsl(var(--chart-ink) / .06), transparent 70%);
+  animation: film-haze 52s ease-in-out infinite alternate; }
+@keyframes film-haze { from { transform: translate(-6%, 3%) rotate(-2deg) } to { transform: translate(6%, -4%) rotate(3deg) } }
 .film-scratches i { position: absolute; top: -10%; bottom: -10%; width: 1px; opacity: 0; background: linear-gradient(180deg, transparent, hsl(var(--chart-ink) / .55) 18%, hsl(var(--chart-ink) / .2) 55%, hsl(var(--chart-ink) / .45) 80%, transparent); animation: film-scratch 11s steps(1) infinite; }
 .film-scratches i:nth-child(2) { width: 2px; animation-duration: 17s; animation-delay: -6s; filter: blur(.4px); }
 .film-scratches i:nth-child(3) { animation-duration: 23s; animation-delay: -13s; background: linear-gradient(180deg, transparent, hsl(var(--midnight) / .7) 30%, transparent 70%); }
 @keyframes film-scratch { 0% { left: 23%; opacity: 0 } 6% { opacity: .8 } 7% { left: 24% } 9% { left: 23.4%; opacity: .5 } 13% { opacity: 0 } 44% { left: 71%; opacity: 0 } 47% { opacity: .7 } 49% { left: 70.2% } 52% { opacity: 0 } 80% { left: 48%; opacity: .45 } 82% { opacity: 0 } }
-.film-motes span { position: absolute; width: 2px; height: 2px; border-radius: 50%; background: hsl(var(--chart-ink) / .7); box-shadow: 0 0 5px hsl(var(--chart-ink) / .55); animation: film-mote 48s ease-in-out infinite alternate; }
-.film-motes span:nth-child(6n+1) { left: 17%; top: 23%; animation-delay: -8s; }
-.film-motes span:nth-child(6n+2) { left: 36%; top: 44%; animation-delay: -23s; }
-.film-motes span:nth-child(6n+3) { left: 52%; top: 19%; animation-delay: -37s; }
-.film-motes span:nth-child(6n+4) { left: 72%; top: 62%; animation-delay: -13s; }
-.film-motes span:nth-child(6n+5) { left: 28%; top: 78%; animation-delay: -31s; }
-.film-motes span:nth-child(6n) { left: 83%; top: 35%; animation-delay: -19s; }
-.film-motes span:nth-child(n+7) { margin-left: 8%; margin-top: 7%; width: 1px; height: 1px; animation-duration: 65s; }
-.film-motes span:nth-child(n+13) { margin-left: -9%; margin-top: -12%; width: 3px; height: 3px; filter: blur(1.2px); opacity: .5; animation-duration: 80s; }
-@keyframes film-mote { from { transform: translate(-12px, 16px); opacity: .15; } 50% { opacity: .75; } to { transform: translate(22px, -25px); opacity: .25; } }
+/* Dust flying around the picture: every speck has its own slow wandering path (set inline). */
+.film-dust span { position: absolute; width: var(--s); height: var(--s); margin: calc(var(--s) / -2) 0 0 calc(var(--s) / -2); border-radius: 50%; opacity: 0; will-change: transform, opacity;
+  animation: film-dust-fly var(--d) ease-in-out var(--dl) infinite alternate, film-dust-glint var(--t) ease-in-out var(--dl) infinite; }
+.film-glint { background: hsl(var(--chart-ink) / .95); box-shadow: 0 0 4px 1px hsl(var(--chart-ink) / .55); }
+.film-mote { background: radial-gradient(circle, hsl(var(--chart-ink) / .8), hsl(var(--chart-ink) / .2) 60%, transparent 72%); filter: blur(.6px); }
+.film-bokeh { background: radial-gradient(circle, hsl(var(--chart-ink) / .5), hsl(var(--chart-ink) / .15) 55%, transparent 72%); filter: blur(1.5px); }
+.film-blob { background: radial-gradient(circle, hsl(var(--midnight) / .55), hsl(var(--midnight) / .2) 55%, transparent 72%); filter: blur(2px); animation-name: film-dust-fly, film-dust-blob !important; }
+@keyframes film-dust-fly {
+  0% { transform: translate3d(0, 0, 0) rotate(0deg) }
+  25% { transform: translate3d(var(--ax), var(--ay), 0) rotate(90deg) }
+  50% { transform: translate3d(var(--bx), var(--by), 0) rotate(180deg) }
+  75% { transform: translate3d(var(--cx), var(--cy), 0) rotate(270deg) }
+  100% { transform: translate3d(var(--dx), var(--dy), 0) rotate(360deg) }
+}
+@keyframes film-dust-glint { 0%, 100% { opacity: calc(var(--o) * .25) } 35% { opacity: var(--o) } 55% { opacity: calc(var(--o) * .5) } 70% { opacity: calc(var(--o) * .95) } }
+@keyframes film-dust-blob { 0%, 100% { opacity: calc(var(--o) * .6) } 50% { opacity: var(--o) } }
+/* On the pale projector screen, glints are lamp-lit specks with a dark rim so they read on cream. */
+.film-fx-screen .film-glint { background: hsl(48 100% 97%); box-shadow: 0 0 3px 1px hsl(var(--screen-lamp) / .9), 0 0 0 .5px hsl(var(--midnight) / .35); }
+.film-fx-screen .film-mote { background: radial-gradient(circle, hsl(48 100% 96% / .95), hsl(var(--screen-lamp) / .45) 55%, transparent 72%); box-shadow: 0 0 0 .5px hsl(var(--midnight) / .12); }
+.film-fx-screen .film-bokeh { background: radial-gradient(circle, hsl(48 100% 97% / .9), hsl(var(--screen-lamp) / .35) 50%, transparent 72%); mix-blend-mode: screen; }
+.film-fx-screen .film-flicker { background: hsl(var(--screen-shade) / .07); mix-blend-mode: multiply; }
+.film-fx-screen .film-haze { mix-blend-mode: soft-light; opacity: .8; background: radial-gradient(ellipse 30% 22% at 30% 40%, hsl(var(--screen-lamp) / .5), transparent 70%), radial-gradient(ellipse 26% 30% at 70% 62%, hsl(var(--screen-lamp) / .4), transparent 70%); }
+.film-fx-screen .film-scratches i { background: linear-gradient(180deg, transparent, hsl(var(--midnight) / .35) 18%, hsl(var(--midnight) / .12) 55%, hsl(var(--midnight) / .3) 80%, transparent); }
+.film-fx-screen .film-vignette { background: repeating-linear-gradient(0deg, transparent 0 3px, hsl(var(--midnight) / .018) 3px 4px); }
 /* Single-frame specks: dark and bright flecks that blink in for a moment, like dirt on the print. */
 .film-specks span { position: absolute; width: 3px; height: 2px; border-radius: 40%; background: hsl(var(--midnight) / .85); opacity: 0; animation: film-speck 6s steps(1) infinite; }
 .film-specks span:nth-child(odd) { background: hsl(var(--chart-ink) / .8); width: 2px; height: 2px; }
+.film-fx-screen .film-specks span:nth-child(odd) { background: hsl(var(--midnight) / .5); }
 .film-specks span:nth-child(1) { left: 12%; top: 31%; animation-delay: -1s; }
 .film-specks span:nth-child(2) { left: 64%; top: 18%; animation-delay: -2.4s; animation-duration: 7.5s; }
 .film-specks span:nth-child(3) { left: 41%; top: 71%; animation-delay: -3.1s; animation-duration: 5.2s; }
@@ -589,20 +638,21 @@ body {
 .film-specks span:nth-child(9) { left: 7%; top: 60%; animation-delay: -3.8s; animation-duration: 8.6s; }
 @keyframes film-speck { 0% { opacity: 0 } 50% { opacity: .9 } 52% { opacity: 0 } }
 .film-hair { position: absolute; inset: 0; width: 100%; height: 100%; fill: none; stroke: hsl(var(--midnight) / .55); stroke-width: .35; vector-effect: non-scaling-stroke; opacity: 0; animation: film-hair 19s steps(1) infinite; }
+.film-fx-screen .film-hair { stroke: hsl(var(--midnight) / .3); }
 .film-hair path:nth-child(2) { stroke: hsl(var(--chart-ink) / .35); }
 @keyframes film-hair { 0% { opacity: 0 } 31% { opacity: .9; transform: translate(0, 0) } 33% { transform: translate(2%, -1%) } 35% { opacity: 0 } 72% { opacity: .7; transform: translate(-3%, 2%) } 73% { opacity: 0 } }
 .film-vignette { position: absolute; inset: 0; background: radial-gradient(ellipse at 48% 42%, transparent 40%, hsl(var(--midnight) / .55)), repeating-linear-gradient(0deg, transparent 0 3px, hsl(var(--chart-ink) / .025) 3px 4px); }
 @media (prefers-reduced-motion: reduce) {
-  .film-flicker, .film-scratches i, .film-specks span, .film-hair, .chart-projection-beam { animation: none !important; }
-  .film-motes span { animation: none; opacity: .35; }
+  .film-flicker, .film-haze, .film-scratches i, .film-specks span, .film-hair, .chart-projection-ink, .chart-projection-lamp { animation: none !important; }
+  .film-dust span { animation: none !important; opacity: calc(var(--o) * .45); }
   .film-scratches i, .film-specks span, .film-hair { opacity: 0; }
 }
-@media print { .chart-projection { max-width: 150mm; } .chart-projection-screen { box-shadow: none; } .film-fx, .chart-projection-beam, .chart-projection-pull { display: none; } }
+@media print { .chart-projection { max-width: 150mm; } .chart-projection-screen { box-shadow: none; } .film-fx, .chart-projection-lamp, .chart-projection-falloff, .chart-projection-tripod { display: none; } }
 
 /* Ink-on-paper plate: 1950s science textbook. */
 .chart-paper {
   --chart-screen: 40 52% 90%; --chart-soft: 40 48% 85%; --chart-ink: 240 50% 23%; --chart-line: 240 30% 40%;
-  --chart-signal: 356 74% 50%; --chart-harmony: 44 100% 42%;
+  --chart-signal: 356 74% 50%; --chart-harmony: 44 100% 42%; --chart-select: 44 100% 50% / .45;
   position: relative; width: 100%; max-width: 480px; margin: 0 auto; padding: 16px 16px 10px;
   background: hsl(var(--chart-screen)); color: hsl(var(--chart-ink));
   border: 1px solid hsl(var(--chart-ink) / .6); outline: 3px double hsl(var(--chart-ink) / .35); outline-offset: -8px;
@@ -628,7 +678,7 @@ body {
 .chart-look-toggle button[aria-pressed="true"] { background: hsl(var(--primary)); color: hsl(var(--primary-foreground)); }
 .chart-look-toggle button:focus-visible { outline: 2px solid hsl(var(--ring)); outline-offset: -3px; }
 @media print { .chart-look-toggle { display: none; } }
-@media (max-width: 420px) { .chart-projection-screen { padding: 8px 2px; } .chart-paper { padding: 12px 8px 8px; outline-offset: -6px; } }
+@media (max-width: 420px) { .chart-projection-screen { border-width: 3px 4px 4px; } .chart-projection-tripod { height: 22px; } .chart-paper { padding: 12px 8px 8px; outline-offset: -6px; } }
 
 /* ── 1950s icon set: printed pictograms and brass medallions ── */
 .retro-icon { vertical-align: middle; }
