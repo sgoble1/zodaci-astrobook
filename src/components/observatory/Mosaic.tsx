@@ -69,7 +69,7 @@ export type Destination = { to: string; title: string; text: string; cta: string
 export function DestinationTiles({ items, label, className }: { items: Destination[]; label: string; className?: string }) {
   return (
     <nav aria-label={label} className={cn('obs-paper dest-tiles p-2', className)}>
-      <ul className="dest-grid" style={{ '--n': items.length } as CSSProperties}>
+      <ul className="dest-grid" style={{ '--n': items.length, '--n3': Math.min(items.length, 3) } as CSSProperties}>
         {items.map(d => (
           <li key={d.to + d.title}>
             <Link to={d.to} className="dest-tile group">
