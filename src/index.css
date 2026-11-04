@@ -680,23 +680,24 @@ body {
 @media print { .chart-look-toggle { display: none; } }
 @media (max-width: 420px) { .chart-projection-screen { border-width: 3px 4px 4px; } .chart-projection-tripod { height: 22px; } .chart-paper { padding: 12px 8px 8px; outline-offset: -6px; } }
 
-/* ── 1950s icon set: two-ink screen-printed pictograms (indigo line, yellow tint, red sparkle, slight misregistration) ── */
+/* ── 1950s icon set: AstroBook-cover inks (line in current colour, mustard tint, red sparkle, slight misregistration) ── */
 .retro-icon { vertical-align: middle; }
-.retro-icon .retro-tint { fill: hsl(var(--primary)); fill-opacity: .3; }
+.retro-icon .retro-tint { fill: hsl(var(--comic-mustard)); fill-opacity: .55; }
 .retro-icon .retro-spark { fill: hsl(var(--accent)); }
-.bg-primary .retro-icon .retro-tint, .retro-on-primary .retro-tint { fill: hsl(var(--accent)); fill-opacity: .35; }
+.bg-primary .retro-icon .retro-tint, .retro-on-primary .retro-tint { fill: hsl(var(--comic-brick)); fill-opacity: .4; }
 .bg-primary .retro-icon .retro-spark, .retro-on-primary .retro-spark { fill: hsl(var(--primary-foreground)); }
-/* Medallion: cream printed paper disc with halftone and a brass ring, like the spot illustrations. */
+/* Medallion: cream printed disc, navy rule, mustard ring, brick offset, the same rings as the spot illustrations. */
 .retro-emblem {
   display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; border-radius: 999px; position: relative;
-  color: hsl(var(--paper-ink));
-  background: radial-gradient(hsl(var(--paper-ink) / .1) .8px, transparent 1.1px) 0 0 / 4px 4px, radial-gradient(circle at 35% 30%, hsl(42 85% 92%), hsl(var(--spot-paper)) 60%, hsl(36 55% 76%));
-  box-shadow: 0 0 0 2px hsl(var(--brass)), 0 0 0 3.5px hsl(var(--background)), 0 0 0 4.5px hsl(var(--brass) / .45), 2px 3px 0 4px hsl(var(--accent) / .3);
-  transition: box-shadow .8s ease, transform 1.2s cubic-bezier(.22,1,.36,1);
+  color: hsl(var(--comic-navy));
+  background: radial-gradient(hsl(var(--comic-navy) / .1) .8px, transparent 1.1px) 0 0 / 4px 4px, radial-gradient(circle at 35% 30%, hsl(42 75% 93%), hsl(var(--spot-paper)) 60%, hsl(37 50% 78%));
+  box-shadow: inset 0 0 0 1.5px hsl(var(--comic-navy) / .55), 0 0 0 2px hsl(var(--comic-mustard)), 0 0 0 3.5px hsl(var(--spot-paper)), 0 0 0 4.5px hsl(var(--comic-navy) / .75), 2px 3px 0 4px hsl(var(--comic-brick) / .45);
+  transition: box-shadow 1s ease, transform 1.4s cubic-bezier(.22,1,.36,1);
 }
-.retro-emblem .retro-icon { filter: drop-shadow(1.1px .9px 0 hsl(var(--accent) / .45)); }
-.retro-emblem .retro-tint { fill: hsl(var(--primary)); fill-opacity: .85; }
-.retro-emblem-active { box-shadow: 0 0 0 2px hsl(var(--accent)), 0 0 0 3.5px hsl(var(--background)), 0 0 0 4.5px hsl(var(--primary) / .8), 0 0 16px 4px hsl(var(--primary) / .3); transform: rotate(-4deg); }
+.retro-emblem .retro-icon { filter: drop-shadow(1.1px .9px 0 hsl(var(--comic-brick) / .5)); }
+.retro-emblem .retro-tint { fill: hsl(var(--comic-mustard)); fill-opacity: .9; }
+.retro-emblem .retro-spark { fill: hsl(var(--comic-brick)); }
+.retro-emblem-active { box-shadow: inset 0 0 0 1.5px hsl(var(--comic-navy) / .55), 0 0 0 2px hsl(var(--comic-brick)), 0 0 0 3.5px hsl(var(--spot-paper)), 0 0 0 4.5px hsl(var(--comic-mustard)), 0 0 16px 4px hsl(var(--comic-mustard) / .35); transform: rotate(-4deg); }
 @media (prefers-reduced-motion: reduce) { .retro-emblem { transition: none; } .retro-emblem-active { transform: none; } }
 
 /* ── Retro TV: rolling hold bar, curved glass, knobs ── */
@@ -730,35 +731,56 @@ body {
 .place-banner-art::after { content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none; background-image: radial-gradient(hsl(var(--foreground) / .06) 1px, transparent 1.2px); background-size: 5px 5px; mix-blend-mode: overlay; }
 @media (max-width: 639px) { .place-banner-art::before { background: linear-gradient(90deg, hsl(var(--background) / .95), hsl(var(--background) / .78) 60%, hsl(var(--background) / .45)); } }
 
-/* ── Atomic spot art: printed medallions and box plates (cream paper, brass ring, slow float). ── */
-:root { --spot-paper: 40 75% 87%; }
+/* ── Product-cover ink (AstroComic / AstroBook): cream paper, navy rule, mustard ring, brick-red plate. ── */
+:root { --spot-paper: 41 62% 88%; --comic-navy: 226 42% 22%; --comic-mustard: 42 66% 50%; --comic-brick: 9 58% 45%; }
 .spot-art { position: relative; display: inline-flex; flex-shrink: 0; }
+.spot-art-disc { position: relative; z-index: 1; display: block; width: 100%; height: 100%; overflow: hidden; background: hsl(var(--spot-paper)); }
 .spot-art img { display: block; width: 100%; height: 100%; object-fit: cover; }
-.spot-art-medallion { border-radius: 999px; aspect-ratio: 1; }
-.spot-art-medallion img { border-radius: 999px; transform: scale(1.12); }
-.spot-art-medallion { overflow: hidden; background: hsl(var(--spot-paper)); box-shadow: 0 0 0 2px hsl(var(--brass)), 0 0 0 4px hsl(var(--background)), 0 0 0 5px hsl(var(--brass) / .45), 3px 4px 0 5px hsl(var(--accent) / .3); animation: spot-float 11s ease-in-out infinite; }
-.spot-art-plate { border-radius: .75rem; overflow: hidden; background: hsl(var(--spot-paper)); }
-.spot-art-badge { position: absolute; right: -2px; bottom: -2px; min-width: 1.6rem; padding: 0 .4rem; border-radius: 999px; background: hsl(var(--accent)); color: hsl(var(--accent-foreground)); border: 2px solid hsl(var(--brass)); font: 400 .85rem/1.35rem 'Bebas Neue', sans-serif; letter-spacing: .06em; text-align: center; }
+.spot-art-plate .spot-art-disc { border-radius: .75rem; }
+/* Medallion: printed disc with the cover's rules; slow bob; a gold orbit passes behind it carrying a small red planet. */
+.spot-art-medallion { aspect-ratio: 1; animation: spot-float 14s ease-in-out infinite; }
+.spot-art-medallion .spot-art-disc { border-radius: 999px; box-shadow: 0 0 0 2px hsl(var(--comic-mustard)), 0 0 0 3.5px hsl(var(--spot-paper)), 0 0 0 4.5px hsl(var(--comic-navy) / .8), 3px 4px 0 4.5px hsl(var(--comic-brick) / .45); }
+.spot-art-medallion .spot-art-disc::after { content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; box-shadow: inset 0 0 0 1.5px hsl(var(--comic-navy) / .55), inset 0 0 18px hsl(30 45% 40% / .2); }
+.spot-art-medallion img { transform: scale(1.14); }
+.spot-art-orbit { position: absolute; z-index: 0; left: -17%; right: -17%; top: 35%; height: 30%; border-radius: 50%; border: 1.5px solid hsl(var(--comic-mustard)); pointer-events: none; transform: rotate(-16deg); animation: spot-orbit-sway 24s ease-in-out infinite alternate; }
+.spot-art-orbit::after { content: ''; position: absolute; top: 22%; right: 7%; width: 10%; aspect-ratio: 1; transform: translate(50%, -50%); border-radius: 999px; border: 1.5px solid hsl(var(--comic-navy)); background: radial-gradient(circle at 35% 32%, hsl(14 75% 66%), hsl(var(--comic-brick)) 62%); }
+.spot-art-medallion:has(.spot-art-orbit)::before { content: ''; position: absolute; z-index: 2; top: -6%; left: -4%; width: 17%; aspect-ratio: 1; background: hsl(var(--comic-mustard)); clip-path: polygon(50% 0, 60% 40%, 100% 50%, 60% 60%, 50% 100%, 40% 60%, 0 50%, 40% 40%); animation: retro-twinkle 10s ease-in-out infinite; }
+.spot-art-badge { position: absolute; z-index: 2; right: -2px; bottom: -2px; min-width: 1.6rem; padding: 0 .4rem; border-radius: 999px; background: hsl(var(--comic-brick)); color: hsl(var(--spot-paper)); border: 2px solid hsl(var(--comic-mustard)); box-shadow: 1.5px 1.5px 0 hsl(var(--comic-navy)); font: 400 .85rem/1.35rem 'Bebas Neue', sans-serif; letter-spacing: .06em; text-align: center; }
 @keyframes spot-float { 0%,100% { transform: translateY(0) rotate(0deg) } 50% { transform: translateY(-3px) rotate(-1.5deg) } }
-/* Box header plate: cream band, dotted orbit, two sparkles and the medallion sitting on it. */
+@keyframes spot-orbit-sway { from { transform: rotate(-18deg) } to { transform: rotate(-8deg) } }
+/* Box header plate: cream cover paper, gold orbit with a planet, sparkles, brick-red band like the AstroBook title plate. */
 .box-plate { position: relative; display: block; overflow: hidden; isolation: isolate;
-  background: radial-gradient(hsl(var(--paper-ink) / .09) 1px, transparent 1.3px) 0 0 / 6px 6px, linear-gradient(180deg, hsl(var(--spot-paper)), hsl(38 60% 82%));
-  border-bottom: 2px solid hsl(var(--brass) / .7); }
-.box-plate-orbit { position: absolute; inset: 18% -10% -60% -10%; border: 1.5px dotted hsl(var(--paper-ink) / .45); border-radius: 50%; transform: rotate(-6deg); }
-.box-plate-spark { position: absolute; top: 22%; left: 18%; width: 14px; height: 14px; background: hsl(var(--primary)); clip-path: polygon(50% 0, 60% 40%, 100% 50%, 60% 60%, 50% 100%, 40% 60%, 0 50%, 40% 40%); animation: retro-twinkle 9s ease-in-out infinite; }
-.box-plate-spark-2 { top: 58%; left: 34%; width: 9px; height: 9px; background: hsl(var(--accent)); animation-delay: -4s; }
-.box-plate-left .box-plate-spark { left: auto; right: 18%; } .box-plate-left .box-plate-spark-2 { right: 34%; }
-.box-plate-spot { position: absolute; top: 50%; height: 140%; width: auto; transform: translateY(-50%); right: 6%; box-shadow: 0 0 0 2px hsl(var(--brass)); }
+  background: radial-gradient(hsl(var(--comic-navy) / .08) .9px, transparent 1.2px) 0 0 / 5px 5px, linear-gradient(180deg, hsl(42 72% 92%), hsl(var(--spot-paper)) 60%, hsl(38 52% 80%));
+  border-bottom: 5px solid hsl(var(--comic-brick)); box-shadow: inset 0 -1.5px 0 hsl(var(--comic-navy) / .6), inset 0 0 30px hsl(30 45% 40% / .14); }
+.box-plate-orbit { position: absolute; inset: 22% -10% -55% -10%; border: 1.5px solid hsl(var(--comic-mustard) / .9); border-radius: 50%; transform: rotate(-6deg); }
+.box-plate-orbit::after { content: ''; position: absolute; top: 9%; left: 30%; width: 12px; height: 12px; border-radius: 999px; border: 1.5px solid hsl(var(--comic-navy)); background: radial-gradient(circle at 35% 32%, hsl(14 75% 66%), hsl(var(--comic-brick)) 62%); transform: translate(-50%, -50%); }
+.box-plate-left .box-plate-orbit::after { left: 70%; }
+.box-plate-spark { position: absolute; top: 20%; left: 16%; width: 16px; height: 16px; background: hsl(var(--comic-mustard)); clip-path: polygon(50% 0, 60% 40%, 100% 50%, 60% 60%, 50% 100%, 40% 60%, 0 50%, 40% 40%); animation: retro-twinkle 10s ease-in-out infinite; }
+.box-plate-spark-2 { top: 60%; left: 40%; width: 9px; height: 9px; background: hsl(var(--comic-navy)); animation-delay: -5s; }
+.box-plate-left .box-plate-spark { left: auto; right: 16%; } .box-plate-left .box-plate-spark-2 { right: 40%; }
+.box-plate-spot { position: absolute; top: 50%; height: 140%; width: auto; transform: translateY(-50%); right: 6%; }
 .box-plate-left .box-plate-spot { right: auto; left: 6%; }
 .box-plate .box-plate-spot { animation: none; }
-/* Atomic feature boxes: printed card with offset shadow; art bobs slowly, card lifts slowly. */
-.atomic-box { position: relative; display: flex; flex-direction: column; gap: .75rem; border-radius: 1.25rem; border: 1px solid hsl(var(--brass) / .5); padding: 1.25rem;
-  background: radial-gradient(hsl(var(--foreground) / .035) 1px, transparent 1.2px) 0 0 / 6px 6px, hsl(var(--card) / .85);
-  box-shadow: 4px 4px 0 hsl(var(--brass) / .25); transition: transform 1.2s cubic-bezier(.22,1,.36,1), box-shadow 1.2s ease, border-color 1.2s ease; }
-.atomic-box:hover, .atomic-box:focus-within { transform: translateY(-3px); border-color: hsl(var(--brass)); box-shadow: 6px 7px 0 hsl(var(--accent) / .35); }
-.atomic-box:hover .spot-art-medallion { animation-duration: 6s; }
+/* Feature boxes: printed AstroBook-cover cards (cream stock, mustard edge, inset navy rule, brick offset). Slow lift on hover. */
+.atomic-box { position: relative; display: flex; flex-direction: column; gap: .75rem; border-radius: .9rem; padding: 1.25rem; color: hsl(var(--comic-navy));
+  border: 2px solid hsl(var(--comic-mustard) / .9); outline: 1px solid hsl(var(--comic-navy) / .45); outline-offset: -7px;
+  background: radial-gradient(hsl(var(--comic-navy) / .065) .9px, transparent 1.2px) 0 0 / 5px 5px, linear-gradient(170deg, hsl(42 72% 92%), hsl(var(--spot-paper)) 55%, hsl(38 50% 80%));
+  box-shadow: inset 0 0 36px hsl(30 45% 40% / .15), 5px 5px 0 hsl(var(--comic-brick) / .6);
+  transition: transform 1.4s cubic-bezier(.22,1,.36,1), box-shadow 1.4s ease; }
+.atomic-box h2, .atomic-box h3, .atomic-box h4 { color: hsl(var(--comic-navy)); background: none; -webkit-text-fill-color: currentColor; }
+.atomic-box .text-muted-foreground { color: hsl(var(--comic-navy) / .76); }
+.atomic-box .text-primary { color: hsl(36 78% 30%); }
+.atomic-box .text-accent { color: hsl(var(--comic-brick)); }
+.atomic-box:hover, .atomic-box:focus-within { transform: translateY(-3px) rotate(-.3deg); box-shadow: inset 0 0 36px hsl(30 45% 40% / .15), 8px 9px 0 hsl(var(--comic-brick) / .65); }
+.atomic-box:focus-visible { outline: 2px solid hsl(var(--ring)); outline-offset: 3px; }
+.atomic-box:hover .spot-art-medallion { animation-duration: 7s; }
 .atomic-box-art { width: 5.5rem; height: 5.5rem; }
-@media (prefers-reduced-motion: reduce) { .spot-art-medallion, .box-plate-spark { animation: none; } .atomic-box { transition: none; } .atomic-box:hover { transform: none; } }
+/* Ink-in: boxes print onto the page as they scroll into view (scroll-linked, so it never runs on its own). */
+@keyframes ink-in { from { opacity: .2; translate: 0 18px; filter: sepia(.5) saturate(.5) } to { opacity: 1; translate: 0 0; filter: none } }
+@supports (animation-timeline: view()) { @media (prefers-reduced-motion: no-preference) {
+  .atomic-box, .box-plate { animation: ink-in linear both; animation-timeline: view(); animation-range: entry 0% entry 80%; }
+} }
+@media (prefers-reduced-motion: reduce) { .spot-art-medallion, .spot-art-orbit, .spot-art-medallion::before, .box-plate-spark { animation: none !important; } .atomic-box { transition: none; } .atomic-box:hover { transform: none; } }
 
 /* ── Gift-shop sidebar: departments with printed medallions, sign tiles, price bands ── */
 .shop-sidebar-h { font-family: 'Bebas Neue', sans-serif; letter-spacing: .16em; font-size: .95rem; color: hsl(var(--primary)); border-bottom: 1px dashed hsl(var(--brass) / .5); padding-bottom: .35rem; }
