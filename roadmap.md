@@ -330,8 +330,9 @@ Audit Oct 29: Chat/counselors already use the member's chart; podcast/custom pag
 - [x] Hero slideshow: slide 1 the Cartographer (a woman, never a Vault Boy-like boy) pointing at a zodiac wheel with planet meanings; slide 2 keeps the current faces hero; slide 3 AstroBook/AstroComic. Keep the Yellowtail script line as the subheading.
 - [ ] Public header as panel plates (logo, nav plate, tagline plate); footer as a navy bar.
 - [x] Global panel look: obs-panel = navy plate with mustard inset rule; obs-paper = aged cream paper.
-- [ ] Member, founder (April/Shane/Zac) and shared dashboards open with the same mosaic: personal hero slideshow from their own chart, destination tiles, then the TV and existing content.
-- [ ] Preserve animated TVs below the mosaic and verify Zac edition access is restricted to Zac and explicitly authorized Shane accounts (Nov 4 request).
-- [~] Verify home and dashboards at 393px and 1280px (home verified Nov 4; dashboards pending).
+- [x] Member, founder (April/Shane/Zac) and shared dashboards render the same mosaic opening before their animated TV and existing content; Shane/Zac edition libraries include the same opening and chart-fed TV. No chapters changed.
+- [x] Preserve animated TVs below the mosaic: Zac desktop/393px channel switching, tuning static and film layers verified. Zac ownership and Shane's two explicit edition shares confirmed in live access records; signed-out redirects to sign-in and unrelated signed-in account renders no private chapters or TV. Admin role alone grants no edition access.
+- [~] Verify home and dashboards at 393px and 1280px (home and Zac library TV verified Nov 4; remaining dashboard account matrix pending).
+- [ ] Repair older member navigation test expectations following Learn consolidation (3 failures: Academy/Blog legacy destinations and Academy breadcrumb label); 24 sky-channel/founder-frame tests pass.
 - [x] Preview fonts: package font files were blocked by the preview server, so headings showed a fallback serif; the server now serves them (Nov 4).
 - [x] Projector additions (kept the existing look): lamp warm-up on first appearance, faint wall glow behind the screen; hero dial gets lamp beam + dust.
