@@ -1,17 +1,64 @@
-import { useId } from 'react';
+import { useId, useMemo, type CSSProperties } from 'react';
 import { cn } from '@/lib/utils';
 
 /**
  * Projected-film layer shared by the zodiac projector and the retro TVs: a slow uneven lamp
- * flicker, film scratches that jump between frames, floating dust motes, single-frame specks
- * and a stray hair. Purely decorative (aria-hidden); everything stops under reduced motion.
+ * flicker, drifting haze in the beam, dust that flies around the whole picture at several
+ * depths, film scratches, single-frame specks and a stray hair. Purely decorative
+ * (aria-hidden); everything stops under reduced motion.
+ *
+ * tone "glow"   — bright dust on a dark picture (retro TVs).
+ * tone "screen" — lamp light on a pale pull-down screen: glinting motes in the beam plus
+ *                 soft, out-of-focus lens dust that reads against the cream.
  */
-export function FilmFx({ className, motes = 18, specks = 9 }: { className?: string; motes?: number; specks?: number }) {
+export type FilmTone = 'glow' | 'screen';
+
+type Dust = { kind: 'glint' | 'mote' | 'blob'; style: CSSProperties };
+
+function seeded(seed: number) {
+  return () => {
+    seed = (seed + 0x6d2b79f5) | 0;
+    let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+    t ^= t + Math.imul(t ^ (t >>> 7), 61 | t);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+/** Deterministic dust field: same count/tone → same paths, so nothing jumps on re-render. */
+export function makeDust(count: number, tone: FilmTone): Dust[] {
+  const r = seeded(count * 7919 + (tone === 'screen' ? 13 : 3));
+  const blobs = tone === 'screen' ? Math.max(3, Math.round(count / 6)) : 0;
+  const px = (n: number) => `${Math.round(n)}px`;
+  const step = (span: number) => (r() * 2 - 1) * span;
+  return Array.from({ length: count + blobs }, (_, i) => {
+    const kind: Dust['kind'] = i >= count ? 'blob' : i % 3 === 0 ? 'mote' : 'glint';
+    const span = kind === 'blob' ? 70 : kind === 'mote' ? 120 : 150;
+    const size = kind === 'blob' ? 9 + r() * 12 : kind === 'mote' ? 2.6 + r() * 2.4 : 1 + r() * 1.6;
+    const style = {
+      left: `${(4 + r() * 92).toFixed(1)}%`,
+      top: `${(4 + r() * 92).toFixed(1)}%`,
+      '--s': px(size),
+      '--o': (kind === 'blob' ? 0.16 + r() * 0.12 : 0.55 + r() * 0.4).toFixed(2),
+      '--d': `${Math.round((kind === 'blob' ? 70 : 30) + r() * 36)}s`,
+      '--t': `${(4 + r() * 7).toFixed(1)}s`,
+      '--dl': `${(-r() * 60).toFixed(1)}s`,
+      '--ax': px(step(span)), '--ay': px(step(span)),
+      '--bx': px(step(span)), '--by': px(step(span)),
+      '--cx': px(step(span)), '--cy': px(step(span)),
+      '--dx': px(step(span)), '--dy': px(step(span)),
+    } as CSSProperties;
+    return { kind, style };
+  });
+}
+
+export function FilmFx({ className, motes = 18, specks = 9, tone = 'glow' }: { className?: string; motes?: number; specks?: number; tone?: FilmTone }) {
+  const dust = useMemo(() => makeDust(motes, tone), [motes, tone]);
   return (
-    <div className={cn('film-fx', className)} aria-hidden="true">
+    <div className={cn('film-fx', tone === 'screen' && 'film-fx-screen', className)} aria-hidden="true">
+      <div className="film-haze" />
       <div className="film-flicker" />
       <div className="film-scratches"><i /><i /><i /></div>
-      <div className="film-motes">{Array.from({ length: motes }, (_, i) => <span key={i} />)}</div>
+      <div className="film-dust">{dust.map((d, i) => <span key={i} className={`film-${d.kind}`} style={d.style} />)}</div>
       <div className="film-specks">{Array.from({ length: specks }, (_, i) => <span key={i} />)}</div>
       <svg className="film-hair" viewBox="0 0 100 100" preserveAspectRatio="none">
         <path d="M71 12c-3 6 4 9 1 15s-6 4-4 10" />

@@ -59,17 +59,23 @@ export function ChartProjection({ children, variant, caption }: { children: Reac
       </figure>
     );
   }
+  // A 1950s tripod slide-show screen in a darkened room: the top bar hangs on the pole's hook,
+  // the white screen reads dim cream with the lights off, brightest where the lamp lands.
   return (
     <div className="chart-projection">
       {ink.defs}
-      <div className="chart-projection-rail" aria-hidden="true"><span /><i /><span /></div>
+      <div className="chart-projection-top" aria-hidden="true"><i /></div>
       <div className="chart-projection-screen">
-        <div className="chart-projection-beam" aria-hidden="true" />
         <div className="chart-projection-ink" style={ink.style}>{children}</div>
-        <FilmFx />
+        <div className="chart-projection-falloff" aria-hidden="true" />
+        <div className="chart-projection-lamp" aria-hidden="true" />
+        <FilmFx tone="screen" motes={30} specks={9} />
       </div>
-      <div className="chart-projection-rail chart-projection-rail-bottom" aria-hidden="true"><span /><i /><span /></div>
-      <div className="chart-projection-pull" aria-hidden="true" />
+      <div className="chart-projection-case" aria-hidden="true"><b>Zodaci</b></div>
+      <svg className="chart-projection-tripod" viewBox="0 0 200 36" preserveAspectRatio="xMidYMin meet" aria-hidden="true" focusable="false">
+        <path d="M100 0v20M100 20L58 35M100 20l42 15M100 20v15" />
+        <circle cx="100" cy="20" r="2.4" />
+      </svg>
     </div>
   );
 }
