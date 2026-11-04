@@ -15,6 +15,8 @@ import { SharedChatFeed } from '@/components/shared/SharedChatFeed';
 import { supabase } from '@/integrations/supabase/client';
 import { CreditBalance } from '@/components/common/CreditBalance';
 import { CurrentChapterPanel } from '@/components/observatory/CurrentChapterPanel';
+import { DashboardMosaic } from '@/components/observatory/DashboardMosaic';
+import { ChartWheelIcon, TelevisionIcon, LibraryIcon, StorefrontIcon, RingsIcon } from '@/components/icons/RetroIcons';
 
 type OrderSummary = { id: string; status: string; edition: string; format: string };
 
@@ -46,8 +48,14 @@ export function MemberDashboard() {
   if (birth === undefined || access.loading) return <p role="status" className="text-muted-foreground">Opening your dashboard…</p>;
   const destination = !birth ? '/start' : visit?.path.startsWith('/my-readings/topic/') ? `${visit.path}${visit.section ? `#${visit.section}` : ''}` : '/my-readings/topic/big-three';
   return <article className="space-y-12">
-    <header className="flex flex-wrap items-end justify-between gap-4 border-b border-border pb-6"><div className="space-y-2"><p className="font-label text-xs text-primary">Personal Observatory · {access.plan === 'free' ? 'Free' : access.plan === 'creator' ? 'Cosmic' : 'Pro'}</p><h1>{birth ? `${birth.name}’s current chapter` : 'Your current chapter'}</h1></div><Button asChild variant="outline"><Link to="/start">{birth ? 'Birth details' : 'Set up my chart'}</Link></Button></header>
-    {chart && <CurrentChapterPanel chart={chart} name={birth?.name} />}
+    <DashboardMosaic chart={chart} name={birth?.name} hasTime={Boolean(birth?.time)} primary={{ to: destination, label: birth ? 'Continue reading' : 'Set up my chart' }} secondary={{ to: '/my-chart', label: 'My chart' }} onAir={{ cta: { to: '#broadcast-studio', label: 'Tune in' } }} press={{ book: { to: '/my-astrobook', label: 'My AstroBook' }, comic: { to: '/astrocomic', label: 'AstroComic' } }} destinations={[
+      { to: '/my-chart', label: 'My chart', Icon: ChartWheelIcon },
+      { to: '#broadcast-studio', label: 'Broadcast Studio', Icon: TelevisionIcon },
+      { to: '/my-readings', label: 'Reading shelf', Icon: LibraryIcon },
+      { to: '/relationships', label: 'Relationships', Icon: RingsIcon },
+      { to: '/store', label: 'Gift shop', Icon: StorefrontIcon },
+    ]} />
+    {chart && <div id="broadcast-studio" className="scroll-mt-24"><CurrentChapterPanel chart={chart} name={birth?.name} /></div>}
     <CreditBalance />
     <section className="grid items-center gap-6 sm:grid-cols-[7rem_minmax(0,1fr)]"><ThemeArt label={visit?.title ?? 'Your Big Three'} className="h-28 w-28" /><div className="space-y-4"><p className="text-xs text-gold">{!birth ? 'Begin here' : visit ? 'Continue reading' : 'Your chart is ready'}</p><h2>{!birth ? 'Meet your sky' : visit?.title ?? 'Your Big Three'}</h2>{!birth ? <p className="text-muted-foreground">Your birth date, time and place create your personal chart.</p> : visit ? <p className="text-muted-foreground">Return to your saved place.</p> : <p className="text-muted-foreground">Sun, Moon and Rising: a starting point for your personal readings.</p>}<Button asChild><Link to={destination}>{!birth ? 'Create my chart' : visit ? 'Continue reading' : 'Open my first reading'}<ArrowRight className="h-4 w-4" /></Link></Button></div></section>
     {chart && <section className="border-y border-border py-6"><div className="mb-5 flex items-center justify-between gap-3"><h2 className="text-2xl">Chart snapshot</h2><Button asChild variant="ghost"><Link to="/my-chart"><Orbit className="h-4 w-4" />My Chart</Link></Button></div><dl className="grid gap-4 sm:grid-cols-3">{placements.map(([label, value]) => <div key={label} className="border-l-2 border-primary pl-4"><dt className="text-xs text-muted-foreground">{label}</dt><dd className="mt-1 font-display text-2xl">{value}</dd></div>)}</dl>{!birth?.time && <p className="mt-4 text-sm text-muted-foreground">Birth time is unknown. Rising sign and houses are not shown.</p>}</section>}
