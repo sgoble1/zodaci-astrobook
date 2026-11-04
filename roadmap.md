@@ -326,7 +326,7 @@ Audit Oct 29: Chat/counselors already use the member's chart; podcast/custom pag
 - [x] Theme superseded by the Astral Research Authority 1950s redesign (Nov 4).
 
 ## Concept mosaic redesign (Nov 4 2026, from the user's Designer concept)
-- [ ] Forecast page linked from Learn: original AstroComic artwork, live general sky/calendar, saved-chart TV channels and retro event slideshow; preserve existing founder forecasts and verify desktop/phone accuracy and privacy.
+- [x] Forecast page /forecast linked from Learn and its desktop/phone submenu: two original AstroComic illustrations, live general sky and 30-day calendar, signed-in saved-chart TV channels, personal/general slow retro slideshows and calculation/interpretation notes. Existing founder forecasts preserved. Browser verified Learn → Forecast, public slides, authenticated Shane channel/reel and no 393px overflow/runtime errors; 20 forecast/metadata tests pass.
 - [x] Home: weathered panel mosaic (motto rail, hero slideshow, observatory poster, five destination tiles, quote plate, Cosmic Archive shelf, How astrology works, Explore the Zodiac, Latest transmissions, Join the observatory).
 - [x] Hero slideshow: slide 1 the Cartographer (a woman, never a Vault Boy-like boy) pointing at a zodiac wheel with planet meanings; slide 2 keeps the current faces hero; slide 3 AstroBook/AstroComic. Keep the Yellowtail script line as the subheading.
 - [ ] Public header as panel plates (logo, nav plate, tagline plate); footer as a navy bar.
