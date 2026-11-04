@@ -149,9 +149,10 @@ export const MEMBER_DOMAINS: MemberDomain[] = [
     id: 'learn', label: 'Research Library', hub: '/learn', hubLabel: 'Open Learn', icon: GraduationCap,
     description: 'Lessons, plain-language guides and articles.',
     tabs: ['/learn', '/themes', '/instructions', '/faq', '/verify'],
-    prefixes: ['/learn', '/academy', '/themes', '/blog', '/reading-room'],
+    prefixes: ['/forecast', '/learn', '/academy', '/themes', '/blog', '/reading-room'],
     columns: [
       { title: 'Academy', items: [
+        { to: '/forecast', label: 'Forecast Center', description: 'Live sky and personal broadcast channels', icon: PlayCircle },
         { to: '/learn', label: 'Learn', description: 'Lessons, guides, sky forecasts and articles', icon: GraduationCap, badge: 'New' },
         { to: '/themes', label: 'Core themes explained', description: 'The twelve themes, in plain words', icon: Sparkles },
       ] },
@@ -392,7 +393,7 @@ const P = (domain: Placement['domain'], level: Placement['level'], note?: string
  */
 export const ROUTE_INVENTORY: Record<string, Placement> = {
   '/index': P('public', 'utility', 'redirects to /welcome'), '/welcome': P('public', 'primary'), '/april': P('public', 'utility', 'April’s shared report; opens for her account and people she shared her edition with'), '/shared-with-me': P('account', 'utility'),
-  '/about': P('learn', 'secondary'), '/characters': P('learn', 'secondary', 'character selection'), '/lp/:slug': P('public', 'utility', 'campaign pages'), '/learn': P('learn', 'primary'), '/learn/:slug': P('learn', 'tertiary', 'Learn article'), '/blog': P('learn', 'utility', 'redirects to /learn#journal'), '/blog/learn/:slug': P('learn', 'tertiary', 'from the Journal'),
+  '/about': P('learn', 'secondary'), '/characters': P('learn', 'secondary', 'character selection'), '/lp/:slug': P('public', 'utility', 'campaign pages'), '/forecast': P('learn', 'secondary'), '/learn': P('learn', 'primary'), '/learn/:slug': P('learn', 'tertiary', 'Learn article'), '/blog': P('learn', 'utility', 'redirects to /learn#journal'), '/blog/learn/:slug': P('learn', 'tertiary', 'from the Journal'),
   '/community': P('explore', 'secondary'), '/community/guidelines': P('explore', 'tertiary', 'from Community'), '/community/:id': P('explore', 'tertiary', 'from Community'),
   '/astrobook': P('public', 'utility', 'public product page; members use /books'), '/book-preview': P('book', 'secondary'), '/demo': P('learn', 'secondary'),
   '/themes': P('learn', 'secondary'), '/themes/:slug': P('learn', 'tertiary', 'from Core themes explained'), '/faq': P('learn', 'secondary'), '/privacy': P('public', 'utility', 'footer'), '/terms': P('public', 'utility', 'footer'),

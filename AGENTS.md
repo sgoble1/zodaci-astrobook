@@ -70,3 +70,4 @@
 - Astral Research Authority world: place/staff/member-character registry lives in src/lib/observatory.ts and shared observatory pieces in src/components/observatory/; pages read their place from the registry so the world stays consistent.
 - Current Chapter and Life Compass derive only from today's transits (src/lib/currentChapter.ts), never AI or biography, so the landing stays truthful without credits.
 - DashboardMosaic is the shared dashboard opening; retain CurrentChapterPanel beneath it, with founder TVs receiving their authorized edition chart directly to prevent viewer-chart substitution.
+- /forecast separates public skyToday/skyEvents bulletins from signed-in useMyBirth broadcasts; reuse CurrentChapterPanel and ForecastReel so chart privacy and deterministic timing stay consistent.

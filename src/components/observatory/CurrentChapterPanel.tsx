@@ -19,8 +19,8 @@ import growthArt from '@/assets/channels/channel-growth.jpg';
 /** Each channel has its own 1950s broadcast card, so changing channel visibly changes the picture. */
 const CHANNEL_ART: Record<ChannelId, string> = { chapter: chapterArt, career: careerArt, relationship: relationshipArt, window: windowArt, growth: growthArt };
 const LINK: Record<ChannelId, [string, string]> = {
-  chapter: ['/transits', 'Open the Forecast Center'], career: ['/my-readings', 'Career readings'], relationship: ['/relationships', 'Relationship Bureau'],
-  window: ['/transits', 'Full 90-day forecast'], growth: ['/timeline', 'Timeline Hall'],
+  chapter: ['/forecast', 'Open the Forecast Center'], career: ['/my-readings', 'Career readings'], relationship: ['/relationships', 'Relationship Bureau'],
+  window: ['/forecast#sky-calendar', 'Full 30-day forecast'], growth: ['/timeline', 'Timeline Hall'],
 };
 
 /** Broadcast Studio: five retro-TV channels plus the six Life Compass signals, all from today's real sky. */
@@ -36,7 +36,8 @@ export function CurrentChapterPanel({ chart, name }: { chart: ChartResult; name?
   const timer = useRef<number>();
   const tabs = useRef<(HTMLButtonElement | null)[]>([]);
   useEffect(() => () => window.clearTimeout(timer.current), []);
-  const ch = channels.find(c => c.id === active)!;
+  const ch = channels.find(c => c.id === active);
+  if (!ch) return null;
   const tune = (id: ChannelId) => {
     if (id === active) return;
     setActive(id);
