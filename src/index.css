@@ -721,3 +721,33 @@ body {
 .place-banner-art::before { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(90deg, hsl(var(--background) / .94) 0%, hsl(var(--background) / .82) 38%, hsl(var(--background) / .3) 70%, hsl(var(--background) / .1)); }
 .place-banner-art::after { content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none; background-image: radial-gradient(hsl(var(--foreground) / .06) 1px, transparent 1.2px); background-size: 5px 5px; mix-blend-mode: overlay; }
 @media (max-width: 639px) { .place-banner-art::before { background: linear-gradient(90deg, hsl(var(--background) / .95), hsl(var(--background) / .78) 60%, hsl(var(--background) / .45)); } }
+
+/* ── Atomic spot art: printed medallions and box plates (cream paper, brass ring, slow float). ── */
+:root { --spot-paper: 40 75% 87%; }
+.spot-art { position: relative; display: inline-flex; flex-shrink: 0; }
+.spot-art img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.spot-art-medallion { border-radius: 999px; aspect-ratio: 1; }
+.spot-art-medallion img { border-radius: 999px; transform: scale(1.12); }
+.spot-art-medallion { overflow: hidden; background: hsl(var(--spot-paper)); box-shadow: 0 0 0 2px hsl(var(--brass)), 0 0 0 4px hsl(var(--background)), 0 0 0 5px hsl(var(--brass) / .45), 3px 4px 0 5px hsl(var(--accent) / .3); animation: spot-float 11s ease-in-out infinite; }
+.spot-art-plate { border-radius: .75rem; overflow: hidden; background: hsl(var(--spot-paper)); }
+.spot-art-badge { position: absolute; right: -2px; bottom: -2px; min-width: 1.6rem; padding: 0 .4rem; border-radius: 999px; background: hsl(var(--accent)); color: hsl(var(--accent-foreground)); border: 2px solid hsl(var(--brass)); font: 400 .85rem/1.35rem 'Bebas Neue', sans-serif; letter-spacing: .06em; text-align: center; }
+@keyframes spot-float { 0%,100% { transform: translateY(0) rotate(0deg) } 50% { transform: translateY(-3px) rotate(-1.5deg) } }
+/* Box header plate: cream band, dotted orbit, two sparkles and the medallion sitting on it. */
+.box-plate { position: relative; display: block; overflow: hidden; isolation: isolate;
+  background: radial-gradient(hsl(var(--paper-ink) / .09) 1px, transparent 1.3px) 0 0 / 6px 6px, linear-gradient(180deg, hsl(var(--spot-paper)), hsl(38 60% 82%));
+  border-bottom: 2px solid hsl(var(--brass) / .7); }
+.box-plate-orbit { position: absolute; inset: 18% -10% -60% -10%; border: 1.5px dotted hsl(var(--paper-ink) / .45); border-radius: 50%; transform: rotate(-6deg); }
+.box-plate-spark { position: absolute; top: 22%; left: 18%; width: 14px; height: 14px; background: hsl(var(--primary)); clip-path: polygon(50% 0, 60% 40%, 100% 50%, 60% 60%, 50% 100%, 40% 60%, 0 50%, 40% 40%); animation: retro-twinkle 9s ease-in-out infinite; }
+.box-plate-spark-2 { top: 58%; left: 34%; width: 9px; height: 9px; background: hsl(var(--accent)); animation-delay: -4s; }
+.box-plate-left .box-plate-spark { left: auto; right: 18%; } .box-plate-left .box-plate-spark-2 { right: 34%; }
+.box-plate-spot { position: absolute; top: 50%; height: 140%; width: auto; transform: translateY(-50%); right: 6%; box-shadow: 0 0 0 2px hsl(var(--brass)); }
+.box-plate-left .box-plate-spot { right: auto; left: 6%; }
+.box-plate .box-plate-spot { animation: none; }
+/* Atomic feature boxes: printed card with offset shadow; art bobs slowly, card lifts slowly. */
+.atomic-box { position: relative; display: flex; flex-direction: column; gap: .75rem; border-radius: 1.25rem; border: 1px solid hsl(var(--brass) / .5); padding: 1.25rem;
+  background: radial-gradient(hsl(var(--foreground) / .035) 1px, transparent 1.2px) 0 0 / 6px 6px, hsl(var(--card) / .85);
+  box-shadow: 4px 4px 0 hsl(var(--brass) / .25); transition: transform 1.2s cubic-bezier(.22,1,.36,1), box-shadow 1.2s ease, border-color 1.2s ease; }
+.atomic-box:hover, .atomic-box:focus-within { transform: translateY(-3px); border-color: hsl(var(--brass)); box-shadow: 6px 7px 0 hsl(var(--accent) / .35); }
+.atomic-box:hover .spot-art-medallion { animation-duration: 6s; }
+.atomic-box-art { width: 5.5rem; height: 5.5rem; }
+@media (prefers-reduced-motion: reduce) { .spot-art-medallion, .box-plate-spark { animation: none; } .atomic-box { transition: none; } .atomic-box:hover { transform: none; } }

@@ -1,4 +1,5 @@
 import { useId } from 'react';
+import { SpotArt, spotFor } from '@/components/art/SpotArt';
 /** Deterministic, unique constellation art for any box. Same key → same art; different keys → different art. */
 const GLYPHS: [RegExp, string][] = [
   [/aries/i, '♈'], [/taurus/i, '♉'], [/gemini/i, '♊'], [/cancer/i, '♋'], [/leo\b/i, '♌'], [/virgo/i, '♍'], [/libra/i, '♎'], [/scorpio/i, '♏'], [/sagittarius/i, '♐'], [/capricorn/i, '♑'], [/aquarius/i, '♒'], [/pisces/i, '♓'],
@@ -9,7 +10,20 @@ const GLYPHS: [RegExp, string][] = [
 function hash(s: string) { let h = 2166136261; for (const c of s) { h ^= c.charCodeAt(0); h = Math.imul(h, 16777619); } return h >>> 0; }
 function rng(seed: number) { return () => { seed = (seed + 0x6d2b79f5) | 0; let t = Math.imul(seed ^ (seed >>> 15), 1 | seed); t ^= t + Math.imul(t ^ (t >>> 7), 61 | t); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
 
+/** Printed box header: cream plate with orbit lines, sparkles and the topic's spot illustration. */
 export function BoxArt({ seed, label, className = 'h-28 w-full' }: { seed: string; label?: string; className?: string }) {
+  const r = rng(hash(seed));
+  const side = r() > 0.5 ? 'right' : 'left';
+  return (
+    <span className={`box-plate box-plate-${side} ${className}`} aria-hidden="true">
+      <i className="box-plate-orbit" /><i className="box-plate-spark" /><i className="box-plate-spark box-plate-spark-2" />
+      <SpotArt kind={spotFor(label ?? seed)} className="box-plate-spot" />
+    </span>
+  );
+}
+
+/** Previous generated constellation strip (kept for any caller that needs a dark band). */
+export function ConstellationBand({ seed, label, className = 'h-28 w-full' }: { seed: string; label?: string; className?: string }) {
   const r = rng(hash(seed));
   const hue = Math.floor(r() * 360);
   const hue2 = (hue + 40 + Math.floor(r() * 80)) % 360;
