@@ -1,5 +1,8 @@
 import { STAFF, placeFor, type StaffId } from '@/lib/observatory';
 import { cn } from '@/lib/utils';
+import { PLACE_ICONS } from '@/components/icons/registry';
+import { RetroEmblem } from '@/components/icons/RetroIcons';
+import { PLACE_SCENES } from './placeScenes';
 import director from '@/assets/staff/director.jpg';
 import cartographer from '@/assets/staff/cartographer.jpg';
 import archivist from '@/assets/staff/archivist.jpg';
@@ -27,20 +30,24 @@ export function StaffPortrait({ id, size = 56, className }: { id: StaffId; size?
   );
 }
 
-/** Poster banner at the top of every member page: which place you're in and who hosts it. */
+/** Poster banner at the top of every member page: the place's 1950s scene, its icon, and who hosts it. */
 export function PlaceBanner({ pathname }: { pathname: string }) {
   const place = placeFor(pathname);
   const host = STAFF[place.host];
+  const Icon = PLACE_ICONS[place.scene];
   return (
-    <div className="retro-place-banner mb-6 flex items-center gap-4 px-4 py-3 sm:px-5">
-      <StaffPortrait id={place.host} size={52} className="sm:hidden" />
-      <StaffPortrait id={place.host} size={64} className="hidden sm:block" />
-      <div className="min-w-0 flex-1">
-        <p className="flex items-center gap-2 font-label text-[0.7rem] text-primary"><span aria-hidden className="obs-light h-1.5 w-1.5 rounded-full bg-primary" />Now in · {place.name}</p>
-        <p className="mt-0.5 truncate font-script text-xl leading-tight text-foreground sm:text-2xl">{place.motto}</p>
-        <p className="font-label text-[0.65rem] text-muted-foreground">Hosted by {host.title}</p>
+    <div className="retro-place-banner place-banner-art mb-6">
+      <img src={PLACE_SCENES[place.scene]} alt="" aria-hidden width={1536} height={640} loading="eager" decoding="async" className="place-banner-scene" />
+      <div className="relative z-[1] flex items-center gap-3 px-4 py-4 sm:gap-4 sm:px-5 sm:py-5">
+        <StaffPortrait id={place.host} size={52} className="sm:hidden" />
+        <StaffPortrait id={place.host} size={68} className="hidden sm:block" />
+        <div className="min-w-0 flex-1">
+          <p className="flex items-center gap-2 font-label text-[0.72rem] text-primary"><Icon size={16} />Now in · {place.name}</p>
+          <p className="mt-0.5 truncate font-script text-xl leading-tight text-foreground sm:text-2xl">{place.motto}</p>
+          <p className="font-label text-[0.68rem] text-foreground/75">Hosted by {host.title}</p>
+        </div>
+        <RetroEmblem icon={Icon} size={48} className="hidden sm:inline-flex" />
       </div>
-      <span aria-hidden className="retro-starburst retro-twinkle hidden text-2xl text-primary sm:inline-block" />
     </div>
   );
 }

@@ -16,31 +16,41 @@ export const STAFF: Record<StaffId, { title: string; department: string }> = {
   curator: { title: 'The Curator', department: 'Relationship Bureau' },
 };
 
-export interface Place { name: string; host: StaffId; motto: string }
+/** Each place has one 1950s scene illustration (banner art) and one icon; components map the key to files. */
+export type PlaceScene = 'broadcast-studio' | 'astral-mapping' | 'navigation-chamber' | 'cosmic-archive' | 'relationship-bureau' | 'research-library'
+  | 'timeline-hall' | 'founder-command' | 'grand-observatory' | 'observation-deck' | 'gift-shop' | 'radio-room' | 'comic-press';
+export interface Place { name: string; host: StaffId; motto: string; scene: PlaceScene }
 
 /** Route prefix → place. First match wins; order from most to least specific. */
 export const PLACES: [string, Place][] = [
-  ['/dashboard', { name: 'Broadcast Studio', host: 'broadcaster', motto: 'Your current chapter, on air' }],
-  ['/chart', { name: 'Astral Mapping Center', host: 'cartographer', motto: 'The measured sky at your birth' }],
-  ['/my-chart', { name: 'Astral Mapping Center', host: 'cartographer', motto: 'The measured sky at your birth' }],
-  ['/forecast', { name: 'Navigation Chamber', host: 'navigator', motto: 'Timing and the road ahead' }],
-  ['/transits', { name: 'Navigation Chamber', host: 'navigator', motto: 'Timing and the road ahead' }],
-  ['/astrobook', { name: 'Cosmic Archive', host: 'archivist', motto: 'Astral dossiers, issued to you' }],
-  ['/library', { name: 'Cosmic Archive', host: 'archivist', motto: 'Everything you have collected' }],
-  ['/relationships', { name: 'Relationship Bureau', host: 'curator', motto: 'Charts side by side' }],
-  ['/siblings', { name: 'Relationship Bureau', host: 'curator', motto: 'Brothers and sisters, side by side' }],
-  ['/compatibility', { name: 'Relationship Bureau', host: 'curator', motto: 'Charts side by side' }],
-  ['/academy', { name: 'Research Library', host: 'researcher', motto: 'Learn how the sky is read' }],
-  ['/blog', { name: 'Research Library', host: 'researcher', motto: 'Latest transmissions' }],
-  ['/reading-room', { name: 'Research Library', host: 'researcher', motto: 'Readings and guides' }],
-  ['/timeline', { name: 'Timeline Hall', host: 'historian', motto: 'Past, current and emerging chapters' }],
-  ['/admin', { name: 'Founder Command', host: 'director', motto: 'Operations of the Authority' }],
-  ['/developer', { name: 'Founder Command', host: 'director', motto: 'Operations of the Authority' }],
+  ['/dashboard', { name: 'Broadcast Studio', host: 'broadcaster', motto: 'Your current chapter, on air', scene: 'broadcast-studio' }],
+  ['/chart', { name: 'Astral Mapping Center', host: 'cartographer', motto: 'The measured sky at your birth', scene: 'astral-mapping' }],
+  ['/my-chart', { name: 'Astral Mapping Center', host: 'cartographer', motto: 'The measured sky at your birth', scene: 'astral-mapping' }],
+  ['/observations', { name: 'Observation Deck', host: 'cartographer', motto: 'What you saw, logged against the real sky', scene: 'observation-deck' }],
+  ['/forecast', { name: 'Navigation Chamber', host: 'navigator', motto: 'Timing and the road ahead', scene: 'navigation-chamber' }],
+  ['/transits', { name: 'Navigation Chamber', host: 'navigator', motto: 'Timing and the road ahead', scene: 'navigation-chamber' }],
+  ['/astrobook', { name: 'Cosmic Archive', host: 'archivist', motto: 'Astral dossiers, issued to you', scene: 'cosmic-archive' }],
+  ['/my-astrobook', { name: 'Cosmic Archive', host: 'archivist', motto: 'Astral dossiers, issued to you', scene: 'cosmic-archive' }],
+  ['/masterbook', { name: 'Cosmic Archive', host: 'archivist', motto: 'The full edition, chapter by chapter', scene: 'cosmic-archive' }],
+  ['/library', { name: 'Cosmic Archive', host: 'archivist', motto: 'Everything you have collected', scene: 'cosmic-archive' }],
+  ['/relationships', { name: 'Relationship Bureau', host: 'curator', motto: 'Charts side by side', scene: 'relationship-bureau' }],
+  ['/siblings', { name: 'Relationship Bureau', host: 'curator', motto: 'Brothers and sisters, side by side', scene: 'relationship-bureau' }],
+  ['/compatibility', { name: 'Relationship Bureau', host: 'curator', motto: 'Charts side by side', scene: 'relationship-bureau' }],
+  ['/academy', { name: 'Research Library', host: 'researcher', motto: 'Learn how the sky is read', scene: 'research-library' }],
+  ['/blog', { name: 'Research Library', host: 'researcher', motto: 'Latest transmissions', scene: 'research-library' }],
+  ['/reading-room', { name: 'Research Library', host: 'researcher', motto: 'Readings and guides', scene: 'research-library' }],
+  ['/timeline', { name: 'Timeline Hall', host: 'historian', motto: 'Past, current and emerging chapters', scene: 'timeline-hall' }],
+  ['/podcasts', { name: 'Radio Room', host: 'broadcaster', motto: 'Your chart, read aloud', scene: 'radio-room' }],
+  ['/my-comic', { name: 'Comic Press', host: 'archivist', motto: 'Your sky, drawn panel by panel', scene: 'comic-press' }],
+  ['/astrocomic', { name: 'Comic Press', host: 'archivist', motto: 'Your sky, drawn panel by panel', scene: 'comic-press' }],
+  ['/store', { name: 'Observatory Gift Shop', host: 'curator', motto: 'Souvenirs from your own sky', scene: 'gift-shop' }],
+  ['/admin', { name: 'Founder Command', host: 'director', motto: 'Operations of the Authority', scene: 'founder-command' }],
+  ['/developer', { name: 'Founder Command', host: 'director', motto: 'Operations of the Authority', scene: 'founder-command' }],
 ];
 
 export function placeFor(pathname: string): Place {
   return PLACES.find(([p]) => pathname === p || pathname.startsWith(`${p}/`))?.[1]
-    ?? { name: 'Grand Observatory', host: 'director', motto: 'Same skies. Brighter answers.' };
+    ?? { name: 'Grand Observatory', host: 'director', motto: 'Same skies. Brighter answers.', scene: 'grand-observatory' };
 }
 
 /** Member characters offered at character selection. The Stargazer is always featured first. */
