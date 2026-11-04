@@ -30,7 +30,6 @@ const FACTS: [string, string][] = [
 ];
 
 /** Section anchors, in the required order. */
-const navigation = ['Work', 'Process', 'Capabilities', 'Team', 'Contact'];
 
 const PILLARS = [
   { icon: Orbit, title: 'Calculated, not guessed', text: 'Every planet, house and angle comes from astronomical data for your exact birth moment, time and place — never a sun-sign template.' },
@@ -56,7 +55,7 @@ export default function BrandLanding() {
   ];
   return <div className="brand-site min-h-screen bg-background text-foreground">
     <a href="#brand-main" className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:bg-background focus:p-3">Skip to content</a>
-    <PublicHeader sections={navigation} />
+    <PublicHeader />
     <main id="brand-main">
       <section className="relative isolate min-h-[520px] sm:min-h-[600px] overflow-hidden flex items-center border-b border-border">
         <img src={hero} alt="An open celestial book beneath a luminous moon and golden astrolabe" width={1536} height={1024} fetchPriority="high" className="absolute inset-0 -z-20 h-full w-full object-cover object-right" />
