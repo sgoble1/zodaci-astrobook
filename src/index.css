@@ -680,16 +680,24 @@ body {
 @media print { .chart-look-toggle { display: none; } }
 @media (max-width: 420px) { .chart-projection-screen { border-width: 3px 4px 4px; } .chart-projection-tripod { height: 22px; } .chart-paper { padding: 12px 8px 8px; outline-offset: -6px; } }
 
-/* ── 1950s icon set: printed pictograms and brass medallions ── */
+/* ── 1950s icon set: two-ink screen-printed pictograms (indigo line, yellow tint, red sparkle, slight misregistration) ── */
 .retro-icon { vertical-align: middle; }
+.retro-icon .retro-tint { fill: hsl(var(--primary)); fill-opacity: .3; }
+.retro-icon .retro-spark { fill: hsl(var(--accent)); }
+.bg-primary .retro-icon .retro-tint, .retro-on-primary .retro-tint { fill: hsl(var(--accent)); fill-opacity: .35; }
+.bg-primary .retro-icon .retro-spark, .retro-on-primary .retro-spark { fill: hsl(var(--primary-foreground)); }
+/* Medallion: cream printed paper disc with halftone and a brass ring, like the spot illustrations. */
 .retro-emblem {
-  display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; border-radius: 999px;
-  color: hsl(var(--primary)); background: radial-gradient(circle at 35% 30%, hsl(var(--indigo-deep)), hsl(var(--midnight)));
-  border: 2px solid hsl(var(--brass)); box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 3px hsl(var(--brass) / .45), 2px 2px 0 3px hsl(var(--accent) / .35);
-  transition: color .8s ease, box-shadow .8s ease;
+  display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; border-radius: 999px; position: relative;
+  color: hsl(var(--paper-ink));
+  background: radial-gradient(hsl(var(--paper-ink) / .1) .8px, transparent 1.1px) 0 0 / 4px 4px, radial-gradient(circle at 35% 30%, hsl(42 85% 92%), hsl(var(--spot-paper)) 60%, hsl(36 55% 76%));
+  box-shadow: 0 0 0 2px hsl(var(--brass)), 0 0 0 3.5px hsl(var(--background)), 0 0 0 4.5px hsl(var(--brass) / .45), 2px 3px 0 4px hsl(var(--accent) / .3);
+  transition: box-shadow .8s ease, transform 1.2s cubic-bezier(.22,1,.36,1);
 }
-.retro-emblem .retro-icon { filter: drop-shadow(0 0 4px hsl(var(--primary) / .45)); }
-.retro-emblem-active { color: hsl(var(--primary)); box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 3px hsl(var(--primary) / .7), 0 0 18px hsl(var(--primary) / .35); }
+.retro-emblem .retro-icon { filter: drop-shadow(1.1px .9px 0 hsl(var(--accent) / .45)); }
+.retro-emblem .retro-tint { fill: hsl(var(--primary)); fill-opacity: .85; }
+.retro-emblem-active { box-shadow: 0 0 0 2px hsl(var(--accent)), 0 0 0 3.5px hsl(var(--background)), 0 0 0 4.5px hsl(var(--primary) / .8), 0 0 16px 4px hsl(var(--primary) / .3); transform: rotate(-4deg); }
+@media (prefers-reduced-motion: reduce) { .retro-emblem { transition: none; } .retro-emblem-active { transform: none; } }
 
 /* ── Retro TV: rolling hold bar, curved glass, knobs ── */
 .retro-tv .obs-crt { box-shadow: inset 0 0 0 2px hsl(var(--midnight)), inset 0 0 30px hsl(var(--midnight) / .9); }
