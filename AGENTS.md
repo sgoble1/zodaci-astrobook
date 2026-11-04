@@ -40,6 +40,7 @@
 - Bookmark caches are owner-keyed/auth-invalidated; throw mutation errors to prevent stale exposure and false saves.
 
 ## Media and presentation
+- Public AstroBook/AstroComic promotions use content/productArtwork shop samples and label illustrative imagery; retain members' composed covers and private issue content so marketing cannot substitute chart-specific output.
 - Podcasts/uploads use library_items/private signed URLs; sharing requires workspace membership/authorized audio URLs.
 - make-podcast saves script→TTS WAV in private library storage/library_items; bounded duration presets synchronize script length/source depth.
 - Queue/speed/resume use per-device localStorage; PDF viewer uses pdfjs-dist legacy.

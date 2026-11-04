@@ -1,5 +1,3 @@
-import { CinematicVideo } from '@/components/fx/CinematicVideo';
-import heroPoster from '@/assets/zodaci-brand-hero.jpg';
 import { Link } from 'react-router-dom';
 import { Check, ArrowRight, Gift } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -11,8 +9,8 @@ import { PLAN_NAME, REFUND_WINDOW_DAYS } from '@/lib/plans';
 import { VersionCompare } from '@/components/books/VersionCompare';
 import { CoverCustomizer } from '@/components/books/CoverCustomizer';
 import { CosmicTeaser } from '@/components/books/CosmicTeaser';
-import { useCoverImage } from '@/hooks/useCoverImage';
-import { DEFAULT_CROP } from '@/lib/coverLayout';
+import { ProductArtworkGallery } from '@/components/books/ProductArtworkGallery';
+import { BOOK_PRODUCT_SAMPLES, PRODUCT_ART } from '@/content/productArtwork';
 import { ThemeArt } from '@/components/common/ThemeArt';
 import { SampleBook } from '@/components/books/SampleBookReader';
 import { VOLUMES } from '@/lib/bookVolumes';
@@ -36,16 +34,16 @@ export function AstroBookPublic() {
   const order = (id = 'classic') => `/auth?next=${encodeURIComponent(`/books?version=${id}`)}`;
   return (
     <article className="space-y-20">
-      <section className="relative isolate grid items-center gap-10 overflow-hidden rounded p-6 sm:p-10 md:grid-cols-2">
-        <CinematicVideo poster={heroPoster} /><div className="absolute inset-0 -z-10 bg-background/70" />
+      <section className="product-page-opening obs-panel">
         <div className="space-y-5">
           <p className="text-xs font-medium tracking-[0.12em] text-accent">YOUR CHART, IN PRINT</p>
-          <h1 className="text-silver font-display text-5xl leading-[0.98] sm:text-7xl">Your encyclopedia, in print.</h1>
+          <h1 className="hero-headline">AstroBook</h1>
+          <p className="font-script text-3xl text-primary">Your stars, your story.</p>
           <p className="text-lg text-muted-foreground">AstroBook gathers what the sky held at your exact minute of birth into six bound volumes. It interprets your complete chart — who you are, your houses, planets and aspects, the esoteric points, world traditions and timing — all written from your exact placements.</p>
           <p className="text-sm text-muted-foreground">{BOOK_VERSIONS.filter(v => v.id === 'digital' || v.id === 'pocket' || v.id === 'linen').map(v => `${v.name} ${money(v.price)}`).join(' · ')} · free US shipping on printed versions</p>
           <div className="flex flex-wrap items-center gap-4"><Button asChild size="lg"><Link to={order()}>Order your AstroBook</Link></Button><Link to="/book-preview" className="text-accent">Read a sample book →</Link><Link to="/demo" className="text-accent">Try the interactive demo →</Link></div>
         </div>
-        <div className="vellum p-6"><h2 className="mb-4 font-display text-2xl">See your cover</h2><CoverCustomizer /></div>
+        <ProductArtworkGallery />
       </section>
       <section id="full-edition" aria-labelledby="fe-h" className="space-y-6">
         <div className="max-w-3xl"><p className="font-smallcaps text-xs text-gold">Open the Collector’s edition</p><h2 id="fe-h" className="mt-1 font-display text-3xl sm:text-4xl">Three full pages from {SAMPLE_EDITION.owner}’s AstroBook</h2><p className="mt-3 text-muted-foreground">Exactly as they print: an illuminated plate for each placement, the calculated facts, then the interpretation. {SAMPLE_EDITION.note} Your book is written the same way from your own chart.</p></div>
@@ -54,8 +52,9 @@ export function AstroBookPublic() {
       </section>
       <section id="story" className="grid gap-8 md:grid-cols-2 items-center">
         <div className="space-y-4"><h2 className="font-display text-3xl">Calculated, not guessed.</h2><p className="text-muted-foreground">Every AstroBook starts with astronomy: the exact positions of the Sun, Moon and planets at the moment and place you were born. Interpretation comes second, and the book always tells you which is which.</p><p className="text-muted-foreground">Then we write it for one person. No two AstroBooks are alike, because no two birth moments are.</p></div>
-        <div className="grid grid-cols-3 gap-3">{['midnight-stars', 'midnight-ember', 'gradient-violet-dusk'].map(k => <ExampleCover key={k} design={k} />)}</div>
+        <div className="grid grid-cols-3 gap-3">{BOOK_PRODUCT_SAMPLES.map(s => <figure key={s.label}><img src={s.src} alt={s.alt} width={1024} height={1024} loading="lazy" className="aspect-square w-full rounded-sm object-contain" /><figcaption className="mt-2 text-center font-label text-sm">{s.label}</figcaption></figure>)}</div>
       </section>
+      <section className="grid items-center gap-8 md:grid-cols-2" aria-labelledby="cover-preview-title"><div><h2 id="cover-preview-title" className="plate-title">Make the cover yours</h2><p className="mt-3 text-muted-foreground">The shop images are illustrative samples. Preview your own name and chosen artwork before ordering.</p><img src={PRODUCT_ART.collection.src} alt={PRODUCT_ART.collection.alt} width={1536} height={1024} loading="lazy" className="mt-5 w-full rounded-sm" /></div><div className="obs-paper p-5"><CoverCustomizer /></div></section>
       <section id="inside" className="space-y-6">
         <h2 className="font-display text-3xl">Six volumes, one sky.</h2>
         <p className="text-muted-foreground">Every AstroBook follows the same six-volume structure as our founders’ Masterbooks, written from your chart. Every version includes Volumes I–IV and VI; World Systems begins at Classic, and larger versions add chapters inside each volume. Compare them below.</p>
@@ -143,8 +142,3 @@ export function TermsPage() {
   ]} />;
 }
 
-/** A current cover design with a sample name, drawn exactly as a printed AstroBook cover. */
-function ExampleCover({ design }: { design: string }) {
-  const url = useCoverImage({ source: { kind: 'design', key: design }, crop: DEFAULT_CROP, name: 'Your Name', trimPt: [432, 648] }, 40);
-  return <div className="aspect-[2/3] w-full overflow-hidden rounded bg-muted shadow-xl">{url && <img src={url} alt="Example AstroBook cover: your name as the title, “Your exact placement in print” beneath, AstroBook bottom right" className="h-full w-full object-cover" />}</div>;
-}
