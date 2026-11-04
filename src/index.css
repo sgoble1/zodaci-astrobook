@@ -596,3 +596,5 @@ body {
 .chart-look-toggle button { padding: .35rem .9rem; font-family: 'Bebas Neue', sans-serif; letter-spacing: .1em; font-size: .95rem; color: hsl(var(--foreground)); }
 .chart-look-toggle button[aria-pressed="true"] { background: hsl(var(--primary)); color: hsl(var(--primary-foreground)); }
 @media print { .chart-look-toggle { display: none; } }
+.chart-projection-screen svg { z-index: 2; filter: drop-shadow(0 0 6px hsl(var(--chart-ink) / .28)) brightness(1.18); }
+.chart-projection-screen::after { z-index: 3; opacity: .55; }
