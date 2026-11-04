@@ -9,7 +9,7 @@ import { PrintPartnerMatrix } from '@/components/common/PrintPartnerMatrix';
 import { ThemeArt } from '@/components/common/ThemeArt';
 import plate from '@/assets/sample-plate-rising.jpg';
 import comic from '@/assets/comic-issue1-cover-v2.jpg';
-import launchArt from '@/assets/pages/investors-launch.jpg';
+import launchArt from '@/assets/pages/investors-atomic-launch.jpg';
 
 const low = BOOK_VERSIONS[0]; const high = BOOK_VERSIONS[BOOK_VERSIONS.length - 1];
 const PRODUCTS: [string, string, string][] = [
@@ -101,7 +101,7 @@ export default function Investors() {
         <div className="grid grid-cols-2 gap-3"><img src={plate} alt="Illuminated AstroBook plate" width={1024} height={1280} className="rounded border border-gold/40" /><img src={comic} alt="AstroComic Issue 1 cover" width={1024} height={1536} className="rounded border border-gold/40" /></div>
       </header>
 
-      <img src={launchArt} alt="A 1950s-style rocket lifts off from an observatory toward a ringed planet above a skyline of books and comics." width={1536} height={768} loading="lazy" className="w-full rounded-lg border border-border" />
+      <img src={launchArt} alt="A 1950s atomic-age zodiac disc above an observatory, with a red research rocket tracing a golden orbit toward Saturn." width={1536} height={768} loading="lazy" className="w-full rounded-lg border border-border" />
       <section aria-labelledby="inv-p" className="space-y-4"><h2 id="inv-p" className="text-3xl">What we sell</h2>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">{PRODUCTS.map(([k, t, d]) => <div key={t} className="vellum p-5"><ThemeArt kind={k as never} className="h-14 w-14" /><h3 className="mt-3 text-xl">{t}</h3><p className="mt-2 text-sm text-muted-foreground">{d}</p></div>)}</div>
       </section>

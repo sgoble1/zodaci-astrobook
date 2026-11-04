@@ -2,7 +2,7 @@ import { usePageMeta } from '@/hooks/usePageMeta';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import workshop from '@/assets/pages/about-workshop.jpg';
+import workshop from '@/assets/pages/about-atomic-zodiac.jpg';
 
 const fade = { initial: { opacity: 0, y: 24 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true }, transition: { duration: 1.1, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] } };
 
@@ -23,7 +23,7 @@ export default function About() {
         <p className="text-lg text-muted-foreground">Zodaci began when we calculated our own charts in full detail and read the results. They described things we had tried to put into words for years. We built it so anyone can have that same careful, complete account of their sky — accurate first, warm second.</p>
       </motion.header>
 
-      <motion.img {...fade} src={workshop} alt="A 1950s-style observatory workshop: a drafting desk with a hand-drawn zodiac chart, books and a brass telescope by a starry window." width={1536} height={768} loading="lazy" className="w-full rounded-lg border border-border" />
+      <motion.img {...fade} src={workshop} alt="Atomic-age zodiac mural with twelve illustrated signs, a golden Sun, crescent Moon, ringed Saturn and an observatory in cream, indigo, yellow and red." width={1536} height={768} loading="lazy" className="w-full rounded-lg border border-border" />
       <motion.section {...fade} className="mx-auto max-w-3xl space-y-5 text-lg leading-relaxed">
         <h2 className="font-display text-3xl">Why we built it</h2>
         <p>We spent years with thick astrology books, hand-drawn charts and late-night conversations about what a Moon in one sign or a Saturn in one house really meant for a real life. The insight was extraordinary — but it was locked inside jargon, scattered across sources, and rarely about <em>you</em>.</p>
