@@ -9,7 +9,7 @@ import { ContactForm } from '@/components/brand/ContactForm';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { PLAN_NAME, PLAN_PRICE, CREDIT_ALLOWANCE } from '@/lib/plans';
 import { BOOK_VERSIONS, money } from '@/lib/books';
-import { PanelTitle } from '@/components/observatory/Observatory';
+import { PanelTitle, StatusLight } from '@/components/observatory/Observatory';
 import { HeroSlideshow, ChartMapSlide, LookUpSlide, PressSlide } from '@/components/observatory/HeroSlides';
 import { MottoRail, ExplorePoster, DestinationTiles, QuotePlate, ArchiveShelf, HowItWorks, ZodiacPlate, TransmissionsPlate, JoinPlate, type Destination } from '@/components/observatory/Mosaic';
 import { BookIcon, ChartWheelIcon, RingsIcon, StorefrontIcon, TelescopeIcon } from '@/components/icons/RetroIcons';
@@ -88,16 +88,13 @@ export default function BrandLanding() {
       <DestinationTiles label="Main destinations" items={DESTINATIONS} />
 
       <div className="mosaic-split-1-2">
-        <QuotePlate quote="Check the sky twice. Name the source. Never invent a life." by="The Authority’s working rules" />
+        <QuotePlate art="magnifier" quote="Check the sky twice. Name the source. Never invent a life." by="The Authority’s working rules" />
         <ArchiveShelf />
       </div>
 
       <HowItWorks />
 
-      <div className="mosaic-split-2-1">
-        <ZodiacPlate />
-        <TransmissionsPlate />
-      </div>
+      <ZodiacPlate />
 
       <section aria-labelledby="live-h" className="obs-panel p-5 sm:p-8"><PanelTitle eyebrow="Astral Mapping Center" live><span id="live-h">Live chart</span></PanelTitle><SampleChartDemo /></section>
 
@@ -113,10 +110,12 @@ export default function BrandLanding() {
         <div className="grid gap-5 md:grid-cols-3">{plans.map(p => <div key={p.key} className={`rounded-md border p-6 flex flex-col ${p.key === 'full' ? 'border-primary' : 'border-border'}`}><h3 className="font-label text-xl">{PLAN_NAME[p.key]}</h3><p className="mt-3"><span className="font-display text-3xl">{p.price.replace('/month', '')}</span>{p.key !== 'free' && <span className="text-muted-foreground"> /month</span>}</p><p className="text-xs text-muted-foreground">{p.note}</p><ul className="mt-5 flex-1 space-y-2 text-sm">{p.points.map(t => <li key={t} className="flex gap-2"><Check aria-hidden className="mt-0.5 h-4 w-4 shrink-0 text-primary" />{t}</li>)}</ul><Button asChild className="mt-6" variant={p.key === 'full' ? 'primary' : 'outline'}><Link to={p.key === 'free' ? '/start' : `/pricing?plan=${p.key === 'full' ? 'pro' : 'cosmic'}`}>{p.key === 'free' ? 'Start for free' : `Choose ${PLAN_NAME[p.key]}`}</Link></Button></div>)}</div>
       </section>
 
-      <div id="contact" className="mosaic-split-1-1">
+      <div className="mosaic-split-1-1">
+        <TransmissionsPlate />
         <JoinPlate />
-        <section aria-label="Write to the observatory" className="obs-panel p-5 sm:p-8"><ContactForm /></section>
       </div>
+
+      <section id="contact" aria-labelledby="contact-h" className="obs-panel p-5 sm:p-8"><div className="grid gap-10 md:grid-cols-2"><div><StatusLight label="Desk open" /><h2 id="contact-h" className="mt-3 font-label text-2xl">Write to the observatory</h2><p className="mt-4 max-w-md leading-relaxed text-muted-foreground">Questions about your chart, an AstroBook order or the shop? Send a note and a person at Zodaci will read it.</p></div><ContactForm /></div></section>
     </main><GlobalFooter />
   </div>;
 }
