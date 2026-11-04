@@ -8,6 +8,10 @@ import { CartDrawer } from '@/components/store/CartDrawer';
 import { PRODUCT_BY_HANDLE_QUERY, storefrontApiRequest, fetchAllProducts, formatMoney, inStock, type ShopifyProduct } from '@/lib/shopify';
 import { useCartStore } from '@/stores/cartStore';
 import { usePageMeta } from '@/hooks/usePageMeta';
+import { StaffPortrait } from '@/components/observatory/StaffPortrait';
+import heads from '@/assets/home-heads-hero.jpg';
+
+const TOP_TYPES = 11;
 
 function useAdd() {
   const addItem = useCartStore(s => s.addItem);
@@ -52,7 +56,14 @@ export default function Store() {
     fetchAllProducts().then(list => { if (on) setProducts(list); }).catch(() => { if (on) setFailed(true); });
     return () => { on = false; };
   }, [attempt]);
-  const types = useMemo(() => ['All', ...new Set((products ?? []).map(p => p.node.productType).filter(Boolean) as string[])], [products]);
+  const [allTypes, setAllTypes] = useState(false);
+  // Categories ordered by how many pieces they hold, so the biggest collections lead.
+  const types = useMemo(() => {
+    const count = new Map<string, number>();
+    for (const p of products ?? []) if (p.node.productType) count.set(p.node.productType, (count.get(p.node.productType) ?? 0) + 1);
+    return ['All', ...[...count.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0])).map(([t]) => t)];
+  }, [products]);
+  const visibleTypes = allTypes ? types : types.slice(0, TOP_TYPES + 1).concat(types.indexOf(type) > TOP_TYPES ? [type] : []);
   const sign = params.get('sign') ?? 'All';
   const signOf = (p: ShopifyProduct) => (p.node.tags ?? []).find(t => t.startsWith('sign:'))?.slice(5);
   const signs = useMemo(() => ['All', ...new Set((products ?? []).map(signOf).filter(Boolean).map(s => s![0].toUpperCase() + s!.slice(1)))], [products]);
@@ -71,9 +82,16 @@ export default function Store() {
   }, [products, type, sign, q, sort]);
   return (
     <div className="mx-auto max-w-6xl space-y-8 px-4 py-10">
-      <header className="flex flex-wrap items-end justify-between gap-4">
-        <div><p className="font-smallcaps text-xs text-gold">The Zodaci Shop</p><h1 className="mt-2 text-4xl sm:text-5xl">Posters, apparel & stationery</h1><p className="mt-3 max-w-xl text-muted-foreground">Posters, tees, mugs, totes, stickers and notebooks — a core collection plus sign editions.</p></div>
-        <CartDrawer />
+      <header className="obs-panel relative isolate overflow-hidden">
+        <img src={heads} alt="" aria-hidden width={1920} height={1088} className="absolute inset-x-0 bottom-0 -z-20 h-full w-full object-cover object-bottom opacity-70" />
+        <div aria-hidden className="absolute inset-0 -z-10 bg-gradient-to-b from-background via-background/80 to-background/10" />
+        <div className="flex flex-wrap items-start justify-between gap-4 px-5 pb-28 pt-8 sm:px-10 sm:pb-40 sm:pt-10">
+          <div className="flex items-start gap-4">
+            <StaffPortrait id="curator" size={64} className="hidden sm:block" />
+            <div><p className="font-label text-sm tracking-[0.2em] text-primary">The Observatory Gift Shop</p><h1 className="mt-2 font-display text-4xl uppercase leading-none sm:text-6xl">Posters, apparel &amp; stationery</h1><p className="mt-2 font-script text-2xl text-primary sm:text-3xl">Souvenirs from your own sky</p><p className="mt-3 max-w-xl text-foreground/85">Posters, tees, mugs, totes, stickers and notebooks — a core collection plus sign editions.</p></div>
+          </div>
+          <CartDrawer />
+        </div>
       </header>
       {failed ? <ShopOffline onRetry={() => setAttempt(a => a + 1)} /> : <>
         <div className="flex flex-wrap items-center gap-3">
@@ -82,8 +100,9 @@ export default function Store() {
             <select value={sort} onChange={e => set('sort', e.target.value, 'featured')} className="h-10 rounded-md border border-input bg-background px-3 text-sm">{(Object.keys(SORTS) as Sort[]).map(k => <option key={k} value={k}>{SORTS[k]}</option>)}</select>
           </label>
         </div>
-        {types.length > 2 && <div className="flex flex-wrap gap-2" role="group" aria-label="Product type">{types.map(t => <Button key={t} size="sm" aria-pressed={t === type} variant={t === type ? 'default' : 'outline'} onClick={() => set('type', t, 'All')}>{t}</Button>)}</div>}
-        {signs.length > 2 && <div className="flex flex-wrap gap-2" role="group" aria-label="Sign edition">{signs.map(s => <Button key={s} size="sm" aria-pressed={s === sign} variant={s === sign ? 'default' : 'outline'} onClick={() => set('sign', s, 'All')}>{s === 'All' ? 'All signs' : s}</Button>)}</div>}
+        {types.length > 2 && <div className="flex flex-wrap gap-2" role="group" aria-label="Product type">{visibleTypes.map(t => <Button key={t} size="sm" aria-pressed={t === type} variant={t === type ? 'secondary' : 'outline'} onClick={() => set('type', t, 'All')}>{t}</Button>)}
+          {types.length > TOP_TYPES + 1 && <Button size="sm" variant="ghost" aria-expanded={allTypes} onClick={() => setAllTypes(v => !v)}>{allTypes ? 'Fewer categories' : `More categories (${types.length - TOP_TYPES - 1})`}</Button>}</div>}
+        {signs.length > 2 && <div className="flex flex-wrap gap-2" role="group" aria-label="Sign edition">{signs.map(s => <Button key={s} size="sm" aria-pressed={s === sign} variant={s === sign ? 'secondary' : 'outline'} onClick={() => set('sign', s, 'All')}>{s === 'All' ? 'All signs' : s}</Button>)}</div>}
         {!products && <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3" aria-busy="true" aria-label="Loading the shop">{Array.from({ length: 6 }, (_, i) => <li key={i} className="parchment overflow-hidden"><div className="aspect-square animate-pulse bg-muted motion-reduce:animate-none" /><div className="space-y-2 p-4"><div className="h-5 w-2/3 rounded bg-muted" /><div className="h-4 w-full rounded bg-muted" /></div></li>)}</ul>}
         {products && <p className="text-sm text-muted-foreground" aria-live="polite">{shown.length} {shown.length === 1 ? 'item' : 'items'}{q && ` matching “${q}”`}</p>}
         {products && shown.length === 0 && <div className="parchment space-y-3 p-8 text-center"><p className="text-muted-foreground">{products.length ? 'Nothing matches that search.' : 'New pieces are on their way — check back soon.'}</p>{(q || type !== 'All') && <Button variant="outline" size="sm" onClick={() => setParams(new URLSearchParams(), { replace: true })}>Clear search and filters</Button>}</div>}
@@ -97,10 +116,10 @@ export default function Store() {
                   {!available && <span className="absolute left-3 top-3 rounded-full border border-border bg-background/90 px-2.5 py-0.5 text-xs">Sold out</span>}
                 </Link>
                 <div className="flex flex-1 flex-col gap-2 p-4">
-                  <Link to={`/product/${p.node.handle}`} className="font-display text-xl hover:underline">{p.node.title}</Link>
+                  <Link to={`/product/${p.node.handle}`} className="font-display text-lg leading-snug hover:underline">{p.node.title}</Link>
                   <p className="line-clamp-2 text-sm text-muted-foreground">{p.node.description}</p>
-                  <div className="mt-auto flex items-center justify-between pt-2"><span className="font-semibold">{p.node.variants.edges.length > 1 ? 'From ' : ''}{formatMoney(p.node.priceRange.minVariantPrice)}</span>
-                    {available ? <Button size="sm" onClick={() => add(p)} disabled={loading}>{loading ? <Loader2 className="h-4 w-4 animate-spin" aria-label="Adding" /> : 'Add to cart'}</Button> : <Button size="sm" variant="outline" disabled>Sold out</Button>}
+                  <div className="mt-auto flex items-center justify-between pt-2"><span className="font-label text-lg tracking-wider text-primary">{p.node.variants.edges.length > 1 ? 'From ' : ''}{formatMoney(p.node.priceRange.minVariantPrice)}</span>
+                    {available ? <Button size="sm" variant="signal" onClick={() => add(p)} disabled={loading}>{loading ? <Loader2 className="h-4 w-4 animate-spin" aria-label="Adding" /> : 'Add to cart'}</Button> : <Button size="sm" variant="outline" disabled>Sold out</Button>}
                   </div>
                 </div>
               </li>
