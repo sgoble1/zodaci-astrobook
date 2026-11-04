@@ -3,6 +3,9 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import workshop from '@/assets/pages/about-atomic-zodiac.jpg';
+import { SpotArt, type SpotKind } from '@/components/art/SpotArt';
+
+const PILLAR_ART: SpotKind[] = ['chart', 'written', 'honest', 'private'];
 
 const fade = { initial: { opacity: 0, y: 24 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true }, transition: { duration: 1.1, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] } };
 
@@ -32,7 +35,7 @@ export default function About() {
       </motion.section>
 
       <motion.section {...fade} className="grid gap-5 sm:grid-cols-2">
-        {PILLARS.map(([t, d]) => <div key={t} className="rounded-lg border border-border bg-card/60 p-6 backdrop-blur"><h3 className="font-display text-xl mb-2">{t}</h3><p className="text-muted-foreground">{d}</p></div>)}
+        {PILLARS.map(([t, d], i) => <div key={t} className="atomic-box sm:flex-row sm:items-start sm:gap-5 p-6"><SpotArt kind={PILLAR_ART[i]} className="atomic-box-art" /><div><h3 className="font-display text-xl mb-2">{t}</h3><p className="text-muted-foreground">{d}</p></div></div>)}
       </motion.section>
 
       <motion.section {...fade} className="mx-auto max-w-3xl space-y-4">

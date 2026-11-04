@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
-import { ArrowUpRight, ArrowRight, Orbit, PenLine, Scale, ShieldCheck, Check } from 'lucide-react';
+import { ArrowUpRight, ArrowRight, Check } from 'lucide-react';
+import { SpotArt, type SpotKind } from '@/components/art/SpotArt';
 import { PublicHeader } from '@/components/brand/PublicHeader';
 import { Button } from '@/components/ui/button';
 import { SampleChartDemo } from '@/components/brand/SampleChartDemo';
@@ -29,10 +30,10 @@ const FACTS: [string, string][] = [
 /** Section anchors, in the required order. */
 
 const PILLARS = [
-  { icon: Orbit, title: 'Calculated, not guessed', text: 'Every planet, house and angle comes from astronomical data for your exact birth moment, time and place — never a sun-sign template.' },
-  { icon: PenLine, title: 'Written for one person', text: 'Readings combine your sign, house, aspects and rulers, and name the placement behind every sentence — so they could only be about you.' },
-  { icon: Scale, title: 'Honest about limits', text: 'No birth time? We show exactly what changes. Measured positions, interpretations and your own notes always stay clearly separate.' },
-  { icon: ShieldCheck, title: 'Private by design', text: 'Your chart, readings and conversations belong to your account. Nothing is shared unless you invite someone in.' },
+  { art: 'chart' as SpotKind, title: 'Calculated, not guessed', text: 'Every planet, house and angle comes from astronomical data for your exact birth moment, time and place — never a sun-sign template.' },
+  { art: 'written' as SpotKind, title: 'Written for one person', text: 'Readings combine your sign, house, aspects and rulers, and name the placement behind every sentence — so they could only be about you.' },
+  { art: 'honest' as SpotKind, title: 'Honest about limits', text: 'No birth time? We show exactly what changes. Measured positions, interpretations and your own notes always stay clearly separate.' },
+  { art: 'private' as SpotKind, title: 'Private by design', text: 'Your chart, readings and conversations belong to your account. Nothing is shared unless you invite someone in.' },
 ];
 
 const STEPS = [
@@ -48,6 +49,9 @@ const SIGNS: [string, string, string][] = [
   ['♐', 'Sagittarius', 'The far road'], ['♑', 'Capricorn', 'The mountain observatory'], ['♒', 'Aquarius', 'The inventor'], ['♓', 'Pisces', 'The cosmic ocean'],
 ];
 
+const FEATURE_ART: SpotKind[] = ['book', 'year', 'radio', 'compass', 'astrobook', 'tv'];
+const STEP_ART: SpotKind[] = ['birth', 'explore', 'book'];
+const RULE_ART: SpotKind[] = ['magnifier', 'source', 'honest'];
 const FEATURES: [string, string, string][] = [
   [`${ALL_READINGS.length}+ readings`, 'Chapters written from your exact placements.', '/reading-room'],
   ['Personal forecasts', 'Transits and timing for the road ahead.', '/start'],
@@ -88,12 +92,12 @@ export default function BrandLanding() {
       <section aria-labelledby="how-h" className="obs-paper p-6 sm:p-10">
         <h2 id="how-h" className="font-label text-2xl">How it works</h2>
         <ConstellationDraw className="my-4 h-16" />
-        <ol className="grid gap-6 md:grid-cols-3">{STEPS.map(([title, text], i) => <li key={title}><p className="font-label text-sm text-accent">{['Birth data', 'Chart mapping', 'Personal insight'][i]}</p><h3 className="mt-2 text-2xl">{title}</h3><p className="mt-2 leading-relaxed text-muted-foreground">{text}</p></li>)}</ol>
+        <ol className="grid gap-6 md:grid-cols-3">{STEPS.map(([title, text], i) => <li key={title}><SpotArt kind={STEP_ART[i]} badge={i + 1} className="mb-4 h-24 w-24" /><p className="font-label text-sm text-accent">{['Birth data', 'Chart mapping', 'Personal insight'][i]}</p><h3 className="mt-2 text-2xl">{title}</h3><p className="mt-2 leading-relaxed text-muted-foreground">{text}</p></li>)}</ol>
       </section>
 
       <section aria-labelledby="feat-h" className="obs-panel p-5 sm:p-8"><PanelTitle eyebrow="Inside the observatory"><span id="feat-h">What you can do</span></PanelTitle>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{FEATURES.map(([t, d, to]) => <Link key={t} to={to} className="group rounded-md border border-border p-5 transition-colors hover:border-primary/60"><h3 className="font-label text-lg">{t}</h3><p className="mt-2 text-sm text-muted-foreground">{d}</p><p className="mt-3 font-label text-xs text-accent">Explore →</p></Link>)}</div>
-        <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">{PILLARS.map(({ icon: Icon, title, text }) => <div key={title} className="border-t border-border pt-4"><Icon aria-hidden className="h-5 w-5 text-primary" /><h3 className="mt-3 text-lg">{title}</h3><p className="mt-1 text-sm text-muted-foreground">{text}</p></div>)}</div>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{FEATURES.map(([t, d, to], i) => <Link key={t} to={to} className="atomic-box group"><SpotArt kind={FEATURE_ART[i]} className="atomic-box-art" /><h3 className="font-label text-lg">{t}</h3><p className="mt-2 text-sm text-muted-foreground">{d}</p><p className="mt-3 font-label text-xs text-accent">Explore →</p></Link>)}</div>
+        <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">{PILLARS.map(({ art, title, text }) => <div key={title} className="atomic-box"><SpotArt kind={art} className="h-20 w-20" /><h3 className="text-lg">{title}</h3><p className="mt-1 text-sm text-muted-foreground">{text}</p></div>)}</div>
       </section>
 
       <section aria-labelledby="book-h" className="grid gap-6 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]">
@@ -118,7 +122,7 @@ export default function BrandLanding() {
           <ul className="divide-y divide-border">{PUBLIC_ARTICLES.map(a => <li key={a.slug}><Link to={`/blog/learn/${a.slug}`} className="flex items-start gap-4 py-4 hover:text-primary"><img src={a.image} alt="" width={1024} height={768} loading="lazy" className="h-16 w-20 shrink-0 rounded object-cover" /><span><span className="font-label text-[0.65rem] text-accent">{a.category}</span><span className="block text-lg leading-snug">{a.title}</span></span><ArrowUpRight className="ml-auto h-4 w-4 shrink-0" /></Link></li>)}</ul>
           <div className="mt-4 flex gap-2"><Button asChild variant="outline" size="sm"><Link to="/academy">Open the Academy</Link></Button><Button asChild variant="ghost" size="sm"><Link to="/blog">All transmissions</Link></Button></div>
         </div>
-        <div className="obs-panel p-5 sm:p-8"><PanelTitle eyebrow="Our working rules"><span>How every reading is made</span></PanelTitle><ul className="space-y-4 leading-relaxed">{[['Check the sky twice.', 'Positions come from an astronomy engine and are cross-checked against a second calculation.'], ['Name the source.', 'Every interpretation points to the placement it came from.'], ['Never invent a life.', 'Readings never claim facts about your family, past or future.']].map(([t, d]) => <li key={t}><p className="font-semibold">{t}</p><p className="text-muted-foreground">{d}</p></li>)}</ul></div>
+        <div className="obs-panel p-5 sm:p-8"><PanelTitle eyebrow="Our working rules"><span>How every reading is made</span></PanelTitle><ul className="space-y-4 leading-relaxed">{[['Check the sky twice.', 'Positions come from an astronomy engine and are cross-checked against a second calculation.'], ['Name the source.', 'Every interpretation points to the placement it came from.'], ['Never invent a life.', 'Readings never claim facts about your family, past or future.']].map(([t, d], i) => <li key={t} className="flex items-start gap-4"><SpotArt kind={RULE_ART[i]} className="h-16 w-16" /><div><p className="font-semibold">{t}</p><p className="text-muted-foreground">{d}</p></div></li>)}</ul></div>
       </section>
 
       <section id="contact" aria-labelledby="join-h" className="obs-panel p-5 sm:p-8"><div className="grid gap-10 md:grid-cols-2"><div><StatusLight label="Transmission pending" /><h2 id="join-h" className="mt-3 font-label text-2xl">Join the observatory</h2><p className="mt-4 max-w-md leading-relaxed text-muted-foreground">Join the interest list for sky notes and new AstroBooks. Email delivery has not launched yet.</p><div className="mt-6"><NewsletterSignup source="sky-notes" button="Join the interest list" /></div></div><ContactForm /></div></section>
