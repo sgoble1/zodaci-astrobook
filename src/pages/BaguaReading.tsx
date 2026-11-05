@@ -11,6 +11,7 @@ import { ReasoningPanel } from '@/components/common/ReasoningPanel';
 import { kuaNumber, dirsFor, KUA_ELEMENT, groupOf } from '@/lib/kua';
 import { DIR_NAME } from '@/content/fengshui';
 import { BCB_CHAPTER } from '@/content/birthChartBook';
+import { StartLink } from '@/components/common/StartLink';
 
 const GEN: Record<string, string> = { Wood: 'Fire', Fire: 'Earth', Earth: 'Metal', Metal: 'Water', Water: 'Wood' };
 
@@ -42,7 +43,7 @@ export default function BaguaReading({ input: given }: { input?: ChartInput } = 
       </header>
 
       <section className="space-y-3"><h2 className="text-2xl border-b border-gold/40 pb-1">I · The directions</h2>
-        {isApril ? <BaguaWheel /> : k ? <KuaWheel kua={k.kua} /> : <p className="text-oxblood">Sex isn’t given, so the Kua number can’t be calculated. {given ? <Link to="/start" className="underline">Add it to your birth details</Link> : 'Add it in the Chart Calculator.'}</p>}
+        {isApril ? <BaguaWheel /> : k ? <KuaWheel kua={k.kua} /> : <p className="text-oxblood">Sex isn’t given, so the Kua number can’t be calculated. {given ? <StartLink className="underline">Add it to your birth details</StartLink> : 'Add it in the Chart Calculator.'}</p>}
         {k && <ReasoningPanel reasoning={{ inputs: [{ label: 'Birth date', value: input.date }, { label: 'Sex', value: isApril ? 'female (Kua from guide)' : input.sex ?? '—' }], steps: k.steps.map((s, i) => ({ label: `Step ${i + 1}`, detail: s })), output: `Kua ${k.kua} · ${kEl} · ${groupOf(k.kua)} group`, confidence: isApril ? 'confirmed' : 'derived', caveats: isApril ? ['The standard female formula gives Kua 8 for this birth year; the guide’s Kua 1 is used.'] : [] }} />}
       </section>
 

@@ -12,6 +12,7 @@ import { ForecastReel } from '@/components/observatory/ForecastReel';
 import { FilmFx } from '@/components/observatory/FilmFx';
 import { TelevisionIcon, MapIcon, LibraryIcon } from '@/components/icons/RetroIcons';
 import controlRoom from '@/assets/forecast/forecast-control-room.jpg';
+import { StartLink } from '@/components/common/StartLink';
 
 export default function Forecast() {
   usePageMeta('Forecast Center · Zodaci', 'Today’s calculated sky, a 30-day calendar and private chart-based television channels, illustrated in Zodaci’s 1950s AstroComic style.');
@@ -65,7 +66,7 @@ function PersonalBroadcast({ now }: { now: Date }) {
   const chart = useMemo(() => { if (!birth) return null; try { return computeChart(toChartInput(birth)); } catch { return null; } }, [birth]);
   const events = useMemo(() => chart ? upcomingEvents(chart, now, 30) : [], [chart, now]);
   if (birth === undefined) return <p role="status">Opening your chart…</p>;
-  if (!birth || !chart) return <div className="space-y-4 border-y border-border py-6"><p className="text-muted-foreground">A saved birth chart is needed for your personal broadcast. Shared editions require the owner’s permission to open the whole chart.</p><Button asChild variant="signal"><Link to="/start">Open birth details</Link></Button></div>;
+  if (!birth || !chart) return <div className="space-y-4 border-y border-border py-6"><p className="text-muted-foreground">A saved birth chart is needed for your personal broadcast. Shared editions require the owner’s permission to open the whole chart.</p><Button asChild variant="signal"><StartLink>Open birth details</StartLink></Button></div>;
   return <div className="space-y-8">
     <div className="flex flex-wrap items-center justify-between gap-3"><p className="text-sm text-muted-foreground">{birth.name} · {birth.date} · {birth.time ?? 'Birth time unknown'} · {birth.placeLabel}</p><Button asChild variant="outline" size="sm"><Link to="/my-chart">Open chart</Link></Button></div>
     {!birth.time && <p role="note" className="border-l-2 border-primary pl-4 text-sm text-muted-foreground">Birth time unknown: no personal Moon, Ascendant or Midheaven contacts are included.</p>}

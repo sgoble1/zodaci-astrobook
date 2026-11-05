@@ -11,9 +11,10 @@ import { PLAN_NAME, PLAN_PRICE, CREDIT_ALLOWANCE } from '@/lib/plans';
 import { BOOK_VERSIONS, money } from '@/lib/books';
 import { PanelTitle, StatusLight } from '@/components/observatory/Observatory';
 import { HeroSlideshow, ChartMapSlide, LookUpSlide, PressSlide } from '@/components/observatory/HeroSlides';
-import { MottoRail, ForecastPlate, ExplorePoster, DestinationTiles, QuotePlate, ArchiveShelf, HowItWorks, ZodiacPlate, TransmissionsPlate, JoinPlate, type Destination } from '@/components/observatory/Mosaic';
+import { MottoRail, ForecastPlate, type MottoLink, ExplorePoster, DestinationTiles, QuotePlate, ArchiveShelf, HowItWorks, ZodiacPlate, TransmissionsPlate, JoinPlate, type Destination } from '@/components/observatory/Mosaic';
 import { BookIcon, ChartWheelIcon, RingsIcon, StorefrontIcon, TelescopeIcon } from '@/components/icons/RetroIcons';
 import { ALL_READINGS } from '@/lib/topicReadings';
+import { PersonalizationStory } from '@/components/books/PersonalizationStory';
 import { ACADEMY } from '@/content/academy';
 import { HOUSE_SYSTEMS } from '@/lib/astro';
 
@@ -43,7 +44,15 @@ const FEATURES: [string, string, string][] = [
 ];
 
 /** Motto words on the left rail; each one opens a real page. */
-const MOTTO: [string, string][] = [['Discover', '/learn'], ['Explore', '/start'], ['Understand', '/demo'], ['Evolve', '/pricing']];
+const MOTTO: MottoLink[] = [
+  ['Discover', '/learn', 'Free lessons & guides'],
+  ['Explore', '/start', 'Your own birth chart'],
+  ['Understand', '/demo', 'A sample edition, inside out'],
+  ['Connect', '/compatibility', 'Two charts, side by side'],
+  ['Create', '/astrobook', 'AstroBooks & AstroComics'],
+  ['Collect', '/store', 'The observatory gift shop'],
+  ['Evolve', '/pricing', 'Go deeper with Pro'],
+];
 
 const DESTINATIONS: Destination[] = [
   { to: '/start', title: 'Birth charts', text: 'Your cosmic blueprint', cta: 'Explore charts', icon: ChartWheelIcon },
@@ -80,9 +89,9 @@ export default function BrandLanding() {
     <PublicHeader />
     <main id="brand-main" className="mosaic mx-auto max-w-7xl px-3 py-4 sm:px-6 sm:py-6">
       <div className="mosaic-top">
-        <div className="mosaic-left"><MottoRail className="mosaic-rail" links={MOTTO} tagline="Your personal guide to the stars — and to yourself." /><ForecastPlate /></div>
+        <div className="mosaic-left"><MottoRail className="mosaic-rail" links={MOTTO} tagline="Your personal guide to the stars — and to yourself." /></div>
         <HeroSlideshow className="mosaic-hero" label="Zodaci highlights" slides={slides} />
-        <ExplorePoster className="mosaic-poster" to="/learn" />
+        <div className="mosaic-right"><ExplorePoster className="mosaic-poster" to="/learn" /><ForecastPlate /></div>
       </div>
 
       <DestinationTiles label="Main destinations" items={DESTINATIONS} />
@@ -93,6 +102,8 @@ export default function BrandLanding() {
       </div>
 
       <HowItWorks />
+
+      <PersonalizationStory />
 
       <ZodiacPlate />
 

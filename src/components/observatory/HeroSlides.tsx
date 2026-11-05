@@ -8,6 +8,7 @@ import cartographer from '@/assets/home/cartographer-guide.jpg';
 import facesHero from '@/assets/home-heads-hero.jpg';
 import sunFace from '@/assets/spots/self.jpg';
 import { PRODUCT_ART } from '@/content/productArtwork';
+import comicCutout from '@/assets/products/astrocomic-cutout.webp';
 
 export type HeroSlide = { id: string; label: string; content: ReactNode };
 
@@ -146,6 +147,7 @@ export function ChartMapSlide({ heading = 'h1', title, script, lines, cta, secon
   const H = heading;
   return (
     <div className="hero-night chartmap">
+      <Starbursts />
       <Link to="/forecast" className="chartmap-signal"><span aria-hidden>✦</span><span className="font-label text-sm">Forecast Center</span><span className="font-script text-xl text-primary">Tune into today's sky</span><ArrowRight aria-hidden className="h-4 w-4" /></Link>
       <img src={cartographer} alt="The Cartographer, the observatory's chart specialist, points up toward the zodiac" width={820} height={1025} loading={eager ? 'eager' : 'lazy'} {...(eager ? { fetchpriority: 'high' } : {})} className="hero-cartographer chartmap-figure" />
       <div className="chartmap-copy">
@@ -207,10 +209,26 @@ export function PressSlide({ heading = 'h2', title, script, text, book, comic }:
         <div className="mt-4 max-w-md text-lg leading-relaxed text-foreground/90">{text}</div>
         <div className="mt-6 flex flex-wrap gap-3"><Button asChild variant="signal" size="lg"><Link to={book.to}>{book.label}<ArrowRight /></Link></Button><Button asChild variant="outline" size="lg"><Link to={comic.to}>{comic.label}</Link></Button></div>
       </div>
-      <div className="flex min-w-0 items-end justify-center gap-4 sm:gap-6">
-        <Link to={book.to} className="w-[48%] max-w-[15rem] -rotate-3"><img src={PRODUCT_ART.book.src} alt={PRODUCT_ART.book.alt} width={1024} height={1024} loading="lazy" className="hero-press-cover w-full object-contain" /><span className="mt-3 block text-center font-label text-sm text-primary">AstroBook · shop sample</span></Link>
-        <Link to={comic.to} className="w-[44%] max-w-[12rem] rotate-2"><img src={PRODUCT_ART.comic.src} alt={PRODUCT_ART.comic.alt} width={768} height={1145} loading="lazy" className="hero-press-cover w-full object-contain" /><span className="mt-3 block text-center font-label text-sm text-primary">AstroComic · story preview</span></Link>
+      <div className="press-covers">
+        <Link to={book.to} className="press-cover-book"><img src={PRODUCT_ART.book.src} alt={PRODUCT_ART.book.alt} width={1024} height={1024} loading="lazy" className="hero-press-cover w-full object-contain" /><span className="mt-3 block text-center font-label text-sm text-primary">AstroBook · shop sample</span></Link>
+        <Link to={comic.to} className="press-cover-comic"><img src={comicCutout} alt={PRODUCT_ART.comic.alt} width={636} height={948} loading="lazy" className="press-cutout w-full" /><span className="mt-2 block text-center font-label text-sm text-primary">AstroComic · story preview</span></Link>
       </div>
+    </div>
+  );
+}
+
+/** Three slow-twinkling 1950s starbursts for the open sky above the Cartographer (decorative). */
+function Starbursts() {
+  const burst = (r: number) => {
+    const pts: string[] = [];
+    for (let i = 0; i < 16; i++) { const a = (i * Math.PI) / 8; const rr = i % 2 ? r * 0.38 : r; pts.push(`${(50 + rr * Math.cos(a)).toFixed(1)},${(50 + rr * Math.sin(a)).toFixed(1)}`); }
+    return pts.join(' ');
+  };
+  return (
+    <div className="chartmap-bursts" aria-hidden="true">
+      {[['b1', 46], ['b2', 40], ['b3', 34]].map(([k, r]) => (
+        <svg key={k as string} viewBox="0 0 100 100" className={`chartmap-burst chartmap-${k}`}><polygon points={burst(r as number)} /><circle cx="50" cy="50" r="6" /></svg>
+      ))}
     </div>
   );
 }

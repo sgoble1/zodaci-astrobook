@@ -21,6 +21,7 @@ import { interAspects, overlays, composite, balance, signPair, animalRelation, d
 import { SelfGate } from '@/components/relationships/SelfGate';
 import type { RelationshipSelf } from '@/hooks/useRelationshipSelf';
 import { usePageMeta } from '@/hooks/usePageMeta';
+import { StartLink } from '@/components/common/StartLink';
 
 function Sec({ id, n, title, level, note, children }: { id: string; n: string; title: string; level: ConfidenceLevel; note: string; children: React.ReactNode }) {
   return (
@@ -133,7 +134,7 @@ function Detail({ rel, self }: { rel: Relationship; self: RelationshipSelf }) {
           <div className="parchment p-4 text-sm space-y-1">{kA ? <><b>Living together:</b> {groupOf(kB.kua) === groupOf(kA.kua) ? `Both are in the ${groupOf(kA.kua)} group, so your good directions overlap.` : `${me === 'You' ? 'You' : me} (Kua ${kA.kua}, ${groupOf(kA.kua)}) and ${N} (Kua ${kB.kua}, ${groupOf(kB.kua)}) are in different groups, so your best directions don’t overlap. Usual remedy: each of you faces your own best direction at your desk; for the bed, choose one partner’s Nien Yen (love) direction.`}
             <p>Shared good directions: {shared.length ? shared.map(d => DIR_NAME[d]).join(', ') : 'none'}. {myP} relationship direction: {DIR_NAME[KUA_TABLE[kA.kua]['Nien Yen']]}; {N}’s: {DIR_NAME[KUA_TABLE[kB.kua]['Nien Yen']]}.</p>
             {kA.source === 'guide' && <p className="text-xs text-muted-foreground">Kua {kA.kua} is the value stated in your Feng Shui guide. The standard formula gives Kua {kA.formula ?? '—'}{kA.formula ? ` (${KUA_ELEMENT[kA.formula]})` : ''}; the guide’s value is used here and the difference is kept visible.</p>}</>
-            : <p>Add your own sex in <Link to="/start" className="underline">your birth details</Link> to compare Kua directions.</p>}</div></>
+            : <p>Add your own sex in <StartLink className="underline">your birth details</StartLink> to compare Kua directions.</p>}</div></>
           : <p className="text-sm">Add {N}’s sex (Edit details) to calculate their Kua number and directions.</p>}
       </Sec>
 

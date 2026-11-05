@@ -9,6 +9,7 @@ import { kuaNumber, dirsFor, groupOf, KUA_ELEMENT, type Sex } from '@/lib/kua';
 import { TierGate } from '@/components/common/TierGate';
 import { Input } from '@/components/ui/input';
 import type { Plan } from '@/content/navigation';
+import { StartLink } from '@/components/common/StartLink';
 
 /** Systems: Chinese pillars, numerology and Feng Shui with tiered depth (Free → Pro → Cosmic). */
 export function SystemsTab({ chart, date, name, sex, plan, loading }: { chart: ChartResult; date: string; name: string; sex: Sex; plan: Plan; loading: boolean }) {
@@ -68,7 +69,7 @@ export function SystemsTab({ chart, date, name, sex, plan, loading }: { chart: C
 
       <section aria-labelledby="sy-fs" className="space-y-3">
         <h2 id="sy-fs" className="font-display text-2xl">Feng Shui</h2>
-        {!kua ? <p className="rounded border border-border bg-card p-4 text-sm">Your Kua number uses birth sex. Add it in your <Link to="/start" className="text-primary underline">birth details</Link> to see your directions.</p> : <>
+        {!kua ? <p className="rounded border border-border bg-card p-4 text-sm">Your Kua number uses birth sex. Add it in your <StartLink className="text-primary underline">birth details</StartLink> to see your directions.</p> : <>
           <p className="rounded-lg border border-border bg-card p-4"><span className="font-medium">Kua {kua.kua} · {groupOf(kua.kua)} group · {KUA_ELEMENT[kua.kua]}</span><span className="block text-sm text-muted-foreground">Calculated from solar year {kua.solarYear}.</span></p>
           <TierGate plan={plan} loading={loading} need="full" title="Your eight directions">
             <ul className="grid gap-2 sm:grid-cols-2">{dirsFor(kua.kua).map(d => <li key={d.mansion} className={`rounded border p-3 text-sm ${d.good ? 'border-gold/50 bg-card' : 'border-border bg-muted/30'}`}><span className="font-medium">{d.dir} · {d.mansion}</span><span className="block text-muted-foreground">{d.meaning}. {d.use}</span></li>)}</ul>

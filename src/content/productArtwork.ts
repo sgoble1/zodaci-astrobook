@@ -3,6 +3,7 @@ import signature from '@/assets/products/signature-gemini.jpg.asset.json';
 import pocket from '@/assets/products/pocket-gemini.jpg.asset.json';
 import comic from '@/assets/products/astrocomic-opening.jpg.asset.json';
 import collection from '@/assets/products/observatory-print-collection.jpg';
+import taurusFlat from '@/assets/products/taurus-cover-flat.jpg';
 
 /** Promotional shop samples only; never replace a member's designed cover or private issue. */
 export const PRODUCT_ART = {
@@ -18,3 +19,5 @@ export const BOOK_PRODUCT_SAMPLES = [
   { ...PRODUCT_ART.signature, label: 'Signature · Gemini' },
   { ...PRODUCT_ART.book, label: 'Collector · Taurus' },
 ];
+/** Flat 2:3 Collector Taurus front cover, wrapped onto every promotional 3D book preview. */
+export const PROMO_3D_COVER = { src: taurusFlat, alt: 'Collector AstroBook front cover: Taurus in a golden atomic orbit' };

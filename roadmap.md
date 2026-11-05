@@ -350,6 +350,12 @@ Audit Oct 29: Chat/counselors already use the member's chart; podcast/custom pag
 - [x] Founder birth prompt: birth lookup falls back to the account's own official edition
 - [x] AstroComic in public top menu
 - [x] Shop featured order: books/comics, stickers, bags, rest
-- [ ] Wave 1 rest: Learn phone overflow, onboarding return, podcast overlap
-- [ ] Waves 2–8 (nav/admin banner, 3D book, personalization, mosaic, About/Pricing/Demo, art/icons/animation, founder homes, Observation Log, Admin restyle, SEO/a11y)
+- [x] Wave 1 rest: Learn phone overflow (fixed earlier; Demo button row fixed), birth-detail entry returns to the sending page or My Chart (onboardingReturn + StartLink, tested), podcast player sits above both phone docks and reserves page space
+- [x] Wave 2: Forecast/Sibling Bureau/Characters/AstroComic in all founder menus, "My Official AstroBook" label everywhere, April loading line, "Viewing: … edition" strip (tested), shop shelves (books & comics → stickers → bags → departments) with side-scrolling rows, portrait book/comic frames, AstroBook + AstroComic lead cards, signed-out "Issue #1", signed-in next unordered issue (tested)
+- [x] Wave 3: 3D book uses the Taurus shop cover on all promotional spots (AstroBook gallery, Demo) with drag/touch turning; personalization story + side-by-side specificity examples (sample edition facts, tested) on AstroBook page and home; callouts on AstroComic and book/comic product pages; sample comic relabelled so Issue #1 is the buyer's own
+- [x] Wave 4: comic cutout (WebP) on the press slide, starbursts above the Cartographer, 7-word motto rail with descriptors, right column = tall Explore poster + short Forecast plate, hero first on phones/tablets, expanded How it works
+- [ ] Wave 5: About (mural, pillar drawings, fifth pillar, How we calculate, Why different, founders), Pricing trust section, restyle Demo/BookPreview/themes
+- [ ] Wave 6: icon set completion, feature-card drawings, place/empty-state art, logo lockup, animations audit
+- [ ] Wave 7: founder edition homes, Zac menu by volume, Sibling Bureau links, 3-column reader, podcasts/counselors/workbooks restyle, phone dock, Timeline Hall archive wall, Observation Log, context editing from Current Chapter, full-moon + Nodes/Chiron fixes
+- [ ] Wave 8: Admin/Developer restyle, SEO page data, accessibility pass, full checks, developer activity log
 - Blocked: comics/Shane corrections (AI credits), Lulu keys, notify.zodaci.com DNS, testimonials, Sabian license

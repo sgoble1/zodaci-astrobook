@@ -9,6 +9,7 @@ import { ReasoningPanel } from '@/components/common/ReasoningPanel';
 import { ConfidenceBadge } from '@/components/common/ConfidenceBadge';
 import { Button } from '@/components/ui/button';
 import { usePageMeta } from '@/hooks/usePageMeta';
+import { StartLink } from '@/components/common/StartLink';
 
 const GEN: Record<string, string> = { Wood: 'Fire', Fire: 'Earth', Earth: 'Metal', Metal: 'Water', Water: 'Wood' };
 const natureCls = (n: string) => (n === 'Auspicious' ? 'border-gold/70 bg-gold/10' : n === 'Mixed' ? 'border-border bg-muted/40' : 'border-oxblood/50 bg-oxblood/5');
@@ -45,7 +46,7 @@ export default function MemberFengShui({ birth, focus = 'directions' }: { birth:
       {!k && (
         <div role="note" className="rounded-lg border border-gold/40 bg-card/60 p-5 text-sm">
           <p>Your Kua number needs the sex recorded at birth (the classical formula differs for male and female).</p>
-          <Button asChild size="sm" className="mt-3"><Link to="/start">Update my birth details</Link></Button>
+          <Button asChild size="sm" className="mt-3"><StartLink>Update my birth details</StartLink></Button>
         </div>
       )}
 

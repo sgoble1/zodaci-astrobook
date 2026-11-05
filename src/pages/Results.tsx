@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { BlueprintTab } from '@/components/results/BlueprintTab';
 import { ToneSwitcher } from '@/components/results/ToneSwitcher';
 import { PLAN_NAME } from '@/lib/plans';
+import { StartLink } from '@/components/common/StartLink';
 
 const PlacementsTab = lazy(() => import('@/components/results/PlacementsTab').then(m => ({ default: m.PlacementsTab })));
 const AspectsTab = lazy(() => import('@/components/results/AspectsTab').then(m => ({ default: m.AspectsTab })));
@@ -33,7 +34,7 @@ export default function Results() {
   const chart = useMemo(() => birth ? computeChart({ ...toChartInput(birth), sex: kuaSex(birth.sex) }) : null, [birth]);
   useEffect(() => { document.getElementById('results-panel')?.focus({ preventScroll: true }); }, [tab]);
   if (birth === undefined) return <div className="mx-auto max-w-4xl space-y-4" role="status" aria-label="Loading your chart"><div className="h-10 w-64 animate-pulse rounded bg-card" /><div className="h-96 animate-pulse rounded-lg bg-card" /></div>;
-  if (!birth || !chart) return <article className="mx-auto max-w-lg space-y-4 py-10 text-center"><h1 className="font-display text-3xl">Add your birth details first</h1><p className="text-muted-foreground">Your results are calculated from your birth date, time and place.</p><Button asChild><Link to="/start">Create my chart</Link></Button></article>;
+  if (!birth || !chart) return <article className="mx-auto max-w-lg space-y-4 py-10 text-center"><h1 className="font-display text-3xl">Add your birth details first</h1><p className="text-muted-foreground">Your results are calculated from your birth date, time and place.</p><Button asChild><StartLink>Create my chart</StartLink></Button></article>;
   const timeKnown = !!birth.time;
   const select = (id: TabId) => { const n = new URLSearchParams(params); n.set('tab', id); setParams(n, { replace: true }); };
   const onKey = (e: React.KeyboardEvent, i: number) => {

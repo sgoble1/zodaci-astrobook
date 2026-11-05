@@ -2,10 +2,12 @@ import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { SpotArt } from '@/components/art/SpotArt';
 import { PRODUCT_ART } from '@/content/productArtwork';
+import { SpecificityExamples } from '@/components/books/SpecificityExamples';
+import { cn } from '@/lib/utils';
 
 /** Public examples of supported depth, never excerpts from private founder biographies. */
-export function PersonalizationStory() {
-  return <section aria-labelledby="personal-depth" className="product-story-band">
+export function PersonalizationStory({ className, examples = true }: { className?: string; examples?: boolean }) {
+  return <section aria-labelledby="personal-depth" className={cn('product-story-band', className)}>
     <div className="product-story-art"><img src={PRODUCT_ART.collection.src} alt={PRODUCT_ART.collection.alt} loading="lazy" width={1536} height={1024} /><p className="mt-3 text-xs text-muted-foreground">Illustrative shop collection · every reader’s content is different.</p></div>
     <div className="min-w-0 space-y-5">
       <p className="font-label text-primary">Beyond your Sun sign</p>
@@ -16,5 +18,20 @@ export function PersonalizationStory() {
       <p className="text-xs leading-relaxed text-muted-foreground">For example: explore creative drive through the Sun, emotional steadiness through the Moon, then their relationship to your work and daily habits. Interpretations are reflective possibilities, not proven facts about your life. Available depth varies by book version; generated work uses AI credits. Changing context does not automatically rewrite existing pages.</p>
       <div className="flex flex-wrap gap-3"><Button asChild variant="outline"><Link to="/personal-context">Add your context</Link></Button><Button asChild variant="outline"><Link to="/my-masterbook">Explore your chapters</Link></Button></div>
     </div>
+    {examples && <SpecificityExamples className="product-story-examples" />}
   </section>;
+}
+
+/** Short callout for product pages: links to the full story on the AstroBook page. */
+export function PersonalizationCallout({ product = 'book', className }: { product?: 'book' | 'comic'; className?: string }) {
+  return <aside aria-label="Made from your chart" className={cn('personal-callout', className)}>
+    <SpotArt kind={product === 'comic' ? 'tv' : 'written'} className="h-16 w-16 shrink-0" orbit={false} />
+    <div className="min-w-0">
+      <p className="font-label text-lg tracking-[0.08em]">{product === 'comic' ? 'Drawn from your own chart' : 'Written from your own chart'}</p>
+      <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{product === 'comic'
+        ? 'Each issue starts from your saved placements and the month’s real transits. Your first issue is your own story, never the sample comic.'
+        : 'Every chapter names the exact sign, degree, house and aspect behind it. Add private context and request chapters on the topics that matter to you.'}</p>
+      <Link to="/astrobook#personal-depth" className="mt-2 inline-block font-label text-sm tracking-[0.14em] text-accent underline-offset-4 hover:underline">See the difference →</Link>
+    </div>
+  </aside>;
 }

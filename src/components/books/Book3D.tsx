@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState, type PointerEvent } from 'react';
 import { COVER_DESIGNS, coverSrc } from '@/content/coverDesigns';
 import { useCoverImage } from '@/hooks/useCoverImage';
 import { DEFAULT_CROP } from '@/lib/coverLayout';
@@ -13,20 +13,26 @@ export function Book3D({ pages = 250, trimPt = [432, 648], label = '6″ × 9″
   // Without a finished cover, show the chosen design with the same name, subtitle and wordmark as the printed book.
   const designed = useCoverImage(fixedSrc ? null : { source: { kind: 'design', key: cover.key }, crop: DEFAULT_CROP, name, trimPt }, 40);
   const [angle, setAngle] = useState(-28);
+  // Drag (mouse or touch) to turn the book; vertical swipes still scroll the page.
+  const drag = useRef<{ x: number; a: number } | null>(null);
+  const [dragging, setDragging] = useState(false);
+  const onDown = (e: PointerEvent<HTMLDivElement>) => { drag.current = { x: e.clientX, a: angle }; setDragging(true); e.currentTarget.setPointerCapture?.(e.pointerId); };
+  const onMove = (e: PointerEvent<HTMLDivElement>) => { const d = drag.current; if (d) setAngle(Math.max(-60, Math.min(60, Math.round(d.a + (e.clientX - d.x) * 0.45)))); };
+  const onUp = () => { drag.current = null; setDragging(false); };
   const spinePx = Math.round(pages * 0.0045 * 40) + (hardcover ? 8 : 0); // 40px per inch, boards add thickness
   const ratio = trimPt[1] / trimPt[0];
   const h = Math.min(360, Math.round(240 * ratio)), w = Math.round(h / ratio);
   const src = fixedSrc || designed || coverSrc(cover);
   return (
     <figure className="space-y-4">
-      <div className="flex justify-center py-6" style={{ perspective: 1400 }}>
+      <div className={`flex cursor-grab select-none justify-center py-6 ${dragging ? 'cursor-grabbing' : ''}`} style={{ perspective: 1400, touchAction: 'pan-y' }} onPointerDown={onDown} onPointerMove={onMove} onPointerUp={onUp} onPointerCancel={onUp}>
         <div
           role="img"
           aria-label={`AstroBook mockup, ${label}, about ${pages} pages`}
-          className="relative transition-transform duration-700 ease-out"
+          className={`relative ${dragging ? '' : 'transition-transform duration-700 ease-out'}`}
           style={{ width: w, height: h, transformStyle: 'preserve-3d', transform: `rotateY(${angle}deg) rotateX(4deg)` }}
         >
-          <img loading="lazy" decoding="async" src={src} alt="" className="absolute inset-0 h-full w-full rounded-r-sm object-cover shadow-2xl" style={{ transform: `translateZ(${spinePx / 2}px)` }} />
+          <img loading="lazy" decoding="async" draggable={false} src={src} alt="" className="absolute inset-0 h-full w-full rounded-r-sm object-cover shadow-2xl" style={{ transform: `translateZ(${spinePx / 2}px)` }} />
           <div className="absolute inset-y-0 bg-muted" style={{ left: -spinePx / 2, width: spinePx, transform: 'rotateY(-90deg)', backgroundImage: `url(${src})`, backgroundSize: 'cover', filter: 'brightness(0.6)' }} />
           <div className="absolute inset-y-1 bg-card" style={{ left: w - spinePx / 2 - 2, width: spinePx, transform: 'rotateY(90deg)', backgroundImage: 'repeating-linear-gradient(90deg, hsl(var(--foreground) / 0.08) 0 1px, transparent 1px 3px)' }} />
           <div className="absolute inset-0 rounded-r-sm bg-card" style={{ transform: `translateZ(-${spinePx / 2}px)` }} />
@@ -40,7 +46,7 @@ export function Book3D({ pages = 250, trimPt = [432, 648], label = '6″ × 9″
               className={`rounded-full border px-3 py-1 text-sm transition-colors ${c.key === cover.key ? 'border-primary bg-primary/15' : 'border-border hover:border-primary/60'}`}>{c.label}</button>
           ))}
         </div>}
-        <figcaption className="text-center text-sm text-muted-foreground">{label} · ~{pages} pages. Drag the slider to turn the book.</figcaption>
+        <figcaption className="text-center text-sm text-muted-foreground">{label} · ~{pages} pages. Drag the book or the slider to turn it.</figcaption>
       </div>
     </figure>
   );

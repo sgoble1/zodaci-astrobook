@@ -15,6 +15,7 @@ import { interAspects, overlays, composite, signPair, animalRelation, dayMasterR
 import { SelfGate } from '@/components/relationships/SelfGate';
 import type { RelationshipSelf } from '@/hooks/useRelationshipSelf';
 import { usePageMeta } from '@/hooks/usePageMeta';
+import { StartLink } from '@/components/common/StartLink';
 
 export default function RelationshipReading() {
   const { id } = useParams();
@@ -96,7 +97,7 @@ function ReadingBody({ rel, self }: { rel: Relationship; self: RelationshipSelf 
           {kA.source === 'guide' && <p className="text-xs text-muted-foreground">Kua {kA.kua} is from your Feng Shui guide; the standard formula gives Kua {kA.formula ?? '—'}.</p>}
           <KuaWheel kua={kB.kua} label={N} />
           {self.isApril && <p className="text-xs"><Link to="/masterbook/bagua-wheel" className="underline">Your Bagua wheel (from your guide)</Link></p>}
-        </> : !kA ? <p>Add your own sex in <Link to="/start" className="underline">your birth details</Link> to include Feng Shui directions.</p> : <p>Add {N}’s sex on the relationship page to include Feng Shui directions.</p>}
+        </> : !kA ? <p>Add your own sex in <StartLink className="underline">your birth details</StartLink> to include Feng Shui directions.</p> : <p>Add {N}’s sex on the relationship page to include Feng Shui directions.</p>}
       </Part>
     </div>
   );

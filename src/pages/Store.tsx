@@ -9,7 +9,14 @@ import { PRICE_BANDS, ShopSidebar, type PriceBand, type ShopFilters } from '@/co
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { PRODUCT_BY_HANDLE_QUERY, storefrontApiRequest, fetchAllProducts, formatMoney, inStock, type ShopifyProduct } from '@/lib/shopify';
 import { useCartStore } from '@/stores/cartStore';
-import { productPriority } from '@/lib/shopPresentation';
+import { PRIORITY_SHELVES, comicIssueTitle, isPortraitProduct, productPriority, shopTitle } from '@/lib/shopPresentation';
+import { PersonalizationCallout } from '@/components/books/PersonalizationStory';
+import { ProductCard, ShopShelf, SpotlightCard } from '@/components/store/ShopShelves';
+import { useNextComicIssue } from '@/hooks/useNextComicIssue';
+import { useSession } from '@/hooks/useLibrary';
+import { PRODUCT_ART } from '@/content/productArtwork';
+import { BOOK_VERSIONS, money } from '@/lib/books';
+import { COMIC_PLANS } from '@/lib/comic';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { StaffPortrait } from '@/components/observatory/StaffPortrait';
 import heads from '@/assets/home-heads-hero.jpg';
@@ -42,7 +49,11 @@ function ShopOffline({ onRetry }: { onRetry: () => void }) {
 }
 
 export default function Store() {
-  usePageMeta('The Zodaci Shop: posters, stickers and notebooks', 'Astrology posters, sticker sheets and star-chart notebooks from Zodaci.');
+  usePageMeta('The Zodaci Shop: AstroBooks, AstroComics and atomic zodiac goods', 'Your chart as an AstroBook or AstroComic, plus atomic zodiac stickers, totes, posters and notebooks from the Zodaci gift shop.');
+  const session = useSession();
+  const issue = useNextComicIssue();
+  const comicCard = comicIssueTitle({ signedIn: !!session, purchased: issue.purchased, next: issue.next });
+  const bookFrom = money(Math.min(...BOOK_VERSIONS.map(v => v.price)));
   const [products, setProducts] = useState<ShopifyProduct[] | null>(null);
   const [failed, setFailed] = useState(false);
   const [attempt, setAttempt] = useState(0);
@@ -97,6 +108,15 @@ export default function Store() {
     // Sold-out items stay visible but sink below what can be bought today.
     return sorted.sort((a, b) => Number(inStock(b)) - Number(inStock(a)));
   }, [products, type, sign, q, sort, band, inStockOnly]);
+  // Default view: side-scrolling shelves in merchandising order. Any search, filter or sort shows the full grid.
+  const browsing = !q && type === 'All' && sign === 'All' && !band && !inStockOnly && sort === 'featured';
+  const shelves = useMemo(() => {
+    const list = products ?? [];
+    const pri = (p: ShopifyProduct) => productPriority(p.node.title, p.node.productType ?? '');
+    const top = PRIORITY_SHELVES.map(sh => ({ id: `p${sh.priority}`, title: sh.title, script: sh.script, items: list.filter(p => pri(p) === sh.priority), seeAll: undefined as string | undefined }));
+    const rest = types.map(t => ({ id: t.name.toLowerCase().replace(/\W+/g, '-'), title: t.name, script: undefined as string | undefined, items: list.filter(p => pri(p) === 3 && p.node.productType === t.name), seeAll: t.name })).filter(sh => sh.items.length);
+    return [...top, ...rest].map(sh => ({ ...sh, items: [...sh.items].sort((a, b) => Number(inStock(b)) - Number(inStock(a))) }));
+  }, [products, types]);
   return (
     <div className="mx-auto max-w-7xl space-y-8 px-4 py-10">
       <header className="obs-panel relative isolate overflow-hidden">
@@ -106,7 +126,7 @@ export default function Store() {
         <div className="px-5 pb-28 pt-8 pr-16 sm:px-10 sm:pb-40 sm:pt-10 sm:pr-20">
           <div className="flex items-start gap-4">
             <StaffPortrait id="curator" size={64} className="hidden sm:block" />
-            <div><p className="font-label text-sm tracking-[0.2em] text-primary">The Observatory Gift Shop</p><h1 className="mt-2 font-display text-4xl uppercase leading-none sm:text-6xl">Posters, apparel &amp; stationery</h1><p className="mt-2 font-script text-2xl text-primary sm:text-3xl">Souvenirs from your own sky</p><p className="mt-3 max-w-xl text-foreground/85">Posters, tees, mugs, totes, stickers and notebooks — a core collection plus sign editions.</p></div>
+            <div><p className="font-label text-sm tracking-[0.2em] text-primary">The Observatory Gift Shop</p><h1 className="mt-2 font-display text-4xl uppercase leading-none sm:text-6xl">Books, comics &amp; souvenirs</h1><p className="mt-2 font-script text-2xl text-primary sm:text-3xl">Souvenirs from your own sky</p><p className="mt-3 max-w-xl text-foreground/85">Your chart as an AstroBook or AstroComic first, then atomic zodiac stickers, totes, posters, tees, mugs and notebooks — a core collection plus sign editions.</p></div>
           </div>
         </div>
       </header>
@@ -133,28 +153,19 @@ export default function Store() {
           {inStockOnly && <Chip label="Ready to order" onClear={() => change('inStock', false)} />}
         </div>}
         {!products && <ul className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3" aria-busy="true" aria-label="Loading the shop">{Array.from({ length: 6 }, (_, i) => <li key={i} className="parchment overflow-hidden"><div className="aspect-square animate-pulse bg-muted motion-reduce:animate-none" /><div className="space-y-2 p-4"><div className="h-5 w-2/3 rounded bg-muted" /><div className="h-4 w-full rounded bg-muted" /></div></li>)}</ul>}
-        {products && <p className="text-sm text-muted-foreground" aria-live="polite">{shown.length} {shown.length === 1 ? 'item' : 'items'}{q && ` matching “${q}”`}</p>}
+        {products && !browsing && <p className="text-sm text-muted-foreground" aria-live="polite">{shown.length} {shown.length === 1 ? 'item' : 'items'}{q && ` matching “${q}”`}</p>}
         {products && shown.length === 0 && <div className="parchment space-y-3 p-8 text-center"><p className="text-muted-foreground">{products.length ? 'Nothing matches that search.' : 'New pieces are on their way — check back soon.'}</p>{(q || type !== 'All' || sign !== 'All' || band || inStockOnly) && <Button variant="outline" size="sm" onClick={() => setParams(new URLSearchParams(), { replace: true })}>Clear search and filters</Button>}</div>}
-        <ul className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
-          {shown.map(p => {
-            const available = inStock(p);
-            return (
-              <li key={p.node.id} className="parchment flex flex-col overflow-hidden">
-                <Link to={`/product/${p.node.handle}`} className="relative block aspect-square bg-muted">
-                  {p.node.images.edges[0] && <img src={p.node.images.edges[0].node.url} alt={p.node.images.edges[0].node.altText ?? p.node.title} loading="lazy" width={600} height={600} className={`h-full w-full object-contain ${available ? '' : 'opacity-60 grayscale'}`} />}
-                  {!available && <span className="absolute left-3 top-3 rounded-full border border-border bg-background/90 px-2.5 py-0.5 text-xs">Sold out</span>}
-                </Link>
-                <div className="flex flex-1 flex-col gap-2 p-4">
-                  <Link to={`/product/${p.node.handle}`} className="font-display text-lg leading-snug hover:underline">{p.node.title}</Link>
-                  <p className="line-clamp-2 text-sm text-muted-foreground">{p.node.description}</p>
-                  <div className="mt-auto flex items-center justify-between pt-2"><span className="font-label text-lg tracking-wider text-primary">{p.node.variants.edges.length > 1 ? 'From ' : ''}{formatMoney(p.node.priceRange.minVariantPrice)}</span>
-                    {available ? <Button size="sm" variant="signal" onClick={() => add(p)} disabled={loading}>{loading ? <Loader2 className="h-4 w-4 animate-spin" aria-label="Adding" /> : 'Add to cart'}</Button> : <Button size="sm" variant="outline" disabled>Sold out</Button>}
-                  </div>
-                </div>
-              </li>
-            );
-          })}
-        </ul>
+        {products && browsing && <div className="space-y-10">
+          {shelves.map((sh, i) => <ShopShelf key={sh.id} id={sh.id} title={sh.title} script={sh.script} items={sh.items} onAdd={add} adding={loading}
+            onSeeAll={sh.seeAll ? () => change('type', sh.seeAll!) : undefined}
+            lead={i === 0 ? <>
+              <SpotlightCard to="/astrobook" image={PRODUCT_ART.book.src} alt={PRODUCT_ART.book.alt} eyebrow="Written for you" title="The AstroBook" note="Your whole chart as a printed book: six volumes calculated from your birth moment, with the context you add." price={`From ${bookFrom}`} cta="Choose an edition" />
+              <SpotlightCard to="/astrocomic" image={PRODUCT_ART.comic.src} alt={PRODUCT_ART.comic.alt} eyebrow={issue.purchased && session ? 'Your next issue' : 'Drawn for you'} title={`AstroComic ${comicCard.title}`} note={comicCard.note} price={COMIC_PLANS.single.label} cta={issue.purchased && session ? 'Order this issue' : 'See the comic'} />
+            </> : undefined} />)}
+        </div>}
+        {(!browsing || !products) && <ul className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+          {shown.map(p => <li key={p.node.id}><ProductCard p={p} onAdd={add} adding={loading} /></li>)}
+        </ul>}
         </div>
       </div>}
     </div>
@@ -198,21 +209,26 @@ export function ProductDetail() {
   const main = imgs[Math.min(image, imgs.length - 1)]?.node;
   const available = v ? v.availableForSale : inStock(product);
   const options = n.options.filter(o => !(o.name === 'Title' && o.values.length === 1 && o.values[0] === 'Default Title'));
+  const portrait = isPortraitProduct(n.title, n.productType ?? '');
+  const shown = shopTitle(n.title, n.productType ?? '');
+  const isComic = /astro\s*comic/i.test(`${n.title} ${n.productType ?? ''}`);
   return (
     <div className="mx-auto max-w-5xl space-y-10 px-4 py-10">
       <div className="flex items-center justify-between"><Link to="/store" className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline">← The shop</Link><CartDrawer /></div>
       <div className="grid gap-10 md:grid-cols-2">
         <div className="space-y-3">
-          <div className="parchment overflow-hidden rounded-md">{main ? <img src={main.url} alt={main.altText ?? n.title} width={900} height={900} className="aspect-square w-full object-contain" /> : <div className="aspect-square bg-muted" />}</div>
+          <div className="parchment overflow-hidden rounded-md">{main ? <img src={main.url} alt={main.altText ?? n.title} width={900} height={portrait ? 1200 : 900} className={`w-full ${portrait ? 'aspect-[3/4] object-cover' : 'aspect-square object-contain'}`} /> : <div className={`${portrait ? 'aspect-[3/4]' : 'aspect-square'} bg-muted`} />}</div>
           {imgs.length > 1 && <div className="flex flex-wrap gap-2" role="group" aria-label="Product photos">{imgs.map((im, i) => <button key={i} type="button" onClick={() => setImage(i)} aria-label={`Photo ${i + 1} of ${imgs.length}`} aria-pressed={i === image} className={`h-16 w-16 overflow-hidden rounded border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${i === image ? 'border-gold' : 'border-border opacity-70 hover:opacity-100'}`}><img src={im.node.url} alt="" loading="lazy" width={64} height={64} className="h-full w-full object-cover" /></button>)}</div>}
         </div>
         <div className="space-y-5">
           {n.productType && <p className="font-smallcaps text-xs text-gold">{n.productType}</p>}
-          <h1 className="text-4xl">{n.title}</h1>
+          <h1 className="text-4xl">{shown.title}</h1>
+          {shown.badge && <p className="inline-block rounded-full bg-accent px-3 py-0.5 font-label text-sm tracking-wider text-accent-foreground">{shown.badge}</p>}
           <p className="text-2xl font-semibold">{formatMoney(v?.price ?? n.priceRange.minVariantPrice)}</p>
           {n.variants.edges.length > 1 && <div className="space-y-2"><p className="text-sm text-muted-foreground">{options.map(o => o.name).join(' / ') || 'Option'}</p><div className="flex flex-wrap gap-2">{n.variants.edges.map(e => <Button key={e.node.id} size="sm" aria-pressed={e.node.id === variantId} variant={e.node.id === variantId ? 'default' : 'outline'} disabled={!e.node.availableForSale} onClick={() => setVariantId(e.node.id)}>{e.node.title}{!e.node.availableForSale && ' · sold out'}</Button>)}</div></div>}
           {available ? <Button size="lg" onClick={() => add(product, variantId)} disabled={loading}>{loading ? <Loader2 className="h-4 w-4 animate-spin" aria-label="Adding" /> : 'Add to cart'}</Button> : <Button size="lg" variant="outline" disabled>Sold out</Button>}
           <p className="whitespace-pre-line text-muted-foreground">{n.description}</p>
+          {portrait && <PersonalizationCallout product={isComic ? 'comic' : 'book'} />}
           {(options.length > 0 || v) && <section aria-labelledby="specs" className="space-y-2 border-t border-border pt-4">
             <h2 id="specs" className="font-smallcaps !text-xs text-gold">Details</h2>
             <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 text-sm">

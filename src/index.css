@@ -397,6 +397,13 @@ body:has(#mobile-menu) [data-generation-notice] { display: none; }
   body:has([data-mobile-tabbar]) .float-above-tabbar { bottom: calc(4.75rem + env(safe-area-inset-bottom)) !important; }
   body:has([data-mobile-tabbar]) [data-sonner-toaster][data-y-position="bottom"] { bottom: calc(4.75rem + env(safe-area-inset-bottom)) !important; }
 }
+/* Founder editions keep their phone dock up to the large breakpoint. */
+@media (max-width: 1023px) {
+  body:has([data-founder-dock]) .float-above-tabbar { bottom: calc(4.75rem + env(safe-area-inset-bottom)) !important; }
+  body:has([data-founder-dock]) [data-sonner-toaster][data-y-position="bottom"] { bottom: calc(4.75rem + env(safe-area-inset-bottom)) !important; }
+}
+/* While the podcast player is open, the end of every page gets room so nothing sits under it. */
+html[data-player-open] #main-content::after { content: ''; display: block; height: calc(var(--player-h, 7.5rem) + 1rem); }
 
 /* Founder side menu: visible keyboard focus on every link and folding group. */
 .founder-sidebar a:focus-visible, .founder-sidebar summary:focus-visible, .founder-sidebar button:focus-visible { outline: 2px solid hsl(var(--ring)); outline-offset: 2px; }
@@ -783,6 +790,10 @@ body {
 @media (prefers-reduced-motion: reduce) { .spot-art-medallion, .spot-art-orbit, .spot-art-medallion::before, .box-plate-spark { animation: none !important; } .atomic-box { transition: none; } .atomic-box:hover { transform: none; } }
 
 /* ── Gift-shop sidebar: departments with printed medallions, sign tiles, price bands ── */
+/* Side-scrolling shop shelves: thin brass scrollbar, cards snap into place. */
+.shop-shelf { scrollbar-width: thin; scrollbar-color: hsl(var(--brass) / .6) transparent; scroll-padding-inline: .25rem; }
+.shop-shelf::-webkit-scrollbar { height: 6px; }
+.shop-shelf::-webkit-scrollbar-thumb { background: hsl(var(--brass) / .55); border-radius: 999px; }
 .shop-sidebar-h { font-family: 'Bebas Neue', sans-serif; letter-spacing: .16em; font-size: .95rem; color: hsl(var(--primary)); border-bottom: 1px dashed hsl(var(--brass) / .5); padding-bottom: .35rem; }
 .shop-dept { display: flex; width: 100%; align-items: center; gap: .65rem; min-height: 2.6rem; padding: .3rem .6rem .3rem .35rem; border-radius: 999px; font-size: .9rem; color: hsl(var(--foreground) / .88); transition: background-color .7s ease, color .7s ease; }
 .shop-dept:hover { background: hsl(var(--secondary)); color: hsl(var(--foreground)); }
@@ -919,35 +930,53 @@ li:hover > .zodiac-coin { transform: rotate(-10deg); }
 
 /* Mosaic layout: plates fitted together with narrow seams, like the concept's weathered panel board. */
 .mosaic { display: flex; flex-direction: column; gap: .9rem; }
-.mosaic-top { display: grid; gap: .9rem; grid-template-columns: minmax(0, 1fr); }
+.mosaic-top { display: grid; gap: .9rem; grid-template-columns: minmax(0, 1fr); grid-template-areas: "hero" "right" "left"; }
+.mosaic-top > .mosaic-hero { grid-area: hero; }
+.mosaic-top > .mosaic-left { grid-area: left; }
+.mosaic-top > .mosaic-right { grid-area: right; }
 .mosaic-left { display: grid; grid-template-columns: minmax(0, 1fr); gap: .9rem; align-content: start; }
 .mosaic-rail { min-width: 0; }
-.mosaic-left .motto-link { display: block; font-size: 1.25rem; letter-spacing: .06em; }
-.mosaic-left .mosaic-rail { gap: 1.5rem; }
-.mosaic-left .mosaic-rail ul { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .5rem; }
-.mosaic-left .mosaic-rail ul li { margin: 0; }
+.motto-item { display: block; border-radius: .3rem; }
+.motto-item:focus-visible { outline: 2px solid hsl(var(--ring)); outline-offset: 2px; }
+.motto-item:hover .motto-link, .motto-item:focus-visible .motto-link { color: hsl(var(--primary)); }
+.motto-desc { display: block; margin-top: .1rem; font-size: .72rem; line-height: 1.25; color: hsl(var(--muted-foreground)); }
+.mosaic-left .motto-link { display: block; font-size: 1.25rem; letter-spacing: .06em; line-height: 1.05; }
+.mosaic-left .mosaic-rail { gap: 1.25rem; }
+.mosaic-left .mosaic-rail ul { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .85rem .75rem; }
+.mosaic-left .mosaic-rail ul li { margin: 0 !important; }
 .mosaic-left .mosaic-rail > div { display: none; }
-.forecast-rail-plate { display: none; padding: 1.25rem; text-align: center; }
+/* Right column: a tall Explore poster with a short Forecast plate fitted underneath. */
+.mosaic-right { display: grid; gap: .9rem; grid-template-columns: minmax(0, 1fr); min-width: 0; }
 .mosaic-poster { min-height: 18rem; }
+.forecast-plate { display: flex; align-items: center; gap: .9rem; padding: 1rem 1.1rem; min-width: 0; }
+.forecast-plate-art { width: 4rem; height: 4rem; flex-shrink: 0; }
+.forecast-plate:focus-visible { outline: 2px solid hsl(var(--ring)); outline-offset: 2px; }
 .mosaic-split-1-2, .mosaic-split-2-1, .mosaic-split-1-1 { display: grid; gap: .9rem; grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 560px) {
+  .mosaic-right { grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); align-items: stretch; }
+  .mosaic-right .forecast-plate { flex-direction: column; justify-content: center; text-align: center; }
+  .mosaic-right .forecast-plate-art { width: 5rem; height: 5rem; }
+}
 @media (min-width: 768px) {
-  .mosaic-top { grid-template-columns: minmax(0, 1fr) 14rem; }
-  .mosaic-left { grid-column: 1 / -1; }
+  .mosaic-top { grid-template-columns: minmax(0, 1fr) 14rem; grid-template-areas: "hero right" "left left"; }
   .mosaic-left .mosaic-rail ul { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .mosaic-right { grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1fr) auto; }
   .mosaic-poster { min-height: 0; }
+  .mosaic-right .forecast-plate { padding: .9rem; }
+  .mosaic-right .forecast-plate-art { width: 3.75rem; height: 3.75rem; }
   .mosaic-split-1-1 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (min-width: 1024px) {
+  .mosaic-left .mosaic-rail ul { grid-template-columns: repeat(7, minmax(0, 1fr)); }
   .mosaic-split-1-2 { grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); }
   .mosaic-split-2-1 { grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr); }
 }
 @media (min-width: 1280px) {
-  .mosaic-top { grid-template-columns: 10.5rem minmax(0, 1fr) 13rem; }
-  .mosaic-left { grid-column: auto; grid-template-rows: auto 1fr; align-content: stretch; }
-  .mosaic-left .mosaic-rail ul { grid-template-columns: minmax(0, 1fr); gap: .75rem; }
+  .mosaic-top { grid-template-columns: 11rem minmax(0, 1fr) 13rem; grid-template-areas: "left hero right"; }
+  .mosaic-left { align-content: stretch; }
+  .mosaic-left .mosaic-rail ul { grid-template-columns: minmax(0, 1fr); gap: 1rem; }
   .mosaic-left .mosaic-rail > div { display: block; }
   .mosaic-left .mosaic-rail > div .spot-art { display: none; }
-  .forecast-rail-plate { display: flex; flex-direction: column; align-items: center; justify-content: center; }
 }
 
 /* Projector additions (layered on top; the existing screen, lamp, dust and flicker are unchanged).
@@ -990,6 +1019,22 @@ li:hover > .zodiac-coin { transform: rotate(-10deg); }
   .chartmap-copy { padding-top: 2.75rem; }
   .chartmap-body { grid-template-columns: minmax(0, 1fr) minmax(0, 15rem); }
 }
+/* Press slide: the Collector AstroBook and the cut-out AstroComic page; full width on phones. */
+.press-covers { display: flex; min-width: 0; align-items: flex-end; justify-content: center; gap: 1rem; }
+.press-cover-book { width: 50%; max-width: 15rem; transform: rotate(-3deg); }
+.press-cover-comic { width: 46%; max-width: 13rem; transform: rotate(2.5deg) translateY(.5rem); }
+.press-cutout { filter: drop-shadow(6px 9px 0 hsl(var(--midnight) / .7)) drop-shadow(0 0 1.5px hsl(var(--comic-mustard))); }
+@container hero (max-width: 30rem) { .press-covers { margin-inline: -.75rem; gap: .5rem; } .press-cover-book, .press-cover-comic { max-width: none; } }
+/* Starbursts in the open sky above the Cartographer; slow twinkle, still under reduced motion. */
+.chartmap-bursts { position: absolute; inset: 0 auto auto 0; width: 37%; height: 40%; z-index: 2; pointer-events: none; display: none; }
+.chartmap-burst { position: absolute; fill: hsl(var(--comic-mustard)); stroke: hsl(var(--midnight)); stroke-width: 2; animation: burst-twinkle 9s ease-in-out infinite; }
+.chartmap-burst circle { fill: hsl(var(--spot-paper)); stroke: none; }
+.chartmap-b1 { width: 2.6rem; top: 9%; left: 70%; animation-delay: -2s; }
+.chartmap-b2 { width: 1.7rem; top: 1.2rem; left: 8%; animation-delay: -5s; }
+.chartmap-b3 { width: 1.3rem; top: 78%; left: 84%; animation-delay: -7.5s; fill: hsl(var(--accent)); }
+@keyframes burst-twinkle { 0%, 100% { opacity: .95; transform: scale(1) rotate(0deg); } 50% { opacity: .55; transform: scale(.82) rotate(12deg); } }
+@container hero (min-width: 40rem) { .chartmap-bursts { display: block; } }
+@media (prefers-reduced-motion: reduce) { .chartmap-burst { animation: none; } }
 .press-slide { position: relative; display: grid; min-height: 100%; align-items: center; gap: 2rem; padding: 2.5rem 1.5rem 4.5rem; }
 @container hero (min-width: 40rem) { .press-slide { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 2.5rem; padding: 2.5rem 2.5rem 4.5rem; } }
 .explore-poster { container-type: inline-size; }
@@ -1026,9 +1071,25 @@ li:hover > .zodiac-coin { transform: rotate(-10deg); }
 .product-page-opening .hero-headline { font-size: 2.5rem; letter-spacing: 0; }
 .product-art-gallery { min-width: 0; width: 100%; max-width: 30rem; margin-inline: auto; }
 .product-art-stage { width: 100%; height: 24rem; padding: .75rem; border-radius: .375rem; background: hsl(var(--spot-paper)); border: 1px solid hsl(var(--brass)); box-shadow: var(--shadow-ink); }
+.product-art-stage-3d { height: auto !important; min-height: 24rem; padding: 0 .5rem .75rem; background: radial-gradient(ellipse 60% 55% at 50% 42%, hsl(var(--screen-lamp) / .35), transparent 70%), hsl(var(--spot-paper)); }
+.product-art-stage-3d figcaption { color: hsl(var(--comic-navy) / .8); }
 .product-art-thumb { flex-shrink: 0; width: 3.5rem; height: 3.5rem; padding: .2rem; background: hsl(var(--spot-paper)); border: 1px solid hsl(var(--brass) / .45); border-radius: .25rem; }
 .product-art-thumb[aria-pressed="true"] { outline: 2px solid hsl(var(--primary)); outline-offset: 2px; }
 .shelf-product { background: hsl(var(--spot-paper)); color: hsl(var(--comic-navy)); padding: .4rem; text-align: center; }
 .shelf-product img { min-height: 0; }
 @media (min-width: 1024px) { .product-page-opening { grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); padding: 2.5rem; } .product-page-opening .hero-headline { font-size: 3.5rem; } }
 @media (max-width: 639px) { .product-art-stage { height: 21rem; } .product-page-opening .product-art-gallery { order: -1; } }
+
+/* Personalization story: product art beside the explanation, then side-by-side examples. */
+.product-story-band { display: grid; gap: 2rem; grid-template-columns: minmax(0, 1fr); padding: 1.5rem; border-radius: 1.25rem; background: hsl(var(--card)); border: 2px solid hsl(var(--brass) / .45); box-shadow: 5px 5px 0 hsl(var(--accent) / .3); }
+.product-story-art img { width: 100%; height: auto; border-radius: .6rem; border: 2px solid hsl(var(--comic-mustard) / .7); box-shadow: 6px 7px 0 hsl(var(--midnight) / .55); }
+.product-story-examples { grid-column: 1 / -1; border-top: 1px dashed hsl(var(--brass) / .5); padding-top: 1.5rem; }
+@media (min-width: 900px) { .product-story-band { grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); padding: 2rem; align-items: start; } }
+.specific-row { display: grid; gap: .75rem; grid-template-columns: minmax(0, 1fr); }
+.specific-generic { padding: .9rem 1rem; border-radius: .6rem; border: 1px dashed hsl(var(--muted-foreground) / .5); background: hsl(var(--muted) / .35); }
+.specific-zodaci { padding: .9rem 1rem; border-radius: .6rem; border: 2px solid hsl(var(--primary) / .55); background: hsl(var(--primary) / .07); }
+@media (min-width: 768px) { .specific-row { grid-template-columns: minmax(0, .8fr) minmax(0, 1.6fr); align-items: stretch; } }
+.personal-callout { display: flex; gap: 1rem; align-items: flex-start; padding: 1rem 1.1rem; border-radius: .8rem; border: 2px solid hsl(var(--brass) / .5); background: hsl(var(--secondary) / .55); }
+
+/* About · How we calculate: numbered brass medallions. */
+.calc-step { display: inline-grid; place-items: center; flex-shrink: 0; width: 2.25rem; height: 2.25rem; border-radius: 999px; font-family: 'Bebas Neue', sans-serif; font-size: 1.15rem; color: hsl(var(--spot-paper)); background: hsl(var(--comic-navy)); box-shadow: 0 0 0 2px hsl(var(--comic-mustard)), 2px 3px 0 hsl(var(--midnight) / .5); }

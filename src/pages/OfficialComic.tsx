@@ -12,6 +12,7 @@ import cover from '@/assets/astrocomic-cover.jpg';
 import skyPanel from '@/assets/astrocomic-sky-panel.jpg';
 import letterPanel from '@/assets/astrocomic-letter-panel.jpg';
 import fontUrl from '@/assets/fonts/manuscript.ttf?url';
+import { StartLink } from '@/components/common/StartLink';
 
 // Shared Lantern & Ink scenes; every chart position and letter on the page is calculated for this edition.
 const ART: Record<string, string> = { '1-0': cover, '2-0': skyPanel, '3-0': letterPanel };
@@ -78,7 +79,7 @@ export default function OfficialComic() {
   if (!row) return <Missing text="This AstroComic belongs to a private edition." />;
   if (!row.birth) return (
     <Missing text={row.is_own ? 'Save your birth details first, then your AstroComic is drawn from your chart.' : `${row.display_name} hasn’t saved birth details yet.`}>
-      {row.is_own && <Button asChild><Link to="/start">Add birth details</Link></Button>}
+      {row.is_own && <Button asChild><StartLink>Add birth details</StartLink></Button>}
     </Missing>
   );
   if (issue === undefined) return <Missing text="This chart couldn’t be calculated from the saved birth details." />;

@@ -5,6 +5,7 @@ import { toChartInput, type MyBirth } from '@/lib/myBirth';
 import { ConfidenceBadge } from '@/components/common/ConfidenceBadge';
 import { Button } from '@/components/ui/button';
 import { usePageMeta } from '@/hooks/usePageMeta';
+import { StartLink } from '@/components/common/StartLink';
 
 /** How certain each part of the member's chart is, from the birth facts they saved — nothing is inferred. */
 export default function MemberDataQuality({ birth }: { birth: MyBirth }) {
@@ -33,7 +34,7 @@ export default function MemberDataQuality({ birth }: { birth: MyBirth }) {
         <h2 className="font-display text-2xl">Close calls in your chart</h2>
         {chart.flags.length ? <ul className="mt-3 space-y-2">{chart.flags.map((f, i) => <li key={i} className="rounded border border-border bg-card p-3 text-sm"><b>{f.topic}</b> <ConfidenceBadge compact level={f.level} note={f.note} /><p className="mt-1">{f.note}</p></li>)}</ul> : <p className="mt-2 text-sm text-muted-foreground">No placements sit close enough to a boundary to change with a small time error.</p>}
       </section>
-      <div className="flex flex-wrap gap-3"><Button asChild><Link to="/start">Edit birth details</Link></Button><Button asChild variant="outline"><Link to="/my-chart">Your chart</Link></Button></div>
+      <div className="flex flex-wrap gap-3"><Button asChild><StartLink>Edit birth details</StartLink></Button><Button asChild variant="outline"><Link to="/my-chart">Your chart</Link></Button></div>
     </article>
   );
 }
