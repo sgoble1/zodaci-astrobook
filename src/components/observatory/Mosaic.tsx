@@ -28,11 +28,12 @@ export function PlateHead({ id, title, sub, script, action }: { id?: string; tit
   );
 }
 
-/** Narrow navy rail of motto words; each word is a real destination. */
-export function MottoRail({ links, tagline, className }: { links: [string, string][]; tagline: string; className?: string }) {
+/** Narrow navy rail of motto words; each word is a real destination with a short descriptor. */
+export type MottoLink = [label: string, to: string, descriptor?: string];
+export function MottoRail({ links, tagline, className }: { links: MottoLink[]; tagline: string; className?: string }) {
   return (
-    <nav aria-label="Ways in" className={cn('obs-panel flex flex-col justify-between gap-8 p-5', className)}>
-      <ul className="space-y-2.5">{links.map(([label, to]) => <li key={label}><Link to={to} className="motto-link">{label}</Link></li>)}</ul>
+    <nav aria-label="Ways in" className={cn('obs-panel flex flex-col justify-between gap-6 p-5', className)}>
+      <ul className="space-y-2.5">{links.map(([label, to, descriptor]) => <li key={label}><Link to={to} className="motto-item group"><span className="motto-link">{label}</span>{descriptor && <span className="motto-desc">{descriptor}</span>}</Link></li>)}</ul>
       <div className="space-y-4 border-t border-[hsl(var(--brass)/0.4)] pt-4">
         <p className="font-label text-xs leading-relaxed tracking-[0.16em] text-muted-foreground">{tagline}</p>
         <SpotArt kind="planet" className="h-14 w-14" orbit={false} />
@@ -41,12 +42,15 @@ export function MottoRail({ links, tagline, className }: { links: [string, strin
   );
 }
 
-export function ForecastPlate() {
-  return <Link to="/forecast" className="obs-paper forecast-rail-plate">
-    <SpotArt kind="radio" className="mx-auto h-20 w-20" orbit={false} />
-    <span className="block font-label text-xl">Sky broadcasts</span>
-    <span className="mt-1 block text-xs text-muted-foreground">Today's planets &amp; the next 30 days</span>
-    <span className="mt-3 inline-flex items-center gap-1 font-label text-sm text-accent">Tune in<ArrowRight aria-hidden className="h-4 w-4" /></span>
+/** Short cream plate under the Explore poster: today's sky broadcasts on the Forecast page. */
+export function ForecastPlate({ className }: { className?: string }) {
+  return <Link to="/forecast" className={cn('obs-paper forecast-plate group', className)}>
+    <SpotArt kind="radio" className="forecast-plate-art" orbit={false} />
+    <span className="min-w-0">
+      <span className="block font-label text-xl leading-none">Sky broadcasts</span>
+      <span className="mt-1 block text-xs leading-snug text-muted-foreground">Today's planets &amp; the next 30 days</span>
+      <span className="mt-2 inline-flex items-center gap-1 font-label text-sm text-accent">Tune in<ArrowRight aria-hidden className="h-4 w-4 transition-transform duration-700 group-hover:translate-x-1" /></span>
+    </span>
   </Link>;
 }
 
@@ -127,24 +131,25 @@ export function ArchiveShelf({ id = 'archive-h', to = '/astrobook', className }:
   );
 }
 
-const STEPS: [SpotKind, string, string][] = [
-  ['birth', 'Your birth date, time & place', 'A unique moment'],
-  ['explore', 'A snapshot of the sky', 'The real positions'],
-  ['chart', 'Your unique chart', 'A cosmic blueprint'],
-  ['written', 'Personal insights', 'Meaningful guidance'],
-  ['growth', 'Greater self-awareness', 'A brighter you'],
+const STEPS: [SpotKind, string, string, string][] = [
+  ['birth', 'Your birth date, time & place', 'A unique moment', 'From a birth certificate if you can. No time? We show exactly what that changes.'],
+  ['explore', 'A snapshot of the sky', 'The real positions', 'Astronomical data places every planet, house cusp and angle for that minute.'],
+  ['chart', 'Your unique chart', 'A cosmic blueprint', 'Signs, exact degrees, houses, rulers and aspects, checked against a second method.'],
+  ['written', 'Personal insights', 'Meaningful guidance', 'Readings name the placement behind every sentence, and your own context if you add it.'],
+  ['growth', 'Greater self-awareness', 'A brighter you', 'Practices, timing and reflection questions you can return to as your sky moves.'],
 ];
 
 export function HowItWorks({ id = 'how-h', className }: { id?: string; className?: string }) {
   return (
     <section aria-labelledby={id} className={cn('obs-paper p-5 sm:p-6', className)}>
-      <PlateHead id={id} title="How astrology works" sub="From your birth time to a brighter tomorrow" />
-      <ol className="grid grid-cols-2 gap-x-4 gap-y-6 sm:grid-cols-3 lg:grid-cols-5">
-        {STEPS.map(([art, title, text], i) => (
+      <PlateHead id={id} title="How astrology works" sub="From your birth time to a brighter tomorrow" action={<Link to="/demo" className="inline-flex items-center gap-1 font-label text-sm tracking-[0.16em] text-accent hover:underline">See a sample edition<ArrowRight aria-hidden className="h-4 w-4" /></Link>} />
+      <ol className="grid grid-cols-1 gap-x-5 gap-y-7 min-[480px]:grid-cols-2 sm:grid-cols-3 lg:grid-cols-5">
+        {STEPS.map(([art, title, text, detail], i) => (
           <li key={title} className="how-step">
             <SpotArt kind={art} badge={i + 1} className="mx-auto h-20 w-20" orbit={false} />
             <p className="mt-3 font-label text-sm leading-tight tracking-[0.1em]">{title}</p>
-            <p className="text-xs text-muted-foreground">{text}</p>
+            <p className="text-xs font-semibold text-accent">{text}</p>
+            <p className="mx-auto mt-1.5 max-w-[15rem] text-xs leading-relaxed text-muted-foreground">{detail}</p>
           </li>
         ))}
       </ol>
