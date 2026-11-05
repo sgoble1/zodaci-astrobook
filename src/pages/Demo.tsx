@@ -126,7 +126,7 @@ export default function Demo() {
       <section className="space-y-5" aria-labelledby="book-h">
         <div><div className="font-smallcaps text-xs text-gold">Printed AstroBook</div><h2 id="book-h" className="text-3xl">Hold your chart in your hands</h2></div>
         <Book3D />
-        <div className="flex justify-center gap-2"><Button asChild variant="outline"><Link to="/book-preview">Flip through sample pages</Link></Button><Button asChild><Link to="/astrobook">See editions & prices</Link></Button></div>
+        <div className="flex flex-wrap justify-center gap-2"><Button asChild variant="outline"><Link to="/book-preview">Flip through sample pages</Link></Button><Button asChild><Link to="/astrobook">See editions & prices</Link></Button></div>
       </section>
     </main>
   );
