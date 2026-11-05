@@ -1075,3 +1075,14 @@ li:hover > .zodiac-coin { transform: rotate(-10deg); }
 .shelf-product img { min-height: 0; }
 @media (min-width: 1024px) { .product-page-opening { grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); padding: 2.5rem; } .product-page-opening .hero-headline { font-size: 3.5rem; } }
 @media (max-width: 639px) { .product-art-stage { height: 21rem; } .product-page-opening .product-art-gallery { order: -1; } }
+
+/* Personalization story: product art beside the explanation, then side-by-side examples. */
+.product-story-band { display: grid; gap: 2rem; grid-template-columns: minmax(0, 1fr); padding: 1.5rem; border-radius: 1.25rem; background: hsl(var(--card)); border: 2px solid hsl(var(--brass) / .45); box-shadow: 5px 5px 0 hsl(var(--accent) / .3); }
+.product-story-art img { width: 100%; height: auto; border-radius: .6rem; border: 2px solid hsl(var(--comic-mustard) / .7); box-shadow: 6px 7px 0 hsl(var(--midnight) / .55); }
+.product-story-examples { grid-column: 1 / -1; border-top: 1px dashed hsl(var(--brass) / .5); padding-top: 1.5rem; }
+@media (min-width: 900px) { .product-story-band { grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); padding: 2rem; align-items: start; } }
+.specific-row { display: grid; gap: .75rem; grid-template-columns: minmax(0, 1fr); }
+.specific-generic { padding: .9rem 1rem; border-radius: .6rem; border: 1px dashed hsl(var(--muted-foreground) / .5); background: hsl(var(--muted) / .35); }
+.specific-zodaci { padding: .9rem 1rem; border-radius: .6rem; border: 2px solid hsl(var(--primary) / .55); background: hsl(var(--primary) / .07); }
+@media (min-width: 768px) { .specific-row { grid-template-columns: minmax(0, .8fr) minmax(0, 1.6fr); align-items: stretch; } }
+.personal-callout { display: flex; gap: 1rem; align-items: flex-start; padding: 1rem 1.1rem; border-radius: .8rem; border: 2px solid hsl(var(--brass) / .5); background: hsl(var(--secondary) / .55); }
