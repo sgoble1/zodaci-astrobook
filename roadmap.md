@@ -1,3 +1,10 @@
+## Nov 5 product and mobile updates
+- [ ] Use current shop artwork in all default 3D previews, retaining personal selected covers.
+- [ ] Refresh product page illustrations and chart/context copy without exposing private Masterbook text.
+- [ ] Improve slideshow and phone layouts; split the right mosaic rail into tall and small plates.
+- [ ] Restore top-menu AstroComic; shop order books/comics → atomic zodiac stickers → bags → other items; recommend the next unordered personal issue.
+- [ ] Refine About artwork; verify desktop/phone and rule tests.
+
 ## Nov 4 evening requests
 - [ ] Current product presentation: use latest shop AstroBook/AstroComic artwork across promotional displays and product pages; rebalance home left rail, add a forecast plate below it and fill the space above the Cartographer without changing projector/TV effects.
 - [x] Projector: white tripod screen in a dark room, lamp falloff, flying dust, wheel fits inside.
