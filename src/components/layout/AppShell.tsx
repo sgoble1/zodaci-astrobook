@@ -29,9 +29,9 @@ const FounderGroupsContext = createContext<NavGroup[] | null>(null);
 const editionLink = (e: string): NavItem => e === 'april' ? { to: '/april', label: 'April’s Masterbook' } : e === 'shane' ? { to: '/shane', label: 'Shane’s Masterbook' } : { to: '/zac', label: 'Zac’s Astrological Library' };
 /** Sections every founder edition shares, in the same place for April, Shane and Zac. */
 const frameGroups = (area: 'april' | 'shane' | 'zac' = 'april') => ({
-  observatory: { title: 'Observatory', items: [{ to: '/dashboard', label: 'Broadcast Studio · Home' }, { to: '/my-chart', label: 'My chart' }, { to: '/my-readings', label: 'My readings' }, { to: '/counselors', label: 'Counselors' }] } as NavGroup,
-  explore: { title: 'Explore', items: [{ to: '/explore', label: 'Explore everything' }, { to: '/transits', label: 'Transits' }, { to: '/timeline', label: 'Timeline' }, { to: '/profection', label: 'Year of life' }, { to: '/other-systems', label: 'Other systems' }] } as NavGroup,
-  media: { title: 'Together & Media', items: [...(area === 'zac' ? [] : [{ to: '/our-charts', label: 'Our charts' }]), { to: '/podcasts', label: 'Podcasts' }, { to: '/investors', label: 'Investor overview' }, { to: '/store', label: 'Shop' }] } as NavGroup,
+  observatory: { title: 'Observatory', items: [{ to: '/dashboard', label: 'Broadcast Studio · Home' }, { to: '/my-chart', label: 'My chart' }, { to: '/forecast', label: 'Forecast Center' }, { to: '/my-readings', label: 'My readings' }, { to: '/counselors', label: 'Counselors' }] } as NavGroup,
+  explore: { title: 'Explore', items: [{ to: '/explore', label: 'Explore everything' }, { to: '/transits', label: 'Transits' }, { to: '/timeline', label: 'Timeline' }, { to: '/profection', label: 'Year of life' }, { to: '/other-systems', label: 'Other systems' }, { to: '/siblings', label: 'Sibling Bureau' }, { to: '/characters', label: 'Observatory characters' }] } as NavGroup,
+  media: { title: 'Together & Media', items: [...(area === 'zac' ? [] : [{ to: '/our-charts', label: 'Our charts' }]), { to: '/podcasts', label: 'Podcasts' }, { to: '/astrocomic', label: 'AstroComic' }, { to: '/investors', label: 'Investor overview' }, { to: '/store', label: 'Shop' }] } as NavGroup,
 });
 function useFounderGroups(): NavGroup[] {
   const { items: rels } = useRelationships();
@@ -51,7 +51,8 @@ function useFounderGroups(): NavGroup[] {
     // Same frame as Shane's and Zac's menus; April's own sections stay exactly as written, in their usual order.
     return universalFounderMenu<NavGroup>({
       ...frameGroups(),
-      edition: noAdmin(orderFounderGroups(aprilGroups)),
+      // Her sections arrive with the private payload; until then the menu says so instead of looking empty.
+      edition: aprilGroups.length ? noAdmin(orderFounderGroups(aprilGroups)) : [{ title: 'My Edition', items: [{ to: '/april', label: 'Loading your sections…' }] }],
       shared, relationships, official,
       sharedWithMe: sharedLinks.length ? { title: 'Shared with me', items: sharedLinks } : undefined,
     }).map(g => ({ ...g, items: [...g.items, ...custom.filter(c => c.menu_group === g.title).map(c => ({ to: `/p/${c.id}`, label: c.status === 'generating' ? `${c.title} · writing…` : c.title, created: true } as NavItem))] }));
@@ -90,7 +91,7 @@ function useShaneGroups(enabled: boolean, area: 'shane' | 'zac' = 'shane'): NavG
       ...frameGroups('shane'),
       edition: [{ title: 'My Edition', items: [{ to: '/shane', label: 'My Masterbook' }] }, chapterGroup],
       shared, relationships,
-      official: { title: 'Official AstroBook', items: [{ to: '/official-astrobook', label: 'All Official AstroBooks' }, { to: '/official-astrobook/comic/shane', label: 'My Official AstroComic' }, { to: '/official-astrobook/illustrated', label: 'Zodaci Illustrated · Oct 2026' }, { to: '/official-astrobook/showcase/shane', label: 'My Illustrated Pages' }] },
+      official: { title: 'Official AstroBook', items: [{ to: '/official-astrobook', label: 'My Official AstroBook' }, { to: '/official-astrobook/comic/shane', label: 'My Official AstroComic' }, { to: '/official-astrobook/illustrated', label: 'Zodaci Illustrated · Oct 2026' }, { to: '/official-astrobook/showcase/shane', label: 'My Illustrated Pages' }] },
       founders: { title: 'Founder Editions', items: [...sharedLinks.filter(l => l.to !== '/zac'), { to: '/zac', label: 'Zac’s Astrological Library' }, { to: '/zac/workbook', label: 'Zac’s Workbook' }, { to: '/official-astrobook/comic/zac', label: 'Zac’s AstroComic' }, { to: '/official-astrobook/comic/april', label: 'April’s AstroComic' }] },
       admin: { title: 'Admin', items: [{ to: '/admin', label: 'Admin dashboard' }, { to: '/dispatch', label: 'Dispatch' }] },
     });
