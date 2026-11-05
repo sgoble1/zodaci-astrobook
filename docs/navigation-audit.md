@@ -2,6 +2,9 @@
 
 Scope: the member app shell (signed-in, non-April), the signed-out shell, public layouts, account menu, search, Instructions and in-page navigation. April's private edition keeps its original menu (her archive's own structure, loaded only for approved accounts) and is audited only for leaks.
 
+## Nov 5 public product access
+PublicHeader shares its desktop/phone list; AstroComic was reachable through product panels but missing from that list. Restore direct AstroComic access beside AstroBooks. Keep Pricing reachable as a separate account-side control, preserving seven main public destinations and all existing routes. No private links added to signed-out navigation.
+
 Prime directive: no page, route or feature is removed. Only placement changes.
 
 ## 1. Navigation sources (before)

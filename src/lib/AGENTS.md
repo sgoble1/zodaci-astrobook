@@ -10,3 +10,4 @@
 - Internal return links use internalDestination to preserve context without off-site redirects.
 - AstroBook content is built by buildVolumes() in bookVolumes.ts (six volumes, chart-derived, readings woven in by volumeFor); BOOK_VERSIONS.inside and VersionCompare must describe exactly what it writes.
 - Cover artwork variants (per trim shape, with pixel sizes) live in content/coverDesigns.ts; designVariant picks the closest shape so print PPI stays testable.
+- shopPresentation owns featured merchandising priority and the next unordered issue calculation; recommendations use owner-scoped confirmed live comic records, never pending checkout rows.
