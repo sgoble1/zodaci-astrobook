@@ -933,32 +933,48 @@ li:hover > .zodiac-coin { transform: rotate(-10deg); }
 .mosaic-top { display: grid; gap: .9rem; grid-template-columns: minmax(0, 1fr); }
 .mosaic-left { display: grid; grid-template-columns: minmax(0, 1fr); gap: .9rem; align-content: start; }
 .mosaic-rail { min-width: 0; }
-.mosaic-left .motto-link { display: block; font-size: 1.25rem; letter-spacing: .06em; }
-.mosaic-left .mosaic-rail { gap: 1.5rem; }
-.mosaic-left .mosaic-rail ul { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .5rem; }
+.motto-item { display: block; border-radius: .3rem; }
+.motto-item:focus-visible { outline: 2px solid hsl(var(--ring)); outline-offset: 2px; }
+.motto-item:hover .motto-link, .motto-item:focus-visible .motto-link { color: hsl(var(--primary)); }
+.motto-desc { display: block; margin-top: .1rem; font-size: .72rem; line-height: 1.25; color: hsl(var(--muted-foreground)); }
+.mosaic-left .motto-link { display: block; font-size: 1.25rem; letter-spacing: .06em; line-height: 1.05; }
+.mosaic-left .mosaic-rail { gap: 1.25rem; }
+.mosaic-left .mosaic-rail ul { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .85rem .75rem; }
 .mosaic-left .mosaic-rail ul li { margin: 0; }
 .mosaic-left .mosaic-rail > div { display: none; }
-.forecast-rail-plate { display: none; padding: 1.25rem; text-align: center; }
+/* Right column: a tall Explore poster with a short Forecast plate fitted underneath. */
+.mosaic-right { display: grid; gap: .9rem; grid-template-columns: minmax(0, 1fr); min-width: 0; }
 .mosaic-poster { min-height: 18rem; }
+.forecast-plate { display: flex; align-items: center; gap: .9rem; padding: 1rem 1.1rem; min-width: 0; }
+.forecast-plate-art { width: 4rem; height: 4rem; flex-shrink: 0; }
+.forecast-plate:focus-visible { outline: 2px solid hsl(var(--ring)); outline-offset: 2px; }
 .mosaic-split-1-2, .mosaic-split-2-1, .mosaic-split-1-1 { display: grid; gap: .9rem; grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 560px) {
+  .mosaic-right { grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); align-items: stretch; }
+  .mosaic-right .forecast-plate { flex-direction: column; justify-content: center; text-align: center; }
+  .mosaic-right .forecast-plate-art { width: 5rem; height: 5rem; }
+}
 @media (min-width: 768px) {
   .mosaic-top { grid-template-columns: minmax(0, 1fr) 14rem; }
   .mosaic-left { grid-column: 1 / -1; }
   .mosaic-left .mosaic-rail ul { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .mosaic-right { grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1fr) auto; }
   .mosaic-poster { min-height: 0; }
+  .mosaic-right .forecast-plate { padding: .9rem; }
+  .mosaic-right .forecast-plate-art { width: 3.75rem; height: 3.75rem; }
   .mosaic-split-1-1 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (min-width: 1024px) {
+  .mosaic-left .mosaic-rail ul { grid-template-columns: repeat(7, minmax(0, 1fr)); }
   .mosaic-split-1-2 { grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); }
   .mosaic-split-2-1 { grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr); }
 }
 @media (min-width: 1280px) {
-  .mosaic-top { grid-template-columns: 10.5rem minmax(0, 1fr) 13rem; }
-  .mosaic-left { grid-column: auto; grid-template-rows: auto 1fr; align-content: stretch; }
-  .mosaic-left .mosaic-rail ul { grid-template-columns: minmax(0, 1fr); gap: .75rem; }
+  .mosaic-top { grid-template-columns: 11rem minmax(0, 1fr) 13rem; }
+  .mosaic-left { grid-column: auto; align-content: stretch; }
+  .mosaic-left .mosaic-rail ul { grid-template-columns: minmax(0, 1fr); gap: 1rem; }
   .mosaic-left .mosaic-rail > div { display: block; }
   .mosaic-left .mosaic-rail > div .spot-art { display: none; }
-  .forecast-rail-plate { display: flex; flex-direction: column; align-items: center; justify-content: center; }
 }
 
 /* Projector additions (layered on top; the existing screen, lamp, dust and flicker are unchanged).
