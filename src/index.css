@@ -930,7 +930,10 @@ li:hover > .zodiac-coin { transform: rotate(-10deg); }
 
 /* Mosaic layout: plates fitted together with narrow seams, like the concept's weathered panel board. */
 .mosaic { display: flex; flex-direction: column; gap: .9rem; }
-.mosaic-top { display: grid; gap: .9rem; grid-template-columns: minmax(0, 1fr); }
+.mosaic-top { display: grid; gap: .9rem; grid-template-columns: minmax(0, 1fr); grid-template-areas: "hero" "right" "left"; }
+.mosaic-top > .mosaic-hero { grid-area: hero; }
+.mosaic-top > .mosaic-left { grid-area: left; }
+.mosaic-top > .mosaic-right { grid-area: right; }
 .mosaic-left { display: grid; grid-template-columns: minmax(0, 1fr); gap: .9rem; align-content: start; }
 .mosaic-rail { min-width: 0; }
 .motto-item { display: block; border-radius: .3rem; }
@@ -940,7 +943,7 @@ li:hover > .zodiac-coin { transform: rotate(-10deg); }
 .mosaic-left .motto-link { display: block; font-size: 1.25rem; letter-spacing: .06em; line-height: 1.05; }
 .mosaic-left .mosaic-rail { gap: 1.25rem; }
 .mosaic-left .mosaic-rail ul { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .85rem .75rem; }
-.mosaic-left .mosaic-rail ul li { margin: 0; }
+.mosaic-left .mosaic-rail ul li { margin: 0 !important; }
 .mosaic-left .mosaic-rail > div { display: none; }
 /* Right column: a tall Explore poster with a short Forecast plate fitted underneath. */
 .mosaic-right { display: grid; gap: .9rem; grid-template-columns: minmax(0, 1fr); min-width: 0; }
@@ -955,8 +958,7 @@ li:hover > .zodiac-coin { transform: rotate(-10deg); }
   .mosaic-right .forecast-plate-art { width: 5rem; height: 5rem; }
 }
 @media (min-width: 768px) {
-  .mosaic-top { grid-template-columns: minmax(0, 1fr) 14rem; }
-  .mosaic-left { grid-column: 1 / -1; }
+  .mosaic-top { grid-template-columns: minmax(0, 1fr) 14rem; grid-template-areas: "hero right" "left left"; }
   .mosaic-left .mosaic-rail ul { grid-template-columns: repeat(4, minmax(0, 1fr)); }
   .mosaic-right { grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1fr) auto; }
   .mosaic-poster { min-height: 0; }
@@ -970,8 +972,8 @@ li:hover > .zodiac-coin { transform: rotate(-10deg); }
   .mosaic-split-2-1 { grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr); }
 }
 @media (min-width: 1280px) {
-  .mosaic-top { grid-template-columns: 11rem minmax(0, 1fr) 13rem; }
-  .mosaic-left { grid-column: auto; align-content: stretch; }
+  .mosaic-top { grid-template-columns: 11rem minmax(0, 1fr) 13rem; grid-template-areas: "left hero right"; }
+  .mosaic-left { align-content: stretch; }
   .mosaic-left .mosaic-rail ul { grid-template-columns: minmax(0, 1fr); gap: 1rem; }
   .mosaic-left .mosaic-rail > div { display: block; }
   .mosaic-left .mosaic-rail > div .spot-art { display: none; }
