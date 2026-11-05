@@ -9,6 +9,7 @@ import { PRICE_BANDS, ShopSidebar, type PriceBand, type ShopFilters } from '@/co
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { PRODUCT_BY_HANDLE_QUERY, storefrontApiRequest, fetchAllProducts, formatMoney, inStock, type ShopifyProduct } from '@/lib/shopify';
 import { useCartStore } from '@/stores/cartStore';
+import { productPriority } from '@/lib/shopPresentation';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { StaffPortrait } from '@/components/observatory/StaffPortrait';
 import heads from '@/assets/home-heads-hero.jpg';
@@ -91,6 +92,8 @@ export default function Store() {
     if (sort === 'price-desc') sorted.sort((a, b) => priceOf(b) - priceOf(a));
     if (sort === 'name') sorted.sort((a, b) => a.node.title.localeCompare(b.node.title));
     if (sort === 'newest') sorted.sort((a, b) => (b.node.createdAt ?? '').localeCompare(a.node.createdAt ?? ''));
+    // Featured: books and comics, then stickers, then bags, then the rest (stable for ties).
+    if (sort === 'featured') sorted.sort((a, b) => productPriority(a.node.title, a.node.productType ?? '') - productPriority(b.node.title, b.node.productType ?? ''));
     // Sold-out items stay visible but sink below what can be bought today.
     return sorted.sort((a, b) => Number(inStock(b)) - Number(inStock(a)));
   }, [products, type, sign, q, sort, band, inStockOnly]);

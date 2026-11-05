@@ -11,7 +11,7 @@ import { useSession } from '@/hooks/useLibrary';
 
 /** The one public menu every signed-out page uses. */
 export const PUBLIC_NAV: [string, string][] = [
-  ['/start', 'Charts'], ['/astrobook', 'AstroBooks'], ['/compatibility', 'Relationships'],
+  ['/start', 'Charts'], ['/astrobook', 'AstroBooks'], ['/astrocomic', 'AstroComic'], ['/compatibility', 'Relationships'],
   ['/learn', 'Learn'], ['/store', 'Shop'], ['/about', 'About'], ['/pricing', 'Pricing'],
 ];
 

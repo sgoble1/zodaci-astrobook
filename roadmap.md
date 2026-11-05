@@ -345,3 +345,11 @@ Audit Oct 29: Chat/counselors already use the member's chart; podcast/custom pag
 - [ ] Repair older member navigation test expectations following Learn consolidation (3 failures: Academy/Blog legacy destinations and Academy breadcrumb label); 24 sky-channel/founder-frame tests pass.
 - [x] Preview fonts: package font files were blocked by the preview server, so headings showed a fallback serif; the server now serves them (Nov 4).
 - [x] Projector additions (kept the existing look): lamp warm-up on first appearance, faint wall glow behind the screen; hero dial gets lamp beam + dust.
+
+## Implementation Brief build (Nov 5 2026) — see .lovable/plan/zodaci-implementation-brief-full-build-plan-2026-11-05.md
+- [x] Founder birth prompt: birth lookup falls back to the account's own official edition
+- [x] AstroComic in public top menu
+- [x] Shop featured order: books/comics, stickers, bags, rest
+- [ ] Wave 1 rest: Learn phone overflow, onboarding return, podcast overlap
+- [ ] Waves 2–8 (nav/admin banner, 3D book, personalization, mosaic, About/Pricing/Demo, art/icons/animation, founder homes, Observation Log, Admin restyle, SEO/a11y)
+- Blocked: comics/Shane corrections (AI credits), Lulu keys, notify.zodaci.com DNS, testimonials, Sabian license
