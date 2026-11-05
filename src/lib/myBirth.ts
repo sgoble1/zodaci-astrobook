@@ -62,7 +62,13 @@ export function useMyBirth() {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const { data } = await (supabase as any).from('profiles').select('*').eq('id', u.user.id).maybeSingle();
         if (data?.birth_date && active && version === revision) return setBirth({ name: data.display_name, date: data.birth_date, time: data.birth_time, placeLabel: data.place_label, lat: data.lat, lon: data.lon, tz: data.tz, houseSystem: data.house_system, sex: data.sex || null });
-        if (active && version === revision) setBirth(null);
+        // Founders keep their chart in their own official edition; use it only for editions this account owns.
+        const { data: own } = await supabase.rpc('my_official_editions');
+        if (!active || version !== revision) return;
+        const mine = (own ?? []).find((e: { is_own: boolean }) => e.is_own) as { edition: string; birth: Record<string, unknown> } | undefined;
+        const ob = mine?.birth;
+        if (ob?.date && Number.isFinite(Number(ob.lat)) && Number.isFinite(Number(ob.lon))) return setBirth({ name: EDITION_OWNER_NAME[mine!.edition] ?? data?.display_name ?? '', date: String(ob.date), time: (ob.time as string) ?? null, placeLabel: String(ob.place_label ?? ''), lat: Number(ob.lat), lon: Number(ob.lon), tz: String(ob.tz), houseSystem: ((ob.house_system as HouseSystem) ?? 'placidus'), sex: null });
+        setBirth(null);
         return;
       }
       const raw = localStorage.getItem(LOCAL);
