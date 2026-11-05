@@ -39,7 +39,12 @@ export function comicIssueTitle(opts: { signedIn: boolean; purchased: boolean; n
   return { title: 'Issue #1', note: 'Your first issue, drawn from your own chart' };
 }
 
-/** Product titles shown in the shop: the comic listing uses the personal issue title. */
-export function shopTitle(title: string, type: string, issue: { title: string }): string {
-  return /astro\s*comic/i.test(`${title} ${type}`) && /issue\s*#?\s*1\b/i.test(title) ? `AstroComic ${issue.title}` : title;
+/**
+ * Product titles shown in the shop. The issue-one comic listing reads simply "AstroComic Issue #1"
+ * (no demo story name, since each buyer's first issue is drawn from their own chart); a pre-order
+ * note moves to a badge. Every other product keeps its catalog title.
+ */
+export function shopTitle(title: string, type = ''): { title: string; badge?: string } {
+  if (!(/astro\s*comic/i.test(`${title} ${type}`) && /issue\s*#?\s*1\b/i.test(title))) return { title };
+  return { title: 'AstroComic Issue #1', badge: /pre-?order/i.test(title) ? 'Pre-order' : undefined };
 }

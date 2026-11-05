@@ -35,7 +35,7 @@ describe('AstroComic issue title', () => {
     expect(comicIssueTitle({ signedIn: true, purchased: false, next: 1 }).title).toBe('Issue #1');
   });
   it('renames the issue-one listing without touching other products', () => {
-    expect(shopTitle('AstroComic Issue #1 (Pre-order)', 'Comic Books', { title: 'Issue #2' })).toBe('AstroComic Issue #2');
-    expect(shopTitle('Constellation Mug', 'Mugs', { title: 'Issue #2' })).toBe('Constellation Mug');
+    expect(shopTitle('AstroComic Issue #1 (Pre-order)', 'Comic Books')).toEqual({ title: 'AstroComic Issue #1', badge: 'Pre-order' });
+    expect(shopTitle('Constellation Mug', 'Mugs')).toEqual({ title: 'Constellation Mug' });
   });
 });
