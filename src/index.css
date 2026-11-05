@@ -1017,6 +1017,22 @@ li:hover > .zodiac-coin { transform: rotate(-10deg); }
   .chartmap-copy { padding-top: 2.75rem; }
   .chartmap-body { grid-template-columns: minmax(0, 1fr) minmax(0, 15rem); }
 }
+/* Press slide: the Collector AstroBook and the cut-out AstroComic page; full width on phones. */
+.press-covers { display: flex; min-width: 0; align-items: flex-end; justify-content: center; gap: 1rem; }
+.press-cover-book { width: 50%; max-width: 15rem; transform: rotate(-3deg); }
+.press-cover-comic { width: 46%; max-width: 13rem; transform: rotate(2.5deg) translateY(.5rem); }
+.press-cutout { filter: drop-shadow(6px 9px 0 hsl(var(--midnight) / .7)) drop-shadow(0 0 1.5px hsl(var(--comic-mustard))); }
+@container hero (max-width: 30rem) { .press-covers { margin-inline: -.75rem; gap: .5rem; } .press-cover-book, .press-cover-comic { max-width: none; } }
+/* Starbursts in the open sky above the Cartographer; slow twinkle, still under reduced motion. */
+.chartmap-bursts { position: absolute; inset: 0 auto auto 0; width: 37%; height: 40%; z-index: 2; pointer-events: none; display: none; }
+.chartmap-burst { position: absolute; fill: hsl(var(--comic-mustard)); stroke: hsl(var(--midnight)); stroke-width: 2; animation: burst-twinkle 9s ease-in-out infinite; }
+.chartmap-burst circle { fill: hsl(var(--spot-paper)); stroke: none; }
+.chartmap-b1 { width: 2.6rem; top: 9%; left: 70%; animation-delay: -2s; }
+.chartmap-b2 { width: 1.7rem; top: 1.2rem; left: 8%; animation-delay: -5s; }
+.chartmap-b3 { width: 1.3rem; top: 78%; left: 84%; animation-delay: -7.5s; fill: hsl(var(--accent)); }
+@keyframes burst-twinkle { 0%, 100% { opacity: .95; transform: scale(1) rotate(0deg); } 50% { opacity: .55; transform: scale(.82) rotate(12deg); } }
+@container hero (min-width: 40rem) { .chartmap-bursts { display: block; } }
+@media (prefers-reduced-motion: reduce) { .chartmap-burst { animation: none; } }
 .press-slide { position: relative; display: grid; min-height: 100%; align-items: center; gap: 2rem; padding: 2.5rem 1.5rem 4.5rem; }
 @container hero (min-width: 40rem) { .press-slide { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 2.5rem; padding: 2.5rem 2.5rem 4.5rem; } }
 .explore-poster { container-type: inline-size; }
