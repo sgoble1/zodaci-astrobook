@@ -1090,3 +1090,6 @@ li:hover > .zodiac-coin { transform: rotate(-10deg); }
 .specific-zodaci { padding: .9rem 1rem; border-radius: .6rem; border: 2px solid hsl(var(--primary) / .55); background: hsl(var(--primary) / .07); }
 @media (min-width: 768px) { .specific-row { grid-template-columns: minmax(0, .8fr) minmax(0, 1.6fr); align-items: stretch; } }
 .personal-callout { display: flex; gap: 1rem; align-items: flex-start; padding: 1rem 1.1rem; border-radius: .8rem; border: 2px solid hsl(var(--brass) / .5); background: hsl(var(--secondary) / .55); }
+
+/* About · How we calculate: numbered brass medallions. */
+.calc-step { display: inline-grid; place-items: center; flex-shrink: 0; width: 2.25rem; height: 2.25rem; border-radius: 999px; font-family: 'Bebas Neue', sans-serif; font-size: 1.15rem; color: hsl(var(--spot-paper)); background: hsl(var(--comic-navy)); box-shadow: 0 0 0 2px hsl(var(--comic-mustard)), 2px 3px 0 hsl(var(--midnight) / .5); }

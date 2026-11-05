@@ -24,7 +24,7 @@ const CALCULATE: [string, string][] = [
   ['Your clock, in universal time', 'Your local birth time is converted with the historical time-zone record for your birthplace, including past daylight-saving rules.'],
   ['Angles and houses', `The Ascendant and Midheaven come from sidereal time at your longitude. Houses default to Placidus; ${HOUSE_SYSTEMS.filter(h => h.id !== 'placidus').map(h => h.label).join(', ')} are one click away.`],
   ['Chiron and the Nodes', 'Chiron is read from a NASA JPL Horizons table (1940–2060). The North Node is the mean node; the true node can differ by up to about 1.5°, and we say so.'],
-  ['Unknown birth time', 'Without a time, houses and angles are withheld and the Moon is shown with its possible range, so nothing rests on a guess.'],
+  ['Unknown birth time', 'Without a time we calculate for noon, flag that the Moon may be off by up to about 6.5°, and leave the Ascendant, Midheaven and houses out rather than guess.'],
   ['Every point labelled', 'Each position carries a note on how it was derived, and readings keep calculated facts, interpretation and your own notes visibly separate.'],
 ];
 
@@ -38,7 +38,7 @@ const DIFFERENCE: { row: string; generic: string | null; report: string | null; 
 
 const FOUNDER_EDITIONS: [string, string][] = [
   ['April’s Masterbook', 'The first complete edition, organised by life topic.'],
-  ['Shane’s Masterbook', 'Sixty-three chapters across the six volumes.'],
+  ['Shane’s Masterbook', 'Sixty-three chapters, organised by life topic.'],
   ['Zac’s Astrological Library', 'A library of chapters with its own workbook.'],
 ];
 
@@ -75,7 +75,7 @@ export default function About() {
         <ul className="grid gap-x-8 gap-y-6 md:grid-cols-2">
           {CALCULATE.map(([t, d], i) => <li key={t} className="flex gap-4"><span aria-hidden className="calc-step">{i + 1}</span><div><h3 className="font-label text-lg tracking-[0.08em]">{t}</h3><p className="mt-1 text-sm leading-relaxed text-muted-foreground">{d}</p></div></li>)}
         </ul>
-        <p className="mt-6 text-sm text-muted-foreground">Want to check a chart yourself? <Link to="/calculator" className="text-accent underline underline-offset-4">Open the chart calculator</Link> and compare house systems side by side.</p>
+        <p className="mt-6 text-sm text-muted-foreground">Members can check any chart themselves: <Link to="/chart-calculator" className="text-accent underline underline-offset-4">Open the chart calculator</Link> and compare house systems side by side.</p>
       </motion.section>
 
       <motion.section {...fade} aria-labelledby="diff-h" className="obs-panel p-5 sm:p-8">

@@ -134,7 +134,7 @@ export function ArchiveShelf({ id = 'archive-h', to = '/astrobook', className }:
 const STEPS: [SpotKind, string, string, string][] = [
   ['birth', 'Your birth date, time & place', 'A unique moment', 'From a birth certificate if you can. No time? We show exactly what that changes.'],
   ['explore', 'A snapshot of the sky', 'The real positions', 'Astronomical data places every planet, house cusp and angle for that minute.'],
-  ['chart', 'Your unique chart', 'A cosmic blueprint', 'Signs, exact degrees, houses, rulers and aspects, checked against a second method.'],
+  ['chart', 'Your unique chart', 'A cosmic blueprint', 'Signs, exact degrees, houses, rulers and aspects, each with a note on how it was derived.'],
   ['written', 'Personal insights', 'Meaningful guidance', 'Readings name the placement behind every sentence, and your own context if you add it.'],
   ['growth', 'Greater self-awareness', 'A brighter you', 'Practices, timing and reflection questions you can return to as your sky moves.'],
 ];
