@@ -158,6 +158,7 @@ import { AccountButton } from '@/components/common/AccountButton';
 import { useCustomPages, NEW_PAGE_HIGHLIGHT_KEY } from '@/hooks/useCustomPages';
 import { useSharedBadges } from '@/hooks/useSharedBadges';
 import { Button } from '@/components/ui/button';
+import { ViewingEditionBanner } from '@/components/common/ViewingEditionBanner';
 import { APRIL_NAV_GROUPS, RELATIONSHIPS_GROUP, SHARED_GROUP, planAllows, requiredPlan, type NavGroup, type NavItem } from '@/content/navigation';
 import { usePlan } from '@/hooks/usePlan';
 import { PlanLock } from '@/components/common/PlanLock';
@@ -372,6 +373,7 @@ function AprilShell({ children, edition = 'april' }: { children: ReactNode; edit
       <main ref={mainRef} id="main-content" tabIndex={-1} className="flex-1 min-w-0 lg:pt-0 pt-[var(--founder-header-h,64px)] pb-20 lg:pb-0 relative z-10 outline-none">
         <div className="mx-auto max-w-5xl px-4 sm:px-8 py-8 sm:py-10 lg:py-14">
           <motion.div key={location.pathname} initial={reduceMotion ? false : { opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: reduceMotion ? 0 : 0.9, ease: [0.2, 0.7, 0.2, 1] }}>
+            <ViewingEditionBanner own={edition} />
             <FounderTrail />
             {children}
             <FounderNext />
