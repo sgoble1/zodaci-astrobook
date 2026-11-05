@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, type ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, ChevronLeft, ChevronRight, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -37,7 +37,7 @@ export function ProductCard({ p, onAdd, adding, className }: { p: ShopifyProduct
 
 /** A department as a side-scrolling shelf, with arrow buttons on wide screens and "See all". */
 export function ShopShelf({ id, title, script, items, onAdd, adding, onSeeAll, lead }: {
-  id: string; title: string; script?: string; items: ShopifyProduct[]; onAdd: Add; adding: boolean; onSeeAll?: () => void; lead?: React.ReactNode;
+  id: string; title: string; script?: string; items: ShopifyProduct[]; onAdd: Add; adding: boolean; onSeeAll?: () => void; lead?: ReactNode;
 }) {
   const track = useRef<HTMLUListElement>(null);
   const scroll = (dir: 1 | -1) => {

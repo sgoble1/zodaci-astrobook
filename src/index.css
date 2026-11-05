@@ -790,6 +790,10 @@ body {
 @media (prefers-reduced-motion: reduce) { .spot-art-medallion, .spot-art-orbit, .spot-art-medallion::before, .box-plate-spark { animation: none !important; } .atomic-box { transition: none; } .atomic-box:hover { transform: none; } }
 
 /* ── Gift-shop sidebar: departments with printed medallions, sign tiles, price bands ── */
+/* Side-scrolling shop shelves: thin brass scrollbar, cards snap into place. */
+.shop-shelf { scrollbar-width: thin; scrollbar-color: hsl(var(--brass) / .6) transparent; scroll-padding-inline: .25rem; }
+.shop-shelf::-webkit-scrollbar { height: 6px; }
+.shop-shelf::-webkit-scrollbar-thumb { background: hsl(var(--brass) / .55); border-radius: 999px; }
 .shop-sidebar-h { font-family: 'Bebas Neue', sans-serif; letter-spacing: .16em; font-size: .95rem; color: hsl(var(--primary)); border-bottom: 1px dashed hsl(var(--brass) / .5); padding-bottom: .35rem; }
 .shop-dept { display: flex; width: 100%; align-items: center; gap: .65rem; min-height: 2.6rem; padding: .3rem .6rem .3rem .35rem; border-radius: 999px; font-size: .9rem; color: hsl(var(--foreground) / .88); transition: background-color .7s ease, color .7s ease; }
 .shop-dept:hover { background: hsl(var(--secondary)); color: hsl(var(--foreground)); }
