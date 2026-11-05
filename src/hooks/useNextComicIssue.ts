@@ -26,5 +26,5 @@ export function useNextComicIssue() {
     void load();
     return () => { current = false; };
   }, [uid]);
-  return result?.owner === uid ? result : { next: 1, purchased: false };
+  return uid && result && result.owner === uid ? result : { next: 1, purchased: false };
 }
