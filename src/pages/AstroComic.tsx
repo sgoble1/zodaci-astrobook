@@ -23,6 +23,9 @@ import skyPanel from '@/assets/astrocomic-sky-panel.jpg';
 import letterPanel from '@/assets/astrocomic-letter-panel.jpg';
 import { ProductArtworkGallery } from '@/components/books/ProductArtworkGallery';
 import { PRODUCT_ART } from '@/content/productArtwork';
+import { PersonalizationCallout } from '@/components/books/PersonalizationStory';
+import { useNextComicIssue } from '@/hooks/useNextComicIssue';
+import { comicIssueTitle } from '@/lib/shopPresentation';
 
 // These scenes are shared illustrations; chart positions and personal letters stay calculated below them.
 const PREVIEW_ART: Record<string, string> = { '2-0': skyPanel, '3-0': letterPanel };
@@ -48,6 +51,8 @@ export default function AstroComic() {
   // Returning from sign-up with a chosen plan opens checkout straight away.
   useEffect(() => { if (session && isComicPlan(initial) && params.get('buy') === '1') setCheckout(true); }, [session?.user.id]); // eslint-disable-line react-hooks/exhaustive-deps
   const first = firstIssueMonth(new Date());
+  const issue = useNextComicIssue();
+  const nextIssue = comicIssueTitle({ signedIn: !!session, purchased: issue.purchased, next: issue.next });
   const personal = !!birth;
   const preview = useMemo(() => {
     const b = birth ?? SAMPLE_BIRTH;
@@ -89,14 +94,16 @@ export default function AstroComic() {
               <StripeEmbeddedCheckout key={plan} comicPlan={plan} onError={setError} returnUrl={`${window.location.origin}/my-comic?session_id={CHECKOUT_SESSION_ID}`} />
             </div>
           )}
+          {session && issue.purchased && <p className="mt-4 rounded-md border border-[hsl(var(--brass)/0.55)] bg-secondary/60 px-3 py-2 text-sm" role="status"><span className="font-label tracking-wider text-primary">Your next issue: {nextIssue.title}</span> · {nextIssue.note}.</p>}
           {session && <p className="mt-4 text-sm"><Link to="/my-comic" className="text-primary underline underline-offset-4">Already subscribed? Open My AstroComic</Link></p>}
+          <PersonalizationCallout product="comic" className="mt-6" />
         </div>
         <ProductArtworkGallery comic />
       </section>
 
       <section aria-labelledby="issue1-h">
-        <h2 id="issue1-h" className="font-display text-3xl">Read Issue #1: {ISSUE_1.title}</h2>
-        <p className="mt-2 mb-8 max-w-2xl text-muted-foreground">Seven drawn pages in the Lantern &amp; Ink style, written from one real chart. Turn the pages here, or open the full issue to read every panel before you subscribe.</p>
+        <h2 id="issue1-h" className="font-display text-3xl">Read the sample issue: {ISSUE_1.title}</h2>
+        <p className="mt-2 mb-8 max-w-2xl text-muted-foreground">Seven drawn pages in the Lantern &amp; Ink style, written from one real chart. It shows the craft; your own Issue #1 is a new story drawn from your chart. Turn the pages here, or open the full sample to read every panel before you subscribe.</p>
         <ComicFlipbook issue={ISSUE_1} />
         <div className="mt-8 flex flex-wrap gap-3"><ComicReader issue={ISSUE_1} scripted={ISSUE_1_SCRIPTED} /><Button asChild size="lg" variant="outline"><Link to="/astrocomic/print-issue-1">Print Issue #1 — sizes &amp; pages<ArrowRight /></Link></Button></div>
       </section>
