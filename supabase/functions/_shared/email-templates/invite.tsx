@@ -55,36 +55,37 @@ export const InviteEmail = ({
 
 export default InviteEmail
 
-const main = { backgroundColor: '#ffffff', fontFamily: 'Arial, sans-serif' }
-const container = { padding: '20px 25px' }
+const main = { backgroundColor: '#ffffff', fontFamily: 'Libre Franklin, Arial, sans-serif' }
+const container = { padding: '32px 25px', maxWidth: '560px', borderTop: '4px solid #E23B44' }
 const h1 = {
+  fontFamily: 'Alfa Slab One, Rockwell, Georgia, serif',
   fontSize: '22px',
   fontWeight: 'bold' as const,
-  color: '#000000',
+  color: '#1E1E5A',
   margin: '0 0 20px',
 }
 const text = {
   fontSize: '14px',
-  color: '#55575d',
+  color: '#484650',
   lineHeight: '1.5',
   margin: '0 0 25px',
 }
 const link = { color: 'inherit', textDecoration: 'underline' }
 const button = {
-  backgroundColor: '#000000',
-  color: '#ffffff',
+  backgroundColor: '#FFC61A',
+  color: '#1E1E5A',
   fontSize: '14px',
-  border: '1px solid #000000',
-  borderRadius: '8px',
+  border: '1px solid #1E1E5A',
+  borderRadius: '6px',
   padding: '12px 20px',
   textDecoration: 'none',
 }
-const footer = { fontSize: '12px', color: '#999999', margin: '30px 0 0' }
+const footer = { fontSize: '12px', color: '#64616a', margin: '30px 0 0' }
 // Rendered as a text child, which React may HTML-escape: keep this CSS free of >, &, and quotes.
 const darkModeCss = `
   @media (prefers-color-scheme: dark) {
-    .dm-btn { background-color: #ffffff !important; color: #000000 !important; }
+    .dm-btn { background-color: #FFC61A !important; color: #1E1E5A !important; }
   }
-  [data-ogsc] .dm-btn { background-color: #ffffff !important; color: #000000 !important; }
-  [data-ogsb] .dm-btn { background-color: #ffffff !important; color: #000000 !important; }
+  [data-ogsc] .dm-btn { background-color: #FFC61A !important; color: #1E1E5A !important; }
+  [data-ogsb] .dm-btn { background-color: #FFC61A !important; color: #1E1E5A !important; }
 `
