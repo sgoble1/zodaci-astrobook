@@ -9,6 +9,7 @@ import { ThemeArt } from '@/components/common/ThemeArt';
 import { Button } from '@/components/ui/button';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { SIGN_RULER } from '@/lib/signRulers';
+import { StartLink } from '@/components/common/StartLink';
 
 const HOUSE_AREA = ['', 'self, body and first impressions', 'money, possessions and self-worth', 'thinking, siblings and your neighbourhood', 'home, family life and inner foundations', 'creativity, romance, play and children', 'daily routine, work habits and health', 'partners and one-to-one relationships', 'shared resources, intimacy and deep change', 'beliefs, study and travel', 'career, reputation and public life', 'friends, groups and hopes', 'rest, solitude and the hidden inner life'];
 /** Where to read more about each planet in the member's own readings. */
@@ -64,7 +65,7 @@ export function MemberPlanetDetail({ birth, planetKey }: { birth: MyBirth; plane
       <section className="grid gap-4 md:grid-cols-3">
         <div className="vellum p-5"><h2 className="font-smallcaps !text-xs text-gold">What it is</h2><p className="mt-2">{BODY_KEYWORDS[b.key] ?? b.name}.</p></div>
         <div className="vellum p-5"><h2 className="font-smallcaps !text-xs text-gold">How it works in {b.sign}</h2><p className="mt-2">{SIGN_KEYWORDS[b.sign]}.</p></div>
-        <div className="vellum p-5"><h2 className="font-smallcaps !text-xs text-gold">Where it shows up</h2><p className="mt-2">{hasTime && b.house ? `The ${ordinal(b.house)} house: ${HOUSE_AREA[b.house]}.` : 'Houses need a birth time.'}</p>{!hasTime && <Link to="/start" className="mt-2 inline-block text-sm underline">Add your birth time</Link>}</div>
+        <div className="vellum p-5"><h2 className="font-smallcaps !text-xs text-gold">Where it shows up</h2><p className="mt-2">{hasTime && b.house ? `The ${ordinal(b.house)} house: ${HOUSE_AREA[b.house]}.` : 'Houses need a birth time.'}</p>{!hasTime && <StartLink className="mt-2 inline-block text-sm underline">Add your birth time</StartLink>}</div>
       </section>
       {b.retro && !b.key.includes('Node') && <p className="rounded border border-border bg-card/60 p-4 text-sm">Retrograde at birth: this part of you tends to work inwardly first — reflect, review and revise before acting.</p>}
       {b.key === 'chiron' && <p className="text-xs text-muted-foreground">Chiron comes from a NASA JPL Horizons table (1940–2060), interpolated; births outside that range don’t show Chiron.</p>}
@@ -95,7 +96,7 @@ export function MemberHouseDetail({ birth, house }: { birth: MyBirth; house: num
     <article className="space-y-4">
       <h1 className="font-display text-4xl">Your {ordinal(house)} house</h1>
       <p className="text-muted-foreground">{HOUSE_AREA[house][0].toUpperCase() + HOUSE_AREA[house].slice(1)}. Houses need a birth time to calculate.</p>
-      <Button asChild><Link to="/start">Add your birth time</Link></Button>
+      <Button asChild><StartLink>Add your birth time</StartLink></Button>
     </article>
   );
   const cusp = fmtLon(chart.cusps[house - 1]);

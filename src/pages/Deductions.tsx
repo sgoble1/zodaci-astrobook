@@ -6,6 +6,7 @@ import { kuaSex, toChartInput, useMyBirth } from '@/lib/myBirth';
 import { deduce, type System } from '@/lib/deductions';
 import { usePlan } from '@/hooks/usePlan';
 import { Button } from '@/components/ui/button';
+import { StartLink } from '@/components/common/StartLink';
 
 const FREE_COUNT = 4;
 const SYSTEMS: System[] = ['Western', 'Chinese', 'Numerology', 'Feng Shui'];
@@ -16,7 +17,7 @@ export default function Deductions() {
   const { plan, loading } = usePlan();
   const chart = useMemo(() => birth ? computeChart(toChartInput(birth)) : null, [birth]);
   if (birth === undefined || loading) return <p role="status">Loading…</p>;
-  if (!birth || !chart) return <p>Add your birth details first. <Link className="underline" to="/start">Get started</Link></p>;
+  if (!birth || !chart) return <p>Add your birth details first. <StartLink className="underline">Get started</StartLink></p>;
   const sex = kuaSex(birth.sex);
   const all = deduce(chart, { date: birth.date, timeKnown: !!birth.time, sex });
   const locked = plan === 'free';

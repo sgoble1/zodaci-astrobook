@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { ThemeArt } from '@/components/common/ThemeArt';
 import { CORE_THEMES, FREE_READINGS, READING_FILTERS, TOPIC_READINGS, readingMatches, type ReadingFilter } from '@/lib/topicReadings';
 import { usePlan } from '@/hooks/usePlan';
+import { StartLink } from '@/components/common/StartLink';
 
 /** Personal life-area readings built only from the member's own calculated chart. */
 export default function MyReadings() {
@@ -21,7 +22,7 @@ export default function MyReadings() {
   if (!birth || !chart) return (
     <article className="mx-auto max-w-lg space-y-4 py-10 text-center">
       <h1 className="font-display text-3xl">Your readings need a chart first</h1>
-      <Button asChild><Link to="/start">Enter my birth details</Link></Button>
+      <Button asChild><StartLink>Enter my birth details</StartLink></Button>
     </article>
   );
   return (

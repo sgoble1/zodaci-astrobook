@@ -15,6 +15,7 @@ import { balance } from '@/lib/resultsEngine';
 import { Button } from '@/components/ui/button';
 import { HouseRulers } from '@/components/chart/HouseRulers';
 import { viewingSharedEdition } from '@/hooks/useAprilSpace';
+import { StartLink } from '@/components/common/StartLink';
 
 const BODY: Record<string, string> = { sun: 'your basic identity and sense of purpose', moon: 'your feelings, instincts and need for safety', mercury: 'how you think, learn and talk', venus: 'how you love and what you value', mars: 'how you act and go after what you want', jupiter: 'where confidence and opportunity grow', saturn: 'where effort, limits and maturity build', uranus: 'where you need freedom', neptune: 'where imagination and sensitivity live', pluto: 'where deep change happens', chiron: 'an old sore spot that can become a gift for helping others', northNode: 'qualities you are learning to grow into', southNode: 'familiar talents to use without getting stuck' };
 const HOUSE_AREA = ['', 'self, body and first impressions', 'money, possessions and self-worth', 'thinking, siblings and your neighbourhood', 'home, family life and inner foundations', 'creativity, romance, play and children', 'daily routine, work habits and health', 'partners and one-to-one relationships', 'shared resources, intimacy and deep change', 'beliefs, study and travel', 'career, reputation and public life', 'friends, groups and hopes', 'rest, solitude and the hidden inner life'];
@@ -35,7 +36,7 @@ export default function MyChart() {
     <article className="mx-auto max-w-lg space-y-4 py-10 text-center">
       <h1 className="font-display text-3xl">You don't have a chart yet</h1>
       <p className="text-muted-foreground">Enter your birth date, time and place and we'll calculate it right away.</p>
-      <Button asChild><Link to="/start">Create my chart</Link></Button>
+      <Button asChild><StartLink>Create my chart</StartLink></Button>
     </article>
   );
   const big3 = [chart.bodies.find(b => b.key === 'sun'), chart.bodies.find(b => b.key === 'moon')].filter(Boolean);
@@ -58,7 +59,7 @@ export default function MyChart() {
         <p className="text-sm text-muted-foreground" title={named.why}>{named.subtitle}. {named.why}</p>
         <p className="mt-3 text-lg">{big3.map(b => `${b!.name} in ${b!.sign}`).join(', ')}{rising ? `, ${rising.sign} rising` : ''}.</p>
         <div className="mt-4 flex flex-wrap gap-3">
-          {!shared && <Button asChild variant="outline"><Link to="/start">Edit birth details</Link></Button>}
+          {!shared && <Button asChild variant="outline"><StartLink>Edit birth details</StartLink></Button>}
           <Button type="button" variant="outline" onClick={() => window.print()}><Printer className="h-4 w-4" aria-hidden />Print</Button>
           {birth.time && <label className="flex items-center gap-2 text-sm">House system
             <select aria-label="House system" className="rounded border border-border bg-background px-2 py-1" value={hs ?? birth.houseSystem} onChange={e => setHs(e.target.value as HouseSystem)}>{HOUSE_SYSTEMS.map(h => <option key={h.id} value={h.id}>{h.label}</option>)}</select></label>}

@@ -7,6 +7,7 @@ import { PLAN_LABEL } from '@/components/common/PlanLock';
 import { MEMBER_DOMAINS, breadcrumbsFor, domainById, domainFor, nextStepsFor, type MemberNavItem } from '@/content/memberNav';
 import { useNavState } from './MemberNav';
 import { recommendFor } from '@/lib/recommend';
+import { StartLink } from '@/components/common/StartLink';
 
 function tabLabel(to: string) {
   for (const d of MEMBER_DOMAINS) { if (d.hub === to) return d.columns.flatMap(c => c.items).find(i => i.to === to)?.label ?? d.label; }
@@ -83,7 +84,7 @@ function NeedsChartBanner({ path }: { path: string }) {
   return (
     <div role="status" className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-primary/40 bg-primary/10 px-4 py-3 text-sm">
       <span>Add your birth details to get started — your chart, readings and book are all built from them.</span>
-      <Link to="/start" className="inline-flex min-h-10 items-center gap-1 rounded-full bg-primary px-4 text-primary-foreground hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">Add birth details<ArrowRight className="h-4 w-4" aria-hidden="true" /></Link>
+      <StartLink className="inline-flex min-h-10 items-center gap-1 rounded-full bg-primary px-4 text-primary-foreground hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">Add birth details<ArrowRight className="h-4 w-4" aria-hidden="true" /></StartLink>
     </div>
   );
 }

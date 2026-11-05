@@ -17,6 +17,7 @@ import { TierGate, meetsPlan } from '@/components/common/TierGate';
 import { RetroExplorer, RetroBadge, TIER_STYLE } from '@/components/retrogood/RetroExplorer';
 import { AffirmationsCarousel } from '@/components/retrogood/AffirmationsCarousel';
 import { TransitOverlay } from '@/components/retrogood/TransitOverlay';
+import { StartLink } from '@/components/common/StartLink';
 
 const TIER_TEXT = { none: 'No planets were retrograde when you were born. Your planets express themselves outwardly and directly.', light: 'A light retrograde signature: one area of life works more inwardly.', notable: 'A notable retrograde signature: several parts of you process inwardly before acting.', strong: 'A strong retrograde signature: reflection, revision and inner work are central to how you live.', dominant: 'A dominant retrograde signature: much of your chart works inwardly, giving unusual depth and self-reliance.' };
 const SECTIONS = [['rg-summary', 'Summary'], ['rg-explorer', 'Explorer'], ['rg-patterns', 'Patterns'], ['rg-insights', 'What stands out'], ['rg-affirm', 'Affirmations'], ['rg-transits', 'Transits']] as const;
@@ -36,7 +37,7 @@ export default function RetroGood() {
     return { planets, patterns: retroPatterns(chart, planets, handle), rg: retroGood(chart), insights: perceive(chart, !!birth.time), affirmations: [...chartAffirmations(chart, birth.date), ...practiceAffirmations(shadowBreakthroughBlock(rankPatterns(detectPatterns(birth.time ? chart : { ...chart, asc: null, cusps: null, utc: null }), chart)))] };
   }, [chart, birth]);
   if (birth === undefined) return <div className="mx-auto max-w-3xl space-y-4" role="status" aria-label="Loading your chart"><div className="h-10 w-48 animate-pulse rounded bg-card" /><div className="h-64 animate-pulse rounded-lg bg-card" /></div>;
-  if (!birth || !chart || !data) return <article className="mx-auto max-w-lg space-y-4 py-10 text-center"><h1 className="font-display text-3xl">Add your birth details first</h1><Button asChild><Link to="/start">Create my chart</Link></Button></article>;
+  if (!birth || !chart || !data) return <article className="mx-auto max-w-lg space-y-4 py-10 text-center"><h1 className="font-display text-3xl">Add your birth details first</h1><Button asChild><StartLink>Create my chart</StartLink></Button></article>;
   const { planets, patterns, rg, insights, affirmations } = data;
   const counts = (['Amplified', 'Internalized', 'Refined', 'Karmic'] as RgTier[]).map(t => [t, planets.filter(p => p.tier === t).length] as const);
   return (

@@ -8,6 +8,7 @@ import { BoxArt } from '@/components/common/BoxArt';
 import { Button } from '@/components/ui/button';
 import { PlanetOrb } from '@/components/chart/PlanetOrb';
 import { usePageMeta } from '@/hooks/usePageMeta';
+import { StartLink } from '@/components/common/StartLink';
 
 export type ChartFocus = 'planets' | 'houses' | 'aspects' | 'elements' | 'calculator';
 const HOUSE_AREA = ['', 'self, body and first impressions', 'money, possessions and self-worth', 'thinking, siblings and your neighbourhood', 'home, family life and inner foundations', 'creativity, romance, play and children', 'daily routine, work habits and health', 'partners and one-to-one relationships', 'shared resources, intimacy and deep change', 'beliefs, study and travel', 'career, reputation and public life', 'friends, groups and hopes', 'rest, solitude and the hidden inner life'];
@@ -54,7 +55,7 @@ export default function MemberChartSection({ birth, focus }: { birth: MyBirth; f
           <p className="text-muted-foreground">{HOUSE_AREA[i + 1]}</p>
           <p className="mt-1">You approach this area with {s.sign} style: {kwText(s.sign)}.</p>
           <p className="mt-1">{inside.length ? `Planets here: ${inside.map(b => b.name).join(', ')} — this area is a focus in your life.` : 'No planets here — this area runs mostly through its ruling sign.'}</p></Link></li>); })}</ol>
-        : <p className="rounded border border-border bg-muted/40 p-4 text-sm">Houses need a birth time. <Link className="underline" to="/start">Add your birth time</Link> to see them.</p>)}
+        : <p className="rounded border border-border bg-muted/40 p-4 text-sm">Houses need a birth time. <StartLink className="underline">Add your birth time</StartLink> to see them.</p>)}
 
       {focus === 'aspects' && <ul className="space-y-3">{[...chart.aspects].sort((x, y) => x.orb - y.orb).map((a, i) => (
         <li key={i} className="rounded border border-border bg-card p-4 text-sm"><h2 className="font-display text-lg">{a.a} {a.symbol} {a.b} <span className="text-sm text-muted-foreground">· {a.type}, orb {a.orb.toFixed(1)}°{a.applying ? ', applying' : ''}</span></h2>

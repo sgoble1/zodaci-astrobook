@@ -22,6 +22,7 @@ import MemberDataQuality from '@/pages/MemberDataQuality';
 import BaguaReading from '@/pages/BaguaReading';
 import { kuaSex, toChartInput } from '@/lib/myBirth';
 import { useZacAccount } from '@/hooks/useZacAccount';
+import { StartLink } from '@/components/common/StartLink';
 
 const TIMING = { '/transits': 'transits', '/retrogrades': 'retrogrades', '/timeline': 'timeline', '/profection': 'profection' } as const;
 const TOPIC_ROUTES: Record<string, string> = { '/numerology': 'numerology', '/purpose': 'purpose', '/family-home': 'family-home', '/love': 'love', '/career': 'career', '/health': 'health' };
@@ -45,7 +46,7 @@ export function PublicChartFallback() {
       <h1 className="font-display text-3xl">This page is built from your own chart</h1>
       <p className="text-muted-foreground">Add your birth date, time and place, and this page will show your own placements and recommendations.</p>
       <div className="flex flex-wrap justify-center gap-3">
-        <Button asChild><Link to="/start">Enter my birth details</Link></Button>
+        <Button asChild><StartLink>Enter my birth details</StartLink></Button>
         <Button asChild variant="outline"><Link to="/auth">Create a free account</Link></Button>
       </div>
     </article>

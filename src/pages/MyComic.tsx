@@ -16,6 +16,7 @@ import { computeChart } from '@/lib/astro';
 import { buildComicIssue, COMIC_PLANS, monthKey, monthLabel, nextIssueMonth, shipBy, type ComicIssue, type ComicPlan } from '@/lib/comic';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import type { Database } from '@/integrations/supabase/types';
+import { StartLink } from '@/components/common/StartLink';
 
 type Sub = Database['public']['Tables']['comic_subscriptions']['Row'];
 type Issue = Database['public']['Tables']['comic_issues']['Row'];
@@ -70,7 +71,7 @@ function MyComicInner() {
       )}
       <Archive issues={issues} />
       {birth && <NextPreview birthName={birth.name} chartInput={toChartInput(birth)} month={current ? nextIssueMonth({ ...current, plan: current.plan as ComicPlan }, issues.filter(i => i.subscription_id === current.id && i.status === 'shipped').map(i => i.issue_month)) : null} />}
-      {birth === null && <p className="text-sm text-muted-foreground">Save your birth details on <Link to="/start" className="underline">your chart</Link> so each issue can be drawn from it.</p>}
+      {birth === null && <p className="text-sm text-muted-foreground">Save your birth details on <StartLink className="underline">your chart</StartLink> so each issue can be drawn from it.</p>}
       {subs.filter(s => !['active', 'paused', 'past_due'].includes(s.status)).length > 0 && <section><h2 className="text-lg">Earlier plans</h2><ul className="mt-3 space-y-1 text-sm text-muted-foreground">{subs.filter(s => !['active', 'paused', 'past_due'].includes(s.status)).map(s => <li key={s.id}>{COMIC_PLANS[s.plan as ComicPlan]?.name ?? s.plan} · {s.status} · since {fmt(s.created_at)}</li>)}</ul></section>}
     </article>
   );
