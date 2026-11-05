@@ -9,7 +9,8 @@ import { PRICE_BANDS, ShopSidebar, type PriceBand, type ShopFilters } from '@/co
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { PRODUCT_BY_HANDLE_QUERY, storefrontApiRequest, fetchAllProducts, formatMoney, inStock, type ShopifyProduct } from '@/lib/shopify';
 import { useCartStore } from '@/stores/cartStore';
-import { PRIORITY_SHELVES, comicIssueTitle, productPriority } from '@/lib/shopPresentation';
+import { PRIORITY_SHELVES, comicIssueTitle, isPortraitProduct, productPriority, shopTitle } from '@/lib/shopPresentation';
+import { PersonalizationCallout } from '@/components/books/PersonalizationStory';
 import { ProductCard, ShopShelf, SpotlightCard } from '@/components/store/ShopShelves';
 import { useNextComicIssue } from '@/hooks/useNextComicIssue';
 import { useSession } from '@/hooks/useLibrary';
@@ -208,6 +209,9 @@ export function ProductDetail() {
   const main = imgs[Math.min(image, imgs.length - 1)]?.node;
   const available = v ? v.availableForSale : inStock(product);
   const options = n.options.filter(o => !(o.name === 'Title' && o.values.length === 1 && o.values[0] === 'Default Title'));
+  const portrait = isPortraitProduct(n.title, n.productType ?? '');
+  const shown = shopTitle(n.title, n.productType ?? '');
+  const isComic = /astro\s*comic/i.test(`${n.title} ${n.productType ?? ''}`);
   return (
     <div className="mx-auto max-w-5xl space-y-10 px-4 py-10">
       <div className="flex items-center justify-between"><Link to="/store" className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline">← The shop</Link><CartDrawer /></div>
@@ -218,11 +222,13 @@ export function ProductDetail() {
         </div>
         <div className="space-y-5">
           {n.productType && <p className="font-smallcaps text-xs text-gold">{n.productType}</p>}
-          <h1 className="text-4xl">{n.title}</h1>
+          <h1 className="text-4xl">{shown.title}</h1>
+          {shown.badge && <p className="inline-block rounded-full bg-accent px-3 py-0.5 font-label text-sm tracking-wider text-accent-foreground">{shown.badge}</p>}
           <p className="text-2xl font-semibold">{formatMoney(v?.price ?? n.priceRange.minVariantPrice)}</p>
           {n.variants.edges.length > 1 && <div className="space-y-2"><p className="text-sm text-muted-foreground">{options.map(o => o.name).join(' / ') || 'Option'}</p><div className="flex flex-wrap gap-2">{n.variants.edges.map(e => <Button key={e.node.id} size="sm" aria-pressed={e.node.id === variantId} variant={e.node.id === variantId ? 'default' : 'outline'} disabled={!e.node.availableForSale} onClick={() => setVariantId(e.node.id)}>{e.node.title}{!e.node.availableForSale && ' · sold out'}</Button>)}</div></div>}
           {available ? <Button size="lg" onClick={() => add(product, variantId)} disabled={loading}>{loading ? <Loader2 className="h-4 w-4 animate-spin" aria-label="Adding" /> : 'Add to cart'}</Button> : <Button size="lg" variant="outline" disabled>Sold out</Button>}
           <p className="whitespace-pre-line text-muted-foreground">{n.description}</p>
+          {portrait && <PersonalizationCallout product={isComic ? 'comic' : 'book'} />}
           {(options.length > 0 || v) && <section aria-labelledby="specs" className="space-y-2 border-t border-border pt-4">
             <h2 id="specs" className="font-smallcaps !text-xs text-gold">Details</h2>
             <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 text-sm">

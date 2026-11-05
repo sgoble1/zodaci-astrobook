@@ -14,6 +14,7 @@ import { HeroSlideshow, ChartMapSlide, LookUpSlide, PressSlide } from '@/compone
 import { MottoRail, ForecastPlate, type MottoLink, ExplorePoster, DestinationTiles, QuotePlate, ArchiveShelf, HowItWorks, ZodiacPlate, TransmissionsPlate, JoinPlate, type Destination } from '@/components/observatory/Mosaic';
 import { BookIcon, ChartWheelIcon, RingsIcon, StorefrontIcon, TelescopeIcon } from '@/components/icons/RetroIcons';
 import { ALL_READINGS } from '@/lib/topicReadings';
+import { PersonalizationStory } from '@/components/books/PersonalizationStory';
 import { ACADEMY } from '@/content/academy';
 import { HOUSE_SYSTEMS } from '@/lib/astro';
 
@@ -101,6 +102,8 @@ export default function BrandLanding() {
       </div>
 
       <HowItWorks />
+
+      <PersonalizationStory />
 
       <ZodiacPlate />
 

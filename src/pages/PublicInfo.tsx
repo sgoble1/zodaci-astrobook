@@ -10,6 +10,7 @@ import { VersionCompare } from '@/components/books/VersionCompare';
 import { CoverCustomizer } from '@/components/books/CoverCustomizer';
 import { CosmicTeaser } from '@/components/books/CosmicTeaser';
 import { ProductArtworkGallery } from '@/components/books/ProductArtworkGallery';
+import { PersonalizationStory } from '@/components/books/PersonalizationStory';
 import { BOOK_PRODUCT_SAMPLES, PRODUCT_ART } from '@/content/productArtwork';
 import { ThemeArt } from '@/components/common/ThemeArt';
 import { SampleBook } from '@/components/books/SampleBookReader';
@@ -50,6 +51,7 @@ export function AstroBookPublic() {
         <EditionPages pages={SAMPLE_EDITION.pages} />
         <div className="flex flex-wrap gap-4"><Button asChild size="lg"><Link to={order()}>Start my AstroBook</Link></Button><Link to="/astrocomic" className="self-center text-accent">Read {SAMPLE_EDITION.owner.split(' ')[0]}’s comic issue →</Link></div>
       </section>
+      <PersonalizationStory />
       <section id="story" className="grid gap-8 md:grid-cols-2 items-center">
         <div className="space-y-4"><h2 className="font-display text-3xl">Calculated, not guessed.</h2><p className="text-muted-foreground">Every AstroBook starts with astronomy: the exact positions of the Sun, Moon and planets at the moment and place you were born. Interpretation comes second, and the book always tells you which is which.</p><p className="text-muted-foreground">Then we write it for one person. No two AstroBooks are alike, because no two birth moments are.</p></div>
         <div className="grid grid-cols-3 gap-3">{BOOK_PRODUCT_SAMPLES.map(s => <figure key={s.label}><img src={s.src} alt={s.alt} width={1024} height={1024} loading="lazy" className="aspect-square w-full rounded-sm object-contain" /><figcaption className="mt-2 text-center font-label text-sm">{s.label}</figcaption></figure>)}</div>
