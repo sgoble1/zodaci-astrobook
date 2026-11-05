@@ -397,6 +397,13 @@ body:has(#mobile-menu) [data-generation-notice] { display: none; }
   body:has([data-mobile-tabbar]) .float-above-tabbar { bottom: calc(4.75rem + env(safe-area-inset-bottom)) !important; }
   body:has([data-mobile-tabbar]) [data-sonner-toaster][data-y-position="bottom"] { bottom: calc(4.75rem + env(safe-area-inset-bottom)) !important; }
 }
+/* Founder editions keep their phone dock up to the large breakpoint. */
+@media (max-width: 1023px) {
+  body:has([data-founder-dock]) .float-above-tabbar { bottom: calc(4.75rem + env(safe-area-inset-bottom)) !important; }
+  body:has([data-founder-dock]) [data-sonner-toaster][data-y-position="bottom"] { bottom: calc(4.75rem + env(safe-area-inset-bottom)) !important; }
+}
+/* While the podcast player is open, the end of every page gets room so nothing sits under it. */
+html[data-player-open] #main-content::after { content: ''; display: block; height: calc(var(--player-h, 7.5rem) + 1rem); }
 
 /* Founder side menu: visible keyboard focus on every link and folding group. */
 .founder-sidebar a:focus-visible, .founder-sidebar summary:focus-visible, .founder-sidebar button:focus-visible { outline: 2px solid hsl(var(--ring)); outline-offset: 2px; }

@@ -404,7 +404,7 @@ function FounderDock({ edition, menuOpen, onMenu }: { edition: FounderEditionNam
   ];
   const cls = (on: boolean) => `flex h-16 flex-col items-center justify-center gap-1 font-label text-[0.7rem] tracking-wider focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring ${on ? 'text-primary' : 'text-muted-foreground'}`;
   return (
-    <nav aria-label="Edition tabs" className="lg:hidden fixed inset-x-0 bottom-0 z-50 border-t-2 border-[hsl(var(--brass)/0.55)] bg-background/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-xl print:hidden">
+    <nav aria-label="Edition tabs" data-founder-dock className="lg:hidden fixed inset-x-0 bottom-0 z-50 border-t-2 border-[hsl(var(--brass)/0.55)] bg-background/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-xl print:hidden">
       <ul className="grid h-16 grid-cols-4">
         {tabs.map(({ to, label, Icon }) => {
           const on = !menuOpen && (pathname === to || (to !== '/dashboard' && pathname.startsWith(`${to}/`)));
