@@ -105,7 +105,7 @@ export default function AstroComic() {
         <h2 id="issue1-h" className="font-display text-3xl">Read the sample issue: {ISSUE_1.title}</h2>
         <p className="mt-2 mb-8 max-w-2xl text-muted-foreground">Seven drawn pages in the Lantern &amp; Ink style, written from one real chart. It shows the craft; your own Issue #1 is a new story drawn from your chart. Turn the pages here, or open the full sample to read every panel before you subscribe.</p>
         <ComicFlipbook issue={ISSUE_1} />
-        <div className="mt-8 flex flex-wrap gap-3"><ComicReader issue={ISSUE_1} scripted={ISSUE_1_SCRIPTED} /><Button asChild size="lg" variant="outline"><Link to="/astrocomic/print-issue-1">Print Issue #1 — sizes &amp; pages<ArrowRight /></Link></Button></div>
+        <div className="mt-8 flex flex-wrap gap-3"><ComicReader issue={ISSUE_1} scripted={ISSUE_1_SCRIPTED} /><Button asChild size="lg" variant="outline"><Link to="/astrocomic/print-issue-1">Print the sample — sizes &amp; pages<ArrowRight /></Link></Button></div>
       </section>
 
       <section aria-labelledby="book-h" className="space-y-6">
