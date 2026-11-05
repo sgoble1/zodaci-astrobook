@@ -1,13 +1,14 @@
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { confirmAction } from '@/components/common/ConfirmHost';
 import { useEffect, useState } from 'react';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate, useSearchParams } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { computeChart } from '@/lib/astro';
 import { saveMyBirth, savedChart, toChartInput, type MyBirth } from '@/lib/myBirth';
+import { onboardingDestination, startLinkFrom } from '@/lib/onboardingReturn';
 
 type Geo = { name: string; admin1?: string; country?: string; latitude: number; longitude: number; timezone: string };
 const STEPS = ['Your name', 'Birth date', 'Birth time', 'Birthplace', 'Review'];
@@ -15,6 +16,8 @@ const STEPS = ['Your name', 'Birth date', 'Birth time', 'Birthplace', 'Review'];
 export default function Onboarding() {
   usePageMeta('Enter your birth details · Zodaci', 'Add your birth date, time and place so Zodaci can calculate your chart.');
   const nav = useNavigate();
+  const [params] = useSearchParams();
+  const returnTo = params.get('next');
   const [step, setStep] = useState(0);
   const [b, setB] = useState<MyBirth>({ name: '', date: '', time: '', placeLabel: '', lat: 0, lon: 0, tz: '', houseSystem: 'placidus' });
   const [unknownTime, setUnknownTime] = useState(false);
@@ -63,14 +66,14 @@ export default function Onboarding() {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       if (u.user) await (supabase as any).from('profiles').update({ sex: (sex === 'Prefer to self-describe' ? `Self-described: ${description.trim()}` : sex).slice(0, 60) }).eq('id', u.user.id);
       setStage('Starting your readings…');
-      nav(res.saved === 'device' ? '/my-chart?device=1' : '/dashboard');
+      nav(onboardingDestination(returnTo, res.saved === 'device' ? 'device' : 'account'));
     } catch { setErr('Your birth details could not be calculated. Check the date, time and selected place.'); }
     finally { setBusy(false); setStage(''); }
   };
 
   if (signedIn === null) return <p role="status" className="p-8 text-muted-foreground">Getting things ready…</p>;
   // Account first, so birth details save once and nothing asks to sign in again later.
-  if (!signedIn) return <Navigate to="/auth?next=%2Fstart" replace />;
+  if (!signedIn) return <Navigate to={`/auth?next=${encodeURIComponent(startLinkFrom(returnTo ?? ''))}`} replace />;
   return (
     <article className="mx-auto max-w-lg space-y-6 py-6">
       <header>
