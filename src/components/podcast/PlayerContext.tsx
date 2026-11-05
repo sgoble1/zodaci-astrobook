@@ -21,6 +21,19 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
   const catalog = useRef<LibraryItem[]>([]);
   const audio = useRef<HTMLAudioElement>(null);
   const lastSave = useRef(0);
+  const panel = useRef<HTMLDivElement>(null);
+  const open = !!current?.url;
+  // Reserve room at the end of the page for the floating player (see #main-content::after).
+  useEffect(() => {
+    const root = document.documentElement;
+    if (!open) { delete root.dataset.playerOpen; root.style.removeProperty('--player-h'); return; }
+    root.dataset.playerOpen = '';
+    const el = panel.current;
+    if (!el || typeof ResizeObserver === 'undefined') return () => { delete root.dataset.playerOpen; };
+    const ro = new ResizeObserver(() => root.style.setProperty('--player-h', `${Math.ceil(el.getBoundingClientRect().height)}px`));
+    ro.observe(el);
+    return () => { ro.disconnect(); delete root.dataset.playerOpen; root.style.removeProperty('--player-h'); };
+  }, [open]);
   useEffect(() => { localStorage.setItem('pod:queue', JSON.stringify(queue)); }, [queue]);
   useEffect(() => { localStorage.setItem('pod:speed', String(speed)); if (audio.current) audio.current.playbackRate = speed; }, [speed]);
   const savePos = (id: string, t: number) => setPositions(p => { const n = { ...p, [id]: t }; localStorage.setItem('pod:pos', JSON.stringify(n)); return n; });
@@ -35,7 +48,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
     <PlayerCtx.Provider value={{ current, queue, speed, positions, playing, play, playNext, stop, toggle, setSpeed, setQueue, setCatalog }}>
       {children}
       {current?.url && (
-        <div className="float-above-tabbar fixed bottom-4 right-4 left-4 lg:left-auto lg:w-[420px] z-50 rounded-xl border border-border bg-card/90 backdrop-blur-xl shadow-lg p-3">
+        <div ref={panel} role="region" aria-label="Podcast player" className="float-above-tabbar fixed bottom-4 right-4 left-4 lg:left-auto lg:w-[420px] z-50 rounded-xl border border-border bg-card/90 backdrop-blur-xl shadow-lg p-3">
           <div className="flex items-center gap-3">
             {current.cover_url && <img loading="lazy" decoding="async" src={current.cover_url} alt="" className="h-10 w-10 shrink-0 rounded object-cover"/>}
             <button onClick={toggle} aria-label={playing ? 'Pause' : 'Play'} className="shrink-0 w-10 h-10 rounded-full bg-primary text-primary-foreground grid place-items-center">
