@@ -1222,8 +1222,10 @@ li:hover > .zodiac-coin { transform: rotate(-10deg); }
 .art-tile:focus-visible { outline: 2px solid hsl(var(--ring)); outline-offset: 2px; }
 
 /* Shelf of real products: every book the same height, the same three-quarter stance and the same slow lift. */
-.shelf-track-real { align-items: flex-end; gap: 1.4rem; padding-top: 1.25rem; }
-.shelf-real { display: flex; flex-direction: column; align-items: center; gap: .6rem; width: 8.75rem; }
+/* Books stand on one ledge (top-aligned rows of equal height); the caption sits clear of the ledge, two lines reserved so
+   one- and two-line titles keep every book at the same height. scroll-padding stops the first book snapping under the arrow. */
+.shelf-track-real { --shelf-top: 1.25rem; --shelf-book: 13rem; align-items: flex-start; gap: 1.6rem; padding-top: var(--shelf-top); padding-bottom: 1.25rem; scroll-padding-inline: 2.75rem; }
+.shelf-real { display: flex; flex-direction: column; align-items: center; gap: 1.35rem; width: 8.75rem; }
 .shelf-real-book { display: flex; align-items: flex-end; justify-content: center; height: 13rem; width: 100%; transform: perspective(900px) rotateY(-9deg); transform-origin: left center; transition: transform 1.6s cubic-bezier(.22,1,.36,1); }
 .shelf-real-book .sample-book { height: 100%; aspect-ratio: 2 / 3; }
 .shelf-real-book .sample-book-body { height: 100%; }
@@ -1231,9 +1233,11 @@ li:hover > .zodiac-coin { transform: rotate(-10deg); }
 .shelf-real:hover .shelf-real-book, .shelf-real:focus-visible .shelf-real-book { transform: perspective(900px) rotateY(-2deg) translateY(-7px); }
 .shelf-real:focus-visible { outline: none; }
 .shelf-real:focus-visible .shelf-real-caption { outline: 2px solid hsl(var(--comic-brick)); outline-offset: 3px; border-radius: 2px; }
-.shelf-real-caption { font-family: 'Bebas Neue', sans-serif; font-size: .85rem; letter-spacing: .12em; line-height: 1.1; text-align: center; color: hsl(var(--comic-navy)); }
-/* Wooden shelf edge under the books. */
-.shelf-track-real { background: linear-gradient(to top, transparent 0 2.6rem, hsl(var(--comic-navy) / .55) 2.6rem 2.75rem, hsl(30 45% 42% / .35) 2.75rem 3.3rem, transparent 3.3rem); }
+.shelf-real-caption { display: flex; align-items: flex-start; justify-content: center; min-height: 2.3em; max-width: 100%; padding-inline: .15rem; font-family: 'Bebas Neue', sans-serif; font-size: .9rem; letter-spacing: .1em; line-height: 1.15; text-align: center; text-wrap: balance; color: hsl(var(--comic-navy)); }
+.shelf-real-book .sample-book, .shelf-real-cutout { margin-bottom: 0; }
+/* Wooden shelf ledge directly beneath every book, measured from the top so it never runs through a cover. */
+.shelf-track-real { background: linear-gradient(to bottom, transparent 0 calc(var(--shelf-top) + var(--shelf-book)), hsl(var(--comic-navy) / .55) calc(var(--shelf-top) + var(--shelf-book)) calc(var(--shelf-top) + var(--shelf-book) + .15rem), hsl(30 45% 42% / .38) calc(var(--shelf-top) + var(--shelf-book) + .15rem) calc(var(--shelf-top) + var(--shelf-book) + .7rem), transparent calc(var(--shelf-top) + var(--shelf-book) + .7rem)); }
+@media (max-width: 639px) { .shelf-track-real { --shelf-book: 11.5rem; gap: 1.1rem; } .shelf-real { width: 7.75rem; } }
 
 /* Gift-shop department window: cut-out products on 1950s atomic backdrops, navy label strips. */
 .dept-grid { display: grid; gap: .75rem; grid-template-columns: repeat(2, minmax(0, 1fr)); }
