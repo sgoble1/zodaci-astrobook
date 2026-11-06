@@ -47,7 +47,7 @@ export function NatalWheel({ size = 640, showAspects = true, interactive = true 
 
   return (
     <div className="relative w-full max-w-[720px] mx-auto">
-      <ChartProjection>
+      <ChartProjection device="monitor">
       <svg role="img" aria-label="April natal zodiac wheel" viewBox={`0 0 ${size} ${size}`} className="w-full h-auto">
         {/* Vellum background circle */}
         <defs>

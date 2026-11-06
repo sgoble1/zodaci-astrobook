@@ -28,7 +28,7 @@ export function SampleChartDemo() {
         <p className="text-sm text-muted-foreground">Ceres ⚳, Pallas ⚴, Juno ⚵ and Vesta ⚶ come from NASA JPL Horizons, the ephemeris Astrodienst is built on.</p>
         <Button asChild size="lg"><Link to="/start">Calculate mine — free<ArrowRight /></Link></Button>
       </div>
-      <div className="w-full"><ChartWheel r={r} /></div>
+      <div className="w-full"><ChartWheel r={r} device="classic" /></div>
     </div>
   );
 }

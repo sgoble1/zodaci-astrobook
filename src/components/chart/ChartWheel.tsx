@@ -1,6 +1,6 @@
 import { useId, useMemo, useState, type KeyboardEvent } from 'react';
 import { Link } from 'react-router-dom';
-import { ChartProjection } from './ChartProjection';
+import { ChartProjection, type ChartDevice } from './ChartProjection';
 import { Button } from '@/components/ui/button';
 import { SIGNS, SIGN_GLYPH, SIGN_KEYWORDS, BODY_KEYWORDS, fmtLon, type ChartResult } from '@/lib/astro';
 import { FIXED_STARS, type SourceRef } from '@/content/compendium';

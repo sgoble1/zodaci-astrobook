@@ -136,14 +136,14 @@ export default function Store() {
         </div>
       </header>
       {failed ? <ShopOffline onRetry={() => setAttempt(a => a + 1)} /> : <div className="grid gap-8 lg:grid-cols-[15rem_minmax(0,1fr)]">
-        <aside className="hidden lg:block"><div className="obs-panel sticky top-24 max-h-[calc(100vh-7rem)] overflow-y-auto p-4">{products ? <ShopSidebar types={types} signs={signs} total={products.length} filters={filters} onChange={change} onClear={clearFilters} /> : <div className="space-y-3" aria-hidden>{Array.from({ length: 8 }, (_, i) => <div key={i} className="h-8 animate-pulse rounded-full bg-muted motion-reduce:animate-none" />)}</div>}</div></aside>
+        <aside className="hidden lg:block"><div className="obs-panel sticky top-24 max-h-[calc(100vh-7rem)] overflow-y-auto p-4">{products ? <ShopSidebar types={types} signs={signs} total={products.length} atomicCount={atomicCount} filters={filters} onChange={change} onClear={clearFilters} /> : <div className="space-y-3" aria-hidden>{Array.from({ length: 8 }, (_, i) => <div key={i} className="h-8 animate-pulse rounded-full bg-muted motion-reduce:animate-none" />)}</div>}</div></aside>
         <div className="min-w-0 space-y-6">
         <div className="flex flex-wrap items-center gap-3">
           <Sheet open={sheet} onOpenChange={setSheet}>
             <SheetTrigger asChild><Button variant="outline" className="lg:hidden" disabled={!products}><SlidersHorizontal />Departments</Button></SheetTrigger>
             <SheetContent side="left" className="w-[85vw] max-w-sm overflow-y-auto">
               <SheetHeader><SheetTitle className="font-display">Browse the shop</SheetTitle></SheetHeader>
-              {products && <div className="mt-5"><ShopSidebar types={types} signs={signs} total={products.length} filters={filters} onChange={change} onClear={clearFilters} onPick={() => setSheet(false)} /></div>}
+              {products && <div className="mt-5"><ShopSidebar types={types} signs={signs} total={products.length} atomicCount={atomicCount} filters={filters} onChange={change} onClear={clearFilters} onPick={() => setSheet(false)} /></div>}
             </SheetContent>
           </Sheet>
           <label className="relative min-w-[200px] flex-1"><span className="sr-only">Search the shop</span><Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" aria-hidden /><Input type="search" value={q} onChange={e => set('q', e.target.value, '')} placeholder="Search posters, signs, notebooks…" className="pl-9" /></label>
