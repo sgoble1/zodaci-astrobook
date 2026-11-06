@@ -11,10 +11,10 @@ describe('featured shop order', () => {
     expect(productPriority('Atomic Zodiac Stickers')).toBe(1);
     expect(productPriority('Zodiac Sticker Sheet', 'Stickers')).toBe(1);
     expect(productPriority('Aries Sticker Sheet', 'Stickers')).toBe(1);
-    expect(productPriority('Canvas Tote Bag')).toBe(2);
-    expect(productPriority('Zodiac Wheel Tote', 'Tote Bags')).toBe(2);
-    expect(productPriority('Zodiac Mug')).toBe(3);
-    expect(productPriority('Ordinary stickers')).toBe(3);
+    expect(productPriority('Canvas Tote Bag')).toBe(3);
+    expect(productPriority('Zodiac Wheel Tote', 'Tote Bags')).toBe(3);
+    expect(productPriority('Zodiac Mug')).toBe(4);
+    expect(productPriority('Ordinary stickers')).toBe(4);
   });
   it('frames only books and comics as portraits', () => {
     expect(isPortraitProduct('AstroComic Issue #1 (Pre-order)', 'Comic Books')).toBe(true);
