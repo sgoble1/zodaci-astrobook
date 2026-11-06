@@ -161,7 +161,6 @@ button, a, input, textarea, select { max-width: 100%; }
 @media (max-width: 639px) {
   h1 { font-size: 2.5rem; overflow-wrap: anywhere; }
   h2 { font-size: 1.75rem; overflow-wrap: break-word; }
-  .parchment, .vellum { border-radius: 0.5rem; }
   input, textarea, select { font-size: 16px; }
   .font-smallcaps { letter-spacing: 0.08em; overflow-wrap: normal; word-break: normal; }
 }
@@ -183,23 +182,22 @@ button, a, input, textarea, select { max-width: 100%; }
   transition: border-color 400ms ease, box-shadow 400ms ease, transform 400ms ease;
 }
 .deckle {
-  border: 1px solid hsl(var(--glow-violet) / 0.25);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow-ink);
+  border: 1px solid hsl(var(--brass) / 0.45);
+  border-radius: var(--cut-card);
+  box-shadow: 4px 4px 0 hsl(var(--brass) / .22);
 }
 .vellum:hover, .parchment:hover, .deckle:hover {
-  border-color: hsl(var(--glow-violet) / 0.45);
-  box-shadow: var(--shadow-gold);
+  border-color: hsl(var(--brass) / 0.75);
+  box-shadow: 5px 5px 0 hsl(var(--accent) / .35);
 }
-.gradient-text {
-  background-image: linear-gradient(135deg, hsl(var(--glow-violet)), hsl(280 80% 68%) 45%, hsl(var(--glow-teal)));
-  -webkit-background-clip: text; background-clip: text; color: transparent;
-}
+/* Legacy name: now a flat shop-yellow ink, no violet/teal gradient (atomic print palette). */
+.gradient-text { color: hsl(var(--primary)); }
 h1 { color: hsl(var(--foreground)); }
 
+/* Legacy name: a brass print rule. */
 .gold-rule {
   height: 1px;
-  background: linear-gradient(to right, transparent, hsl(var(--glow-violet) / 0.7), hsl(var(--glow-teal) / 0.7), transparent);
+  background: linear-gradient(to right, hsl(var(--brass) / 0.7), hsl(var(--brass) / 0.35) 70%, transparent);
 }
 
 .text-gold { color: hsl(var(--gold)); }
