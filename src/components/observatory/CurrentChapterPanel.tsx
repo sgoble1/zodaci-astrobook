@@ -9,6 +9,7 @@ import { StaffPortrait } from './StaffPortrait';
 import { CHANNEL_ICONS } from '@/components/icons/registry';
 import { RetroEmblem } from '@/components/icons/RetroIcons';
 import { Button } from '@/components/ui/button';
+import { Maximize2, Minimize2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import chapterArt from '@/assets/channels/channel-chapter.jpg';
 import careerArt from '@/assets/channels/channel-career.jpg';
@@ -36,8 +37,27 @@ export function CurrentChapterPanel({ chart, name }: { chart: ChartResult; name?
   const timer = useRef<number>();
   const tabs = useRef<(HTMLButtonElement | null)[]>([]);
   useEffect(() => () => window.clearTimeout(timer.current), []);
+  // Full-screen TV: the browser's own full-screen mode on the set itself; Esc exits.
+  const stage = useRef<HTMLDivElement>(null);
+  const [full, setFull] = useState(false);
+  const canFull = typeof document !== 'undefined' && !!document.fullscreenEnabled;
+  useEffect(() => {
+    const on = () => setFull(document.fullscreenElement === stage.current);
+    document.addEventListener('fullscreenchange', on);
+    return () => document.removeEventListener('fullscreenchange', on);
+  }, []);
+  const toggleFull = () => { if (document.fullscreenElement) void document.exitFullscreen?.(); else void stage.current?.requestFullscreen?.().catch(() => {}); };
+  // The sky wire: every planet's position today, then this chart's live contacts, crawling slowly under the picture.
+  const wire = useMemo(() => [
+    ...sky.map(p => `${p.glyph}\uFE0E ${p.name} ${p.deg}° ${p.sign}${p.retro ? ' Rx' : ''}`),
+    ...hits.slice(0, 6).map(h => `${h.transit.name} ${h.symbol}\uFE0E natal ${h.natalName} · orb ${h.orb.toFixed(1)}°`),
+  ], [sky, hits]);
   const ch = channels.find(c => c.id === active);
   if (!ch) return null;
+  const idx = channels.findIndex(c => c.id === active);
+  // Reception: a tight contact comes in clear; a quiet channel is a faint carrier signal.
+  const bars = ch.hit ? Math.max(1, Math.min(5, 5 - Math.floor(ch.hit.orb))) : 1;
+  const dialDeg = channels.length > 1 ? -135 + (270 / (channels.length - 1)) * idx : 0;
   const tune = (id: ChannelId) => {
     if (id === active) return;
     setActive(id);
@@ -65,18 +85,33 @@ export function CurrentChapterPanel({ chart, name }: { chart: ChartResult; name?
             );
           })}
         </div>
+        <div className="mb-3 flex items-center justify-between gap-3">
+          <button type="button" onClick={() => tune(channels[(idx + 1) % channels.length].id)} className="tv-dial" aria-label={`Turn the dial to channel ${channels[(idx + 1) % channels.length].number}, ${channels[(idx + 1) % channels.length].name}`}>
+            <span aria-hidden className="tv-dial-face" style={{ transform: `rotate(${dialDeg}deg)` }}><span className="tv-dial-pointer" /></span>
+            <span className="font-label text-xs tracking-widest text-muted-foreground">Turn the dial</span>
+          </button>
+          <span className="flex items-center gap-2" role="img" aria-label={`Reception ${bars} of 5`}>
+            <span className="font-label text-xs tracking-widest text-muted-foreground" aria-hidden>Reception</span>
+            <span aria-hidden className="tv-signal">{[1, 2, 3, 4, 5].map(n => <span key={n} className={cn('tv-signal-bar', n <= bars && 'tv-signal-on')} style={{ height: `${n * 20}%` }} />)}</span>
+          </span>
+          {canFull && <Button type="button" variant="outline" size="sm" onClick={toggleFull} aria-pressed={full}>{full ? <Minimize2 aria-hidden className="h-4 w-4" /> : <Maximize2 aria-hidden className="h-4 w-4" />}<span className="hidden sm:inline">{full ? 'Exit full screen' : 'Full screen'}</span><span className="sr-only sm:hidden">{full ? 'Exit full screen' : 'Full screen'}</span></Button>}
+        </div>
         <div id="ch-panel" role="tabpanel" aria-labelledby={`ch-${active}`} aria-live="polite">
+          <div ref={stage} className="tv-stage">
           <RetroTV channel={`Channel ${ch.number} · ${ch.name}`} label={ch.hit ? `${ch.hit.transit.name} ${ch.hit.symbol} ${ch.hit.natalName}` : ch.id === 'window' ? `${ch.events.length} ${ch.events.length === 1 ? 'event' : 'events'}` : 'Quiet sky'}>
             <div className="relative h-full w-full">
               <img key={active} src={CHANNEL_ART[active]} alt="" width={1024} height={768} loading="lazy" className="channel-art absolute inset-0 h-full w-full object-cover" />
               <div className="absolute left-3 top-3 flex items-center gap-2"><RetroEmblem icon={CHANNEL_ICONS[active]} size={34} active /><span className="channel-callsign">CH {ch.number}</span></div>
-              <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-background via-background/75 to-transparent p-4 pt-12 sm:p-5 sm:pt-16">
+              <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-background via-background/75 to-transparent p-4 pb-9 pt-12 sm:p-5 sm:pb-10 sm:pt-16">
                 <div className="flex items-center gap-2"><StaffPortrait id={ch.host} size={32} /><p className="font-label text-[0.7rem] text-primary sm:text-xs">{STAFF[ch.host].title} · now transmitting</p></div>
                 <h3 className="mt-1.5 font-display text-xl leading-tight sm:text-3xl">{ch.title}</h3>
               </div>
+              <div aria-hidden className="tv-ticker"><div className="tv-ticker-track">{[0, 1].map(k => <span key={k} className="tv-ticker-run">{wire.map((w, i) => <span key={i}>{w}<span className="tv-ticker-sep">✦</span></span>)}</span>)}</div></div>
               {tuning && <div aria-hidden className="obs-static-burst absolute inset-0 z-[5]" />}
             </div>
           </RetroTV>
+          </div>
+          <p className="sr-only">Sky wire: {wire.join('; ')}.</p>
           {ch.sky.length > 0 && (
             <dl className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-3" aria-label={`${STAFF[ch.host].title}'s sky readout for today`}>
               {ch.sky.map(r => <div key={r.label} className="sky-dial"><dt>{r.label}</dt><dd>{r.value}</dd></div>)}
