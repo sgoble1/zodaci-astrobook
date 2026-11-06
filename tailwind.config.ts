@@ -72,7 +72,9 @@ export default {
         },
       },
       borderRadius: {
-        lg: "var(--radius)",
+        "2xl": "var(--cut-plate)",
+        xl: "var(--cut-card)",
+        lg: "var(--cut-card)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
