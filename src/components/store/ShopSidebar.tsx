@@ -39,7 +39,7 @@ export function ShopSidebar({ types, signs, total, atomicCount, filters, onChang
       <div>
         <h2 className="shop-sidebar-h">Departments</h2>
         <ul className="mt-2 space-y-0.5">
-          <li><DeptButton active={filters.type === 'All'} onClick={() => pick('type', 'All')} icon={StorefrontIcon} label="Everything" count={total} /></li>
+          <li><DeptButton active={filters.type === 'All'} onClick={() => pick('type', 'All')} icon={StorefrontIcon} label="Everything" count={filters.collection === 'atomic' ? atomicCount : total} /></li>
           {types.map(t => <li key={t.name}><DeptButton active={filters.type === t.name} onClick={() => pick('type', t.name)} icon={iconForProductType(t.name)} label={t.name} count={t.count} /></li>)}
         </ul>
       </div>
