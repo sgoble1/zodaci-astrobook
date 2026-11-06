@@ -5,7 +5,7 @@ import { cn } from '@/lib/utils';
 
 const STATUS_LABEL: Record<TimelineRow['status'], string> = { passed: 'Passed', now: 'Now', ahead: 'Ahead' };
 const fmt = (d: Date) => d.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
-const LANE_TOP = ['12%', '31%', '58%', '77%'];
+const LANE_TOP = ['9%', '25%', '41%', '57%', '73%'];
 
 /**
  * Timeline Hall wall: the member's own cycle dates (returns, squares, oppositions) pinned across ninety years,
@@ -19,13 +19,13 @@ export function CycleWall({ chart, birthYear, list = false }: { chart: ChartResu
   const startYear = birthYear, endYear = startYear + 90, span = endYear - startYear;
   const pos = (year: number) => `${Math.max(0, Math.min(100, ((year - startYear) / span) * 100))}%`;
   const nowYear = now.getFullYear();
-  // Lay pins into up to four lanes so labels never overlap (label width estimated in years at the 760px minimum).
+  // Lay pins into up to five lanes so labels never overlap (label width estimated in years at the 820px minimum).
   const lane = useMemo(() => {
     const ends: number[] = [];
     return new Map(rows.map(r => {
-      const x = r.year + r.date.getUTCMonth() / 12, w = (r.title.length * 6.5 + 26) / (760 / span);
+      const x = r.year + r.date.getUTCMonth() / 12, w = (r.title.length * 6.5 + 30) / (820 / span);
       let l = ends.findIndex(end => end < x);
-      if (l < 0) l = ends.length < 4 ? ends.length : ends.indexOf(Math.min(...ends));
+      if (l < 0) l = ends.length < LANE_TOP.length ? ends.length : ends.indexOf(Math.min(...ends));
       ends[l] = x + w;
       return [r.key, l] as const;
     }));
@@ -35,9 +35,9 @@ export function CycleWall({ chart, birthYear, list = false }: { chart: ChartResu
     <div className="space-y-6">
       <section aria-label="Cycle wall" className="obs-panel p-4 sm:p-6">
         <div className="overflow-x-auto pb-7 pt-1">
-          <div className="min-w-[760px] pr-32">
-          <div className="relative h-36">
-            <div aria-hidden className="absolute inset-x-0 top-1/2 h-px bg-primary/50" />
+          <div className="min-w-[820px] pr-32">
+          <div className="relative h-40">
+            <div aria-hidden className="absolute inset-x-0 bottom-0 h-px bg-primary/50" />
             {Array.from({ length: 10 }, (_, i) => startYear + i * 10).map(y => (
               <div key={y} aria-hidden className="absolute bottom-0 top-0" style={{ left: pos(y) }}>
                 <div className="h-full w-px bg-border/70" />
