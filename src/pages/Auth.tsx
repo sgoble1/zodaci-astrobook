@@ -1,4 +1,5 @@
 import { usePageMeta } from '@/hooks/usePageMeta';
+import observatoryArt from '@/assets/places/grand-observatory.jpg';
 import { useState } from 'react';
 import { useNavigate, Link, useSearchParams, Navigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
@@ -91,5 +92,6 @@ export default function Auth() {
         </button>
       </p>
     </article>
+    </div>
   );
 }
