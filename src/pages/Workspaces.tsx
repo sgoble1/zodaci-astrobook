@@ -1,4 +1,5 @@
 import { confirmAction } from '@/components/common/ConfirmHost';
+import { PageHead } from '@/components/observatory/PageHead';
 import { useCallback, useEffect, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
@@ -28,13 +29,9 @@ export default function Workspaces() {
 
   return (
     <article className="max-w-3xl space-y-8">
-      <header>
-        <p className="text-xs font-label tracking-[0.14em] text-primary">Only invited members</p>
-        <h1 className="text-4xl mt-2">Your shared workspaces</h1>
-        <p className="text-muted-foreground mt-3">
-          Share selected podcasts and wonderings with people you invite. Your birth details, personal examples and private readings stay private.
-        </p>
-      </header>
+      <PageHead eyebrow="Shared workspaces · invited members only" title="Your shared workspaces" script="Private rooms for the people you invite." art="counsel">
+        Share selected podcasts and wonderings with people you invite. Your birth details, personal examples and private readings stay private.
+      </PageHead>
       {!session ? (
         <Button asChild>
           <Link to="/auth">Sign in</Link>
@@ -55,7 +52,7 @@ export default function Workspaces() {
             </Button>
           )}
           <form
-            className="flex flex-col sm:flex-row gap-3"
+            className="obs-paper flex flex-col gap-3 p-4 sm:flex-row sm:p-5"
             onSubmit={async (e) => {
               e.preventDefault();
               const r = await supabase.rpc('create_space', { _name: name });
@@ -77,7 +74,7 @@ export default function Workspaces() {
             <Button>Create workspace</Button>
           </form>
           <form
-            className="space-y-4 border-y border-border py-6"
+            className="obs-paper space-y-4 p-4 sm:p-5"
             onSubmit={async (e) => {
               e.preventDefault();
               const r = await supabase.from('space_invites')
@@ -127,7 +124,7 @@ export default function Workspaces() {
           </form>
 
           {inviteLink && (
-            <div className="space-y-3 p-4 parchment border border-gold/30 rounded">
+            <div className="space-y-3 p-4 parchment">
               <Label htmlFor="invite-link">Invitation link</Label>
               <Input id="invite-link" readOnly value={inviteLink} />
               <div className="flex gap-2">
