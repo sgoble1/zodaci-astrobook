@@ -62,7 +62,7 @@ export default function About() {
           </div>
         </div>
         <figure className="about-hero-art">
-          <img src={rooftop} alt="Two 1950s astronomers on an observatory rooftop at night: a man at a brass telescope and a woman with a clipboard beside an easel showing a zodiac wheel" width={1400} height={933} fetchpriority="high" />
+          <img src={rooftop} alt="Two 1950s astronomers on an observatory rooftop at night: a man at a brass telescope and a woman with a clipboard beside an easel showing a zodiac wheel" width={1400} height={933} {...{ fetchpriority: 'high' }} />
         </figure>
       </header>
 
