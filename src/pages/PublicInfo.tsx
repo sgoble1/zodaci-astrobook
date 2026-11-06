@@ -11,6 +11,7 @@ import { CoverCustomizer } from '@/components/books/CoverCustomizer';
 import { CosmicTeaser } from '@/components/books/CosmicTeaser';
 import { ProductArtworkGallery } from '@/components/books/ProductArtworkGallery';
 import { PersonalizationStory } from '@/components/books/PersonalizationStory';
+import { WhyZodaciLine } from '@/components/brand/WhyZodaci';
 import { BOOK_PRODUCT_SAMPLES, PRODUCT_ART } from '@/content/productArtwork';
 import { SampleCover } from '@/components/books/SampleCover';
 import { ThemeArt } from '@/components/common/ThemeArt';
@@ -53,6 +54,7 @@ export function AstroBookPublic() {
         <div className="flex flex-wrap gap-4"><Button asChild size="lg"><Link to={order()}>Start my AstroBook</Link></Button><Link to="/astrocomic" className="self-center text-accent">Read {SAMPLE_EDITION.owner.split(' ')[0]}’s comic issue →</Link></div>
       </section>
       <PersonalizationStory />
+      <WhyZodaciLine />
       <section id="story" className="grid gap-8 md:grid-cols-2 items-center">
         <div className="space-y-4"><h2 className="font-display text-3xl">Astronomy first, then the writing.</h2><p className="text-muted-foreground">Every AstroBook starts with the positions of the Sun, Moon and planets for the minute and place you were born. The interpretation comes after, and the book marks which is which.</p><p className="text-muted-foreground">Two people born on the same day still get different books: the Rising sign and houses shift every few minutes, and the Moon moves about a degree every two hours.</p></div>
         <div className="grid grid-cols-3 gap-4">{BOOK_PRODUCT_SAMPLES.map(s => <figure key={s.label}><SampleCover sample={s.sample} /><figcaption className="mt-3 text-center text-xs leading-snug text-muted-foreground"><span className="block font-label text-sm tracking-[0.1em] text-primary">{s.label}</span>For {s.sample.name}</figcaption></figure>)}</div>

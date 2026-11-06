@@ -21,7 +21,7 @@ export function WhyZodaciLine({ className }: { className?: string }) {
 export function TrustStrip({ className }: { className?: string }) {
   const items = [
     { icon: Telescope, title: 'Calculated, then written', text: 'Positions come from an astronomy engine for your birth minute and the time-zone rules your town used that day.' },
-    { icon: LockKeyhole, title: 'Your birth data stays yours', text: 'Saved to your account only. Other members never see it, and public shares are off unless you turn them on.' },
+    { icon: LockKeyhole, title: 'Your birth data stays yours', text: 'Saved to your account only. No one else sees it unless you choose to share.' },
     { icon: RotateCcw, title: `${REFUND_WINDOW_DAYS}-day refund`, text: `Ask within ${REFUND_WINDOW_DAYS} days of your first subscription payment for a full refund. Cancel anytime.` },
     { icon: ShieldCheck, title: 'Honest about uncertainty', text: 'No birth time? We say so and leave out the Rising sign and houses instead of guessing.' },
   ];
