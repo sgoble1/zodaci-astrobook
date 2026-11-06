@@ -1040,9 +1040,9 @@ li:hover > .zodiac-coin { transform: rotate(-10deg); }
 .art-slide-landscape .art-slide-art { width: min(100%, 26rem); }
 .art-slide-copy { min-width: 0; }
 @container hero (min-width: 40rem) {
-  .art-slide { align-items: center; gap: 2.25rem; padding: 2.5rem 2.25rem 4.75rem; }
-  .art-slide-landscape { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); }
-  .art-slide .hero-headline { font-size: 2.35rem; }
+  .art-slide { align-items: center; align-content: center; gap: 2.25rem; padding: 2.5rem 2.25rem 4.75rem; }
+  .art-slide-landscape { grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); }
+  .art-slide .hero-headline { font-size: 2.2rem; }
   .art-slide-landscape .art-slide-art { order: 2; width: 100%; }
   .art-slide-portrait { grid-template-columns: minmax(0, .8fr) minmax(0, 1fr); }
   .art-slide-portrait .art-slide-art { width: 100%; max-width: 19rem; }
