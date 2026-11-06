@@ -76,8 +76,8 @@ export function ImageLibrary() {
               <p className="break-all text-sm font-semibold">{i.name}</p>
               <p className="text-xs text-muted-foreground">{AREAS[i.folder]?.[0] ?? i.folder}{i.cdn ? ' · CDN' : ''} · {i.path}</p>
               <div className="mt-auto grid grid-cols-2 gap-2 pt-2">
-                <Button size="sm" variant="outline" className="w-full px-2" onClick={() => setOpen(i)}><Eye aria-hidden className="h-4 w-4" />View</Button>
-                <Button size="sm" variant="outline" className="w-full px-2" asChild><a href={i.url} download={i.name} aria-label={`Download ${i.name}`}><Download aria-hidden className="h-4 w-4" />Save</a></Button>
+                <Button size="sm" variant="outline" className="w-full gap-1 px-1.5 text-xs" onClick={() => setOpen(i)}><Eye aria-hidden className="h-4 w-4" />View</Button>
+                <Button size="sm" variant="outline" className="w-full gap-1 px-1.5 text-xs" asChild><a href={i.url} download={i.name} aria-label={`Download ${i.name}`}><Download aria-hidden className="h-4 w-4" />Download</a></Button>
               </div>
             </div>
           </li>
