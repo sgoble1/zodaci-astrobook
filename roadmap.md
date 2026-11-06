@@ -375,3 +375,6 @@ Audit Oct 29: Chat/counselors already use the member's chart; podcast/custom pag
 ## Nov 6 — V2.3 master plan
 - [ ] Execute approved master plan (.lovable/plan.md): hero slides, mosaic tiles, real 3D covers, cover-style icons, cut-out shop grid, About hero/text, image redraws, V2.3 Gaps 1–47, image library page, build cost at $0.35/credit, founder data extraction last.
 - [x] Completeness review of plan against all attachments and the V2.3 doc (Nov 6).
+- [x] Phase 1.1: Cartographer slide is now slide 1; phone spacing tightened (woman points at the dial).
+- [x] Phase 10: build cost at $0.35/credit (src/lib/devCost.ts) on Developer and Investors; Admin card still open.
+- [ ] Phases 1.2–9, 11, 12 of the V2.3 plan (new slides, mosaic tiles, 3D covers, icons, cut-out shop grid, About hero, image redraws, Gaps 1–47, image library) — continue next.
