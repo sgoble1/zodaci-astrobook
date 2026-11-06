@@ -17,20 +17,24 @@ export function useReadingProgress({ path, title, contentRef, sections }: { path
   const [current, setCurrent] = useState(0);
   const [here, setHere] = useState(0);
   const baseline = useRef(0);
+  // Which account+page the saved row was loaded for; tracking waits for it so a slow load can't overwrite real progress with 0.
+  const [loadedFor, setLoadedFor] = useState('');
+  const key = uid ? `${uid}|${path}` : '';
 
   useEffect(() => {
-    setSaved(null); baseline.current = 0;
+    setSaved(null); setLoadedFor(''); baseline.current = 0;
     if (!uid) return;
     let live = true;
-    void supabase.from('reading_progress').select(COLS).eq('owner_id', uid).eq('path', path).maybeSingle().then(({ data }) => {
-      if (!live || !data) return;
-      setSaved(data as SavedProgress); baseline.current = data.progress;
+    void supabase.from('reading_progress').select(COLS).eq('owner_id', uid).eq('path', path).maybeSingle().then(({ data, error }) => {
+      if (!live || error) return;
+      if (data) { setSaved(data as SavedProgress); baseline.current = data.progress; }
+      setLoadedFor(`${uid}|${path}`);
     });
     return () => { live = false; };
   }, [uid, path]);
 
   useEffect(() => {
-    if (!uid) return;
+    if (!uid || loadedFor !== key) return;
     let timer: ReturnType<typeof setTimeout> | undefined;
     let last = { progress: -1, section: '' };
     let pending: { progress: number; section: string; sectionTitle: string } | null = null;
@@ -60,7 +64,7 @@ export function useReadingProgress({ path, title, contentRef, sections }: { path
     window.addEventListener('scroll', measure, { passive: true });
     window.addEventListener('pagehide', flush);
     return () => { clearTimeout(opened); clearTimeout(timer); flush(); window.removeEventListener('scroll', measure); window.removeEventListener('pagehide', flush); };
-  }, [uid, path, title, contentRef, sections]);
+  }, [uid, path, title, contentRef, sections, loadedFor, key]);
 
   /** `current` is the furthest point reached; `here` is where the reader is right now. */
   return { saved, current, here, signedIn: !!uid };
