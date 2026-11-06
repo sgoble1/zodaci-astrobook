@@ -1202,3 +1202,73 @@ li:hover > .zodiac-coin { transform: rotate(-10deg); }
   .chart-projection-hero .chart-projection-lamp, .chart-monitor-scan, .chart-monitor-screen .chart-projection-ink { animation: none !important; }
 }
 @media print { .chart-hero-beam, .chart-hero-caption, .chart-monitor-controls, .chart-monitor-foot, .chart-monitor-scan { display: none; } }
+
+/* ══ V2.3 (Nov 6): mosaic art tiles, real-product shelf, gift-shop department window ══ */
+.mosaic-trio { display: grid; gap: .9rem; grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 768px) { .mosaic-trio { grid-template-columns: repeat(2, minmax(0, 1fr)); } .mosaic-trio > section { grid-column: 1 / -1; grid-row: 2; } }
+@media (min-width: 1100px) { .mosaic-trio { grid-template-columns: minmax(0, 1fr) minmax(0, 1.75fr) minmax(0, 1fr); } .mosaic-trio > section { grid-column: auto; grid-row: auto; } }
+
+.art-tile { position: relative; display: flex; flex-direction: column; gap: .9rem; padding: .75rem .75rem 1.1rem; min-width: 0; }
+.art-tile-pic { display: block; overflow: hidden; aspect-ratio: 4 / 3; border-radius: var(--cut-card); box-shadow: 0 0 0 1.5px hsl(var(--comic-navy) / .7), 4px 5px 0 hsl(var(--comic-navy) / .25); }
+.art-tile-night .art-tile-pic { box-shadow: 0 0 0 1.5px hsl(var(--comic-mustard) / .8), 4px 5px 0 hsl(var(--midnight) / .5); }
+.art-tile-pic img { width: 100%; height: 100%; object-fit: cover; transition: transform 6s cubic-bezier(.22,1,.36,1); }
+.art-tile:hover .art-tile-pic img { transform: scale(1.04); }
+.art-tile-copy { display: block; padding: 0 .4rem; padding-right: 3.25rem; }
+.art-tile-title { display: block; margin-block: .2rem .35rem; font-family: 'Alfa Slab One', serif; text-transform: uppercase; font-size: 1.35rem; line-height: 1.05; }
+.art-tile-go { position: absolute; right: 1rem; bottom: 1.1rem; display: inline-flex; width: 2.5rem; height: 2.5rem; align-items: center; justify-content: center; border-radius: 999px; color: hsl(var(--spot-paper)); background: hsl(var(--comic-brick)); box-shadow: 0 0 0 2px hsl(var(--comic-navy)), 3px 3px 0 2px hsl(var(--comic-navy) / .35); transition: transform 1.2s cubic-bezier(.22,1,.36,1); }
+.art-tile-night .art-tile-go { box-shadow: 0 0 0 2px hsl(var(--comic-mustard)), 3px 3px 0 2px hsl(var(--midnight) / .5); }
+.art-tile:hover .art-tile-go { transform: translateX(3px) rotate(-8deg); }
+.art-tile:focus-visible { outline: 2px solid hsl(var(--ring)); outline-offset: 2px; }
+
+/* Shelf of real products: every book the same height, the same three-quarter stance and the same slow lift. */
+.shelf-track-real { align-items: flex-end; gap: 1.4rem; padding-top: 1.25rem; }
+.shelf-real { display: flex; flex-direction: column; align-items: center; gap: .6rem; width: 8.75rem; }
+.shelf-real-book { display: flex; align-items: flex-end; justify-content: center; height: 13rem; width: 100%; transform: perspective(900px) rotateY(-9deg); transform-origin: left center; transition: transform 1.6s cubic-bezier(.22,1,.36,1); }
+.shelf-real-book .sample-book { height: 100%; aspect-ratio: 2 / 3; }
+.shelf-real-book .sample-book-body { height: 100%; }
+.shelf-real-cutout { height: 100%; width: auto; max-width: 100%; object-fit: contain; filter: drop-shadow(5px 7px 0 hsl(var(--comic-navy) / .28)) drop-shadow(0 10px 14px hsl(var(--midnight) / .35)); }
+.shelf-real:hover .shelf-real-book, .shelf-real:focus-visible .shelf-real-book { transform: perspective(900px) rotateY(-2deg) translateY(-7px); }
+.shelf-real:focus-visible { outline: none; }
+.shelf-real:focus-visible .shelf-real-caption { outline: 2px solid hsl(var(--comic-brick)); outline-offset: 3px; border-radius: 2px; }
+.shelf-real-caption { font-family: 'Bebas Neue', sans-serif; font-size: .85rem; letter-spacing: .12em; line-height: 1.1; text-align: center; color: hsl(var(--comic-navy)); }
+/* Wooden shelf edge under the books. */
+.shelf-track-real { background: linear-gradient(to top, transparent 0 2.6rem, hsl(var(--comic-navy) / .55) 2.6rem 2.75rem, hsl(30 45% 42% / .35) 2.75rem 3.3rem, transparent 3.3rem); }
+
+/* Gift-shop department window: cut-out products on 1950s atomic backdrops, navy label strips. */
+.dept-grid { display: grid; gap: .75rem; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.dept-grid > li { min-width: 0; }
+.dept-featured { grid-column: span 2; }
+@media (min-width: 640px) { .dept-grid:not(.dept-grid-compact) { grid-template-columns: repeat(3, minmax(0, 1fr)); } .dept-grid:not(.dept-grid-compact) .dept-featured { grid-row: span 2; } }
+@media (min-width: 1100px) { .dept-grid:not(.dept-grid-compact) { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+@media (min-width: 640px) { .dept-grid-compact { grid-template-columns: minmax(0, 1.25fr) repeat(2, minmax(0, 1fr)); } .dept-grid-compact .dept-featured { grid-column: auto; grid-row: span 2; } }
+.dept-tile { position: relative; isolation: isolate; display: flex; flex-direction: column; justify-content: flex-end; height: 100%; min-height: 11.5rem; overflow: hidden; border-radius: var(--cut-card); color: hsl(var(--comic-navy));
+  box-shadow: 0 0 0 2px hsl(var(--comic-navy)), 4px 5px 0 2px hsl(var(--comic-navy) / .3); }
+.dept-featured .dept-tile { min-height: 20rem; }
+.dept-tile::after { content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none; background: radial-gradient(hsl(var(--midnight) / .14) .9px, transparent 1.2px) 0 0 / 5px 5px; mix-blend-mode: multiply; }
+.dept-rays-red { background: radial-gradient(circle at 50% 46%, hsl(9 70% 62%) 0 18%, transparent 46%), repeating-conic-gradient(from 0deg at 50% 46%, hsl(var(--comic-brick)) 0 6deg, hsl(9 62% 44%) 6deg 12deg); }
+.dept-rays-mustard { background: radial-gradient(circle at 50% 46%, hsl(45 95% 82%) 0 16%, transparent 44%), repeating-conic-gradient(from 0deg at 50% 46%, hsl(var(--comic-mustard)) 0 6deg, hsl(40 88% 52%) 6deg 12deg); }
+.dept-orbit-navy { color: hsl(var(--spot-paper)); background: radial-gradient(hsl(var(--spot-paper) / .6) .8px, transparent 1.1px) 7px 9px / 37px 37px, repeating-radial-gradient(ellipse 70% 34% at 50% 46%, transparent 0 22px, hsl(var(--comic-mustard) / .55) 22px 23.5px, transparent 23.5px 34px), radial-gradient(circle at 50% 46%, hsl(222 50% 30%), hsl(var(--comic-navy)) 70%); }
+.dept-orbit-cream { background: radial-gradient(hsl(var(--comic-navy) / .35) .8px, transparent 1.1px) 3px 5px / 31px 31px, repeating-radial-gradient(ellipse 70% 34% at 50% 46%, transparent 0 22px, hsl(var(--comic-navy) / .35) 22px 23.3px, transparent 23.3px 34px), radial-gradient(circle at 50% 46%, hsl(44 80% 92%), hsl(var(--spot-paper)) 60%, hsl(38 52% 80%)); }
+.dept-product { position: absolute; inset: .75rem .75rem 3.4rem; display: flex; align-items: center; justify-content: center; }
+.dept-product img, .dept-set img { filter: drop-shadow(5px 7px 0 hsl(var(--midnight) / .4)); transition: transform 1.8s cubic-bezier(.22,1,.36,1); }
+.dept-product img { max-width: 82%; max-height: 100%; width: auto; height: auto; object-fit: contain; transform: rotate(-2deg); }
+.dept-tile:hover .dept-product img, .dept-tile:focus-visible .dept-product img { transform: rotate(0deg) translateY(-6px) scale(1.03); }
+.dept-set { position: absolute; inset: .5rem .5rem 4rem; }
+.dept-set img { position: absolute; height: auto; }
+.dept-set-poster { left: 5%; top: 4%; width: 40%; transform: rotate(-4deg); }
+.dept-set-stickers { right: 6%; top: 2%; width: 33%; transform: rotate(5deg); }
+.dept-set-tee { left: 16%; bottom: 0; width: 42%; transform: rotate(2deg); z-index: 2; }
+.dept-set-mug { right: 7%; bottom: 2%; width: 36%; transform: rotate(-3deg); z-index: 3; }
+.dept-tile:hover .dept-set-poster { transform: rotate(-2deg) translateY(-5px); }
+.dept-tile:hover .dept-set-mug { transform: rotate(-1deg) translateY(-5px); }
+.dept-label { position: relative; z-index: 4; display: flex; align-items: center; justify-content: space-between; gap: .6rem; margin: .5rem; padding: .45rem .5rem .45rem .8rem; border-radius: var(--cut-chip); color: hsl(var(--spot-paper)); background: hsl(var(--comic-navy)); box-shadow: inset 0 0 0 1px hsl(var(--comic-mustard) / .55); }
+.dept-label-title { display: block; font-family: 'Bebas Neue', sans-serif; font-size: 1.15rem; letter-spacing: .1em; line-height: 1; color: hsl(var(--comic-mustard)); }
+.dept-label-big .dept-label-title { font-size: 1.6rem; }
+.dept-label-note { display: block; margin-top: .15rem; font-size: .72rem; line-height: 1.2; color: hsl(var(--spot-paper) / .82); }
+.dept-go { display: inline-flex; flex-shrink: 0; width: 1.9rem; height: 1.9rem; align-items: center; justify-content: center; border-radius: 999px; border: 1.5px solid hsl(var(--comic-mustard)); color: hsl(var(--comic-mustard)); transition: background-color .8s ease, color .8s ease; }
+.dept-tile:hover .dept-go { background: hsl(var(--comic-mustard)); color: hsl(var(--comic-navy)); }
+.dept-tile:focus-visible { outline: 3px solid hsl(var(--ring)); outline-offset: 3px; }
+@media (prefers-reduced-motion: reduce) {
+  .art-tile-pic img, .art-tile-go, .shelf-real-book, .dept-product img, .dept-set img { transition: none; }
+  .art-tile:hover .art-tile-pic img, .art-tile:hover .art-tile-go, .dept-tile:hover .dept-product img, .dept-tile:hover .dept-set-poster, .dept-tile:hover .dept-set-mug { transform: none; }
+}
