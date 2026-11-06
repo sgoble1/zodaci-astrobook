@@ -1312,5 +1312,6 @@ li:hover > .zodiac-coin { transform: rotate(-10deg); }
 .art-slide-copy { container-type: inline-size; }
 .hero-slides .art-slide .hero-headline { font-size: clamp(1.4rem, 7.9cqi, 2.4rem); }
 @media (min-width: 1100px) {
-  .mosaic-trio .art-tile-pic { flex: 1 1 auto; aspect-ratio: auto; min-height: 11rem; }
+  .mosaic-trio .art-tile-pic { position: relative; flex: 1 1 auto; aspect-ratio: auto; min-height: 11rem; }
+  .mosaic-trio .art-tile-pic img { position: absolute; inset: 0; }
 }
