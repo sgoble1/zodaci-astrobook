@@ -72,12 +72,12 @@ export default function BrandLanding() {
   ];
   const slides = [
     {
-      id: 'map', label: 'Map the stars',
-      content: <ChartMapSlide heading="h1" eager title={<>Map the stars.<br />Understand yourself.</>} script="Your cosmic blueprint, mapped." lines={['Calculated from your exact birth moment', 'Read and written for you alone', 'Kept private in your own archive']} cta={{ to: '/start', label: 'Generate your birth chart' }} secondary={{ to: '/demo', label: 'See a sample edition' }} />,
+      id: 'look-up', label: 'Look up',
+      content: <LookUpSlide heading="h1" eager title="Look up. It's all written there." script="The sky at your birth, read for you." text="The sky at your exact birth moment, calculated, read and kept in your own archive." cta={{ to: '/start', label: 'Generate your birth chart' }} secondary={{ to: '/learn', label: 'Start learning' }} />,
     },
     {
-      id: 'look-up', label: 'Look up',
-      content: <LookUpSlide title="Look up. It's all written there." script="The sky at your birth, read for you." text="The sky at your exact birth moment, calculated, read and kept in your own archive." cta={{ to: '/start', label: 'Generate your birth chart' }} secondary={{ to: '/learn', label: 'Start learning' }} />,
+      id: 'map', label: 'Map the stars',
+      content: <ChartMapSlide heading="h2" title={<>Map the stars.<br />Understand yourself.</>} script="Your cosmic blueprint, mapped." lines={['Calculated from your exact birth moment', 'Read and written for you alone', 'Kept private in your own archive']} cta={{ to: '/start', label: 'Generate your birth chart' }} secondary={{ to: '/demo', label: 'See a sample edition' }} />,
     },
     {
       id: 'press', label: 'AstroBooks and AstroComics',
