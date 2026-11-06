@@ -1344,3 +1344,14 @@ li:hover > .zodiac-coin { transform: rotate(-10deg); }
 .tv-stage:fullscreen .retro-tv { width: min(100%, calc((100vh - 6rem) * 4 / 3)); }
 .tv-stage:fullscreen .tv-ticker { font-size: 1.1rem; }
 @media (prefers-reduced-motion: reduce) { .tv-ticker-track { animation: none; } .tv-dial-face { transition: none; } }
+/* Timeline Hall pins: a member's own cycle dates on one wall. */
+.timeline-pin { position: absolute; display: inline-flex; align-items: center; gap: .35rem; transform: translateX(-.4rem); white-space: nowrap; border-radius: 999px; padding: .1rem .45rem .1rem .1rem; transition: background-color .8s ease; }
+.timeline-pin:hover { background: hsl(var(--primary) / .1); }
+.timeline-pin:focus-visible { outline: 2px solid hsl(var(--ring)); outline-offset: 2px; }
+.timeline-pin-dot { width: .8rem; height: .8rem; border-radius: 999px; border: 2px solid hsl(var(--primary)); background: hsl(var(--background)); flex-shrink: 0; }
+.timeline-pin-passed .timeline-pin-dot { background: hsl(var(--primary) / .45); border-color: hsl(var(--primary) / .6); }
+.timeline-pin-now .timeline-pin-dot { background: hsl(var(--accent)); border-color: hsl(var(--accent)); box-shadow: 0 0 0 4px hsl(var(--accent) / .2); }
+.timeline-pin-label { font-family: 'Bebas Neue', sans-serif; font-size: .78rem; letter-spacing: .1em; color: hsl(var(--foreground) / .8); }
+.timeline-pin-passed .timeline-pin-label { color: hsl(var(--muted-foreground)); }
+.timeline-pin-on { background: hsl(var(--primary) / .16); }
+.timeline-pin-on .timeline-pin-label { color: hsl(var(--primary)); }
