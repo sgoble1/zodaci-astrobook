@@ -1289,3 +1289,11 @@ li:hover > .zodiac-coin { transform: rotate(-10deg); }
 .about-why-body { margin: 1.5rem auto 0; max-width: 44rem; display: grid; gap: 1.1rem; font-size: 1.075rem; line-height: 1.75; }
 @media (min-width: 768px) { .about-why { padding: 3rem 3.5rem; } }
 @media (prefers-reduced-motion: reduce) { .about-hero-art img { transform: none; } }
+.store-hero { display: grid; gap: 1.5rem; padding: 1rem; align-items: center; }
+.store-hero-art { margin: 0; justify-self: center; width: min(70%, 16rem); }
+.store-hero-art img { display: block; width: 100%; height: auto; border-radius: var(--cut-card); box-shadow: 0 0 0 2px hsl(var(--comic-mustard)), 7px 9px 0 3px hsl(var(--midnight) / .55); transform: rotate(-1.2deg); }
+.store-hero-copy { display: flex; flex-direction: column; gap: .75rem; min-width: 0; padding: 0 .5rem 1rem; }
+.store-hero .hero-headline { font-size: clamp(2.2rem, 1.5rem + 3vw, 4rem); }
+@media (min-width: 768px) { .store-hero { grid-template-columns: minmax(0, 15rem) minmax(0, 1fr); padding: 1.5rem 2rem; gap: 2.5rem; } .store-hero-art { width: 100%; } .store-hero-copy { padding: 1rem 3.5rem 1rem 0; } }
+@media (min-width: 1100px) { .store-hero { grid-template-columns: minmax(0, 19rem) minmax(0, 1fr); } }
+@media (prefers-reduced-motion: reduce) { .store-hero-art img { transform: none; } }

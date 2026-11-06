@@ -20,7 +20,7 @@ import { BOOK_VERSIONS, money } from '@/lib/books';
 import { COMIC_PLANS } from '@/lib/comic';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { StaffPortrait } from '@/components/observatory/StaffPortrait';
-import heads from '@/assets/home-heads-hero.jpg';
+import giftTower from '@/assets/home/gift-shop-tower.jpg';
 
 function useAdd() {
   const addItem = useCartStore(s => s.addItem);
@@ -144,15 +144,15 @@ export default function Store() {
   }, [products, types]);
   return (
     <div className="mx-auto max-w-7xl space-y-8 px-4 py-10">
-      <header className="obs-panel relative isolate overflow-hidden">
-        <img src={heads} alt="" aria-hidden width={1920} height={1088} className="absolute inset-x-0 bottom-0 -z-20 h-full w-full object-cover object-bottom opacity-70" />
-        <div aria-hidden className="absolute inset-0 -z-10 bg-gradient-to-b from-background via-background/80 to-background/10" />
-        <div className="absolute right-4 top-4 sm:right-6 sm:top-6"><CartDrawer /></div>
-        <div className="px-5 pb-28 pt-8 pr-16 sm:px-10 sm:pb-40 sm:pt-10 sm:pr-20">
-          <div className="flex items-start gap-4">
-            <StaffPortrait id="curator" size={64} className="hidden sm:block" />
-            <div><p className="font-label text-sm tracking-[0.2em] text-primary">The Observatory Gift Shop</p><h1 className="mt-2 font-display text-4xl uppercase leading-none sm:text-6xl">Books, comics &amp; souvenirs</h1><p className="mt-2 font-script text-2xl text-primary sm:text-3xl">Souvenirs from your own sky</p><p className="mt-3 max-w-xl text-foreground/85">Your chart as an AstroBook or AstroComic first, then atomic zodiac stickers, totes, posters, tees, mugs and notebooks — a core collection plus sign editions.</p></div>
-          </div>
+      <header className="obs-panel hero-night rivets store-hero">
+        <div className="absolute right-4 top-4 z-10 sm:right-6 sm:top-6"><CartDrawer /></div>
+        <figure className="store-hero-art"><img src={giftTower} alt="A 1950s poster of a radio tower and copper-domed observatory above a small town, radio waves rippling into a starry sky" width={900} height={1125} {...{ fetchpriority: 'high' }} /></figure>
+        <div className="store-hero-copy">
+          <div className="flex items-center gap-3"><StaffPortrait id="curator" size={48} className="hidden sm:block" /><p className="font-label text-sm tracking-[0.2em] text-primary">The Observatory Gift Shop</p></div>
+          <h1 className="hero-headline">Take the sky home</h1>
+          <p className="font-script text-2xl text-primary sm:text-3xl">Souvenirs from your own sky</p>
+          <p className="max-w-xl leading-relaxed text-foreground/85">Your chart as an AstroBook or AstroComic, then posters, tees, mugs, totes, notebooks and stickers for every sign, drawn in our original atomic-age style.</p>
+          <div className="flex flex-wrap gap-3 pt-1"><Button asChild variant="signal"><Link to="/store?collection=atomic">Atomic Zodiac Collection</Link></Button><Button asChild variant="outline"><Link to="/astrobook">Choose an AstroBook</Link></Button></div>
         </div>
       </header>
       {failed ? <ShopOffline onRetry={() => setAttempt(a => a + 1)} /> : <div className="grid gap-8 lg:grid-cols-[15rem_minmax(0,1fr)]">
