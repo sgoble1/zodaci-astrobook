@@ -395,3 +395,15 @@ Audit Oct 29: Chat/counselors already use the member's chart; podcast/custom pag
 - [x] Phase 8a: dashboard TV has a tuning dial, reception bars, a slow sky-wire crawl and full-screen mode (verified 393/1280, signed in).
 - [ ] Phase 8: V2.3 Gaps (founder art and menus; member page restyles; Observation Log/Context Engine; content; nav/theme check; pricing trust; investor figures).
 - [ ] Phase 11 (last): Shane's 63 chapters and Zac's documents — blocked on AI credits and owner accounts.
+
+## Nov 6 (late) — V2.3 gaps, this run
+- [x] Home shelf: books stand on one ledge, captions sit clear beneath (two lines reserved), first book no longer hides under the arrow; "Sample covers" note centred under the Take the Sky Home stack.
+- [ ] Theme sweep (Gaps 18, 23, 24, 29, 30, 31, 39, 41, 46): old small-caps/gold eyebrows → label style; founder banners/badges/links squared; header + phone dock (Gap 9); Learn sideways scroll.
+- [ ] April menus (Gap 5/6): Flying Stars intro + submenu, Interactive Bagua Map intro/rename, menu descriptors; Zac in podcasts + Workspaces hero (Gap 37); new founder topic groups (Gap 44).
+- [ ] Observation Log (Gap 11) and reading progress/history (Gap 45): owner-only tables, pages, dashboard "Recently read", sidebar read marks (tested).
+- [ ] Personal Context restyle + Content Center (Gaps 26, 27); "Your context" on the Current Chapter TV.
+- [ ] Page restyles: Relationships + detail (15), Counselors (21), My Readings (39), Retrogrades from the member's own chart (41), Pricing (19), Demo (23), AstroBook page (24), Learn (16).
+- [ ] Sign-based shop picks on dashboards (36); Investor unit economics/costs/scenarios with sources (47); placement-attribution rule in generation (25); workbook themes (32); Forecast themes/90-day timeline/coming-soon (33); TV depth (34).
+- [ ] Reading Room articles expanded (22); April plate images (Gap 12); shop departments in sidebar (3B); three-column reader (4A, risk-checked).
+- [ ] Activity logs (Developer + dashboards) updated; tests; 393/1280 checks.
+- Note: V2.3 "Mystic Ink" image prompts are read as the atomic-zodiac style (owner decision). OG image (Gap 14) left to hosting per standing rule.
