@@ -831,7 +831,7 @@ body {
 }
 .obs-paper h1, .obs-paper h2, .obs-paper h3, .obs-paper h4 { color: hsl(var(--comic-navy)); background: none; -webkit-text-fill-color: currentColor; }
 .obs-paper .text-muted-foreground { color: hsl(var(--comic-navy) / .74); }
-.obs-paper .text-primary { color: hsl(36 78% 30%); }
+.obs-paper .text-primary, .obs-paper .text-gold, .atomic-box .text-gold { color: hsl(36 78% 30%); }
 .obs-paper .text-accent { color: hsl(var(--comic-brick)); }
 .obs-paper .text-foreground { color: hsl(var(--comic-navy)); }
 
