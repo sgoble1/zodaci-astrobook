@@ -40,21 +40,25 @@ def bake(src, out, name, born, placements, area, paint):
     top, bottom = area
     if paint:
         a = np.asarray(im).astype(float)
-        patch = a[1300:1320, 300:700].reshape(-1, 3)
-        base, std = np.median(patch, 0), patch.std(0).clip(0, 4)
+        # Paper colour per column from the clean strip under the old tagline, smoothed, plus matching grain.
+        strip = a[1478:1494, 37:987]
+        base = np.median(strip, 0)
+        k = np.ones(61) / 61
+        base = np.stack([np.convolve(np.pad(base[:, c], 30, mode='edge'), k, mode='valid') for c in range(3)], 1)
+        std = strip.std(0).mean(0).clip(0, 5)
         noise = np.random.default_rng(7).normal(0, 1, (bottom - top, 950, 1)) * std
-        a[top:bottom, 37:987] = (base + noise).clip(0, 255)
+        a[top:bottom, 37:987] = (base[None, :, :] + noise).clip(0, 255)
         im = Image.fromarray(a.astype('uint8'))
     d = ImageDraw.Draw(im)
     cx, inner = W / 2, 860
     h = bottom - top
-    y = top + h * 0.06
+    y = top + h * 0.03
     small, sw = fit(BEBAS, 'PREPARED FOR', 34, inner, 7)
     draw_tracked(d, cx - sw / 2, y, 'PREPARED FOR', small, RED, 7)
     y += 44
-    nf, nw = fit(SLAB, name.upper(), 84, inner)
+    nf, nw = fit(SLAB, name.upper(), 80, inner)
     d.text((cx - nw / 2, y), name.upper(), font=nf, fill=NAVY)
-    y += nf.size * 1.12 + 6
+    y += nf.getbbox(name.upper())[3] + 22
     # Rule with a small four-point star.
     d.line([(cx - 300, y), (cx - 22, y)], fill=GOLD, width=3)
     d.line([(cx + 22, y), (cx + 300, y)], fill=GOLD, width=3)
@@ -62,7 +66,7 @@ def bake(src, out, name, born, placements, area, paint):
     y += 18
     bf, bw = fit(BEBAS, born.upper(), 44, inner, 2)
     draw_tracked(d, cx - bw / 2, y, born.upper(), bf, NAVY, 2)
-    y += bf.size * 1.05
+    y += bf.size * 1.0
     pf, pw = fit(BEBAS, placements.upper(), 38, inner, 2)
     draw_tracked(d, cx - pw / 2, y, placements.upper(), pf, RED, 2)
     # A touch of print softness so the type sits in the paper like the artwork.
