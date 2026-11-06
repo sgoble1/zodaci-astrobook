@@ -5,19 +5,19 @@ import { SAMPLE_EDITION } from '@/content/sampleEdition';
  * (a fictional reader's birth moment, calculated like a real order). No private founder
  * text is used; the context example is labelled as an illustration of the feature.
  */
-const [rising, sun] = SAMPLE_EDITION.pages;
+const [rising, twelfth] = SAMPLE_EDITION.pages;
 const fact = (page: typeof rising, label: string) => page.facts.find(f => f.label === label)?.value ?? '';
 
 export const SPECIFICITY_ROWS: { generic: string; specific: string; facts: string }[] = [
   {
-    generic: 'Leo rising: confident, warm, loves attention.',
-    specific: 'Your Ascendant is 12° Leo, so the Sun rules the whole chart, and it sits in Aries in the 9th house. Your warmth wants to start something: an idea, a trip, a course of study. Chiron, five degrees behind the Ascendant, can make being seen feel exposing at first; the chapter explains how that turns into a skill.',
-    facts: `${fact(rising, 'Ascendant')} · ruler ${fact(rising, 'Chart ruler')} · ${fact(rising, 'In the 1st house')}`,
+    generic: 'Taurus: calm, stubborn, loves comfort.',
+    specific: 'Your Ascendant is 12° Taurus and your Sun is less than a third of a degree from it, so you were born just after sunrise. Who you are and how you come across are hard to separate. Because the Sun is still on the 12th-house side, you also need more quiet time than people expect; the chapter explains why.',
+    facts: `${fact(rising, 'Ascendant')} · ${fact(rising, 'On the Ascendant')} · ruler ${fact(rising, 'Chart ruler')}`,
   },
   {
-    generic: 'Venus retrograde people struggle in love.',
-    specific: 'Venus was retrograde at 15° Aries in your 9th house, so what you value tends to be decided privately and revisited often. Two of your tightest aspects involve this Venus: a trine to the North Node within 0.1° and a square to Mars within 0.3°. One ties what you love to where your life is heading; the other puts desire and drive at odds.',
-    facts: `Venus ${fact(sun, 'Venus')} · ${fact(sun, 'Tightest aspects')}`,
+    generic: 'Venus in Aries people rush into love.',
+    specific: 'Venus rules your chart and stands at 13° Aries in the 12th house, less than two degrees from Jupiter and three from the North Node. You may look unhurried but choose in an instant, and what you love tends to point where your life is growing. The tightest aspect in your chart, Mercury trine Neptune within 0.04°, lets you make a feeling concrete.',
+    facts: `Venus ${fact(twelfth, 'Venus')} · ${fact(twelfth, 'Tightest aspect')}`,
   },
 ];
 
@@ -25,7 +25,7 @@ export function SpecificityExamples({ className }: { className?: string }) {
   return (
     <section aria-labelledby="specificity-h" className={className}>
       <h3 id="specificity-h" className="font-label text-xl tracking-[0.1em]">The difference, side by side</h3>
-      <p className="mt-1 text-sm text-muted-foreground">From our public sample edition: a real calculated chart printed under the invented name {SAMPLE_EDITION.owner}.</p>
+      <p className="mt-1 text-sm text-muted-foreground">From our public sample edition for {SAMPLE_EDITION.owner}, a fictional reader whose birth moment is calculated like a real order.</p>
       <ul className="mt-4 space-y-4">
         {SPECIFICITY_ROWS.map(r => (
           <li key={r.generic} className="specific-row">
