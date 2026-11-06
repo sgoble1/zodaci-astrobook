@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
+// useRef is used for the slideshow root (in-view pause) and slide refs.
 import { Link } from 'react-router-dom';
 import { ArrowRight, ChevronLeft, ChevronRight, Pause, Play } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -37,13 +38,23 @@ export function HeroSlideshow({ slides, label, interval = 15000, className }: { 
   const [hidden, setHidden] = useState(false);
   const reduced = useReducedMotion();
   const [announce, setAnnounce] = useState('');
+  const [inView, setInView] = useState(true);
+  const root = useRef<HTMLElement>(null);
   const count = slides.length;
-  const auto = count > 1 && !reduced && !stopped && !hover && !hidden;
+  // Never advance while scrolled away: on phones the slideshow follows each slide's height, which would move the page.
+  const auto = count > 1 && !reduced && !stopped && !hover && !hidden && inView;
 
   useEffect(() => {
     const on = () => setHidden(document.visibilityState === 'hidden');
     document.addEventListener('visibilitychange', on);
     return () => document.removeEventListener('visibilitychange', on);
+  }, []);
+  useEffect(() => {
+    const el = root.current;
+    if (!el || typeof IntersectionObserver === 'undefined') return;
+    const io = new IntersectionObserver(([e]) => setInView(e.intersectionRatio >= 0.6), { threshold: [0, 0.6, 1] });
+    io.observe(el);
+    return () => io.disconnect();
   }, []);
   useEffect(() => {
     if (!auto) return;
@@ -59,6 +70,7 @@ export function HeroSlideshow({ slides, label, interval = 15000, className }: { 
 
   return (
     <section
+      ref={root}
       aria-roledescription="carousel"
       aria-label={label}
       className={cn('hero-slides obs-panel', className)}
