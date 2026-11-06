@@ -488,7 +488,11 @@ body {
 .font-script { font-family: 'Yellowtail', cursive; font-weight: 400; }
 
 /* ── 1950s atomic-age layer: screen-print offsets, halftone, starbursts, slab type ── */
-:root { --shadow-print: 3px 3px 0 hsl(var(--brass) / .55); --radius: 1rem; }
+:root { --shadow-print: 3px 3px 0 hsl(var(--brass) / .55); --radius: .5rem;
+  /* Hand-cut corners: small and slightly uneven, like die-cut 1950s card stock (never one uniform large radius). */
+  --cut-plate: 7px 11px 8px 12px / 11px 7px 12px 8px;
+  --cut-card: 5px 8px 6px 9px / 8px 5px 9px 6px;
+  --cut-chip: 4px 6px 4px 7px / 6px 4px 7px 4px; }
 h1:not([class*="text-"]), .text-silver { background: none; -webkit-text-fill-color: currentColor; color: hsl(var(--foreground)); }
 h1, h2 { letter-spacing: .01em; }
 body {
@@ -498,8 +502,8 @@ body {
     radial-gradient(ellipse at 90% 110%, hsl(var(--accent) / .10), transparent 55%);
   background-size: 7px 7px, 100% 100%, 100% 100%;
 }
-.obs-panel { border-radius: 1.25rem; box-shadow: inset 0 0 0 3px hsl(var(--background)), inset 0 0 0 4px hsl(var(--brass) / .3), 5px 5px 0 hsl(var(--accent) / .35); }
-.obs-paper { border-radius: 1.25rem; box-shadow: inset 0 0 40px hsl(30 40% 50% / .18), 5px 5px 0 hsl(var(--primary) / .45); }
+.obs-panel { border-radius: var(--cut-plate); box-shadow: inset 0 0 0 3px hsl(var(--background)), inset 0 0 0 4px hsl(var(--brass) / .3), 5px 5px 0 hsl(var(--accent) / .35); }
+.obs-paper { border-radius: var(--cut-plate); box-shadow: inset 0 0 40px hsl(30 40% 50% / .18), 5px 5px 0 hsl(var(--primary) / .45); }
 .retro-card { border-color: hsl(var(--brass) / .45); box-shadow: 4px 4px 0 hsl(var(--brass) / .25); background-image: radial-gradient(hsl(var(--foreground) / .035) 1px, transparent 1.2px); background-size: 6px 6px; }
 .obs-panel > :first-child h2.font-label, .font-label.text-lg { font-size: 1.35rem; letter-spacing: .1em; }
 .retro-heads-band { height: clamp(90px, 16vw, 200px); background-size: cover; background-position: center 100%; border-bottom: 4px double hsl(var(--brass) / .6); -webkit-mask-image: linear-gradient(to bottom, transparent, #000 45%); mask-image: linear-gradient(to bottom, transparent, #000 45%); }
@@ -508,17 +512,17 @@ body {
 .retro-twinkle { animation: retro-twinkle 7s ease-in-out infinite; }
 @media (prefers-reduced-motion: reduce) { .retro-twinkle { animation: none; } }
 .retro-portrait { border: 2px solid hsl(var(--brass)); box-shadow: 0 0 0 3px hsl(var(--background)), 0 0 0 4px hsl(var(--brass) / .5), 3px 3px 0 4px hsl(var(--accent) / .35); }
-.retro-place-banner { border-radius: 1.25rem; border: 1px solid hsl(var(--brass) / .5); background: linear-gradient(100deg, hsl(var(--card)), hsl(var(--indigo-deep, var(--card)) / .6)); box-shadow: 4px 4px 0 hsl(var(--accent) / .3); background-image: radial-gradient(hsl(var(--foreground) / .04) 1px, transparent 1.2px), linear-gradient(100deg, hsl(var(--card)), hsl(var(--background))); background-size: 6px 6px, 100% 100%; }
+.retro-place-banner { border-radius: var(--cut-plate); border: 1px solid hsl(var(--brass) / .5); background: linear-gradient(100deg, hsl(var(--card)), hsl(var(--indigo-deep, var(--card)) / .6)); box-shadow: 4px 4px 0 hsl(var(--accent) / .3); background-image: radial-gradient(hsl(var(--foreground) / .04) 1px, transparent 1.2px), linear-gradient(100deg, hsl(var(--card)), hsl(var(--background))); background-size: 6px 6px, 100% 100%; }
 /* Retro surfaces everywhere, including the member atlas (overrides the flat legacy glass). */
 .vellum, .parchment, .member-experience .vellum, .member-experience .parchment {
-  border: 1px solid hsl(var(--brass) / .45); border-radius: 1.25rem;
+  border: 1px solid hsl(var(--brass) / .45); border-radius: var(--cut-card);
   background-color: hsl(var(--card) / .85); backdrop-filter: none; -webkit-backdrop-filter: none;
   background-image: radial-gradient(hsl(var(--foreground) / .035) 1px, transparent 1.2px); background-size: 6px 6px;
   box-shadow: 4px 4px 0 hsl(var(--brass) / .22);
 }
 .vellum:hover, .parchment:hover, .member-experience .vellum:hover, .member-experience .parchment:hover { border-color: hsl(var(--brass) / .75); box-shadow: 5px 5px 0 hsl(var(--accent) / .35); }
 .font-smallcaps, .member-experience .font-smallcaps { font-family: 'Bebas Neue', 'Libre Franklin', sans-serif; font-weight: 400; letter-spacing: .14em; text-transform: uppercase; }
-@media (max-width: 639px) { .parchment, .vellum { border-radius: 1rem; } }
+
 /* Channel change: a soft burst of static that fades out slowly. */
 @keyframes obs-static-burst { 0% { opacity: .95 } 100% { opacity: 0 } }
 .obs-static-burst {
@@ -726,7 +730,7 @@ body {
 .channel-tab:focus-visible { outline: none; box-shadow: 0 0 0 2px hsl(var(--ring)); }
 .channel-tab-active { border-color: hsl(var(--primary)); background: hsl(var(--primary) / .15); color: hsl(var(--primary)); }
 @media (max-width: 639px) { .channel-tab { padding: 0 .25rem; gap: .2rem; flex-direction: column; min-height: 3.1rem; border-radius: .9rem; font-size: .8rem; } }
-.sky-dial { position: relative; min-width: 0; padding: .55rem .75rem .6rem; border-radius: .9rem; border: 1px solid hsl(var(--brass) / .5); background: radial-gradient(circle at 15% 20%, hsl(var(--indigo-deep) / .7), hsl(var(--card))); box-shadow: inset 0 0 0 2px hsl(var(--background) / .6), 3px 3px 0 hsl(var(--brass) / .2); }
+.sky-dial { position: relative; min-width: 0; padding: .55rem .75rem .6rem; border-radius: var(--cut-card); border: 1px solid hsl(var(--brass) / .5); background: radial-gradient(circle at 15% 20%, hsl(var(--indigo-deep) / .7), hsl(var(--card))); box-shadow: inset 0 0 0 2px hsl(var(--background) / .6), 3px 3px 0 hsl(var(--brass) / .2); }
 .sky-dial dt { font-family: 'Bebas Neue', sans-serif; letter-spacing: .14em; font-size: .72rem; color: hsl(var(--primary)); }
 .sky-dial dd { margin-top: .1rem; font-family: 'Alfa Slab One', serif; font-size: .95rem; line-height: 1.25; color: hsl(var(--foreground)); overflow-wrap: anywhere; }
 @media (prefers-reduced-motion: reduce) { .retro-tv-roll, .channel-art { animation: none; } }
@@ -769,7 +773,7 @@ body {
 .box-plate-left .box-plate-spot { right: auto; left: 6%; }
 .box-plate .box-plate-spot { animation: none; }
 /* Feature boxes: printed AstroBook-cover cards (cream stock, mustard edge, inset navy rule, brick offset). Slow lift on hover. */
-.atomic-box { position: relative; display: flex; flex-direction: column; gap: .75rem; border-radius: .9rem; padding: 1.25rem; color: hsl(var(--comic-navy));
+.atomic-box { position: relative; display: flex; flex-direction: column; gap: .75rem; border-radius: var(--cut-card); padding: 1.25rem; color: hsl(var(--comic-navy));
   border: 2px solid hsl(var(--comic-mustard) / .9); outline: 1px solid hsl(var(--comic-navy) / .45); outline-offset: -7px;
   background: radial-gradient(hsl(var(--comic-navy) / .065) .9px, transparent 1.2px) 0 0 / 5px 5px, linear-gradient(170deg, hsl(42 72% 92%), hsl(var(--spot-paper)) 55%, hsl(38 50% 80%));
   box-shadow: inset 0 0 36px hsl(30 45% 40% / .15), 5px 5px 0 hsl(var(--comic-brick) / .6);
@@ -801,7 +805,7 @@ body {
 .shop-dept-on { background: hsl(var(--primary) / .14); color: hsl(var(--primary)); }
 .shop-dot { width: .7rem; height: .7rem; margin-inline: .55rem .2rem; border-radius: 999px; border: 2px solid hsl(var(--brass)); }
 .shop-dept-on .shop-dot { background: hsl(var(--accent)); border-color: hsl(var(--accent)); }
-.shop-sign { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .2rem; aspect-ratio: 1; border-radius: .7rem; border: 1px solid hsl(var(--brass) / .45); color: hsl(var(--foreground) / .85); font-family: 'Bebas Neue', sans-serif; letter-spacing: .08em; transition: background-color .7s ease, border-color .7s ease, color .7s ease; }
+.shop-sign { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .2rem; aspect-ratio: 1; border-radius: var(--cut-chip); border: 1px solid hsl(var(--brass) / .45); color: hsl(var(--foreground) / .85); font-family: 'Bebas Neue', sans-serif; letter-spacing: .08em; transition: background-color .7s ease, border-color .7s ease, color .7s ease; }
 .shop-sign:hover { border-color: hsl(var(--brass)); color: hsl(var(--foreground)); }
 .shop-sign-on { background: hsl(var(--primary)); border-color: hsl(var(--primary)); color: hsl(var(--primary-foreground)); box-shadow: 2px 2px 0 hsl(var(--accent)); }
 @media (prefers-reduced-motion: reduce) { .shop-dept, .shop-sign { transition: none; } }
@@ -830,7 +834,7 @@ body {
 .obs-paper .text-primary { color: hsl(36 78% 30%); }
 .obs-paper .text-accent { color: hsl(var(--comic-brick)); }
 .obs-paper .text-foreground { color: hsl(var(--comic-navy)); }
-.atomic-box { border-radius: .45rem; }
+
 
 /* Hero type: slab capitals in cream, tight leading; Yellowtail script stays the subheading. */
 .hero-headline { font-family: 'Alfa Slab One', 'Rockwell', Georgia, serif; font-weight: 400; text-transform: uppercase; font-size: clamp(2.5rem, 1.4rem + 3vw, 4.5rem); line-height: .95; letter-spacing: .01em; color: hsl(var(--foreground)); background: none; -webkit-text-fill-color: currentColor; overflow-wrap: break-word; }
@@ -1103,15 +1107,15 @@ li:hover > .zodiac-coin { transform: rotate(-10deg); }
 @media (max-width: 639px) { .product-art-stage { height: 21rem; } .product-page-opening .product-art-gallery { order: -1; } }
 
 /* Personalization story: product art beside the explanation, then side-by-side examples. */
-.product-story-band { display: grid; gap: 2rem; grid-template-columns: minmax(0, 1fr); padding: 1.5rem; border-radius: 1.25rem; background: hsl(var(--card)); border: 2px solid hsl(var(--brass) / .45); box-shadow: 5px 5px 0 hsl(var(--accent) / .3); }
-.product-story-art img { width: 100%; height: auto; border-radius: .6rem; border: 2px solid hsl(var(--comic-mustard) / .7); box-shadow: 6px 7px 0 hsl(var(--midnight) / .55); }
+.product-story-band { display: grid; gap: 2rem; grid-template-columns: minmax(0, 1fr); padding: 1.5rem; border-radius: var(--cut-plate); background: hsl(var(--card)); border: 2px solid hsl(var(--brass) / .45); box-shadow: 5px 5px 0 hsl(var(--accent) / .3); }
+.product-story-art img { width: 100%; height: auto; border-radius: var(--cut-chip); border: 2px solid hsl(var(--comic-mustard) / .7); box-shadow: 6px 7px 0 hsl(var(--midnight) / .55); }
 .product-story-examples { grid-column: 1 / -1; border-top: 1px dashed hsl(var(--brass) / .5); padding-top: 1.5rem; }
 @media (min-width: 900px) { .product-story-band { grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); padding: 2rem; align-items: start; } }
 .specific-row { display: grid; gap: .75rem; grid-template-columns: minmax(0, 1fr); }
-.specific-generic { padding: .9rem 1rem; border-radius: .6rem; border: 1px dashed hsl(var(--muted-foreground) / .5); background: hsl(var(--muted) / .35); }
-.specific-zodaci { padding: .9rem 1rem; border-radius: .6rem; border: 2px solid hsl(var(--primary) / .55); background: hsl(var(--primary) / .07); }
+.specific-generic { padding: .9rem 1rem; border-radius: var(--cut-card); border: 1px dashed hsl(var(--muted-foreground) / .5); background: hsl(var(--muted) / .35); }
+.specific-zodaci { padding: .9rem 1rem; border-radius: var(--cut-card); border: 2px solid hsl(var(--primary) / .55); background: hsl(var(--primary) / .07); }
 @media (min-width: 768px) { .specific-row { grid-template-columns: minmax(0, .8fr) minmax(0, 1.6fr); align-items: stretch; } }
-.personal-callout { display: flex; gap: 1rem; align-items: flex-start; padding: 1rem 1.1rem; border-radius: .8rem; border: 2px solid hsl(var(--brass) / .5); background: hsl(var(--secondary) / .55); }
+.personal-callout { display: flex; gap: 1rem; align-items: flex-start; padding: 1rem 1.1rem; border-radius: var(--cut-card); border: 2px solid hsl(var(--brass) / .5); background: hsl(var(--secondary) / .55); }
 
 /* About · How we calculate: numbered brass medallions. */
 .calc-step { display: inline-grid; place-items: center; flex-shrink: 0; width: 2.25rem; height: 2.25rem; border-radius: 999px; font-family: 'Bebas Neue', sans-serif; font-size: 1.15rem; color: hsl(var(--spot-paper)); background: hsl(var(--comic-navy)); box-shadow: 0 0 0 2px hsl(var(--comic-mustard)), 2px 3px 0 hsl(var(--midnight) / .5); }
