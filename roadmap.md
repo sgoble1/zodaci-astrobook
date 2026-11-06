@@ -391,6 +391,7 @@ Audit Oct 29: Chat/counselors already use the member's chart; podcast/custom pag
 - [x] Phase 3 rest: AstroBook page and Demo turn the same 3D book with real sample covers; shelf books share one angle and lift.
 - [x] Phase 4: icon set in the book-cover style — heavier ink, halftone tint, gold orbit ring at emblem sizes, hand-cut badge frames (registry names kept). Destination tile headings fit their tiles.
 - [ ] Phase 7 rest: desk astrologer art; place/explore/reading-room art refresh.
+- [x] Phase 8b: Timeline Hall cycle wall — each member's own returns/squares/oppositions pinned across 90 years with a Now marker (tested, verified 393/1280 signed in); support email is help@zodaci.com everywhere (Gap 2).
 - [x] Phase 8a: dashboard TV has a tuning dial, reception bars, a slow sky-wire crawl and full-screen mode (verified 393/1280, signed in).
 - [ ] Phase 8: V2.3 Gaps (founder art and menus; member page restyles; Observation Log/Context Engine; content; nav/theme check; pricing trust; investor figures).
 - [ ] Phase 11 (last): Shane's 63 chapters and Zac's documents — blocked on AI credits and owner accounts.

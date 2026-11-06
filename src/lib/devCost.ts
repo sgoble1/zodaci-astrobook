@@ -38,11 +38,9 @@ export function buildCostLine(s: BuildCreditSnapshot = BUILD_CREDIT_SNAPSHOT) {
 export type OpenWorkItem = { id: string; label: string; credits: number; blockedBy?: string };
 export const OPEN_WORK: OpenWorkItem[] = [
   { id: 'reader-3col', label: 'Three-column AstroBook reader and member page layouts', credits: 18 },
-  { id: 'timeline-hall', label: 'Timeline Hall archive wall with retro TVs', credits: 10 },
   { id: 'context-engine', label: 'Context editing from Current Chapter and the full personal-context tool', credits: 14 },
   { id: 'founder-art', label: 'Founder illustrations and menu polish (Gaps 4–6, 12, 44, 46)', credits: 16 },
   { id: 'member-pages', label: 'Restyle Learn, Compatibility, sign-in, Counselors, Readings, Retrogrades, Community', credits: 22 },
-  { id: 'broadcast', label: 'TV ticker, signal meter, tuning dial and full-screen mode', credits: 12 },
   { id: 'content', label: 'More articles, Demo finish and full Forecast Center', credits: 16 },
   { id: 'a11y', label: 'Accessibility pass, page titles and the remaining checks', credits: 10 },
   { id: 'comics', label: 'Personal AstroComic Issue #1 and Issue #2', credits: 40, blockedBy: 'AI credits for writing and drawing' },
