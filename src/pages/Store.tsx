@@ -61,7 +61,9 @@ export default function Store() {
   const type = params.get('type') ?? 'All';
   const q = params.get('q') ?? '';
   const sort = (params.get('sort') as Sort) in SORTS ? (params.get('sort') as Sort) : 'featured';
-  const set = (k: string, v: string, empty: string) => { const n = new URLSearchParams(params); if (v === empty) n.delete(k); else n.set(k, v); setParams(n, { replace: true }); };
+  const set = (k: string, v: string, empty: string) => {
+    setParams(previous => { const n = new URLSearchParams(previous); if (v === empty) n.delete(k); else n.set(k, v); return n; }, { replace: true });
+  };
   const { add, loading } = useAdd();
   useEffect(() => {
     let on = true; setFailed(false); setProducts(null);
