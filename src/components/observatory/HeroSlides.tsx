@@ -227,6 +227,34 @@ export function PressSlide({ heading = 'h2', title, script, text, points, book, 
   );
 }
 
+export type SlideArt = { src: string; alt: string; width: number; height: number };
+
+/**
+ * An illustrated poster slide: a framed 1950s print beside the copy. Landscape prints sit to the right of the text,
+ * portrait prints to the left; on phones the print comes first and the text follows, with nothing overlapping.
+ */
+export function ArtSlide({ heading = 'h2', art, eyebrow, title, script, text, cta, secondary, eager }: { heading?: Heading; art: SlideArt; eyebrow?: string; title: ReactNode; script: string; text: ReactNode; cta: Cta; secondary?: Cta; eager?: boolean }) {
+  const H = heading;
+  const portrait = art.height > art.width;
+  return (
+    <div className={cn('hero-night art-slide', portrait ? 'art-slide-portrait' : 'art-slide-landscape')}>
+      <figure className="art-slide-art">
+        <img src={art.src} alt={art.alt} width={art.width} height={art.height} loading={eager ? 'eager' : 'lazy'} decoding="async" />
+      </figure>
+      <div className="art-slide-copy">
+        {eyebrow && <p className="font-label text-sm tracking-[0.2em] text-primary">{eyebrow}</p>}
+        <H className="hero-headline">{title}</H>
+        <p className="mt-2 font-script text-3xl text-primary sm:text-4xl">{script}</p>
+        <div className="mt-4 max-w-md text-base leading-relaxed text-foreground/90 sm:text-lg">{text}</div>
+        <div className="mt-6 flex flex-wrap gap-3">
+          <Button asChild variant="signal" size="lg" className="max-w-full"><Link to={cta.to}>{cta.label}<ArrowRight /></Link></Button>
+          {secondary && <Button asChild variant="outline" size="lg"><Link to={secondary.to}>{secondary.label}</Link></Button>}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /** Three slow-twinkling 1950s starbursts for the open sky above the Cartographer (decorative). */
 function Starbursts() {
   const burst = (r: number) => {
