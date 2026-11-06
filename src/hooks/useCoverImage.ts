@@ -2,12 +2,12 @@ import { useEffect, useState } from 'react';
 import { renderCoverCanvas, type CoverSpec } from '@/lib/coverRender';
 
 /**
- * A JPEG data URL of the finished cover (artwork + name + subtitle + wordmark) at a screen resolution.
+ * A JPEG data URL of the finished cover (artwork + name + birth line or subtitle + wordmark) at a screen resolution.
  * Used for thumbnails, the public cover preview and the 3D book, so every preview shows the same typography.
  */
 export function useCoverImage(spec: CoverSpec | null, ppi = 48) {
   const [url, setUrl] = useState('');
-  const key = spec ? JSON.stringify([spec.source, spec.crop, spec.name, spec.trimPt, ppi]) : '';
+  const key = spec ? JSON.stringify([spec.source, spec.crop, spec.name, spec.trimPt, spec.detail ?? '', ppi]) : '';
   useEffect(() => {
     if (!spec) { setUrl(''); return; }
     let on = true;

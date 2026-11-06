@@ -3,7 +3,8 @@ import { COVER_BLEED_IN, PRINT_PPI, coverType, placeArt, type CoverCrop, type Co
 
 /** Where the cover artwork comes from: one of our designs, or an image URL (your upload or a chart cover). */
 export type CoverSource = { kind: 'design'; key: string } | { kind: 'image'; url: string };
-export type CoverSpec = { source: CoverSource; crop: CoverCrop; name: string; trimPt: [number, number] };
+/** `detail` is the optional birth line printed under the name (see coverBirthLine); absent means the edition subtitle. */
+export type CoverSpec = { source: CoverSource; crop: CoverCrop; name: string; trimPt: [number, number]; detail?: string };
 
 /** Print colours for type on the cover (fixed ink values, independent of the site theme). */
 const IVORY = '#F4ECDD';
@@ -80,7 +81,7 @@ export async function drawCover(ctx: CanvasRenderingContext2D, spec: CoverSpec, 
 
   const ppi = w / (spec.trimPt[0] / 72);
   const measure = (family: string, weight = '', spacing = 0) => (text: string, size: number) => { ctx.font = `${weight}${size}px ${family}`; return ctx.measureText(text).width + spacing * size * Math.max(0, Array.from(text).length - 1); };
-  const t = coverType(w, h, ppi, spec.name, measure(SERIF), measure(SANS, '500 ', SPACING));
+  const t = coverType(w, h, ppi, spec.name, measure(SERIF), measure(SANS, '500 ', SPACING), spec.detail);
   ctx.save(); ctx.shadowColor = 'rgba(0,0,0,0.45)'; ctx.shadowBlur = t.title.size * 0.12;
   drawBox(ctx, t.title, SERIF, IVORY);
   ctx.restore();
@@ -108,6 +109,6 @@ export async function renderCoverJpeg(spec: CoverSpec, ppi = PRINT_PPI): Promise
 }
 
 /** Stable identity for a cover spec, so a finished print render is only reused for exactly the same design. */
-export const coverSpecKey = (s: CoverSpec) => JSON.stringify([s.source, s.crop, s.name.trim(), s.trimPt]);
+export const coverSpecKey = (s: CoverSpec) => JSON.stringify([s.source, s.crop, s.name.trim(), s.trimPt, s.detail?.trim() ?? '']);
 
 export { COVER_BLEED_IN };
