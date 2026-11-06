@@ -1323,3 +1323,6 @@ li:hover > .zodiac-coin { transform: rotate(-10deg); }
 .bg-primary .retro-icon .retro-tint, .retro-on-primary .retro-tint { fill: hsl(var(--comic-brick)); fill-opacity: .4; }
 .retro-orbit { fill: none; stroke: hsl(var(--brass)); stroke-width: .7; stroke-dasharray: 5 1.4; opacity: .9; }
 .retro-emblem { border-radius: 32% 38% 30% 40% / 38% 30% 40% 32%; }
+/* Destination tile headings shrink with their tile so long words like "Relationships" never run into the next tile. */
+.dest-tile > .min-w-0 { container-type: inline-size; }
+.dest-tile-title { font-size: clamp(.95rem, 13cqi, 1.125rem); overflow-wrap: anywhere; }
