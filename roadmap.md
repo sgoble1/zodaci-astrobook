@@ -371,3 +371,7 @@ Audit Oct 29: Chat/counselors already use the member's chart; podcast/custom pag
 - [ ] Atomic Zodiac Collection: curated visual order, newest dates, atomic-only sign/department filtering, atomic editions first within shop categories.
 - [ ] Live wheels use the hero's dark lamp/dust projection; founder NatalWheel uses an automatic retro monitor; home sample preserves the classic pale tripod projector. Ink-on-paper remains for print.
 - Blocked: comics/Shane corrections (AI credits), Lulu keys, notify.zodaci.com DNS, testimonials, Sabian license
+
+## Nov 6 — V2.3 master plan
+- [ ] Execute approved master plan (.lovable/plan.md): hero slides, mosaic tiles, real 3D covers, cover-style icons, cut-out shop grid, About hero/text, image redraws, V2.3 Gaps 1–47, image library page, build cost at $0.35/credit, founder data extraction last.
+- [x] Completeness review of plan against all attachments and the V2.3 doc (Nov 6).
