@@ -52,9 +52,24 @@ export default function Auth() {
   };
 
   return (
-    <article className="mx-auto max-w-md space-y-6 py-10">
+    <div className="auth-stage mx-auto grid max-w-4xl items-stretch gap-6 py-6 lg:grid-cols-[1fr_minmax(0,28rem)] lg:py-10">
+    <aside className="poster-header relative hidden overflow-hidden lg:block">
+      <img src={observatoryArt} alt="A 1950s observatory with white domes and searchlights over a reflecting pool" width={1536} height={640} decoding="async" className="absolute inset-0 h-full w-full object-cover object-[40%_center]" />
+      <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-background via-background/55 to-transparent" />
+      <div className="absolute inset-x-0 bottom-0 space-y-3 p-7">
+        <p className="font-label text-sm tracking-[0.2em] text-primary">Zodaci · Astral Research Authority</p>
+        <p className="font-script text-3xl text-primary">Your sky. Your story.</p>
+        <ul className="space-y-1.5 text-sm text-foreground/85">
+          <li>Your chart is calculated to the minute from your birth details.</li>
+          <li>Your birth data and readings stay private unless you share them.</li>
+          <li>Free to start; no card needed for a free account.</li>
+        </ul>
+      </div>
+    </aside>
+    <article className="obs-panel w-full space-y-6 p-6 sm:p-8">
       <header className="text-center">
-        <h1 className="font-display text-3xl">{mode === 'up' ? 'Create your free account' : 'Welcome back'}</h1>
+        <p className="font-label text-xs tracking-[0.2em] text-primary lg:hidden">Zodaci · Astral Research Authority</p>
+        <h1 className="mt-1 font-display text-3xl">{mode === 'up' ? 'Create your free account' : 'Welcome back'}</h1>
         <p className="mt-2 text-sm text-muted-foreground">{mode === 'up' ? 'Keep your chart safe, sync it across devices and unlock your personal readings.' : 'Sign in to open your Zodaci.'}</p>
       </header>
       <Button type="button" variant="outline" className="w-full" onClick={async () => {

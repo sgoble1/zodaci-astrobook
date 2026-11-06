@@ -83,7 +83,7 @@ export default function Compatibility() {
   const ready = !!result && result.rows.length > 0;
   return (
     <article className="space-y-16">
-      <PosterHeader img={bureauArt} alt="A 1950s relationship bureau office with two star charts pinned side by side" eyebrow="Zodaci · Relationship Bureau" title="Two charts, side by side." script="Where you meet, and where you differ.">
+      <PosterHeader img={bureauArt} alt="Two mustard armchairs facing each other across a table spread with a split zodiac chart, under a painted Sun and Moon" eyebrow="Zodaci · Relationship Bureau" title="Two charts, side by side." script="Where you meet, and where you differ.">
         <p>Compare Sun, Moon, Venus, Mars and Rising by element and modality. Use birth details for the most complete picture, or just the signs you know.</p>
       </PosterHeader>
       <section className="grid gap-8 lg:grid-cols-[1fr_1fr_1.1fr]" aria-label="Compatibility calculator">
