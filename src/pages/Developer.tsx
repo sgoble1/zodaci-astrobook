@@ -26,6 +26,7 @@ export default function Developer({ view = 'board' }: { view?: 'board' | 'timeli
   const [filter, setFilter] = useState<'all' | Item['kind']>('all');
   const [draft, setDraft] = useState({ title: '', kind: 'feature' as Item['kind'], area: 'General' });
   const [err, setErr] = useState('');
+  const { snap } = useBuildCreditSnapshot();
 
   const load = useCallback(async () => {
     const [{ data: it }, { data: st }] = await Promise.all([supabase.from('dev_items').select('*').order('priority').order('updated_at', { ascending: false }), supabase.rpc('dev_stats')]);
@@ -80,23 +81,31 @@ export default function Developer({ view = 'board' }: { view?: 'board' | 'timeli
 
   return (
     <article className="space-y-10">
-      <header className="space-y-3"><p className="font-smallcaps text-xs text-gold">Developer · {dev ? 'you can edit' : 'read-only — only Shane can edit'}</p><h1 className="text-4xl">Developer dashboard</h1><p className="text-muted-foreground">Live numbers update every minute; the list updates instantly.</p>{tabs}</header>
+      <header className="space-y-3"><p className="font-label text-sm tracking-[0.14em] text-accent">Developer · {dev ? 'you can edit' : 'read-only — only Shane can edit'}</p><h1 className="hero-headline !text-[clamp(2rem,1.4rem+2.4vw,3.2rem)]">Developer dashboard</h1><p className="script-sub !text-2xl">Live numbers, open work and what it costs.</p><p className="text-muted-foreground">Live numbers update every minute; the list updates instantly.</p>{tabs}</header>
 
-      <section aria-labelledby="dv-s" className="space-y-3"><h2 id="dv-s" className="text-2xl">Live platform</h2>
-        {stats ? <dl className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-7">{STAT_LABELS.map(([k, l]) => <div key={k} className="vellum p-3"><dt className="text-xs text-muted-foreground">{l}</dt><dd className="font-display text-2xl text-gold">{Number(stats[k] ?? 0).toLocaleString()}</dd></div>)}<div className="vellum p-3"><dt className="text-xs text-muted-foreground">Credit pack sales</dt><dd className="font-display text-2xl text-gold">${((stats.credit_packs_cents ?? 0) / 100).toFixed(0)}</dd></div></dl> : <p role="status" className="text-sm text-muted-foreground">Loading…</p>}
+      <section aria-labelledby="dv-s" className="obs-paper rivets space-y-3 p-5 sm:p-6"><h2 id="dv-s" className="plate-title !text-2xl">Live platform</h2>
+        {stats ? <dl className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-7">{STAT_LABELS.map(([k, l]) => <div key={k} className="rounded-[var(--cut-card)] border border-[hsl(var(--comic-navy)/0.25)] p-3"><dt className="text-xs text-muted-foreground">{l}</dt><dd className="font-display text-2xl">{Number(stats[k] ?? 0).toLocaleString()}</dd></div>)}<div className="rounded-[var(--cut-card)] border border-[hsl(var(--comic-navy)/0.25)] p-3"><dt className="text-xs text-muted-foreground">Credit pack sales</dt><dd className="font-display text-2xl">${((stats.credit_packs_cents ?? 0) / 100).toFixed(0)}</dd></div></dl> : <div role="status" aria-label="Loading live numbers" className="grid grid-cols-2 gap-3 sm:grid-cols-4">{Array.from({ length: 8 }, (_, i) => <div key={i} className="h-16 animate-pulse rounded-[var(--cut-card)] bg-muted" />)}</div>}
       </section>
 
+      <BuildCostCard editable={dev} />
+
       <section aria-labelledby="dv-c" className="grid gap-4 md:grid-cols-2">
-        <div className="vellum space-y-2 p-5"><h2 id="dv-c" className="text-xl">Costs</h2>
+        <div className="obs-paper space-y-2 p-5"><h2 id="dv-c" className="plate-title !text-xl">Other costs</h2>
           <ul className="space-y-1 text-sm text-muted-foreground">
-            <li>{buildCostLine()}</li>
+            <li>{buildCostLine(snap)}</li>
             <li>Member AI usage this month: {stats?.ai_credits_month ?? '…'} member credits across {stats?.ai_uses_month ?? '…'} calls.</li>
             <li>Item costs logged below: ${(items.reduce((s, i) => s + (i.cost_cents ?? 0), 0) / 100).toFixed(2)}</li>
-            <li>Print costs: see Admin → Shop & print (book costing).</li>
+            <li>Print costs: see <Link className="underline" to="/admin?tab=shop">Admin → Shop & print</Link> (book costing).</li>
           </ul></div>
-        <div className="vellum space-y-2 p-5"><h2 className="text-xl">Summary</h2>
+        <div className="obs-paper space-y-2 p-5"><h2 className="plate-title !text-xl">Summary</h2>
           <ul className="grid grid-cols-2 gap-1 text-sm">{(Object.keys(KINDS) as Item['kind'][]).map(k => <li key={k}><strong>{KINDS[k]}s:</strong> {count(k, 'done')} done / {count(k)} total</li>)}</ul>
-          <p className="text-xs text-muted-foreground">Blocked: {items.filter(i => i.status === 'blocked').map(i => i.title).join('; ') || 'none'}</p></div>
+          <p className="text-xs text-muted-foreground">Blocked: {items.filter(i => i.status === 'blocked').map(i => i.title).join('; ') || 'none'}</p>
+          <div className="flex flex-wrap gap-2 pt-2"><Button asChild size="sm" variant="outline"><Link to="/admin?tab=images">Image library</Link></Button><Button asChild size="sm" variant="outline"><Link to="/admin?tab=activity">Member activity</Link></Button><Button asChild size="sm" variant="outline"><Link to="/admin?tab=launch">Launch checklist</Link></Button></div></div>
+      </section>
+
+      <section aria-labelledby="dv-u" className="obs-paper space-y-3 p-5 sm:p-6"><h2 id="dv-u" className="plate-title !text-2xl">Latest updates</h2>
+        <ol className="space-y-2">{DEV_TIMELINE.slice(-5).reverse().map((e, i) => <li key={i} className="border-b border-dashed border-[hsl(var(--comic-navy)/0.2)] pb-2"><p className="text-xs text-muted-foreground">{new Date(e.date + 'T12:00:00Z').toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })}</p><p className="font-semibold">{e.title}</p><p className="text-sm text-muted-foreground">{e.summary}</p></li>)}</ol>
+        <Link to="/developer/timeline" className="text-sm underline">Full build timeline</Link>
       </section>
 
       <section aria-labelledby="dv-l" className="space-y-3">
