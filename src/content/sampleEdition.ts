@@ -1,6 +1,7 @@
-import rising from '@/assets/sample-plate-rising.jpg';
-import sun from '@/assets/sample-plate-sun.jpg';
-import moon from '@/assets/sample-plate-moon.jpg';
+import rising from '@/assets/plates/sample-taurus-rising.jpg';
+import twelfth from '@/assets/plates/sample-twelfth-house.jpg';
+import moon from '@/assets/plates/sample-cancer-moon.jpg';
+import { COVER_SAMPLES } from '@/content/coverSamples';
 
 export interface EditionFact { label: string; value: string }
 export interface EditionPage {
@@ -13,67 +14,69 @@ export interface EditionShowcase {
   pages: EditionPage[]; script?: EditionScriptPage[];
 }
 
+const reader = COVER_SAMPLES.find(s => s.id === 'collector')!;
+
 /**
- * Public sample of a full Collector's edition. The placements are a real calculated chart (checked in
- * sampleEdition.test.ts) published under the invented name "Elias Marrow"; no birth place, biography or personal
- * context appears. Every fact line is a calculated position; the paragraphs are interpretation.
+ * Public sample of a full Collector's edition for the invented reader on the Collector sample cover (Rosalind Vance).
+ * The birth moment is fictional and belongs to no founder or member; every fact line is a calculated position for that
+ * moment (checked in sampleEdition.test.ts) and the paragraphs are interpretation.
  */
 export const SAMPLE_EDITION: EditionShowcase = {
-  owner: 'Elias Marrow',
-  title: 'Elias Marrow',
+  owner: reader.name,
+  title: reader.name,
   subtitle: 'Your exact placement in print',
-  note: 'Sample reader: Aries Sun, Taurus Moon, Leo Rising · Placidus houses · birth time known to the minute.',
+  note: 'Sample reader (fictional): Taurus Sun, Cancer Moon, Taurus Rising · Placidus houses · birth time known to the minute.',
   pages: [
     {
-      n: 1, volume: 'Volume I · The Celestial Matrix', title: 'The Lantern at the Gate', placement: 'Leo Rising 12°24′ · Chiron in the 1st',
-      image: rising, imageAlt: 'Illuminated plate: a golden lion rising over the eastern horizon with a key-shaped comet beside its mane',
+      n: 1, volume: 'Volume I · The Celestial Matrix', title: 'The Garden Gate', placement: 'Taurus Rising 12°47′ · Sun on the Ascendant',
+      image: rising, imageAlt: 'Printed plate: a cream-white bull standing at an open iron garden gate as the sun rises behind it, roses on the stone walls and gold orbit rings in the sky',
       facts: [
-        { label: 'Ascendant', value: 'Leo 12°24′' },
-        { label: 'Chart ruler', value: 'Sun in Aries 5°06′, 9th house' },
-        { label: 'In the 1st house', value: 'Chiron in Leo 17°36′ (retrograde)' },
-        { label: 'Contacts to the Ascendant', value: 'Jupiter sextile (2.0°) · Venus trine (3.5°) · North Node trine (3.6°)' },
+        { label: 'Ascendant', value: 'Taurus 12°47′' },
+        { label: 'Chart ruler', value: 'Venus in Aries 13°00′, 12th house' },
+        { label: 'On the Ascendant', value: 'Sun in Taurus 12°29′ — 0.3° away, on the 12th-house side' },
+        { label: 'Across the chart', value: 'Pluto in Scorpio 8°28′ opposite the Ascendant (4.3°)' },
       ],
       body: [
-        'Your Ascendant is the degree of the zodiac that was rising on the eastern horizon at the minute you were born. Yours is 12° of Leo, which puts the Sun — the ruler of Leo — in charge of the whole chart. People meet you as warmth first: you tend to enter a room as if you were expected, and others often read you as more confident than you feel.',
-        'Because the Sun rules your chart and stands in Aries, the way you shine is through starting things. A Leo Ascendant ruled by an Aries Sun wants its light to do something — make, launch, lead — rather than simply be admired. When you are not creating, the Leo face can feel like a costume; when you are, it fits perfectly.',
-        'Chiron sits five degrees behind your Ascendant, inside the 1st house. In astrology Chiron marks a tender place that becomes a source of skill. Here it sits on the self-image itself: being seen can feel exposing, and the instinct may be to perform before anyone can judge. The same placement often makes a person unusually good at helping others feel seen.',
-        'Three easy aspects reach your Ascendant — Jupiter by sextile, Venus and the North Node by trine. These are flowing angles: generosity, charm and a sense of direction are available without much effort. The work of this chart is less about earning confidence and more about trusting what is already there.',
+        'Your Ascendant is the degree of the zodiac that was rising on the eastern horizon at the minute you were born. Yours is 12° of Taurus. Taurus rising tends to meet the world slowly and steadily: you take a room in before you act in it, and people often read you as calm before they know you well.',
+        'Your Sun sits less than a third of a degree from that rising degree. In plain terms, you were born just after sunrise, and the Sun had only just cleared the horizon. When the Sun is this close to the Ascendant, who you are and how you come across are hard to separate — what people see first is very close to what you are.',
+        'Because the Sun is on the 12th-house side of the line, part of that light is still behind the gate. The 12th house is the house of rest, retreat and work done out of sight. You may need more quiet time than people expect from someone so visible, and you may do your best thinking alone before you show anything.',
+        'Pluto stands opposite your Ascendant, in the house of other people. Close relationships are where this chart gets tested and changed. Partners who matter tend to be intense, and the relationships that last are the ones where neither person has to pretend.',
       ],
-      reflection: 'Where do you perform being confident, and where do you simply feel it?',
+      reflection: 'What do people notice about you first — and what do they only learn once they have walked through the gate?',
     },
     {
-      n: 2, volume: 'Volume III · Planetary Geometry', title: 'The Cardinal Spark', placement: 'Sun & Venus in Aries · 9th house',
-      image: sun, imageAlt: 'Illuminated plate: a fiery golden ram leaping across a sky toward distant temples beneath a pink morning star',
+      n: 2, volume: 'Volume III · Planetary Geometry', title: 'The Hidden Workshop', placement: 'Four planets in the 12th house · Venus with Jupiter in Aries',
+      image: twelfth, imageAlt: 'Printed plate: a brass ram on a lamplit workbench in an attic workshop, with a pink morning star and a banded gold planet seen through a round window',
       facts: [
-        { label: 'Sun', value: 'Aries 5°06′, 9th house' },
-        { label: 'Venus', value: 'Aries 15°54′, 9th house, retrograde' },
-        { label: 'Tightest aspects', value: 'Venus trine North Node (0.1°) · Venus square Mars (0.3°)' },
-        { label: 'Dignity', value: 'Sun exalted in Aries · Venus in detriment in Aries' },
+        { label: '12th house', value: 'Sun, Mercury, Venus and Jupiter' },
+        { label: 'Venus', value: 'Aries 13°00′, 12th house — conjunct Jupiter (1.7°) and the North Node (3.0°)' },
+        { label: 'Tightest aspect', value: 'Mercury in Taurus 7°49′ trine Neptune in Capricorn 7°51′ (0.04°)' },
+        { label: 'Dignity', value: 'Venus in detriment in Aries · Jupiter in a fire sign it rules by triplicity at night' },
       ],
       body: [
-        'The Sun is exalted in Aries — astrologers have long treated this as the place where the Sun’s vitality is strongest. In the 9th house, that vitality points outward: toward ideas, belief, study, travel and anything that widens the map. You are likely to feel most alive at the start of a new chapter, and least alive when life becomes a routine with no horizon.',
-        'Venus shares the 9th house with your Sun, and she was moving retrograde when you were born. Venus retrograde happens for about six weeks every eighteen months. Traditionally it turns love and taste inward: what you value is decided privately and revisited often, not borrowed from others. You may come to relationships and beliefs through reflection rather than at first sight.',
-        'Two of the tightest aspects in your entire chart involve this Venus. A trine to the North Node, exact within a tenth of a degree, ties what you love to the direction your life is growing. A square to Mars, exact within a third of a degree, puts desire and drive in friction — the push-pull between wanting and going after. Used well, this square is creative heat; unattended, it can show up as impatience in love.',
-        'Together these placements describe someone whose growth comes through what they choose to care about. The ram leaps, but Venus asks it to look back once before it lands.',
+        'Four of your planets sit in the 12th house, the part of the sky that had just risen before you were born. Traditional astrology treats this house as private: behind the scenes, in solitude, in service, in the imagination. A chart weighted here often does its real work quietly and is surprised later by how much it has built.',
+        'Venus rules your Taurus Ascendant, so she is your chart ruler, and she stands in Aries — her detriment, the sign opposite her own. Venus in Aries loves quickly and plainly and does not like to wait. Under a patient Taurus Ascendant, that makes for a person who looks unhurried but chooses in an instant.',
+        'Jupiter is less than two degrees from Venus, and the North Node is close by. Jupiter enlarges what it touches; with Venus, it tends to bring generosity, a good eye and luck through what you love. With the Node beside them, the direction your life grows in runs through those same tastes and affections.',
+        'The tightest aspect in the whole chart is a trine from Mercury to Neptune, exact to less than a tenth of a degree. Practical Taurus thinking meets Neptune’s imagination easily. You can make a feeling concrete — in words, images, rooms or plans — and that may be the most useful tool in the workshop.',
       ],
-      reflection: 'Which belief or love have you chosen twice — once at first, and once again after looking back?',
+      reflection: 'What have you made in private that you have not yet shown anyone?',
     },
     {
-      n: 3, volume: 'Volume II · The Twelve Temples', title: 'The Steady Hearth', placement: 'Moon in Taurus 2°30′ · conjunct the Midheaven',
-      image: moon, imageAlt: 'Illuminated plate: a white bull resting on a mountain summit beneath a crescent moon, with a stone cottage and roses below',
+      n: 3, volume: 'Volume II · The Twelve Temples', title: 'The Harbor Light', placement: 'Moon in Cancer 13°28′ · 3rd house',
+      image: moon, imageAlt: 'Printed plate: a striped lighthouse and lit cottage on a small harbor under a full moon in gold orbit rings, a red crab on the rocks in front',
       facts: [
-        { label: 'Moon', value: 'Taurus 2°30′, 10th house' },
-        { label: 'Midheaven', value: 'Taurus 0°24′ — Moon conjunct within 2.1°' },
-        { label: 'Dignity', value: 'Moon exalted in Taurus' },
-        { label: 'Support', value: 'Saturn sextile the Midheaven (4.4°)' },
+        { label: 'Moon', value: 'Cancer 13°28′, 3rd house' },
+        { label: 'Dignity', value: 'Moon in its own sign (domicile)' },
+        { label: 'Easy contacts', value: 'Sextile the Ascendant (0.7°) · sextile the Sun (1.0°)' },
+        { label: 'Friction', value: 'Square Venus (0.5°) · square Jupiter (1.2°)' },
       ],
       body: [
-        'The Moon describes what makes you feel safe. In Taurus — the Moon’s exaltation — safety comes from what is steady and real: good food, warm rooms, things made by hand, people who stay. You tend to calm down through the body and the senses before you can calm down through words.',
-        'Your Moon is only two degrees from the Midheaven, the highest point of the chart and the classic marker of vocation and reputation. That is a rare and visible placement. Your emotional life and your public life run close together: the work that suits you is work you can care about, and people often sense your feelings about it whether you say them or not.',
-        'The contrast with your Aries Sun is the heart of this chart. The Sun wants to start; the Moon wants to keep. One is a match, the other a hearth. You may swing between restless launching and a deep wish to stay put — and the most satisfying projects are the ones that let you do both: start something new, then build it to last.',
-        'Saturn’s sextile to the Midheaven adds patience to the career point. Recognition through this chart tends to come slowly and then hold, the way a stone house holds its warmth long after the fire is out.',
+        'The Moon describes what makes you feel safe. In Cancer, its own sign, the Moon works at full strength: safety comes from home, from the people you have chosen as family, and from being able to look after someone. Feelings run deep and are remembered for a long time.',
+        'Your Moon is in the 3rd house — the house of daily talk, short trips, neighbors, siblings and learning. You tend to settle your feelings by putting them into words, often with the people closest at hand. Letters, calls and conversations on the way somewhere can matter more to you than big occasions.',
+        'The Moon makes easy sextiles to both your Sun and your Ascendant, each within a degree. Your moods, your will and the way you come across tend to agree with each other. People usually can tell how you feel, and it is rarely a surprise to you.',
+        'The tension in this chart is the square from the Moon to Venus and Jupiter. The Moon wants to stay close and keep things safe; Venus and Jupiter in Aries want to go out, choose fast and try more. You may swing between staying in and saying yes to everything — and the most satisfying choices tend to be the ones that bring the adventure home.',
       ],
-      reflection: 'What in your life have you built to last — and what would you like to build next?',
+      reflection: 'Who do you tell first when something happens — and what does that conversation give you?',
     },
   ],
 };
