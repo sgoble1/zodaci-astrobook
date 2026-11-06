@@ -88,7 +88,7 @@ export default function Pricing() {
       <PaymentTestModeBanner />
       <header className="space-y-3 text-center">
         <h1 className="hero-headline !text-[clamp(2.2rem,1.4rem+3.4vw,4.2rem)]">Simple, honest pricing.</h1>
-        <p className="script-sub">Start free. Go deeper when you want to.</p>
+        <p className="font-script text-3xl text-primary">Start free. Go deeper when you want to.</p>
         <p className="mx-auto max-w-2xl text-lg text-muted-foreground">Start free with the essentials of your chart. Open the full encyclopedia when you want the depth. No surprises.</p>
         <p className="text-sm"><Link to="/demo" className="text-primary underline underline-offset-4">Try the interactive demo first</Link></p>
         {sub.tier !== 'free' && <div className="flex flex-col items-center gap-1 pt-2">{billed && <Button variant="outline" onClick={manage}>Manage subscription · cancel, card & invoices</Button>}{sub.periodEnd && <p className="text-xs text-muted-foreground">{sub.status === 'granted' ? `${PLAN_NAME[sub.tier]} access granted until` : sub.cancelAtEnd ? 'Ends' : 'Renews'} {new Date(sub.periodEnd).toLocaleDateString()}</p>}{sub.status === 'past_due' && <p role="alert" className="text-sm text-destructive">Your last payment didn’t go through. Update your card in Manage subscription to keep your plan.</p>}</div>}
