@@ -359,6 +359,13 @@ Audit Oct 29: Chat/counselors already use the member's chart; podcast/custom pag
 - [ ] Wave 7: founder edition homes, Zac menu by volume, Sibling Bureau links, 3-column reader, podcasts/counselors/workbooks restyle, phone dock, Timeline Hall archive wall, Observation Log, context editing from Current Chapter, full-moon + Nodes/Chiron fixes
 - [ ] Wave 8: Admin/Developer restyle, SEO page data, accessibility pass, full checks, developer activity log
 
+## Nov 6 requests (evening)
+- [ ] Finish: Atomic Zodiac + department combined filter keeps the collection; visual check of hero projector / retro monitor / classic projector charts.
+- [ ] AstroBook covers show the sample person's name, birthplace, birth time and date on the cover to show personalization (public sample only).
+- [ ] Product slide: one "Take the Sky Home" slide with real marketing copy; resize the AstroComic/AstroBook art on it.
+- [ ] Page openings: new pages open at the top; links with a section open at that section under the sticky header.
+- [ ] Body text formatting consistency, softer hand-made corner rounding, and plainer, trustworthy copy that doesn't read as AI (keep hero headline styles).
+
 ## Atomic collection and chart displays (Nov 6 2026)
 - [ ] Faces-looking-up artwork is the first/default home slide; Cartographer and print slides remain.
 - [ ] Atomic Zodiac Collection: curated visual order, newest dates, atomic-only sign/department filtering, atomic editions first within shop categories.
