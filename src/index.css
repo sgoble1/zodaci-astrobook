@@ -938,7 +938,7 @@ li:hover > .zodiac-coin { transform: rotate(-10deg); }
 .mosaic-top > .mosaic-hero { grid-area: hero; }
 .mosaic-top > .mosaic-left { grid-area: left; }
 .mosaic-top > .mosaic-right { grid-area: right; }
-.mosaic-left { display: grid; grid-template-columns: minmax(0, 1fr); gap: .9rem; align-content: start; }
+.mosaic-left { display: grid; grid-template-columns: minmax(0, 1fr); gap: .9rem; align-content: space-between; }
 .mosaic-rail { min-width: 0; }
 .motto-item { display: block; border-radius: .3rem; }
 .motto-item:focus-visible { outline: 2px solid hsl(var(--ring)); outline-offset: 2px; }
@@ -999,9 +999,9 @@ li:hover > .zodiac-coin { transform: rotate(-10deg); }
 /* Slide 1 (Cartographer + dial) sizes itself to the slideshow's own width, not the window,
    so it fits whether the slideshow fills a phone, a dashboard column or the mosaic's centre. */
 .hero-slides { container: hero / inline-size; }
-.chartmap { position: relative; display: grid; min-height: 100%; grid-template-columns: minmax(0, 1fr); }
-.chartmap-figure { order: 2; justify-self: center; align-self: end; height: 18rem; width: auto; }
-.chartmap-copy { position: relative; z-index: 10; display: flex; min-width: 0; flex-direction: column; gap: 1.5rem; padding: 2.25rem 1.5rem 1rem; }
+.chartmap { position: relative; display: grid; min-height: 100%; grid-template-columns: minmax(0, 1fr); align-content: start; }
+.chartmap-figure { order: 2; justify-self: center; align-self: end; height: 20rem; width: auto; margin-top: -2rem; }
+.chartmap-copy { position: relative; z-index: 10; display: flex; min-width: 0; flex-direction: column; gap: 1.1rem; padding: 1.75rem 1.25rem .5rem; }
 .chartmap-body { display: grid; gap: 1.5rem; grid-template-columns: minmax(0, 1fr); }
 .chartmap-dial { width: 100%; max-width: 14rem; margin-inline: auto; }
 .chartmap-planets { display: none; gap: .4rem 1.25rem; grid-template-columns: repeat(auto-fill, minmax(8.25rem, 1fr)); }
@@ -1013,7 +1013,8 @@ li:hover > .zodiac-coin { transform: rotate(-10deg); }
   .chartmap-signal { position: absolute; z-index: 12; top: 2.5rem; left: 1.25rem; width: 29%; display: flex; flex-direction: column; align-items: center; gap: .5rem; padding: 1rem .5rem; text-align: center; border-block: 1px solid hsl(var(--brass) / .55); }
   .chartmap-signal:hover { color: hsl(var(--primary)); }
   .chartmap { grid-template-columns: 37% minmax(0, 1fr); }
-  .chartmap-figure { order: 0; justify-self: start; height: auto; width: 100%; max-height: 34rem; object-fit: contain; object-position: left bottom; }
+  .chartmap { align-content: stretch; }
+  .chartmap-figure { order: 0; justify-self: start; align-self: end; margin-top: 0; height: auto; width: 100%; max-height: 34rem; object-fit: contain; object-position: left bottom; }
   .chartmap-copy { margin-left: -1.5rem; padding: 2.25rem 1.75rem 4rem 0; }
   .chartmap-body { grid-template-columns: minmax(0, 1fr) 9.5rem; align-items: center; }
   .chartmap-dial { max-width: none; }

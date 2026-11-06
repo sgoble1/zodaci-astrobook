@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { buildCostLine } from '@/lib/devCost';
 import { Link } from 'react-router-dom';
 import { Plus, Trash2 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
@@ -87,7 +88,7 @@ export default function Developer({ view = 'board' }: { view?: 'board' | 'timeli
       <section aria-labelledby="dv-c" className="grid gap-4 md:grid-cols-2">
         <div className="vellum space-y-2 p-5"><h2 id="dv-c" className="text-xl">Costs</h2>
           <ul className="space-y-1 text-sm text-muted-foreground">
-            <li>Build credits: 324 used this billing period (Oct 29 – Nov 29, 2026), 77 remaining. Snapshot taken Oct 29.</li>
+            <li>{buildCostLine()}</li>
             <li>Member AI usage this month: {stats?.ai_credits_month ?? '…'} member credits across {stats?.ai_uses_month ?? '…'} calls.</li>
             <li>Item costs logged below: ${(items.reduce((s, i) => s + (i.cost_cents ?? 0), 0) / 100).toFixed(2)}</li>
             <li>Print costs: see Admin → Shop & print (book costing).</li>
