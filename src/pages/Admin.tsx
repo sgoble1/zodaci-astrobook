@@ -36,6 +36,8 @@ import { ShopAdmin } from '@/components/admin/ShopAdmin';
 import { AiStudioAdmin } from '@/components/admin/AiStudioAdmin';
 import { ADMIN_TAB_GROUPS, resolveAdminTab, type AdminTab } from '@/lib/adminTabs';
 import { SharedSpacesPanel } from '@/components/admin/SharedSpacesPanel';
+import { ImageLibrary } from '@/components/admin/ImageLibrary';
+import { BuildCostCard } from '@/components/admin/BuildCostCard';
 
 export default function Admin() {
   const session = useSession();
@@ -105,6 +107,8 @@ export default function Admin() {
             {tab === 'launch' && <LaunchChecklist />}
             {tab === 'access' && <AccessManager />}
             {tab === 'shared' && <SharedSpacesPanel />}
+            {tab === 'images' && <ImageLibrary />}
+            {tab === 'costs' && <BuildCostCard editable />}
           </>}
         </div>
       )}</AuthGate>
