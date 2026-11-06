@@ -9,6 +9,7 @@ import { PrintPartnerMatrix } from '@/components/common/PrintPartnerMatrix';
 import { ThemeArt } from '@/components/common/ThemeArt';
 import { PRODUCT_ART } from '@/content/productArtwork';
 import launchArt from '@/assets/pages/investors-atomic-launch.jpg';
+import { BUILD_CREDIT_SNAPSHOT, creditCost, formatUsd, DOLLARS_PER_BUILD_CREDIT } from '@/lib/devCost';
 
 const low = BOOK_VERSIONS[0]; const high = BOOK_VERSIONS[BOOK_VERSIONS.length - 1];
 const PRODUCTS: [string, string, string][] = [
@@ -137,7 +138,7 @@ export default function Investors() {
           <p className="mt-3 text-muted-foreground">Yearly revenue if Zodaci reaches each audience size, using today’s real prices (Pro {PLAN_PRICE.full.month}, Cosmic {PLAN_PRICE.creator.month}, books {money(low.price)}–{money(high.price)}). Conversion rates are assumptions in line with typical subscription apps, shown so you can judge them.</p></div>
         <div className="overflow-x-auto"><table className="w-full text-sm"><thead><tr className="text-left text-muted-foreground"><th className="p-2">Free members</th><th className="p-2">Pro</th><th className="p-2">Cosmic</th><th className="p-2">Buy a book</th><th className="p-2">Shop, 2 orders/yr</th><th className="p-2 text-right">Yearly revenue</th></tr></thead>
           <tbody>{SCENARIOS.map(x => <tr key={x.members} className="border-t border-border/60"><td className="p-2">{x.members.toLocaleString()}</td><td className="p-2">{x.pro * 100}%</td><td className="p-2">{x.cosmic * 100}%</td><td className="p-2">{x.book * 100}%</td><td className="p-2">{x.shop * 100}%</td><td className="p-2 text-right font-display text-xl text-gold">{usd(yearly(x))}</td></tr>)}</tbody></table></div>
-        <p className="text-sm text-muted-foreground">Assumes an average book of ${BOOK_AVG} and shop order of ${SHOP_AVG}; excludes comics, gifts and costs. The bigger upside is the combination: a social network gives every member reasons to return daily, and every visit shows products matched to their chart — compatibility gifts, couple’s books, friends’ posters — so community activity turns directly into shop and book sales.</p>
+        <p className="text-sm text-muted-foreground">Assumes an average book of ${BOOK_AVG} and shop order of ${SHOP_AVG}; excludes comics, gifts and costs. Development cost so far this billing period: {formatUsd(creditCost(BUILD_CREDIT_SNAPSHOT.usedThisPeriod))} ({BUILD_CREDIT_SNAPSHOT.usedThisPeriod} build credits at {formatUsd(DOLLARS_PER_BUILD_CREDIT)} each). The bigger upside is the combination: a social network gives every member reasons to return daily, and every visit shows products matched to their chart — compatibility gifts, couple’s books, friends’ posters — so community activity turns directly into shop and book sales.</p>
       </section>
 
       <section aria-labelledby="inv-cs" className="space-y-5">
