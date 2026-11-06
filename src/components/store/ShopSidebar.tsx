@@ -1,6 +1,6 @@
 import { SIGNS, SIGN_GLYPH } from '@/lib/astro';
 import { iconForProductType } from '@/components/icons/registry';
-import { RetroEmblem, StorefrontIcon } from '@/components/icons/RetroIcons';
+import { ChartWheelIcon, RetroEmblem, StorefrontIcon } from '@/components/icons/RetroIcons';
 import { cn } from '@/lib/utils';
 
 export const PRICE_BANDS = [

@@ -9,7 +9,7 @@ import { PRICE_BANDS, ShopSidebar, type PriceBand, type ShopFilters } from '@/co
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { PRODUCT_BY_HANDLE_QUERY, storefrontApiRequest, fetchAllProducts, formatMoney, inStock, type ShopifyProduct } from '@/lib/shopify';
 import { useCartStore } from '@/stores/cartStore';
-import { PRIORITY_SHELVES, comicIssueTitle, isPortraitProduct, productPriority, shopTitle } from '@/lib/shopPresentation';
+import { PRIORITY_SHELVES, comicIssueTitle, compareAtomicAesthetic, isAtomicZodiac, isPortraitProduct, productPriority, shopTitle } from '@/lib/shopPresentation';
 import { PersonalizationCallout } from '@/components/books/PersonalizationStory';
 import { ProductCard, ShopShelf, SpotlightCard } from '@/components/store/ShopShelves';
 import { useNextComicIssue } from '@/hooks/useNextComicIssue';

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { ArrowRight, ChevronLeft, ChevronRight, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { formatMoney, inStock, type ShopifyProduct } from '@/lib/shopify';
-import { isPortraitProduct, shopTitle } from '@/lib/shopPresentation';
+import { isAtomicZodiac, isPortraitProduct, shopTitle } from '@/lib/shopPresentation';
 import { cn } from '@/lib/utils';
 
 type Add = (p: ShopifyProduct) => void;

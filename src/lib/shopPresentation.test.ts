@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { comicIssueTitle, isPortraitProduct, nextUnorderedIssue, productPriority, shopTitle } from './shopPresentation';
+import { atomicAestheticRank, comicIssueTitle, compareAtomicAesthetic, isAtomicZodiac, isPortraitProduct, nextUnorderedIssue, productPriority, shopTitle } from './shopPresentation';
 
 describe('featured shop order', () => {
   it('places AstroBooks and AstroComics before other products', () => {
