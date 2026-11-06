@@ -46,7 +46,7 @@ export function ShopSidebar({ types, signs, total, atomicCount, filters, onChang
       {signs.length > 0 && <div>
         <h2 className="shop-sidebar-h">Sign editions</h2>
         <div className="mt-3 grid grid-cols-4 gap-1.5" role="group" aria-label="Sign edition">
-          {signs.map(s => {
+          {[...signs].sort((a, b) => SIGNS.findIndex(n => n.toLowerCase() === a.name.toLowerCase()) - SIGNS.findIndex(n => n.toLowerCase() === b.name.toLowerCase())).map(s => {
             const i = SIGNS.findIndex(n => n.toLowerCase() === s.name.toLowerCase());
             const on = filters.sign === s.name;
             return <button key={s.name} type="button" aria-pressed={on} onClick={() => pick('sign', on ? 'All' : s.name)} title={`${s.name} · ${s.count}`} className={cn('shop-sign', on && 'shop-sign-on')}><span aria-hidden className="text-lg leading-none">{i >= 0 ? `${SIGN_GLYPH[i]}\uFE0E` : '✦'}</span><span className="text-[0.62rem] leading-none">{s.name.slice(0, 3)}</span></button>;

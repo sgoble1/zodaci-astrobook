@@ -72,7 +72,7 @@ export function ChartWheel({ r, sourcesFor, device = 'projector' }: { r: ChartRe
   const uid = useId().replace(/:/g, '');
   return (
     <div className="grid lg:grid-cols-[minmax(0,460px)_1fr] gap-6 items-start">
-      <ChartProjection>
+      <ChartProjection device={device}>
       <svg viewBox={`0 0 ${S} ${S}`} className="w-full max-w-[460px] mx-auto" role="group" aria-label="Natal chart wheel — choose any planet, sign, aspect or pillar for details">
         <defs>
           <radialGradient id={`vellum-${uid}`} cx="50%" cy="50%" r="60%">

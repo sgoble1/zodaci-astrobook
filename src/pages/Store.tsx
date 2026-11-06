@@ -90,7 +90,12 @@ export default function Store() {
   }, [catalog]);
   const filters: ShopFilters = { collection, type, sign, price, inStock: inStockOnly };
   const change = (k: keyof ShopFilters, v: string | boolean) => {
-    if (k === 'inStock') set('stock', v ? '1' : '', ''); else set(k, String(v), k === 'price' ? 'all' : 'All');
+    if (k === 'collection') {
+      const n = new URLSearchParams(params);
+      if (v === 'atomic') n.set('collection', 'atomic'); else n.delete('collection');
+      n.delete('type'); n.delete('sign');
+      setParams(n, { replace: true });
+    } else if (k === 'inStock') set('stock', v ? '1' : '', ''); else set(k, String(v), k === 'price' ? 'all' : 'All');
   };
   const clearFilters = () => { const n = new URLSearchParams(); if (q) n.set('q', q); if (sort !== 'featured') n.set('sort', sort); setParams(n, { replace: true }); };
   const band = PRICE_BANDS.find(b => b.id === price);
