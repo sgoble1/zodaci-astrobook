@@ -13,7 +13,7 @@ const PREVIEW_HEIGHT = 560;
  * Design your AstroBook cover on the real trim: drag to move the picture, zoom in or out, and see the safe zone that
  * keeps your name clear of the cut. What you see here is drawn by the same code that makes the printed cover.
  */
-export function CoverEditor({ spec, onChange, trimLabel }: { spec: CoverSpec; onChange: (s: CoverSpec) => void; trimLabel: string }) {
+export function CoverEditor({ spec, onChange, trimLabel, birthLine }: { spec: CoverSpec; onChange: (s: CoverSpec) => void; trimLabel: string; /** The reader's own birth line; when given, they choose whether it prints under their name. */ birthLine?: string }) {
   const canvas = useRef<HTMLCanvasElement>(null);
   const [showSafe, setShowSafe] = useState(true);
   const [size, setSize] = useState<{ width: number; height: number } | null>(null);
@@ -75,8 +75,12 @@ export function CoverEditor({ spec, onChange, trimLabel }: { spec: CoverSpec; on
         <div className="space-y-1.5">
           <Label htmlFor="cover-name">Name on the cover</Label>
           <Input id="cover-name" value={spec.name} maxLength={40} onChange={e => onChange({ ...spec, name: e.target.value })} placeholder="Your name" autoComplete="name" />
-          <p className="text-xs text-muted-foreground">Beneath it: “Your exact placement in print”. The AstroBook mark sits bottom-right.</p>
+          <p className="text-xs text-muted-foreground">{spec.detail ? `Beneath it: ${spec.detail}.` : 'Beneath it: “Your exact placement in print”.'} The AstroBook mark sits bottom-right.</p>
         </div>
+        {birthLine && <label className="flex items-start gap-3 text-sm">
+          <Switch checked={!!spec.detail} onCheckedChange={on => onChange({ ...spec, detail: on ? birthLine : undefined })} aria-label="Print my birth date, time and place under my name" className="mt-0.5" />
+          <span><span className="block">Print my birth date, time and place under my name</span><span className="block text-xs text-muted-foreground">{birthLine}. Turn this off to keep your birth details off the outside of the book.</span></span>
+        </label>}
         <div className="space-y-2">
           <div className="flex items-center justify-between gap-2"><Label htmlFor="cover-zoom">Zoom</Label><span className="text-xs text-muted-foreground">{Math.round(spec.crop.zoom * 100)}%</span></div>
           <div className="flex items-center gap-2">

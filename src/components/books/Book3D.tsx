@@ -7,11 +7,11 @@ import { DEFAULT_CROP } from '@/lib/coverLayout';
  * Interactive 3D AstroBook mockup scaled from the printer spec: US Trade 6 × 9 in softcover,
  * perfect-bound. Spine thickness approximates page count on 80 lb satin stock (~0.0045 in/page).
  */
-export function Book3D({ pages = 250, trimPt = [432, 648], label = '6″ × 9″ · softcover perfect binding', hardcover = false, coverSrc: fixedSrc, name = '', design, onPick }: { pages?: number; trimPt?: [number, number]; label?: string; hardcover?: boolean; coverSrc?: string; name?: string; design?: string; /** When given, the preview chips choose the real cover instead of only previewing one. */ onPick?: (key: string) => void }) {
+export function Book3D({ pages = 250, trimPt = [432, 648], label = '6″ × 9″ · softcover perfect binding', hardcover = false, coverSrc: fixedSrc, name = '', detail, design, onPick }: { pages?: number; trimPt?: [number, number]; label?: string; hardcover?: boolean; coverSrc?: string; name?: string; /** Birth line under the name on designed previews. */ detail?: string; design?: string; /** When given, the preview chips choose the real cover instead of only previewing one. */ onPick?: (key: string) => void }) {
   const [picked, setCover] = useState(() => COVER_DESIGNS.find(d => d.key === design) ?? COVER_DESIGNS[0]);
   const cover = COVER_DESIGNS.find(d => d.key === design) ?? picked;
   // Without a finished cover, show the chosen design with the same name, subtitle and wordmark as the printed book.
-  const designed = useCoverImage(fixedSrc ? null : { source: { kind: 'design', key: cover.key }, crop: DEFAULT_CROP, name, trimPt }, 40);
+  const designed = useCoverImage(fixedSrc ? null : { source: { kind: 'design', key: cover.key }, crop: DEFAULT_CROP, name, trimPt, detail }, 40);
   const [angle, setAngle] = useState(-28);
   // Drag (mouse or touch) to turn the book; vertical swipes still scroll the page.
   const drag = useRef<{ x: number; a: number } | null>(null);
