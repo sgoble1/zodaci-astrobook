@@ -86,3 +86,22 @@ For every changed page: screenshots at 393px and 1280px, a console check, tests 
 - `Book3D` becomes the one 3D book display, fed by `productArtwork.ts`.
 - Icons keep their registry names. Shop tiles become a new `ShopDepartmentGrid`.
 - Build cost lives in a constant in `plans.ts`-style config (`devCost.ts`) plus an admin-editable `platform_settings` key for the credit totals.
+
+## Additions found in the completeness review
+- **Image library page (from the "Homepage (20)" screenshot):** an Admin page that lists every site image by area (Homepage, AstroBooks, Shop and so on). Each image shows its file name, where it's used, and View and Download buttons, in our hand-cut style.
+- **Roadmap items the brief marks open:**
+  - shop sidebar grouping the ~57 product types into a few departments
+  - logo and wordmark check
+  - page-specific layouts (P1.7c)
+  - Timeline Hall restyle (P9)
+  - Founder Command restyle (P10)
+  - three-column AstroBook reader (prompt 4A, checked for risk first)
+  - stronger slow flicker, scratches and dust on the projector
+  - box illustrations on every feature box, with slow 1950s box animations
+  - more art for the explore, reading-room, guide and place pages
+- **Brief's "new items" list:** help@zodaci.com goes through the built-in email system (not Resend). The founder's Printed AstroBook page in the library shows a preview with sample chapters.
+- **Kept as later work, as the brief says:**
+  - waiting on AI credits: Intelligence Layer (P3b), personal comic issues (P5), AI Observatory (P12)
+  - needing new groundwork first: Living AstroBooks (P4), Portrait System (P6), Event Architecture (P11)
+  - waiting on you: Zac's illustrated comic pages, Shane's chapter corrections, real testimonials, licensed Sabian text, Lulu printing
+- **Gap 32 detail:** workbook entries feed personalization only with the owner's opt-in. They never override chart facts.
