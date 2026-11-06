@@ -189,7 +189,7 @@ export function PrecisionTile({ className }: { className?: string }) {
 export function ShopWindowPlate({ id = 'shopwin-h', className }: { id?: string; className?: string }) {
   return (
     <section aria-labelledby={id} className={cn('obs-paper p-4 sm:p-5', className)}>
-      <PlateHead id={id} title="The gift shop" sub="Atomic Zodiac prints, tees, mugs and totes" action={<Link to="/store" className="inline-flex items-center gap-1 font-label text-sm tracking-[0.16em] text-accent hover:underline">Visit the shop<ArrowRight aria-hidden className="h-4 w-4" /></Link>} />
+      <PlateHead id={id} title="The gift shop" sub="The Atomic Zodiac Collection, for every sign" action={<Link to="/store" className="inline-flex items-center gap-1 font-label text-sm tracking-[0.16em] text-accent hover:underline">Visit the shop<ArrowRight aria-hidden className="h-4 w-4" /></Link>} />
       <ShopDepartmentGrid compact headingId={id} />
     </section>
   );
