@@ -52,7 +52,7 @@ export function DashboardMosaic({ chart, name, hasTime, primary, secondary, onAi
   });
   if (press) slides.push({
     id: 'press', label: 'Take the sky home',
-    content: <PressSlide title={<>Take the<br />sky home.</>} script="Your name. Your minute. In print." text="AstroBooks and AstroComics are written and drawn from this chart. Read them here, or order a printed copy with your name and birth details on the cover." points={['Your name and birth details on the cover', 'Every chapter worked out from this chart', 'Printed to order, one copy at a time']} book={press.book} comic={press.comic} />,
+    content: <PressSlide title={<>Take the<br />sky home.</>} script="Your sky, bound in print." text="AstroBooks and AstroComics are written and drawn from this chart. Read them here, or order a printed copy with your name and birth details on the cover." points={['Your name and birth details on the cover', 'Every chapter worked out from this chart', 'Printed to order, one copy at a time']} book={press.book} comic={press.comic} />,
   });
   return (
     <div className="mosaic">

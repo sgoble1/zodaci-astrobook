@@ -1025,11 +1025,11 @@ li:hover > .zodiac-coin { transform: rotate(-10deg); }
 .press-point-star { color: hsl(var(--comic-mustard)); font-size: .8rem; }
 .press-stack { position: relative; width: min(100%, 24rem); margin-inline: auto; aspect-ratio: 1 / 1.02; }
 .press-stack > a { position: absolute; display: block; transition: transform 1.6s cubic-bezier(.22,1,.36,1); }
-.press-stack-back { width: 44%; left: 2%; top: 4%; transform: rotate(-9deg); filter: brightness(.82) saturate(.9); }
-.press-stack-front { width: 54%; left: 24%; top: 0; transform: rotate(-2deg); z-index: 2; }
-.press-stack-comic { width: 38%; right: 0; bottom: 6%; transform: rotate(5deg); z-index: 3; }
-.press-stack-front:hover, .press-stack-front:focus-visible { transform: rotate(-1deg) translateY(-6px); }
-.press-stack-comic:hover, .press-stack-comic:focus-visible { transform: rotate(3deg) translateY(-6px); }
+.press-stack-back { width: 42%; right: 1%; top: 0; transform: rotate(7deg); filter: brightness(.8) saturate(.9); }
+.press-stack-front { width: 54%; left: 4%; top: 3%; transform: rotate(-2.5deg); z-index: 2; }
+.press-stack-comic { width: 33%; right: 3%; bottom: 7%; transform: rotate(4deg); z-index: 3; }
+.press-stack-front:hover, .press-stack-front:focus-visible { transform: rotate(-1.5deg) translateY(-6px); }
+.press-stack-comic:hover, .press-stack-comic:focus-visible { transform: rotate(2.5deg) translateY(-6px); }
 .press-stack > a:focus-visible { outline: 2px solid hsl(var(--comic-mustard)); outline-offset: 4px; border-radius: .3rem; }
 .press-stack-note { position: absolute; left: 0; bottom: 0; font-family: 'Bebas Neue', sans-serif; font-size: .8rem; letter-spacing: .16em; text-transform: uppercase; color: hsl(var(--comic-mustard)); }
 .press-cutout { filter: drop-shadow(5px 7px 0 hsl(var(--midnight) / .7)) drop-shadow(0 0 1.5px hsl(var(--comic-mustard))); }

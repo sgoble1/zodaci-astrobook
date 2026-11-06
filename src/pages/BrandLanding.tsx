@@ -81,7 +81,7 @@ export default function BrandLanding() {
     },
     {
       id: 'press', label: 'Take the sky home',
-      content: <PressSlide title={<>Take the<br />sky home.</>} script="Your name. Your minute. In print."
+      content: <PressSlide title={<>Take the<br />sky home.</>} script="Your sky, bound in print."
         text={<>An AstroBook is your birth chart written out as a book, with your name, birth date, time and place printed on the cover. Every chapter is worked out from that minute and place, so no two copies say the same thing. AstroComic draws the same chart as an illustrated story.</>}
         points={['Your name and birth details on the cover', `Five editions, from a ${money(fromBook)} PDF to linen hardcover`, 'Printed to order and shipped free in the US']}
         book={{ to: '/astrobook', label: 'Browse AstroBooks' }} comic={{ to: '/astrocomic', label: 'Meet AstroComic' }} />,
