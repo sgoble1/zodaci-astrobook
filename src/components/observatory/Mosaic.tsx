@@ -120,7 +120,7 @@ export function ArchiveShelf({ id = 'archive-h', to = '/astrobook', className }:
               </Link>
             </li>
           ))}
-          <li className="shelf-item"><Link to={to} className="shelf-cover shelf-product" aria-label="AstroBook, Collector Taurus shop sample"><img src={PRODUCT_ART.book.src} alt={PRODUCT_ART.book.alt} width={1024} height={1024} loading="lazy" className="h-full w-full object-contain" /><span className="font-label text-xs">Collector AstroBook</span></Link></li>
+          <li className="shelf-item"><Link to={to} className="shelf-cover" aria-label="Collector AstroBook sample cover, printed for a fictional reader"><img src={PRODUCT_ART.book.src} alt={PRODUCT_ART.book.alt} width={1024} height={1536} loading="lazy" className="h-full w-full object-cover" /></Link></li>
           <li className="shelf-item"><Link to="/astrocomic" className="shelf-cover shelf-product" aria-label="AstroComic story preview"><img src={PRODUCT_ART.comic.src} alt={PRODUCT_ART.comic.alt} width={768} height={1145} loading="lazy" className="h-full w-full object-contain" /></Link></li>
         </ul>
         <button type="button" onClick={() => slide(-1)} className="shelf-arrow left-0" aria-label="Scroll the shelf left"><ChevronLeft aria-hidden className="h-5 w-5" /></button>

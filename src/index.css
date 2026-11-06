@@ -1094,7 +1094,9 @@ li:hover > .zodiac-coin { transform: rotate(-10deg); }
 .product-art-stage-3d { height: auto !important; min-height: 24rem; padding: 0 .5rem .75rem; background: radial-gradient(ellipse 60% 55% at 50% 42%, hsl(var(--screen-lamp) / .35), transparent 70%), hsl(var(--spot-paper)); }
 .product-art-stage-3d figcaption { color: hsl(var(--comic-navy) / .8); }
 .product-art-thumb { flex-shrink: 0; width: 3.5rem; height: 3.5rem; padding: .2rem; background: hsl(var(--spot-paper)); border: 1px solid hsl(var(--brass) / .45); border-radius: .25rem; }
-.product-art-thumb[aria-pressed="true"] { outline: 2px solid hsl(var(--primary)); outline-offset: 2px; }
+.product-art-thumb[aria-pressed="true"], .product-art-thumb[aria-checked="true"] { outline: 2px solid hsl(var(--primary)); outline-offset: 2px; }
+.product-art-thumb:focus-visible { outline: 2px solid hsl(var(--ring)); outline-offset: 2px; }
+.product-art-thumb-cover { width: 2.75rem; height: 4.1rem; padding: 0; overflow: hidden; }
 .shelf-product { background: hsl(var(--spot-paper)); color: hsl(var(--comic-navy)); padding: .4rem; text-align: center; }
 .shelf-product img { min-height: 0; }
 @media (min-width: 1024px) { .product-page-opening { grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); padding: 2.5rem; } .product-page-opening .hero-headline { font-size: 3.5rem; } }

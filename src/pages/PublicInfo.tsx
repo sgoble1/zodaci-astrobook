@@ -12,6 +12,7 @@ import { CosmicTeaser } from '@/components/books/CosmicTeaser';
 import { ProductArtworkGallery } from '@/components/books/ProductArtworkGallery';
 import { PersonalizationStory } from '@/components/books/PersonalizationStory';
 import { BOOK_PRODUCT_SAMPLES, PRODUCT_ART } from '@/content/productArtwork';
+import { SampleCover } from '@/components/books/SampleCover';
 import { ThemeArt } from '@/components/common/ThemeArt';
 import { SampleBook } from '@/components/books/SampleBookReader';
 import { VOLUMES } from '@/lib/bookVolumes';
@@ -54,9 +55,9 @@ export function AstroBookPublic() {
       <PersonalizationStory />
       <section id="story" className="grid gap-8 md:grid-cols-2 items-center">
         <div className="space-y-4"><h2 className="font-display text-3xl">Calculated, not guessed.</h2><p className="text-muted-foreground">Every AstroBook starts with astronomy: the exact positions of the Sun, Moon and planets at the moment and place you were born. Interpretation comes second, and the book always tells you which is which.</p><p className="text-muted-foreground">Then we write it for one person. No two AstroBooks are alike, because no two birth moments are.</p></div>
-        <div className="grid grid-cols-3 gap-3">{BOOK_PRODUCT_SAMPLES.map(s => <figure key={s.label}><img src={s.src} alt={s.alt} width={1024} height={1024} loading="lazy" className="aspect-square w-full rounded-sm object-contain" /><figcaption className="mt-2 text-center font-label text-sm">{s.label}</figcaption></figure>)}</div>
+        <div className="grid grid-cols-3 gap-4">{BOOK_PRODUCT_SAMPLES.map(s => <figure key={s.label}><SampleCover sample={s.sample} /><figcaption className="mt-3 text-center text-xs leading-snug text-muted-foreground"><span className="block font-label text-sm tracking-[0.1em] text-primary">{s.label}</span>For {s.sample.name}</figcaption></figure>)}</div>
       </section>
-      <section className="grid items-center gap-8 md:grid-cols-2" aria-labelledby="cover-preview-title"><div><h2 id="cover-preview-title" className="plate-title">Make the cover yours</h2><p className="mt-3 text-muted-foreground">The shop images are illustrative samples. Preview your own name and chosen artwork before ordering.</p><img src={PRODUCT_ART.collection.src} alt={PRODUCT_ART.collection.alt} width={1536} height={1024} loading="lazy" className="mt-5 w-full rounded-sm" /></div><div className="obs-paper p-5"><CoverCustomizer /></div></section>
+      <section className="grid items-center gap-8 md:grid-cols-2" aria-labelledby="cover-preview-title"><div><h2 id="cover-preview-title" className="plate-title">Make the cover yours</h2><p className="mt-3 text-muted-foreground">The sample covers above are printed for fictional readers. Type your own name and birth details here to see yours; nothing you type is saved.</p><img src={PRODUCT_ART.collection.src} alt={PRODUCT_ART.collection.alt} width={1536} height={1024} loading="lazy" className="mt-5 w-full rounded-sm" /></div><div className="obs-paper p-5"><CoverCustomizer /></div></section>
       <section id="inside" className="space-y-6">
         <h2 className="font-display text-3xl">Six volumes, one sky.</h2>
         <p className="text-muted-foreground">Every AstroBook follows the same six-volume structure as our founders’ Masterbooks, written from your chart. Every version includes Volumes I–IV and VI; World Systems begins at Classic, and larger versions add chapters inside each volume. Compare them below.</p>
