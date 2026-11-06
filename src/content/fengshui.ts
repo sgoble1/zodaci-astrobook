@@ -71,3 +71,25 @@ registerPrivateValue("fengshui", "ELEMENT_PROFILE", value => { ELEMENT_PROFILE =
 registerPrivateValue("fengshui", "ROOMS", value => { ROOMS = value as typeof ROOMS; }, []);
 registerPrivateValue("fengshui", "CRYSTALS", value => { CRYSTALS = value as typeof CRYSTALS; }, []);
 registerPrivateValue("fengshui", "TWELVE_WEEKS", value => { TWELVE_WEEKS = value as typeof TWELVE_WEEKS; }, []);
+
+/**
+ * Monthly Flying Stars. The solar month (not the calendar month) sets the star: months begin at the twelve
+ * "jie" solar terms, the first at Lichun (~Feb 4). The first month's centre star depends on the year's branch —
+ * Rat/Rabbit/Horse/Rooster years start at 8, Ox/Dragon/Goat/Dog at 5, Tiger/Snake/Monkey/Pig at 2 — and the
+ * centre then descends by one each month. Start dates are typical and can shift by a day either side.
+ */
+export const SOLAR_MONTHS: { label: string; starts: string }[] = [
+  { label: 'Tiger month', starts: 'Feb 4' }, { label: 'Rabbit month', starts: 'Mar 6' }, { label: 'Dragon month', starts: 'Apr 5' },
+  { label: 'Snake month', starts: 'May 6' }, { label: 'Horse month', starts: 'Jun 6' }, { label: 'Goat month', starts: 'Jul 7' },
+  { label: 'Monkey month', starts: 'Aug 8' }, { label: 'Rooster month', starts: 'Sep 8' }, { label: 'Dog month', starts: 'Oct 8' },
+  { label: 'Pig month', starts: 'Nov 7' }, { label: 'Rat month', starts: 'Dec 7' }, { label: 'Ox month', starts: 'Jan 6' },
+];
+const BRANCHES = ['Rat', 'Ox', 'Tiger', 'Rabbit', 'Dragon', 'Snake', 'Horse', 'Goat', 'Monkey', 'Rooster', 'Dog', 'Pig'] as const;
+/** Chinese zodiac animal of a solar year (the year that begins at Lichun). */
+export const yearBranch = (year: number) => BRANCHES[(((year - 4) % 12) + 12) % 12];
+/** Centre star of solar month `m` (0 = the Tiger month beginning ~Feb 4) of a solar year. */
+export const monthlyCenter = (year: number, m: number) => {
+  const b = (((year - 4) % 12) + 12) % 12;
+  const first = b % 3 === 0 ? 8 : b % 3 === 1 ? 5 : 2;
+  return ((((first - 1 - m) % 9) + 9) % 9) + 1;
+};
