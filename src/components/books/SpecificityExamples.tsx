@@ -11,12 +11,12 @@ const fact = (page: typeof rising, label: string) => page.facts.find(f => f.labe
 export const SPECIFICITY_ROWS: { generic: string; specific: string; facts: string }[] = [
   {
     generic: 'Leo rising: confident, warm, loves attention.',
-    specific: 'Your Ascendant is 12° Leo, so the Sun rules the whole chart — and it sits in Aries in the 9th house. Your warmth wants to start something: an idea, a trip, a course of study. Chiron five degrees behind the Ascendant explains why being seen can feel exposing, and how that becomes a skill.',
+    specific: 'Your Ascendant is 12° Leo, so the Sun rules the whole chart, and it sits in Aries in the 9th house. Your warmth wants to start something: an idea, a trip, a course of study. Chiron, five degrees behind the Ascendant, can make being seen feel exposing at first; the chapter explains how that turns into a skill.',
     facts: `${fact(rising, 'Ascendant')} · ruler ${fact(rising, 'Chart ruler')} · ${fact(rising, 'In the 1st house')}`,
   },
   {
     generic: 'Venus retrograde people struggle in love.',
-    specific: 'Venus was retrograde at 15° Aries in your 9th house. What you value is decided privately and revisited often. Two of your tightest aspects — a trine to the North Node within 0.1° and a square to Mars within 0.3° — tie what you love to where your life is growing, with real friction between desire and drive.',
+    specific: 'Venus was retrograde at 15° Aries in your 9th house, so what you value tends to be decided privately and revisited often. Two of your tightest aspects involve this Venus: a trine to the North Node within 0.1° and a square to Mars within 0.3°. One ties what you love to where your life is heading; the other puts desire and drive at odds.',
     facts: `Venus ${fact(sun, 'Venus')} · ${fact(sun, 'Tightest aspects')}`,
   },
 ];
@@ -35,7 +35,7 @@ export function SpecificityExamples({ className }: { className?: string }) {
         ))}
         <li className="specific-row">
           <div className="specific-generic"><p className="font-label text-xs tracking-[0.16em] text-muted-foreground">Example context you add</p><p className="mt-1 text-sm italic">“I’m deciding whether to go back to school next year.”</p></div>
-          <div className="specific-zodaci"><p className="font-label text-xs tracking-[0.16em] text-primary">A new chapter can then explore</p><p className="mt-1 text-sm leading-relaxed">How the 9th-house Aries Sun (study, belief, the wider map) and the retrograde Venus there (choosing twice) bear on that decision, alongside the timing ahead — while the decision, and the facts of your life, stay yours.</p><p className="mt-2 font-label text-[0.68rem] tracking-[0.12em] text-muted-foreground">Illustration of the feature · your context is private and opt-in</p></div>
+          <div className="specific-zodaci"><p className="font-label text-xs tracking-[0.16em] text-primary">A new chapter can then explore</p><p className="mt-1 text-sm leading-relaxed">How the Aries Sun in the 9th house (study, belief, travel) and the retrograde Venus beside it (choosing something twice) bear on that decision, with the timing over the next year. The decision, and the facts of your life, stay yours.</p><p className="mt-2 font-label text-[0.68rem] tracking-[0.12em] text-muted-foreground">Illustration of the feature · your context is private and opt-in</p></div>
         </li>
       </ul>
     </section>

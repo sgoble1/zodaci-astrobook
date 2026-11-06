@@ -100,7 +100,7 @@ export default function BrandLanding() {
       <DestinationTiles label="Main destinations" items={DESTINATIONS} />
 
       <div className="mosaic-split-1-2">
-        <QuotePlate art="magnifier" quote="Check the sky twice. Name the source. Never invent a life." by="The Authority’s working rules" />
+        <QuotePlate art="magnifier" quote="We check every position twice, name our sources, and never make up details about anyone’s life." by="How we work" />
         <ArchiveShelf />
       </div>
 
