@@ -2,7 +2,7 @@ import { SAMPLE_EDITION } from '@/content/sampleEdition';
 
 /**
  * "A horoscope says / Your chapter says": concrete depth taken from the public sample edition
- * (a real calculated chart published under the invented name Elias Marrow). No private founder
+ * (a fictional reader's birth moment, calculated like a real order). No private founder
  * text is used; the context example is labelled as an illustration of the feature.
  */
 const [rising, sun] = SAMPLE_EDITION.pages;

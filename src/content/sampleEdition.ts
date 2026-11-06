@@ -51,7 +51,7 @@ export const SAMPLE_EDITION: EditionShowcase = {
         { label: '12th house', value: 'Sun, Mercury, Venus and Jupiter' },
         { label: 'Venus', value: 'Aries 13°00′, 12th house — conjunct Jupiter (1.7°) and the North Node (3.0°)' },
         { label: 'Tightest aspect', value: 'Mercury in Taurus 7°49′ trine Neptune in Capricorn 7°51′ (0.04°)' },
-        { label: 'Dignity', value: 'Venus in detriment in Aries · Jupiter in a fire sign it rules by triplicity at night' },
+        { label: 'Dignity', value: 'Venus in detriment in Aries' },
       ],
       body: [
         'Four of your planets sit in the 12th house, the part of the sky that had just risen before you were born. Traditional astrology treats this house as private: behind the scenes, in solitude, in service, in the imagination. A chart weighted here often does its real work quietly and is surprised later by how much it has built.',
