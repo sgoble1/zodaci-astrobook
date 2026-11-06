@@ -27,20 +27,20 @@ const FACTS: [string, string][] = [
 ];
 
 const PILLARS = [
-  { art: 'chart' as SpotKind, title: 'Calculated, not guessed', text: 'Every planet, house and angle comes from astronomical data for your exact birth moment, time and place — never a sun-sign template.' },
-  { art: 'written' as SpotKind, title: 'Written for one person', text: 'Readings combine your sign, house, aspects and rulers, and name the placement behind every sentence — so they could only be about you.' },
-  { art: 'honest' as SpotKind, title: 'Honest about limits', text: 'No birth time? We show exactly what changes. Measured positions, interpretations and your own notes always stay clearly separate.' },
-  { art: 'private' as SpotKind, title: 'Private by design', text: 'Your chart, readings and conversations belong to your account. Nothing is shared unless you invite someone in.' },
+  { art: 'chart' as SpotKind, title: 'Worked out from astronomy', text: 'Planets, houses and angles are calculated for the minute and place you were born, using the historical time zone for that town.' },
+  { art: 'written' as SpotKind, title: 'Written for one chart', text: 'Each reading combines your signs, houses, aspects and rulers, and says which placement every paragraph comes from.' },
+  { art: 'honest' as SpotKind, title: 'Clear about uncertainty', text: 'If your birth time is unknown, we say which placements could change. Calculations, interpretation and your own notes are labelled separately.' },
+  { art: 'private' as SpotKind, title: 'Private by default', text: 'Your chart, readings and conversations stay in your account. Nobody else sees them unless you share them.' },
 ];
 
 const FEATURE_ART: SpotKind[] = ['book', 'year', 'radio', 'compass', 'astrobook', 'tv'];
 const FEATURES: [string, string, string][] = [
-  [`${ALL_READINGS.length}+ readings`, 'Chapters written from your exact placements.', '/learn#guides'],
-  ['Personal forecasts', 'Transits and timing for the road ahead.', '/start'],
-  ['AI Observatory', 'Ask questions answered from your own chart, with sources.', '/start'],
-  ['Life Compass', 'Career, relationships, finances, purpose, health and creativity signals.', '/start'],
-  ['AstroBooks', 'Your chart as a printed astral dossier.', '/astrobook'],
-  ['Current Chapters', 'The theme your sky is working on now, on air.', '/start'],
+  [`${ALL_READINGS.length} readings`, 'Chapters written from your own placements.', '/learn#guides'],
+  ['Personal forecasts', 'Transits to your chart over the coming weeks.', '/forecast'],
+  ['Ask the Sources', 'Questions answered from your chart and our reference library, with citations.', '/start'],
+  ['Life Compass', 'Six areas of life, read from today’s transits to your chart.', '/start'],
+  ['AstroBooks', 'Your chart, printed and bound as a book.', '/astrobook'],
+  ['Current Chapter', 'What today’s sky is touching in your chart.', '/start'],
 ];
 
 /** Motto words on the left rail; each one opens a real page. */
@@ -55,8 +55,8 @@ const MOTTO: MottoLink[] = [
 ];
 
 const DESTINATIONS: Destination[] = [
-  { to: '/start', title: 'Birth charts', text: 'Your cosmic blueprint', cta: 'Explore charts', icon: ChartWheelIcon },
-  { to: '/astrobook', title: 'AstroBooks', text: 'Your personal astral dossier', cta: 'View AstroBooks', icon: BookIcon },
+  { to: '/start', title: 'Birth charts', text: 'Calculated for your birth minute', cta: 'Explore charts', icon: ChartWheelIcon },
+  { to: '/astrobook', title: 'AstroBooks', text: 'Your chart as a printed book', cta: 'View AstroBooks', icon: BookIcon },
   { to: '/compatibility', title: 'Relationships', text: 'Two charts, side by side', cta: 'Compare charts', icon: RingsIcon },
   { to: '/learn#forecasts', title: 'Forecasts', text: 'Today’s sky and the month ahead', cta: 'See the sky', icon: TelescopeIcon },
   { to: '/store', title: 'Gift Shop', text: 'Prints, books and keepsakes', cta: 'Visit the shop', icon: StorefrontIcon },

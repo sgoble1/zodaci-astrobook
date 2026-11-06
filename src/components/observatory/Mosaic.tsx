@@ -55,7 +55,7 @@ export function ForecastPlate({ className }: { className?: string }) {
 }
 
 /** Tall travel-poster plate: the observatory on its hill under the Moon. */
-export function ExplorePoster({ to, title = 'Explore a brighter tomorrow', className }: { to: string; title?: string; className?: string }) {
+export function ExplorePoster({ to, title = 'Learn to read your chart', className }: { to: string; title?: string; className?: string }) {
   return (
     <Link to={to} className={cn('explore-poster group', className)}>
       <img src={poster} alt="A domed observatory on a forested hilltop under a full Moon" width={720} height={990} loading="lazy" className="absolute inset-0 h-full w-full object-cover object-bottom" />
@@ -108,7 +108,7 @@ export function ArchiveShelf({ id = 'archive-h', to = '/astrobook', className }:
   const slide = (dir: 1 | -1) => track.current?.scrollBy({ left: dir * track.current.clientWidth * 0.8, behavior: 'smooth' });
   return (
     <section aria-labelledby={id} className={cn('obs-paper p-5 sm:p-6', className)}>
-      <PlateHead id={id} title="The Cosmic Archive" sub="Every AstroBook, written from your own chart" />
+      <PlateHead id={id} title="The Cosmic Archive" sub="The chapters inside an AstroBook" />
       <div className="relative">
         <ul ref={track} className="shelf-track" tabIndex={0} aria-label="AstroBook chapters and covers">
           {CHAPTER_TABS.map((c, i) => (
@@ -132,17 +132,17 @@ export function ArchiveShelf({ id = 'archive-h', to = '/astrobook', className }:
 }
 
 const STEPS: [SpotKind, string, string, string][] = [
-  ['birth', 'Your birth date, time & place', 'A unique moment', 'From a birth certificate if you can. No time? We show exactly what that changes.'],
-  ['explore', 'A snapshot of the sky', 'The real positions', 'Astronomical data places every planet, house cusp and angle for that minute.'],
-  ['chart', 'Your unique chart', 'A cosmic blueprint', 'Signs, exact degrees, houses, rulers and aspects, each with a note on how it was derived.'],
-  ['written', 'Personal insights', 'Meaningful guidance', 'Readings name the placement behind every sentence, and your own context if you add it.'],
-  ['growth', 'Greater self-awareness', 'A brighter you', 'Practices, timing and reflection questions you can return to as your sky moves.'],
+  ['birth', 'Your birth date, time & place', 'Where it starts', 'A birth certificate is best. No time? We show which parts that affects.'],
+  ['explore', 'The sky at that minute', 'Calculated', 'An astronomy engine places every planet, house cusp and angle for that minute and place.'],
+  ['chart', 'Your chart', 'Degrees, houses, aspects', 'Each placement comes with a note on how it was worked out.'],
+  ['written', 'Your readings', 'Tied to placements', 'Every paragraph names the placement it comes from. Your own context is used only if you add it.'],
+  ['growth', 'Coming back to it', 'As the sky moves', 'Timing, practices and questions to return to when transits change.'],
 ];
 
 export function HowItWorks({ id = 'how-h', className }: { id?: string; className?: string }) {
   return (
     <section aria-labelledby={id} className={cn('obs-paper p-5 sm:p-6', className)}>
-      <PlateHead id={id} title="How astrology works" sub="From your birth time to a brighter tomorrow" action={<Link to="/demo" className="inline-flex items-center gap-1 font-label text-sm tracking-[0.16em] text-accent hover:underline">See a sample edition<ArrowRight aria-hidden className="h-4 w-4" /></Link>} />
+      <PlateHead id={id} title="How astrology works" sub="What happens between your birth time and your first reading" action={<Link to="/demo" className="inline-flex items-center gap-1 font-label text-sm tracking-[0.16em] text-accent hover:underline">See a sample edition<ArrowRight aria-hidden className="h-4 w-4" /></Link>} />
       <ol className="grid grid-cols-1 gap-x-5 gap-y-7 min-[480px]:grid-cols-2 sm:grid-cols-3 lg:grid-cols-5">
         {STEPS.map(([art, title, text, detail], i) => (
           <li key={title} className="how-step">
@@ -153,21 +153,20 @@ export function HowItWorks({ id = 'how-h', className }: { id?: string; className
           </li>
         ))}
       </ol>
-      <p className="mt-5 text-center font-label text-sm tracking-[0.2em] text-muted-foreground">Ancient wisdom. A more connected tomorrow.</p>
     </section>
   );
 }
 
 const ZODIAC: [string, string, string][] = [
-  ['♈', 'Aries', 'The first spark'], ['♉', 'Taurus', 'The steady ground'], ['♊', 'Gemini', 'The two voices'], ['♋', 'Cancer', 'The shelter'],
-  ['♌', 'Leo', 'The solar heart'], ['♍', 'Virgo', 'The careful hand'], ['♎', 'Libra', 'The balance'], ['♏', 'Scorpio', 'The deep water'],
-  ['♐', 'Sagittarius', 'The far road'], ['♑', 'Capricorn', 'The mountain observatory'], ['♒', 'Aquarius', 'The inventor'], ['♓', 'Pisces', 'The cosmic ocean'],
+  ['♈', 'Aries', 'Starting things'], ['♉', 'Taurus', 'Keeping things'], ['♊', 'Gemini', 'Talk and learning'], ['♋', 'Cancer', 'Home and care'],
+  ['♌', 'Leo', 'Being seen'], ['♍', 'Virgo', 'Getting it right'], ['♎', 'Libra', 'Fairness and partners'], ['♏', 'Scorpio', 'Depth and trust'],
+  ['♐', 'Sagittarius', 'Travel and belief'], ['♑', 'Capricorn', 'Work and structure'], ['♒', 'Aquarius', 'Groups and ideas'], ['♓', 'Pisces', 'Imagination and rest'],
 ];
 
 export function ZodiacPlate({ id = 'zodiac-h', highlight, className }: { id?: string; highlight?: string; className?: string }) {
   return (
     <section aria-labelledby={id} className={cn('obs-paper p-5 sm:p-6', className)}>
-      <PlateHead id={id} title="Explore the zodiac" sub="Twelve archetypes. Endless possibilities." />
+      <PlateHead id={id} title="Explore the zodiac" sub="The twelve signs, in a few words each" />
       <ul className="grid grid-cols-4 gap-x-2 gap-y-4 sm:grid-cols-6 xl:grid-cols-12">
         {ZODIAC.map(([g, n, motto]) => (
           <li key={n} className="text-center">
@@ -184,7 +183,7 @@ export function ZodiacPlate({ id = 'zodiac-h', highlight, className }: { id?: st
 export function TransmissionsPlate({ id = 'tx-h', className }: { id?: string; className?: string }) {
   return (
     <section aria-labelledby={id} className={cn('obs-paper p-5 sm:p-6', className)}>
-      <PlateHead id={id} title="Latest transmissions" sub="Ideas, insights and cosmic perspectives" />
+      <PlateHead id={id} title="Latest transmissions" sub="Short articles from the Academy" />
       <ul className="divide-y divide-[hsl(var(--comic-navy)/0.18)]">
         {PUBLIC_ARTICLES.slice(0, 5).map(a => (
           <li key={a.slug}><Link to={`/learn/${a.slug}`} className="group flex items-baseline gap-3 py-2"><span aria-hidden className="text-accent">✦</span><span className="min-w-0 flex-1"><span className="block text-sm font-semibold leading-snug group-hover:underline">{a.title}</span><span className="block font-label text-[0.65rem] tracking-[0.14em] text-muted-foreground">{a.category}</span></span></Link></li>
@@ -200,9 +199,8 @@ export function JoinPlate({ id = 'join-h', className }: { id?: string; className
     <section aria-labelledby={id} className={cn('obs-paper relative overflow-hidden p-5 sm:p-6', className)}>
       <div className="relative z-10 max-w-[19rem]">
         <PlateHead id={id} title="Join the observatory" />
-        <p className="mb-4 text-sm text-muted-foreground">Join the interest list for sky notes and new AstroBooks. Email delivery has not launched yet.</p>
+        <p className="mb-4 text-sm text-muted-foreground">Leave your email to hear when sky notes and new AstroBooks go out. We haven’t sent any yet.</p>
         <NewsletterSignup source="sky-notes" button="Sign up" />
-        <p className="mt-4 font-label text-xs tracking-[0.16em] text-muted-foreground">Curious souls. Brighter tomorrows.</p>
       </div>
       <img src={poster} alt="" aria-hidden width={720} height={990} loading="lazy" className="join-plate-art" />
     </section>
