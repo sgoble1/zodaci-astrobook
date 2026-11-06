@@ -1355,3 +1355,6 @@ li:hover > .zodiac-coin { transform: rotate(-10deg); }
 .timeline-pin-passed .timeline-pin-label { color: hsl(var(--muted-foreground)); }
 .timeline-pin-on { background: hsl(var(--primary) / .16); }
 .timeline-pin-on .timeline-pin-label { color: hsl(var(--primary)); }
+/* Shared page poster header (Compatibility, Community, sign-in): hand-cut plate, brass rule, printed grain. */
+.poster-header { border-radius: var(--cut-plate); border: 1px solid hsl(var(--brass) / .5); box-shadow: 5px 5px 0 hsl(var(--accent) / .3); }
+.poster-header-grain { pointer-events: none; background: radial-gradient(hsl(var(--midnight) / .22) .7px, transparent 1px) 0 0 / 4px 4px; mix-blend-mode: multiply; }
