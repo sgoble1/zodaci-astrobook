@@ -106,20 +106,21 @@ export default function Store() {
     if (sort === 'price-asc') sorted.sort((a, b) => priceOf(a) - priceOf(b));
     if (sort === 'price-desc') sorted.sort((a, b) => priceOf(b) - priceOf(a));
     if (sort === 'name') sorted.sort((a, b) => a.node.title.localeCompare(b.node.title));
-    if (sort === 'newest') sorted.sort((a, b) => (b.node.createdAt ?? '').localeCompare(a.node.createdAt ?? ''));
-    // Featured: books and comics, then stickers, then bags, then the rest (stable for ties).
-    if (sort === 'featured') sorted.sort((a, b) => productPriority(a.node.title, a.node.productType ?? '') - productPriority(b.node.title, b.node.productType ?? ''));
+    if (sort === 'newest') sorted.sort((a, b) => Number(isAtomicZodiac(b.node)) - Number(isAtomicZodiac(a.node)) || (b.node.createdAt ?? '').localeCompare(a.node.createdAt ?? ''));
+    // Featured: books/comics, Atomic Zodiac, other stickers, bags, then the remaining catalog.
+    if (sort === 'featured') sorted.sort((a, b) => productPriority(a.node.title, a.node.productType ?? '', a.node.tags) - productPriority(b.node.title, b.node.productType ?? '', b.node.tags)
+      || (isAtomicZodiac(a.node) && isAtomicZodiac(b.node) ? compareAtomicAesthetic(a.node, b.node) : 0));
     // Sold-out items stay visible but sink below what can be bought today.
     return sorted.sort((a, b) => Number(inStock(b)) - Number(inStock(a)));
-  }, [products, type, sign, q, sort, band, inStockOnly]);
+  }, [products, collection, type, sign, q, sort, band, inStockOnly]);
   // Default view: side-scrolling shelves in merchandising order. Any search, filter or sort shows the full grid.
-  const browsing = !q && type === 'All' && sign === 'All' && !band && !inStockOnly && sort === 'featured';
+  const browsing = !q && collection === 'all' && type === 'All' && sign === 'All' && !band && !inStockOnly && sort === 'featured';
   const shelves = useMemo(() => {
     const list = products ?? [];
-    const pri = (p: ShopifyProduct) => productPriority(p.node.title, p.node.productType ?? '');
-    const top = PRIORITY_SHELVES.map(sh => ({ id: `p${sh.priority}`, title: sh.title, script: sh.script, items: list.filter(p => pri(p) === sh.priority), seeAll: undefined as string | undefined }));
-    const rest = types.map(t => ({ id: t.name.toLowerCase().replace(/\W+/g, '-'), title: t.name, script: undefined as string | undefined, items: list.filter(p => pri(p) === 3 && p.node.productType === t.name), seeAll: t.name })).filter(sh => sh.items.length);
-    return [...top, ...rest].map(sh => ({ ...sh, items: [...sh.items].sort((a, b) => Number(inStock(b)) - Number(inStock(a))) }));
+    const pri = (p: ShopifyProduct) => productPriority(p.node.title, p.node.productType ?? '', p.node.tags);
+    const top = PRIORITY_SHELVES.map(sh => ({ id: `p${sh.priority}`, title: sh.title, script: sh.script, items: list.filter(p => pri(p) === sh.priority), seeAll: sh.priority === 1 ? 'atomic' : undefined as string | undefined }));
+    const rest = types.map(t => ({ id: t.name.toLowerCase().replace(/\W+/g, '-'), title: t.name, script: undefined as string | undefined, items: list.filter(p => pri(p) === 4 && p.node.productType === t.name), seeAll: t.name })).filter(sh => sh.items.length);
+    return [...top, ...rest].map(sh => ({ ...sh, items: [...sh.items].sort((a, b) => Number(inStock(b)) - Number(inStock(a)) || (sh.id === 'p1' ? compareAtomicAesthetic(a.node, b.node) : 0)) }));
   }, [products, types]);
   return (
     <div className="mx-auto max-w-7xl space-y-8 px-4 py-10">
