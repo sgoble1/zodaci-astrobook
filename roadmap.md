@@ -358,4 +358,9 @@ Audit Oct 29: Chat/counselors already use the member's chart; podcast/custom pag
 - [ ] Wave 6: icon set completion, feature-card drawings, place/empty-state art, logo lockup, animations audit
 - [ ] Wave 7: founder edition homes, Zac menu by volume, Sibling Bureau links, 3-column reader, podcasts/counselors/workbooks restyle, phone dock, Timeline Hall archive wall, Observation Log, context editing from Current Chapter, full-moon + Nodes/Chiron fixes
 - [ ] Wave 8: Admin/Developer restyle, SEO page data, accessibility pass, full checks, developer activity log
+
+## Atomic collection and chart displays (Nov 6 2026)
+- [ ] Faces-looking-up artwork is the first/default home slide; Cartographer and print slides remain.
+- [ ] Atomic Zodiac Collection: curated visual order, newest dates, atomic-only sign/department filtering, atomic editions first within shop categories.
+- [ ] Live wheels use the hero's dark lamp/dust projection; founder NatalWheel uses an automatic retro monitor; home sample preserves the classic pale tripod projector. Ink-on-paper remains for print.
 - Blocked: comics/Shane corrections (AI credits), Lulu keys, notify.zodaci.com DNS, testimonials, Sabian license

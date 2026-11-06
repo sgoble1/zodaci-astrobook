@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { ArrowRight, ChevronLeft, ChevronRight, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { formatMoney, inStock, type ShopifyProduct } from '@/lib/shopify';
-import { isPortraitProduct, shopTitle } from '@/lib/shopPresentation';
+import { isAtomicZodiac, isPortraitProduct, shopTitle } from '@/lib/shopPresentation';
 import { cn } from '@/lib/utils';
 
 type Add = (p: ShopifyProduct) => void;
@@ -11,7 +11,8 @@ type Add = (p: ShopifyProduct) => void;
 /** One catalog product as a gift-shop card. Books and comics use a portrait frame. */
 export function ProductCard({ p, onAdd, adding, className }: { p: ShopifyProduct; onAdd: Add; adding: boolean; className?: string }) {
   const available = inStock(p);
-  const portrait = isPortraitProduct(p.node.title, p.node.productType ?? '');
+  const portrait = isPortraitProduct(p.node.title, p.node.productType ?? '', p.node.tags);
+  const atomic = isAtomicZodiac(p.node);
   const { title, badge } = shopTitle(p.node.title, p.node.productType ?? '');
   const img = p.node.images.edges[0]?.node;
   return (
@@ -20,9 +21,11 @@ export function ProductCard({ p, onAdd, adding, className }: { p: ShopifyProduct
         {img && <img src={img.url} alt={img.altText ?? title} loading="lazy" decoding="async" width={600} height={portrait ? 800 : 600} className={cn('h-full w-full', portrait ? 'object-cover' : 'object-contain', !available && 'opacity-60 grayscale')} />}
         {!available && <span className="absolute left-3 top-3 rounded-full border border-border bg-background/90 px-2.5 py-0.5 text-xs">Sold out</span>}
         {available && badge && <span className="absolute left-3 top-3 rounded-full bg-accent px-2.5 py-0.5 font-label text-xs tracking-wider text-accent-foreground">{badge}</span>}
+        {atomic && <span className="absolute bottom-3 left-3 rounded-full border border-[hsl(var(--brass)/0.7)] bg-background/90 px-2.5 py-0.5 font-label text-xs tracking-wider text-primary">Atomic Zodiac</span>}
       </Link>
       <div className="flex flex-1 flex-col gap-2 p-4">
         <Link to={`/product/${p.node.handle}`} className="font-display text-lg leading-snug hover:underline">{title}</Link>
+        {atomic && <p className="font-label text-xs tracking-[0.14em] text-accent">Atomic Zodiac edition</p>}
         <p className="line-clamp-2 text-sm text-muted-foreground">{p.node.description}</p>
         <div className="mt-auto flex items-center justify-between gap-2 pt-2">
           <span className="font-label text-lg tracking-wider text-primary">{p.node.variants.edges.length > 1 ? 'From ' : ''}{formatMoney(p.node.priceRange.minVariantPrice)}</span>

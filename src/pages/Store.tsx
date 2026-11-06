@@ -9,7 +9,7 @@ import { PRICE_BANDS, ShopSidebar, type PriceBand, type ShopFilters } from '@/co
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { PRODUCT_BY_HANDLE_QUERY, storefrontApiRequest, fetchAllProducts, formatMoney, inStock, type ShopifyProduct } from '@/lib/shopify';
 import { useCartStore } from '@/stores/cartStore';
-import { PRIORITY_SHELVES, comicIssueTitle, isPortraitProduct, productPriority, shopTitle } from '@/lib/shopPresentation';
+import { PRIORITY_SHELVES, comicIssueTitle, compareAtomicAesthetic, isAtomicZodiac, isPortraitProduct, productPriority, shopTitle } from '@/lib/shopPresentation';
 import { PersonalizationCallout } from '@/components/books/PersonalizationStory';
 import { ProductCard, ShopShelf, SpotlightCard } from '@/components/store/ShopShelves';
 import { useNextComicIssue } from '@/hooks/useNextComicIssue';
@@ -61,7 +61,9 @@ export default function Store() {
   const type = params.get('type') ?? 'All';
   const q = params.get('q') ?? '';
   const sort = (params.get('sort') as Sort) in SORTS ? (params.get('sort') as Sort) : 'featured';
-  const set = (k: string, v: string, empty: string) => { const n = new URLSearchParams(params); if (v === empty) n.delete(k); else n.set(k, v); setParams(n, { replace: true }); };
+  const set = (k: string, v: string, empty: string) => {
+    setParams(previous => { const n = new URLSearchParams(previous); if (v === empty) n.delete(k); else n.set(k, v); return n; }, { replace: true });
+  };
   const { add, loading } = useAdd();
   useEffect(() => {
     let on = true; setFailed(false); setProducts(null);
@@ -69,12 +71,15 @@ export default function Store() {
     return () => { on = false; };
   }, [attempt]);
   const [sheet, setSheet] = useState(false);
-  // Departments ordered by how many pieces they hold, so the biggest collections lead.
+  const collection = params.get('collection') === 'atomic' ? 'atomic' : 'all';
+  const atomicCount = useMemo(() => (products ?? []).filter(p => isAtomicZodiac(p.node)).length, [products]);
+  // Collection selection scopes both department and sign counts to the editions being browsed.
+  const catalog = useMemo(() => (products ?? []).filter(p => collection === 'all' || isAtomicZodiac(p.node)), [products, collection]);
   const types = useMemo(() => {
     const count = new Map<string, number>();
-    for (const p of products ?? []) if (p.node.productType) count.set(p.node.productType, (count.get(p.node.productType) ?? 0) + 1);
+    for (const p of catalog) if (p.node.productType) count.set(p.node.productType, (count.get(p.node.productType) ?? 0) + 1);
     return [...count.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0])).map(([name, n]) => ({ name, count: n }));
-  }, [products]);
+  }, [catalog]);
   const sign = params.get('sign') ?? 'All';
   const priceParam = params.get('price');
   const price: PriceBand | 'all' = PRICE_BANDS.some(b => b.id === priceParam) ? (priceParam as PriceBand) : 'all';
@@ -82,18 +87,26 @@ export default function Store() {
   const signOf = (p: ShopifyProduct) => (p.node.tags ?? []).find(t => t.startsWith('sign:'))?.slice(5);
   const signs = useMemo(() => {
     const count = new Map<string, number>();
-    for (const p of products ?? []) { const s = signOf(p); if (s) { const n = s[0].toUpperCase() + s.slice(1); count.set(n, (count.get(n) ?? 0) + 1); } }
+    for (const p of catalog) { const s = signOf(p); if (s) { const n = s[0].toUpperCase() + s.slice(1); count.set(n, (count.get(n) ?? 0) + 1); } }
     return [...count.entries()].map(([name, n]) => ({ name, count: n }));
-  }, [products]);
-  const filters: ShopFilters = { type, sign, price, inStock: inStockOnly };
+  }, [catalog]);
+  const filters: ShopFilters = { collection, type, sign, price, inStock: inStockOnly };
   const change = (k: keyof ShopFilters, v: string | boolean) => {
-    if (k === 'inStock') set('stock', v ? '1' : '', ''); else set(k, String(v), k === 'price' ? 'all' : 'All');
+    if (k === 'collection') {
+      setParams(previous => {
+        const n = new URLSearchParams(previous);
+        if (v === 'atomic') n.set('collection', 'atomic'); else n.delete('collection');
+        n.delete('type'); n.delete('sign');
+        return n;
+      }, { replace: true });
+    } else if (k === 'inStock') set('stock', v ? '1' : '', ''); else set(k, String(v), k === 'price' ? 'all' : 'All');
   };
   const clearFilters = () => { const n = new URLSearchParams(); if (q) n.set('q', q); if (sort !== 'featured') n.set('sort', sort); setParams(n, { replace: true }); };
   const band = PRICE_BANDS.find(b => b.id === price);
   const shown = useMemo(() => {
     const words = q.toLowerCase().split(/\s+/).filter(Boolean);
-    const list = (products ?? []).filter(p => (type === 'All' || p.node.productType === type)
+    const list = (products ?? []).filter(p => (collection === 'all' || isAtomicZodiac(p.node))
+      && (type === 'All' || p.node.productType === type)
       && (sign === 'All' || signOf(p) === sign.toLowerCase())
       && (!band || (priceOf(p) >= band.min && priceOf(p) < band.max))
       && (!inStockOnly || inStock(p))
@@ -102,20 +115,21 @@ export default function Store() {
     if (sort === 'price-asc') sorted.sort((a, b) => priceOf(a) - priceOf(b));
     if (sort === 'price-desc') sorted.sort((a, b) => priceOf(b) - priceOf(a));
     if (sort === 'name') sorted.sort((a, b) => a.node.title.localeCompare(b.node.title));
-    if (sort === 'newest') sorted.sort((a, b) => (b.node.createdAt ?? '').localeCompare(a.node.createdAt ?? ''));
-    // Featured: books and comics, then stickers, then bags, then the rest (stable for ties).
-    if (sort === 'featured') sorted.sort((a, b) => productPriority(a.node.title, a.node.productType ?? '') - productPriority(b.node.title, b.node.productType ?? ''));
+    if (sort === 'newest') sorted.sort((a, b) => Number(isAtomicZodiac(b.node)) - Number(isAtomicZodiac(a.node)) || (b.node.createdAt ?? '').localeCompare(a.node.createdAt ?? ''));
+    // Featured: books/comics, Atomic Zodiac, other stickers, bags, then the remaining catalog.
+    if (sort === 'featured') sorted.sort((a, b) => productPriority(a.node.title, a.node.productType ?? '', a.node.tags) - productPriority(b.node.title, b.node.productType ?? '', b.node.tags)
+      || (isAtomicZodiac(a.node) && isAtomicZodiac(b.node) ? compareAtomicAesthetic(a.node, b.node) : 0));
     // Sold-out items stay visible but sink below what can be bought today.
     return sorted.sort((a, b) => Number(inStock(b)) - Number(inStock(a)));
-  }, [products, type, sign, q, sort, band, inStockOnly]);
+  }, [products, collection, type, sign, q, sort, band, inStockOnly]);
   // Default view: side-scrolling shelves in merchandising order. Any search, filter or sort shows the full grid.
-  const browsing = !q && type === 'All' && sign === 'All' && !band && !inStockOnly && sort === 'featured';
+  const browsing = !q && collection === 'all' && type === 'All' && sign === 'All' && !band && !inStockOnly && sort === 'featured';
   const shelves = useMemo(() => {
     const list = products ?? [];
-    const pri = (p: ShopifyProduct) => productPriority(p.node.title, p.node.productType ?? '');
-    const top = PRIORITY_SHELVES.map(sh => ({ id: `p${sh.priority}`, title: sh.title, script: sh.script, items: list.filter(p => pri(p) === sh.priority), seeAll: undefined as string | undefined }));
-    const rest = types.map(t => ({ id: t.name.toLowerCase().replace(/\W+/g, '-'), title: t.name, script: undefined as string | undefined, items: list.filter(p => pri(p) === 3 && p.node.productType === t.name), seeAll: t.name })).filter(sh => sh.items.length);
-    return [...top, ...rest].map(sh => ({ ...sh, items: [...sh.items].sort((a, b) => Number(inStock(b)) - Number(inStock(a))) }));
+    const pri = (p: ShopifyProduct) => productPriority(p.node.title, p.node.productType ?? '', p.node.tags);
+    const top = PRIORITY_SHELVES.map(sh => ({ id: `p${sh.priority}`, title: sh.title, script: sh.script, items: list.filter(p => pri(p) === sh.priority), seeAll: sh.priority === 1 ? 'atomic' : undefined as string | undefined }));
+    const rest = types.map(t => ({ id: t.name.toLowerCase().replace(/\W+/g, '-'), title: t.name, script: undefined as string | undefined, items: list.filter(p => pri(p) === 4 && p.node.productType === t.name), seeAll: t.name })).filter(sh => sh.items.length);
+    return [...top, ...rest].map(sh => ({ ...sh, items: [...sh.items].sort((a, b) => Number(inStock(b)) - Number(inStock(a)) || (sh.id === 'p1' ? compareAtomicAesthetic(a.node, b.node) : 0)) }));
   }, [products, types]);
   return (
     <div className="mx-auto max-w-7xl space-y-8 px-4 py-10">
@@ -131,14 +145,14 @@ export default function Store() {
         </div>
       </header>
       {failed ? <ShopOffline onRetry={() => setAttempt(a => a + 1)} /> : <div className="grid gap-8 lg:grid-cols-[15rem_minmax(0,1fr)]">
-        <aside className="hidden lg:block"><div className="obs-panel sticky top-24 max-h-[calc(100vh-7rem)] overflow-y-auto p-4">{products ? <ShopSidebar types={types} signs={signs} total={products.length} filters={filters} onChange={change} onClear={clearFilters} /> : <div className="space-y-3" aria-hidden>{Array.from({ length: 8 }, (_, i) => <div key={i} className="h-8 animate-pulse rounded-full bg-muted motion-reduce:animate-none" />)}</div>}</div></aside>
+        <aside className="hidden lg:block"><div className="obs-panel sticky top-24 max-h-[calc(100vh-7rem)] overflow-y-auto p-4">{products ? <ShopSidebar types={types} signs={signs} total={products.length} atomicCount={atomicCount} filters={filters} onChange={change} onClear={clearFilters} /> : <div className="space-y-3" aria-hidden>{Array.from({ length: 8 }, (_, i) => <div key={i} className="h-8 animate-pulse rounded-full bg-muted motion-reduce:animate-none" />)}</div>}</div></aside>
         <div className="min-w-0 space-y-6">
         <div className="flex flex-wrap items-center gap-3">
           <Sheet open={sheet} onOpenChange={setSheet}>
             <SheetTrigger asChild><Button variant="outline" className="lg:hidden" disabled={!products}><SlidersHorizontal />Departments</Button></SheetTrigger>
             <SheetContent side="left" className="w-[85vw] max-w-sm overflow-y-auto">
               <SheetHeader><SheetTitle className="font-display">Browse the shop</SheetTitle></SheetHeader>
-              {products && <div className="mt-5"><ShopSidebar types={types} signs={signs} total={products.length} filters={filters} onChange={change} onClear={clearFilters} onPick={() => setSheet(false)} /></div>}
+              {products && <div className="mt-5"><ShopSidebar types={types} signs={signs} total={products.length} atomicCount={atomicCount} filters={filters} onChange={change} onClear={clearFilters} onPick={() => setSheet(false)} /></div>}
             </SheetContent>
           </Sheet>
           <label className="relative min-w-[200px] flex-1"><span className="sr-only">Search the shop</span><Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" aria-hidden /><Input type="search" value={q} onChange={e => set('q', e.target.value, '')} placeholder="Search posters, signs, notebooks…" className="pl-9" /></label>
@@ -146,18 +160,24 @@ export default function Store() {
             <select value={sort} onChange={e => set('sort', e.target.value, 'featured')} className="h-10 rounded-md border border-input bg-background px-3 text-sm">{(Object.keys(SORTS) as Sort[]).map(k => <option key={k} value={k}>{SORTS[k]}</option>)}</select>
           </label>
         </div>
-        {(type !== 'All' || sign !== 'All' || band || inStockOnly) && <div className="flex flex-wrap items-center gap-2" aria-label="Active filters">
+        {(collection !== 'all' || type !== 'All' || sign !== 'All' || band || inStockOnly) && <div className="flex flex-wrap items-center gap-2" aria-label="Active filters">
+          {collection !== 'all' && <Chip label="Atomic Zodiac Collection" onClear={() => change('collection', 'all')} />}
           {type !== 'All' && <Chip label={type} onClear={() => change('type', 'All')} />}
           {sign !== 'All' && <Chip label={`${sign} edition`} onClear={() => change('sign', 'All')} />}
           {band && <Chip label={band.label} onClear={() => change('price', 'all')} />}
           {inStockOnly && <Chip label="Ready to order" onClear={() => change('inStock', false)} />}
         </div>}
         {!products && <ul className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3" aria-busy="true" aria-label="Loading the shop">{Array.from({ length: 6 }, (_, i) => <li key={i} className="parchment overflow-hidden"><div className="aspect-square animate-pulse bg-muted motion-reduce:animate-none" /><div className="space-y-2 p-4"><div className="h-5 w-2/3 rounded bg-muted" /><div className="h-4 w-full rounded bg-muted" /></div></li>)}</ul>}
+        {products && collection === 'atomic' && <section className="obs-panel p-5" aria-labelledby="atomic-collection-title">
+          <p className="font-label text-sm tracking-[0.16em] text-primary">The Atomic Zodiac Collection</p>
+          <h2 id="atomic-collection-title" className="mt-1 font-display text-3xl uppercase">Every sign. One atomic age.</h2>
+          <p className="mt-2 max-w-2xl text-sm text-muted-foreground">Explore only the Atomic Zodiac editions by department or sign. Curator’s order leads with illustrated display pieces; choose Newest to see the latest additions first.</p>
+        </section>}
         {products && !browsing && <p className="text-sm text-muted-foreground" aria-live="polite">{shown.length} {shown.length === 1 ? 'item' : 'items'}{q && ` matching “${q}”`}</p>}
-        {products && shown.length === 0 && <div className="parchment space-y-3 p-8 text-center"><p className="text-muted-foreground">{products.length ? 'Nothing matches that search.' : 'New pieces are on their way — check back soon.'}</p>{(q || type !== 'All' || sign !== 'All' || band || inStockOnly) && <Button variant="outline" size="sm" onClick={() => setParams(new URLSearchParams(), { replace: true })}>Clear search and filters</Button>}</div>}
+        {products && shown.length === 0 && <div className="parchment space-y-3 p-8 text-center"><p className="text-muted-foreground">{products.length ? 'Nothing matches that search.' : 'New pieces are on their way — check back soon.'}</p>{(q || collection !== 'all' || type !== 'All' || sign !== 'All' || band || inStockOnly) && <Button variant="outline" size="sm" onClick={() => setParams(new URLSearchParams(), { replace: true })}>Clear search and filters</Button>}</div>}
         {products && browsing && <div className="space-y-10">
           {shelves.map((sh, i) => <ShopShelf key={sh.id} id={sh.id} title={sh.title} script={sh.script} items={sh.items} onAdd={add} adding={loading}
-            onSeeAll={sh.seeAll ? () => change('type', sh.seeAll!) : undefined}
+            onSeeAll={sh.seeAll ? () => sh.seeAll === 'atomic' ? change('collection', 'atomic') : change('type', sh.seeAll!) : undefined}
             lead={i === 0 ? <>
               <SpotlightCard to="/astrobook" image={PRODUCT_ART.book.src} alt={PRODUCT_ART.book.alt} eyebrow="Written for you" title="The AstroBook" note="Your whole chart as a printed book: six volumes calculated from your birth moment, with the context you add." price={`From ${bookFrom}`} cta="Choose an edition" />
               <SpotlightCard to="/astrocomic" image={PRODUCT_ART.comic.src} alt={PRODUCT_ART.comic.alt} eyebrow={issue.purchased && session ? 'Your next issue' : 'Drawn for you'} title={`AstroComic ${comicCard.title}`} note={comicCard.note} price={COMIC_PLANS.single.label} cta={issue.purchased && session ? 'Order this issue' : 'See the comic'} />
@@ -209,7 +229,7 @@ export function ProductDetail() {
   const main = imgs[Math.min(image, imgs.length - 1)]?.node;
   const available = v ? v.availableForSale : inStock(product);
   const options = n.options.filter(o => !(o.name === 'Title' && o.values.length === 1 && o.values[0] === 'Default Title'));
-  const portrait = isPortraitProduct(n.title, n.productType ?? '');
+  const portrait = isPortraitProduct(n.title, n.productType ?? '', n.tags);
   const shown = shopTitle(n.title, n.productType ?? '');
   const isComic = /astro\s*comic/i.test(`${n.title} ${n.productType ?? ''}`);
   return (

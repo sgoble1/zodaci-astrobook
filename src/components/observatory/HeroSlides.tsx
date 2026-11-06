@@ -181,12 +181,12 @@ export function ChartMapSlide({ heading = 'h1', title, script, lines, cta, secon
   );
 }
 
-/** Slide 2: the original home hero — a row of 1950s faces looking up at the sky — kept alive. */
-export function LookUpSlide({ heading = 'h2', title, script, text, cta, secondary }: { heading?: Heading; title: ReactNode; script: string; text: ReactNode; cta: Cta; secondary?: Cta }) {
+/** Default slide: the original home hero — a row of 1950s faces looking up at the sky. */
+export function LookUpSlide({ heading = 'h2', title, script, text, cta, secondary, eager }: { heading?: Heading; title: ReactNode; script: string; text: ReactNode; cta: Cta; secondary?: Cta; eager?: boolean }) {
   const H = heading;
   return (
     <div className="relative isolate flex min-h-full flex-col justify-start overflow-hidden">
-      <img src={facesHero} alt="A row of 1950s-style faces at the bottom of the frame gaze up at a zodiac wheel, planets and starbursts in an indigo night sky" width={1920} height={1088} loading="lazy" className="absolute inset-0 -z-20 h-full w-full object-cover object-[30%_100%] sm:object-bottom" />
+      <img src={facesHero} alt="A row of 1950s-style faces at the bottom of the frame gaze up at a zodiac wheel, planets and starbursts in an indigo night sky" width={1920} height={1088} loading={eager ? 'eager' : 'lazy'} {...(eager ? { fetchpriority: 'high' } : {})} className="absolute inset-0 -z-20 h-full w-full object-cover object-[30%_100%] sm:object-bottom" />
       <div aria-hidden className="absolute inset-0 -z-10 bg-gradient-to-b from-background/85 via-background/40 to-transparent sm:bg-gradient-to-r sm:from-background/85 sm:via-background/30 sm:to-transparent" />
       <div className="px-6 pb-48 pt-10 sm:px-12 sm:pb-56 sm:pt-14">
         <H className="hero-headline max-w-2xl">{title}</H>

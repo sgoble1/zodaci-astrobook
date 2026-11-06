@@ -22,7 +22,7 @@
 
 ## Charts and content
 - ChartWheel renders computed charts; fixed-star contacts parse Compendium star degrees.
-- Live zodiac wheels share ChartProjection and global chart tokens so member, public and founder slides remain consistent without changing chart geometry.
+- Live zodiac wheels share ChartProjection and global chart tokens so member, public and founder slides remain consistent without changing chart geometry. Default is the dark hero projector; NatalWheel uses the retro monitor automatically and SampleChartDemo preserves the classic pale tripod projector.
 - Relationships use owner-only RLS; Needs use saved birth facts, never invented biography.
 - April Kua remains source-reported 1 versus formula 8; show the discrepancy.
 - Birth Chart Book uses bcb-XX protected entries split on DOCX Heading2; birthChartBook.ts maps chart points to chapters.

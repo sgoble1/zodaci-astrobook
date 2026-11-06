@@ -1,6 +1,6 @@
 import { SIGNS, SIGN_GLYPH } from '@/lib/astro';
 import { iconForProductType } from '@/components/icons/registry';
-import { RetroEmblem, StorefrontIcon } from '@/components/icons/RetroIcons';
+import { ChartWheelIcon, RetroEmblem, StorefrontIcon } from '@/components/icons/RetroIcons';
 import { cn } from '@/lib/utils';
 
 export const PRICE_BANDS = [
@@ -10,12 +10,13 @@ export const PRICE_BANDS = [
 ] as const;
 export type PriceBand = (typeof PRICE_BANDS)[number]['id'];
 
-export type ShopFilters = { type: string; sign: string; price: PriceBand | 'all'; inStock: boolean };
+export type ShopFilters = { collection: 'all' | 'atomic'; type: string; sign: string; price: PriceBand | 'all'; inStock: boolean };
 
 type Props = {
   types: { name: string; count: number }[];
   signs: { name: string; count: number }[];
   total: number;
+  atomicCount: number;
   filters: ShopFilters;
   onChange: (key: keyof ShopFilters, value: string | boolean) => void;
   onClear: () => void;
@@ -23,22 +24,29 @@ type Props = {
 };
 
 /** Gift-shop departments: product types, sign editions, price bands and availability. */
-export function ShopSidebar({ types, signs, total, filters, onChange, onClear, onPick }: Props) {
+export function ShopSidebar({ types, signs, total, atomicCount, filters, onChange, onClear, onPick }: Props) {
   const pick = (key: keyof ShopFilters, value: string | boolean) => { onChange(key, value); onPick?.(); };
-  const filtered = filters.type !== 'All' || filters.sign !== 'All' || filters.price !== 'all' || filters.inStock;
+  const filtered = filters.collection !== 'all' || filters.type !== 'All' || filters.sign !== 'All' || filters.price !== 'all' || filters.inStock;
   return (
     <nav aria-label="Shop departments" className="shop-sidebar space-y-6">
       <div>
+        <h2 className="shop-sidebar-h">Collections</h2>
+        <ul className="mt-2 space-y-0.5">
+          <li><DeptButton active={filters.collection === 'all'} onClick={() => pick('collection', 'all')} icon={StorefrontIcon} label="All collections" count={total} /></li>
+          <li><DeptButton active={filters.collection === 'atomic'} onClick={() => pick('collection', 'atomic')} icon={ChartWheelIcon} label="Atomic Zodiac" count={atomicCount} /></li>
+        </ul>
+      </div>
+      <div>
         <h2 className="shop-sidebar-h">Departments</h2>
         <ul className="mt-2 space-y-0.5">
-          <li><DeptButton active={filters.type === 'All'} onClick={() => pick('type', 'All')} icon={StorefrontIcon} label="Everything" count={total} /></li>
+          <li><DeptButton active={filters.type === 'All'} onClick={() => pick('type', 'All')} icon={StorefrontIcon} label="Everything" count={filters.collection === 'atomic' ? atomicCount : total} /></li>
           {types.map(t => <li key={t.name}><DeptButton active={filters.type === t.name} onClick={() => pick('type', t.name)} icon={iconForProductType(t.name)} label={t.name} count={t.count} /></li>)}
         </ul>
       </div>
       {signs.length > 0 && <div>
         <h2 className="shop-sidebar-h">Sign editions</h2>
         <div className="mt-3 grid grid-cols-4 gap-1.5" role="group" aria-label="Sign edition">
-          {signs.map(s => {
+          {[...signs].sort((a, b) => SIGNS.findIndex(n => n.toLowerCase() === a.name.toLowerCase()) - SIGNS.findIndex(n => n.toLowerCase() === b.name.toLowerCase())).map(s => {
             const i = SIGNS.findIndex(n => n.toLowerCase() === s.name.toLowerCase());
             const on = filters.sign === s.name;
             return <button key={s.name} type="button" aria-pressed={on} onClick={() => pick('sign', on ? 'All' : s.name)} title={`${s.name} · ${s.count}`} className={cn('shop-sign', on && 'shop-sign-on')}><span aria-hidden className="text-lg leading-none">{i >= 0 ? `${SIGN_GLYPH[i]}\uFE0E` : '✦'}</span><span className="text-[0.62rem] leading-none">{s.name.slice(0, 3)}</span></button>;
