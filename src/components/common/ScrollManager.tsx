@@ -38,12 +38,24 @@ export function ScrollManager() {
     if (intent.kind === 'section') {
       if (!intent.smooth) instant(0);
       const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      let touched = false, settles = 0;
+      const stop = () => { touched = true; };
+      const events = ['wheel', 'touchstart', 'keydown', 'pointerdown'] as const;
+      events.forEach(e => window.addEventListener(e, stop, { passive: true, once: true }));
+      const pad = parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop) || 0;
       const go = () => {
         const el = document.getElementById(intent.id);
-        if (el) { el.scrollIntoView({ block: 'start', behavior: intent.smooth && !reduce ? 'smooth' : ('instant' as ScrollBehavior) }); return; }
+        if (el) {
+          // Images above the section can finish loading after the jump; re-align a few times unless the visitor scrolls.
+          const off = el.getBoundingClientRect().top - pad;
+          if (settles === 0 || (!touched && Math.abs(off) > 24)) el.scrollIntoView({ block: 'start', behavior: settles === 0 && intent.smooth && !reduce ? 'smooth' : ('instant' as ScrollBehavior) });
+          if (++settles < 6 && !touched) timer = window.setTimeout(go, 400);
+          return;
+        }
         if (++tries < 40) timer = window.setTimeout(go, 150);
       };
       go();
+      return () => { window.clearTimeout(timer); events.forEach(e => window.removeEventListener(e, stop)); };
     }
     if (intent.kind === 'restore') {
       const target = positions.current[location.key] ?? 0;
