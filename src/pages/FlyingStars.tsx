@@ -29,7 +29,7 @@ export default function FlyingStars() {
   return (
     <div className="space-y-10">
       <header>
-        <div className="font-smallcaps text-xs text-gold">Feng Shui · Xuan Kong Flying Stars</div>
+        <div className="font-label text-xs tracking-[0.16em] text-primary">Feng Shui · Xuan Kong Flying Stars</div>
         <h1 className="text-4xl sm:text-5xl mt-2">Flying Stars for April’s Home</h1>
         <p className="text-muted-foreground mt-3 max-w-2xl">Each year nine “stars” move through the nine sectors of a home. Pick a year and click any sector to see which star visits, what it means, and how it combines with April’s Kua 1 directions from the Feng Shui guide.</p>
         <div className="flex flex-wrap gap-3 mt-3 items-center text-sm">
@@ -40,7 +40,7 @@ export default function FlyingStars() {
       </header>
 
       <div className="flex flex-wrap items-center gap-3">
-        <label className="font-smallcaps text-[10px] text-muted-foreground">Year</label>
+        <label className="font-label text-[10px] tracking-[0.14em] text-muted-foreground">Year</label>
         <input type="range" min={2024} max={2043} value={year} onChange={e => set('year', e.target.value)} className="w-56 accent-[hsl(var(--gold))]" aria-label="Year" />
         <span className="font-display text-2xl">{year}</span>
         <span className="text-xs text-muted-foreground">center star {center} · Period {per.period} ({per.from}–{per.to})</span>
@@ -55,7 +55,7 @@ export default function FlyingStars() {
               return (
                 <button key={d} onClick={() => set('sector', d)} aria-pressed={sel === d}
                   className={`relative rounded border-2 p-2 text-left transition ${natureCls(s.nature)} ${sel === d ? 'ring-2 ring-foreground/70' : 'hover:ring-1 hover:ring-gold'}`}>
-                  <div className="font-smallcaps text-[10px] text-muted-foreground">{DIR_NAME[d]}</div>
+                  <div className="font-label text-[10px] tracking-[0.14em] text-muted-foreground">{DIR_NAME[d]}</div>
                   <div className="font-display text-4xl leading-none mt-1">{annual[d]}</div>
                   <div className="text-[10px] mt-1">{s.element}</div>
                   <div className="absolute top-1.5 right-2 text-[10px] text-muted-foreground" title="Period 9 base star">P{base[d]}</div>
@@ -70,24 +70,24 @@ export default function FlyingStars() {
         <div className="parchment p-5 space-y-4" id={`sector-${sel}`}>
           <div className="flex items-start justify-between gap-3">
             <div>
-              <div className="font-smallcaps text-[10px] text-gold">{year} · {DIR_NAME[sel]}</div>
+              <div className="font-label text-[10px] tracking-[0.14em] text-primary">{year} · {DIR_NAME[sel]}</div>
               <h2 className="text-2xl">Star {annual[sel]} — {star.name}</h2>
             </div>
             <CopyLinkButton path={`/feng-shui/flying-stars?year=${year}&sector=${sel}`} label="Share" />
           </div>
           <div className="flex gap-2 flex-wrap text-xs"><span className="border rounded px-2 py-0.5">{star.nature}</span><span className="border rounded px-2 py-0.5">{star.element}</span><span className="border rounded px-2 py-0.5">Base star {base[sel]}: {STAR_INFO[base[sel]].name}</span></div>
           <p>{star.theme}</p>
-          <p className="text-sm"><span className="font-smallcaps text-[10px] text-gold mr-2">Remedy</span>{star.remedy}</p>
+          <p className="text-sm"><span className="font-label text-[10px] tracking-[0.14em] text-primary mr-2">Remedy</span>{star.remedy}</p>
           {kua && (
             <div className="border-t border-border pt-3">
-              <div className="font-smallcaps text-[10px] text-gold flex items-center gap-2">April’s Kua 1 direction <ConfidenceBadge compact level={kua.standardNote ? 'ambiguous' : 'confirmed'} note={kua.standardNote ?? 'Quoted from the PDF direction table.'} /></div>
+              <div className="font-label text-[10px] tracking-[0.14em] text-primary flex items-center gap-2">April’s Kua 1 direction <ConfidenceBadge compact level={kua.standardNote ? 'ambiguous' : 'confirmed'} note={kua.standardNote ?? 'Quoted from the PDF direction table.'} /></div>
               <p className="mt-1"><b>{kua.name}</b> · {kua.meaning}. {kua.activation}<Cite source={{ doc: 'Complete Birth Chart Analysis & Feng Shui Guide', section: '18A · Direction table', page: 'pp. 115–116' }} /></p>
               {kua.standardNote && <p className="text-xs italic text-muted-foreground mt-1">{kua.standardNote}</p>}
             </div>
           )}
-          {gua && <div className="border-t border-border pt-3 text-sm"><div className="font-smallcaps text-[10px] text-gold">Bagua area · {gua.gua}</div><p className="mt-1">{gua.lifeArea} ({gua.element}). {gua.guidance}</p></div>}
+          {gua && <div className="border-t border-border pt-3 text-sm"><div className="font-label text-[10px] tracking-[0.14em] text-primary">Bagua area · {gua.gua}</div><p className="mt-1">{gua.lifeArea} ({gua.element}). {gua.guidance}</p></div>}
           <div className="border-t border-border pt-3 text-sm">
-            <div className="font-smallcaps text-[10px] text-gold">Combined reading</div>
+            <div className="font-label text-[10px] tracking-[0.14em] text-primary">Combined reading</div>
             <p className="mt-1">{kua?.auspicious && star.nature === 'Auspicious' ? `Double support: a good personal direction meets a good annual star. Put the desk, bed-head or daily work here in ${year}.`
               : kua?.auspicious && star.nature !== 'Auspicious' ? `A good personal direction is visited by a difficult star in ${year}. Keep using the direction, but apply the remedy and avoid renovation here this year.`
               : !kua?.auspicious && star.nature === 'Auspicious' && sel !== 'C' ? `An unfavourable personal direction receives a helpful star. It's fine for social or shared use this year, but don't move the bed or desk here.`

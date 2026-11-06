@@ -28,7 +28,7 @@ export default function MemberStarMap({ birth }: { birth: MyBirth }) {
   const sel = stars.find(s => s.n === active);
   return (
     <article className="space-y-8">
-      <header><p className="font-smallcaps text-xs text-gold">Your sky</p><h1 className="font-display text-4xl">The fixed stars at your birth</h1>
+      <header><p className="font-label text-xs tracking-[0.16em] text-primary">Your sky</p><h1 className="font-display text-4xl">The fixed stars at your birth</h1>
         <p className="mt-2 max-w-2xl text-muted-foreground">Bright, slow-moving stars sit along the zodiac like landmarks. When one of your planets lands within 1.5° of one, astrologers say that star "touches" your chart. Watch the sky align to your birth moment, then tap a star.</p></header>
       <div className="grid gap-8 lg:grid-cols-[1.2fr_1fr] items-start">
         <svg viewBox="0 0 100 100" className="w-full aspect-square rounded-full bg-card/40" role="img" aria-label="Sky map of fixed stars and your planets">

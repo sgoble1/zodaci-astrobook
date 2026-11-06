@@ -20,7 +20,7 @@ export default function Chinese() {
         <div className="grid md:grid-cols-4 gap-3">
           {PILLARS.map(p => (
             <div key={p.id} className="p-5 border border-border rounded bg-card/70 text-center">
-              <div className="font-smallcaps text-[10px] text-gold">{p.label.split('·')[0]?.trim()}</div>
+              <div className="font-label text-[10px] tracking-[0.14em] text-primary">{p.label.split('·')[0]?.trim()}</div>
               <div className="mt-3">
                 <div className="font-display text-5xl leading-none">{p.stem}</div>
                 <div className="font-display text-5xl leading-none mt-1">{p.branch}</div>
@@ -35,7 +35,7 @@ export default function Chinese() {
         <div className="mt-5 space-y-4">
           {PILLARS.map(p => (
             <div key={p.id} className="p-4 border-l-2 border-gold/60 bg-muted/30">
-              <div className="font-smallcaps text-[10px] text-gold">{p.label}</div>
+              <div className="font-label text-[10px] tracking-[0.14em] text-primary">{p.label}</div>
               <p className="text-sm mt-1 leading-relaxed">{p.meaning}</p>
             </div>
           ))}
@@ -60,7 +60,7 @@ export default function Chinese() {
       </section>
 
       <section className="p-6 border border-gold/50 bg-gold/5 rounded">
-        <div className="font-smallcaps text-[11px] text-gold">The convergence</div>
+        <div className="font-label text-xs tracking-[0.16em] text-primary">The convergence</div>
         <h3 className="font-display text-2xl mt-1">{LIFE_LESSON.headline}</h3>
         <p className="mt-3 leading-relaxed text-foreground/90">{LIFE_LESSON.body}</p>
       </section>
@@ -70,7 +70,7 @@ export default function Chinese() {
         <div className="divide-y divide-border/70 border-y border-border/70">
           {LUCK_PILLARS.map(l => (
             <div key={l.window} className="py-3 grid grid-cols-[8rem,7rem,1fr] gap-4 items-baseline">
-              <div className="font-smallcaps text-[11px] text-gold">{l.window}</div>
+              <div className="font-label text-xs tracking-[0.16em] text-primary">{l.window}</div>
               <div className="font-display">{l.pillar}</div>
               <div className="text-sm text-foreground/80">{l.note}</div>
             </div>

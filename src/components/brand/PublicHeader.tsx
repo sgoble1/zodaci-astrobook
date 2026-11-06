@@ -49,7 +49,7 @@ export function PublicHeader({ sections }: { sections?: string[] }) {
               <SheetHeader><SheetTitle className="text-left">Menu</SheetTitle></SheetHeader>
               <nav aria-label="Mobile navigation" className="mt-6 flex flex-col">
                 {sections?.map(s => <a key={s} href={`#${s.toLowerCase()}`} onClick={() => setOpen(false)} className="border-b border-border py-3 text-lg">{s}</a>)}
-                {sections && <p className="mb-1 mt-6 font-smallcaps text-xs text-gold">Explore</p>}
+                {sections && <p className="mb-1 mt-6 font-label text-xs tracking-[0.16em] text-primary">Explore</p>}
                 {PUBLIC_NAV.map(([to, label]) => <div key={to} className="border-b border-border">
                   <Link to={to} onClick={() => setOpen(false)} className="block py-3 text-lg">{label}</Link>
                   {to === '/learn' && <ul className="mb-3 grid gap-1 pl-3">{LEARN_SECTIONS.map(s => <li key={s.id}><Link to={s.id === 'forecasts' ? '/forecast' : `/learn#${s.id}`} onClick={() => setOpen(false)} className="flex items-center gap-2 py-1.5 text-muted-foreground"><SpotArt kind={s.art} className="h-6 w-6" orbit={false} />{s.label}</Link></li>)}</ul>}

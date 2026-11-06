@@ -43,7 +43,7 @@ export function SourceChapters({ match, ids = [], title = 'The full text from th
   return (
     <section className="space-y-6">
       <div>
-        <div className="font-smallcaps text-[11px] text-gold">From the Masterbook · {items.length} {items.length === 1 ? 'chapter' : 'chapters'}</div>
+        <div className="font-label text-xs tracking-[0.16em] text-primary">From the Masterbook · {items.length} {items.length === 1 ? 'chapter' : 'chapters'}</div>
         <h2 className="font-display mt-1">{title}</h2>
         <div className="gold-rule my-4 max-w-xs" />
       </div>

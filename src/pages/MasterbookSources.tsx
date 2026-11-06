@@ -62,7 +62,7 @@ export default function MasterbookSources() {
   return (
     <div className="space-y-8">
       <header>
-        <div className="font-smallcaps text-xs text-gold">The Masterbook · document index</div>
+        <div className="font-label text-xs tracking-[0.16em] text-primary">The Masterbook · document index</div>
         <h1 className="text-4xl sm:text-5xl mt-2">Every Source Document</h1>
         <p className="text-muted-foreground mt-3 max-w-2xl">All {arranged.length} documents behind this site, each with its sections. Open the original PDF straight to a section, read it here, or ask a question about just that document.</p>
         <div className="flex flex-wrap gap-3 mt-4 items-center">
@@ -79,7 +79,7 @@ export default function MasterbookSources() {
             <section key={d.key} className="parchment">
               <button onClick={() => setExpanded(isOpen && !q ? null : d.key)} className="w-full flex items-center justify-between gap-4 p-4 text-left">
                 <div>
-                  <div className="font-smallcaps text-[10px] text-gold">{d.kind} {d.size && `· ${d.size}`} · {d.sections.length} sections</div>
+                  <div className="font-label text-[10px] tracking-[0.14em] text-primary">{d.kind} {d.size && `· ${d.size}`} · {d.sections.length} sections</div>
                   <div className="font-display text-lg leading-snug">{d.title}</div>
                   {d.note && <div className="text-xs text-muted-foreground mt-0.5">{d.note}</div>}
                 </div>

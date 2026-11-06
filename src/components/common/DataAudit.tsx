@@ -42,7 +42,7 @@ export function DataAudit() {
     <section aria-labelledby="audit-h" className="p-6 border border-border rounded bg-card/70 space-y-4">
       <div className="flex flex-wrap items-baseline justify-between gap-3">
         <div>
-          <div className="font-smallcaps text-[10px] text-gold">Automatic accuracy check · runs every time this page opens</div>
+          <div className="font-label text-[10px] tracking-[0.14em] text-primary">Automatic accuracy check · runs every time this page opens</div>
           <h2 id="audit-h" className="font-display text-2xl mt-1">Data quality score: {score}%</h2>
         </div>
         <span className={`rounded-full border px-3 py-1 text-sm ${offs ? STYLE.off[1] : STYLE.match[1]}`}>{offs ? `${offs} item${offs > 1 ? 's' : ''} need review` : 'No errors found'}</span>

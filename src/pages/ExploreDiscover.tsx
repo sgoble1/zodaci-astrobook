@@ -72,7 +72,7 @@ function AprilDiscover() {
   return (
     <div className="space-y-10">
       <header className="max-w-3xl gentle-fade">
-        <div className="font-smallcaps text-xs text-gold">Explore & Discover</div>
+        <div className="font-label text-xs tracking-[0.16em] text-primary">Explore & Discover</div>
         <h1 className="font-display mt-2">Choose what you want to understand.</h1>
         <p className="mt-4 text-base leading-relaxed text-muted-foreground">
           Pick a subject below. You will see the most useful places to begin, what each page explains, and where to go next.
@@ -102,7 +102,7 @@ function AprilDiscover() {
       <section aria-live="polite" aria-labelledby="discovery-results">
         <div className="flex items-end justify-between gap-4 border-b border-border pb-3">
           <div>
-            <div className="font-smallcaps text-[10px] text-gold">Selected subject</div>
+            <div className="font-label text-[10px] tracking-[0.14em] text-primary">Selected subject</div>
             <h2 id="discovery-results" className="font-display text-2xl">{activeLabel}</h2>
           </div>
           <span className="text-xs text-muted-foreground">{visibleItems.length} places to explore</span>
@@ -114,9 +114,9 @@ function AprilDiscover() {
               <div className="-mx-5 -mt-5 mb-4"><BoxArt seed={item.to + item.title} label={item.title} /></div>
               <h3 className="font-display text-xl leading-tight"><Link to={item.to} className="group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">{item.title}</Link></h3>
               <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{item.description}</p>
-              <Link to={item.to} className="group mt-5 inline-flex items-center gap-2 font-smallcaps text-[10px] text-gold">Open this page <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" aria-hidden="true" /></Link>
-              {april && <div className="mt-4 border-t border-border/60 pt-3"><div className="font-smallcaps text-[10px] text-muted-foreground">Read the source text</div><ul className="mt-2 space-y-1">{item.sources.map(source => <li key={source.to}><Link className="text-sm underline decoration-border underline-offset-4 hover:text-gold" to={source.to}>{source.label}</Link></li>)}</ul></div>}
-              <div className="mt-4 border-t border-border/60 pt-3"><div className="font-smallcaps text-[10px] text-muted-foreground">Continue this trail</div><ul className="mt-2 space-y-1">{item.next && <li><Link className="text-sm underline decoration-border underline-offset-4 hover:text-gold" to={item.next.to}>{item.next.label}</Link></li>}{collection.filter(other => other.category === item.category && other.to !== item.to).slice(0, item.next ? 1 : 2).map(other => <li key={other.to}><Link className="text-sm underline decoration-border underline-offset-4 hover:text-gold" to={other.to}>{other.title}</Link></li>)}</ul></div>
+              <Link to={item.to} className="group mt-5 inline-flex items-center gap-2 font-label text-[10px] tracking-[0.14em] text-primary">Open this page <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" aria-hidden="true" /></Link>
+              {april && <div className="mt-4 border-t border-border/60 pt-3"><div className="font-label text-[10px] tracking-[0.14em] text-muted-foreground">Read the source text</div><ul className="mt-2 space-y-1">{item.sources.map(source => <li key={source.to}><Link className="text-sm underline decoration-border underline-offset-4 hover:text-gold" to={source.to}>{source.label}</Link></li>)}</ul></div>}
+              <div className="mt-4 border-t border-border/60 pt-3"><div className="font-label text-[10px] tracking-[0.14em] text-muted-foreground">Continue this trail</div><ul className="mt-2 space-y-1">{item.next && <li><Link className="text-sm underline decoration-border underline-offset-4 hover:text-gold" to={item.next.to}>{item.next.label}</Link></li>}{collection.filter(other => other.category === item.category && other.to !== item.to).slice(0, item.next ? 1 : 2).map(other => <li key={other.to}><Link className="text-sm underline decoration-border underline-offset-4 hover:text-gold" to={other.to}>{other.title}</Link></li>)}</ul></div>
             </article>
           ))}
         </div>

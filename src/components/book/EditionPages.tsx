@@ -8,11 +8,11 @@ export function EditionPages({ pages, images }: { pages: EditionPage[]; images?:
         <article key={p.n} aria-labelledby={`ep-${p.n}`} className="vellum grid overflow-hidden lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]">
           <figure className={`relative bg-background/60 ${i % 2 ? 'lg:order-2' : ''}`}>
             <img src={images?.[p.image] ?? p.image} alt={p.imageAlt} width={1024} height={1280} loading="lazy" className="h-full w-full object-cover" />
-            <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-background/95 to-transparent p-4 font-smallcaps text-xs text-gold">Plate {p.n} · {p.placement}</figcaption>
+            <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-background/95 to-transparent p-4 font-label text-xs tracking-[0.16em] text-primary">Plate {p.n} · {p.placement}</figcaption>
           </figure>
           <div className="space-y-5 p-6 sm:p-10">
             <div>
-              <p className="font-smallcaps text-xs text-gold">{p.volume}</p>
+              <p className="font-label text-xs tracking-[0.16em] text-primary">{p.volume}</p>
               <h3 id={`ep-${p.n}`} className="mt-1 font-display text-3xl sm:text-4xl">{p.title}</h3>
             </div>
             <dl className="grid gap-x-6 gap-y-2 border-y border-border/60 py-4 text-sm sm:grid-cols-2">

@@ -26,7 +26,7 @@ export default function RelationshipReading() {
 }
 
 function Part({ n, title, level, note, children }: { n: string; title: string; level: ConfidenceLevel; note: string; children: React.ReactNode }) {
-  return <section className="space-y-3"><div className="flex flex-wrap items-center gap-3 border-b border-gold/40 pb-2"><span className="font-smallcaps text-xs text-gold">{n}</span><h2 className="text-2xl flex-1">{title}</h2><ConfidenceBadge level={level} note={note} /></div>{children}</section>;
+  return <section className="space-y-3"><div className="flex flex-wrap items-center gap-3 border-b border-gold/40 pb-2"><span className="font-label text-xs tracking-[0.16em] text-primary">{n}</span><h2 className="text-2xl flex-1">{title}</h2><ConfidenceBadge level={level} note={note} /></div>{children}</section>;
 }
 
 function ReadingBody({ rel, self }: { rel: Relationship; self: RelationshipSelf }) {
@@ -54,7 +54,7 @@ function ReadingBody({ rel, self }: { rel: Relationship; self: RelationshipSelf 
   return (
     <div className="space-y-10">
       <header className="space-y-2">
-        <div className="font-smallcaps text-xs text-gold">Relationship reading</div>
+        <div className="font-label text-xs tracking-[0.16em] text-primary">Relationship reading</div>
         <h1 className="text-4xl">{Me} & {N} · The Reading</h1>
         <p className="text-muted-foreground max-w-3xl">Both charts, the contacts between them, the combined chart, the Four Pillars, numerology and the Feng Shui directions, brought together into one reading. Interpretations are written by the app from the calculations{self.isApril ? <>; for your own relationship chapters see <Link to="/guides/relationships" className="underline">Relationships in the Sources</Link></> : ''}.</p>
         <div className="flex gap-3 text-sm"><Link to={`/relationships/${rel.id}`} className="underline">← Relationship details</Link><Link to={`/relationships/${rel.id}/timeline`} className="underline">Timeline</Link></div>

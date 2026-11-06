@@ -14,7 +14,7 @@ export default function Relationships() {
   return (
     <div className="space-y-8">
       <header className="space-y-2">
-        <div className="font-smallcaps text-xs text-gold">Relationships</div>
+        <div className="font-label text-xs tracking-[0.16em] text-primary">Relationships</div>
         <h1 className="text-4xl">Your relationships</h1>
         <p className="max-w-3xl text-muted-foreground">Add someone’s birth details to calculate their chart and compare it with yours: planet contacts between the two charts, house overlays, the combined (composite) chart, Chinese zodiac and Day Master match, Feng Shui Kua directions and numerology. Birth time is optional; without it the Moon, Rising sign and houses are marked uncertain or left out.</p>
       </header>

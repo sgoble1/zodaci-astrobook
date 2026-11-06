@@ -12,7 +12,7 @@ export function AcademyHome() {
   useJsonLd('academy-schema', { '@type': 'Course', name: 'Zodaci Academy', description: 'Plain-language lessons on reading a birth chart.', provider: { '@type': 'Organization', name: 'Zodaci', sameAs: 'https://zodaci.com' }, hasPart: ALL_LESSONS.map(l => ({ '@type': 'LearningResource', name: l.title, url: `https://zodaci.com/academy/${l.slug}` })) });
   return (
     <article className="space-y-14">
-      <header className="max-w-3xl"><p className="font-smallcaps text-xs text-gold">Zodaci Academy</p><h1 className="mt-3 font-display text-5xl">Learn to read your own sky.</h1><p className="mt-4 text-lg text-muted-foreground">{ALL_LESSONS.length} short lessons in four paths. Each one separates what is measured from what is interpreted, and ends with a way to try it on your chart.</p></header>
+      <header className="max-w-3xl"><p className="font-label text-xs tracking-[0.16em] text-primary">Zodaci Academy</p><h1 className="mt-3 font-display text-5xl">Learn to read your own sky.</h1><p className="mt-4 text-lg text-muted-foreground">{ALL_LESSONS.length} short lessons in four paths. Each one separates what is measured from what is interpreted, and ends with a way to try it on your chart.</p></header>
       {ACADEMY.map(path => (
         <section key={path.slug} aria-labelledby={`p-${path.slug}`}>
           <h2 id={`p-${path.slug}`} className="font-display text-3xl">{path.title}</h2>
@@ -22,7 +22,7 @@ export function AcademyHome() {
           ))}</ol>
         </section>
       ))}
-      <section aria-labelledby="rr-h" className="border-t border-border pt-10"><h2 id="rr-h" className="font-display text-3xl">From the Reading Room</h2><div className="mt-6 grid gap-4 sm:grid-cols-3">{PUBLIC_ARTICLES.map(a => <Link key={a.slug} to={`/learn/${a.slug}`} className="vellum p-5"><p className="font-smallcaps text-[10px] text-gold">{a.category}</p><h3 className="mt-2 text-lg">{a.title}</h3><p className="mt-2 text-sm text-muted-foreground">{a.summary}</p></Link>)}</div></section>
+      <section aria-labelledby="rr-h" className="border-t border-border pt-10"><h2 id="rr-h" className="font-display text-3xl">From the Reading Room</h2><div className="mt-6 grid gap-4 sm:grid-cols-3">{PUBLIC_ARTICLES.map(a => <Link key={a.slug} to={`/learn/${a.slug}`} className="vellum p-5"><p className="font-label text-[10px] tracking-[0.14em] text-primary">{a.category}</p><h3 className="mt-2 text-lg">{a.title}</h3><p className="mt-2 text-sm text-muted-foreground">{a.summary}</p></Link>)}</div></section>
       <section className="vellum p-6 text-center sm:p-10"><h2 className="font-display text-3xl">Ready to look at your own chart?</h2><p className="mt-3 text-muted-foreground">Free to begin. No birth time needed to start.</p><div className="mt-6 flex flex-wrap justify-center gap-3"><Button asChild><Link to="/start">Explore your chart</Link></Button><Button asChild variant="outline"><Link to="/compatibility">Try the compatibility score</Link></Button></div></section>
     </article>
   );

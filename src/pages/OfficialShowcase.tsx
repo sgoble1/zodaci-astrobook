@@ -45,7 +45,7 @@ export default function OfficialShowcase() {
   return (
     <article className="space-y-10">
       <header className="max-w-3xl">
-        <p className="font-smallcaps text-xs text-gold">Official AstroBook · Illustrated showcase</p>
+        <p className="font-label text-xs tracking-[0.16em] text-primary">Official AstroBook · Illustrated showcase</p>
         <h1 className="mt-1 text-4xl sm:text-5xl">{data?.title ?? OWNER[edition]}</h1>
         <p className="mt-1 font-display text-xl text-muted-foreground">{data?.subtitle ?? 'Your exact placement in print'}</p>
         {data && <p className="mt-3 text-sm text-muted-foreground">{data.note} Four pages are fully illustrated; the next chapters are shown as script. Facts are calculated positions; the paragraphs are interpretation.</p>}
@@ -59,7 +59,7 @@ export default function OfficialShowcase() {
           {!!data.script?.length && (
             <section aria-labelledby="sc-h" className="space-y-4">
               <h2 id="sc-h" className="text-3xl">Coming next in the book</h2>
-              <ol className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{data.script.map(s => <li key={s.n} className="vellum p-5"><p className="font-smallcaps text-xs text-gold">Page {s.n} · {s.placement}</p><h3 className="mt-1 text-xl">{s.title}</h3><p className="mt-2 text-sm text-muted-foreground">{s.summary}</p></li>)}</ol>
+              <ol className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{data.script.map(s => <li key={s.n} className="vellum p-5"><p className="font-label text-xs tracking-[0.16em] text-primary">Page {s.n} · {s.placement}</p><h3 className="mt-1 text-xl">{s.title}</h3><p className="mt-2 text-sm text-muted-foreground">{s.summary}</p></li>)}</ol>
             </section>
           )}
         </>

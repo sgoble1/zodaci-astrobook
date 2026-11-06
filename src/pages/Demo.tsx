@@ -76,7 +76,7 @@ export default function Demo() {
   return (
     <main className="mx-auto max-w-5xl space-y-16 px-5 py-12">
       <header className="space-y-3">
-        <div className="font-smallcaps text-xs text-gold">Interactive demo · fictional sample chart</div>
+        <div className="font-label text-xs tracking-[0.16em] text-primary">Interactive demo · fictional sample chart</div>
         <h1 className="text-4xl md:text-5xl">See every plan, inside and out</h1>
         <p className="max-w-2xl text-muted-foreground">This demo uses a made-up person, {SAMPLE.name} ({SAMPLE.facts}). Your own readings are written from your exact birth time and place.</p>
         <div className="flex flex-wrap gap-2"><Button asChild><Link to="/auth?mode=signup&next=/start">Start free with your chart</Link></Button><Button asChild variant="outline"><Link to="/pricing">Compare plans</Link></Button></div>
@@ -88,7 +88,7 @@ export default function Demo() {
 
       <section className="space-y-5" aria-labelledby="reading-h">
         <div className="flex flex-wrap items-end justify-between gap-4">
-          <div><div className="font-smallcaps text-xs text-gold">Core theme reading</div><h2 id="reading-h" className="text-3xl">Emotional World</h2></div>
+          <div><div className="font-label text-xs tracking-[0.16em] text-primary">Core theme reading</div><h2 id="reading-h" className="text-3xl">Emotional World</h2></div>
           <div role="radiogroup" aria-label="Show the demo as" className="flex rounded-full border border-border p-1">{(['free', 'full', 'creator'] as DemoTier[]).map(t => <button key={t} type="button" role="radio" aria-checked={tier === t} onClick={() => setTier(t)} className={`rounded-full px-4 py-1.5 text-sm transition-colors duration-500 ${tier === t ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:text-foreground'}`}>{PLAN_NAME[t]}{t !== 'free' && <span className="ml-1 opacity-75">{PLAN_PRICE[t].month.replace('/month', '')}</span>}</button>)}</div>
         </div>
         <div className="grid gap-6 md:grid-cols-[200px_1fr]">
@@ -106,26 +106,26 @@ export default function Demo() {
       </section>
 
       <section className="space-y-6" aria-labelledby="mb-h">
-        <div><div className="font-smallcaps text-xs text-gold">AstroBook and Masterbook</div><h2 id="mb-h" className="text-3xl">A whole book about one chart</h2><p className="max-w-2xl text-muted-foreground">Your AstroBook is written in the same six volumes as our founders’ own editions, calculated from your placements. On Pro you read your Masterbook chapters online; Cosmic adds new chapters on any topic you choose.</p></div>
-        <ol className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{VOLUMES.map(v => <li key={v.n} className="vellum overflow-hidden"><img src={v.art} alt={`Illustrated plate for Volume ${v.n}, ${v.title}`} width={800} height={1000} loading="lazy" className="aspect-[4/3] w-full object-cover" /><div className="p-4"><p className="font-smallcaps text-[10px] text-gold">Volume {v.n}</p><h3 className="text-xl">{v.title}</h3><p className="mt-1 text-sm text-muted-foreground">{v.text}</p></div></li>)}</ol>
+        <div><div className="font-label text-xs tracking-[0.16em] text-primary">AstroBook and Masterbook</div><h2 id="mb-h" className="text-3xl">A whole book about one chart</h2><p className="max-w-2xl text-muted-foreground">Your AstroBook is written in the same six volumes as our founders’ own editions, calculated from your placements. On Pro you read your Masterbook chapters online; Cosmic adds new chapters on any topic you choose.</p></div>
+        <ol className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{VOLUMES.map(v => <li key={v.n} className="vellum overflow-hidden"><img src={v.art} alt={`Illustrated plate for Volume ${v.n}, ${v.title}`} width={800} height={1000} loading="lazy" className="aspect-[4/3] w-full object-cover" /><div className="p-4"><p className="font-label text-[10px] tracking-[0.14em] text-primary">Volume {v.n}</p><h3 className="text-xl">{v.title}</h3><p className="mt-1 text-sm text-muted-foreground">{v.text}</p></div></li>)}</ol>
         <article className="parchment grid gap-6 p-6 md:grid-cols-[240px_1fr]" aria-label="Sample Masterbook chapter">
           <img src={pisces} alt="Storybook illustration for the Moon in Pisces" width={800} height={1000} loading="lazy" className="w-full rounded-sm border border-border object-cover" />
-          <div className="space-y-3"><p className="font-smallcaps text-xs text-gold">Sample chapter · Jules Harbor</p><h3 className="text-2xl">{MASTER_SAMPLE[0]}</h3>{MASTER_SAMPLE.slice(1).map(t => <p key={t.slice(0, 20)} className="leading-relaxed">{t}</p>)}<p className="text-xs text-muted-foreground">Jules is fictional. In your Masterbook every degree, house and aspect is calculated from your own birth moment.</p></div>
+          <div className="space-y-3"><p className="font-label text-xs tracking-[0.16em] text-primary">Sample chapter · Jules Harbor</p><h3 className="text-2xl">{MASTER_SAMPLE[0]}</h3>{MASTER_SAMPLE.slice(1).map(t => <p key={t.slice(0, 20)} className="leading-relaxed">{t}</p>)}<p className="text-xs text-muted-foreground">Jules is fictional. In your Masterbook every degree, house and aspect is calculated from your own birth moment.</p></div>
         </article>
       </section>
 
       <section className="space-y-5" aria-labelledby="pod-h">
-        <div><div className="font-smallcaps text-xs text-gold">Cosmic plan</div><h2 id="pod-h" className="text-3xl">Podcast studio</h2><p className="text-muted-foreground">Turn any reading into a narrated episode saved to your library.</p></div>
+        <div><div className="font-label text-xs tracking-[0.16em] text-primary">Cosmic plan</div><h2 id="pod-h" className="text-3xl">Podcast studio</h2><p className="text-muted-foreground">Turn any reading into a narrated episode saved to your library.</p></div>
         <PodcastPlayer />
       </section>
 
       <section className="space-y-5" aria-labelledby="comic-h">
-        <div><div className="font-smallcaps text-xs text-gold">AstroComic · sold separately</div><h2 id="comic-h" className="text-3xl">Your month, as a comic</h2></div>
+        <div><div className="font-label text-xs tracking-[0.16em] text-primary">AstroComic · sold separately</div><h2 id="comic-h" className="text-3xl">Your month, as a comic</h2></div>
         <ComicFlipbook issue={ISSUE_1} />
       </section>
 
       <section className="space-y-5" aria-labelledby="book-h">
-        <div><div className="font-smallcaps text-xs text-gold">Printed AstroBook</div><h2 id="book-h" className="text-3xl">Hold your chart in your hands</h2></div>
+        <div><div className="font-label text-xs tracking-[0.16em] text-primary">Printed AstroBook</div><h2 id="book-h" className="text-3xl">Hold your chart in your hands</h2></div>
         <Book3D coverSrc={PROMO_3D_COVER.src} hardcover label="Collector AstroBook · sample cover for a fictional reader" />
         <div className="flex flex-wrap justify-center gap-2"><Button asChild variant="outline"><Link to="/book-preview">Flip through sample pages</Link></Button><Button asChild><Link to="/astrobook">See editions & prices</Link></Button></div>
       </section>

@@ -32,14 +32,14 @@ export default function UploadedDoc() {
     <div className="grid lg:grid-cols-[260px_1fr] gap-8">
       <aside className="space-y-1 text-sm lg:sticky lg:top-6 lg:self-start lg:max-h-[85vh] overflow-y-auto">
         <Link to="/library" className="text-xs font-smallcaps text-muted-foreground hover:text-foreground">← Your library</Link>
-        <div className="font-smallcaps text-[10px] text-gold pt-3">{secs.length} sections</div>
+        <div className="font-label text-[10px] tracking-[0.14em] text-primary pt-3">{secs.length} sections</div>
         {secs.map((s, i) => (
           <button key={i} onClick={() => { setOpen(i); history.replaceState(null, '', `#s${i}`); }}
             className={`block w-full text-left px-2 py-1.5 rounded leading-snug ${i === open ? 'bg-accent/15 border-l-2 border-accent' : 'hover:bg-muted text-muted-foreground'}`}>{s.title}</button>
         ))}
       </aside>
       <article>
-        <div className="font-smallcaps text-xs text-gold">{row.category ?? 'Your Uploads'} · uploaded document</div>
+        <div className="font-label text-xs tracking-[0.16em] text-primary">{row.category ?? 'Your Uploads'} · uploaded document</div>
         <div className="flex items-start justify-between gap-4">
           <h1 className="text-3xl sm:text-4xl mt-2">{row.title}</h1>
           <CopyLinkButton />

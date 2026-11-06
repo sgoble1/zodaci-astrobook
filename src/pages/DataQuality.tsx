@@ -9,7 +9,7 @@ export default function DataQuality() {
   return (
     <article className="space-y-12">
       <header>
-        <div className="font-smallcaps text-[11px] text-gold">Meta · Data Quality</div>
+        <div className="font-label text-xs tracking-[0.16em] text-primary">Meta · Data Quality</div>
         <h1 className="font-display mt-2">What is confirmed, and what is not.</h1>
         <div className="gold-rule my-5 max-w-xs" />
         <p className="max-w-2xl text-lg text-foreground/85 leading-relaxed">
@@ -24,7 +24,7 @@ export default function DataQuality() {
           <div id={r.id} key={r.id} className="p-6 border border-border rounded bg-card/70">
             <div className="flex items-baseline justify-between flex-wrap gap-3">
               <div>
-                <div className="font-smallcaps text-[10px] text-gold">{r.field}</div>
+                <div className="font-label text-[10px] tracking-[0.14em] text-primary">{r.field}</div>
                 <div className="font-display text-xl mt-1">{r.value}</div>
               </div>
               <div className="flex items-center gap-3">
@@ -51,7 +51,7 @@ export default function DataQuality() {
 
             {r.affects.length > 0 && (
               <div className="mt-4">
-                <div className="font-smallcaps text-[10px] text-muted-foreground mb-1">Downstream insights affected</div>
+                <div className="font-label text-[10px] tracking-[0.14em] text-muted-foreground mb-1">Downstream insights affected</div>
                 <div className="flex flex-wrap gap-1.5">
                   {r.affects.map(a => (
                     <span key={a} className={`text-[10px] font-smallcaps px-2 py-0.5 rounded-full border ${CONFIDENCE_STYLE[r.status].className}`}>{a}</span>
@@ -65,7 +65,7 @@ export default function DataQuality() {
       </section>
 
       <section className="p-6 border border-gold/40 bg-gold/5 rounded">
-        <div className="font-smallcaps text-[11px] text-gold">Reconciling the birth time</div>
+        <div className="font-label text-xs tracking-[0.16em] text-primary">Reconciling the birth time</div>
         <h3 className="font-display text-xl mt-1">Two candidates on file</h3>
         <p className="mt-3 leading-relaxed text-sm">
           The three finished companion PDFs (Volume I, Volume II, Timeline Guide) all list <span className="font-mono">{BIRTH.time}</span>. An earlier working note cited a different morning time. The site uses <span className="font-mono">{BIRTH.time}</span> everywhere — this yields the Sagittarius 29°28′ Ascendant, the Cap H1 stellium, and the Ba Zi Bing Shen hour pillar that every finished report is built around. If a birth certificate is uploaded, any angle-based reading (Ascendant, Midheaven, house cusps, hour pillar, profection lord) will be re-derived from that instead.

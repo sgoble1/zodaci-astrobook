@@ -29,7 +29,7 @@ export default function Workspaces() {
   return (
     <article className="max-w-3xl space-y-8">
       <header>
-        <p className="text-xs font-smallcaps text-gold">Only invited members</p>
+        <p className="text-xs font-label tracking-[0.14em] text-primary">Only invited members</p>
         <h1 className="text-4xl mt-2">Your shared workspaces</h1>
         <p className="text-muted-foreground mt-3">
           Share selected podcasts and wonderings with people you invite. Your birth details, personal examples and private readings stay private.

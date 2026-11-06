@@ -72,7 +72,7 @@ export default function Aspects() {
               const B = PLACEMENTS.find(p => p.key === selected.b)!;
               return (
                 <div className="p-6 border border-gold/40 rounded bg-card">
-                  <div className="font-smallcaps text-[11px] text-gold">{selected.type} · {selected.orb}</div>
+                  <div className="font-label text-xs tracking-[0.16em] text-primary">{selected.type} · {selected.orb}</div>
                   <div className="mt-3 text-3xl">
                     <span className="text-gold">{A.glyph}</span> <span className="text-muted-foreground text-lg mx-2">×</span> <span className="text-gold">{B.glyph}</span>
                   </div>

@@ -35,7 +35,7 @@ export default function SourceReader() {
     <div className="space-y-6">
       <Link to="/sources" className="text-xs font-smallcaps text-muted-foreground hover:text-foreground">← Source files</Link>
       <header>
-        <div className="font-smallcaps text-xs text-gold">Full text · {units?.length ?? '…'} {units?.[0]?.loc.split(' ')[0].toLowerCase() ?? 'page'}s</div>
+        <div className="font-label text-xs tracking-[0.16em] text-primary">Full text · {units?.length ?? '…'} {units?.[0]?.loc.split(' ')[0].toLowerCase() ?? 'page'}s</div>
         <h1 className="text-3xl sm:text-4xl mt-2">{src?.title ?? fileName}</h1>
         <div className="flex flex-wrap gap-3 items-center mt-4">
           <Input placeholder="Find in this document…" value={q} onChange={e => setQ(e.target.value)} className="max-w-sm" />
@@ -49,7 +49,7 @@ export default function SourceReader() {
       {units && !failed && shown.length === 0 && <p className="text-sm text-muted-foreground">{q ? `Nothing in this document matches “${q}”.` : 'This document has no readable text yet.'}</p>}
       {shown.map(u => (
         <section key={u.i} id={`u${u.i}`} className="parchment p-5 scroll-mt-24">
-          <div className="font-smallcaps text-[10px] text-gold mb-2">{u.loc}</div>
+          <div className="font-label text-[10px] tracking-[0.14em] text-primary mb-2">{u.loc}</div>
           <div className="mb-prose text-[0.98rem]">{para(u.text).map((p, j) => <p key={j}>{p}</p>)}</div>
         </section>
       ))}

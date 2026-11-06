@@ -17,14 +17,14 @@ export default function Houses() {
           <Link key={h.number} to={`/houses/${h.number}`} className="group p-5 border border-border rounded bg-card hover:border-gold hover:shadow-[var(--shadow-gold)] transition-all">
             <div className="flex items-baseline justify-between">
               <div className="font-display text-4xl text-gold leading-none">{h.number}</div>
-              <div className="font-smallcaps text-[10px] text-muted-foreground text-right">Cusp<br />{h.cusp}</div>
+              <div className="font-label text-[10px] tracking-[0.14em] text-muted-foreground text-right">Cusp<br />{h.cusp}</div>
             </div>
             <div className="gold-rule my-3" />
             <div className="font-display text-lg leading-tight">{h.name}</div>
             <div className="text-xs text-muted-foreground mt-1">Ruler: {h.ruler}</div>
             {h.planets.length > 0 && (
               <div className="mt-2 text-xs">
-                <span className="font-smallcaps text-[10px] text-gold">Tenants</span> · {h.planets.join(', ')}
+                <span className="font-label text-[10px] tracking-[0.14em] text-primary">Tenants</span> · {h.planets.join(', ')}
               </div>
             )}
             <div className="text-sm text-foreground/80 mt-3 italic">{h.summary}</div>

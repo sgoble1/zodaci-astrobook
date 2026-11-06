@@ -6,7 +6,7 @@ export default function Verify() {
   return (
     <article className="space-y-12">
       <header className="max-w-3xl">
-        <div className="font-smallcaps text-xs text-gold">Check it yourself</div>
+        <div className="font-label text-xs tracking-[0.16em] text-primary">Check it yourself</div>
         <h1 className="font-display mt-2">Verify the Sources</h1>
         <p className="mt-4 text-lg text-muted-foreground">Every chart and system page links here. In plain words: the planet positions are real astronomy you can check with NASA. The meanings come from old books and traditions, which these links let you read. And the research links show what scientists found when they tested astrology.</p>
       </header>

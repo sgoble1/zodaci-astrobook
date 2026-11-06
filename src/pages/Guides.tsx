@@ -20,7 +20,7 @@ export default function Guide() {
   const secs = g.match ? entries.filter(e => g.match!.test(e.title)) : entries.filter(e => e.id.startsWith(g.prefix) && (g.prefix.endsWith('-p') || !/-p\d+$/.test(e.id)));
   return (
     <div className="space-y-6">
-      <div className="font-smallcaps text-xs text-gold">Source guide · {secs.length} sections</div>
+      <div className="font-label text-xs tracking-[0.16em] text-primary">Source guide · {secs.length} sections</div>
       <h1 className="text-3xl sm:text-4xl">{g.title}</h1>
       <p className="text-muted-foreground max-w-2xl">{g.blurb} Each section opens as a full page with the complete text, links to the PDF page, and a “Summarise from the sources” button.</p>
       {g.slug === 'timeline-retrogrades' && <section className="space-y-4 border-y border-border py-6" aria-labelledby="timing-overview-heading">
@@ -44,13 +44,13 @@ export default function Guide() {
       {!['timeline-retrogrades', 'relationships'].includes(g.slug) && <section className="space-y-3"><h2 className="text-2xl">Bagua wheel · April’s eight directions</h2><BaguaWheel /></section>}
       {g.slug === 'feng-shui-pages' && <section className="space-y-3"><h2 className="text-2xl">Flying Stars wheel</h2><FlyingStarWheel /></section>}
       {g.slug === 'relationships' ? <>
-        <nav className="parchment p-4 text-xs flex flex-wrap gap-x-4 gap-y-1"><span className="font-smallcaps text-gold">Jump to</span>{secs.map(e => <a key={e.id} href={`#${e.id}`} className="underline">{e.title}</a>)}</nav>
+        <nav className="parchment p-4 text-xs flex flex-wrap gap-x-4 gap-y-1"><span className="font-label tracking-[0.14em] text-primary">Jump to</span>{secs.map(e => <a key={e.id} href={`#${e.id}`} className="underline">{e.title}</a>)}</nav>
         <div className="space-y-4">{secs.map(e => <RelSourceSection key={e.id} e={e} />)}</div>
         <p className="text-xs text-muted-foreground">See also <Link to="/relationships" className="underline">your relationships</Link> and the <Link to="/masterbook" className="underline">full Masterbook</Link>.</p>
       </> : <ol className="grid sm:grid-cols-2 gap-3">
         {secs.map(e => (
           <li key={e.id}><Link to={`/masterbook/${e.id}`} className="parchment block p-4 hover:border-primary h-full">
-            <div className="font-smallcaps text-[10px] text-gold">{e.label}</div>
+            <div className="font-label text-[10px] tracking-[0.14em] text-primary">{e.label}</div>
             <div className="text-sm mt-1">{e.title}</div>
           </Link></li>
         ))}

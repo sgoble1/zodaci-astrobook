@@ -87,7 +87,7 @@ export default function Transits() {
         <section id={active.id} className="grid md:grid-cols-[1fr,auto] gap-6 items-start p-6 border border-border rounded bg-card/70">
           <div>
             <div className="flex items-center gap-3 flex-wrap">
-              <div className="font-smallcaps text-[11px] text-gold">{active.window}</div>
+              <div className="font-label text-xs tracking-[0.16em] text-primary">{active.window}</div>
               <ConfidenceBadge level={active.reasoning.confidence} note={active.reasoning.caveats?.[0]} compact />
               <CopyLinkButton hash={active.id} label="Share this transit" />
             </div>
@@ -99,7 +99,7 @@ export default function Transits() {
             <p className="leading-relaxed text-foreground/90">{active.body}</p>
             <ReasoningPanel reasoning={active.reasoning} />
             <div className="mt-4 text-[11px] text-muted-foreground">
-              <span className="font-smallcaps text-[10px] text-gold">Cited in · </span>
+              <span className="font-label text-[10px] tracking-[0.14em] text-primary">Cited in · </span>
               {active.sources.map((s, i) => (
                 <span key={i}>{i > 0 && ' · '}<span className="italic">{s.doc}</span> {s.section}{s.page && ` ${s.page}`}</span>
               ))}
@@ -121,7 +121,7 @@ export default function Transits() {
               onClick={() => { setActive(t); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
               className="w-full text-left py-4 grid grid-cols-[8rem,1fr] gap-4 items-baseline hover:bg-muted/40 px-2"
             >
-              <div className="font-smallcaps text-[10px] text-muted-foreground">{t.window}</div>
+              <div className="font-label text-[10px] tracking-[0.14em] text-muted-foreground">{t.window}</div>
               <div>
                 <div className="font-display">{t.title}</div>
                 <div className="text-xs text-foreground/70 mt-0.5">{t.transiting} {t.aspect} {t.natalPoint}</div>

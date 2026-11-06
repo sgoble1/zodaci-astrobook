@@ -21,7 +21,7 @@ export default function Chat() {
   return (
     <div className="space-y-6">
       <header>
-        <div className="font-smallcaps text-xs text-gold">The Oracle Desk · Conversations</div>
+        <div className="font-label text-xs tracking-[0.16em] text-primary">The Oracle Desk · Conversations</div>
         <h1 className="text-4xl sm:text-5xl mt-2">SmartChat</h1>
         <p className="text-muted-foreground mt-3 max-w-2xl">Talk with the sources over several turns. Every answer cites the passages it used, and your conversations are saved to your account.</p>
       </header>
@@ -122,7 +122,7 @@ function ChatInner() {
     <div className="grid lg:grid-cols-[230px_1fr] gap-5">
       <aside className="space-y-2">
         <Button className="w-full" variant="outline" onClick={() => nav('/chat')}><MessageSquarePlus className="w-4 h-4 mr-2" />New conversation</Button>
-        <div className="font-smallcaps text-[10px] text-gold pt-2">History</div>
+        <div className="font-label text-[10px] tracking-[0.14em] text-primary pt-2">History</div>
         {convoFailed && <LoadError what="your conversation history" onRetry={() => void loadConvos()} />}
         {!convoFailed && convos.length === 0 && <p className="text-xs text-muted-foreground">No saved conversations yet.</p>}
         <ul className="space-y-1 max-h-[60vh] overflow-y-auto">

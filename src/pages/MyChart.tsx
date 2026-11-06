@@ -51,7 +51,7 @@ export default function MyChart() {
         </div>
       )}
       <header>
-        <p className="font-smallcaps text-xs text-gold">{birth.name ? `${birth.name}'s chart` : 'Your chart'}</p>
+        <p className="font-label text-xs tracking-[0.16em] text-primary">{birth.name ? `${birth.name}'s chart` : 'Your chart'}</p>
         <h1 className="font-display mt-1 text-4xl">{shared ? `${birth.name}’s birth chart` : 'Your birth chart'}</h1>
         {shared && <p className="mt-2 text-sm text-gold">Shared edition · Read only</p>}
         <p className="mt-2 text-muted-foreground">{birth.date}{birth.time ? ` · ${birth.time}` : ' · time unknown'} · {birth.placeLabel}</p>
@@ -90,12 +90,12 @@ export default function MyChart() {
           return <>
             <DialogHeader><DialogTitle className="font-display text-2xl">{sel.glyph} {sel.name} in {sel.sign}</DialogTitle><DialogDescription>{sel.deg}°{String(sel.min).padStart(2, '0')}′ {sel.sign}{sel.house && birth.time ? ` · house ${sel.house}` : ''}{sel.retro ? ' · retrograde' : ''}</DialogDescription></DialogHeader>
             <div className="space-y-4 text-sm">
-              <section><h3 className="font-smallcaps text-xs text-gold">The planet</h3><p>{sel.name} represents {BODY[sel.key] ?? 'one part of your life'}.</p></section>
-              <section><h3 className="font-smallcaps text-xs text-gold">The sign</h3><p>{sel.sign} colours it as {SIGN_KEYWORDS[sel.sign]}. At {sel.deg}° it sits in the {['first', 'second', 'third'][decan - 1]} third (decan) of the sign{sel.deg >= 29 ? ' — the final degree, often read as a theme of completion' : sel.deg < 1 ? ' — the very start of the sign, fresh and raw' : ''}.</p></section>
-              {sel.house && birth.time ? <section><h3 className="font-smallcaps text-xs text-gold">The house</h3><p>House {sel.house} is about {HOUSE_AREA[sel.house]}. This is the area of life where {sel.name.toLowerCase()} energy shows up most.</p></section> : null}
-              {sel.retro && <section><h3 className="font-smallcaps text-xs text-gold">Retrograde</h3><p>From Earth it appeared to move backwards when you were born. Traditionally this turns the planet's energy inward: more reflective, reworked and personal.</p></section>}
-              <section><h3 className="font-smallcaps text-xs text-gold">Links to other planets ({asp.length})</h3>{asp.length ? <ul className="list-disc pl-5 space-y-1">{asp.map((a, i) => <li key={i}>{a.a} {a.type.toLowerCase()} {a.b} ({a.orb.toFixed(1)}°) — {ASPECT[a.type] ?? ''}</li>)}</ul> : <p>No major aspects within orb.</p>}</section>
-              <section><h3 className="font-smallcaps text-xs text-gold">In plain words</h3><p>Your {BODY[sel.key] ?? sel.name} works in a {SIGN_KEYWORDS[sel.sign].split(', ').slice(0, 2).join(' and ')} way{sel.house && birth.time ? `, mostly through ${HOUSE_AREA[sel.house].split(',')[0]}` : ''}.</p></section>
+              <section><h3 className="font-label text-xs tracking-[0.16em] text-primary">The planet</h3><p>{sel.name} represents {BODY[sel.key] ?? 'one part of your life'}.</p></section>
+              <section><h3 className="font-label text-xs tracking-[0.16em] text-primary">The sign</h3><p>{sel.sign} colours it as {SIGN_KEYWORDS[sel.sign]}. At {sel.deg}° it sits in the {['first', 'second', 'third'][decan - 1]} third (decan) of the sign{sel.deg >= 29 ? ' — the final degree, often read as a theme of completion' : sel.deg < 1 ? ' — the very start of the sign, fresh and raw' : ''}.</p></section>
+              {sel.house && birth.time ? <section><h3 className="font-label text-xs tracking-[0.16em] text-primary">The house</h3><p>House {sel.house} is about {HOUSE_AREA[sel.house]}. This is the area of life where {sel.name.toLowerCase()} energy shows up most.</p></section> : null}
+              {sel.retro && <section><h3 className="font-label text-xs tracking-[0.16em] text-primary">Retrograde</h3><p>From Earth it appeared to move backwards when you were born. Traditionally this turns the planet's energy inward: more reflective, reworked and personal.</p></section>}
+              <section><h3 className="font-label text-xs tracking-[0.16em] text-primary">Links to other planets ({asp.length})</h3>{asp.length ? <ul className="list-disc pl-5 space-y-1">{asp.map((a, i) => <li key={i}>{a.a} {a.type.toLowerCase()} {a.b} ({a.orb.toFixed(1)}°) — {ASPECT[a.type] ?? ''}</li>)}</ul> : <p>No major aspects within orb.</p>}</section>
+              <section><h3 className="font-label text-xs tracking-[0.16em] text-primary">In plain words</h3><p>Your {BODY[sel.key] ?? sel.name} works in a {SIGN_KEYWORDS[sel.sign].split(', ').slice(0, 2).join(' and ')} way{sel.house && birth.time ? `, mostly through ${HOUSE_AREA[sel.house].split(',')[0]}` : ''}.</p></section>
               {!shared && TOPIC[sel.key] && <Button asChild size="sm"><Link to={`/my-readings/topic/${TOPIC[sel.key]}`}>Read the full chapter →</Link></Button>}
             </div>
           </>;

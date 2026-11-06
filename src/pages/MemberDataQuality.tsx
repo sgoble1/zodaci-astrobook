@@ -23,7 +23,7 @@ export default function MemberDataQuality({ birth }: { birth: MyBirth }) {
   return (
     <article className="space-y-8">
       <header>
-        <p className="font-smallcaps text-xs text-gold">Data quality</p>
+        <p className="font-label text-xs tracking-[0.16em] text-primary">Data quality</p>
         <h1 className="font-display mt-1 text-4xl">How exact is your chart?</h1>
         <p className="mt-2 max-w-2xl text-muted-foreground">Every reading is built from the facts below. Nothing here is guessed from your answers or from anyone else’s chart.</p>
       </header>

@@ -35,7 +35,7 @@ export default function MyUploads() {
   return (
     <div className="space-y-8">
       <header>
-        <div className="font-smallcaps text-xs text-gold">The Masterbook · your additions</div>
+        <div className="font-label text-xs tracking-[0.16em] text-primary">The Masterbook · your additions</div>
         <h1 className="text-4xl sm:text-5xl mt-2">Upload to the Masterbook</h1>
         <p className="text-muted-foreground mt-3 max-w-2xl">Add your own PDFs and spreadsheets. Each is split into clickable sections (by heading or page for PDFs, by sheet for spreadsheets), shown in the Masterbook, searchable with ⌘K and answerable in Ask the Sources.</p>
       </header>
@@ -61,7 +61,7 @@ export default function MyUploads() {
               const secs = (it.sections as { title: string }[] | null) ?? [];
               return (
                 <div key={it.id} className="parchment p-4">
-                  <div className="font-smallcaps text-[10px] text-gold">{it.category} · {secs.length} sections · {fmtSize(it.size_bytes)}</div>
+                  <div className="font-label text-[10px] tracking-[0.14em] text-primary">{it.category} · {secs.length} sections · {fmtSize(it.size_bytes)}</div>
                   <Link to={`/masterbook/u/${it.id}`} className="font-display text-lg leading-snug mt-1 block hover:underline">{it.title}</Link>
                   <div className="flex gap-3 mt-3 text-xs">
                     <Link to={`/masterbook/u/${it.id}`} className="underline">Read</Link>

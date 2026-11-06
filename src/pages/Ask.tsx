@@ -65,7 +65,7 @@ export default function Ask() {
   return (
     <div className="space-y-8">
       <header>
-        <div className="font-smallcaps text-xs text-gold">The Oracle Desk · AI-powered</div>
+        <div className="font-label text-xs tracking-[0.16em] text-primary">The Oracle Desk · AI-powered</div>
         <h1 className="text-4xl sm:text-5xl mt-2">Ask the Sources</h1>
         <p className="text-muted-foreground mt-3 max-w-2xl">Ask anything about April’s chart. Answers come only from the uploaded documents, with every claim linked to the passage it came from.</p>
       </header>
@@ -90,7 +90,7 @@ export default function Ask() {
       {asked && (
         <section className="space-y-6">
           <div>
-            <div className="font-smallcaps text-[10px] text-gold">Question</div>
+            <div className="font-label text-[10px] tracking-[0.14em] text-primary">Question</div>
             <p className="font-display text-xl">{asked}</p>
           </div>
           {err && <p role="alert" className="text-destructive text-sm">{err}</p>}

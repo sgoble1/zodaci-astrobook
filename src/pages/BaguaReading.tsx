@@ -36,7 +36,7 @@ export default function BaguaReading({ input: given }: { input?: ChartInput } = 
   return (
     <div className="space-y-10">
       <header className="space-y-2">
-        <div className="font-smallcaps text-xs text-gold">Bagua reading</div>
+        <div className="font-label text-xs tracking-[0.16em] text-primary">Bagua reading</div>
         <h1 className="text-4xl">{given ? 'Your Bagua reading' : `Bagua Reading · ${isApril ? 'April' : `${input.date} · ${input.placeLabel}`}`}</h1>
         <p className="max-w-3xl text-muted-foreground">Natal positions, aspects, the Four Pillars, Compendium fixed stars and the Feng Shui Kua directions woven into one reading, with confidence and reasoning for each part. {given ? <><Link to="/my-chart" className="underline">Your chart</Link> · <Link to="/feng-shui" className="underline">Your directions</Link></> : <><Link to={`/reading?${toParams(input)}`} className="underline">Full reading</Link> · <Link to={`/chart-calculator?${toParams(input)}`} className="underline">Change the chart</Link></>}</p>
         <div className="flex flex-wrap gap-2">{r.flags.map((f, i) => <ConfidenceBadge key={i} level={f.level} note={`${f.topic}: ${f.note}`} />)}</div>

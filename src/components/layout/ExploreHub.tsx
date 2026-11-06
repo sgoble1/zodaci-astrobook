@@ -57,7 +57,7 @@ export function MemberExploreHub() {
   return (
     <div className="space-y-14">
       <header className="max-w-3xl space-y-3">
-        <p className="font-smallcaps text-xs text-gold">Explore</p>
+        <p className="font-label text-xs tracking-[0.16em] text-primary">Explore</p>
         <h1 className="font-display">There’s more to your chart than the birth moment.</h1>
         <p className="text-lg text-muted-foreground">Timing, relationships and other wisdom systems — all in one place, all calculated from your own birth details.</p>
       </header>

@@ -15,7 +15,7 @@ export default function Compendium() {
   return (
     <div className="space-y-12">
       <header>
-        <div className="font-smallcaps text-[11px] text-gold">Companion Volumes · Reference</div>
+        <div className="font-label text-xs tracking-[0.16em] text-primary">Companion Volumes · Reference</div>
         <h1 className="font-display mt-2">The Master Compendium.</h1>
         <div className="gold-rule my-5 max-w-xs" />
         <p className="max-w-2xl text-lg text-foreground/85 leading-relaxed">
@@ -119,7 +119,7 @@ function SabianSection() {
   const drawer = useDetailDrawer();
   return (
     <section>
-      <div className="font-smallcaps text-[11px] text-gold">II · Sabian Symbols</div>
+      <div className="font-label text-xs tracking-[0.16em] text-primary">II · Sabian Symbols</div>
       <h2 className="font-display mt-1 mb-4">An illuminated wheel · one image per degree.</h2>
       <div className="grid md:grid-cols-2 gap-3">
         {SABIAN_SYMBOLS.map(s => (
@@ -134,7 +134,7 @@ function SabianSection() {
                   <p>{s.interpretation}</p>
                   {s.notes && (
                     <>
-                      <div className="font-smallcaps text-[10px] text-gold mt-4 mb-1">Interpretation notes</div>
+                      <div className="font-label text-[10px] tracking-[0.14em] text-primary mt-4 mb-1">Interpretation notes</div>
                       <p className="italic text-foreground/75">{s.notes}</p>
                     </>
                   )}
@@ -145,10 +145,10 @@ function SabianSection() {
             className="text-left p-4 border rounded bg-card/70 border-border hover:border-gold/60 transition-colors">
             <div className="flex justify-between items-baseline gap-2">
               <div className="font-display text-lg">{s.point}</div>
-              <div className="font-smallcaps text-[10px] text-muted-foreground">{s.degree}</div>
+              <div className="font-label text-[10px] tracking-[0.14em] text-muted-foreground">{s.degree}</div>
             </div>
             <div className="italic text-foreground/85 mt-1">"{s.symbol}"</div>
-            <div className="font-smallcaps text-[10px] text-gold mt-2">Read →</div>
+            <div className="font-label text-[10px] tracking-[0.14em] text-primary mt-2">Read →</div>
           </button>
         ))}
       </div>
@@ -162,10 +162,10 @@ function FixedStarsSection() {
     <section>
       <div className="flex items-baseline justify-between gap-4 flex-wrap">
         <div>
-          <div className="font-smallcaps text-[11px] text-gold">III · Fixed Stars</div>
+          <div className="font-label text-xs tracking-[0.16em] text-primary">III · Fixed Stars</div>
           <h2 className="font-display mt-1">Ancient beacons touching the natal chart.</h2>
         </div>
-        <Link to="/star-map" className="font-smallcaps text-[10px] text-gold border-b border-gold/50 hover:border-gold">
+        <Link to="/star-map" className="font-label text-[10px] tracking-[0.14em] text-primary border-b border-gold/50 hover:border-gold">
           Open the interactive sky map →
         </Link>
       </div>
@@ -179,12 +179,12 @@ function FixedStarsSection() {
               subtitle: `${s.degree} · conj. ${s.conjunct}`,
               body: (
                 <>
-                  <div className="font-smallcaps text-[10px] text-gold mb-1">Meaning</div>
+                  <div className="font-label text-[10px] tracking-[0.14em] text-primary mb-1">Meaning</div>
                   <p className="italic">{s.meaning}</p>
-                  <div className="font-smallcaps text-[10px] text-gold mt-4 mb-1">Natal activation</div>
+                  <div className="font-label text-[10px] tracking-[0.14em] text-primary mt-4 mb-1">Natal activation</div>
                   <p>{s.activation}</p>
                   <div className="mt-4">
-                    <Link to={`/star-map#${s.id}`} className="font-smallcaps text-[10px] text-gold border-b border-gold/50">
+                    <Link to={`/star-map#${s.id}`} className="font-label text-[10px] tracking-[0.14em] text-primary border-b border-gold/50">
                       See on the sky map →
                     </Link>
                   </div>
@@ -195,7 +195,7 @@ function FixedStarsSection() {
             className="w-full text-left p-5 border border-border rounded bg-card/60 hover:border-gold/60 transition-colors">
             <div className="flex flex-wrap justify-between gap-2 items-baseline">
               <div className="font-display text-xl text-gold">{s.name}</div>
-              <div className="font-smallcaps text-[10px] text-muted-foreground">
+              <div className="font-label text-[10px] tracking-[0.14em] text-muted-foreground">
                 {s.degree} · conj. {s.conjunct} · orb {s.orb}
               </div>
             </div>
@@ -212,7 +212,7 @@ function AsteroidsSection() {
   const drawer = useDetailDrawer();
   return (
     <section>
-      <div className="font-smallcaps text-[11px] text-gold">IV · Asteroid Goddesses</div>
+      <div className="font-label text-xs tracking-[0.16em] text-primary">IV · Asteroid Goddesses</div>
       <h2 className="font-display mt-1 mb-4">Juno · Vesta · Ceres · Pallas Athena.</h2>
       <div className="grid md:grid-cols-2 gap-4">
         {ASTEROIDS.map(a => (
@@ -230,7 +230,7 @@ function AsteroidsSection() {
               <div className="text-gold text-2xl font-display">{a.glyph}</div>
               <div>
                 <div className="font-display text-lg">{a.name}</div>
-                <div className="font-smallcaps text-[10px] text-muted-foreground">{a.placement}</div>
+                <div className="font-label text-[10px] tracking-[0.14em] text-muted-foreground">{a.placement}</div>
               </div>
             </div>
             <div className="gold-rule my-3" />
@@ -246,7 +246,7 @@ function SpecialAspectsSection() {
   const drawer = useDetailDrawer();
   return (
     <section>
-      <div className="font-smallcaps text-[11px] text-gold">V · Special & Minor Aspects</div>
+      <div className="font-label text-xs tracking-[0.16em] text-primary">V · Special & Minor Aspects</div>
       <h2 className="font-display mt-1 mb-4">The rarest angles in April's chart.</h2>
       <div className="space-y-3">
         {SPECIAL_ASPECTS.map(a => (
@@ -262,7 +262,7 @@ function SpecialAspectsSection() {
             className="w-full text-left p-4 border border-border rounded bg-card/60 hover:border-gold/60 transition-colors">
             <div className="flex flex-wrap justify-between gap-2 items-baseline">
               <div className="font-display text-base">{a.name}</div>
-              <div className="font-smallcaps text-[10px] text-muted-foreground">{a.planets} · orb {a.orb}</div>
+              <div className="font-label text-[10px] tracking-[0.14em] text-muted-foreground">{a.planets} · orb {a.orb}</div>
             </div>
           </button>
         ))}
@@ -275,7 +275,7 @@ function ArabicPartsSection() {
   const drawer = useDetailDrawer();
   return (
     <section>
-      <div className="font-smallcaps text-[11px] text-gold">VI · Arabic Parts (Lots)</div>
+      <div className="font-label text-xs tracking-[0.16em] text-primary">VI · Arabic Parts (Lots)</div>
       <h2 className="font-display mt-1 mb-4">Fortune, Spirit, Marriage.</h2>
       <div className="grid md:grid-cols-3 gap-4">
         {ARABIC_PARTS.map(p => (
@@ -289,9 +289,9 @@ function ArabicPartsSection() {
             })}
             className="text-left p-5 border border-border rounded bg-card/60 hover:border-gold/60 transition-colors">
             <div className="font-display text-lg text-gold">{p.name}</div>
-            <div className="font-smallcaps text-[10px] text-muted-foreground mt-1">{p.position}</div>
+            <div className="font-label text-[10px] tracking-[0.14em] text-muted-foreground mt-1">{p.position}</div>
             <div className="gold-rule my-3" />
-            <div className="font-smallcaps text-[10px] text-gold">Read →</div>
+            <div className="font-label text-[10px] tracking-[0.14em] text-primary">Read →</div>
           </button>
         ))}
       </div>
@@ -304,10 +304,10 @@ function ProfectionSection() {
     <section>
       <div className="flex items-baseline justify-between gap-4 flex-wrap">
         <div>
-          <div className="font-smallcaps text-[11px] text-gold">VII · Annual Profection · Age {PROFECTION_35.age}</div>
+          <div className="font-label text-xs tracking-[0.16em] text-primary">VII · Annual Profection · Age {PROFECTION_35.age}</div>
           <h2 className="font-display mt-1">The Twelfth-House year · {PROFECTION_35.window}.</h2>
         </div>
-        <Link to="/profection" className="font-smallcaps text-[10px] text-gold border-b border-gold/50 hover:border-gold">
+        <Link to="/profection" className="font-label text-[10px] tracking-[0.14em] text-primary border-b border-gold/50 hover:border-gold">
           Open the interactive profection module →
         </Link>
       </div>
@@ -315,14 +315,14 @@ function ProfectionSection() {
         <div className="p-5 border border-gold/40 rounded bg-card">
           <table className="w-full text-sm">
             <tbody className="divide-y divide-border/70">
-              <tr><td className="py-2 font-smallcaps text-[10px] text-muted-foreground">House activated</td><td className="py-2">H{PROFECTION_35.house} · {PROFECTION_35.houseSign}</td></tr>
-              <tr><td className="py-2 font-smallcaps text-[10px] text-muted-foreground">Traditional Time Lord</td><td className="py-2">{PROFECTION_35.traditionalLord}</td></tr>
-              <tr><td className="py-2 font-smallcaps text-[10px] text-muted-foreground">Modern Time Lord</td><td className="py-2">{PROFECTION_35.modernLord}</td></tr>
-              <tr><td className="py-2 font-smallcaps text-[10px] text-muted-foreground">Time Lord in natal chart</td><td className="py-2">{PROFECTION_35.lordPosition}</td></tr>
+              <tr><td className="py-2 font-label text-[10px] tracking-[0.14em] text-muted-foreground">House activated</td><td className="py-2">H{PROFECTION_35.house} · {PROFECTION_35.houseSign}</td></tr>
+              <tr><td className="py-2 font-label text-[10px] tracking-[0.14em] text-muted-foreground">Traditional Time Lord</td><td className="py-2">{PROFECTION_35.traditionalLord}</td></tr>
+              <tr><td className="py-2 font-label text-[10px] tracking-[0.14em] text-muted-foreground">Modern Time Lord</td><td className="py-2">{PROFECTION_35.modernLord}</td></tr>
+              <tr><td className="py-2 font-label text-[10px] tracking-[0.14em] text-muted-foreground">Time Lord in natal chart</td><td className="py-2">{PROFECTION_35.lordPosition}</td></tr>
             </tbody>
           </table>
           <div className="gold-rule my-4" />
-          <div className="font-smallcaps text-[10px] text-gold mb-1">Alchemical theme</div>
+          <div className="font-label text-[10px] tracking-[0.14em] text-primary mb-1">Alchemical theme</div>
           <p className="italic text-foreground/85 text-sm">{PROFECTION_35.alchemicalTheme}</p>
           <SourceRefPanel source={PROFECTION_35.source} />
         </div>

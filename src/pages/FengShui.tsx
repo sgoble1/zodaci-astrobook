@@ -31,8 +31,8 @@ export default function FengShui() {
       <div className="p-6 border border-gold/40 rounded bg-card">
         <p className="text-sm leading-relaxed">{KUA_INFO.note}</p>
         <div className="mt-4 flex flex-wrap gap-4 text-xs">
-          <div><span className="font-smallcaps text-[10px] text-gold">Best directions</span> · {KUA_INFO.bestDirections.join(', ')}</div>
-          <div><span className="font-smallcaps text-[10px] text-muted-foreground">Difficult directions</span> · {KUA_INFO.worstDirections.join(', ')}</div>
+          <div><span className="font-label text-[10px] tracking-[0.14em] text-primary">Best directions</span> · {KUA_INFO.bestDirections.join(', ')}</div>
+          <div><span className="font-label text-[10px] tracking-[0.14em] text-muted-foreground">Difficult directions</span> · {KUA_INFO.worstDirections.join(', ')}</div>
         </div>
       </div>
 
@@ -68,7 +68,7 @@ export default function FengShui() {
 
         {/* Detail */}
         <div className="lg:sticky lg:top-8 h-fit p-6 border border-gold/40 rounded bg-card gentle-fade" key={selected.direction}>
-          <div className="font-smallcaps text-[11px] text-gold">{selected.direction} · {selected.element} · {selected.color}</div>
+          <div className="font-label text-xs tracking-[0.16em] text-primary">{selected.direction} · {selected.element} · {selected.color}</div>
           <h2 className="font-display mt-2">{selected.gua} · {selected.lifeArea}</h2>
           <div className="gold-rule my-4 w-16" />
           <p className="text-foreground/85 leading-relaxed">{selected.guidance}</p>
@@ -91,7 +91,7 @@ export default function FengShui() {
                   <div className="font-display text-lg">{b.gua}</div>
                   <div className="text-xs text-muted-foreground">{b.lifeArea}</div>
                 </div>
-                <div className="font-smallcaps text-[10px] text-gold">{b.direction} · {b.element}</div>
+                <div className="font-label text-[10px] tracking-[0.14em] text-primary">{b.direction} · {b.element}</div>
               </div>
             </button>
           ))}

@@ -27,7 +27,7 @@ function Sec({ id, n, title, level, note, children }: { id: string; n: string; t
   return (
     <section id={id} className="scroll-mt-24 space-y-3">
       <div className="module-heading border-b border-gold/40 pb-2">
-        <span className="font-smallcaps text-xs text-gold">{n}</span><h2 className="min-w-0 text-2xl">{title}</h2>
+        <span className="font-label text-xs tracking-[0.16em] text-primary">{n}</span><h2 className="min-w-0 text-2xl">{title}</h2>
         <div className="module-heading-actions"><ConfidenceBadge level={level} note={note} /><CopyLinkButton hash={id} label="Link" /></div>
       </div>
       {children}
@@ -98,7 +98,7 @@ function Detail({ rel, self }: { rel: Relationship; self: RelationshipSelf }) {
   return (
     <div className="space-y-10">
       <header className="space-y-2">
-        <div className="font-smallcaps text-xs text-gold">Relationship · {rel.relation}</div>
+        <div className="font-label text-xs tracking-[0.16em] text-primary">Relationship · {rel.relation}</div>
         <h1 className="text-4xl">{me === 'You' ? `You & ${N}` : `${me} & ${N}`}</h1>
         <p className="text-muted-foreground">{N}: born {rel.birth_date}{timeKnown ? ` at ${rel.birth_time}` : ' (time unknown — noon used)'} in {rel.place_label} · {rel.sex === 'unspecified' ? 'sex not given' : rel.sex}. {me === 'You' ? 'You' : me}: {self.birth.date}{self.birth.time ? `, ${self.birth.time}` : ' (time unknown)'}, {self.birth.placeLabel}.</p>
         <div className="flex flex-wrap gap-2">{B.flags.map((f, i) => <ConfidenceBadge key={i} level={f.level} note={`${f.topic}: ${f.note}`} />)}</div>
@@ -125,7 +125,7 @@ function Detail({ rel, self }: { rel: Relationship; self: RelationshipSelf }) {
       </Sec>
 
       <Sec id="bazi" n="III" title={`${N}’s Four Pillars (Ba Zi)`} level={timeKnown ? 'derived' : 'ambiguous'} note="Standard sexagenary calculation; the Hour pillar needs a birth time.">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">{B.bazi.map(p => <div key={p.label} className="parchment p-3"><div className="font-smallcaps text-[10px] text-gold">{p.label}</div><div className="font-display text-2xl">{p.stem}{p.branch} {p.romanized}</div><div className="text-xs text-muted-foreground">{p.polarity} {p.stemElement} · {p.animal}</div><p className="text-[11px] mt-1">{p.note}</p></div>)}</div>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">{B.bazi.map(p => <div key={p.label} className="parchment p-3"><div className="font-label text-[10px] tracking-[0.14em] text-primary">{p.label}</div><div className="font-display text-2xl">{p.stem}{p.branch} {p.romanized}</div><div className="text-xs text-muted-foreground">{p.polarity} {p.stemElement} · {p.animal}</div><p className="text-[11px] mt-1">{p.note}</p></div>)}</div>
         <p className="text-sm">Day Master (the self): <b>{dB.polarity} {dB.stemElement}</b> · Year animal: <b>{yB.animal}</b> · Element count: {Object.entries(B.elements).map(([k, v]) => `${k} ${v}`).join(', ')}.</p>
       </Sec>
 

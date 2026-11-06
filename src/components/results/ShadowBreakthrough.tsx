@@ -27,7 +27,7 @@ export function ShadowBreakthrough({ chart, timeKnown, tone }: { chart: ChartRes
             {it.definition && <p className="mt-1 text-sm italic text-muted-foreground">{it.definition}</p>}
             <div className="mt-3 grid gap-3 md:grid-cols-2">
               <div className="rounded-lg border border-border/60 bg-muted/40 p-3"><p className="font-smallcaps text-xs text-muted-foreground">Under pressure</p><p className="mt-1">{it.shadow}</p></div>
-              <div className="rounded-lg border border-gold/40 bg-gold/10 p-3"><p className="font-smallcaps text-xs text-gold">Breakthrough</p><p className="mt-1">{it.breakthrough}</p></div>
+              <div className="rounded-lg border border-gold/40 bg-gold/10 p-3"><p className="font-label text-xs tracking-[0.16em] text-primary">Breakthrough</p><p className="mt-1">{it.breakthrough}</p></div>
             </div>
             {it.practice && <p className="mt-3 text-sm"><span className="text-gold">Practice: </span>{it.practice}.</p>}
           </li>

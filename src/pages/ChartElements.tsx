@@ -9,7 +9,7 @@ export default function ChartElements() {
   return (
     <div className="space-y-8">
       <header className="space-y-2">
-        <div className="font-smallcaps text-xs text-gold">Birth chart · element by element</div>
+        <div className="font-label text-xs tracking-[0.16em] text-primary">Birth chart · element by element</div>
         <h1 className="text-4xl">Chart Elements & Their Meanings</h1>
         <p className="max-w-3xl text-muted-foreground">Each position in April’s chart ({BIRTH.date}, {BIRTH.time}, as used in the reports), what it means, and where that meaning comes from. Every entry also appears in <Link to="/reading#elements" className="underline">the Complete Reading</Link>.</p>
       </header>

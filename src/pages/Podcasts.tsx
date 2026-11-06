@@ -56,17 +56,17 @@ export default function Podcasts() {
   return (
     <div className="space-y-10">
       <header>
-        <div className="font-smallcaps text-xs text-gold">The Listening Room</div>
+        <div className="font-label text-xs tracking-[0.16em] text-primary">The Listening Room</div>
         <h1 className="text-4xl sm:text-5xl mt-2">Podcasts & Audio Readings</h1>
         <p className="text-muted-foreground mt-3 max-w-2xl">Personal chart episodes, private to you or shared with invited workspace members.</p>
       </header>
 
       {current?.url && (
         <div className="parchment deckle p-5">
-          <div className="font-smallcaps text-[10px] text-gold">Now playing · controls in the mini player</div>
+          <div className="font-label text-[10px] tracking-[0.14em] text-primary">Now playing · controls in the mini player</div>
           <div className="font-display text-xl mt-1">{current.title}</div>
           <div className="flex flex-wrap items-center gap-2 mt-3 text-xs">
-            <span className="font-smallcaps text-[10px] text-gold mr-1">Speed</span>
+            <span className="font-label text-[10px] tracking-[0.14em] text-primary mr-1">Speed</span>
             {[0.75, 1, 1.25, 1.5, 1.75, 2].map(r => (
               <button key={r} onClick={() => setSpeed(r)} className={`px-2 py-1 rounded border ${speed === r ? 'border-accent bg-accent/15' : 'border-border hover:bg-muted'}`}>{r}×</button>
             ))}
@@ -78,7 +78,7 @@ export default function Podcasts() {
       {queue.length > 0 && (
         <section className="parchment p-4">
           <div className="flex items-center justify-between mb-2">
-            <div className="font-smallcaps text-[10px] text-gold">Up next · {queue.length}</div>
+            <div className="font-label text-[10px] tracking-[0.14em] text-primary">Up next · {queue.length}</div>
             <button className="text-xs underline" onClick={() => setQueue(() => [])}>Clear queue</button>
           </div>
           <ol className="space-y-1 text-sm">

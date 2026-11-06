@@ -263,7 +263,7 @@ export function ProductDetail() {
           {imgs.length > 1 && <div className="flex flex-wrap gap-2" role="group" aria-label="Product photos">{imgs.map((im, i) => <button key={i} type="button" onClick={() => setImage(i)} aria-label={`Photo ${i + 1} of ${imgs.length}`} aria-pressed={i === image} className={`h-16 w-16 overflow-hidden rounded border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${i === image ? 'border-gold' : 'border-border opacity-70 hover:opacity-100'}`}><img src={im.node.url} alt="" loading="lazy" width={64} height={64} className="h-full w-full object-cover" /></button>)}</div>}
         </div>
         <div className="space-y-5">
-          {n.productType && <p className="font-smallcaps text-xs text-gold">{n.productType}</p>}
+          {n.productType && <p className="font-label text-xs tracking-[0.16em] text-primary">{n.productType}</p>}
           <h1 className="text-4xl">{shown.title}</h1>
           {shown.badge && <p className="inline-block rounded-full bg-accent px-3 py-0.5 font-label text-sm tracking-wider text-accent-foreground">{shown.badge}</p>}
           <p className="text-2xl font-semibold">{formatMoney(v?.price ?? n.priceRange.minVariantPrice)}</p>

@@ -45,7 +45,7 @@ export default function Sources() {
 
   const Row = ({ title, sub, url, ext, onDelete, read }: { title: string; sub: string; url?: string; ext: string; onDelete?: () => void; read?: string }) => (
     <li className="parchment p-4 flex items-center gap-4">
-      <div className="w-10 h-12 shrink-0 border border-border grid place-items-center text-[10px] font-smallcaps text-gold"><FileText className="w-4 h-4" />{ext}</div>
+      <div className="w-10 h-12 shrink-0 border border-border grid place-items-center text-[10px] font-label tracking-[0.14em] text-primary"><FileText className="w-4 h-4" />{ext}</div>
       <div className="flex-1 min-w-0">
         <button className="font-display text-lg text-left hover:underline" onClick={() => url && setView({ title, url, ext })}>{title}</button>
         <div className="text-xs text-muted-foreground">{sub}</div>
@@ -61,7 +61,7 @@ export default function Sources() {
     <div className="space-y-10">
       {viewer}
       <header>
-        <div className="font-smallcaps text-xs text-gold">The Archive</div>
+        <div className="font-label text-xs tracking-[0.16em] text-primary">The Archive</div>
         <h1 className="text-4xl sm:text-5xl mt-2">Source Files</h1>
         <p className="text-muted-foreground mt-3 max-w-2xl">Every original document this site was built from. Open one to read it, or download it to verify any passage.</p>
         <Input placeholder="Filter files…" value={q} onChange={e => setQ(e.target.value)} className="max-w-sm mt-4" />

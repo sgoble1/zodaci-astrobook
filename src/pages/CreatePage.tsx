@@ -68,7 +68,7 @@ export default function CreatePage() {
   return (
     <div className="space-y-6">
       <header className="space-y-2">
-        <div className="font-smallcaps text-xs text-gold">New page</div>
+        <div className="font-label text-xs tracking-[0.16em] text-primary">New page</div>
         <h1 className="text-4xl sm:text-5xl">Create a Topic & Page</h1>
         <p className="max-w-2xl text-muted-foreground">Describe what to research, analyse or calculate. A full page is written from the Masterbook and sources, saved, and added to the menu where you choose.</p>
       </header>

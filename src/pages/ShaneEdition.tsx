@@ -130,7 +130,7 @@ function ChapterView({ area, id, entries, text, owns, full, onRetry }: { area: E
   return (
     <article className="min-w-0">
       <Link to={copy.base} className="font-smallcaps text-xs text-muted-foreground hover:text-foreground">← {full ? copy.title : `Shared from ${copy.name}’s Masterbook`}</Link>
-      {e && <><div className="mt-4 font-smallcaps text-xs text-gold">{e.part} · {e.label}</div><h1 className="mt-2 text-3xl sm:text-4xl">{e.title}</h1></>}
+      {e && <><div className="mt-4 font-label text-xs tracking-[0.16em] text-primary">{e.part} · {e.label}</div><h1 className="mt-2 text-3xl sm:text-4xl">{e.title}</h1></>}
       <div className="mt-4 flex flex-wrap items-center gap-3">
         {owns && e && <ShareChapterButton edition={area} chapter={{ id: e.id, title: e.title }} />}
         {!owns && e && <SharedByNote ownerName={copy.name} scope={full ? 'edition' : 'chapter'} />}
@@ -141,7 +141,7 @@ function ChapterView({ area, id, entries, text, owns, full, onRetry }: { area: E
         : text === 'denied' ? <NoEditionAccess owner={copy.name} onRetry={onRetry} />
         : text === '' ? <div className="space-y-3"><p role="alert">This chapter couldn’t be opened. Check your connection and try again.</p><Button variant="outline" onClick={onRetry}>Try again</Button></div>
         : <NavigatedProse content={text} path={`${copy.base}/${id}`} title={e?.title ?? `${copy.name}’s chapter`} headingLevel={headingLevel} />}
-      <p className="parchment mt-10 p-4 text-xs text-muted-foreground"><span className="font-smallcaps text-gold">Source</span> · {copy.source}</p>
+      <p className="parchment mt-10 p-4 text-xs text-muted-foreground"><span className="font-label tracking-[0.14em] text-primary">Source</span> · {copy.source}</p>
       <nav className="mt-8 flex justify-between gap-4" aria-label="Chapters">
         {prev ? <Link to={`${copy.base}/${prev.id}`} className="parchment flex max-w-[48%] items-center gap-2 p-3 text-sm"><ChevronLeft className="h-4 w-4 shrink-0" aria-hidden="true" /><span className="truncate">{prev.title}</span></Link> : <span />}
         {next && <Link to={`${copy.base}/${next.id}`} className="parchment flex max-w-[48%] items-center gap-2 p-3 text-right text-sm"><span className="truncate">{next.title}</span><ChevronRight className="h-4 w-4 shrink-0" aria-hidden="true" /></Link>}
@@ -171,7 +171,7 @@ function EditionHome({ area, entries, owns, full }: { area: EditionKey; entries:
   if (chapterOnly) return (
     <div className="space-y-8">
       <header>
-        <div className="font-smallcaps text-[11px] text-gold">{copy.eyebrow}</div>
+        <div className="font-label text-xs tracking-[0.16em] text-primary">{copy.eyebrow}</div>
         <h1 className="mt-2 text-4xl sm:text-5xl">Shared from {copy.name}’s Masterbook</h1>
         <div className="mt-3"><SharedByNote ownerName={copy.name} scope="chapter" /></div>
         <p className="mt-3 max-w-2xl text-muted-foreground">{copy.name} shared {entries ? (entries.length === 1 ? 'one chapter' : `${entries.length} chapters`) : 'chapters'} with you. The rest of the book stays private.</p>
@@ -194,7 +194,7 @@ function EditionHome({ area, entries, owns, full }: { area: EditionKey; entries:
       </>}
       <section className="gentle-fade grid items-center gap-10 lg:grid-cols-[1.1fr,0.9fr]">
         <div>
-          <div className="mb-4 font-smallcaps text-[11px] text-gold">{copy.eyebrow}</div>
+          <div className="mb-4 font-label text-xs tracking-[0.16em] text-primary">{copy.eyebrow}</div>
           <h2 className="font-display leading-[0.95]">{copy.name}.<br /><span className="font-script text-primary">{copy.tagline}</span></h2>
           <div className="gold-rule my-6 max-w-md" />
           {!owns && <div className="mb-4"><SharedByNote ownerName={copy.name} scope="edition" /></div>}
@@ -204,7 +204,7 @@ function EditionHome({ area, entries, owns, full }: { area: EditionKey; entries:
           {birth && (
             <dl className="mt-8 grid grid-cols-2 gap-4 text-xs sm:grid-cols-4">
               {[['Born', birth.date], ['Time', birth.time ?? 'Unknown'], ['Place', birth.placeLabel], ['Rising', rising ? `${rising.sign} ${rising.deg}°` : '—']].map(([k, v]) => (
-                <div key={k}><dt className="font-smallcaps text-[10px] text-muted-foreground">{k}</dt><dd className="mt-1 text-foreground">{v}</dd></div>
+                <div key={k}><dt className="font-label text-[10px] tracking-[0.14em] text-muted-foreground">{k}</dt><dd className="mt-1 text-foreground">{v}</dd></div>
               ))}
             </dl>
           )}
@@ -224,7 +224,7 @@ function EditionHome({ area, entries, owns, full }: { area: EditionKey; entries:
 
       {chart && (
         <section aria-labelledby={`${area}-planets`} className="gentle-fade">
-          <div className="font-smallcaps text-[11px] text-gold">The planets</div>
+          <div className="font-label text-xs tracking-[0.16em] text-primary">The planets</div>
           <h2 id={`${area}-planets`} className="font-display mt-1">Every placement, and where the book discusses it.</h2>
           <p className="mt-2 max-w-2xl text-sm text-muted-foreground">Tap a planet to show the chapters that mention it. Placements are calculated from {copy.name}’s saved birth details.</p>
           <ul className="mt-6 grid grid-cols-3 gap-3 sm:grid-cols-4 lg:grid-cols-6">
@@ -245,7 +245,7 @@ function EditionHome({ area, entries, owns, full }: { area: EditionKey; entries:
 
       {modules.length > 0 && (
         <section className="gentle-fade" aria-labelledby={`${area}-explore`}>
-          <div className="mb-2 font-smallcaps text-[11px] text-gold">Explore</div>
+          <div className="mb-2 font-label text-xs tracking-[0.16em] text-primary">Explore</div>
           <h2 id={`${area}-explore`} className="font-display mb-6">Around the book.</h2>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {modules.map(m => (
@@ -262,7 +262,7 @@ function EditionHome({ area, entries, owns, full }: { area: EditionKey; entries:
 
       <section id={`${area}-contents`} aria-labelledby={`${area}-contents-h`} className="scroll-mt-24 space-y-8">
         <div>
-          <div className="font-smallcaps text-[11px] text-gold">Contents</div>
+          <div className="font-label text-xs tracking-[0.16em] text-primary">Contents</div>
           <h2 id={`${area}-contents-h`} className="font-display mt-1">The volumes.</h2>
           <div className="relative mt-5 max-w-md">
             <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" aria-hidden="true" />

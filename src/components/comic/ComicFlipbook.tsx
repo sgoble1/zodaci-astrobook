@@ -40,14 +40,14 @@ export function ComicFlipbook({ issue }: { issue: AstroComicShowcase }) {
                   <>
                     <img src={issue.cover} alt={issue.coverAlt} width={1024} height={1536} className="absolute inset-0 h-full w-full object-cover" />
                     <div className="absolute inset-x-0 top-0 bg-gradient-to-b from-background/80 via-background/30 to-transparent px-4 pb-10 pt-4">
-                      <p className="font-smallcaps text-[10px] text-gold">{issue.banner}</p>
+                      <p className="font-label text-[10px] tracking-[0.14em] text-primary">{issue.banner}</p>
                       <p className="mt-1 font-display text-2xl leading-tight sm:text-3xl">{issue.title}</p>
                     </div>
                     <p className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-background/95 to-transparent p-4 text-xs italic">{issue.subCaption}</p>
                   </>
                 ) : (
                   <div className="flex h-full flex-col gap-2 p-2.5">
-                    <div className="flex items-baseline justify-between border-b border-foreground/30 pb-1"><span className="font-smallcaps text-[9px] text-gold">{p.placement}</span><span className="text-[9px] text-muted-foreground">{p.pageNumber}</span></div>
+                    <div className="flex items-baseline justify-between border-b border-foreground/30 pb-1"><span className="font-label text-[10px] tracking-[0.14em] text-primary">{p.placement}</span><span className="text-[9px] text-muted-foreground">{p.pageNumber}</span></div>
                     <p className="font-display text-base leading-tight">{p.actTitle}</p>
                     <div className="relative min-h-0 flex-[3] overflow-hidden border-2 border-foreground/80">
                       <img src={p.art} alt={p.panels[0].visualPrompt} width={1536} height={1024} loading="lazy" className="h-full w-full object-cover" />
@@ -75,14 +75,14 @@ export function ComicFlipbook({ issue }: { issue: AstroComicShowcase }) {
         </div>
       </div>
       <div aria-live="polite">
-        <p className="font-smallcaps text-xs text-gold">Issue #{issue.issueNumber} · {issue.subject.sunSign} Sun · {issue.subject.moonSign} Moon · {issue.subject.risingSign} Rising</p>
+        <p className="font-label text-xs tracking-[0.16em] text-primary">Issue #{issue.issueNumber} · {issue.subject.sunSign} Sun · {issue.subject.moonSign} Moon · {issue.subject.risingSign} Rising</p>
         <h3 className="mt-2 font-display text-3xl">{page ? page.actTitle : issue.title}</h3>
         {page ? (
           <ol className="mt-5 space-y-4">{page.panels.map((p, i) => <li key={i} className="border-l-2 border-gold/60 pl-4"><p className="text-xs text-muted-foreground">Panel {i + 1}</p><p className="mt-1 leading-relaxed">{p.narration}</p>{p.dialogue && <p className="mt-1 font-semibold">{p.dialogue}</p>}</li>)}</ol>
         ) : (
           <p className="mt-4 leading-relaxed text-muted-foreground">Seven drawn pages, one real chart. The rising sign sets the scene, the Sun lights the action, the Moon brings the story home — then Mercury, Mars, Saturn and the North Node each take a page. Turn the page to read the script beside the art.</p>
         )}
-        {at === leaves - 1 && <p className="mt-6 font-smallcaps text-xs text-gold">{issue.footer}</p>}
+        {at === leaves - 1 && <p className="mt-6 font-label text-xs tracking-[0.16em] text-primary">{issue.footer}</p>}
       </div>
     </div>
   );

@@ -15,7 +15,7 @@ export default function Volume2() {
   return (
     <article className="space-y-14">
       <header>
-        <div className="font-smallcaps text-[11px] text-gold">AstroBook · Volume II</div>
+        <div className="font-label text-xs tracking-[0.16em] text-primary">AstroBook · Volume II</div>
         <h1 className="font-display mt-2">The Supplementary Guide.</h1>
         <div className="gold-rule my-5 max-w-xs" />
         <p className="max-w-2xl text-lg text-foreground/85 leading-relaxed">
@@ -44,7 +44,7 @@ export default function Volume2() {
                       <p>{e.body}</p>
                       {e.extras && e.extras.map((x, i) => (
                         <div key={i} className="mt-3 p-3 border-l-2 border-gold/60 bg-muted/30">
-                          <div className="font-smallcaps text-[10px] text-gold">{x.label}</div>
+                          <div className="font-label text-[10px] tracking-[0.14em] text-primary">{x.label}</div>
                           <p className="text-sm mt-1">{x.detail}</p>
                         </div>
                       ))}
@@ -53,7 +53,7 @@ export default function Volume2() {
                   })}
                   className="text-left p-5 border border-border rounded bg-card/70 hover:border-gold transition-colors"
                 >
-                  <div className="font-smallcaps text-[10px] text-gold">{e.eyebrow}</div>
+                  <div className="font-label text-[10px] tracking-[0.14em] text-primary">{e.eyebrow}</div>
                   <div className="font-display text-lg mt-1 leading-tight">{e.title}</div>
                   <p className="text-xs mt-2 text-foreground/70 line-clamp-3 leading-relaxed">{e.body}</p>
                   <div className="mt-3 flex items-center justify-between">

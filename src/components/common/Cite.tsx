@@ -10,7 +10,7 @@ export function Cite({ source, n }: Props) {
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <button className="align-super text-[9px] font-smallcaps text-gold hover:text-foreground border-b border-gold/40 hover:border-foreground/60 mx-0.5 leading-none">
+        <button className="align-super text-[9px] font-label tracking-[0.14em] text-primary hover:text-foreground border-b border-gold/40 hover:border-foreground/60 mx-0.5 leading-none">
           {n != null ? `[${n}]` : '[cite]'}
         </button>
       </PopoverTrigger>

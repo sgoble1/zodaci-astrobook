@@ -93,7 +93,7 @@ export default function Investors() {
     <article className="space-y-16">
       <header className="grid items-center gap-8 lg:grid-cols-[1fr_22rem]">
         <div>
-          <div className="font-smallcaps text-xs text-gold">Private · Investor overview</div>
+          <div className="font-label text-xs tracking-[0.16em] text-primary">Private · Investor overview</div>
           <h1 className="text-5xl sm:text-7xl">An encyclopedia of each person’s sky</h1>
           <p className="mt-4 max-w-2xl text-lg text-muted-foreground">Zodaci calculates the planets, stars and sensitive points at a member’s exact time of birth and builds an expansive, cross-referenced body of writing from them — readings, a six-volume book, comics and podcasts. The depth is the product: our founders’ own editions gave them words for things they had always felt. Later, the same calculations let members find each other.</p>
           <div className="mt-6 flex flex-wrap gap-3"><Button asChild><Link to="/astrobook">See the AstroBook pages</Link></Button><Button asChild variant="outline"><Link to="/astrocomic">Read the comic</Link></Button><Button asChild variant="outline"><Link to="/demo">Try the demo</Link></Button></div>
@@ -111,11 +111,11 @@ export default function Investors() {
       </section>
 
       <section aria-labelledby="inv-r" className="space-y-4"><h2 id="inv-r" className="text-3xl">Roadmap</h2>
-        <ol className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">{PHASES.map(p => <li key={p.name} className="vellum flex flex-col p-5"><p className="font-smallcaps text-xs text-gold">{p.when} · {p.status}</p><h3 className="mt-1 text-xl">{p.name}</h3><ul className="mt-3 list-disc space-y-1.5 pl-5 text-sm text-muted-foreground">{p.items.map(i => <li key={i}>{i}</li>)}</ul></li>)}</ol>
+        <ol className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">{PHASES.map(p => <li key={p.name} className="vellum flex flex-col p-5"><p className="font-label text-xs tracking-[0.16em] text-primary">{p.when} · {p.status}</p><h3 className="mt-1 text-xl">{p.name}</h3><ul className="mt-3 list-disc space-y-1.5 pl-5 text-sm text-muted-foreground">{p.items.map(i => <li key={i}>{i}</li>)}</ul></li>)}</ol>
       </section>
 
       <section aria-labelledby="inv-s" className="vellum space-y-6 p-6 sm:p-10">
-        <div className="max-w-3xl"><p className="font-smallcaps text-xs text-gold">Future · Phase 4</p><h2 id="inv-s" className="mt-1 text-3xl sm:text-4xl">Zodaci Social: a network built on real charts</h2><p className="mt-3 text-muted-foreground">Reddit-style communities meet precise compatibility. Every member already has a calculated chart, so Zodaci can go where sun-sign apps cannot: explaining, aspect by aspect, why two people fit. This is a plan, not a live feature.</p></div>
+        <div className="max-w-3xl"><p className="font-label text-xs tracking-[0.16em] text-primary">Future · Phase 4</p><h2 id="inv-s" className="mt-1 text-3xl sm:text-4xl">Zodaci Social: a network built on real charts</h2><p className="mt-3 text-muted-foreground">Reddit-style communities meet precise compatibility. Every member already has a calculated chart, so Zodaci can go where sun-sign apps cannot: explaining, aspect by aspect, why two people fit. This is a plan, not a live feature.</p></div>
         <div className="grid gap-4 sm:grid-cols-2">{SOCIAL.map(([t, d]) => <div key={t} className="rounded-lg border border-border/60 bg-background/40 p-5"><h3 className="text-lg">{t}</h3><p className="mt-2 text-sm text-muted-foreground">{d}</p></div>)}</div>
         <p className="text-xs text-muted-foreground">Privacy first: matching is opt-in, private readings and Masterbooks never become public, and members can leave and delete their profile at any time.</p>
       </section>
@@ -130,11 +130,11 @@ export default function Investors() {
       </section>
 
       <section aria-labelledby="inv-f" className="space-y-4"><h2 id="inv-f" className="text-3xl">Coming next for members</h2>
-        <div className="grid gap-4 sm:grid-cols-2">{FUTURE.map(([t, d]) => <div key={t} className="vellum p-5"><p className="font-smallcaps text-xs text-gold">Planned</p><h3 className="mt-1 text-xl">{t}</h3><p className="mt-2 text-sm text-muted-foreground">{d}</p></div>)}</div>
+        <div className="grid gap-4 sm:grid-cols-2">{FUTURE.map(([t, d]) => <div key={t} className="vellum p-5"><p className="font-label text-xs tracking-[0.16em] text-primary">Planned</p><h3 className="mt-1 text-xl">{t}</h3><p className="mt-2 text-sm text-muted-foreground">{d}</p></div>)}</div>
       </section>
 
       <section aria-labelledby="inv-i" className="vellum space-y-5 p-6 sm:p-10">
-        <div className="max-w-3xl"><p className="font-smallcaps text-xs text-gold">Projection · not a forecast</p><h2 id="inv-i" className="mt-1 text-3xl sm:text-4xl">Income potential</h2>
+        <div className="max-w-3xl"><p className="font-label text-xs tracking-[0.16em] text-primary">Projection · not a forecast</p><h2 id="inv-i" className="mt-1 text-3xl sm:text-4xl">Income potential</h2>
           <p className="mt-3 text-muted-foreground">Yearly revenue if Zodaci reaches each audience size, using today’s real prices (Pro {PLAN_PRICE.full.month}, Cosmic {PLAN_PRICE.creator.month}, books {money(low.price)}–{money(high.price)}). Conversion rates are assumptions in line with typical subscription apps, shown so you can judge them.</p></div>
         <div className="overflow-x-auto"><table className="w-full text-sm"><thead><tr className="text-left text-muted-foreground"><th className="p-2">Free members</th><th className="p-2">Pro</th><th className="p-2">Cosmic</th><th className="p-2">Buy a book</th><th className="p-2">Shop, 2 orders/yr</th><th className="p-2 text-right">Yearly revenue</th></tr></thead>
           <tbody>{SCENARIOS.map(x => <tr key={x.members} className="border-t border-border/60"><td className="p-2">{x.members.toLocaleString()}</td><td className="p-2">{x.pro * 100}%</td><td className="p-2">{x.cosmic * 100}%</td><td className="p-2">{x.book * 100}%</td><td className="p-2">{x.shop * 100}%</td><td className="p-2 text-right font-display text-xl text-gold">{usd(yearly(x))}</td></tr>)}</tbody></table></div>
@@ -142,7 +142,7 @@ export default function Investors() {
       </section>
 
       <section aria-labelledby="inv-cs" className="space-y-5">
-        <div className="max-w-3xl"><p className="font-smallcaps text-xs text-gold">Major income lever</p><h2 id="inv-cs" className="mt-1 text-3xl sm:text-4xl">Creator Studio</h2><p className="mt-3 text-muted-foreground">Members don’t just read about their chart — they make things from it. That turns a subscription into a personal product shop.</p></div>
+        <div className="max-w-3xl"><p className="font-label text-xs tracking-[0.16em] text-primary">Major income lever</p><h2 id="inv-cs" className="mt-1 text-3xl sm:text-4xl">Creator Studio</h2><p className="mt-3 text-muted-foreground">Members don’t just read about their chart — they make things from it. That turns a subscription into a personal product shop.</p></div>
         <div className="grid gap-4 sm:grid-cols-2">{STUDIO.map(([t, d]) => <div key={t} className="vellum p-5"><h3 className="text-xl">{t}</h3><p className="mt-2 text-sm text-muted-foreground">{d}</p></div>)}</div>
         <div className="overflow-x-auto"><table className="w-full text-sm"><thead><tr className="text-left text-muted-foreground"><th className="p-2">Members</th><th className="p-2">Make something</th><th className="p-2">Order a print (2/yr, ${PRINT_AVG})</th><th className="p-2">Buy credit packs (2/yr, ${PACK_AVG})</th><th className="p-2 text-right">Extra yearly revenue</th></tr></thead>
           <tbody>{STUDIO_ROWS.map(r => <tr key={r.members} className="border-t border-border/60"><td className="p-2">{r.members.toLocaleString()}</td><td className="p-2">{r.makers * 100}%</td><td className="p-2">{r.printers * 100}%</td><td className="p-2">{r.packs * 100}%</td><td className="p-2 text-right font-display text-xl text-gold">{usd(studioYear(r))}</td></tr>)}</tbody></table></div>

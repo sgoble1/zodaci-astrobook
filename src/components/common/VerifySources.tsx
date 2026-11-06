@@ -8,7 +8,7 @@ export function VerifySourceList({ group }: { group: VerifyGroup }) {
     <ul className="mt-4 grid gap-3 sm:grid-cols-2">
       {group.sources.map(s => (
         <li key={s.href} className="border border-border bg-card/50 p-4 rounded-sm">
-          <div className="font-smallcaps text-[10px] text-gold">{s.kind}</div>
+          <div className="font-label text-[10px] tracking-[0.14em] text-primary">{s.kind}</div>
           <a href={s.href} target="_blank" rel="noopener noreferrer" className="mt-1 inline-flex items-start gap-1 font-medium underline decoration-gold underline-offset-4">
             {s.label}<ExternalLink className="w-3 h-3 mt-1 shrink-0" aria-hidden /><span className="sr-only"> (opens in a new tab)</span>
           </a>

@@ -41,7 +41,7 @@ export function CosmicTeaser() {
     } catch (err) { setError(err instanceof Error ? err.message : 'Please try again.'); setState('idle'); }
   };
   if (state === 'done' && teaser) return <div className="space-y-4" role="status">
-    <p className="flex items-center gap-2 font-smallcaps text-xs text-gold"><Sparkles className="h-4 w-4" aria-hidden />Your Cosmic Teaser</p>
+    <p className="flex items-center gap-2 font-label text-xs tracking-[0.16em] text-primary"><Sparkles className="h-4 w-4" aria-hidden />Your Cosmic Teaser</p>
     <h3 className="font-display text-3xl">Sun in {teaser.sun}</h3>
     <p className="text-muted-foreground">{SUN_TEASE[teaser.sun]}{teaser.cusp ? ' (The Sun changed sign close to your birthday, so your birth time confirms this.)' : ''}</p>
     <dl className="grid grid-cols-2 gap-3 text-sm"><div className="rounded border border-border p-3"><dt className="text-xs text-muted-foreground">Chinese zodiac year</dt><dd className="text-lg">{teaser.animal}</dd></div><div className="rounded border border-border p-3"><dt className="text-xs text-muted-foreground">Life Path number</dt><dd className="text-lg">{teaser.lp} · {LP_MEANING[teaser.lp] ?? ''}</dd></div></dl>

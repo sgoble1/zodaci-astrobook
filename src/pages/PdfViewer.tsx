@@ -77,7 +77,7 @@ export default function PdfViewer() {
     <div className="space-y-4">
       <button type="button" onClick={() => window.history.length > 1 ? window.history.back() : window.location.assign('/library')} className="text-xs font-smallcaps text-muted-foreground hover:text-foreground">← Back</button>
       <header className="flex flex-wrap items-end justify-between gap-3">
-        <div><div className="font-smallcaps text-xs text-gold">PDF viewer</div><h1 className="text-2xl sm:text-3xl mt-1">{meta?.title ?? '…'}</h1></div>
+        <div><div className="font-label text-xs tracking-[0.16em] text-primary">PDF viewer</div><h1 className="text-2xl sm:text-3xl mt-1">{meta?.title ?? '…'}</h1></div>
         {meta && <div className="flex gap-3 text-xs">{meta.libId && <Link to={`/sources/read/${meta.libId}#u${page - 1}`} className="underline">Text of this page</Link>}<a href={meta.url} download className="underline flex items-center gap-1"><Download className="w-3 h-3" />Download</a></div>}
       </header>
       {err && <p className="text-oxblood">{err}</p>}
@@ -96,7 +96,7 @@ export default function PdfViewer() {
           </div>
           {textOnly ? (
             <div className="parchment p-5 space-y-2">
-              <div className="font-smallcaps text-xs text-gold">Text view · page {page}</div>
+              <div className="font-label text-xs tracking-[0.16em] text-primary">Text view · page {page}</div>
               {text ? <div className="text-sm whitespace-pre-wrap leading-relaxed">{text[page - 1]?.trim() || 'This page has no selectable text (it may be an image).'}</div>
                 : <p className="text-sm text-muted-foreground">The page images couldn’t be loaded here{meta?.libId ? ', and the text is still loading…' : ' and there is no extracted text for this file. Use Download to open it.'}</p>}
               <p className="text-[11px] text-muted-foreground">The original page image couldn’t be drawn in this browser, so the page’s extracted text is shown instead.</p>

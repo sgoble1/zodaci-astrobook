@@ -82,7 +82,7 @@ function IllustratedReader() {
     <article className="space-y-6">
       <header className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <div className="font-smallcaps text-xs text-gold">Official AstroBook · Shane</div>
+          <div className="font-label text-xs tracking-[0.16em] text-primary">Official AstroBook · Shane</div>
           <h1 className="text-4xl sm:text-5xl">Zodaci Illustrated, October 2026</h1>
           <p className="mt-2 text-muted-foreground">Shane’s illustrated edition, read page by page. The file stays private; each visit opens it through a link that expires within minutes.</p>
         </div>
