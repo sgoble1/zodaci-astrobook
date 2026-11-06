@@ -7,6 +7,7 @@ import { Printer } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { SIGN_RULER } from '@/lib/signRulers';
+import { CycleWall } from '@/components/timeline/CycleWall';
 
 type Focus = 'transits' | 'retrogrades' | 'timeline' | 'profection';
 const SLOW: [string, Astronomy.Body][] = [['Jupiter', Astronomy.Body.Jupiter], ['Saturn', Astronomy.Body.Saturn], ['Uranus', Astronomy.Body.Uranus], ['Neptune', Astronomy.Body.Neptune], ['Pluto', Astronomy.Body.Pluto]];
@@ -110,6 +111,7 @@ export default function PersonalTiming({ birth, focus }: { birth: MyBirth; focus
       <section key="l" className="space-y-3">
         <h2 className="font-display text-2xl">Your life milestones</h2>
         <p className="text-sm text-muted-foreground">Calculated dates when slow planets return to, or oppose, where they were at your birth. These are the classic turning points of a life.</p>
+        {focus === 'timeline' && <CycleWall chart={chart} birthYear={chart.utc.getUTCFullYear()} />}
         <ol className="space-y-2 border-l border-border pl-4">{miles.map((m, i) => <li key={i} className={`text-sm ${m.date < now ? 'text-muted-foreground' : ''}`}><strong>{fmtD(m.date)}</strong> · {m.label} (age {Math.floor((m.date.getTime() - chart.utc.getTime()) / (365.25 * day))})<br />{m.plain}</li>)}</ol>
       </section>
     ),
