@@ -13,7 +13,7 @@ import { FirstViewReveal } from '@/components/fx/FirstViewReveal';
 import { createContext, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { BookOpen, Menu, Orbit, Tv, X } from 'lucide-react';
 import { GenerationProgress } from '@/components/readings/GenerationProgress';
-import { founderPlace, onlyInFullEdition, orderFounderGroups, universalFounderMenu } from '@/lib/founderEdition';
+import { clarifyFounderGroups, founderPlace, onlyInFullEdition, orderFounderGroups, universalFounderMenu } from '@/lib/founderEdition';
 import { domainFor } from '@/content/memberNav';
 import { useShaneAccount } from '@/hooks/useShaneAccount';
 import { loadEditionIndex } from '@/pages/ShaneEdition';
@@ -49,13 +49,13 @@ function useFounderGroups(): NavGroup[] {
     const official: NavGroup = { title: 'Official AstroBook', items: [{ to: '/official-astrobook', label: 'My Official AstroBook' }, { to: '/official-astrobook/comic/april', label: 'My Official AstroComic' }, { to: '/official-astrobook/showcase/april', label: 'My Illustrated Pages' }] };
     const sharedLinks = sharedEditions.filter(e => e !== 'april').map(editionLink);
     // Same frame as Shane's and Zac's menus; April's own sections stay exactly as written, in their usual order.
-    return universalFounderMenu<NavGroup>({
+    return clarifyFounderGroups(universalFounderMenu<NavGroup>({
       ...frameGroups(),
       // Her sections arrive with the private payload; until then the menu says so instead of looking empty.
       edition: aprilGroups.length ? noAdmin(orderFounderGroups(aprilGroups)) : [{ title: 'My Edition', items: [{ to: '/april', label: 'Loading your sections…' }] }],
       shared, relationships, official,
       sharedWithMe: sharedLinks.length ? { title: 'Shared with me', items: sharedLinks } : undefined,
-    }).map(g => ({ ...g, items: [...g.items, ...custom.filter(c => c.menu_group === g.title).map(c => ({ to: `/p/${c.id}`, label: c.status === 'generating' ? `${c.title} · writing…` : c.title, created: true } as NavItem))] }));
+    }).map(g => ({ ...g, items: [...g.items, ...custom.filter(c => c.menu_group === g.title).map(c => ({ to: `/p/${c.id}`, label: c.status === 'generating' ? `${c.title} · writing…` : c.title, created: true } as NavItem))] })));
   }, [aprilGroups, badges.chat, badges.wonderings, rels, custom, sharedEditions]);
 }
 /** Shane's full edition menu: his own edition and chapters, shared pages, relationships and admin tools. */
@@ -80,27 +80,34 @@ function useShaneGroups(enabled: boolean, area: 'shane' | 'zac' = 'shane'): NavG
     const relationships = { ...RELATIONSHIPS_GROUP, items: [...RELATIONSHIPS_GROUP.items, ...(viewingOther ? [] : rels.map(r => ({ to: `/relationships/${r.id}`, label: `↳ ${r.name}${r.relation ? ` · ${r.relation}` : ''}` })))] };
     const sharedLinks: NavItem[] = sharedEditions.filter(e => e !== area).map(editionLink);
     const chapterGroup = { title: area === 'zac' ? 'Zac’s Library by Topic' : 'Masterbook by Topic', items: chapters === null ? [{ to: `/${area}`, label: 'Loading chapters…' }] : chapters.length ? [] : [{ to: `/${area}`, label: 'Chapters couldn’t load — open the edition' }], submenus: topics.map(t => ({ label: `${t.label} · ${t.items.length}`, items: t.items.map(c => ({ to: `/${area}/${c.id}`, label: shortChapterLabel(c.id, c.title || c.label) })) })) } as NavGroup;
-    if (area === 'zac') return universalFounderMenu<NavGroup>({
+    if (area === 'zac') return clarifyFounderGroups(universalFounderMenu<NavGroup>({
       ...frameGroups('zac'),
       edition: [{ title: 'My Edition', items: [{ to: '/zac', label: 'My Astrological Library' }, { to: '/zac/workbook', label: 'My Workbook' }] }, chapterGroup],
       shared, relationships,
       sharedWithMe: sharedLinks.length ? { title: 'Shared with me', items: sharedLinks } : undefined,
       official: { title: 'Official AstroBook', items: [{ to: '/official-astrobook', label: 'My Official AstroBook' }, { to: '/official-astrobook/comic/zac', label: 'My Official AstroComic' }, { to: '/official-astrobook/showcase/zac', label: 'My Illustrated Pages' }] },
-    });
-    return universalFounderMenu<NavGroup>({
+    }));
+    return clarifyFounderGroups(universalFounderMenu<NavGroup>({
       ...frameGroups('shane'),
       edition: [{ title: 'My Edition', items: [{ to: '/shane', label: 'My Masterbook' }] }, chapterGroup],
       shared, relationships,
       official: { title: 'Official AstroBook', items: [{ to: '/official-astrobook', label: 'My Official AstroBook' }, { to: '/official-astrobook/comic/shane', label: 'My Official AstroComic' }, { to: '/official-astrobook/illustrated', label: 'Zodaci Illustrated · Oct 2026' }, { to: '/official-astrobook/showcase/shane', label: 'My Illustrated Pages' }] },
       founders: { title: 'Founder Editions', items: [...sharedLinks.filter(l => l.to !== '/zac'), { to: '/zac', label: 'Zac’s Astrological Library' }, { to: '/zac/workbook', label: 'Zac’s Workbook' }, { to: '/official-astrobook/comic/zac', label: 'Zac’s AstroComic' }, { to: '/official-astrobook/comic/april', label: 'April’s AstroComic' }] },
       admin: { title: 'Admin', items: [{ to: '/admin', label: 'Admin dashboard' }, { to: '/dispatch', label: 'Dispatch' }] },
-    });
+    }));
   }, [chapters, rels, badges.chat, badges.wonderings, area, sharedEditions]);
 }
 type FounderEditionName = 'april' | 'shane' | 'zac';
 const EditionContext = createContext<FounderEditionName>('april');
 
 const cleanLabel = (l: string) => l.replace(/^↳\s*/, '');
+/** Menu links that differ only by query (Flying Stars views): only the one whose query matches the page is current. */
+const queryMatches = (to: string, search: string, siblings: { to: string }[]) => {
+  const here = new URLSearchParams(search);
+  const fits = (link: string) => [...new URLSearchParams(link.split('?')[1] ?? '')].every(([k, v]) => here.get(k) === v);
+  if (!to.includes('?')) return !siblings.some(o => o.to.startsWith(`${to}?`) && fits(o.to));
+  return fits(to);
+};
 
 /** April's breadcrumb (section › page) from her own menu; hidden on the first page of a section. */
 function FounderTrail() {
@@ -431,7 +438,7 @@ function SidebarInner({ mobile = false, onNavigate }: { mobile?: boolean; onNavi
   }, [custom]);
   const allGroups = useContext(FounderGroupsContext) ?? APRIL_NAV_GROUPS;
   const edition = useContext(EditionContext);
-  const { pathname } = useLocation();
+  const { pathname, search } = useLocation();
   useMenuTitleFallback(useMemo(() => allGroups.flatMap(g => [...g.items, ...(g.footer ?? []), ...(g.submenus ?? []).flatMap(s => s.items)]), [allGroups]));
   return (
     <div className={`founder-sidebar flex min-h-full flex-col gap-6 overflow-x-hidden ${mobile ? 'px-4 pb-8 pt-4' : 'h-full overflow-y-auto p-6'}`}>
@@ -457,20 +464,20 @@ function SidebarInner({ mobile = false, onNavigate }: { mobile?: boolean; onNavi
                     isActive ? 'bg-primary/10 border-primary/50 border-l-4 border-l-primary text-foreground' : 'text-muted-foreground hover:text-foreground hover:bg-muted/60'
                   }${n.created ? ' bg-created/20 text-foreground' : ''}${n.to === '/create' ? ' nav-create-glow' : ''}${glowId && n.to === `/p/${glowId}` ? ' nav-new-glow' : ''}`
                 }
-              ><span>{n.label}{n.created ? <span className="sr-only"> (created page)</span> : null}{glowId && n.to === `/p/${glowId}` ? <span className="sr-only"> — just added</span> : null}</span>{n.badge ? <span className="min-w-5 rounded-sm bg-primary px-1.5 text-center text-[10px] text-primary-foreground" aria-label={`${n.badge} new`}>{n.badge}</span> : null}</NavLink>
+              ><span className="min-w-0"><span className="block">{n.label}{n.created ? <span className="sr-only"> (created page)</span> : null}{glowId && n.to === `/p/${glowId}` ? <span className="sr-only"> — just added</span> : null}</span>{n.hint && <span className="mt-0.5 block text-[11px] leading-snug text-muted-foreground/90">{n.hint}</span>}</span>{n.badge ? <span className="min-w-5 rounded-sm bg-primary px-1.5 text-center text-[10px] text-primary-foreground" aria-label={`${n.badge} new`}>{n.badge}</span> : null}</NavLink>
             ))}
             {g.submenus?.map(submenu => {
               const links = (
                   <div className="ml-3 flex flex-col gap-0.5 border-l border-border/70 pl-2">
                     {submenu.items.map(n => (
                       <NavLink
-                        key={n.to} to={n.to} onClick={onNavigate} end={n.to === '/feng-shui'}
+                        key={n.to} to={n.to} onClick={onNavigate} end={n.to === '/feng-shui' || n.to.includes('?') || submenu.items.some(o => o !== n && o.to.startsWith(`${n.to}?`))}
                         className={({ isActive }) =>
                           `flex min-h-11 items-center rounded border border-transparent px-3 py-2 text-xs transition-colors ${
-                            isActive ? 'bg-primary/10 border-primary/50 border-l-4 border-l-primary text-foreground' : 'text-muted-foreground hover:text-foreground hover:bg-muted/60'
+                            isActive && queryMatches(n.to, search, submenu.items) ? 'bg-primary/10 border-primary/50 border-l-4 border-l-primary text-foreground' : 'text-muted-foreground hover:text-foreground hover:bg-muted/60'
                           }`
                         }
-                      ><span>{n.label}</span></NavLink>
+                      ><span className="min-w-0"><span className="block">{n.label}</span>{n.hint && <span className="mt-0.5 block text-[11px] leading-snug text-muted-foreground/90">{n.hint}</span>}</span></NavLink>
                     ))}
                   </div>
               );
