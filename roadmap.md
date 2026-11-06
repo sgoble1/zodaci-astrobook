@@ -386,7 +386,8 @@ Audit Oct 29: Chat/counselors already use the member's chart; podcast/custom pag
 - [x] Admin Image library (Products → Image library): every site image by area with file name, where used, View and Download.
 - [x] Gap 35: Developer dashboard restyled (paper plates, grouped stats, build-cost card, quick links).
 - [ ] Phase 6 rest: "Why Zodaci" line on Pricing and AstroBook pages.
-- [ ] Phase 9: move the public sample edition ("Elias Marrow") off a founder's real chart onto an invented one, with new plates.
+- [x] Phase 9: public sample edition moved off a founder's chart onto the fictional Collector reader (Rosalind Vance) with three new plates; side-by-side examples and AstroComic section updated (tested).
+- [ ] Sample AstroComic Issue #1 ("Elias") is still drawn from a founder's sign placements and hints at a mill town; redraw for a fictional reader — needs AI credits.
 - [ ] Phase 3 rest: one shared 3D book on AstroBook page, Demo and dashboards using real covers.
 - [ ] Phase 4: icon set redrawn in the book-cover style (keep registry names).
 - [ ] Phase 7 rest: desk astrologer art; place/explore/reading-room art refresh.
