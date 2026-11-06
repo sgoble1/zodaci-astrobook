@@ -385,11 +385,13 @@ Audit Oct 29: Chat/counselors already use the member's chart; podcast/custom pag
 - [x] Phase 12 logs: Developer "Latest updates" + timeline entries to Nov 6; member and founder dashboards show "What's new" (public-safe).
 - [x] Admin Image library (Products → Image library): every site image by area with file name, where used, View and Download.
 - [x] Gap 35: Developer dashboard restyled (paper plates, grouped stats, build-cost card, quick links).
-- [ ] Phase 6 rest: "Why Zodaci" line on Pricing and AstroBook pages.
+- [x] Phase 6 rest: "Why Zodaci" line and trust strip on Pricing and AstroBook pages.
 - [x] Phase 9: public sample edition moved off a founder's chart onto the fictional Collector reader (Rosalind Vance) with three new plates; side-by-side examples and AstroComic section updated (tested).
 - [ ] Sample AstroComic Issue #1 ("Elias") is still drawn from a founder's sign placements and hints at a mill town; redraw for a fictional reader — needs AI credits.
-- [ ] Phase 3 rest: one shared 3D book on AstroBook page, Demo and dashboards using real covers.
-- [ ] Phase 4: icon set redrawn in the book-cover style (keep registry names).
+- [x] Phase 3 rest: AstroBook page and Demo turn the same 3D book with real sample covers; shelf books share one angle and lift.
+- [x] Phase 4: icon set in the book-cover style — heavier ink, halftone tint, gold orbit ring at emblem sizes, hand-cut badge frames (registry names kept). Destination tile headings fit their tiles.
 - [ ] Phase 7 rest: desk astrologer art; place/explore/reading-room art refresh.
-- [ ] Phase 8: V2.3 Gaps (TV ticker/signal/dial/full-screen; founder art and menus; member page restyles; Observation Log/Context Engine; content; nav/theme check; pricing trust; investor figures).
+- [x] Phase 8b: Timeline Hall cycle wall — each member's own returns/squares/oppositions pinned across 90 years with a Now marker (tested, verified 393/1280 signed in); support email is help@zodaci.com everywhere (Gap 2).
+- [x] Phase 8a: dashboard TV has a tuning dial, reception bars, a slow sky-wire crawl and full-screen mode (verified 393/1280, signed in).
+- [ ] Phase 8: V2.3 Gaps (founder art and menus; member page restyles; Observation Log/Context Engine; content; nav/theme check; pricing trust; investor figures).
 - [ ] Phase 11 (last): Shane's 63 chapters and Zac's documents — blocked on AI credits and owner accounts.

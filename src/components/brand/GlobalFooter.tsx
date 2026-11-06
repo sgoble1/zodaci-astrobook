@@ -24,7 +24,7 @@ export function GlobalFooter() {
             <h2 className="mb-3 text-sm font-semibold">{col.heading}</h2>
             <ul className="space-y-2 text-sm text-muted-foreground">
               {col.links.map(([to, label]) => <li key={label}><Link to={to} className="hover:text-foreground">{label}</Link></li>)}
-              {col.heading === 'Company' && <li><a href="mailto:hello@zodaci.com" className="hover:text-foreground">Contact</a></li>}
+              {col.heading === 'Company' && <li><a href="mailto:help@zodaci.com" className="hover:text-foreground">Contact</a></li>}
             </ul>
           </nav>
         ))}

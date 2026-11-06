@@ -93,7 +93,7 @@ export function DestinationTiles({ items, label, className }: { items: Destinati
             <Link to={d.to} className="dest-tile group">
               <RetroEmblem icon={d.icon} size={60} className="retro-emblem-ink shrink-0" />
               <span className="min-w-0">
-                <span className="block font-display text-lg uppercase leading-tight">{d.title}</span>
+                <span className="dest-tile-title block font-display uppercase leading-tight">{d.title}</span>
                 <span className="block text-sm text-muted-foreground">{d.text}</span>
                 <span className="mt-1.5 inline-flex items-center gap-1 font-label text-xs tracking-[0.16em] text-accent">{d.cta}<ArrowRight aria-hidden className="h-3.5 w-3.5 transition-transform duration-700 group-hover:translate-x-1" /></span>
               </span>

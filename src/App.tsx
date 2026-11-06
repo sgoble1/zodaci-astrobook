@@ -1,6 +1,7 @@
 import { EditionBirthSeed } from '@/components/common/EditionBirthSeed';
 import { BrowserRouter, Navigate, Routes, Route } from 'react-router-dom';
 import { Toaster } from '@/components/ui/sonner';
+import { RetroIconDefs } from '@/components/icons/RetroIcons';
 import { lazy, Suspense, useMemo, type ReactNode } from 'react';
 import { AppShell } from './components/layout/AppShell';
 import { ScrollManager } from './components/common/ScrollManager';
@@ -418,6 +419,7 @@ export default function App() {
         </Suspense>
       </Providers>
       <Toaster theme="dark" position="bottom-right" />
+      <RetroIconDefs />
     </>
     </BrowserRouter>
   );

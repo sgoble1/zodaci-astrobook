@@ -118,7 +118,7 @@ export function FaqPage() {
     </article>
   );
 }
-const FaqSchemaNote = ({ count }: { count: number }) => <p className="text-xs text-muted-foreground">{count} questions · Still curious? Email <a className="underline" href="mailto:hello@zodaci.com">hello@zodaci.com</a>.</p>;
+const FaqSchemaNote = ({ count }: { count: number }) => <p className="text-xs text-muted-foreground">{count} questions · Still curious? Email <a className="underline" href="mailto:help@zodaci.com">help@zodaci.com</a>.</p>;
 
 function Legal({ title, sections }: { title: string; sections: [string, string][] }) {
   return <article className="mx-auto max-w-3xl space-y-6"><h1 className="font-display text-4xl">{title}</h1><p className="text-sm text-muted-foreground">Last updated October 2026</p>{sections.map(([h, b]) => <section key={h} className="space-y-2"><h2 className="text-xl font-semibold">{h}</h2><p className="text-muted-foreground leading-relaxed">{b}</p></section>)}</article>;
@@ -130,8 +130,8 @@ export function PrivacyPage() {
     ['How we use it', 'To calculate your chart, write your readings, run the features you choose, process payments and send emails you opted into.'],
     ['Who can see it', 'Only you, unless you share something in a space you created or joined. Payments are handled by our payment processor; we never see your full card number.'],
     ['AI processing', 'To write readings and counselor replies, relevant chart facts and your message are sent to an AI model provider. They are not used to build public profiles of you.'],
-    ['Your choices', 'You can edit your birth details, unsubscribe from email at any time, and request deletion of your account and data by emailing hello@zodaci.com.'],
-    ['Contact', 'Questions about privacy: hello@zodaci.com.'],
+    ['Your choices', 'You can edit your birth details, unsubscribe from email at any time, and request deletion of your account and data by emailing help@zodaci.com.'],
+    ['Contact', 'Questions about privacy: help@zodaci.com.'],
   ]} />;
 }
 export function TermsPage() {
@@ -143,7 +143,7 @@ export function TermsPage() {
     ['Refunds', `If you ask within ${REFUND_WINDOW_DAYS} days of your first subscription payment, we refund that payment in full. Later renewals are not refunded, but cancelling stops the next one.`],
     ['AstroBook orders', 'Books are made to order from your readings. Printed versions ship within the US only; production and shipping times are estimates. Damaged or misprinted books are reprinted at no charge; because each book is personal, we do not accept change-of-mind returns.'],
     ['Community', 'Be kind, keep other people’s private information private and follow the community guidelines. We may remove content that breaks them.'],
-    ['Contact', 'hello@zodaci.com'],
+    ['Contact', 'help@zodaci.com'],
   ]} />;
 }
 

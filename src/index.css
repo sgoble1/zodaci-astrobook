@@ -1315,3 +1315,46 @@ li:hover > .zodiac-coin { transform: rotate(-10deg); }
   .mosaic-trio .art-tile-pic { position: relative; flex: 1 1 auto; aspect-ratio: auto; min-height: 11rem; }
   .mosaic-trio .art-tile-pic img { position: absolute; inset: 0; }
 }
+
+/* Icon set in the AstroBook cover style: halftone tint, gold orbit ring at emblem sizes, hand-cut badge frames. */
+.retro-halftone-base { fill: hsl(var(--comic-mustard) / .38); }
+.retro-halftone-dot { fill: hsl(var(--comic-mustard)); }
+.retro-icon .retro-tint, .retro-emblem .retro-tint, .retro-emblem-ink .retro-tint { fill: url(#retro-halftone) hsl(var(--comic-mustard)); fill-opacity: 1; }
+.bg-primary .retro-icon .retro-tint, .retro-on-primary .retro-tint { fill: hsl(var(--comic-brick)); fill-opacity: .4; }
+.retro-orbit { fill: none; stroke: hsl(var(--brass)); stroke-width: .7; stroke-dasharray: 5 1.4; opacity: .9; }
+.retro-emblem { border-radius: 32% 38% 30% 40% / 38% 30% 40% 32%; }
+/* Destination tile headings shrink with their tile so long words like "Relationships" never run into the next tile. */
+.dest-tile > .min-w-0 { container-type: inline-size; }
+.dest-tile-title { font-size: clamp(.85rem, 9cqi, 1.125rem); }
+/* Broadcast Studio extras: tuning dial, reception bars, the slow sky-wire crawl and full-screen set. */
+.tv-dial { display: inline-flex; align-items: center; gap: .6rem; border-radius: 999px; padding: .2rem .7rem .2rem .2rem; transition: background-color .8s ease; }
+.tv-dial:hover { background: hsl(var(--brass) / .1); }
+.tv-dial:focus-visible { outline: 2px solid hsl(var(--ring)); outline-offset: 2px; }
+.tv-dial-face { position: relative; display: block; width: 2.1rem; height: 2.1rem; border-radius: 999px; border: 2px solid hsl(var(--brass)); background: radial-gradient(circle at 35% 30%, hsl(var(--brass) / .55), hsl(var(--midnight)) 70%); box-shadow: 0 2px 0 hsl(var(--midnight) / .6), inset 0 0 0 3px hsl(var(--midnight) / .5); transition: transform 1.4s cubic-bezier(.22,1,.36,1); }
+.tv-dial-pointer { position: absolute; left: 50%; top: .2rem; width: 3px; height: .7rem; margin-left: -1.5px; border-radius: 2px; background: hsl(var(--primary)); }
+.tv-signal { display: inline-flex; align-items: flex-end; gap: 2px; height: 1rem; }
+.tv-signal-bar { width: 4px; border-radius: 1px; background: hsl(var(--muted-foreground) / .3); transition: background-color 1s ease; }
+.tv-signal-on { background: hsl(var(--primary)); }
+.tv-ticker { position: absolute; inset-inline: 0; bottom: 0; z-index: 2; overflow: hidden; white-space: nowrap; padding: .3rem 0; background: hsl(var(--midnight) / .82); border-top: 1px solid hsl(var(--brass) / .5); font-family: 'Bebas Neue', sans-serif; font-size: .8rem; letter-spacing: .12em; color: hsl(var(--primary)); }
+.tv-ticker-track { display: inline-flex; animation: tv-wire 140s linear infinite; }
+.tv-ticker-run > span { padding-inline: .1rem; }
+.tv-ticker-sep { margin-inline: .7rem; color: hsl(var(--accent)); }
+@keyframes tv-wire { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+.tv-stage:fullscreen { display: flex; align-items: center; justify-content: center; padding: 2rem; background: hsl(var(--midnight)); }
+.tv-stage:fullscreen .retro-tv { width: min(100%, calc((100vh - 6rem) * 4 / 3)); }
+.tv-stage:fullscreen .tv-ticker { font-size: 1.1rem; }
+@media (prefers-reduced-motion: reduce) { .tv-ticker-track { animation: none; } .tv-dial-face { transition: none; } }
+/* Timeline Hall pins: a member's own cycle dates on one wall. */
+.timeline-pin { position: absolute; display: inline-flex; align-items: center; gap: .35rem; transform: translateX(-.4rem); white-space: nowrap; border-radius: 999px; padding: .1rem .45rem .1rem .1rem; transition: background-color .8s ease; }
+.timeline-pin:hover { background: hsl(var(--primary) / .1); }
+.timeline-pin:focus-visible { outline: 2px solid hsl(var(--ring)); outline-offset: 2px; }
+.timeline-pin-dot { width: .8rem; height: .8rem; border-radius: 999px; border: 2px solid hsl(var(--primary)); background: hsl(var(--background)); flex-shrink: 0; }
+.timeline-pin-passed .timeline-pin-dot { background: hsl(var(--primary) / .45); border-color: hsl(var(--primary) / .6); }
+.timeline-pin-now .timeline-pin-dot { background: hsl(var(--accent)); border-color: hsl(var(--accent)); box-shadow: 0 0 0 4px hsl(var(--accent) / .2); }
+.timeline-pin-label { font-family: 'Bebas Neue', sans-serif; font-size: .78rem; letter-spacing: .1em; color: hsl(var(--foreground) / .8); }
+.timeline-pin-passed .timeline-pin-label { color: hsl(var(--muted-foreground)); }
+.timeline-pin-on { background: hsl(var(--primary) / .16); }
+.timeline-pin-on .timeline-pin-label { color: hsl(var(--primary)); }
+/* Shared page poster header (Compatibility, Community, sign-in): hand-cut plate, brass rule, printed grain. */
+.poster-header { border-radius: var(--cut-plate); border: 1px solid hsl(var(--brass) / .5); box-shadow: 5px 5px 0 hsl(var(--accent) / .3); }
+.poster-header-grain { pointer-events: none; background: radial-gradient(hsl(var(--midnight) / .22) .7px, transparent 1px) 0 0 / 4px 4px; mix-blend-mode: multiply; }
