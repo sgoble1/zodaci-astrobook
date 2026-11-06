@@ -1234,7 +1234,6 @@ li:hover > .zodiac-coin { transform: rotate(-10deg); }
 .shelf-real:focus-visible { outline: none; }
 .shelf-real:focus-visible .shelf-real-caption { outline: 2px solid hsl(var(--comic-brick)); outline-offset: 3px; border-radius: 2px; }
 .shelf-real-caption { display: flex; align-items: flex-start; justify-content: center; min-height: 2.3em; max-width: 100%; padding-inline: .15rem; font-family: 'Bebas Neue', sans-serif; font-size: .9rem; letter-spacing: .1em; line-height: 1.15; text-align: center; text-wrap: balance; color: hsl(var(--comic-navy)); }
-.shelf-real-book .sample-book, .shelf-real-cutout { margin-bottom: 0; }
 /* Wooden shelf ledge directly beneath every book, measured from the top so it never runs through a cover. */
 .shelf-track-real { background: linear-gradient(to bottom, transparent 0 calc(var(--shelf-top) + var(--shelf-book)), hsl(var(--comic-navy) / .55) calc(var(--shelf-top) + var(--shelf-book)) calc(var(--shelf-top) + var(--shelf-book) + .15rem), hsl(30 45% 42% / .38) calc(var(--shelf-top) + var(--shelf-book) + .15rem) calc(var(--shelf-top) + var(--shelf-book) + .7rem), transparent calc(var(--shelf-top) + var(--shelf-book) + .7rem)); }
 @media (max-width: 639px) { .shelf-track-real { --shelf-book: 11.5rem; gap: 1.1rem; } .shelf-real { width: 7.75rem; } }
