@@ -130,7 +130,7 @@ function FounderNext() {
     <nav aria-labelledby="founder-next" className="mt-16 border-t border-border pt-8 print:hidden">
       <h2 id="founder-next" className="font-display text-2xl">Continue in {place.section}</h2>
       <ul className="mt-5 grid gap-3 sm:grid-cols-3">
-        {place.next.map(n => <li key={n.to}><Link to={n.to} className="flex h-full items-center justify-between gap-2 rounded-xl border border-border bg-card/60 p-4 text-sm hover:border-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"><span>{place.parent?.to === n.to ? `Back to ${cleanLabel(n.label)}` : cleanLabel(n.label)}</span><span aria-hidden="true">→</span></Link></li>)}
+        {place.next.map(n => <li key={n.to}><Link to={n.to} className="flex h-full items-center justify-between gap-2 rounded-sm border border-[hsl(var(--brass)/0.4)] bg-[hsl(var(--paper)/0.06)] p-4 text-sm hover:border-[hsl(var(--brass)/0.75)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"><span>{place.parent?.to === n.to ? `Back to ${cleanLabel(n.label)}` : cleanLabel(n.label)}</span><span aria-hidden="true">→</span></Link></li>)}
       </ul>
     </nav>
   );
@@ -141,7 +141,7 @@ function ClassicViewBanner() {
   const { pathname } = useLocation();
   const fullOnly = onlyInFullEdition(APRIL_NAV_GROUPS, pathname, domainFor(pathname) !== null);
   return (
-    <div role="status" className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-gold/40 bg-gold/10 px-4 py-3 text-sm">
+    <div role="status" className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-sm border border-[hsl(var(--brass)/0.5)] bg-[hsl(var(--brass)/0.08)] px-4 py-3 text-sm">
       <span>{fullOnly ? "This page is part of your full edition — the classic menu doesn't list it, so it opens as written for you." : "You're seeing the classic view — the same pages and menus every member sees."}</span>
       <Button size="sm" variant="outline" onClick={() => setClassicView(false)}>Back to your full edition</Button>
     </div>
@@ -237,7 +237,7 @@ export function AppShell() {
   // Classic view shows the member version of every page the member menu lists; pages that exist only in
   // April's full edition keep their original content rather than falling back to unrelated member pages.
   const ownPage = !!april && classic && onlyInFullEdition(APRIL_NAV_GROUPS, location.pathname, domainFor(location.pathname) !== null);
-  const page = <PageErrorBoundary key={location.pathname}>{editionFailed && <div role="alert" className="mb-4 rounded-2xl border border-gold/40 bg-card/60 p-4 text-sm"><p className="font-medium text-foreground">Your private edition couldn't open.</p><p className="mt-1 text-muted-foreground">Your connection may have dropped, so you're seeing the member view for now.</p><Button size="sm" variant="outline" className="mt-3" onClick={retryAprilSpace}>Try again</Button></div>}{!founder && !keepNames && !ownPage && <PublicWording />}{april === undefined && !isPublicPath(location.pathname) ? null : founder || ownPage ? <Outlet /> : <PlanGuard>{isPublicPath(location.pathname) ? <Outlet /> : <PublicChartFallback />}</PlanGuard>}<VerifySources /><RouteMetaFallback /></PageErrorBoundary>;
+  const page = <PageErrorBoundary key={location.pathname}>{editionFailed && <div role="alert" className="mb-4 rounded-sm border border-[hsl(var(--brass)/0.5)] bg-[hsl(var(--brass)/0.08)] p-4 text-sm"><p className="font-medium text-foreground">Your private edition couldn't open.</p><p className="mt-1 text-muted-foreground">Your connection may have dropped, so you're seeing the member view for now.</p><Button size="sm" variant="outline" className="mt-3" onClick={retryAprilSpace}>Try again</Button></div>}{!founder && !keepNames && !ownPage && <PublicWording />}{april === undefined && !isPublicPath(location.pathname) ? null : founder || ownPage ? <Outlet /> : <PlanGuard>{isPublicPath(location.pathname) ? <Outlet /> : <PublicChartFallback />}</PlanGuard>}<VerifySources /><RouteMetaFallback /></PageErrorBoundary>;
   if (zacFull) return <AprilShell edition="zac">{page}</AprilShell>;
   if (shaneFull) return <AprilShell edition="shane">{page}</AprilShell>;
   if (!founder) return <MemberShell>{(april || shane || zac) && classic && <ClassicViewBanner />}{page}</MemberShell>;
@@ -441,7 +441,7 @@ function SidebarInner({ mobile = false, onNavigate }: { mobile?: boolean; onNavi
         <div className="mt-3"><AdminEditionSwitch fullEdition /></div>
         <div className="font-display text-2xl leading-tight mt-1">{edition === 'shane' ? 'Shane' : edition === 'zac' ? 'Zac' : 'April'}</div>
         <div className="text-xs text-muted-foreground mt-1">Private edition</div>
-        {viewingSharedEdition() && <div role="status" className="mt-3 rounded-xl border border-gold/40 bg-gold/10 p-3 text-xs"><p>You're seeing {edition === 'zac' ? 'Zac' : 'April'}'s menu exactly as they see it. Your own pages are hidden here.</p><Button size="sm" variant="outline" className="mt-2" onClick={leaveAprilEdition}>Back to my edition</Button></div>}
+        {viewingSharedEdition() && <div role="status" className="mt-3 rounded-sm border border-[hsl(var(--brass)/0.5)] bg-[hsl(var(--brass)/0.08)] p-3 text-xs"><p>You're seeing {edition === 'zac' ? 'Zac' : 'April'}'s menu exactly as they see it. Your own pages are hidden here.</p><Button size="sm" variant="outline" className="mt-2" onClick={leaveAprilEdition}>Back to my edition</Button></div>}
         <div className="gold-rule my-4" />
       </div>
       <div className="pt-1 space-y-2"><CommandPaletteTrigger label="Search the compendium" /><BookmarkButton /></div>

@@ -68,7 +68,7 @@ export default function AprilHome() {
           <h2 id="april-planets" className="sr-only">Planets</h2>
           <ul className="mt-6 grid grid-cols-3 gap-3 sm:grid-cols-5 lg:grid-cols-6">
             {PLACEMENTS.slice(0, 12).map(p => (
-              <li key={p.key}><Link to={`/planets/${p.key}`} className="flex flex-col items-center gap-2 rounded-xl border border-border bg-card/60 p-3 text-center hover:border-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+              <li key={p.key}><Link to={`/planets/${p.key}`} className="flex flex-col items-center gap-2 rounded-sm border border-[hsl(var(--brass)/0.4)] bg-card/60 p-3 text-center hover:border-[hsl(var(--brass)/0.75)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
                 <PlanetOrb planet={p.key} size={48} />
                 <span className="text-sm">{p.name}</span><span className="text-xs text-muted-foreground">{p.sign} {p.degree}°</span>
               </Link></li>
@@ -95,7 +95,7 @@ export default function AprilHome() {
         <h2 className="font-display mb-8">The complete compendium.</h2>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {modules.map(m => (
-            <Link key={m.to} to={m.to} className="group block p-5 rounded border border-border bg-card/60 hover:border-gold hover:shadow-[var(--shadow-gold)] transition-all">
+            <Link key={m.to} to={m.to} className="group block p-5 rounded-sm border border-[hsl(var(--brass)/0.4)] bg-card/60 hover:border-[hsl(var(--brass)/0.75)] hover:shadow-[4px_4px_0_hsl(var(--accent)/0.3)] transition-all">
               <div className="font-display text-xl leading-tight">{m.title}</div>
               <div className="gold-rule my-3 w-12" />
               <div className="text-sm text-muted-foreground leading-relaxed">{m.desc}</div>
@@ -111,7 +111,7 @@ export default function AprilHome() {
         <h2 className="font-display mb-6">You are standing at the threshold.</h2>
         <div className="grid md:grid-cols-2 gap-6">
           {PHASES.filter(p => p.current).map(p => (
-            <div key={p.id} className="p-6 border border-gold/40 rounded bg-card">
+            <div key={p.id} className="p-6 border border-[hsl(var(--brass)/0.5)] rounded-sm bg-card">
               <div className="font-label text-[10px] tracking-[0.14em] text-primary">{p.years}</div>
               <h3 className="font-display mt-2">{p.title}</h3>
               <p className="text-sm text-foreground/85 mt-3 leading-relaxed">{p.interpretation}</p>

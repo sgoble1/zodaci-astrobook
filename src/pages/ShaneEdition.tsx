@@ -249,7 +249,7 @@ function EditionHome({ area, entries, owns, full }: { area: EditionKey; entries:
           <h2 id={`${area}-explore`} className="font-display mb-6">Around the book.</h2>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {modules.map(m => (
-              <Link key={m.to} to={m.to} className="group flex gap-4 rounded border border-border bg-card/60 p-5 transition-all hover:border-gold hover:shadow-[var(--shadow-gold)]">
+              <Link key={m.to} to={m.to} className="group flex gap-4 rounded-sm border border-[hsl(var(--brass)/0.4)] bg-card/60 p-5 transition-all hover:border-[hsl(var(--brass)/0.75)] hover:shadow-[4px_4px_0_hsl(var(--accent)/0.3)]">
                 <ThemeArt label={m.title} className="h-14 w-14" />
                 <span className="min-w-0"><span className="block font-display text-xl leading-tight">{m.title}</span><span className="gold-rule my-2 block w-10" /><span className="block text-sm leading-relaxed text-muted-foreground">{m.desc}</span></span>
               </Link>
