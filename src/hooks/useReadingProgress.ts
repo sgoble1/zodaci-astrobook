@@ -15,6 +15,7 @@ export function useReadingProgress({ path, title, contentRef, sections }: { path
   const uid = useSession()?.user.id;
   const [saved, setSaved] = useState<SavedProgress | null>(null);
   const [current, setCurrent] = useState(0);
+  const [here, setHere] = useState(0);
   const baseline = useRef(0);
 
   useEffect(() => {
@@ -44,8 +45,9 @@ export function useReadingProgress({ path, title, contentRef, sections }: { path
     const measure = () => {
       const el = contentRef.current; if (!el) return;
       const r = el.getBoundingClientRect();
-      const progress = furthest(baseline.current, readProgress(r.top, r.height, window.innerHeight));
-      baseline.current = progress; setCurrent(progress);
+      const at = readProgress(r.top, r.height, window.innerHeight);
+      const progress = furthest(baseline.current, at);
+      baseline.current = progress; setCurrent(progress); setHere(at);
       let section = sections[0]?.id ?? '';
       for (const s of sections) { const h = document.getElementById(s.id); if (h && h.getBoundingClientRect().top < window.innerHeight / 3) section = s.id; }
       const next = { progress, section };
@@ -60,7 +62,8 @@ export function useReadingProgress({ path, title, contentRef, sections }: { path
     return () => { clearTimeout(opened); clearTimeout(timer); flush(); window.removeEventListener('scroll', measure); window.removeEventListener('pagehide', flush); };
   }, [uid, path, title, contentRef, sections]);
 
-  return { saved, current, signedIn: !!uid };
+  /** `current` is the furthest point reached; `here` is where the reader is right now. */
+  return { saved, current, here, signedIn: !!uid };
 }
 
 /** The reader's own recent readings, newest first. */

@@ -7,7 +7,7 @@ import { useReadingProgress } from '@/hooks/useReadingProgress';
 import { continueTarget, isFinished } from '@/lib/readingProgress';
 
 /** "Continue from …" and "Finished" for a reader who has been here before; nothing for first visits or signed-out readers. */
-function ProgressStrip({ saved, current, sections }: { saved: ReturnType<typeof useReadingProgress>['saved']; current: number; sections: { id: string; title: string }[] }) {
+function ProgressStrip({ saved, current, here, sections }: { saved: ReturnType<typeof useReadingProgress>['saved']; current: number; here: number; sections: { id: string; title: string }[] }) {
   const target = continueTarget(saved, sections, typeof window === 'undefined' ? '' : window.location.hash);
   const done = isFinished(Math.max(saved?.progress ?? 0, current));
   if (!target && !done) return null;
@@ -20,7 +20,7 @@ function ProgressStrip({ saved, current, sections }: { saved: ReturnType<typeof 
   return (
     <div className="mb-6 flex flex-wrap items-center gap-3 text-sm">
       {done && <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/60 px-3 py-1 font-label text-xs tracking-[0.14em] text-primary"><CheckCircle2 aria-hidden className="h-3.5 w-3.5" />Finished</span>}
-      {target && current < 5 && <button type="button" onClick={jump} className="inline-flex items-center gap-1.5 rounded-full border border-border px-3 py-1 text-foreground transition-colors duration-500 hover:border-primary"><CornerDownRight aria-hidden className="h-3.5 w-3.5 text-primary" />Continue from “{target.title}”</button>}
+      {target && here < 5 && <button type="button" onClick={jump} className="inline-flex items-center gap-1.5 rounded-full border border-border px-3 py-1 text-foreground transition-colors duration-500 hover:border-primary"><CornerDownRight aria-hidden className="h-3.5 w-3.5 text-primary" />Continue from “{target.title}”</button>}
     </div>
   );
 }
@@ -51,15 +51,15 @@ export function NavigatedProse({ content, path, title, headingLevel = 2, idPrefi
   const entries = useMemo(() => headingEntries(content, headingLevel, idPrefix), [content, headingLevel, idPrefix]);
   const sections = useMemo(() => entries.map(({ id, title }) => ({ id, title })), [entries]);
   const anchor = (line?: number) => entries.find(entry => entry.line === line)?.id;
-  const { saved, current } = useReadingProgress({ path, title, contentRef: ref, sections });
+  const { saved, current, here } = useReadingProgress({ path, title, contentRef: ref, sections });
   const prose = <div ref={ref} className="reading-prose min-w-0"><ReactMarkdown remarkPlugins={[remarkGfm]} components={{
     h2: ({ children, node }) => <h2 id={headingLevel === 2 ? anchor(node?.position?.start.line) : undefined} className="scroll-mt-24">{children}</h2>,
     h3: ({ children, node }) => <h3 id={headingLevel === 3 ? anchor(node?.position?.start.line) : undefined} className="scroll-mt-24">{children}</h3>,
   }}>{content}</ReactMarkdown></div>;
-  if (sections.length < 3) return <><ProgressStrip saved={saved} current={current} sections={sections} />{prose}</>;
+  if (sections.length < 3) return <><ProgressStrip saved={saved} current={current} here={here} sections={sections} />{prose}</>;
   return (
     <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_15rem]">
-      <div className="min-w-0"><ReadingNavigator variant="bar" sections={sections} contentRef={ref} path={path} readingTitle={title} /><ProgressStrip saved={saved} current={current} sections={sections} />{prose}</div>
+      <div className="min-w-0"><ReadingNavigator variant="bar" sections={sections} contentRef={ref} path={path} readingTitle={title} /><ProgressStrip saved={saved} current={current} here={here} sections={sections} />{prose}</div>
       <ReadingNavigator variant="side" sections={sections} contentRef={ref} path={path} readingTitle={title} />
     </div>
   );
