@@ -307,14 +307,17 @@ export function MobileTabBar() {
     s.setSheet(null); go(domainById(id).hub);
   };
   return <>
-    <nav aria-label="Main tabs" data-mobile-tabbar className="fixed inset-x-0 bottom-0 z-50 border-t border-border bg-background/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-xl md:hidden">
+    <nav aria-label="Main tabs" data-mobile-tabbar className="field-dock fixed inset-x-0 bottom-0 z-50 border-t-2 border-[hsl(var(--brass)/0.55)] bg-background/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-xl md:hidden">
       <ul className="grid h-16 grid-cols-5">
         {TABS.map(t => {
           const Icon = t.id === 'account' ? UserRound : domainById(t.id).icon;
           const isActive = activeTab === t.id;
           return <li key={t.id} className="contents"><button type="button" onClick={() => tap(t.id, isActive)} aria-haspopup={t.id === 'account' || isActive ? 'dialog' : undefined} aria-expanded={s.sheet === t.id}
-            className={`flex h-16 flex-col items-center justify-center gap-1 text-[11px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring ${isActive ? 'text-gold' : 'text-muted-foreground'}`}>
-            <Icon className="h-5 w-5" aria-hidden="true" />{t.label}{isActive && <span className="sr-only">(current section)</span>}
+            className={`relative flex h-16 flex-col items-center justify-center gap-0.5 font-label text-xs tracking-[0.12em] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring ${isActive ? 'text-primary' : 'text-muted-foreground'}`}>
+            {isActive && <span aria-hidden="true" className="absolute inset-x-4 top-0 h-0.5 bg-primary" />}
+            <Icon className="h-5 w-5" aria-hidden="true" />
+            <span aria-hidden="true" className={`h-1 w-1 rounded-full ${isActive ? 'bg-primary' : 'bg-transparent'}`} />
+            {t.label}{isActive && <span className="sr-only">(current section)</span>}
           </button></li>;
         })}
       </ul>

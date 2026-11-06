@@ -23,7 +23,7 @@ export function PublicHeader({ sections }: { sections?: string[] }) {
   const active = (to: string) => pathname === to || pathname.startsWith(`${to}/`);
   const learnActive = ['/learn', '/academy', '/reading-room', '/forecast'].some(active);
   return (
-    <header className="sticky top-0 z-40 border-b-2 border-[hsl(var(--brass)/0.6)] bg-background/90 backdrop-blur-md">
+    <header className="sticky top-0 z-40 border-b-2 border-[hsl(var(--brass)/0.6)] bg-background/95 shadow-[0_2px_0_hsl(var(--brass)/0.3)] backdrop-blur-xl">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-5 sm:px-10 lg:h-20">
         <Link to="/welcome" aria-label="Zodaci home" className="shrink-0"><span className="xl:hidden 2xl:inline"><ZodaciLogo /></span><span className="hidden xl:inline 2xl:hidden"><ZodaciLogo compact /></span></Link>
         <nav aria-label="Public pages" className="hidden items-center gap-0 xl:flex">
@@ -42,7 +42,7 @@ export function PublicHeader({ sections }: { sections?: string[] }) {
         </nav>
         <div className="flex items-center gap-2">
           <Button asChild variant="outline" size="sm" className="hidden sm:inline-flex"><Link to={account[0]}>{account[1]}<ArrowUpRight /></Link></Button>
-          {!session && <Button asChild variant="signal" size="sm" className="hidden 2xl:inline-flex"><Link to="/start">Generate your chart<ArrowRight /></Link></Button>}
+          {!session && <Button asChild variant="signal" size="sm" className="hidden xl:inline-flex"><Link to="/start">Generate your chart<ArrowRight /></Link></Button>}
           <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild><Button variant="ghost" size="icon" className="xl:hidden" aria-label="Open menu"><Menu /></Button></SheetTrigger>
             <SheetContent side="right" className="w-[85vw] max-w-sm overflow-y-auto bg-background">
