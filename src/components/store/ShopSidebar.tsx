@@ -24,11 +24,18 @@ type Props = {
 };
 
 /** Gift-shop departments: product types, sign editions, price bands and availability. */
-export function ShopSidebar({ types, signs, total, filters, onChange, onClear, onPick }: Props) {
+export function ShopSidebar({ types, signs, total, atomicCount, filters, onChange, onClear, onPick }: Props) {
   const pick = (key: keyof ShopFilters, value: string | boolean) => { onChange(key, value); onPick?.(); };
-  const filtered = filters.type !== 'All' || filters.sign !== 'All' || filters.price !== 'all' || filters.inStock;
+  const filtered = filters.collection !== 'all' || filters.type !== 'All' || filters.sign !== 'All' || filters.price !== 'all' || filters.inStock;
   return (
     <nav aria-label="Shop departments" className="shop-sidebar space-y-6">
+      <div>
+        <h2 className="shop-sidebar-h">Collections</h2>
+        <ul className="mt-2 space-y-0.5">
+          <li><DeptButton active={filters.collection === 'all'} onClick={() => pick('collection', 'all')} icon={StorefrontIcon} label="All collections" count={total} /></li>
+          <li><DeptButton active={filters.collection === 'atomic'} onClick={() => pick('collection', 'atomic')} icon={ChartWheelIcon} label="Atomic Zodiac" count={atomicCount} /></li>
+        </ul>
+      </div>
       <div>
         <h2 className="shop-sidebar-h">Departments</h2>
         <ul className="mt-2 space-y-0.5">

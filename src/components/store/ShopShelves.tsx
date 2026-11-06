@@ -21,6 +21,7 @@ export function ProductCard({ p, onAdd, adding, className }: { p: ShopifyProduct
         {img && <img src={img.url} alt={img.altText ?? title} loading="lazy" decoding="async" width={600} height={portrait ? 800 : 600} className={cn('h-full w-full', portrait ? 'object-cover' : 'object-contain', !available && 'opacity-60 grayscale')} />}
         {!available && <span className="absolute left-3 top-3 rounded-full border border-border bg-background/90 px-2.5 py-0.5 text-xs">Sold out</span>}
         {available && badge && <span className="absolute left-3 top-3 rounded-full bg-accent px-2.5 py-0.5 font-label text-xs tracking-wider text-accent-foreground">{badge}</span>}
+        {atomic && <span className="absolute bottom-3 left-3 rounded-full border border-[hsl(var(--brass)/0.7)] bg-background/90 px-2.5 py-0.5 font-label text-xs tracking-wider text-primary">Atomic Zodiac</span>}
       </Link>
       <div className="flex flex-1 flex-col gap-2 p-4">
         <Link to={`/product/${p.node.handle}`} className="font-display text-lg leading-snug hover:underline">{title}</Link>

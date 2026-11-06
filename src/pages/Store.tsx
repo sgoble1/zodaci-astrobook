@@ -85,10 +85,10 @@ export default function Store() {
   const signOf = (p: ShopifyProduct) => (p.node.tags ?? []).find(t => t.startsWith('sign:'))?.slice(5);
   const signs = useMemo(() => {
     const count = new Map<string, number>();
-    for (const p of products ?? []) { const s = signOf(p); if (s) { const n = s[0].toUpperCase() + s.slice(1); count.set(n, (count.get(n) ?? 0) + 1); } }
+    for (const p of catalog) { const s = signOf(p); if (s) { const n = s[0].toUpperCase() + s.slice(1); count.set(n, (count.get(n) ?? 0) + 1); } }
     return [...count.entries()].map(([name, n]) => ({ name, count: n }));
-  }, [products]);
-  const filters: ShopFilters = { type, sign, price, inStock: inStockOnly };
+  }, [catalog]);
+  const filters: ShopFilters = { collection, type, sign, price, inStock: inStockOnly };
   const change = (k: keyof ShopFilters, v: string | boolean) => {
     if (k === 'inStock') set('stock', v ? '1' : '', ''); else set(k, String(v), k === 'price' ? 'all' : 'All');
   };
