@@ -7,6 +7,8 @@ import { isAtomicZodiac, isPortraitProduct, shopTitle } from '@/lib/shopPresenta
 import { cn } from '@/lib/utils';
 
 type Add = (p: ShopifyProduct) => void;
+/** A shelf previews its first pieces; "See all" opens the full department. */
+const SHELF_MAX = 18;
 
 /** One catalog product as a gift-shop card. Books and comics use a portrait frame. */
 export function ProductCard({ p, onAdd, adding, className }: { p: ShopifyProduct; onAdd: Add; adding: boolean; className?: string }) {
@@ -64,7 +66,7 @@ export function ShopShelf({ id, title, script, items, onAdd, adding, onSeeAll, l
       </div>
       <ul ref={track} className="shop-shelf -mx-1 flex snap-x snap-mandatory gap-4 overflow-x-auto px-1 pb-3" aria-label={`${title}, scroll sideways for more`}>
         {lead}
-        {items.map(p => <li key={p.node.id} className="w-[min(16rem,72vw)] shrink-0 snap-start"><ProductCard p={p} onAdd={onAdd} adding={adding} /></li>)}
+        {items.slice(0, SHELF_MAX).map(p => <li key={p.node.id} className="w-[min(16rem,72vw)] shrink-0 snap-start"><ProductCard p={p} onAdd={onAdd} adding={adding} /></li>)}
       </ul>
     </section>
   );
