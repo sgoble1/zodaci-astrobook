@@ -15,9 +15,9 @@ const VIEWS: { id: View; label: string }[] = [{ id: 'annual', label: 'Annual sta
 /** Solar month holding today's date (month 0 begins ~Feb 4). */
 const currentSolarMonth = (d = new Date()) => {
   const md = (d.getMonth() + 1) * 100 + d.getDate();
-  const starts = [204, 306, 405, 506, 606, 707, 808, 908, 1008, 1107, 1207];
-  if (md < 106 || md >= 1207) return md >= 1207 ? 10 : 10;
+  if (md >= 1207 || md < 106) return 10;
   if (md < 204) return 11;
+  const starts = [204, 306, 405, 506, 606, 707, 808, 908, 1008, 1107];
   let m = 0; starts.forEach((s, i) => { if (md >= s) m = i; }); return m;
 };
 

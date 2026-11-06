@@ -24,7 +24,7 @@ const FS_DOCS = [
   ...Object.values(STAR_INFO).map(s => ({ id: 'fs-star-' + s.n, kind: 'fengshui', title: `Star ${s.n} · ${s.name}`, subtitle: `Flying star · ${s.element} · ${s.nature}`, body: s.theme, route: '/feng-shui/flying-stars' })),
   { id: 'tool-calc', kind: 'tool', title: 'Birth Chart Calculator', subtitle: 'Compute positions, aspects & Ba Zi from date, time, place', body: 'calculate natal chart ephemeris bazi', route: '/chart-calculator' },
   { id: 'tool-elements', kind: 'tool', title: 'Chart Elements & Meanings', subtitle: 'Every position with sources', body: 'planets meanings citations', route: '/chart-elements' },
-  { id: 'tool-bagua-wheel', kind: 'tool', title: 'Masterbook · Bagua Wheel', subtitle: 'Eight directions, Kua 1', body: 'feng shui bagua directions', route: '/masterbook/bagua-wheel' },
+  { id: 'tool-bagua-wheel', kind: 'tool', title: 'Interactive Bagua Map', subtitle: 'April’s eight directions, Kua 1', body: 'feng shui bagua directions', route: '/masterbook/bagua-wheel' },
   { id: 'tool-bagua-reading', kind: 'tool', title: 'The Bagua Reading', subtitle: 'Chart + Ba Zi + Kua directions', body: 'feng shui kua reading', route: '/bagua-reading' },
   { id: 'tool-relationships', kind: 'tool', title: 'Relationships', subtitle: 'Synastry, composite, Chinese match', body: 'relationship compatibility synastry partner', route: '/relationships' },
   { id: 'tool-reading', kind: 'tool', title: 'The Complete Reading', subtitle: 'Natal + aspects + Ba Zi + Compendium', body: 'reading synthesis', route: '/reading' },
