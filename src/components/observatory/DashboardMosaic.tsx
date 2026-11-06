@@ -51,8 +51,8 @@ export function DashboardMosaic({ chart, name, hasTime, primary, secondary, onAi
     content: <LookUpSlide title="Look up. Today’s sky is on air." script="Tuned to your own chart." text="The Broadcast Studio below reads today’s real planetary positions against this chart: the current chapter, career, relationships, the weeks ahead and growth." cta={onAir.cta} secondary={onAir.secondary} />,
   });
   if (press) slides.push({
-    id: 'press', label: 'AstroBooks and AstroComics',
-    content: <PressSlide title={<>Your chart,<br />in print.</>} script="Books and comics from your own sky." text="AstroBooks and AstroComics are written and drawn from this chart — read them here, or order a printed copy." book={press.book} comic={press.comic} />,
+    id: 'press', label: 'Take the sky home',
+    content: <PressSlide title={<>Take the<br />sky home.</>} script="Your name. Your minute. In print." text="AstroBooks and AstroComics are written and drawn from this chart. Read them here, or order a printed copy with your name and birth details on the cover." points={['Your name and birth details on the cover', 'Every chapter worked out from this chart', 'Printed to order, one copy at a time']} book={press.book} comic={press.comic} />,
   });
   return (
     <div className="mosaic">

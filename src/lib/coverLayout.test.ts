@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { COVER_SUBTITLE, COVER_WORDMARK, artPpi, clampCrop, coverName, coverType, placeArt } from './coverLayout';
+import { COVER_SUBTITLE, COVER_WORDMARK, artPpi, clampCrop, coverBirthLine, coverName, coverType, placeArt } from './coverLayout';
 
 // Fixed-width stand-in for a font: every character is 0.55 em wide.
 const mono = (t: string, size: number) => t.length * size * 0.55;
