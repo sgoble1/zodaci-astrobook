@@ -30,8 +30,8 @@ export type ArchiveBook = { handle: string; title: string; img: ShowcaseImage };
 
 /** Reference books from the gift shop's Cosmic Archive line, shown on the home shelf beside the AstroBooks. */
 export const ARCHIVE_BOOKS: ArchiveBook[] = [
-  { handle: 'cosmic-archive-the-houses-personalized', title: 'Cosmic Archive: The Houses', img: { src: houses, width: 456, height: 760 } },
-  { handle: 'cosmic-archive-aspects-patterns-personalized', title: 'Cosmic Archive: Aspects & Patterns', img: { src: aspects, width: 456, height: 760 } },
+  { handle: 'cosmic-archive-the-houses-personalized', title: 'The Houses', img: { src: houses, width: 456, height: 760 } },
+  { handle: 'cosmic-archive-aspects-patterns-personalized', title: 'Aspects & Patterns', img: { src: aspects, width: 456, height: 760 } },
   { handle: 'cosmic-archive-the-zodiac-field-guide', title: 'The Zodiac Field Guide', img: { src: fieldGuide, width: 513, height: 760 } },
   { handle: 'cosmic-archive-moon-cycles', title: 'Moon Cycles', img: { src: moon, width: 528, height: 760 } },
   { handle: 'cosmic-archive-the-stargazer-s-handbook', title: 'The Stargazer’s Handbook', img: { src: stargazer, width: 491, height: 760 } },

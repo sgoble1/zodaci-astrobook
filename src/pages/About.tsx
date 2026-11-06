@@ -53,7 +53,7 @@ export default function About() {
       <header className="obs-panel hero-night rivets about-hero">
         <div className="about-hero-copy">
           <p className="font-label text-sm tracking-[0.2em] text-primary">Our craft</p>
-          <h1 className="hero-headline">Astronomy-grade precision.<br />Plain-language depth.</h1>
+          <h1 className="hero-headline">Astronomy‑grade precision.<br />Plain‑language depth.</h1>
           <p className="font-script text-3xl text-primary">Accurate first, warm second.</p>
           <p className="max-w-xl text-lg leading-relaxed text-foreground/90">Zodaci is a personal observatory. We calculate your birth chart from the minute and place you were born, then write every reading in plain language you can use, naming the placement each line comes from.</p>
           <div className="flex flex-wrap gap-3 pt-1">

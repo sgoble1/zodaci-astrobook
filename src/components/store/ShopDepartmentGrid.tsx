@@ -9,7 +9,7 @@ import { FEATURED_SET, SHOP_DEPARTMENTS, departmentHref, type ShopDepartment } f
  * `counts` (product type → number in the collection) adds item counts when the catalog is loaded.
  */
 export function ShopDepartmentGrid({ counts, compact = false, className, headingId }: { counts?: Map<string, number>; compact?: boolean; className?: string; headingId?: string }) {
-  const departments = compact ? SHOP_DEPARTMENTS.slice(0, 4) : SHOP_DEPARTMENTS;
+  const departments = compact ? SHOP_DEPARTMENTS.slice(0, 2) : SHOP_DEPARTMENTS;
   const countFor = (d: ShopDepartment) => counts ? d.types.reduce((n, t) => n + (counts.get(t) ?? 0), 0) : undefined;
   const total = counts ? [...counts.values()].reduce((a, b) => a + b, 0) : undefined;
   return (

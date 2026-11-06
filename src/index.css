@@ -1241,7 +1241,7 @@ li:hover > .zodiac-coin { transform: rotate(-10deg); }
 .dept-featured { grid-column: span 2; }
 @media (min-width: 640px) { .dept-grid:not(.dept-grid-compact) { grid-template-columns: repeat(3, minmax(0, 1fr)); } .dept-grid:not(.dept-grid-compact) .dept-featured { grid-row: span 2; } }
 @media (min-width: 1100px) { .dept-grid:not(.dept-grid-compact) { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
-@media (min-width: 640px) { .dept-grid-compact { grid-template-columns: minmax(0, 1.25fr) repeat(2, minmax(0, 1fr)); } .dept-grid-compact .dept-featured { grid-column: auto; grid-row: span 2; } }
+@media (min-width: 640px) { .dept-grid-compact { grid-template-columns: repeat(3, minmax(0, 1fr)); } .dept-grid-compact .dept-featured { grid-column: span 2; grid-row: span 2; } }
 .dept-tile { position: relative; isolation: isolate; display: flex; flex-direction: column; justify-content: flex-end; height: 100%; min-height: 11.5rem; overflow: hidden; border-radius: var(--cut-card); color: hsl(var(--comic-navy));
   box-shadow: 0 0 0 2px hsl(var(--comic-navy)), 4px 5px 0 2px hsl(var(--comic-navy) / .3); }
 .dept-featured .dept-tile { min-height: 20rem; }
@@ -1282,7 +1282,8 @@ li:hover > .zodiac-coin { transform: rotate(-10deg); }
     radial-gradient(circle, hsl(var(--comic-navy) / .75) 0 2.2px, transparent 2.8px) 0 100% / 6px 6px no-repeat, radial-gradient(circle, hsl(var(--comic-navy) / .75) 0 2.2px, transparent 2.8px) 100% 100% / 6px 6px no-repeat; }
 .about-hero { display: grid; gap: 2rem; align-items: center; padding: 2rem 1.25rem; container: abouthero / inline-size; }
 .about-hero-copy { display: flex; flex-direction: column; gap: 1rem; min-width: 0; }
-.about-hero .hero-headline { font-size: clamp(2.1rem, 1.4rem + 3vw, 3.6rem); }
+.about-hero-copy { container-type: inline-size; }
+.about-hero .hero-headline { font-size: clamp(1.5rem, 9.2cqi, 3.3rem); }
 .about-hero-art { margin: 0; }
 .about-hero-art img { display: block; width: 100%; height: auto; border-radius: var(--cut-card); transform: rotate(1.2deg); box-shadow: 0 0 0 2px hsl(var(--comic-mustard)), 0 0 0 4px hsl(var(--midnight) / .6), 9px 11px 0 4px hsl(var(--midnight) / .55); }
 @media (min-width: 900px) { .about-hero { grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); padding: 3rem 2.75rem; gap: 3rem; } }
@@ -1305,4 +1306,11 @@ li:hover > .zodiac-coin { transform: rotate(-10deg); }
   .hero-slide:not(.hero-slide-on) { position: absolute; inset: 0 0 auto 0; }
   .art-slide-landscape .art-slide-art { width: min(92%, 24rem); }
   .art-slide-portrait .art-slide-art { width: min(52%, 13rem); }
+}
+
+/* Long poster headlines scale to their own column so words like "Astronomy-grade" never split or overflow. */
+.art-slide-copy { container-type: inline-size; }
+.hero-slides .art-slide .hero-headline { font-size: clamp(1.45rem, 9cqi, 2.4rem); }
+@media (min-width: 1100px) {
+  .mosaic-trio .art-tile-pic { flex: 1 1 auto; aspect-ratio: auto; min-height: 11rem; }
 }

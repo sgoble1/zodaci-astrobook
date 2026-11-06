@@ -94,7 +94,7 @@ export default function BrandLanding() {
     {
       id: 'precision', label: 'Astronomy-grade precision',
       content: <ArtSlide art={{ src: rooftop, alt: 'Two 1950s astronomers on an observatory rooftop at night: one looks through a brass telescope, the other holds a clipboard beside an easel with a zodiac wheel', width: 1400, height: 933 }}
-        eyebrow="Our craft" title={<>Astronomy-grade precision.<br />Plain-language depth.</>} script="Worked out first, written second."
+        eyebrow="Our craft" title={<>Astronomy‑grade precision.<br />Plain‑language depth.</>} script="Worked out first, written second."
         text="We work out your chart from the minute and place you were born, with the time-zone rules your town kept that day. Every reading is then written in plain words and names the placement it comes from."
         cta={{ to: '/start', label: 'Start your chart' }} secondary={{ to: '/astrobook', label: 'Get your AstroBook' }} />,
     },
