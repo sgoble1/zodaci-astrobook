@@ -10,12 +10,13 @@ export const PRICE_BANDS = [
 ] as const;
 export type PriceBand = (typeof PRICE_BANDS)[number]['id'];
 
-export type ShopFilters = { type: string; sign: string; price: PriceBand | 'all'; inStock: boolean };
+export type ShopFilters = { collection: 'all' | 'atomic'; type: string; sign: string; price: PriceBand | 'all'; inStock: boolean };
 
 type Props = {
   types: { name: string; count: number }[];
   signs: { name: string; count: number }[];
   total: number;
+  atomicCount: number;
   filters: ShopFilters;
   onChange: (key: keyof ShopFilters, value: string | boolean) => void;
   onClear: () => void;

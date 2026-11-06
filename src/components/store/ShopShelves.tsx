@@ -11,7 +11,8 @@ type Add = (p: ShopifyProduct) => void;
 /** One catalog product as a gift-shop card. Books and comics use a portrait frame. */
 export function ProductCard({ p, onAdd, adding, className }: { p: ShopifyProduct; onAdd: Add; adding: boolean; className?: string }) {
   const available = inStock(p);
-  const portrait = isPortraitProduct(p.node.title, p.node.productType ?? '');
+  const portrait = isPortraitProduct(p.node.title, p.node.productType ?? '', p.node.tags);
+  const atomic = isAtomicZodiac(p.node);
   const { title, badge } = shopTitle(p.node.title, p.node.productType ?? '');
   const img = p.node.images.edges[0]?.node;
   return (

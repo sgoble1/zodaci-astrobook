@@ -69,12 +69,15 @@ export default function Store() {
     return () => { on = false; };
   }, [attempt]);
   const [sheet, setSheet] = useState(false);
-  // Departments ordered by how many pieces they hold, so the biggest collections lead.
+  const collection = params.get('collection') === 'atomic' ? 'atomic' : 'all';
+  const atomicCount = useMemo(() => (products ?? []).filter(p => isAtomicZodiac(p.node)).length, [products]);
+  // Collection selection scopes both department and sign counts to the editions being browsed.
+  const catalog = useMemo(() => (products ?? []).filter(p => collection === 'all' || isAtomicZodiac(p.node)), [products, collection]);
   const types = useMemo(() => {
     const count = new Map<string, number>();
-    for (const p of products ?? []) if (p.node.productType) count.set(p.node.productType, (count.get(p.node.productType) ?? 0) + 1);
+    for (const p of catalog) if (p.node.productType) count.set(p.node.productType, (count.get(p.node.productType) ?? 0) + 1);
     return [...count.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0])).map(([name, n]) => ({ name, count: n }));
-  }, [products]);
+  }, [catalog]);
   const sign = params.get('sign') ?? 'All';
   const priceParam = params.get('price');
   const price: PriceBand | 'all' = PRICE_BANDS.some(b => b.id === priceParam) ? (priceParam as PriceBand) : 'all';
