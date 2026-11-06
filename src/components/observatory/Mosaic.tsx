@@ -6,9 +6,15 @@ import { RetroEmblem, type RetroIconComponent } from '@/components/icons/RetroIc
 import { SpotArt, type SpotKind } from '@/components/art/SpotArt';
 import { NewsletterSignup } from '@/components/brand/NewsletterSignup';
 import { PUBLIC_ARTICLES } from '@/content/publicArticles';
-import { CHAPTER_TABS } from '@/lib/books';
+import { ACADEMY } from '@/content/academy';
 import poster from '@/assets/home/observatory-poster.jpg';
-import { PRODUCT_ART } from '@/content/productArtwork';
+import library from '@/assets/home/library-lessons.jpg';
+import chartMakers from '@/assets/pages/chart-makers.jpg';
+import comicCutout from '@/assets/products/astrocomic-cutout.webp';
+import { COVER_SAMPLES } from '@/content/coverSamples';
+import { ARCHIVE_BOOKS } from '@/content/shopShowcase';
+import { SampleCover } from '@/components/books/SampleCover';
+import { ShopDepartmentGrid } from '@/components/store/ShopDepartmentGrid';
 
 /**
  * Weathered panel mosaic from the observatory concept: navy plates (obs-panel) and aged cream
