@@ -1315,3 +1315,11 @@ li:hover > .zodiac-coin { transform: rotate(-10deg); }
   .mosaic-trio .art-tile-pic { position: relative; flex: 1 1 auto; aspect-ratio: auto; min-height: 11rem; }
   .mosaic-trio .art-tile-pic img { position: absolute; inset: 0; }
 }
+
+/* Icon set in the AstroBook cover style: halftone tint, gold orbit ring at emblem sizes, hand-cut badge frames. */
+.retro-halftone-base { fill: hsl(var(--comic-mustard) / .38); }
+.retro-halftone-dot { fill: hsl(var(--comic-mustard)); }
+.retro-icon .retro-tint, .retro-emblem .retro-tint, .retro-emblem-ink .retro-tint { fill: url(#retro-halftone) hsl(var(--comic-mustard)); fill-opacity: 1; }
+.bg-primary .retro-icon .retro-tint, .retro-on-primary .retro-tint { fill: hsl(var(--comic-brick)); fill-opacity: .4; }
+.retro-orbit { fill: none; stroke: hsl(var(--brass)); stroke-width: .7; stroke-dasharray: 5 1.4; opacity: .9; }
+.retro-emblem { border-radius: 32% 38% 30% 40% / 38% 30% 40% 32%; }

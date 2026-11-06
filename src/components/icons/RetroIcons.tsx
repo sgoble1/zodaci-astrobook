@@ -9,10 +9,26 @@ import { cn } from '@/lib/utils';
 type IconProps = Omit<SVGProps<SVGSVGElement>, 'children'> & { size?: number; title?: string };
 
 function Ico({ size = 22, title, className, children, ...rest }: IconProps & { children: ReactNode }) {
+  // Book-cover style: heavy navy ink, halftone tint (pattern in RetroIconDefs) and, at emblem sizes, a gold orbit ring behind.
   return (
-    <svg viewBox="0 0 24 24" width={size} height={size} fill="none" stroke="currentColor" strokeWidth={1.7} strokeLinecap="round" strokeLinejoin="round"
+    <svg viewBox="0 0 24 24" width={size} height={size} fill="none" stroke="currentColor" strokeWidth={size >= 28 ? 1.6 : 1.9} strokeLinecap="round" strokeLinejoin="round"
       role={title ? 'img' : undefined} aria-hidden={title ? undefined : true} aria-label={title} className={cn('retro-icon shrink-0', className)} {...rest}>
+      {size >= 28 && <ellipse cx="12" cy="12.5" rx="11.2" ry="4.4" transform="rotate(-18 12 12.5)" className="retro-orbit" />}
       {children}
+    </svg>
+  );
+}
+
+/** Shared SVG patterns for the icon set (halftone dot tint like the AstroBook cover art). Render once near the app root. */
+export function RetroIconDefs() {
+  return (
+    <svg width="0" height="0" aria-hidden="true" focusable="false" style={{ position: 'absolute', width: 0, height: 0, overflow: 'hidden' }}>
+      <defs>
+        <pattern id="retro-halftone" width="2.2" height="2.2" patternUnits="userSpaceOnUse" patternTransform="rotate(30)">
+          <rect width="2.2" height="2.2" className="retro-halftone-base" />
+          <circle cx="1.1" cy="1.1" r="0.62" className="retro-halftone-dot" />
+        </pattern>
+      </defs>
     </svg>
   );
 }
