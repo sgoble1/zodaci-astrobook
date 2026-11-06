@@ -18,6 +18,37 @@ export type CoverType = { safe: number; title: CoverTextBox; rule: { x: number; 
 /** The title shown when no name is entered yet. */
 export const coverName = (name?: string | null) => (name ?? '').replace(/\s+/g, ' ').trim().slice(0, 40) || 'Your Name';
 
+const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+/** "06:42" → "6:42 a.m."; null for missing or malformed times. */
+export function coverTime(time?: string | null) {
+  const m = /^(\d{1,2}):(\d{2})/.exec(time ?? '');
+  if (!m) return null;
+  const h = Number(m[1]), min = m[2];
+  if (h > 23 || Number(min) > 59) return null;
+  return `${h % 12 || 12}:${min} ${h < 12 ? 'a.m.' : 'p.m.'}`;
+}
+/** Shortens a geocoded label to "City, Region" so it fits one cover line. */
+export function coverPlace(label?: string | null) {
+  const parts = (label ?? '').split(',').map(p => p.trim()).filter(Boolean);
+  if (parts.length <= 2) return parts.join(', ');
+  const tail = parts[parts.length - 1];
+  // "City, County, State, Country" → "City, State" (drop a trailing country when a region exists).
+  const region = /^(united states|usa|us|united kingdom|uk)$/i.test(tail) ? parts[parts.length - 2] : tail;
+  return `${parts[0]}, ${region}`;
+}
+/**
+ * The birth line printed under the reader's name: "Born 3 May 1987 · 6:42 a.m. · Asheville, North Carolina".
+ * Time and place are left out when unknown, never guessed.
+ */
+export function coverBirthLine(birth: { date?: string | null; time?: string | null; placeLabel?: string | null } | null | undefined) {
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(birth?.date ?? '');
+  if (!m || Number(m[2]) < 1 || Number(m[2]) > 12) return '';
+  const parts = [`Born ${Number(m[3])} ${MONTHS[Number(m[2]) - 1]} ${m[1]}`];
+  const t = coverTime(birth?.time); if (t) parts.push(t);
+  const p = coverPlace(birth?.placeLabel); if (p) parts.push(p);
+  return parts.join(' · ');
+}
+
 /** Split a name into at most two balanced lines (only at spaces). */
 export function titleLines(name: string): string[][] {
   const words = name.split(' ');
@@ -30,7 +61,7 @@ export function titleLines(name: string): string[][] {
  * Lay out the cover type for a W×H pixel cover at `ppi` pixels per inch. Positions are top-down baselines in pixels.
  * `serif` measures the display face; `sans` measures the subtitle face (with letter spacing included by the caller).
  */
-export function coverType(w: number, h: number, ppi: number, name: string, serif: Measure, sans: Measure): CoverType {
+export function coverType(w: number, h: number, ppi: number, name: string, serif: Measure, sans: Measure, detail?: string): CoverType {
   const safe = COVER_SAFE_IN * ppi;
   const inner = (w - safe * 2) * 0.92; // a little breathing room inside the safe zone
   const title = coverName(name);
@@ -46,13 +77,24 @@ export function coverType(w: number, h: number, ppi: number, name: string, serif
   const top = safe + h * 0.045;
   const ys = best.lines.map((_, i) => top + tSize * 0.92 + i * tSize * 1.08);
   const ruleY = ys[ys.length - 1] + tSize * 0.42;
-  const sSize = Math.max(w * 0.022, Math.min(w * 0.032, (inner / Math.max(1, sans(COVER_SUBTITLE.toUpperCase(), 100))) * 100));
+  // The line under the rule is the reader's birth line when they chose to print it, otherwise the edition subtitle.
+  const sub = (detail?.trim() || COVER_SUBTITLE).toUpperCase();
+  const fitSize = (line: string) => (inner / Math.max(1, sans(line, 100))) * 100;
+  let subLines = [sub];
+  let sSize = Math.min(w * 0.032, fitSize(sub));
+  if (sSize < w * 0.022 && sub.includes(' · ')) {
+    // Too long for one readable line: break before the place, which is the last part.
+    const cut = sub.lastIndexOf(' · ');
+    subLines = [sub.slice(0, cut), sub.slice(cut + 3)];
+    sSize = Math.min(w * 0.032, ...subLines.map(fitSize));
+  }
+  sSize = Math.max(w * 0.018, sSize);
   const wSize = w * 0.058;
   return {
     safe,
     title: { lines: best.lines, size: tSize, x: w / 2, y: ys, align: 'center' },
     rule: { x: w / 2 - w * 0.09, y: ruleY, width: w * 0.18 },
-    subtitle: { lines: [COVER_SUBTITLE.toUpperCase()], size: sSize, x: w / 2, y: [ruleY + sSize * 2.1], align: 'center' },
+    subtitle: { lines: subLines, size: sSize, x: w / 2, y: subLines.map((_, i) => ruleY + sSize * 2.1 + i * sSize * 1.45), align: 'center' },
     wordmark: { lines: [COVER_WORDMARK], size: wSize, x: w - safe, y: [h - safe], align: 'right' },
   };
 }

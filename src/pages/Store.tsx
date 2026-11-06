@@ -35,6 +35,7 @@ function useAdd() {
 
 const SORTS = { featured: 'Featured', 'price-asc': 'Price: low to high', 'price-desc': 'Price: high to low', name: 'Name: A to Z', newest: 'Newest' } as const;
 type Sort = keyof typeof SORTS;
+const PAGE = 48;
 const priceOf = (p: ShopifyProduct) => parseFloat(p.node.priceRange.minVariantPrice.amount);
 
 function ShopOffline({ onRetry }: { onRetry: () => void }) {
@@ -61,8 +62,11 @@ export default function Store() {
   const type = params.get('type') ?? 'All';
   const q = params.get('q') ?? '';
   const sort = (params.get('sort') as Sort) in SORTS ? (params.get('sort') as Sort) : 'featured';
+  // Always start from the address bar: a click that lands before the next render must not drop other filters.
+  const current = () => new URLSearchParams(window.location.search);
   const set = (k: string, v: string, empty: string) => {
-    setParams(previous => { const n = new URLSearchParams(previous); if (v === empty) n.delete(k); else n.set(k, v); return n; }, { replace: true });
+    const n = current(); if (v === empty) n.delete(k); else n.set(k, v);
+    setParams(n, { replace: true });
   };
   const { add, loading } = useAdd();
   useEffect(() => {
@@ -93,12 +97,10 @@ export default function Store() {
   const filters: ShopFilters = { collection, type, sign, price, inStock: inStockOnly };
   const change = (k: keyof ShopFilters, v: string | boolean) => {
     if (k === 'collection') {
-      setParams(previous => {
-        const n = new URLSearchParams(previous);
-        if (v === 'atomic') n.set('collection', 'atomic'); else n.delete('collection');
-        n.delete('type'); n.delete('sign');
-        return n;
-      }, { replace: true });
+      const n = current();
+      if (v === 'atomic') n.set('collection', 'atomic'); else n.delete('collection');
+      n.delete('type'); n.delete('sign');
+      setParams(n, { replace: true });
     } else if (k === 'inStock') set('stock', v ? '1' : '', ''); else set(k, String(v), k === 'price' ? 'all' : 'All');
   };
   const clearFilters = () => { const n = new URLSearchParams(); if (q) n.set('q', q); if (sort !== 'featured') n.set('sort', sort); setParams(n, { replace: true }); };
@@ -123,6 +125,9 @@ export default function Store() {
     return sorted.sort((a, b) => Number(inStock(b)) - Number(inStock(a)));
   }, [products, collection, type, sign, q, sort, band, inStockOnly]);
   // Default view: side-scrolling shelves in merchandising order. Any search, filter or sort shows the full grid.
+  const [limit, setLimit] = useState(PAGE);
+  const filterKey = params.toString();
+  useEffect(() => { setLimit(PAGE); }, [filterKey]);
   const browsing = !q && collection === 'all' && type === 'All' && sign === 'All' && !band && !inStockOnly && sort === 'featured';
   const shelves = useMemo(() => {
     const list = products ?? [];
@@ -184,8 +189,12 @@ export default function Store() {
             </> : undefined} />)}
         </div>}
         {(!browsing || !products) && <ul className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
-          {shown.map(p => <li key={p.node.id}><ProductCard p={p} onAdd={add} adding={loading} /></li>)}
+          {shown.slice(0, limit).map(p => <li key={p.node.id}><ProductCard p={p} onAdd={add} adding={loading} /></li>)}
         </ul>}
+        {products && !browsing && shown.length > limit && <div className="flex flex-col items-center gap-2 pt-2">
+          <p className="text-sm text-muted-foreground">Showing {limit} of {shown.length}</p>
+          <Button variant="outline" onClick={() => setLimit(l => l + PAGE)}>Show {Math.min(PAGE, shown.length - limit)} more</Button>
+        </div>}
         </div>
       </div>}
     </div>

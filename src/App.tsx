@@ -3,6 +3,7 @@ import { BrowserRouter, Navigate, Routes, Route } from 'react-router-dom';
 import { Toaster } from '@/components/ui/sonner';
 import { lazy, Suspense, useMemo, type ReactNode } from 'react';
 import { AppShell } from './components/layout/AppShell';
+import { ScrollManager } from './components/common/ScrollManager';
 import { DetailDrawerProvider, type DrawerPayload } from './components/common/DetailDrawer';
 import { CommandPalette } from './components/common/CommandPalette';
 import { ActivityTracker } from './components/common/ActivityTracker';
@@ -243,6 +244,7 @@ export default function App() {
     <BrowserRouter>
     <>
       <Providers>
+        <ScrollManager />
         <ActivityTracker />
         <CartSync />
         <ReferralCapture />

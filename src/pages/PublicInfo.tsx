@@ -12,6 +12,7 @@ import { CosmicTeaser } from '@/components/books/CosmicTeaser';
 import { ProductArtworkGallery } from '@/components/books/ProductArtworkGallery';
 import { PersonalizationStory } from '@/components/books/PersonalizationStory';
 import { BOOK_PRODUCT_SAMPLES, PRODUCT_ART } from '@/content/productArtwork';
+import { SampleCover } from '@/components/books/SampleCover';
 import { ThemeArt } from '@/components/common/ThemeArt';
 import { SampleBook } from '@/components/books/SampleBookReader';
 import { VOLUMES } from '@/lib/bookVolumes';
@@ -40,7 +41,7 @@ export function AstroBookPublic() {
           <p className="text-xs font-medium tracking-[0.12em] text-accent">YOUR CHART, IN PRINT</p>
           <h1 className="hero-headline">AstroBook</h1>
           <p className="font-script text-3xl text-primary">Your stars, your story.</p>
-          <p className="text-lg text-muted-foreground">AstroBook gathers what the sky held at your exact minute of birth into six bound volumes. It interprets your complete chart — who you are, your houses, planets and aspects, the esoteric points, world traditions and timing — all written from your exact placements.</p>
+          <p className="text-lg text-muted-foreground">An AstroBook is your birth chart written out in six volumes: who you are, your houses, planets and aspects, the finer points, other traditions, and timing for the year ahead. Every chapter is worked out from the minute and place you were born.</p>
           <p className="text-sm text-muted-foreground">{BOOK_VERSIONS.filter(v => v.id === 'digital' || v.id === 'pocket' || v.id === 'linen').map(v => `${v.name} ${money(v.price)}`).join(' · ')} · free US shipping on printed versions</p>
           <div className="flex flex-wrap items-center gap-4"><Button asChild size="lg"><Link to={order()}>Order your AstroBook</Link></Button><Link to="/book-preview" className="text-accent">Read a sample book →</Link><Link to="/demo" className="text-accent">Try the interactive demo →</Link></div>
         </div>
@@ -53,10 +54,10 @@ export function AstroBookPublic() {
       </section>
       <PersonalizationStory />
       <section id="story" className="grid gap-8 md:grid-cols-2 items-center">
-        <div className="space-y-4"><h2 className="font-display text-3xl">Calculated, not guessed.</h2><p className="text-muted-foreground">Every AstroBook starts with astronomy: the exact positions of the Sun, Moon and planets at the moment and place you were born. Interpretation comes second, and the book always tells you which is which.</p><p className="text-muted-foreground">Then we write it for one person. No two AstroBooks are alike, because no two birth moments are.</p></div>
-        <div className="grid grid-cols-3 gap-3">{BOOK_PRODUCT_SAMPLES.map(s => <figure key={s.label}><img src={s.src} alt={s.alt} width={1024} height={1024} loading="lazy" className="aspect-square w-full rounded-sm object-contain" /><figcaption className="mt-2 text-center font-label text-sm">{s.label}</figcaption></figure>)}</div>
+        <div className="space-y-4"><h2 className="font-display text-3xl">Astronomy first, then the writing.</h2><p className="text-muted-foreground">Every AstroBook starts with the positions of the Sun, Moon and planets for the minute and place you were born. The interpretation comes after, and the book marks which is which.</p><p className="text-muted-foreground">Two people born on the same day still get different books: the Rising sign and houses shift every few minutes, and the Moon moves about a degree every two hours.</p></div>
+        <div className="grid grid-cols-3 gap-4">{BOOK_PRODUCT_SAMPLES.map(s => <figure key={s.label}><SampleCover sample={s.sample} /><figcaption className="mt-3 text-center text-xs leading-snug text-muted-foreground"><span className="block font-label text-sm tracking-[0.1em] text-primary">{s.label}</span>For {s.sample.name}</figcaption></figure>)}</div>
       </section>
-      <section className="grid items-center gap-8 md:grid-cols-2" aria-labelledby="cover-preview-title"><div><h2 id="cover-preview-title" className="plate-title">Make the cover yours</h2><p className="mt-3 text-muted-foreground">The shop images are illustrative samples. Preview your own name and chosen artwork before ordering.</p><img src={PRODUCT_ART.collection.src} alt={PRODUCT_ART.collection.alt} width={1536} height={1024} loading="lazy" className="mt-5 w-full rounded-sm" /></div><div className="obs-paper p-5"><CoverCustomizer /></div></section>
+      <section className="grid items-center gap-8 md:grid-cols-2" aria-labelledby="cover-preview-title"><div><h2 id="cover-preview-title" className="plate-title">Make the cover yours</h2><p className="mt-3 text-muted-foreground">The sample covers above are printed for fictional readers. Type your own name and birth details here to see yours; nothing you type is saved.</p><img src={PRODUCT_ART.collection.src} alt={PRODUCT_ART.collection.alt} width={1536} height={1024} loading="lazy" className="mt-5 w-full rounded-sm" /></div><div className="obs-paper p-5"><CoverCustomizer /></div></section>
       <section id="inside" className="space-y-6">
         <h2 className="font-display text-3xl">Six volumes, one sky.</h2>
         <p className="text-muted-foreground">Every AstroBook follows the same six-volume structure as our founders’ Masterbooks, written from your chart. Every version includes Volumes I–IV and VI; World Systems begins at Classic, and larger versions add chapters inside each volume. Compare them below.</p>
@@ -89,12 +90,12 @@ export function AstroBookPublic() {
         <SampleBook maxPages={6} cta={<Button asChild variant="outline"><Link to="/book-preview">Read the full sample<ArrowRight /></Link></Button>} />
       </section>
       <section id="teaser" className="grid gap-8 rounded-xl border border-gold/30 bg-card p-8 md:grid-cols-2">
-        <div className="space-y-3"><h2 className="font-display text-3xl">Free Cosmic Teaser.</h2><p className="text-muted-foreground">Not ready for a book? Enter your email and birth date for a short, calculated teaser: your Sun sign, Chinese zodiac year and Life Path number. Free, instant, no account.</p></div>
+        <div className="space-y-3"><h2 className="font-display text-3xl">A free teaser.</h2><p className="text-muted-foreground">Not ready for a book? Enter your email and birth date for a short, calculated teaser: your Sun sign, Chinese zodiac year and Life Path number. Free, instant, no account.</p></div>
         <CosmicTeaser />
       </section>
       <section id="gift" className="rounded-xl border border-primary/30 bg-primary/10 p-10 text-center space-y-4">
         <Gift className="mx-auto h-8 w-8 text-accent" aria-hidden />
-        <h2 className="font-display text-3xl">The most personal gift you can give.</h2>
+        <h2 className="font-display text-3xl">Give an AstroBook.</h2>
         <p className="mx-auto max-w-xl text-muted-foreground">Mark your order as a gift, add a message and ship it straight to them. Each book is written from the birth details on the ordering account, so to give someone a book about their own chart, ask them to create a free account first.</p>
         <Button asChild size="lg"><Link to={order('signature')}>Give an AstroBook</Link></Button>
       </section>

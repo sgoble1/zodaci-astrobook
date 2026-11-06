@@ -19,6 +19,8 @@ export type ManuscriptInput = {
   chart?: ChartResult;
   /** Certificate number shown on Collector's Linen certificate pages. */
   certificate?: string;
+  /** Birth line printed under the name when no designed cover image is supplied. */
+  coverDetail?: string;
 };
 const ink = rgb(.12, .1, .18), muted = rgb(.38, .36, .42), gold = rgb(.62, .48, .2);
 const clean = (s: string) => s.replace(/!\[([^\]]*)\]\([^)]*\)/g, '$1').replace(/\[([^\]]+)\]\(([^)]+)\)/g, '$1 ($2)').replace(/[*`_]/g, '').replace(/\r/g, '');
@@ -44,12 +46,14 @@ export async function composeManuscript(input: ManuscriptInput) {
   } else {
     // No designed cover (tests and previews): the same type layout on plain midnight.
     cover.drawRectangle({ x: 0, y: 0, width: W, height: H, color: rgb(13 / 255, 16 / 255, 40 / 255) });
-    const t = coverType(W, H, 72, input.name, (txt, size) => font.widthOfTextAtSize(txt, size), (txt, size) => font.widthOfTextAtSize(txt, size) + size * 0.18 * Math.max(0, txt.length - 1));
+    const t = coverType(W, H, 72, input.name, (txt, size) => font.widthOfTextAtSize(txt, size), (txt, size) => font.widthOfTextAtSize(txt, size) + size * 0.18 * Math.max(0, txt.length - 1), input.coverDetail);
     const ivory = rgb(244 / 255, 236 / 255, 221 / 255), coverGold = rgb(212 / 255, 168 / 255, 83 / 255);
     t.title.lines.forEach((l, i) => cover.drawText(l, { x: t.title.x - font.widthOfTextAtSize(l, t.title.size) / 2, y: H - t.title.y[i], size: t.title.size, font, color: ivory }));
     cover.drawRectangle({ x: t.rule.x, y: H - t.rule.y, width: t.rule.width, height: 0.6, color: coverGold });
-    const sub = t.subtitle.lines[0]; const sw = font.widthOfTextAtSize(sub, t.subtitle.size) + t.subtitle.size * 0.18 * (sub.length - 1);
-    let x = t.subtitle.x - sw / 2; for (const ch of sub) { cover.drawText(ch, { x, y: H - t.subtitle.y[0], size: t.subtitle.size, font, color: coverGold }); x += font.widthOfTextAtSize(ch, t.subtitle.size) + t.subtitle.size * 0.18; }
+    t.subtitle.lines.forEach((sub, i) => {
+      const sw = font.widthOfTextAtSize(sub, t.subtitle.size) + t.subtitle.size * 0.18 * (sub.length - 1);
+      let x = t.subtitle.x - sw / 2; for (const ch of sub) { cover.drawText(ch, { x, y: H - t.subtitle.y[i], size: t.subtitle.size, font, color: coverGold }); x += font.widthOfTextAtSize(ch, t.subtitle.size) + t.subtitle.size * 0.18; }
+    });
     const wm = t.wordmark.lines[0]; cover.drawText(wm, { x: t.wordmark.x - font.widthOfTextAtSize(wm, t.wordmark.size), y: H - t.wordmark.y[0], size: t.wordmark.size, font, color: coverGold });
   }
   // Title page built from the reader's own chart.
