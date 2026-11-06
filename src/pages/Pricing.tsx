@@ -16,6 +16,7 @@ import { CREDIT_ALLOWANCE, PLAN_AMOUNT, PLAN_NAME, PLAN_PRICE, PRICE_TIER, REFUN
 import { BOOK_VERSIONS, money } from '@/lib/books';
 import { internalDestination } from '@/lib/internalDestination';
 import { logActivity } from '@/components/common/ActivityTracker';
+import { TrustStrip, WhyZodaciLine } from '@/components/brand/WhyZodaci';
 
 type Card = { tier: Tier; slug: 'free' | 'pro' | 'cosmic'; cta: string; blurb: string; items: string[] };
 const CARDS: Card[] = [
@@ -86,7 +87,8 @@ export default function Pricing() {
     <article className="mx-auto max-w-5xl space-y-14">
       <PaymentTestModeBanner />
       <header className="space-y-3 text-center">
-        <h1 className="text-silver font-display text-5xl sm:text-7xl">Simple, honest pricing.</h1>
+        <h1 className="hero-headline !text-[clamp(2.2rem,1.4rem+3.4vw,4.2rem)]">Simple, honest pricing.</h1>
+        <p className="font-script text-3xl text-primary">Start free. Go deeper when you want to.</p>
         <p className="mx-auto max-w-2xl text-lg text-muted-foreground">Start free with the essentials of your chart. Open the full encyclopedia when you want the depth. No surprises.</p>
         <p className="text-sm"><Link to="/demo" className="text-primary underline underline-offset-4">Try the interactive demo first</Link></p>
         {sub.tier !== 'free' && <div className="flex flex-col items-center gap-1 pt-2">{billed && <Button variant="outline" onClick={manage}>Manage subscription · cancel, card & invoices</Button>}{sub.periodEnd && <p className="text-xs text-muted-foreground">{sub.status === 'granted' ? `${PLAN_NAME[sub.tier]} access granted until` : sub.cancelAtEnd ? 'Ends' : 'Renews'} {new Date(sub.periodEnd).toLocaleDateString()}</p>}{sub.status === 'past_due' && <p role="alert" className="text-sm text-destructive">Your last payment didn’t go through. Update your card in Manage subscription to keep your plan.</p>}</div>}
@@ -145,6 +147,8 @@ export default function Pricing() {
       </AlertDialog>
       {(sub.tier === 'full' || sub.tier === 'creator') && <p className="text-center"><Button asChild><Link to="/creator">Open Creator Studio</Link></Button></p>}
       {(sub.tier === 'full' || sub.tier === 'creator') && <div className="space-y-2"><CreatorStudio /><p className="text-center text-sm"><Link to="/my-masterbook" className="underline">Open My Masterbook to read and play what you’ve made</Link></p></div>}
+      <TrustStrip />
+      <WhyZodaciLine />
       <section className="space-y-4" aria-labelledby="pricing-faq"><h2 id="pricing-faq" className="font-display text-3xl">Questions</h2><Faq items={PRICING_FAQ} id="pricing-faq-schema" /></section>
       <section className="space-y-3" aria-labelledby="compare">
         <h2 id="compare" className="font-display text-3xl">Compare plans</h2>

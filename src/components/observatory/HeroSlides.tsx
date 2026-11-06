@@ -37,13 +37,23 @@ export function HeroSlideshow({ slides, label, interval = 15000, className }: { 
   const [hidden, setHidden] = useState(false);
   const reduced = useReducedMotion();
   const [announce, setAnnounce] = useState('');
+  const [inView, setInView] = useState(true);
+  const root = useRef<HTMLElement>(null);
   const count = slides.length;
-  const auto = count > 1 && !reduced && !stopped && !hover && !hidden;
+  // Never advance while scrolled away: on phones the slideshow follows each slide's height, which would move the page.
+  const auto = count > 1 && !reduced && !stopped && !hover && !hidden && inView;
 
   useEffect(() => {
     const on = () => setHidden(document.visibilityState === 'hidden');
     document.addEventListener('visibilitychange', on);
     return () => document.removeEventListener('visibilitychange', on);
+  }, []);
+  useEffect(() => {
+    const el = root.current;
+    if (!el || typeof IntersectionObserver === 'undefined') return;
+    const io = new IntersectionObserver(([e]) => setInView(e.intersectionRatio >= 0.6), { threshold: [0, 0.6, 1] });
+    io.observe(el);
+    return () => io.disconnect();
   }, []);
   useEffect(() => {
     if (!auto) return;
@@ -59,6 +69,7 @@ export function HeroSlideshow({ slides, label, interval = 15000, className }: { 
 
   return (
     <section
+      ref={root}
       aria-roledescription="carousel"
       aria-label={label}
       className={cn('hero-slides obs-panel', className)}
@@ -144,31 +155,33 @@ export const PLANET_MEANINGS: PlanetLine[] = [
 type Cta = { to: string; label: string };
 type Heading = 'h1' | 'h2';
 
-/** Slide 1: the Cartographer points to the chart; headline, script subheading, a dial and the planets' meanings. */
+/**
+ * Slide 1: the Cartographer points straight at a lit zodiac dial. The dial is placed relative to her figure, so her
+ * finger meets it at every size; on phones the pair sits above the text, on wider slides beside it.
+ */
 export function ChartMapSlide({ heading = 'h1', title, script, lines, cta, secondary, planets = PLANET_MEANINGS, highlight, eager }: { heading?: Heading; title: ReactNode; script: string; lines: string[]; cta: Cta; secondary?: Cta; planets?: PlanetLine[]; highlight?: string; eager?: boolean }) {
   const H = heading;
   return (
     <div className="hero-night chartmap">
       <Starbursts />
-      <Link to="/forecast" className="chartmap-signal"><span aria-hidden>✦</span><span className="font-label text-sm">Forecast Center</span><span className="font-script text-xl text-primary">Tune into today's sky</span><ArrowRight aria-hidden className="h-4 w-4" /></Link>
-      <img src={cartographer} alt="The Cartographer, the observatory's chart specialist, points up toward the zodiac" width={820} height={1025} loading={eager ? 'eager' : 'lazy'} {...(eager ? { fetchpriority: 'high' } : {})} className="hero-cartographer chartmap-figure" />
+      <div className="chartmap-stage">
+        <div className="chartmap-figure-wrap">
+          <img src={cartographer} alt="The Cartographer, the observatory's chart specialist, points up at a zodiac wheel" width={820} height={1025} loading={eager ? 'eager' : 'lazy'} {...(eager ? { fetchpriority: 'high' } : {})} className="chartmap-figure" />
+          <div className="hero-projection chartmap-dial">
+            <AstroDial highlight={highlight} className="w-full" />
+            <FilmFx motes={14} specks={5} tone="glow" />
+          </div>
+        </div>
+      </div>
       <div className="chartmap-copy">
         <div>
           <H className="hero-headline">{title}</H>
           <p className="mt-2 font-script text-3xl text-primary sm:text-4xl">{script}</p>
         </div>
-        <div className="chartmap-body">
-          <div className="min-w-0 space-y-5">
-            <ul className="space-y-1 font-label text-sm tracking-[0.14em] text-foreground/85">{lines.map(l => <li key={l}>{l}</li>)}</ul>
-            <div className="flex flex-wrap gap-3">
-              <Button asChild variant="signal" size="lg" className="max-w-full"><Link to={cta.to}>{cta.label}<ArrowRight /></Link></Button>
-              {secondary && <Button asChild variant="outline" size="lg"><Link to={secondary.to}>{secondary.label}</Link></Button>}
-            </div>
-          </div>
-          <div className="hero-projection chartmap-dial">
-            <AstroDial highlight={highlight} className="w-full" />
-            <FilmFx motes={14} specks={5} tone="glow" />
-          </div>
+        <ul className="space-y-1 font-label text-sm tracking-[0.14em] text-foreground/85">{lines.map(l => <li key={l}>{l}</li>)}</ul>
+        <div className="flex flex-wrap gap-3">
+          <Button asChild variant="signal" size="lg" className="max-w-full"><Link to={cta.to}>{cta.label}<ArrowRight /></Link></Button>
+          {secondary && <Button asChild variant="outline" size="lg"><Link to={secondary.to}>{secondary.label}</Link></Button>}
         </div>
         <ul aria-label="What each planet describes" className="chartmap-planets">
           {planets.map(p => (
@@ -220,6 +233,34 @@ export function PressSlide({ heading = 'h2', title, script, text, points, book, 
         <Link to={book.to} className="press-stack-front" aria-label={`${book.label}: sample Collector AstroBook printed for ${LEAD_COVER.name}, a fictional reader`}><SampleCover sample={LEAD_COVER} /></Link>
         <Link to={comic.to} className="press-stack-comic" aria-label={`${comic.label}: AstroComic story preview`}><img src={comicCutout} alt={PRODUCT_ART.comic.alt} width={636} height={948} loading="lazy" className="press-cutout w-full" /></Link>
         <p className="press-stack-note">Sample covers · fictional readers</p>
+      </div>
+    </div>
+  );
+}
+
+export type SlideArt = { src: string; alt: string; width: number; height: number };
+
+/**
+ * An illustrated poster slide: a framed 1950s print beside the copy. Landscape prints sit to the right of the text,
+ * portrait prints to the left; on phones the print comes first and the text follows, with nothing overlapping.
+ */
+export function ArtSlide({ heading = 'h2', art, eyebrow, title, script, text, cta, secondary, eager }: { heading?: Heading; art: SlideArt; eyebrow?: string; title: ReactNode; script: string; text: ReactNode; cta: Cta; secondary?: Cta; eager?: boolean }) {
+  const H = heading;
+  const portrait = art.height > art.width;
+  return (
+    <div className={cn('hero-night art-slide', portrait ? 'art-slide-portrait' : 'art-slide-landscape')}>
+      <figure className="art-slide-art">
+        <img src={art.src} alt={art.alt} width={art.width} height={art.height} loading={eager ? 'eager' : 'lazy'} decoding="async" />
+      </figure>
+      <div className="art-slide-copy">
+        {eyebrow && <p className="font-label text-sm tracking-[0.2em] text-primary">{eyebrow}</p>}
+        <H className="hero-headline">{title}</H>
+        <p className="mt-2 font-script text-3xl text-primary sm:text-4xl">{script}</p>
+        <div className="mt-4 max-w-md text-base leading-relaxed text-foreground/90 sm:text-lg">{text}</div>
+        <div className="mt-6 flex flex-wrap gap-3">
+          <Button asChild variant="signal" size="lg" className="max-w-full"><Link to={cta.to}>{cta.label}<ArrowRight /></Link></Button>
+          {secondary && <Button asChild variant="outline" size="lg"><Link to={secondary.to}>{secondary.label}</Link></Button>}
+        </div>
       </div>
     </div>
   );

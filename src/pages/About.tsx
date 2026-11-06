@@ -1,9 +1,11 @@
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Check, Minus } from 'lucide-react';
+import { ArrowRight, Check, Minus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import mural from '@/assets/pages/about-zodiac-print.jpg';
+import rooftop from '@/assets/home/rooftop-astronomers.jpg';
+import chartMakers from '@/assets/pages/chart-makers.jpg';
 import { SpotArt, type SpotKind } from '@/components/art/SpotArt';
 import { PlateHead } from '@/components/observatory/Mosaic';
 import { HOUSE_SYSTEMS } from '@/lib/astro';
@@ -45,26 +47,41 @@ const FOUNDER_EDITIONS: [string, string][] = [
 const Cell = ({ v }: { v: string | null }) => v ? <span>{v}</span> : <span className="inline-flex items-center gap-1 text-muted-foreground"><Minus className="h-4 w-4" aria-hidden />Not included</span>;
 
 export default function About() {
-  usePageMeta('About Zodaci · How we calculate and why it’s different', 'The story behind Zodaci: astronomy-grade birth charts, honest interpretation, private context you control and readings written for one person.');
+  usePageMeta('About Zodaci · Astronomy-grade precision, plain-language depth', 'Why Zodaci exists and how we calculate: birth charts worked out from your exact birth minute, readings in plain language that name their placements, and private context you control.');
   return (
     <article className="space-y-16 sm:space-y-20">
-      <motion.header {...fade} className="mx-auto max-w-3xl space-y-5 text-center">
-        <p className="font-label text-sm tracking-[0.2em] text-primary">About Zodaci</p>
-        <h1 className="hero-headline">An encyclopedia, one sky at a time.</h1>
-        <p className="font-script text-3xl text-primary">Accurate first, warm second.</p>
-        <p className="text-lg text-muted-foreground">Zodaci began when we calculated our own charts in full detail and read the results. They described things we had tried to put into words for years. We built it so anyone can have that same careful, complete account of their sky.</p>
-      </motion.header>
+      <header className="obs-panel hero-night rivets about-hero">
+        <div className="about-hero-copy">
+          <p className="font-label text-sm tracking-[0.2em] text-primary">Our craft</p>
+          <h1 className="hero-headline"><span className="whitespace-nowrap">Astronomy-grade</span> precision.<br /><span className="whitespace-nowrap">Plain-language</span> depth.</h1>
+          <p className="font-script text-3xl text-primary">Accurate first, warm second.</p>
+          <p className="max-w-xl text-lg leading-relaxed text-foreground/90">Zodaci is a personal observatory. We calculate your birth chart from the minute and place you were born, then write every reading in plain language you can use, naming the placement each line comes from.</p>
+          <div className="flex flex-wrap gap-3 pt-1">
+            <Button asChild size="lg" variant="signal"><Link to="/start">Start your chart<ArrowRight /></Link></Button>
+            <Button asChild size="lg" variant="outline"><Link to="/astrobook">Get your AstroBook</Link></Button>
+          </div>
+        </div>
+        <figure className="about-hero-art">
+          <img src={rooftop} alt="Two 1950s astronomers on an observatory rooftop at night: a man at a brass telescope and a woman with a clipboard beside an easel showing a zodiac wheel" width={1400} height={933} {...{ fetchpriority: 'high' }} />
+        </figure>
+      </header>
+
+      <motion.section {...fade} aria-labelledby="why-h" className="obs-paper rivets about-why">
+        <p className="text-center font-label text-sm tracking-[0.2em] text-accent">Why Zodaci exists</p>
+        <h2 id="why-h" className="mt-2 text-center font-display text-3xl uppercase leading-tight sm:text-4xl">Same skies. Brighter answers.</h2>
+        <div className="about-why-body">
+          <p>We spent years with thick astrology books, hand-drawn charts and late-night conversations about what a Moon in one sign or a Saturn in one house meant for a real life. The insight was there, but it was locked inside jargon, scattered across sources, and rarely about <em>you</em>.</p>
+          <p>So we built the companion we wished existed: a place that calculates your chart precisely, translates every symbol into plain language, and then goes deep, with chapters on love, purpose, healing and timing written from your own placements.</p>
+          <p>We love the craft, the history, and the moment a reading makes someone say, “that’s exactly me.” Every page here is made with that moment in mind.</p>
+        </div>
+        <figure className="mt-8 overflow-hidden rounded-[var(--cut-card)] shadow-[0_0_0_1.5px_hsl(var(--comic-navy)/0.6)]">
+          <img src={chartMakers} alt="Two 1950s chart makers: a woman drafting a zodiac wheel with a compass, and a man checking planet tables with a magnifying glass under a brass lamp" width={1400} height={700} loading="lazy" className="w-full" />
+        </figure>
+      </motion.section>
 
       <motion.figure {...fade} className="obs-paper overflow-hidden p-2">
-        <img src={mural} alt="Atomic-age zodiac print: a navy wheel of the twelve signs around a golden Sun, with a crescent Moon, ringed planet, atom and a domed observatory in cream, navy, mustard and brick red" width={1536} height={768} loading="lazy" className="w-full rounded-[0.9rem]" />
+        <img src={mural} alt="Atomic-age zodiac print: a navy wheel of the twelve signs around a golden Sun, with a crescent Moon, ringed planet, atom and a domed observatory in cream, navy, mustard and brick red" width={1536} height={768} loading="lazy" className="w-full rounded-[var(--cut-card)]" />
       </motion.figure>
-
-      <motion.section {...fade} className="mx-auto max-w-3xl space-y-5 text-lg leading-relaxed">
-        <h2 className="plate-title">Why we built it</h2>
-        <p>We spent years with thick astrology books, hand-drawn charts and late-night conversations about what a Moon in one sign or a Saturn in one house really meant for a real life. The insight was extraordinary — but it was locked inside jargon, scattered across sources, and rarely about <em>you</em>.</p>
-        <p>So we built the companion we wished existed: a place that calculates your chart precisely, translates every symbol into plain language, and then goes deep — chapters on love, purpose, healing and timing written from your own placements.</p>
-        <p>This is our passion. We love the craft, the history and the moments when a reading makes someone say, "that's exactly me." Every page here is made with that feeling in mind.</p>
-      </motion.section>
 
       <motion.section {...fade} aria-label="What we stand for" className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {PILLARS.map(([art, t, d]) => <div key={t} className="atomic-box p-6"><SpotArt kind={art} className="atomic-box-art" /><h3 className="font-label text-xl tracking-[0.06em]">{t}</h3><p className="mt-2 text-muted-foreground">{d}</p></div>)}

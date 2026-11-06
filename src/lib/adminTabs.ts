@@ -1,5 +1,5 @@
 /** Admin dashboard sections: Editions, Products, Orders, Shared Spaces, Members & growth, Platform. The open tab lives in ?tab= so links and reloads keep it. */
-export type AdminTab = 'upload' | 'sections' | 'index' | 'relationships' | 'marketing' | 'growth' | 'activity' | 'charts' | 'orders' | 'shop' | 'comic' | 'stripe' | 'studio' | 'newsletter' | 'april' | 'credits' | 'audit' | 'settings' | 'launch' | 'access' | 'shared';
+export type AdminTab = 'upload' | 'sections' | 'index' | 'relationships' | 'marketing' | 'growth' | 'activity' | 'charts' | 'orders' | 'shop' | 'comic' | 'stripe' | 'studio' | 'newsletter' | 'april' | 'credits' | 'audit' | 'settings' | 'launch' | 'access' | 'shared' | 'images' | 'costs';
 export type AdminTabGroup = { label: string; tabs: { id: AdminTab; label: string; adminOnly?: boolean }[] };
 
 export const ADMIN_TAB_GROUPS: AdminTabGroup[] = [
@@ -9,7 +9,7 @@ export const ADMIN_TAB_GROUPS: AdminTabGroup[] = [
     { id: 'relationships', label: 'Relationships' },
   ] },
   { label: 'Products', tabs: [
-    { id: 'shop', label: 'Shop & print', adminOnly: true }, { id: 'studio', label: 'AI & illustrations', adminOnly: true },
+    { id: 'shop', label: 'Shop & print', adminOnly: true }, { id: 'studio', label: 'AI & illustrations', adminOnly: true }, { id: 'images', label: 'Image library', adminOnly: true },
   ] },
   { label: 'Orders', tabs: [
     { id: 'orders', label: 'AstroBook orders', adminOnly: true }, { id: 'comic', label: 'AstroComic queue', adminOnly: true }, { id: 'stripe', label: 'Payments', adminOnly: true },
@@ -19,7 +19,7 @@ export const ADMIN_TAB_GROUPS: AdminTabGroup[] = [
     { id: 'growth', label: 'Growth & upgrades', adminOnly: true }, { id: 'activity', label: 'Member activity', adminOnly: true }, { id: 'marketing', label: 'Marketing pages', adminOnly: true }, { id: 'newsletter', label: 'Newsletter', adminOnly: true },
   ] },
   { label: 'Platform', tabs: [
-    { id: 'credits', label: 'Credits & grants', adminOnly: true }, { id: 'audit', label: 'Audit log', adminOnly: true }, { id: 'settings', label: 'Settings', adminOnly: true }, { id: 'launch', label: 'Launch checklist', adminOnly: true },
+    { id: 'credits', label: 'Credits & grants', adminOnly: true }, { id: 'audit', label: 'Audit log', adminOnly: true }, { id: 'settings', label: 'Settings', adminOnly: true }, { id: 'launch', label: 'Launch checklist', adminOnly: true }, { id: 'costs', label: 'Build costs', adminOnly: true },
   ] },
 ];
 

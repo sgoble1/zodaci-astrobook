@@ -6,9 +6,15 @@ import { RetroEmblem, type RetroIconComponent } from '@/components/icons/RetroIc
 import { SpotArt, type SpotKind } from '@/components/art/SpotArt';
 import { NewsletterSignup } from '@/components/brand/NewsletterSignup';
 import { PUBLIC_ARTICLES } from '@/content/publicArticles';
-import { CHAPTER_TABS } from '@/lib/books';
+import { ACADEMY } from '@/content/academy';
 import poster from '@/assets/home/observatory-poster.jpg';
-import { PRODUCT_ART } from '@/content/productArtwork';
+import library from '@/assets/home/library-lessons.jpg';
+import chartMakers from '@/assets/pages/chart-makers.jpg';
+import comicCutout from '@/assets/products/astrocomic-cutout.webp';
+import { COVER_SAMPLES } from '@/content/coverSamples';
+import { ARCHIVE_BOOKS } from '@/content/shopShowcase';
+import { SampleCover } from '@/components/books/SampleCover';
+import { ShopDepartmentGrid } from '@/components/store/ShopDepartmentGrid';
 
 /**
  * Weathered panel mosaic from the observatory concept: navy plates (obs-panel) and aged cream
@@ -99,34 +105,92 @@ export function DestinationTiles({ items, label, className }: { items: Destinati
   );
 }
 
-const CHAPTER_ART: Record<string, SpotKind> = { 'big-three': 'self', planets: 'planet', houses: 'house', aspects: 'aspect', timing: 'year' };
-const BOOK_TONES = ['shelf-book-navy', 'shelf-book-cream', 'shelf-book-navy', 'shelf-book-red', 'shelf-book-cream'];
-
-/** A sliding shelf of the AstroBook's real chapters, plus the AstroBook and AstroComic covers. */
+/**
+ * The Cosmic Archive shelf: the real products, every one standing at the same angle with the same slow lift —
+ * the three sample AstroBooks (fictional readers), the AstroComic, then the gift shop's Cosmic Archive books.
+ */
 export function ArchiveShelf({ id = 'archive-h', to = '/astrobook', className }: { id?: string; to?: string; className?: string }) {
   const track = useRef<HTMLUListElement>(null);
-  const slide = (dir: 1 | -1) => track.current?.scrollBy({ left: dir * track.current.clientWidth * 0.8, behavior: 'smooth' });
+  const slide = (dir: 1 | -1) => {
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    track.current?.scrollBy({ left: dir * track.current.clientWidth * 0.8, behavior: reduce ? 'auto' : 'smooth' });
+  };
   return (
     <section aria-labelledby={id} className={cn('obs-paper p-5 sm:p-6', className)}>
-      <PlateHead id={id} title="The Cosmic Archive" sub="The chapters inside an AstroBook" />
+      <PlateHead id={id} title="The Cosmic Archive" sub="AstroBooks, AstroComic and the archive reference books" />
       <div className="relative">
-        <ul ref={track} className="shelf-track" tabIndex={0} aria-label="AstroBook chapters and covers">
-          {CHAPTER_TABS.map((c, i) => (
-            <li key={c.id} className="shelf-item">
-              <Link to={to} className={cn('shelf-book', BOOK_TONES[i % BOOK_TONES.length])} aria-label={`${c.label}: ${c.text}`}>
-                <span className="shelf-book-title">{c.label}</span>
-                <SpotArt kind={CHAPTER_ART[c.id] ?? 'book'} className="mx-auto h-20 w-20" orbit={false} />
-                <span className="shelf-book-foot">ZODACI</span>
+        <ul ref={track} className="shelf-track shelf-track-real" tabIndex={0} aria-label="Books and comics on the shelf, scroll sideways for more">
+          {COVER_SAMPLES.map(s => (
+            <li key={s.id} className="shelf-item">
+              <Link to={to} className="shelf-real group" aria-label={`${s.edition} AstroBook sample, printed for ${s.name}, a fictional reader`}>
+                <span className="shelf-real-book"><SampleCover sample={s} /></span>
+                <span className="shelf-real-caption">{s.edition} AstroBook</span>
               </Link>
             </li>
           ))}
-          <li className="shelf-item"><Link to={to} className="shelf-cover" aria-label="Collector AstroBook sample cover, printed for a fictional reader"><img src={PRODUCT_ART.book.src} alt={PRODUCT_ART.book.alt} width={1024} height={1536} loading="lazy" className="h-full w-full object-cover" /></Link></li>
-          <li className="shelf-item"><Link to="/astrocomic" className="shelf-cover shelf-product" aria-label="AstroComic story preview"><img src={PRODUCT_ART.comic.src} alt={PRODUCT_ART.comic.alt} width={768} height={1145} loading="lazy" className="h-full w-full object-contain" /></Link></li>
+          <li className="shelf-item">
+            <Link to="/astrocomic" className="shelf-real group" aria-label="AstroComic: your first issue, drawn from your own chart">
+              <span className="shelf-real-book"><img src={comicCutout} alt="" width={636} height={948} loading="lazy" decoding="async" className="shelf-real-cutout" /></span>
+              <span className="shelf-real-caption">AstroComic</span>
+            </Link>
+          </li>
+          {ARCHIVE_BOOKS.map(b => (
+            <li key={b.handle} className="shelf-item">
+              <Link to={`/product/${b.handle}`} className="shelf-real group">
+                <span className="shelf-real-book"><img src={b.img.src} alt="" width={b.img.width} height={b.img.height} loading="lazy" decoding="async" className="shelf-real-cutout" /></span>
+                <span className="shelf-real-caption">{b.title}</span>
+              </Link>
+            </li>
+          ))}
         </ul>
         <button type="button" onClick={() => slide(-1)} className="shelf-arrow left-0" aria-label="Scroll the shelf left"><ChevronLeft aria-hidden className="h-5 w-5" /></button>
         <button type="button" onClick={() => slide(1)} className="shelf-arrow right-0" aria-label="Scroll the shelf right"><ChevronRight aria-hidden className="h-5 w-5" /></button>
       </div>
-      <p className="mt-4 text-center"><Link to={to} className="inline-flex items-center gap-1 font-label text-sm tracking-[0.16em] text-accent hover:underline">View all AstroBooks<ArrowRight aria-hidden className="h-4 w-4" /></Link></p>
+      <p className="mt-4 flex flex-wrap justify-center gap-x-6 gap-y-2 text-center">
+        <Link to={to} className="inline-flex items-center gap-1 font-label text-sm tracking-[0.16em] text-accent hover:underline">Choose an AstroBook<ArrowRight aria-hidden className="h-4 w-4" /></Link>
+        <Link to="/store?collection=atomic&type=Books" className="inline-flex items-center gap-1 font-label text-sm tracking-[0.16em] text-accent hover:underline">Browse archive books<ArrowRight aria-hidden className="h-4 w-4" /></Link>
+      </p>
+    </section>
+  );
+}
+
+/** Cream plate: the observatory library, opening the free lessons on Learn. */
+export function LessonsTile({ className }: { className?: string }) {
+  const lessons = ACADEMY.reduce((n, p) => n + p.lessons.length, 0);
+  return (
+    <Link to="/learn" className={cn('obs-paper art-tile group', className)}>
+      <span className="art-tile-pic"><img src={library} alt="" width={800} height={800} loading="lazy" decoding="async" /></span>
+      <span className="art-tile-copy">
+        <span className="block font-label text-sm tracking-[0.16em] text-accent">Free lessons</span>
+        <span className="art-tile-title">Learn to read the sky</span>
+        <span className="block text-sm leading-snug text-muted-foreground">{lessons} short lessons, from the twelve signs to reading your own transits.</span>
+      </span>
+      <span className="art-tile-go" aria-hidden="true"><ArrowRight className="h-5 w-5" /></span>
+    </Link>
+  );
+}
+
+/** Navy plate: how a chart is worked out, opening the About page's calculation notes. */
+export function PrecisionTile({ className }: { className?: string }) {
+  return (
+    <Link to="/about#calc-h" className={cn('obs-panel art-tile art-tile-night group', className)}>
+      <span className="art-tile-pic"><img src={chartMakers} alt="" width={1400} height={700} loading="lazy" decoding="async" className="object-left" /></span>
+      <span className="art-tile-copy">
+        <span className="block font-label text-sm tracking-[0.16em] text-primary">How we calculate</span>
+        <span className="art-tile-title">Astronomy-grade precision</span>
+        <span className="block text-sm leading-snug text-muted-foreground">Your birth minute, the historical time zone for your town, and every placement checked.</span>
+      </span>
+      <span className="art-tile-go" aria-hidden="true"><ArrowRight className="h-5 w-5" /></span>
+    </Link>
+  );
+}
+
+/** The gift shop window as a mosaic plate: the Atomic Zodiac set and four departments. */
+export function ShopWindowPlate({ id = 'shopwin-h', className }: { id?: string; className?: string }) {
+  return (
+    <section aria-labelledby={id} className={cn('obs-paper p-4 sm:p-5', className)}>
+      <PlateHead id={id} title="The gift shop" sub="The Atomic Zodiac Collection, for every sign" action={<Link to="/store" className="inline-flex items-center gap-1 font-label text-sm tracking-[0.16em] text-accent hover:underline">Visit the shop<ArrowRight aria-hidden className="h-4 w-4" /></Link>} />
+      <ShopDepartmentGrid compact headingId={id} />
     </section>
   );
 }

@@ -999,31 +999,56 @@ li:hover > .zodiac-coin { transform: rotate(-10deg); }
 /* Slide 1 (Cartographer + dial) sizes itself to the slideshow's own width, not the window,
    so it fits whether the slideshow fills a phone, a dashboard column or the mosaic's centre. */
 .hero-slides { container: hero / inline-size; }
+/* Phone: the Cartographer and her dial on top, the text beneath. Wider: figure + dial on the left, text on the right. */
 .chartmap { position: relative; display: grid; min-height: 100%; grid-template-columns: minmax(0, 1fr); align-content: start; }
-.chartmap-figure { order: 2; justify-self: center; align-self: end; height: 20rem; width: auto; margin-top: -2rem; }
-.chartmap-copy { position: relative; z-index: 10; display: flex; min-width: 0; flex-direction: column; gap: 1.1rem; padding: 1.75rem 1.25rem .5rem; }
-.chartmap-body { display: grid; gap: 1.5rem; grid-template-columns: minmax(0, 1fr); }
-.chartmap-dial { width: 100%; max-width: 14rem; margin-inline: auto; }
-.chartmap-planets { display: none; gap: .4rem 1.25rem; grid-template-columns: repeat(auto-fill, minmax(8.25rem, 1fr)); }
+.chartmap-stage { position: relative; z-index: 3; padding: 7.25rem 0 0 .5rem; }
+.chartmap-figure-wrap { position: relative; width: 58%; aspect-ratio: 820 / 1025; }
+.chartmap-figure { display: block; width: 100%; height: 100%; object-fit: cover;
+  -webkit-mask-image: linear-gradient(to bottom, #000 78%, transparent); mask-image: linear-gradient(to bottom, #000 78%, transparent); }
+/* Her fingertip sits at about 95% across and 13% down the drawing: the dial's lower-left edge meets it. */
+.chartmap-dial { position: absolute; left: 80%; bottom: 84%; width: 72%; }
+.chartmap-copy { position: relative; z-index: 10; display: flex; min-width: 0; flex-direction: column; gap: 1rem; margin-top: -2.5rem; padding: 0 1.25rem 1rem; }
+.chartmap-planets { display: none; gap: .45rem 1rem; grid-template-columns: repeat(auto-fill, minmax(8.5rem, 1fr)); }
 .hero-slides .hero-headline { font-size: 2.1rem; letter-spacing: 0; }
-.chartmap-signal { display: none; }
-@container hero (min-width: 30rem) { .chartmap-planets { display: grid; } }
+@container hero (min-width: 30rem) {
+  .chartmap-planets { display: grid; }
+  .chartmap-stage { padding-top: 8.5rem; }
+  .chartmap-figure-wrap { width: 44%; }
+  .chartmap-dial { width: 76%; }
+}
 @container hero (min-width: 40rem) {
-  .hero-slides .hero-headline { font-size: 2.7rem; }
-  .chartmap-signal { position: absolute; z-index: 12; top: 2.5rem; left: 1.25rem; width: 29%; display: flex; flex-direction: column; align-items: center; gap: .5rem; padding: 1rem .5rem; text-align: center; border-block: 1px solid hsl(var(--brass) / .55); }
-  .chartmap-signal:hover { color: hsl(var(--primary)); }
-  .chartmap { grid-template-columns: 37% minmax(0, 1fr); }
-  .chartmap { align-content: stretch; }
-  .chartmap-figure { order: 0; justify-self: start; align-self: end; margin-top: 0; height: auto; width: 100%; max-height: 34rem; object-fit: contain; object-position: left bottom; }
-  .chartmap-copy { margin-left: -1.5rem; padding: 2.25rem 1.75rem 4rem 0; }
-  .chartmap-body { grid-template-columns: minmax(0, 1fr) 9.5rem; align-items: center; }
-  .chartmap-dial { max-width: none; }
+  .hero-slides .hero-headline { font-size: 2.55rem; }
+  .chartmap { grid-template-columns: 43% minmax(0, 1fr); align-content: stretch; }
+  .chartmap-stage { display: flex; align-items: flex-end; padding: 0 0 0 .25rem; }
+  .chartmap-figure-wrap { width: 96%; }
+  .chartmap-figure { -webkit-mask-image: none; mask-image: none; }
+  .chartmap-dial { left: 71%; bottom: 85%; width: 50%; }
+  .chartmap-copy { margin-top: 0; justify-content: center; gap: 1.1rem; padding: 2.25rem 1.75rem 4.75rem 3.75rem; }
 }
 @container hero (min-width: 56rem) {
-  .hero-slides .hero-headline { font-size: 3.4rem; }
+  .hero-slides .hero-headline { font-size: 3.2rem; }
   .chartmap-copy { padding-top: 2.75rem; }
-  .chartmap-body { grid-template-columns: minmax(0, 1fr) minmax(0, 15rem); }
 }
+/* Illustrated poster slides (precision, field guide, gift shop). */
+.art-slide { position: relative; display: grid; min-height: 100%; grid-template-columns: minmax(0, 1fr); align-content: start; gap: 1.5rem; padding: 1.5rem 1.25rem 1.25rem; }
+.art-slide-art { margin: 0; justify-self: center; width: 100%; }
+.art-slide-art img { display: block; width: 100%; height: auto; border-radius: var(--cut-card, .4rem);
+  box-shadow: 0 0 0 2px hsl(var(--comic-mustard)), 0 0 0 4px hsl(var(--midnight) / .6), 8px 10px 0 4px hsl(var(--midnight) / .55);
+  transform: rotate(-1.2deg); transition: transform 2.4s cubic-bezier(.22,1,.36,1); }
+.art-slide:hover .art-slide-art img { transform: rotate(-.4deg) translateY(-3px); }
+.art-slide-portrait .art-slide-art { width: min(62%, 15rem); }
+.art-slide-landscape .art-slide-art { width: min(100%, 26rem); }
+.art-slide-copy { min-width: 0; }
+@container hero (min-width: 40rem) {
+  .art-slide { align-items: center; align-content: center; gap: 2.25rem; padding: 2.5rem 2.25rem 4.75rem; }
+  .art-slide-landscape { grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); }
+  .art-slide .hero-headline { font-size: 2.2rem; }
+  .art-slide-landscape .art-slide-art { order: 2; width: 100%; }
+  .art-slide-portrait { grid-template-columns: minmax(0, .8fr) minmax(0, 1fr); }
+  .art-slide-portrait .art-slide-art { width: 100%; max-width: 19rem; }
+  .art-slide-portrait .art-slide-art img { max-height: 30rem; width: auto; margin-inline: auto; }
+}
+@media (prefers-reduced-motion: reduce) { .art-slide-art img, .art-slide:hover .art-slide-art img { transition: none; transform: rotate(-1.2deg); } }
 /* "Take the sky home" slide: two sample books with the comic page in front, sized together so none dominates. */
 .press-points { display: grid; gap: .45rem; margin-top: 1.1rem; font-size: .95rem; color: hsl(var(--foreground) / .9); }
 .press-points li { display: flex; gap: .6rem; align-items: baseline; }
@@ -1178,3 +1203,115 @@ li:hover > .zodiac-coin { transform: rotate(-10deg); }
   .chart-projection-hero .chart-projection-lamp, .chart-monitor-scan, .chart-monitor-screen .chart-projection-ink { animation: none !important; }
 }
 @media print { .chart-hero-beam, .chart-hero-caption, .chart-monitor-controls, .chart-monitor-foot, .chart-monitor-scan { display: none; } }
+
+/* ══ V2.3 (Nov 6): mosaic art tiles, real-product shelf, gift-shop department window ══ */
+.mosaic-trio { display: grid; gap: .9rem; grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 768px) { .mosaic-trio { grid-template-columns: repeat(2, minmax(0, 1fr)); } .mosaic-trio > section { grid-column: 1 / -1; grid-row: 2; } }
+@media (min-width: 1100px) { .mosaic-trio { grid-template-columns: minmax(0, 1fr) minmax(0, 1.75fr) minmax(0, 1fr); } .mosaic-trio > section { grid-column: auto; grid-row: auto; } }
+
+.art-tile { position: relative; display: flex; flex-direction: column; gap: .9rem; padding: .75rem .75rem 1.1rem; min-width: 0; }
+.art-tile-pic { display: block; overflow: hidden; aspect-ratio: 4 / 3; border-radius: var(--cut-card); box-shadow: 0 0 0 1.5px hsl(var(--comic-navy) / .7), 4px 5px 0 hsl(var(--comic-navy) / .25); }
+.art-tile-night .art-tile-pic { box-shadow: 0 0 0 1.5px hsl(var(--comic-mustard) / .8), 4px 5px 0 hsl(var(--midnight) / .5); }
+.art-tile-pic img { width: 100%; height: 100%; object-fit: cover; transition: transform 6s cubic-bezier(.22,1,.36,1); }
+.art-tile:hover .art-tile-pic img { transform: scale(1.04); }
+.art-tile-copy { display: block; padding: 0 .4rem; padding-right: 3.25rem; }
+.art-tile-title { display: block; margin-block: .2rem .35rem; font-family: 'Alfa Slab One', serif; text-transform: uppercase; font-size: 1.35rem; line-height: 1.05; }
+.art-tile-go { position: absolute; right: 1rem; bottom: 1.1rem; display: inline-flex; width: 2.5rem; height: 2.5rem; align-items: center; justify-content: center; border-radius: 999px; color: hsl(var(--spot-paper)); background: hsl(var(--comic-brick)); box-shadow: 0 0 0 2px hsl(var(--comic-navy)), 3px 3px 0 2px hsl(var(--comic-navy) / .35); transition: transform 1.2s cubic-bezier(.22,1,.36,1); }
+.art-tile-night .art-tile-go { box-shadow: 0 0 0 2px hsl(var(--comic-mustard)), 3px 3px 0 2px hsl(var(--midnight) / .5); }
+.art-tile:hover .art-tile-go { transform: translateX(3px) rotate(-8deg); }
+.art-tile:focus-visible { outline: 2px solid hsl(var(--ring)); outline-offset: 2px; }
+
+/* Shelf of real products: every book the same height, the same three-quarter stance and the same slow lift. */
+.shelf-track-real { align-items: flex-end; gap: 1.4rem; padding-top: 1.25rem; }
+.shelf-real { display: flex; flex-direction: column; align-items: center; gap: .6rem; width: 8.75rem; }
+.shelf-real-book { display: flex; align-items: flex-end; justify-content: center; height: 13rem; width: 100%; transform: perspective(900px) rotateY(-9deg); transform-origin: left center; transition: transform 1.6s cubic-bezier(.22,1,.36,1); }
+.shelf-real-book .sample-book { height: 100%; aspect-ratio: 2 / 3; }
+.shelf-real-book .sample-book-body { height: 100%; }
+.shelf-real-cutout { height: 100%; width: auto; max-width: 100%; object-fit: contain; filter: drop-shadow(5px 7px 0 hsl(var(--comic-navy) / .28)) drop-shadow(0 10px 14px hsl(var(--midnight) / .35)); }
+.shelf-real:hover .shelf-real-book, .shelf-real:focus-visible .shelf-real-book { transform: perspective(900px) rotateY(-2deg) translateY(-7px); }
+.shelf-real:focus-visible { outline: none; }
+.shelf-real:focus-visible .shelf-real-caption { outline: 2px solid hsl(var(--comic-brick)); outline-offset: 3px; border-radius: 2px; }
+.shelf-real-caption { font-family: 'Bebas Neue', sans-serif; font-size: .85rem; letter-spacing: .12em; line-height: 1.1; text-align: center; color: hsl(var(--comic-navy)); }
+/* Wooden shelf edge under the books. */
+.shelf-track-real { background: linear-gradient(to top, transparent 0 2.6rem, hsl(var(--comic-navy) / .55) 2.6rem 2.75rem, hsl(30 45% 42% / .35) 2.75rem 3.3rem, transparent 3.3rem); }
+
+/* Gift-shop department window: cut-out products on 1950s atomic backdrops, navy label strips. */
+.dept-grid { display: grid; gap: .75rem; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.dept-grid > li { min-width: 0; }
+.dept-featured { grid-column: span 2; }
+@media (min-width: 640px) { .dept-grid:not(.dept-grid-compact) { grid-template-columns: repeat(3, minmax(0, 1fr)); } .dept-grid:not(.dept-grid-compact) .dept-featured { grid-row: span 2; } }
+@media (min-width: 1100px) { .dept-grid:not(.dept-grid-compact) { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+@media (min-width: 640px) { .dept-grid-compact { grid-template-columns: repeat(3, minmax(0, 1fr)); } .dept-grid-compact .dept-featured { grid-column: span 2; grid-row: span 2; } }
+.dept-tile { position: relative; isolation: isolate; display: flex; flex-direction: column; justify-content: flex-end; height: 100%; min-height: 11.5rem; overflow: hidden; border-radius: var(--cut-card); color: hsl(var(--comic-navy));
+  box-shadow: 0 0 0 2px hsl(var(--comic-navy)), 4px 5px 0 2px hsl(var(--comic-navy) / .3); }
+.dept-featured .dept-tile { min-height: 20rem; }
+.dept-tile::after { content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none; background: radial-gradient(hsl(var(--midnight) / .14) .9px, transparent 1.2px) 0 0 / 5px 5px; mix-blend-mode: multiply; }
+.dept-rays-red { background: radial-gradient(circle at 50% 46%, hsl(9 70% 62%) 0 18%, transparent 46%), repeating-conic-gradient(from 0deg at 50% 46%, hsl(var(--comic-brick)) 0 6deg, hsl(9 62% 44%) 6deg 12deg); }
+.dept-rays-mustard { background: radial-gradient(circle at 50% 46%, hsl(45 95% 82%) 0 16%, transparent 44%), repeating-conic-gradient(from 0deg at 50% 46%, hsl(var(--comic-mustard)) 0 6deg, hsl(40 88% 52%) 6deg 12deg); }
+.dept-orbit-navy { color: hsl(var(--spot-paper)); background: radial-gradient(hsl(var(--spot-paper) / .6) .8px, transparent 1.1px) 7px 9px / 37px 37px, repeating-radial-gradient(ellipse 70% 34% at 50% 46%, transparent 0 22px, hsl(var(--comic-mustard) / .55) 22px 23.5px, transparent 23.5px 34px), radial-gradient(circle at 50% 46%, hsl(222 50% 30%), hsl(var(--comic-navy)) 70%); }
+.dept-orbit-cream { background: radial-gradient(hsl(var(--comic-navy) / .35) .8px, transparent 1.1px) 3px 5px / 31px 31px, repeating-radial-gradient(ellipse 70% 34% at 50% 46%, transparent 0 22px, hsl(var(--comic-navy) / .35) 22px 23.3px, transparent 23.3px 34px), radial-gradient(circle at 50% 46%, hsl(44 80% 92%), hsl(var(--spot-paper)) 60%, hsl(38 52% 80%)); }
+.dept-product { position: absolute; inset: .75rem .75rem 3.4rem; display: flex; align-items: center; justify-content: center; }
+.dept-product img, .dept-set img { filter: drop-shadow(5px 7px 0 hsl(var(--midnight) / .4)); transition: transform 1.8s cubic-bezier(.22,1,.36,1); }
+.dept-product img { max-width: 82%; max-height: 100%; width: auto; height: auto; object-fit: contain; transform: rotate(-2deg); }
+.dept-tile:hover .dept-product img, .dept-tile:focus-visible .dept-product img { transform: rotate(0deg) translateY(-6px) scale(1.03); }
+.dept-set { position: absolute; inset: .5rem .5rem 4rem; }
+.dept-set img { position: absolute; height: auto; }
+.dept-set-poster { left: 5%; top: 4%; width: 40%; transform: rotate(-4deg); }
+.dept-set-stickers { right: 6%; top: 2%; width: 33%; transform: rotate(5deg); }
+.dept-set-tee { left: 16%; bottom: 0; width: 42%; transform: rotate(2deg); z-index: 2; }
+.dept-set-mug { right: 7%; bottom: 2%; width: 36%; transform: rotate(-3deg); z-index: 3; }
+.dept-tile:hover .dept-set-poster { transform: rotate(-2deg) translateY(-5px); }
+.dept-tile:hover .dept-set-mug { transform: rotate(-1deg) translateY(-5px); }
+.dept-label { position: relative; z-index: 4; display: flex; align-items: center; justify-content: space-between; gap: .6rem; margin: .5rem; padding: .45rem .5rem .45rem .8rem; border-radius: var(--cut-chip); color: hsl(var(--spot-paper)); background: hsl(var(--comic-navy)); box-shadow: inset 0 0 0 1px hsl(var(--comic-mustard) / .55); }
+.dept-label-title { display: block; font-family: 'Bebas Neue', sans-serif; font-size: 1.15rem; letter-spacing: .1em; line-height: 1; color: hsl(var(--comic-mustard)); }
+.dept-label-big .dept-label-title { font-size: 1.6rem; }
+.dept-label-note { display: block; margin-top: .15rem; font-size: .72rem; line-height: 1.2; color: hsl(var(--spot-paper) / .82); }
+.dept-go { display: inline-flex; flex-shrink: 0; width: 1.9rem; height: 1.9rem; align-items: center; justify-content: center; border-radius: 999px; border: 1.5px solid hsl(var(--comic-mustard)); color: hsl(var(--comic-mustard)); transition: background-color .8s ease, color .8s ease; }
+.dept-tile:hover .dept-go { background: hsl(var(--comic-mustard)); color: hsl(var(--comic-navy)); }
+.dept-tile:focus-visible { outline: 3px solid hsl(var(--ring)); outline-offset: 3px; }
+@media (prefers-reduced-motion: reduce) {
+  .art-tile-pic img, .art-tile-go, .shelf-real-book, .dept-product img, .dept-set img { transition: none; }
+  .art-tile:hover .art-tile-pic img, .art-tile:hover .art-tile-go, .dept-tile:hover .dept-product img, .dept-tile:hover .dept-set-poster, .dept-tile:hover .dept-set-mug { transform: none; }
+}
+/* Brass rivets in the four corners of a plate (decorative). */
+.rivets { position: relative; }
+.rivets::before { content: ''; position: absolute; inset: .55rem; pointer-events: none; z-index: 1;
+  background: radial-gradient(circle, hsl(var(--brass)) 0 2.2px, transparent 2.8px) 0 0 / 6px 6px no-repeat, radial-gradient(circle, hsl(var(--brass)) 0 2.2px, transparent 2.8px) 100% 0 / 6px 6px no-repeat,
+    radial-gradient(circle, hsl(var(--brass)) 0 2.2px, transparent 2.8px) 0 100% / 6px 6px no-repeat, radial-gradient(circle, hsl(var(--brass)) 0 2.2px, transparent 2.8px) 100% 100% / 6px 6px no-repeat; }
+.obs-paper.rivets::before { background: radial-gradient(circle, hsl(var(--comic-navy) / .75) 0 2.2px, transparent 2.8px) 0 0 / 6px 6px no-repeat, radial-gradient(circle, hsl(var(--comic-navy) / .75) 0 2.2px, transparent 2.8px) 100% 0 / 6px 6px no-repeat,
+    radial-gradient(circle, hsl(var(--comic-navy) / .75) 0 2.2px, transparent 2.8px) 0 100% / 6px 6px no-repeat, radial-gradient(circle, hsl(var(--comic-navy) / .75) 0 2.2px, transparent 2.8px) 100% 100% / 6px 6px no-repeat; }
+.about-hero { display: grid; gap: 2rem; align-items: center; padding: 2rem 1.25rem; container: abouthero / inline-size; }
+.about-hero-copy { display: flex; flex-direction: column; gap: 1rem; min-width: 0; }
+.about-hero-copy { container-type: inline-size; }
+.about-hero .hero-headline { font-size: clamp(1.4rem, 7.9cqi, 3.3rem); }
+.about-hero-art { margin: 0; }
+.about-hero-art img { display: block; width: 100%; height: auto; border-radius: var(--cut-card); transform: rotate(1.2deg); box-shadow: 0 0 0 2px hsl(var(--comic-mustard)), 0 0 0 4px hsl(var(--midnight) / .6), 9px 11px 0 4px hsl(var(--midnight) / .55); }
+@media (min-width: 900px) { .about-hero { grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); padding: 3rem 2.75rem; gap: 3rem; } }
+.about-why { padding: 2.25rem 1.25rem; }
+.about-why-body { margin: 1.5rem auto 0; max-width: 44rem; display: grid; gap: 1.1rem; font-size: 1.075rem; line-height: 1.75; }
+@media (min-width: 768px) { .about-why { padding: 3rem 3.5rem; } }
+@media (prefers-reduced-motion: reduce) { .about-hero-art img { transform: none; } }
+.store-hero { display: grid; gap: 1.5rem; padding: 1rem; align-items: center; }
+.store-hero-art { margin: 0; justify-self: center; width: min(70%, 16rem); }
+.store-hero-art img { display: block; width: 100%; height: auto; border-radius: var(--cut-card); box-shadow: 0 0 0 2px hsl(var(--comic-mustard)), 7px 9px 0 3px hsl(var(--midnight) / .55); transform: rotate(-1.2deg); }
+.store-hero-copy { display: flex; flex-direction: column; gap: .75rem; min-width: 0; padding: 0 .5rem 1rem; }
+.store-hero .hero-headline { font-size: clamp(2.2rem, 1.5rem + 3vw, 4rem); }
+@media (min-width: 768px) { .store-hero { grid-template-columns: minmax(0, 15rem) minmax(0, 1fr); padding: 1.5rem 2rem; gap: 2.5rem; } .store-hero-art { width: 100%; } .store-hero-copy { padding: 1rem 3.5rem 1rem 0; } }
+@media (min-width: 1100px) { .store-hero { grid-template-columns: minmax(0, 19rem) minmax(0, 1fr); } }
+@media (prefers-reduced-motion: reduce) { .store-hero-art img { transform: none; } }
+
+/* Phones: the slideshow takes the height of the slide on screen, so no slide leaves an empty band under it. */
+@media (max-width: 767px) {
+  .hero-slides-track { position: relative; }
+  .hero-slide:not(.hero-slide-on) { position: absolute; inset: 0 0 auto 0; }
+  .art-slide-landscape .art-slide-art { width: min(92%, 24rem); }
+  .art-slide-portrait .art-slide-art { width: min(52%, 13rem); }
+}
+
+/* Long poster headlines scale to their own column so words like "Astronomy-grade" never split or overflow. */
+.art-slide-copy { container-type: inline-size; }
+.hero-slides .art-slide .hero-headline { font-size: clamp(1.4rem, 7.9cqi, 2.4rem); }
+@media (min-width: 1100px) {
+  .mosaic-trio .art-tile-pic { position: relative; flex: 1 1 auto; aspect-ratio: auto; min-height: 11rem; }
+  .mosaic-trio .art-tile-pic img { position: absolute; inset: 0; }
+}

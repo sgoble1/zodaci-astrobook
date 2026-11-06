@@ -109,7 +109,7 @@ export default function AstroComic() {
       </section>
 
       <section aria-labelledby="book-h" className="space-y-6">
-        <div><p className="font-smallcaps text-xs text-gold">The same chart, in the AstroBook</p><h2 id="book-h" className="mt-1 font-display text-3xl">Three full pages of {ISSUE_1.hero}’s book</h2><p className="mt-2 max-w-2xl text-muted-foreground">The comic tells the story; the book explains it. {SAMPLE_EDITION.note}</p></div>
+        <div><p className="font-smallcaps text-xs text-gold">Inside a sample AstroBook</p><h2 id="book-h" className="mt-1 font-display text-3xl">Three full pages of {SAMPLE_EDITION.owner}’s book</h2><p className="mt-2 max-w-2xl text-muted-foreground">The comic tells the story; the book explains the chart behind it. {SAMPLE_EDITION.note}</p></div>
         <EditionPages pages={SAMPLE_EDITION.pages} />
         <Button asChild variant="outline"><Link to="/astrobook">See the AstroBook<ArrowRight /></Link></Button>
       </section>

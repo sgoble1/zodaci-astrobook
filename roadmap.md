@@ -376,5 +376,20 @@ Audit Oct 29: Chat/counselors already use the member's chart; podcast/custom pag
 - [ ] Execute approved master plan (.lovable/plan.md): hero slides, mosaic tiles, real 3D covers, cover-style icons, cut-out shop grid, About hero/text, image redraws, V2.3 Gaps 1–47, image library page, build cost at $0.35/credit, founder data extraction last.
 - [x] Completeness review of plan against all attachments and the V2.3 doc (Nov 6).
 - [x] Phase 1.1: Cartographer slide is now slide 1; phone spacing tightened (woman points at the dial).
-- [x] Phase 10: build cost at $0.35/credit (src/lib/devCost.ts) on Developer and Investors; Admin card still open.
-- [ ] Phases 1.2–9, 11, 12 of the V2.3 plan (new slides, mosaic tiles, 3D covers, icons, cut-out shop grid, About hero, image redraws, Gaps 1–47, image library) — continue next.
+- [x] Phase 10: build cost at $0.35/credit on Developer, Admin (Platform → Build costs, admin-editable snapshot) and Investors; open-work estimate with per-item credits (tested).
+- [x] Phase 1.2–1.3: three new slides (Astronomy-grade precision, Field guide to the stars, Observatory Gift Shop); six slides, none removed; slow autoplay pauses off-screen. Verified 393/1280.
+- [x] Phase 2: Learn-to-read-the-sky, gift-shop window and precision tiles on the home mosaic. Verified 393/1280.
+- [x] Phase 3 (shelf): Cosmic Archive shelf shows real product covers from the shop plus the sample AstroBook covers.
+- [x] Phase 5: cut-out gift-shop department grid on atomic backgrounds (Store + home window); damaged cut-outs left out.
+- [x] Phase 6: About hero "Astronomy-grade precision. Plain-language depth." + "Why Zodaci exists" section; headline fits at 393px.
+- [x] Phase 12 logs: Developer "Latest updates" + timeline entries to Nov 6; member and founder dashboards show "What's new" (public-safe).
+- [x] Admin Image library (Products → Image library): every site image by area with file name, where used, View and Download.
+- [x] Gap 35: Developer dashboard restyled (paper plates, grouped stats, build-cost card, quick links).
+- [ ] Phase 6 rest: "Why Zodaci" line on Pricing and AstroBook pages.
+- [x] Phase 9: public sample edition moved off a founder's chart onto the fictional Collector reader (Rosalind Vance) with three new plates; side-by-side examples and AstroComic section updated (tested).
+- [ ] Sample AstroComic Issue #1 ("Elias") is still drawn from a founder's sign placements and hints at a mill town; redraw for a fictional reader — needs AI credits.
+- [ ] Phase 3 rest: one shared 3D book on AstroBook page, Demo and dashboards using real covers.
+- [ ] Phase 4: icon set redrawn in the book-cover style (keep registry names).
+- [ ] Phase 7 rest: desk astrologer art; place/explore/reading-room art refresh.
+- [ ] Phase 8: V2.3 Gaps (TV ticker/signal/dial/full-screen; founder art and menus; member page restyles; Observation Log/Context Engine; content; nav/theme check; pricing trust; investor figures).
+- [ ] Phase 11 (last): Shane's 63 chapters and Zac's documents — blocked on AI credits and owner accounts.
