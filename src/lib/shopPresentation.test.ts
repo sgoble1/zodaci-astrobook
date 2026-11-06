@@ -9,8 +9,8 @@ describe('featured shop order', () => {
   });
   it('places atomic zodiac stickers ahead of bags and the remaining catalog', () => {
     expect(productPriority('Atomic Zodiac Stickers')).toBe(1);
-    expect(productPriority('Zodiac Sticker Sheet', 'Stickers')).toBe(1);
-    expect(productPriority('Aries Sticker Sheet', 'Stickers')).toBe(1);
+    expect(productPriority('Zodiac Sticker Sheet', 'Stickers')).toBe(2);
+    expect(productPriority('Aries Sticker Sheet', 'Stickers')).toBe(2);
     expect(productPriority('Canvas Tote Bag')).toBe(3);
     expect(productPriority('Zodiac Wheel Tote', 'Tote Bags')).toBe(3);
     expect(productPriority('Zodiac Mug')).toBe(4);

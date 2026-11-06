@@ -164,6 +164,11 @@ export default function Store() {
           {inStockOnly && <Chip label="Ready to order" onClear={() => change('inStock', false)} />}
         </div>}
         {!products && <ul className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3" aria-busy="true" aria-label="Loading the shop">{Array.from({ length: 6 }, (_, i) => <li key={i} className="parchment overflow-hidden"><div className="aspect-square animate-pulse bg-muted motion-reduce:animate-none" /><div className="space-y-2 p-4"><div className="h-5 w-2/3 rounded bg-muted" /><div className="h-4 w-full rounded bg-muted" /></div></li>)}</ul>}
+        {products && collection === 'atomic' && <section className="obs-panel p-5" aria-labelledby="atomic-collection-title">
+          <p className="font-label text-sm tracking-[0.16em] text-primary">The Atomic Zodiac Collection</p>
+          <h2 id="atomic-collection-title" className="mt-1 font-display text-3xl uppercase">Every sign. One atomic age.</h2>
+          <p className="mt-2 max-w-2xl text-sm text-muted-foreground">Explore only the Atomic Zodiac editions by department or sign. Curator’s order leads with illustrated display pieces; choose Newest to see the latest additions first.</p>
+        </section>}
         {products && !browsing && <p className="text-sm text-muted-foreground" aria-live="polite">{shown.length} {shown.length === 1 ? 'item' : 'items'}{q && ` matching “${q}”`}</p>}
         {products && shown.length === 0 && <div className="parchment space-y-3 p-8 text-center"><p className="text-muted-foreground">{products.length ? 'Nothing matches that search.' : 'New pieces are on their way — check back soon.'}</p>{(q || collection !== 'all' || type !== 'All' || sign !== 'All' || band || inStockOnly) && <Button variant="outline" size="sm" onClick={() => setParams(new URLSearchParams(), { replace: true })}>Clear search and filters</Button>}</div>}
         {products && browsing && <div className="space-y-10">
