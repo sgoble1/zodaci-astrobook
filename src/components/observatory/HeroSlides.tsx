@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
-// useRef is used for the slideshow root (in-view pause) and slide refs.
 import { Link } from 'react-router-dom';
 import { ArrowRight, ChevronLeft, ChevronRight, Pause, Play } from 'lucide-react';
 import { Button } from '@/components/ui/button';
