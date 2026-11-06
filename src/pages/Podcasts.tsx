@@ -16,11 +16,14 @@ import { CreatorStudio } from '@/components/payments/CreatorStudio';
 import { useAprilSpace } from '@/hooks/useAprilSpace';
 import { useSharedSpaceMember } from '@/hooks/useSharedSpaceMember';
 import { useWorkspaces } from '@/hooks/useWorkspaces';
+import { useSharedSpaces } from '@/hooks/useSharedSpaces';
 import { supabase } from '@/integrations/supabase/client';
 
-const PERSON_LABEL: Record<string, string> = { april: "April's", shane: "Shane's", both: 'Both of ours' };
-type Person = 'all' | 'april' | 'shane' | 'both' | 'unassigned';
-const PEOPLE: Person[] = ['all', 'april', 'shane', 'both', 'unassigned'];
+const PERSON_LABEL: Record<string, string> = { april: "April's", shane: "Shane's", zac: "Zac's", both: 'Both of ours' };
+type Person = 'all' | 'april' | 'shane' | 'zac' | 'both' | 'unassigned';
+/** Each shared space has two people: April & Shane, or Zac & Shane. "Both of ours" means the two people in that space. */
+const peopleFor = (partner: 'april' | 'zac'): Person[] => ['all', partner, 'shane', 'both', 'unassigned'];
+const PERSON_BADGE: Record<string, string> = { april: 'bg-accent/15 text-accent', shane: 'bg-primary/15 text-primary', zac: 'bg-[hsl(var(--brass)/0.15)] text-[hsl(var(--brass))]' };
 const matchesPerson = (who: string | null | undefined, p: Person) => p === 'all' || (p === 'unassigned' ? !who : who === p);
 
 export default function Podcasts() {
@@ -29,6 +32,9 @@ export default function Podcasts() {
   // April and Shane share episodes in either edition; the database decides who is a founder member.
   const founders = useSharedSpaceMember() === true;
   const spaces=useWorkspaces();
+  const sharedSpace = useSharedSpaces();
+  const partner: 'april' | 'zac' = sharedSpace.active === 'zac' ? 'zac' : 'april';
+  const PEOPLE = peopleFor(partner);
   const session = useSession();
   const isAdmin = useIsAdmin(session);
   const { current, queue, setQueue, speed, setSpeed, positions, play, playNext, stop, setCatalog } = usePlayer();
@@ -117,8 +123,8 @@ export default function Podcasts() {
                   <button onClick={() => play(ep)} className="font-display text-lg text-left hover:underline">{ep.title}</button>
                   <div className="text-xs text-muted-foreground">{ep.category && <>{ep.category} · </>}{new Date(ep.created_at).toLocaleDateString()} · <EpisodeLength ep={ep} /> · {fmtSize(ep.size_bytes)}{positions[ep.id] > 5 && <> · <span className="text-gold">resume at {fmt(positions[ep.id])}</span></>}</div>
                   <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-muted-foreground"><span className="inline-flex items-center gap-1">{ep.workspace_id || ep.shared_with_space ? <><Users className="h-3.5 w-3.5"/>Shared workspace</> : <><Lock className="h-3.5 w-3.5"/>Private to you</>}</span>
-                    {founders && !canAssign(ep) && ep.belongs_to && PERSON_LABEL[ep.belongs_to] && <span className={`rounded-full px-2 py-0.5 font-semibold ${ep.belongs_to === 'april' ? 'bg-accent/15 text-accent' : ep.belongs_to === 'shane' ? 'bg-primary/15 text-primary' : 'bg-muted text-foreground'}`}>{PERSON_LABEL[ep.belongs_to]}</span>}
-                    {canAssign(ep) && <select aria-label={`Whose episode is ${ep.title}`} value={ep.belongs_to ?? ''} className="h-8 border border-input rounded bg-background px-2" onChange={e => void assign(ep, e.target.value)}><option value="">{ep.belongs_to ? 'Not assigned' : 'Assign to…'}</option><option value="april">April's</option><option value="shane">Shane's</option><option value="both">Both of ours</option></select>}
+                    {founders && !canAssign(ep) && ep.belongs_to && PERSON_LABEL[ep.belongs_to] && <span className={`rounded-sm px-2 py-0.5 font-label tracking-[0.1em] ${PERSON_BADGE[ep.belongs_to] ?? 'bg-muted text-foreground'}`}>{PERSON_LABEL[ep.belongs_to]}</span>}
+                    {canAssign(ep) && <select aria-label={`Whose episode is ${ep.title}`} value={ep.belongs_to ?? ''} className="h-8 border border-input rounded bg-background px-2" onChange={e => void assign(ep, e.target.value)}><option value="">{ep.belongs_to ? 'Not assigned' : 'Assign to…'}</option><option value={partner}>{PERSON_LABEL[partner]}</option><option value="shane">Shane's</option><option value="both">Both of ours</option>{ep.belongs_to && ep.belongs_to !== partner && !['shane', 'both'].includes(ep.belongs_to) && <option value={ep.belongs_to}>{PERSON_LABEL[ep.belongs_to]}</option>}</select>}
                   </div>
                   {session?.user.id === ep.owner_id && !ep.shared_with_space && <select aria-label={`Visibility of ${ep.title}`} value={ep.workspace_id ?? ''} className="mt-3 h-10 max-w-full border border-input rounded bg-background px-2 text-sm" onChange={async e=>{const r=await supabase.from('library_items').update({workspace_id:e.target.value||null,shared_with_space:false}).eq('id',ep.id);if(r.error)toast.error(r.error.message);else void lib.reload();}}><option value="">Private</option>{spaces.map(s=><option key={s.id} value={s.id}>{s.name}</option>)}</select>}
                   {ep.description && <p className="text-sm mt-1">{ep.description}</p>}
