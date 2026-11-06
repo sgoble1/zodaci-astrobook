@@ -184,20 +184,12 @@ const KEEP_NAME_PATHS = ['/shared', '/our-charts', '/podcasts', '/shane', '/zac'
 const SIGNED_OUT_PATHS = ['/auth', '/pricing', '/books', '/reset-password'];
 const GROUP_COLORS = ['--primary', '--oxblood', '--accent', '--candle', '--gold-bright', '--starlight', '--gold', '--glow-violet'];
 
-/** Route change: scroll to the top (or the linked section) and move keyboard focus from the menu to the page. */
+/** Route change: move keyboard focus from the menu to the page. Scroll position is owned by ScrollManager. */
 function useRouteChangeFocus() {
   const { pathname, hash } = useLocation();
   const first = useRef(true);
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
-    if (hash) {
-      let tries = 0;
-      const t = window.setInterval(() => {
-        const el = document.getElementById(decodeURIComponent(hash.slice(1)));
-        if (el) { el.scrollIntoView({ block: 'start' }); window.clearInterval(t); } else if (++tries > 15) window.clearInterval(t);
-      }, 150);
-      return () => window.clearInterval(t);
-    }
+    if (hash) return;
     if (first.current) { first.current = false; return; }
     const active = document.activeElement;
     const inChrome = !active || active === document.body || !!active.closest('header, nav, [role="dialog"], aside');
