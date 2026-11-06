@@ -5,7 +5,7 @@ import { cn } from '@/lib/utils';
 
 const STATUS_LABEL: Record<TimelineRow['status'], string> = { passed: 'Passed', now: 'Now', ahead: 'Ahead' };
 const fmt = (d: Date) => d.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
-const LANE_TOP = ['4%', '28%', '58%', '80%'];
+const LANE_TOP = ['12%', '31%', '58%', '77%'];
 
 /**
  * Timeline Hall wall: the member's own cycle dates (returns, squares, oppositions) pinned across ninety years,
@@ -34,8 +34,9 @@ export function CycleWall({ chart, birthYear, list = false }: { chart: ChartResu
   return (
     <div className="space-y-6">
       <section aria-label="Cycle wall" className="obs-panel p-4 sm:p-6">
-        <div className="overflow-x-auto pb-2">
-          <div className="relative h-32 min-w-[760px]">
+        <div className="overflow-x-auto pb-7 pt-1">
+          <div className="min-w-[760px] pr-32">
+          <div className="relative h-36">
             <div aria-hidden className="absolute inset-x-0 top-1/2 h-px bg-primary/50" />
             {Array.from({ length: 10 }, (_, i) => startYear + i * 10).map(y => (
               <div key={y} aria-hidden className="absolute bottom-0 top-0" style={{ left: pos(y) }}>
@@ -53,11 +54,12 @@ export function CycleWall({ chart, birthYear, list = false }: { chart: ChartResu
             ))}
             <div aria-hidden className="absolute bottom-0 top-0" style={{ left: pos(nowYear + now.getMonth() / 12) }}>
               <div className="h-full w-0.5 bg-accent" />
-              <div className="absolute -top-3 -translate-x-1/2 font-label text-[0.7rem] text-accent">Now · {nowYear}</div>
+              <div className="absolute -top-1 -translate-x-1/2 whitespace-nowrap rounded-sm bg-background/80 px-1 font-label text-[0.7rem] text-accent">Now · {nowYear}</div>
             </div>
           </div>
+          </div>
         </div>
-        <p className="mt-6 text-xs text-muted-foreground">Dates are the first exact pass; most cycles are felt for several months either side.</p>
+        <p className="mt-2 text-xs text-muted-foreground">Dates are the first exact pass; most cycles are felt for several months either side.</p>
       </section>
 
       {selected && (
