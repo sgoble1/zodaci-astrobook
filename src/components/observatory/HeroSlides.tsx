@@ -9,6 +9,8 @@ import facesHero from '@/assets/home-heads-hero.jpg';
 import sunFace from '@/assets/spots/self.jpg';
 import { PRODUCT_ART } from '@/content/productArtwork';
 import comicCutout from '@/assets/products/astrocomic-cutout.webp';
+import { SampleCover } from '@/components/books/SampleCover';
+import { LEAD_COVER, coverSample } from '@/content/coverSamples';
 
 export type HeroSlide = { id: string; label: string; content: ReactNode };
 
@@ -198,20 +200,26 @@ export function LookUpSlide({ heading = 'h2', title, script, text, cta, secondar
   );
 }
 
-/** Slide 3: the printed products — AstroBook and AstroComic covers side by side. */
-export function PressSlide({ heading = 'h2', title, script, text, book, comic }: { heading?: Heading; title: ReactNode; script: string; text: ReactNode; book: Cta; comic: Cta }) {
+/**
+ * "Take the sky home": the printed products as one composed slide — two sample AstroBooks printed with invented
+ * readers' names and birth details, with the AstroComic page tucked in front at a matching scale.
+ */
+export function PressSlide({ heading = 'h2', title, script, text, points, book, comic }: { heading?: Heading; title: ReactNode; script: string; text: ReactNode; points: string[]; book: Cta; comic: Cta }) {
   const H = heading;
   return (
     <div className="hero-night press-slide">
-      <div>
+      <div className="press-copy">
         <H className="hero-headline">{title}</H>
         <p className="mt-2 font-script text-3xl text-primary sm:text-4xl">{script}</p>
-        <div className="mt-4 max-w-md text-lg leading-relaxed text-foreground/90">{text}</div>
+        <div className="mt-4 max-w-md text-base leading-relaxed text-foreground/90 sm:text-lg">{text}</div>
+        <ul className="press-points">{points.map(p => <li key={p}><span aria-hidden className="press-point-star">✦</span>{p}</li>)}</ul>
         <div className="mt-6 flex flex-wrap gap-3"><Button asChild variant="signal" size="lg"><Link to={book.to}>{book.label}<ArrowRight /></Link></Button><Button asChild variant="outline" size="lg"><Link to={comic.to}>{comic.label}</Link></Button></div>
       </div>
-      <div className="press-covers">
-        <Link to={book.to} className="press-cover-book"><img src={PRODUCT_ART.book.src} alt={PRODUCT_ART.book.alt} width={1024} height={1024} loading="lazy" className="hero-press-cover w-full object-contain" /><span className="mt-3 block text-center font-label text-sm text-primary">AstroBook · shop sample</span></Link>
-        <Link to={comic.to} className="press-cover-comic"><img src={comicCutout} alt={PRODUCT_ART.comic.alt} width={636} height={948} loading="lazy" className="press-cutout w-full" /><span className="mt-2 block text-center font-label text-sm text-primary">AstroComic · story preview</span></Link>
+      <div className="press-stack">
+        <Link to={book.to} className="press-stack-back" tabIndex={-1} aria-hidden="true"><SampleCover sample={coverSample('pocket')} /></Link>
+        <Link to={book.to} className="press-stack-front" aria-label={`${book.label}: sample Collector AstroBook printed for ${LEAD_COVER.name}, a fictional reader`}><SampleCover sample={LEAD_COVER} /></Link>
+        <Link to={comic.to} className="press-stack-comic" aria-label={`${comic.label}: AstroComic story preview`}><img src={comicCutout} alt={PRODUCT_ART.comic.alt} width={636} height={948} loading="lazy" className="press-cutout w-full" /></Link>
+        <p className="press-stack-note">Sample covers · fictional readers</p>
       </div>
     </div>
   );

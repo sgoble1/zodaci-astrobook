@@ -1019,12 +1019,30 @@ li:hover > .zodiac-coin { transform: rotate(-10deg); }
   .chartmap-copy { padding-top: 2.75rem; }
   .chartmap-body { grid-template-columns: minmax(0, 1fr) minmax(0, 15rem); }
 }
-/* Press slide: the Collector AstroBook and the cut-out AstroComic page; full width on phones. */
-.press-covers { display: flex; min-width: 0; align-items: flex-end; justify-content: center; gap: 1rem; }
-.press-cover-book { width: 50%; max-width: 15rem; transform: rotate(-3deg); }
-.press-cover-comic { width: 46%; max-width: 13rem; transform: rotate(2.5deg) translateY(.5rem); }
-.press-cutout { filter: drop-shadow(6px 9px 0 hsl(var(--midnight) / .7)) drop-shadow(0 0 1.5px hsl(var(--comic-mustard))); }
-@container hero (max-width: 30rem) { .press-covers { margin-inline: -.75rem; gap: .5rem; } .press-cover-book, .press-cover-comic { max-width: none; } }
+/* "Take the sky home" slide: two sample books with the comic page in front, sized together so none dominates. */
+.press-points { display: grid; gap: .45rem; margin-top: 1.1rem; font-size: .95rem; color: hsl(var(--foreground) / .9); }
+.press-points li { display: flex; gap: .6rem; align-items: baseline; }
+.press-point-star { color: hsl(var(--comic-mustard)); font-size: .8rem; }
+.press-stack { position: relative; width: min(100%, 24rem); margin-inline: auto; aspect-ratio: 1 / 1.02; }
+.press-stack > a { position: absolute; display: block; transition: transform 1.6s cubic-bezier(.22,1,.36,1); }
+.press-stack-back { width: 44%; left: 2%; top: 4%; transform: rotate(-9deg); filter: brightness(.82) saturate(.9); }
+.press-stack-front { width: 54%; left: 24%; top: 0; transform: rotate(-2deg); z-index: 2; }
+.press-stack-comic { width: 38%; right: 0; bottom: 6%; transform: rotate(5deg); z-index: 3; }
+.press-stack-front:hover, .press-stack-front:focus-visible { transform: rotate(-1deg) translateY(-6px); }
+.press-stack-comic:hover, .press-stack-comic:focus-visible { transform: rotate(3deg) translateY(-6px); }
+.press-stack > a:focus-visible { outline: 2px solid hsl(var(--comic-mustard)); outline-offset: 4px; border-radius: .3rem; }
+.press-stack-note { position: absolute; left: 0; bottom: 0; font-family: 'Bebas Neue', sans-serif; font-size: .8rem; letter-spacing: .16em; text-transform: uppercase; color: hsl(var(--comic-mustard)); }
+.press-cutout { filter: drop-shadow(5px 7px 0 hsl(var(--midnight) / .7)) drop-shadow(0 0 1.5px hsl(var(--comic-mustard))); }
+@media (prefers-reduced-motion: reduce) { .press-stack > a { transition: none; } }
+
+/* A printed sample book: shaded spine on the left, page edges on the right and a print-offset shadow. */
+.sample-book { margin: 0; }
+.sample-book-body { position: relative; aspect-ratio: 2 / 3; overflow: hidden; border-radius: .18rem .45rem .45rem .18rem; background: hsl(var(--spot-paper));
+  box-shadow: 0 0 0 1px hsl(var(--midnight) / .5), 4px 0 0 -1px hsl(var(--spot-paper) / .9), 6px 0 0 -1px hsl(var(--brass) / .55), 8px 10px 0 hsl(var(--midnight) / .55), 0 18px 28px -14px hsl(var(--midnight) / .8); }
+.sample-book-body img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.sample-book-body::before { content: ''; position: absolute; inset: 0 auto 0 0; width: 7%; z-index: 1; pointer-events: none;
+  background: linear-gradient(90deg, hsl(var(--midnight) / .38), hsl(var(--midnight) / .08) 55%, hsl(var(--spot-paper) / .22) 70%, transparent); }
+.sample-book-body::after { content: ''; position: absolute; inset: 0; z-index: 1; pointer-events: none; background: linear-gradient(115deg, hsl(var(--spot-paper) / .14), transparent 38%, transparent 70%, hsl(var(--midnight) / .12)); }
 /* Starbursts in the open sky above the Cartographer; slow twinkle, still under reduced motion. */
 .chartmap-bursts { position: absolute; inset: 0 auto auto 0; width: 37%; height: 40%; z-index: 2; pointer-events: none; display: none; }
 .chartmap-burst { position: absolute; fill: hsl(var(--comic-mustard)); stroke: hsl(var(--midnight)); stroke-width: 2; animation: burst-twinkle 9s ease-in-out infinite; }
@@ -1036,7 +1054,9 @@ li:hover > .zodiac-coin { transform: rotate(-10deg); }
 @container hero (min-width: 40rem) { .chartmap-bursts { display: block; } }
 @media (prefers-reduced-motion: reduce) { .chartmap-burst { animation: none; } }
 .press-slide { position: relative; display: grid; min-height: 100%; align-items: center; gap: 2rem; padding: 2.5rem 1.5rem 4.5rem; }
-@container hero (min-width: 40rem) { .press-slide { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 2.5rem; padding: 2.5rem 2.5rem 4.5rem; } }
+.press-copy { min-width: 0; }
+@container hero (min-width: 40rem) { .press-slide { grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr); gap: 2rem; padding: 2.5rem 2.5rem 4.5rem; } }
+@container hero (min-width: 56rem) { .press-stack { width: min(100%, 26rem); } }
 .explore-poster { container-type: inline-size; }
 .explore-poster-title { font-size: clamp(1.4rem, 12.5cqi, 2.2rem); }
 

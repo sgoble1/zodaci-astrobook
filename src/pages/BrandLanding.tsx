@@ -80,8 +80,11 @@ export default function BrandLanding() {
       content: <ChartMapSlide heading="h2" title={<>Map the stars.<br />Understand yourself.</>} script="Your cosmic blueprint, mapped." lines={['Calculated from your exact birth moment', 'Read and written for you alone', 'Kept private in your own archive']} cta={{ to: '/start', label: 'Generate your birth chart' }} secondary={{ to: '/demo', label: 'See a sample edition' }} />,
     },
     {
-      id: 'press', label: 'AstroBooks and AstroComics',
-      content: <PressSlide title={<>Your chart,<br />in print.</>} script="Books and comics from your own sky." text={<>Every AstroBook is an astral dossier written from your chart — five versions, from a {money(fromBook)} PDF to a linen-bound collector’s edition. AstroComic turns the same chart into an illustrated serial.</>} book={{ to: '/astrobook', label: 'Browse AstroBooks' }} comic={{ to: '/astrocomic', label: 'AstroComic' }} />,
+      id: 'press', label: 'Take the sky home',
+      content: <PressSlide title={<>Take the<br />sky home.</>} script="Your name. Your minute. In print."
+        text={<>An AstroBook is your birth chart written out as a book, with your name, birth date, time and place printed on the cover. Every chapter is worked out from that minute and place, so no two copies say the same thing. AstroComic draws the same chart as an illustrated story.</>}
+        points={['Your name and birth details on the cover', `Five editions, from a ${money(fromBook)} PDF to linen hardcover`, 'Printed to order and shipped free in the US']}
+        book={{ to: '/astrobook', label: 'Browse AstroBooks' }} comic={{ to: '/astrocomic', label: 'Meet AstroComic' }} />,
     },
   ];
   return <div className="brand-site min-h-screen text-foreground">
