@@ -12,6 +12,7 @@ import { useCartStore } from '@/stores/cartStore';
 import { PRIORITY_SHELVES, comicIssueTitle, compareAtomicAesthetic, isAtomicZodiac, isPortraitProduct, productPriority, shopTitle } from '@/lib/shopPresentation';
 import { PersonalizationCallout } from '@/components/books/PersonalizationStory';
 import { ProductCard, ShopShelf, SpotlightCard } from '@/components/store/ShopShelves';
+import { ShopDepartmentGrid } from '@/components/store/ShopDepartmentGrid';
 import { useNextComicIssue } from '@/hooks/useNextComicIssue';
 import { useSession } from '@/hooks/useLibrary';
 import { PRODUCT_ART } from '@/content/productArtwork';
@@ -77,6 +78,11 @@ export default function Store() {
   const [sheet, setSheet] = useState(false);
   const collection = params.get('collection') === 'atomic' ? 'atomic' : 'all';
   const atomicCount = useMemo(() => (products ?? []).filter(p => isAtomicZodiac(p.node)).length, [products]);
+  const atomicTypeCounts = useMemo(() => {
+    const m = new Map<string, number>();
+    for (const p of products ?? []) if (isAtomicZodiac(p.node) && p.node.productType) m.set(p.node.productType, (m.get(p.node.productType) ?? 0) + 1);
+    return m;
+  }, [products]);
   // Collection selection scopes both department and sign counts to the editions being browsed.
   const catalog = useMemo(() => (products ?? []).filter(p => collection === 'all' || isAtomicZodiac(p.node)), [products, collection]);
   const types = useMemo(() => {
@@ -181,6 +187,13 @@ export default function Store() {
         {products && !browsing && <p className="text-sm text-muted-foreground" aria-live="polite">{shown.length} {shown.length === 1 ? 'item' : 'items'}{q && ` matching “${q}”`}</p>}
         {products && shown.length === 0 && <div className="parchment space-y-3 p-8 text-center"><p className="text-muted-foreground">{products.length ? 'Nothing matches that search.' : 'New pieces are on their way — check back soon.'}</p>{(q || collection !== 'all' || type !== 'All' || sign !== 'All' || band || inStockOnly) && <Button variant="outline" size="sm" onClick={() => setParams(new URLSearchParams(), { replace: true })}>Clear search and filters</Button>}</div>}
         {products && browsing && <div className="space-y-10">
+          <section aria-labelledby="dept-window-h" className="space-y-3">
+            <div className="border-b border-dashed border-[hsl(var(--brass)/0.5)] pb-2">
+              <h2 id="dept-window-h" className="font-label text-2xl tracking-[0.12em] text-primary">Shop the Atomic Zodiac Collection</h2>
+              <p className="font-script text-xl leading-tight text-foreground/80">Pick a department to see every sign</p>
+            </div>
+            <ShopDepartmentGrid counts={atomicTypeCounts} headingId="dept-window-h" />
+          </section>
           {shelves.map((sh, i) => <ShopShelf key={sh.id} id={sh.id} title={sh.title} script={sh.script} items={sh.items} onAdd={add} adding={loading}
             onSeeAll={sh.seeAll ? () => sh.seeAll === 'atomic' ? change('collection', 'atomic') : change('type', sh.seeAll!) : undefined}
             lead={i === 0 ? <>
