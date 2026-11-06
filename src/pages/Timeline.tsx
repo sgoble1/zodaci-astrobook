@@ -42,6 +42,16 @@ function MemberTimeline() {
   const startYear = Number(birth.date.slice(0, 4)), endYear = startYear + 90, span = endYear - startYear;
   const pos = (year: number) => `${Math.max(0, Math.min(100, ((year - startYear) / span) * 100))}%`;
   const nowYear = NOW_YEAR();
+  // Lay pins into up to four lanes so labels never overlap (label width estimated in years at the 760px minimum).
+  const lanes: number[] = [];
+  const lane = new Map(rows.map(r => {
+    const x = r.year + r.date.getUTCMonth() / 12, w = (r.title.length * 6.5 + 26) / (760 / span);
+    let l = lanes.findIndex(end => end < x);
+    if (l < 0) l = lanes.length < 4 ? lanes.length : lanes.indexOf(Math.min(...lanes));
+    lanes[l] = x + w;
+    return [r.key, l] as const;
+  }));
+  const LANE_TOP = ['4%', '28%', '58%', '80%'];
   return (
     <div className="space-y-8">
       <header className="max-w-3xl space-y-3">
@@ -51,7 +61,7 @@ function MemberTimeline() {
 
       <section aria-label="Cycle wall" className="obs-panel p-4 sm:p-6">
         <div className="overflow-x-auto pb-2">
-          <div className="relative h-28 min-w-[760px]">
+          <div className="relative h-32 min-w-[760px]">
             <div aria-hidden className="absolute inset-x-0 top-1/2 h-px bg-primary/50" />
             {Array.from({ length: 10 }, (_, i) => startYear + i * 10).map(y => (
               <div key={y} aria-hidden className="absolute bottom-0 top-0" style={{ left: pos(y) }}>
@@ -59,11 +69,11 @@ function MemberTimeline() {
                 <div className="absolute top-full mt-1 -translate-x-1/2 font-label text-[0.7rem] text-muted-foreground">{y}</div>
               </div>
             ))}
-            {rows.map((r, i) => (
+            {rows.map(r => (
               <button key={r.key} type="button" onClick={() => setPicked(r.key)} aria-pressed={selected?.key === r.key}
                 aria-label={`${r.title}, ${fmt(r.date)}, age ${r.age}, ${STATUS_LABEL[r.status].toLowerCase()}`}
                 className={cn('timeline-pin', `timeline-pin-${r.status}`, selected?.key === r.key && 'timeline-pin-on')}
-                style={{ left: pos(r.year + (r.date.getUTCMonth() / 12)), top: i % 2 ? '58%' : '14%' }}>
+                style={{ left: pos(r.year + (r.date.getUTCMonth() / 12)), top: LANE_TOP[lane.get(r.key) ?? 0] }}>
                 <span aria-hidden className="timeline-pin-dot" /><span className="timeline-pin-label">{r.title}</span>
               </button>
             ))}
