@@ -1002,11 +1002,11 @@ li:hover > .zodiac-coin { transform: rotate(-10deg); }
 /* Phone: the Cartographer and her dial on top, the text beneath. Wider: figure + dial on the left, text on the right. */
 .chartmap { position: relative; display: grid; min-height: 100%; grid-template-columns: minmax(0, 1fr); align-content: start; }
 .chartmap-stage { position: relative; z-index: 3; padding: 7.25rem 0 0 .5rem; }
-.chartmap-figure-wrap { position: relative; width: 52%; aspect-ratio: 820 / 1025; }
+.chartmap-figure-wrap { position: relative; width: 58%; aspect-ratio: 820 / 1025; }
 .chartmap-figure { display: block; width: 100%; height: 100%; object-fit: cover;
   -webkit-mask-image: linear-gradient(to bottom, #000 78%, transparent); mask-image: linear-gradient(to bottom, #000 78%, transparent); }
 /* Her fingertip sits at about 95% across and 13% down the drawing: the dial's lower-left edge meets it. */
-.chartmap-dial { position: absolute; left: 80%; bottom: 84%; width: 82%; }
+.chartmap-dial { position: absolute; left: 80%; bottom: 84%; width: 72%; }
 .chartmap-copy { position: relative; z-index: 10; display: flex; min-width: 0; flex-direction: column; gap: 1rem; margin-top: -2.5rem; padding: 0 1.25rem 1rem; }
 .chartmap-planets { display: none; gap: .45rem 1rem; grid-template-columns: repeat(auto-fill, minmax(8.5rem, 1fr)); }
 .hero-slides .hero-headline { font-size: 2.1rem; letter-spacing: 0; }
@@ -1018,12 +1018,12 @@ li:hover > .zodiac-coin { transform: rotate(-10deg); }
 }
 @container hero (min-width: 40rem) {
   .hero-slides .hero-headline { font-size: 2.55rem; }
-  .chartmap { grid-template-columns: 41% minmax(0, 1fr); align-content: stretch; }
+  .chartmap { grid-template-columns: 43% minmax(0, 1fr); align-content: stretch; }
   .chartmap-stage { display: flex; align-items: flex-end; padding: 0 0 0 .25rem; }
-  .chartmap-figure-wrap { width: 80%; }
+  .chartmap-figure-wrap { width: 96%; }
   .chartmap-figure { -webkit-mask-image: none; mask-image: none; }
-  .chartmap-dial { left: 74%; bottom: 86%; width: 60%; }
-  .chartmap-copy { margin-top: 0; justify-content: center; gap: 1.1rem; padding: 2.25rem 1.75rem 4.75rem 1.25rem; }
+  .chartmap-dial { left: 71%; bottom: 85%; width: 50%; }
+  .chartmap-copy { margin-top: 0; justify-content: center; gap: 1.1rem; padding: 2.25rem 1.75rem 4.75rem 3.75rem; }
 }
 @container hero (min-width: 56rem) {
   .hero-slides .hero-headline { font-size: 3.2rem; }
@@ -1041,7 +1041,8 @@ li:hover > .zodiac-coin { transform: rotate(-10deg); }
 .art-slide-copy { min-width: 0; }
 @container hero (min-width: 40rem) {
   .art-slide { align-items: center; gap: 2.25rem; padding: 2.5rem 2.25rem 4.75rem; }
-  .art-slide-landscape { grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); }
+  .art-slide-landscape { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); }
+  .art-slide .hero-headline { font-size: 2.35rem; }
   .art-slide-landscape .art-slide-art { order: 2; width: 100%; }
   .art-slide-portrait { grid-template-columns: minmax(0, .8fr) minmax(0, 1fr); }
   .art-slide-portrait .art-slide-art { width: 100%; max-width: 19rem; }
@@ -1297,3 +1298,11 @@ li:hover > .zodiac-coin { transform: rotate(-10deg); }
 @media (min-width: 768px) { .store-hero { grid-template-columns: minmax(0, 15rem) minmax(0, 1fr); padding: 1.5rem 2rem; gap: 2.5rem; } .store-hero-art { width: 100%; } .store-hero-copy { padding: 1rem 3.5rem 1rem 0; } }
 @media (min-width: 1100px) { .store-hero { grid-template-columns: minmax(0, 19rem) minmax(0, 1fr); } }
 @media (prefers-reduced-motion: reduce) { .store-hero-art img { transform: none; } }
+
+/* Phones: the slideshow takes the height of the slide on screen, so no slide leaves an empty band under it. */
+@media (max-width: 767px) {
+  .hero-slides-track { position: relative; }
+  .hero-slide:not(.hero-slide-on) { position: absolute; inset: 0 0 auto 0; }
+  .art-slide-landscape .art-slide-art { width: min(92%, 24rem); }
+  .art-slide-portrait .art-slide-art { width: min(52%, 13rem); }
+}
