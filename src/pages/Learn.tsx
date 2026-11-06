@@ -40,7 +40,7 @@ export default function Learn() {
   const guides = READING_ROOM.filter(a => !cat || a.category === cat);
 
   return (
-    <article className="space-y-14">
+    <article className="space-y-10 overflow-x-clip">
       <header className="learn-hero relative overflow-hidden rounded-2xl border border-[hsl(var(--brass)/0.5)]">
         <img src={READING_ROOM_HERO} alt="A lamp-lit 1950s home library with a telescope at the window and a zodiac wheel on the wall" width={1280} height={717} {...{ fetchpriority: 'high' }} className="h-80 w-full object-cover sm:h-[26rem]" />
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/55 to-transparent" />
@@ -52,7 +52,7 @@ export default function Learn() {
         </div>
       </header>
 
-      <nav aria-label="Learn sections" className="learn-subnav sticky top-16 z-30 -mx-2 flex gap-2 overflow-x-auto rounded-full border border-[hsl(var(--brass)/0.5)] bg-background p-1.5 shadow-lg lg:top-20">
+      <nav aria-label="Learn sections" className="learn-subnav sticky top-16 z-30 mx-0 flex gap-2 overflow-x-auto rounded-full border border-[hsl(var(--brass)/0.5)] bg-background p-1.5 shadow-lg lg:top-20">
         {sections.map(s => <a key={s.id} href={`#${s.id}`} aria-current={hash === `#${s.id}` ? 'true' : undefined} className={cn('flex shrink-0 items-center gap-2 rounded-full px-3 py-1.5 font-label text-sm transition-colors duration-700 hover:bg-secondary', hash === `#${s.id}` && 'bg-primary text-primary-foreground')}><SpotArt kind={s.art} className="h-6 w-6" orbit={false} />{s.label}</a>)}
       </nav>
 
@@ -62,8 +62,8 @@ export default function Learn() {
           <div key={path.slug}>
             <h3 className="font-display text-2xl">{path.title}</h3>
             <p className="mt-1 max-w-2xl text-sm text-muted-foreground">{path.intro}</p>
-            <ol className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">{path.lessons.map((l, i) => (
-              <li key={l.slug}><Link to={`/academy/${l.slug}`} className="atomic-box h-full"><SpotArt label={`${l.title} ${l.summary}`} badge={i + 1} className="h-16 w-16" /><h4 className="text-lg leading-snug">{l.title}</h4><p className="flex-1 text-sm leading-relaxed text-muted-foreground">{l.summary}</p><p className="flex items-center gap-1.5 font-label text-xs text-primary"><Clock aria-hidden className="h-3.5 w-3.5" />{l.minutes} min</p></Link></li>
+            <ol aria-label={`${path.title}: ${path.lessons.length} lessons, scroll sideways for more`} tabIndex={0} className="learn-shelf mt-5 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-3">{path.lessons.map((l, i) => (
+              <li key={l.slug} className="w-[min(16rem,72vw)] shrink-0 snap-start"><Link to={`/academy/${l.slug}`} className="obs-paper learn-card flex h-full flex-col gap-3 p-4"><SpotArt label={`${l.title} ${l.summary}`} badge={i + 1} className="h-14 w-14" /><h4 className="font-display text-lg leading-snug">{l.title}</h4><p className="flex-1 text-sm leading-relaxed text-muted-foreground">{l.summary}</p><p className="flex items-center gap-1.5 font-label text-xs tracking-[0.14em] text-primary"><Clock aria-hidden className="h-3.5 w-3.5" />{l.minutes} min</p></Link></li>
             ))}</ol>
           </div>
         ))}
@@ -89,14 +89,14 @@ export default function Learn() {
       <section id="guides" aria-labelledby="guides-h" className="scroll-mt-36 space-y-6">
         <SectionHead id="guides-h" eyebrow="The Reading Room" title="Illustrated guides" text="Short guides with words to know and something to try on your own chart." art="explore" />
         <div role="group" aria-label="Filter guides by category" className="flex flex-wrap gap-2">
-          {[null, ...ROOM_CATEGORIES].map(c => <Button key={c ?? 'all'} size="sm" variant={cat === c ? 'secondary' : 'outline'} aria-pressed={cat === c} onClick={() => setCat(c)}>{c ?? 'All'}</Button>)}
+          {[null, ...ROOM_CATEGORIES].map(c => <button key={c ?? 'all'} type="button" aria-pressed={cat === c} onClick={() => setCat(c)} className={cn('rounded-full border border-[hsl(var(--brass)/0.5)] px-4 py-1.5 font-label text-sm tracking-[0.12em] transition-colors duration-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring', cat === c ? 'bg-primary text-primary-foreground' : 'hover:bg-secondary')}>{c ?? 'All'}</button>)}
         </div>
-        <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">{guides.map(a => <li key={a.slug}><Link to={`/reading-room/${a.slug}`} className="atomic-box h-full overflow-hidden p-0"><img src={a.image} alt="" loading="lazy" decoding="async" width={1280} height={717} className="aspect-video w-full object-cover" /><div className="space-y-2 p-5"><p className="font-label text-xs text-primary">{a.category} · {a.minutes} min</p><h3 className="text-xl leading-snug">{a.title}</h3><p className="text-sm text-muted-foreground">{a.glance}</p></div></Link></li>)}</ul>
+        <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">{guides.map(a => <li key={a.slug}><Link to={`/reading-room/${a.slug}`} className="obs-paper learn-card flex h-full flex-col overflow-hidden"><img src={a.image} alt="" loading="lazy" decoding="async" width={1280} height={717} className="aspect-[3/2] w-full object-cover" /><div className="flex flex-1 flex-col gap-2 p-5"><p className="font-label text-xs tracking-[0.14em] text-primary">{a.category} · {a.minutes} min</p><h3 className="font-display text-xl leading-snug">{a.title}</h3><p className="flex-1 text-sm text-muted-foreground">{a.glance}</p><p className="font-label text-xs tracking-[0.14em] text-accent">Read guide →</p></div></Link></li>)}</ul>
       </section>
 
       <section id="articles" aria-labelledby="articles-h" className="scroll-mt-36 space-y-6">
         <SectionHead id="articles-h" eyebrow="Zodaci editorial" title="Articles" text="Longer pieces on the measured sky and on using a reading well, each with sources you can check." art="source" />
-        <ul className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">{PUBLIC_ARTICLES.map(a => <li key={a.slug}><Link to={`/learn/${a.slug}`} className="atomic-box h-full overflow-hidden p-0"><img src={a.image} alt="" width={1024} height={768} loading="lazy" decoding="async" className="aspect-[4/3] w-full object-cover" /><div className="flex flex-1 flex-col gap-2 p-5"><p className="font-label text-xs text-accent">{a.category}</p><h3 className="text-xl leading-snug">{a.title}</h3><p className="flex-1 text-sm text-muted-foreground">{a.summary}</p><p className="font-label text-xs text-primary">Read article →</p></div></Link></li>)}</ul>
+        <ul className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">{PUBLIC_ARTICLES.map((a, i) => <li key={a.slug} className={i === 0 ? 'md:col-span-2 lg:col-span-3' : undefined}><Link to={`/learn/${a.slug}`} className={cn('obs-paper learn-card h-full overflow-hidden', i === 0 ? 'grid md:grid-cols-2' : 'flex flex-col')}><img src={a.image} alt="" width={1024} height={768} loading="lazy" decoding="async" className={cn('w-full object-cover', i === 0 ? 'aspect-[4/3] md:aspect-auto md:h-full' : 'aspect-[4/3]')} /><div className={cn('flex flex-1 flex-col gap-2', i === 0 ? 'p-6 sm:p-8 md:justify-center' : 'p-5')}><p className="font-label text-xs tracking-[0.14em] text-accent">{i === 0 ? `Featured · ${a.category}` : a.category}</p><h3 className={cn('font-display leading-snug', i === 0 ? 'text-2xl sm:text-3xl' : 'text-xl')}>{a.title}</h3><p className={cn('text-sm text-muted-foreground', i !== 0 && 'flex-1')}>{a.summary}</p><p className="font-label text-xs tracking-[0.14em] text-primary">Read article →</p></div></Link></li>)}</ul>
       </section>
 
       <section id="journal" aria-labelledby="journal-h" className="scroll-mt-36 space-y-6">
@@ -104,16 +104,19 @@ export default function Learn() {
         <CommunityJournal />
       </section>
 
-      <section className="atomic-box items-start p-6 sm:flex-row sm:items-center sm:justify-between"><div className="flex items-center gap-4"><SpotArt kind="chart" className="h-16 w-16" /><div><h2 className="font-display text-2xl">Try it on your own sky</h2><p className="text-sm text-muted-foreground">Every lesson and guide makes more sense with your chart open beside it.</p></div></div><Button asChild variant="signal"><Link to={session ? '/my-chart' : '/start'}>{session ? 'Open my chart' : 'Generate your chart'}<ArrowRight /></Link></Button></section>
+      <section className="obs-paper flex flex-col items-start gap-4 p-6 sm:flex-row sm:items-center sm:justify-between"><div className="flex items-center gap-4"><SpotArt kind="chart" className="h-16 w-16" /><div><h2 className="font-display text-2xl">Try it on your own sky</h2><p className="text-sm text-muted-foreground">Every lesson and guide makes more sense with your chart open beside it.</p></div></div><Button asChild variant="signal"><Link to={session ? '/my-chart' : '/start'}>{session ? 'Open my chart' : 'Generate your chart'}<ArrowRight /></Link></Button></section>
     </article>
   );
 }
 
 function SectionHead({ id, eyebrow, title, text, art }: { id: string; eyebrow: string; title: string; text: string; art: SpotKind }) {
   return (
+    <div>
+    <div aria-hidden="true" className="mb-4 h-px bg-[hsl(var(--brass)/0.4)]" />
     <div className="flex items-start gap-5">
       <SpotArt kind={art} className="hidden h-20 w-20 sm:inline-flex" />
-      <div><p className="font-label text-sm tracking-[0.18em] text-accent">{eyebrow}</p><h2 id={id} className="mt-1 font-display text-3xl sm:text-4xl">{title}</h2><p className="mt-2 max-w-2xl text-muted-foreground">{text}</p></div>
+      <div><p className="font-label text-xs tracking-[0.16em] text-accent">{eyebrow}</p><h2 id={id} className="mt-1 font-display text-3xl sm:text-4xl">{title}</h2><p className="mt-2 max-w-2xl text-muted-foreground">{text}</p></div>
+    </div>
     </div>
   );
 }
