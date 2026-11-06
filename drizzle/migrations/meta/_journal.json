@@ -547,6 +547,13 @@
       "when": 1793760313613,
       "tag": "0077_migration",
       "breakpoints": true
+    },
+    {
+      "idx": 78,
+      "version": "7",
+      "when": 1794007695856,
+      "tag": "0078_observation_log_reading_progress_zac_podcasts",
+      "breakpoints": true
     }
   ]
 }

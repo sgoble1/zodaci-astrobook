@@ -1411,6 +1411,39 @@ export type Database = {
         }
         Relationships: []
       }
+      observation_log: {
+        Row: {
+          created_at: string
+          id: string
+          location: string
+          notes: string
+          observed_at: string
+          owner_id: string
+          tags: string[]
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          location?: string
+          notes?: string
+          observed_at: string
+          owner_id?: string
+          tags?: string[]
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          location?: string
+          notes?: string
+          observed_at?: string
+          owner_id?: string
+          tags?: string[]
+          updated_at?: string
+        }
+        Relationships: []
+      }
       official_editions: {
         Row: {
           birth: Json
@@ -1582,6 +1615,42 @@ export type Database = {
           sex?: string
           tz?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      reading_progress: {
+        Row: {
+          created_at: string
+          id: string
+          last_read_at: string
+          owner_id: string
+          path: string
+          progress: number
+          section_id: string | null
+          section_title: string | null
+          title: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          last_read_at?: string
+          owner_id?: string
+          path: string
+          progress?: number
+          section_id?: string | null
+          section_title?: string | null
+          title: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          last_read_at?: string
+          owner_id?: string
+          path?: string
+          progress?: number
+          section_id?: string | null
+          section_title?: string | null
+          title?: string
         }
         Relationships: []
       }
