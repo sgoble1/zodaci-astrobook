@@ -10,19 +10,24 @@ import { usePageMeta } from '@/hooks/usePageMeta';
 import { PLAN_NAME, PLAN_PRICE, CREDIT_ALLOWANCE } from '@/lib/plans';
 import { BOOK_VERSIONS, money } from '@/lib/books';
 import { PanelTitle, StatusLight } from '@/components/observatory/Observatory';
-import { HeroSlideshow, ChartMapSlide, LookUpSlide, PressSlide } from '@/components/observatory/HeroSlides';
-import { MottoRail, ForecastPlate, type MottoLink, ExplorePoster, DestinationTiles, QuotePlate, ArchiveShelf, HowItWorks, ZodiacPlate, TransmissionsPlate, JoinPlate, type Destination } from '@/components/observatory/Mosaic';
+import { HeroSlideshow, ChartMapSlide, LookUpSlide, PressSlide, ArtSlide } from '@/components/observatory/HeroSlides';
+import { MottoRail, ForecastPlate, type MottoLink, ExplorePoster, DestinationTiles, QuotePlate, ArchiveShelf, HowItWorks, ZodiacPlate, TransmissionsPlate, JoinPlate, LessonsTile, PrecisionTile, ShopWindowPlate, type Destination } from '@/components/observatory/Mosaic';
+import rooftop from '@/assets/home/rooftop-astronomers.jpg';
+import stargazer from '@/assets/home/stargazer-field-guide.jpg';
+import giftTower from '@/assets/home/gift-shop-tower.jpg';
 import { BookIcon, ChartWheelIcon, RingsIcon, StorefrontIcon, TelescopeIcon } from '@/components/icons/RetroIcons';
 import { ALL_READINGS } from '@/lib/topicReadings';
 import { PersonalizationStory } from '@/components/books/PersonalizationStory';
 import { ACADEMY } from '@/content/academy';
 import { HOUSE_SYSTEMS } from '@/lib/astro';
 
+const lessonCount = ACADEMY.reduce((n, p) => n + p.lessons.length, 0);
+
 /** Product facts only — counted from the app itself, never invented usage numbers. */
 const FACTS: [string, string][] = [
   [String(ALL_READINGS.length), 'readings written from your chart'],
   [String(HOUSE_SYSTEMS.length), 'house systems to compare'],
-  [String(ACADEMY.reduce((n, p) => n + p.lessons.length, 0)), 'free Academy lessons'],
+  [String(lessonCount), 'free Academy lessons'],
   ['Free', 'to begin — no trial clock'],
 ];
 
@@ -86,6 +91,27 @@ export default function BrandLanding() {
         points={['Your name and birth details on the cover', `Five editions, from a ${money(fromBook)} PDF to linen hardcover`, 'Printed to order and shipped free in the US']}
         book={{ to: '/astrobook', label: 'Browse AstroBooks' }} comic={{ to: '/astrocomic', label: 'Meet AstroComic' }} />,
     },
+    {
+      id: 'precision', label: 'Astronomy-grade precision',
+      content: <ArtSlide art={{ src: rooftop, alt: 'Two 1950s astronomers on an observatory rooftop at night: one looks through a brass telescope, the other holds a clipboard beside an easel with a zodiac wheel', width: 1400, height: 933 }}
+        eyebrow="Our craft" title={<>Astronomy-grade precision.<br />Plain-language depth.</>} script="Worked out first, written second."
+        text="We calculate your chart from the minute and place you were born, using the time-zone rules your town actually kept that day. Then every reading is written in plain words and names the placement it comes from."
+        cta={{ to: '/start', label: 'Start your chart' }} secondary={{ to: '/astrobook', label: 'Get your AstroBook' }} />,
+    },
+    {
+      id: 'field-guide', label: 'Field guide to the stars',
+      content: <ArtSlide art={{ src: stargazer, alt: 'A 1950s woman astronomer in a cream lab coat holds a red field guide and points up at a red starburst, with domed observatories and a brass telescope behind her', width: 900, height: 1350 }}
+        eyebrow="The Academy" title={<>Your field guide<br />to the stars.</>} script="Free lessons, plain words."
+        text={<>{lessonCount} short lessons and illustrated guides take you from the twelve signs to reading your own transits. No account needed to start.</>}
+        cta={{ to: '/learn', label: 'Start learning' }} secondary={{ to: '/forecast', label: 'Read today’s sky' }} />,
+    },
+    {
+      id: 'gift-shop', label: 'The Observatory Gift Shop',
+      content: <ArtSlide art={{ src: giftTower, alt: 'A 1950s poster of a radio tower and copper-domed observatory above a small town, radio waves rippling into a starry teal sky', width: 900, height: 1125 }}
+        eyebrow="The Observatory Gift Shop" title={<>Souvenirs from<br />your own sky.</>} script="Every sign, one atomic age."
+        text="Posters, tees, mugs, totes, notebooks and stickers for all twelve signs, drawn in the same 1950s style as the observatory."
+        cta={{ to: '/store', label: 'Visit the gift shop' }} secondary={{ to: '/store?collection=atomic', label: 'Atomic Zodiac Collection' }} />,
+    },
   ];
   return <div className="brand-site min-h-screen text-foreground">
     <a href="#brand-main" className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:bg-background focus:p-3">Skip to content</a>
@@ -98,6 +124,12 @@ export default function BrandLanding() {
       </div>
 
       <DestinationTiles label="Main destinations" items={DESTINATIONS} />
+
+      <div className="mosaic-trio">
+        <LessonsTile />
+        <ShopWindowPlate />
+        <PrecisionTile />
+      </div>
 
       <div className="mosaic-split-1-2">
         <QuotePlate art="magnifier" quote="We check every position twice, name our sources, and never make up details about anyone’s life." by="How we work" />
