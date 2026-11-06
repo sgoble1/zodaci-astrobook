@@ -47,7 +47,7 @@ export function ScrollManager() {
         const el = document.getElementById(intent.id);
         if (el) {
           // Images above the section can finish loading after the jump; re-align a few times unless the visitor scrolls.
-          const off = el.getBoundingClientRect().top - pad;
+          const off = el.getBoundingClientRect().top - pad - (parseFloat(getComputedStyle(el).scrollMarginTop) || 0);
           if (settles === 0 || (!touched && Math.abs(off) > 24)) el.scrollIntoView({ block: 'start', behavior: settles === 0 && intent.smooth && !reduce ? 'smooth' : ('instant' as ScrollBehavior) });
           if (++settles < 6 && !touched && !intent.smooth) timer = window.setTimeout(go, 400);
           return;
