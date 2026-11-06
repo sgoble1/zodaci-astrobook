@@ -96,7 +96,8 @@ export default function Store() {
   const band = PRICE_BANDS.find(b => b.id === price);
   const shown = useMemo(() => {
     const words = q.toLowerCase().split(/\s+/).filter(Boolean);
-    const list = (products ?? []).filter(p => (type === 'All' || p.node.productType === type)
+    const list = (products ?? []).filter(p => (collection === 'all' || isAtomicZodiac(p.node))
+      && (type === 'All' || p.node.productType === type)
       && (sign === 'All' || signOf(p) === sign.toLowerCase())
       && (!band || (priceOf(p) >= band.min && priceOf(p) < band.max))
       && (!inStockOnly || inStock(p))

@@ -25,6 +25,7 @@ export function ProductCard({ p, onAdd, adding, className }: { p: ShopifyProduct
       </Link>
       <div className="flex flex-1 flex-col gap-2 p-4">
         <Link to={`/product/${p.node.handle}`} className="font-display text-lg leading-snug hover:underline">{title}</Link>
+        {atomic && <p className="font-label text-xs tracking-[0.14em] text-accent">Atomic Zodiac edition</p>}
         <p className="line-clamp-2 text-sm text-muted-foreground">{p.node.description}</p>
         <div className="mt-auto flex items-center justify-between gap-2 pt-2">
           <span className="font-label text-lg tracking-wider text-primary">{p.node.variants.edges.length > 1 ? 'From ' : ''}{formatMoney(p.node.priceRange.minVariantPrice)}</span>
