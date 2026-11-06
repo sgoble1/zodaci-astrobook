@@ -1061,7 +1061,8 @@ li:hover > .zodiac-coin { transform: rotate(-10deg); }
 .press-stack-front:hover, .press-stack-front:focus-visible { transform: rotate(-1.5deg) translateY(-6px); }
 .press-stack-comic:hover, .press-stack-comic:focus-visible { transform: rotate(2.5deg) translateY(-6px); }
 .press-stack > a:focus-visible { outline: 2px solid hsl(var(--comic-mustard)); outline-offset: 4px; border-radius: .3rem; }
-.press-stack-note { position: absolute; left: 0; bottom: 0; font-family: 'Bebas Neue', sans-serif; font-size: .8rem; letter-spacing: .16em; text-transform: uppercase; color: hsl(var(--comic-mustard)); }
+.press-stack { margin-bottom: 2.4rem; }
+.press-stack-note { position: absolute; inset-inline: 0; top: 100%; margin: 0; padding-top: .9rem; text-align: center; font-family: 'Bebas Neue', sans-serif; font-size: .8rem; letter-spacing: .16em; text-transform: uppercase; color: hsl(var(--comic-mustard)); }
 .press-cutout { filter: drop-shadow(5px 7px 0 hsl(var(--midnight) / .7)) drop-shadow(0 0 1.5px hsl(var(--comic-mustard))); }
 @media (prefers-reduced-motion: reduce) { .press-stack > a { transition: none; } }
 
