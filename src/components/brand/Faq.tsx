@@ -49,8 +49,8 @@ const SHIPPING_ANSWER = `${DIGITAL ? `The ${DIGITAL.name} is ready as soon as pa
 export const PRICING_FAQ: QA[] = [
   { q: 'What happens when my free trial ends?', a: `Zodaci doesn't have a time-limited trial — the ${PLAN_NAME.free} plan is free forever. If a friend's invitation gave you 7 days of ${PLAN_NAME.full}, you return to ${PLAN_NAME.free} automatically when it ends and nothing is charged.` },
   { q: 'Can I cancel anytime?', a: 'Yes. Open Manage subscription on the pricing page and cancel in a couple of clicks. You keep access until the end of your billing period.' },
-  { q: 'Do you offer refunds?', a: `Yes. Ask within ${REFUND_WINDOW_DAYS} days of your first subscription payment and we refund it in full — email hello@zodaci.com from your account address. After that, cancelling stops future renewals and you keep access until the period ends. AstroBooks are made to order, so they are reprinted free if damaged or misprinted rather than refunded.` },
-  { q: 'Is my birth data private?', a: 'Your birth details, chart and readings are visible only to you unless you choose to share them, and we never sell them. To write readings, the relevant chart facts are sent to our AI provider; they are not used to build a public profile of you. Email hello@zodaci.com from your account address to have everything deleted.' },
+  { q: 'Do you offer refunds?', a: `Yes. Ask within ${REFUND_WINDOW_DAYS} days of your first subscription payment and we refund it in full — email help@zodaci.com from your account address. After that, cancelling stops future renewals and you keep access until the period ends. AstroBooks are made to order, so they are reprinted free if damaged or misprinted rather than refunded.` },
+  { q: 'Is my birth data private?', a: 'Your birth details, chart and readings are visible only to you unless you choose to share them, and we never sell them. To write readings, the relevant chart facts are sent to our AI provider; they are not used to build a public profile of you. Email help@zodaci.com from your account address to have everything deleted.' },
   { q: "What if I don't know my birth time?", a: 'You can still begin. Planet signs and aspects come from your birth date and place. Your Rising sign and houses depend on the exact time, so Zodaci leaves them out instead of guessing. Add the time later and your chart recalculates.' },
   { q: "What's the difference between Zodaci and AstroBook?", a: 'Zodaci is the digital platform — your chart, readings and community all live here. AstroBook is a printed (or PDF) book made from your Zodaci readings and sold separately from plans. You can order one any time after creating your chart.' },
   { q: 'How does AstroBook shipping work?', a: SHIPPING_ANSWER },
@@ -84,7 +84,7 @@ export const GENERAL_FAQ: { category: string; items: QA[] }[] = [
   { category: 'AstroBook', items: ASTROBOOK_FAQ },
   { category: 'Privacy & data', items: [
     { q: 'What data does Zodaci store?', a: 'Your birth details, account email, notes or reflections you save, and your readings. We never sell this data.' },
-    { q: 'Can I delete my account and data?', a: 'Yes. Email hello@zodaci.com from your account address and we will permanently delete your account and associated data.' },
+    { q: 'Can I delete my account and data?', a: 'Yes. Email help@zodaci.com from your account address and we will permanently delete your account and associated data.' },
     { q: 'Is my data encrypted?', a: 'Data is encrypted in transit and stored with access rules so your birth details are never visible to other members.' },
   ] },
 ];

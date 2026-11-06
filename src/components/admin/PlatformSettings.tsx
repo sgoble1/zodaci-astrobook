@@ -66,7 +66,7 @@ export function PlatformSettings() {
         <form className="grid gap-3 sm:grid-cols-3" onSubmit={e => { e.preventDefault(); const fd = new FormData(e.currentTarget); const p = general.safeParse({ display_name: fd.get('display_name'), tagline: fd.get('tagline'), support_email: fd.get('support_email') }); if (!p.success) { toast.error(p.error.issues[0].message); return; } void save('site.general', p.data, 'General settings saved').then(ok => ok && setS({ ...s, general: p.data as SiteSettings['general'] })); }}>
           <div><Label htmlFor="ps-name">Display name</Label><Input id="ps-name" name="display_name" defaultValue={g.display_name} maxLength={60} /></div>
           <div><Label htmlFor="ps-tag">Tagline</Label><Input id="ps-tag" name="tagline" defaultValue={g.tagline} maxLength={120} /></div>
-          <div><Label htmlFor="ps-mail">Support email</Label><Input id="ps-mail" name="support_email" type="email" defaultValue={g.support_email} maxLength={254} placeholder="hello@zodaci.com" /></div>
+          <div><Label htmlFor="ps-mail">Support email</Label><Input id="ps-mail" name="support_email" type="email" defaultValue={g.support_email} maxLength={254} placeholder="help@zodaci.com" /></div>
           <Button type="submit" disabled={saving === 'site.general'} className="sm:col-span-3 sm:w-fit">{saving === 'site.general' ? 'Saving…' : 'Save general settings'}</Button>
         </form>
       </section>
@@ -104,7 +104,7 @@ export function PlatformSettings() {
       <section className="vellum space-y-3 p-5" aria-labelledby="ps-email">
         <h2 id="ps-email" className="font-display text-2xl flex items-center gap-2"><Mail aria-hidden className="h-5 w-5 text-gold" />Email sending</h2>
         <p className="text-sm">Sender domain: <span className="text-gold">not connected yet</span>.</p>
-        <p className="text-sm text-muted-foreground">Newsletters can be written, segmented and scheduled now; they are sent once a sender address on your own domain (for example hello@zodaci.com) is connected. Sign-in emails already work.</p>
+        <p className="text-sm text-muted-foreground">Newsletters can be written, segmented and scheduled now; they are sent once a sender address on your own domain (for example help@zodaci.com) is connected. Sign-in emails already work.</p>
       </section>
 
       <section className="vellum space-y-3 p-5" aria-labelledby="ps-prices">

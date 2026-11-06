@@ -35,7 +35,7 @@ export function CycleWall({ chart, birthYear, list = false }: { chart: ChartResu
     <div className="space-y-6">
       <section aria-label="Cycle wall" className="obs-panel p-4 sm:p-6">
         <div className="overflow-x-auto pb-7 pt-1">
-          <div className="min-w-[820px] pr-32">
+          <div className="min-w-[820px] pl-5 pr-32">
           <div className="relative h-40">
             <div aria-hidden className="absolute inset-x-0 bottom-0 h-px bg-primary/50" />
             {Array.from({ length: 10 }, (_, i) => startYear + i * 10).map(y => (
