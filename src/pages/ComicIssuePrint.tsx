@@ -37,7 +37,7 @@ export default function ComicIssuePrint() {
       <nav aria-label="Breadcrumb" className="text-sm text-muted-foreground"><Link to="/astrocomic" className="underline underline-offset-4">AstroComic</Link> / Print Issue #1</nav>
       <section className="grid items-center gap-10 lg:grid-cols-[1fr_340px]">
         <div>
-          <p className="font-smallcaps text-xs text-gold">{ISSUE_1.banner}</p>
+          <p className="font-label text-xs tracking-[0.16em] text-primary">{ISSUE_1.banner}</p>
           <h1 className="mt-3 font-display text-5xl leading-[0.95]">Print Issue #1:<br />{ISSUE_1.title}</h1>
           <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted-foreground">A 24-page digest comic in the Lantern &amp; Ink style, printed in full color and saddle-stitched. Pre-order now — estimated to ship in early December 2026.</p>
           <div className="mt-8 flex flex-wrap gap-3">
@@ -51,7 +51,7 @@ export default function ComicIssuePrint() {
       <section aria-labelledby="deliv-h" className="space-y-4">
         <h2 id="deliv-h" className="font-display text-3xl">Pre-order delivery timeline</h2>
         <p className="text-muted-foreground">Estimated dates. If anything slips we email every pre-order with the new date, and you can cancel for a full refund before it ships.</p>
-        <ol className="grid gap-4 md:grid-cols-5">{DELIVERY.map(([t, d, n], i) => <li key={t} className="vellum p-4"><p className="font-smallcaps text-xs text-gold">{d}</p><h3 className="mt-1 text-lg">{t}</h3><p className="mt-1 text-sm text-muted-foreground">{n}</p></li>)}</ol>
+        <ol className="grid gap-4 md:grid-cols-5">{DELIVERY.map(([t, d, n], i) => <li key={t} className="vellum p-4"><p className="font-label text-xs tracking-[0.16em] text-primary">{d}</p><h3 className="mt-1 text-lg">{t}</h3><p className="mt-1 text-sm text-muted-foreground">{n}</p></li>)}</ol>
       </section>
 
       <section aria-labelledby="formats-h">

@@ -4,7 +4,7 @@ import { TOPICS } from '@/content/topics';
 import { LIBRARY_TOPICS } from '@/content/libraryTopics';
 import { TOPIC_READINGS, CORE_THEMES } from '@/lib/topicReadings';
 
-export type NavItem = { to: string; label: string; created?: boolean; badge?: number };
+export type NavItem = { to: string; label: string; created?: boolean; badge?: number; /** One-line note under a menu entry whose name alone is unclear. */ hint?: string };
 export type NavSubmenu = { label: string; items: NavItem[] };
 export type NavGroup = { title: string; items: NavItem[]; submenus?: NavSubmenu[]; footer?: NavItem[] };
 

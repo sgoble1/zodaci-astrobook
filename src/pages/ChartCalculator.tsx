@@ -57,7 +57,7 @@ export default function ChartCalculator() {
   return (
     <div className="space-y-10">
       <header>
-        <div className="font-smallcaps text-xs text-gold">Calculator · natal positions, aspects & Ba Zi</div>
+        <div className="font-label text-xs tracking-[0.16em] text-primary">Calculator · natal positions, aspects & Ba Zi</div>
         <h1 className="text-4xl sm:text-5xl mt-2">Birth Chart Calculator</h1>
         <p className="text-muted-foreground mt-3 max-w-2xl">Enter a date, time and place. The app calculates planet positions, the Ascendant and Midheaven, the major aspects and the Chinese Four Pillars, and flags anything uncertain. It opens with April’s birth data so you can compare the results with the source documents.</p>
       </header>
@@ -101,7 +101,7 @@ export default function ChartCalculator() {
           <section>
             <h2 className="text-2xl mb-3">Planets & points</h2>
             <div className="overflow-x-auto"><table className="w-full text-sm">
-              <thead><tr className="text-left font-smallcaps text-[10px] text-muted-foreground border-b border-border"><th className="py-1.5">Point</th><th>Position</th><th>House</th><th>Meaning (in-app gloss)</th>{isApril && <th>Source PDF</th>}<th>Confidence</th></tr></thead>
+              <thead><tr className="text-left font-label text-[10px] tracking-[0.14em] text-muted-foreground border-b border-border"><th className="py-1.5">Point</th><th>Position</th><th>House</th><th>Meaning (in-app gloss)</th>{isApril && <th>Source PDF</th>}<th>Confidence</th></tr></thead>
               <tbody>
                 {result.asc != null && [['Ascendant', result.asc], ['Midheaven', result.mc!]].map(([n, l]) => (
                   <tr key={n as string} className="border-b border-border/50"><td className="py-1.5 font-medium">{n as string}</td><td className="font-mono">{fmtLon(l as number).text}<span className="block text-[10px] text-muted-foreground">independently calculated</span></td><td>{n === 'Ascendant' ? 1 : 10}</td><td className="text-xs">{SIGN_KEYWORDS[fmtLon(l as number).sign]}</td>{isApril && <td className="text-xs">{n === 'Ascendant' ? `${ANGLES.ascendant.sign} ${ANGLES.ascendant.degree}°${String(ANGLES.ascendant.minute).padStart(2, '0')}′` : `${ANGLES.midheaven.sign} ${ANGLES.midheaven.degree}°${String(ANGLES.midheaven.minute).padStart(2, '0')}′ · conjunct Spica`}<Cite source={BC_SRC} /></td>}<td><ConfidenceBadge compact level={input.placeSource === 'manual' ? 'approximate' : 'derived'} note="Angles move ~1° every 4 minutes; accuracy depends on the birth time." /></td></tr>
@@ -154,7 +154,7 @@ export default function ChartCalculator() {
                 const match = src ? src.romanized === p.romanized : null;
                 return (
                   <div key={p.label} className="parchment p-3 text-center">
-                    <div className="font-smallcaps text-[10px] text-gold">{p.label}</div>
+                    <div className="font-label text-[10px] tracking-[0.14em] text-primary">{p.label}</div>
                     <div className="font-display text-4xl mt-1">{p.stem}{p.branch}</div>
                     <div className="text-sm">{p.romanized}</div>
                     <div className="text-[11px] text-muted-foreground">{p.polarity} {p.stemElement} · {p.animal} ({p.branchElement})</div>

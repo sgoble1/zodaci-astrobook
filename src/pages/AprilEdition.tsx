@@ -39,7 +39,7 @@ function Section({ id, title, kicker, children }: { id: string; title: string; k
   return (
     <section id={id} aria-labelledby={`${id}-title`} className="scroll-mt-6 space-y-4">
       <div>
-        <div className="font-smallcaps text-xs text-gold">{kicker}</div>
+        <div className="font-label text-xs tracking-[0.16em] text-primary">{kicker}</div>
         <h2 id={`${id}-title`} className="text-3xl mt-1">{title}</h2>
       </div>
       {children}
@@ -94,7 +94,7 @@ function AprilEditionInner() {
     <article className="mx-auto max-w-4xl space-y-14 p-5 sm:p-10">
       <header className="space-y-4 text-center">
         <ZodaciLogo compact />
-        <div className="font-smallcaps text-xs text-gold">A shared chart report</div>
+        <div className="font-label text-xs tracking-[0.16em] text-primary">A shared chart report</div>
         <h1 className="text-4xl sm:text-6xl">{birth.name || "April's"} Edition</h1>
         <p className="mx-auto max-w-2xl text-muted-foreground">
           The original chart readings, prepared from April's verified birth chart. Shared by April with the accounts she chose — please keep this page private.
@@ -119,7 +119,7 @@ function AprilEditionInner() {
             ['Age', String(birth.currentAge)],
           ].map(([k, v]) => (
             <div key={k} className="parchment rounded-lg p-4">
-              <div className="font-smallcaps text-[10px] text-gold">{k}</div>
+              <div className="font-label text-[10px] tracking-[0.14em] text-primary">{k}</div>
               <div className="mt-1 text-sm">{v}</div>
             </div>
           ))}
@@ -217,8 +217,8 @@ function AprilEditionInner() {
         <div className="parchment rounded-lg p-5 space-y-3">
           <p className="text-sm">{ed.kua.note}</p>
           <div className="grid gap-3 sm:grid-cols-2">
-            <div><div className="font-smallcaps text-[10px] text-gold">Best directions</div><p className="text-sm">{ed.kua.bestDirections.join(' · ')}</p></div>
-            <div><div className="font-smallcaps text-[10px] text-gold">Directions to approach with care</div><p className="text-sm">{ed.kua.worstDirections.join(' · ')}</p></div>
+            <div><div className="font-label text-[10px] tracking-[0.14em] text-primary">Best directions</div><p className="text-sm">{ed.kua.bestDirections.join(' · ')}</p></div>
+            <div><div className="font-label text-[10px] tracking-[0.14em] text-primary">Directions to approach with care</div><p className="text-sm">{ed.kua.worstDirections.join(' · ')}</p></div>
           </div>
           <div className="space-y-3 pt-2">
             {ed.bagua.map(b => (
@@ -241,7 +241,7 @@ function AprilEditionInner() {
           ].map(([k, n, m]) => (
             <div key={k} className="parchment rounded-lg p-5">
               <ThemeArt kind="year" className="h-14 w-14" badge={String(n)} />
-              <div className="mt-2 font-smallcaps text-[10px] text-gold">{k}</div>
+              <div className="mt-2 font-label text-[10px] tracking-[0.14em] text-primary">{k}</div>
               <p className="mt-1 text-sm leading-relaxed text-foreground/90">{m}</p>
             </div>
           ))}

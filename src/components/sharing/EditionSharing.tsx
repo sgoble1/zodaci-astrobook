@@ -69,7 +69,7 @@ export function EditionSharingPanel({ edition }: { edition: Edition }) {
         <>
           {error && <p role="alert" className="text-sm text-destructive">{error}</p>}
           <div>
-            <h3 className="font-smallcaps text-xs text-gold">The whole book</h3>
+            <h3 className="font-label text-xs tracking-[0.16em] text-primary">The whole book</h3>
             {whole.length === 0 ? <p className="mt-2 text-sm text-muted-foreground">Only you can read it.</p> : (
               <ul className="mt-2 divide-y divide-border rounded-lg border border-border">
                 {whole.map(s => (
@@ -84,7 +84,7 @@ export function EditionSharingPanel({ edition }: { edition: Edition }) {
           <RecipientPicker idPrefix={`edition-${edition}`} edition={edition} busy={busy} exclude={whole.map(s => s.recipient)} onPick={t => run(() => shareEdition(edition, t), 'Masterbook shared')} />
           {chapters.length > 0 && (
             <div>
-              <h3 className="font-smallcaps text-xs text-gold">Single chapters you’ve shared</h3>
+              <h3 className="font-label text-xs tracking-[0.16em] text-primary">Single chapters you’ve shared</h3>
               <ul className="mt-2 divide-y divide-border rounded-lg border border-border">
                 {chapters.map(s => (
                   <li key={s.key} className="flex items-center justify-between gap-3 px-3 py-2 text-sm">

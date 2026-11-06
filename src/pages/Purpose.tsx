@@ -34,7 +34,7 @@ export default function Purpose() {
       </section>
 
       <section className="p-6 border border-gold/40 rounded bg-card">
-        <div className="font-smallcaps text-[11px] text-gold">The Double-Seven</div>
+        <div className="font-label text-xs tracking-[0.16em] text-primary">The Double-Seven</div>
         <h3 className="font-display mt-2">Life Path 7 · Personal Year 7 · 2026</h3>
         <p className="mt-4 text-foreground/85 leading-relaxed">
           A Personal Year that matches the Life Path is rare; when it does the year's frequency amplifies to its maximum possible expression. For a seven this means an interior year of research, spiritual deepening, solitude as strength, and the accumulation of wisdom that no outward search could ever produce. Layered atop the four simultaneous astrological activations of 2026, the timing is not coincidental. It is the schedule she was born to keep.
@@ -48,7 +48,7 @@ export default function Purpose() {
 function BigNumber({ label, value, accent = false }: { label: string; value: string; accent?: boolean }) {
   return (
     <div className={`p-6 border rounded text-center ${accent ? 'border-gold/60 bg-gold/5' : 'border-border bg-card/60'}`}>
-      <div className="font-smallcaps text-[10px] text-muted-foreground">{label}</div>
+      <div className="font-label text-[10px] tracking-[0.14em] text-muted-foreground">{label}</div>
       <div className="font-display text-7xl text-gold leading-none mt-2">{value}</div>
     </div>
   );

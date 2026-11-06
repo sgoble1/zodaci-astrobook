@@ -68,7 +68,7 @@ export default function Developer({ view = 'board' }: { view?: 'board' | 'timeli
 
   if (view === 'timeline') return (
     <article className="space-y-8">
-      <header className="space-y-3"><p className="font-smallcaps text-xs text-gold">Developer · {dev ? 'editor' : 'read-only'}</p><h1 className="text-4xl">Build timeline</h1><p className="max-w-2xl text-muted-foreground">From the first "Zodiactic" build in October 2025 to today. Summarised from both project chats.</p>{tabs}</header>
+      <header className="space-y-3"><p className="font-label text-xs tracking-[0.16em] text-primary">Developer · {dev ? 'editor' : 'read-only'}</p><h1 className="text-4xl">Build timeline</h1><p className="max-w-2xl text-muted-foreground">From the first "Zodiactic" build in October 2025 to today. Summarised from both project chats.</p>{tabs}</header>
       <ol className="relative space-y-6 border-l border-gold/40 pl-6">{DEV_TIMELINE.map((e, i) => (
         <li key={i} className="relative"><span aria-hidden className={`absolute -left-[1.95rem] top-1.5 h-3 w-3 rounded-full ${e.phase === 'Current build' ? 'bg-primary' : 'bg-gold'}`} />
           <p className="text-xs text-muted-foreground">{new Date(e.date + 'T12:00:00Z').toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })} · {e.phase}</p>

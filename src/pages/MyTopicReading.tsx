@@ -60,7 +60,7 @@ export default function MyTopicReading({ slugOverride }: { slugOverride?: string
       <header className="flex flex-wrap border-b border-border items-center gap-6 p-6 sm:p-8">
         <ThemeArt label={`${meta?.title ?? ''} ${slug}`} className="h-24 w-24" />
         <div className="min-w-0 flex-1 space-y-2">
-          <p className="font-smallcaps text-xs text-gold">Your reading{row ? ` · ${Math.max(1, Math.round(row.content.split(/\s+/).length / 230))} min read · ${sections.length} sections` : ''}</p>
+          <p className="font-label text-xs tracking-[0.16em] text-primary">Your reading{row ? ` · ${Math.max(1, Math.round(row.content.split(/\s+/).length / 230))} min read · ${sections.length} sections` : ''}</p>
           <h1 className="font-display text-4xl sm:text-5xl">{meta?.title ?? 'Reading'}</h1>
           <p className="text-sm text-muted-foreground">Written from your own birth chart.</p>
         </div>
@@ -75,7 +75,7 @@ export default function MyTopicReading({ slugOverride }: { slugOverride?: string
           </div>
           <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-b from-transparent via-background/80 to-background">
             <div className="vellum max-w-md space-y-3 p-6 text-center">
-              <p className="font-smallcaps text-xs text-gold">Preview · section 1 of 5</p>
+              <p className="font-label text-xs tracking-[0.16em] text-primary">Preview · section 1 of 5</p>
               <p className="font-display text-2xl">Unlock the full deep dive</p>
               <p className="text-sm text-muted-foreground">Your chart has four more sections on daily life, strengths, watch-outs, practices and reflection questions.</p>
               <Button asChild><Link to={`/pricing?next=${encodeURIComponent(`/my-readings/topic/${slug}`)}`}>Upgrade to Pro — $9/mo</Link></Button>

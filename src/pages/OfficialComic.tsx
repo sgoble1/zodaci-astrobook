@@ -90,7 +90,7 @@ export default function OfficialComic() {
     <article className="space-y-6">
       <header className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <div className="font-smallcaps text-xs text-gold">Official AstroComic · {ownerLabel(row)}</div>
+          <div className="font-label text-xs tracking-[0.16em] text-primary">Official AstroComic · {ownerLabel(row)}</div>
           <h1 className="text-4xl sm:text-5xl">{issue.title}</h1>
           <p className="mt-2 max-w-2xl text-muted-foreground">Issue {issue.issueNumber} · {issue.monthLabel}. Sun in {issue.signs.sun}{issue.signs.moon ? `, Moon in ${issue.signs.moon}` : ''}{issue.signs.rising ? `, ${issue.signs.rising} rising` : ''}. Calculated from {row.birth_source.toLowerCase()}.</p>
         </div>

@@ -50,7 +50,7 @@ export function FlyingStarWheel({ initialYear = new Date().getFullYear() }: { in
         <p className="text-xs text-muted-foreground mt-1">South at the top, as in classical charts. Years change at Lichun (~4 February).</p>
       </div>
       <div className="parchment p-4 space-y-2">
-        <div className="font-smallcaps text-xs text-gold">{DIR_NAME[sel]} · {year}</div>
+        <div className="font-label text-xs tracking-[0.16em] text-primary">{DIR_NAME[sel]} · {year}</div>
         <h3 className="font-display text-2xl">Star {info.n} — {info.name}</h3>
         <ConfidenceBadge level="derived" note="Calculated with the classical Lo Shu flight; the source PDFs don't include flying stars." />
         <p className="text-sm"><b>{info.nature}</b> · {info.element}. {info.theme}</p>

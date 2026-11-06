@@ -112,3 +112,46 @@ export function founderPlace(groups: FounderGroup[], path: string): FounderPlace
 export function onlyInFullEdition(groups: FounderGroup[], path: string, memberListed: boolean): boolean {
   return !memberListed && founderPlace(groups, path) !== null;
 }
+
+/** Short notes under menu entries whose names alone don't say what they open (V2.3 Gap 6). */
+const LINK_NOTES: Record<string, { label?: RegExp; rename?: string; hint: string }> = {
+  '/masterbook/bagua-wheel': { label: /bagua wheel/i, rename: 'Interactive Bagua Map', hint: 'Interactive feng shui map of your eight directions' },
+  '/retrogood': { hint: 'What stands out in your chart' },
+  '/feng-shui/flying-stars': { hint: 'Nine stars moving through the home each year' },
+  '/profection': { hint: 'The house your current year of life lights up' },
+  '/findings': { hint: 'The strongest patterns, ranked' },
+  '/siblings': { hint: 'Brothers’ and sisters’ charts side by side' },
+  '/other-systems': { hint: 'Vedic, Chinese, Mayan and other traditions' },
+  '/our-charts': { hint: 'Both charts on one page' },
+};
+/** Flying Stars pages grouped under one submenu (Gap 5); any extra Flying Stars links already in the menu stay in it. */
+export const FLYING_STARS_MENU = [
+  { to: '/feng-shui/flying-stars', label: 'Flying Stars overview' },
+  { to: '/feng-shui/flying-stars?year=2026', label: 'Annual stars 2026' },
+  { to: '/feng-shui/flying-stars?view=monthly', label: 'Monthly stars' },
+  { to: '/feng-shui/flying-stars?view=guide', label: 'How to use Flying Stars' },
+];
+const isFlyingStars = (to: string) => /^\/feng-shui\/flying-stars(?:[?#/]|$)/.test(to);
+
+/**
+ * Clarifies a founder menu without removing anything: the confusing "Bagua Wheel" entry gets a plain name, unclear
+ * entries get a one-line hint, and every Flying Stars link moves into a single "Flying Stars" submenu in its section.
+ */
+export function clarifyFounderGroups<G extends FounderGroup & { items: (FounderLink & { hint?: string })[] }>(groups: G[]): G[] {
+  const note = <L extends FounderLink & { hint?: string }>(l: L): L => {
+    const n = LINK_NOTES[l.to.split(/[?#]/)[0]];
+    if (!n || l.to.includes('?')) return l;
+    return { ...l, label: n.rename && (!n.label || n.label.test(l.label)) ? n.rename : l.label, hint: l.hint ?? n.hint };
+  };
+  return groups.map(g => {
+    const fsHere = [...g.items, ...(g.submenus ?? []).flatMap(s => s.items)].filter(i => isFlyingStars(i.to));
+    const items = g.items.filter(i => !fsHere.length || !isFlyingStars(i.to)).map(note);
+    let submenus = (g.submenus ?? []).map(s => ({ ...s, items: s.items.filter(i => !fsHere.length || !isFlyingStars(i.to)).map(note) })).filter(s => s.items.length);
+    if (fsHere.length) {
+      const seen = new Set<string>();
+      const fs = [...FLYING_STARS_MENU, ...fsHere].filter(i => !seen.has(i.to) && seen.add(i.to)).map(i => ({ to: i.to, label: i.label }));
+      submenus = [{ label: 'Flying Stars', items: fs }, ...submenus];
+    }
+    return { ...g, items, ...(g.submenus || fsHere.length ? { submenus } : {}) };
+  });
+}

@@ -42,7 +42,7 @@ export function BaguaWheel() {
         </g>
       </svg>
       <div className="parchment p-4 space-y-2">
-        <div className="font-smallcaps text-xs text-gold">{DIR_NAME[sel]}</div>
+        <div className="font-label text-xs tracking-[0.16em] text-primary">{DIR_NAME[sel]}</div>
         {kua ? <>
           <h3 className="font-display text-2xl">{kua.name} — {kua.meaning}</h3>
           <ConfidenceBadge level={kua.standardNote ? 'ambiguous' : 'confirmed'} note={kua.standardNote ?? 'Quoted from the 18A direction table.'} />

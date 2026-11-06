@@ -61,7 +61,7 @@ export default function BirthChart() {
               ['Personal Year 2026', `${BIRTH.personalYear2026} — Reflection, Inner Wisdom, Spiritual Deepening`],
             ].map(([k, v]) => (
               <div key={k} className="py-2.5 grid grid-cols-[7rem,1fr] gap-4">
-                <dt className="font-smallcaps text-[10px] text-muted-foreground pt-0.5">{k}</dt>
+                <dt className="font-label text-[10px] tracking-[0.14em] text-muted-foreground pt-0.5">{k}</dt>
                 <dd>{v}</dd>
               </div>
             ))}
@@ -89,7 +89,7 @@ export default function BirthChart() {
 
       <section className="grid md:grid-cols-2 gap-6">
         <div className="p-6 border border-border rounded bg-card/60">
-          <div className="font-smallcaps text-[11px] text-gold mb-2">Elemental balance</div>
+          <div className="font-label text-xs tracking-[0.16em] text-primary mb-2">Elemental balance</div>
           <div className="space-y-2">
             {['Fire','Earth','Air','Water'].map(e => (
               <BalanceRow key={e} label={e} count={elements[e] || 0} />
@@ -100,7 +100,7 @@ export default function BirthChart() {
           </p>
         </div>
         <div className="p-6 border border-border rounded bg-card/60">
-          <div className="font-smallcaps text-[11px] text-gold mb-2">Modality balance</div>
+          <div className="font-label text-xs tracking-[0.16em] text-primary mb-2">Modality balance</div>
           <div className="space-y-2">
             {['Cardinal','Fixed','Mutable'].map(e => (
               <BalanceRow key={e} label={e} count={modalities[e] || 0} />
@@ -132,14 +132,14 @@ export default function BirthChart() {
             if (!p) return null;
             return (
               <div key={k}>
-                <div className="font-smallcaps text-[10px] text-gold">{p.headline}</div>
+                <div className="font-label text-[10px] tracking-[0.14em] text-primary">{p.headline}</div>
                 <p className="text-foreground/85 leading-relaxed mt-2">{p.interpretation}</p>
                 <Link to={`/planets/${k}`} className="ink-link text-xs mt-3 inline-block font-smallcaps">Continue →</Link>
               </div>
             );
           })}
           <div>
-            <div className="font-smallcaps text-[10px] text-gold">Ascendant · Sagittarius 29°28′ · Anaretic</div>
+            <div className="font-label text-[10px] tracking-[0.14em] text-primary">Ascendant · Sagittarius 29°28′ · Anaretic</div>
             <p className="text-foreground/85 leading-relaxed mt-2">
               The Ascendant is the mask through which the self meets the world. Hers rises at the anaretic 29th degree of Sagittarius — the degree of completion and crisis, the last breath of the sign before it becomes Capricorn. The world sees the philosopher-explorer, the archer aiming for horizons beyond the visible. What stands behind that first impression is the triple Capricorn stellium already rising: Saturn's discipline, Uranus's revolution, Neptune's mysticism — and the Aquarius North Node calling her forward into the first house of self. She is Sagittarius as it turns into Capricorn: freedom crystallizing into structure.
             </p>

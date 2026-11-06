@@ -8,7 +8,7 @@ export function IllustrationGallery() {
   return (
     <section aria-labelledby="ill-gallery" className="space-y-4">
       <div>
-        <div className="font-smallcaps text-[10px] text-gold">Illustration Reference Guide · all 16 plates</div>
+        <div className="font-label text-[10px] tracking-[0.14em] text-primary">Illustration Reference Guide · all 16 plates</div>
         <h2 id="ill-gallery" className="font-display text-2xl mt-1">The Compendium illustrations</h2>
         <p className="text-sm text-muted-foreground mt-1">Each picture was made from the AI image instructions written for that plate in April's Illustration Reference Guide.</p>
       </div>

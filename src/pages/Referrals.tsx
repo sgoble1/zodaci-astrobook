@@ -63,7 +63,7 @@ function Inner({ uid }: { uid: string }) {
   };
   return (
     <article className="mx-auto max-w-4xl space-y-10">
-      <header><p className="font-smallcaps text-xs text-gold">Invite a friend</p><h1 className="mt-2 font-display text-4xl sm:text-5xl">Give a friend 7 days free Pro.</h1><p className="mt-3 text-lg text-muted-foreground">You both get rewarded: when your friend starts a paid plan, you get 30 days of Pro.</p></header>
+      <header><p className="font-label text-xs tracking-[0.16em] text-primary">Invite a friend</p><h1 className="mt-2 font-display text-4xl sm:text-5xl">Give a friend 7 days free Pro.</h1><p className="mt-3 text-lg text-muted-foreground">You both get rewarded: when your friend starts a paid plan, you get 30 days of Pro.</p></header>
       <section className="vellum space-y-4 p-6" aria-labelledby="code-h">
         <h2 id="code-h" className="text-lg">Your invitation</h2>
         <p className="font-display text-3xl tracking-wide">{code}</p>

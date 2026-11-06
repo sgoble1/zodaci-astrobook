@@ -18,7 +18,7 @@ export default function OfficialAstroBook() {
     <article className="space-y-12">
       <header className="grid items-center gap-8 md:grid-cols-[1fr_18rem]">
         <div>
-          <div className="font-smallcaps text-xs text-gold">Official AstroBook</div>
+          <div className="font-label text-xs tracking-[0.16em] text-primary">Official AstroBook</div>
           <h1 className="text-4xl sm:text-5xl">{viewingAll ? 'The Official AstroBooks' : 'Your Official AstroBook'}</h1>
           <p className="mt-3 max-w-2xl text-muted-foreground">
             {viewingAll
@@ -49,13 +49,13 @@ function EditionShelf({ row }: { row: OfficialEditionRow }) {
     <section aria-labelledby={`ed-${row.edition}`} className="space-y-5">
       <div className="flex flex-wrap items-baseline justify-between gap-2 border-b border-border pb-2">
         <h2 id={`ed-${row.edition}`} className="text-3xl">{row.is_own ? 'Your books' : `${row.display_name}’s books`}</h2>
-        <span className="font-smallcaps text-xs text-gold">{ownerLabel(row)}</span>
+        <span className="font-label text-xs tracking-[0.16em] text-primary">{ownerLabel(row)}</span>
       </div>
       <div className="grid gap-6 lg:grid-cols-2">
         <div className="parchment flex flex-col gap-4 p-5 sm:flex-row">
           <div className="mx-auto shrink-0"><Book3D pages={book.pages} label="Official edition · 6″ × 9″" hardcover design="midnight-stars" name={row.display_name} /></div>
           <div className="flex flex-1 flex-col gap-3">
-            <div className="font-smallcaps text-xs text-gold">Official Masterbook</div>
+            <div className="font-label text-xs tracking-[0.16em] text-primary">Official Masterbook</div>
             <h3 className="text-2xl leading-tight">{book.masterbookTitle}</h3>
             <p className="flex-1 text-sm text-muted-foreground">{book.detail}</p>
             <div className="flex flex-wrap gap-2">
@@ -69,7 +69,7 @@ function EditionShelf({ row }: { row: OfficialEditionRow }) {
             <img src={PRODUCT_ART.comic.src} alt={PRODUCT_ART.comic.alt} width={768} height={1145} loading="lazy" className="aspect-[11/17] w-full object-contain" /><span className="block p-2 text-center text-xs text-muted-foreground">Shared story illustration</span>
           </Link>
           <div className="flex flex-1 flex-col gap-3">
-            <div className="font-smallcaps text-xs text-gold">Official AstroComic</div>
+            <div className="font-label text-xs tracking-[0.16em] text-primary">Official AstroComic</div>
             <h3 className="text-2xl leading-tight">{row.is_own ? 'Your AstroComic' : `${row.display_name}’s AstroComic`}</h3>
             <p className="flex-1 text-sm text-muted-foreground">A 24-page issue drawn from {row.is_own ? 'your' : `${row.display_name}’s`} own chart and this month’s sky, in the Lantern &amp; Ink comic style.{row.birth ? '' : ' Birth details are needed before it can be drawn.'}</p>
             <div><Button asChild variant={row.birth ? 'default' : 'outline'}><Link to={comicTo}><Sparkles className="mr-1.5 h-4 w-4" aria-hidden="true" />Read the AstroComic</Link></Button></div>
@@ -77,7 +77,7 @@ function EditionShelf({ row }: { row: OfficialEditionRow }) {
         </div>
       </div>
       <Link to={`/official-astrobook/showcase/${row.edition}`} className="vellum flex flex-col gap-1 p-5 hover:border-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
-        <span className="font-smallcaps text-xs text-gold">New · Illustrated showcase</span>
+        <span className="font-label text-xs tracking-[0.16em] text-primary">New · Illustrated showcase</span>
         <span className="font-display text-2xl">{row.is_own ? 'Your' : `${row.display_name}’s`} four illustrated pages</span>
         <span className="text-sm text-muted-foreground">Rising sign, Sun, Moon and a signature pattern, each with its own plate and calculated facts — plus the next chapters in script.</span>
       </Link>

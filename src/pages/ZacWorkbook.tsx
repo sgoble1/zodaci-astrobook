@@ -118,7 +118,7 @@ export default function ZacWorkbook() {
   return (
     <article className="space-y-10">
       <header className="space-y-3">
-        <div className="font-smallcaps text-xs text-gold">{zac.is_own ? 'Your edition' : 'Zac’s edition · admin view'} · Workbook</div>
+        <div className="font-label text-xs tracking-[0.16em] text-primary">{zac.is_own ? 'Your edition' : 'Zac’s edition · admin view'} · Workbook</div>
         <h1 className="text-4xl sm:text-5xl">{book.title}</h1>
         <p className="max-w-2xl text-muted-foreground">{book.intro}</p>
         {!canWrite && <p role="note" className="max-w-2xl rounded-lg border border-gold/40 bg-gold/10 px-3 py-2 text-sm">Read-only preview. Answers save only in Zac’s own account, and nobody else can read them.</p>}
@@ -144,7 +144,7 @@ export default function ZacWorkbook() {
 
         <section className="parchment space-y-5 p-6" aria-labelledby="station-h">
           <div className="flex flex-wrap items-baseline justify-between gap-2">
-            <span className="font-smallcaps text-xs text-gold">{station.subtitle}</span>
+            <span className="font-label text-xs tracking-[0.16em] text-primary">{station.subtitle}</span>
             <span className="text-xs text-muted-foreground">{station.source}</span>
           </div>
           <h2 id="station-h" className="text-3xl">{station.title}</h2>
@@ -155,7 +155,7 @@ export default function ZacWorkbook() {
               <textarea value={entries[p.id]?.answer ?? ''} readOnly={!canWrite} onChange={e => edit(p.id, p.text, station.key, { answer: e.target.value })} rows={4} className="w-full rounded-md border border-input bg-background p-3 text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring read-only:opacity-70" placeholder={canWrite ? 'Write freely…' : 'Answers are written in Zac’s own account.'} />
             </label>
           ))}
-          <p className="text-sm"><span className="font-smallcaps text-gold">Practice</span> · {station.practice}</p>
+          <p className="text-sm"><span className="font-label tracking-[0.14em] text-primary">Practice</span> · {station.practice}</p>
           <div className="flex flex-wrap gap-3">
             {canWrite && <Button onClick={() => edit(`${station.key}:done`, `Station complete: ${station.title}`, station.key, { done: !stationDone(station) }, true)} variant={stationDone(station) ? 'outline' : 'default'}>{stationDone(station) ? 'Mark as not done' : 'Mark station complete'}</Button>}
             {i < book.stations.length - 1 && <Button variant="ghost" onClick={() => setActive(book.stations[i + 1].key)}>Next station →</Button>}

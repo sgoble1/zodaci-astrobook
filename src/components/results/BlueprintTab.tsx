@@ -28,7 +28,7 @@ export function BlueprintTab({ chart, date, timeKnown, tone, name = '', placeLab
   ];
   return (
     <div className="space-y-8">
-      <ul className="grid gap-3 sm:grid-cols-3">{big3.map(b => <li key={b.label} className="rounded-lg border border-border bg-card p-4"><p className="font-smallcaps text-xs text-gold">{b.label}</p><p className="font-display text-2xl">{b.value}</p><p className="text-sm text-muted-foreground">{b.note}</p></li>)}</ul>
+      <ul className="grid gap-3 sm:grid-cols-3">{big3.map(b => <li key={b.label} className="rounded-lg border border-border bg-card p-4"><p className="font-label text-xs tracking-[0.16em] text-primary">{b.label}</p><p className="font-display text-2xl">{b.value}</p><p className="text-sm text-muted-foreground">{b.note}</p></li>)}</ul>
       <section aria-labelledby="bp-story" className="rounded-lg border border-primary/40 bg-card p-5">
         <h2 id="bp-story" className="font-display text-2xl">Your chart at a glance</h2>
         <p className="mt-2 text-lg leading-relaxed">{narrative(insights, tone)}</p>
@@ -49,10 +49,10 @@ export function BlueprintTab({ chart, date, timeKnown, tone, name = '', placeLab
         </section>
       </div>
       <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        <li className="rounded-lg border border-border bg-card p-4"><p className="font-smallcaps text-xs text-gold">Chart shape</p><p className="font-display text-xl">{shape.shape}</p><p className="text-sm text-muted-foreground">{SHAPE_TEXT[shape.shape]}</p></li>
-        <li className="rounded-lg border border-border bg-card p-4"><p className="font-smallcaps text-xs text-gold">Chinese year</p><p className="font-display text-xl">{year ? `${year.stemElement} ${year.animal}` : '—'}</p><p className="text-sm text-muted-foreground">From the solar-term year, not 1 January.</p></li>
-        <li className="rounded-lg border border-border bg-card p-4"><p className="font-smallcaps text-xs text-gold">Life Path</p><p className="font-display text-xl">{lp}</p><p className="text-sm text-muted-foreground">{LP_MEANING[lp] ?? ''}</p></li>
-        <li className="rounded-lg border border-border bg-card p-4"><p className="font-smallcaps text-xs text-gold">RetroGOOD</p><p className="font-display text-xl capitalize">{rg.tier}</p><p className="text-sm text-muted-foreground">{rg.planets.length} retrograde planet{rg.planets.length === 1 ? '' : 's'}</p></li>
+        <li className="rounded-lg border border-border bg-card p-4"><p className="font-label text-xs tracking-[0.16em] text-primary">Chart shape</p><p className="font-display text-xl">{shape.shape}</p><p className="text-sm text-muted-foreground">{SHAPE_TEXT[shape.shape]}</p></li>
+        <li className="rounded-lg border border-border bg-card p-4"><p className="font-label text-xs tracking-[0.16em] text-primary">Chinese year</p><p className="font-display text-xl">{year ? `${year.stemElement} ${year.animal}` : '—'}</p><p className="text-sm text-muted-foreground">From the solar-term year, not 1 January.</p></li>
+        <li className="rounded-lg border border-border bg-card p-4"><p className="font-label text-xs tracking-[0.16em] text-primary">Life Path</p><p className="font-display text-xl">{lp}</p><p className="text-sm text-muted-foreground">{LP_MEANING[lp] ?? ''}</p></li>
+        <li className="rounded-lg border border-border bg-card p-4"><p className="font-label text-xs tracking-[0.16em] text-primary">RetroGOOD</p><p className="font-display text-xl capitalize">{rg.tier}</p><p className="text-sm text-muted-foreground">{rg.planets.length} retrograde planet{rg.planets.length === 1 ? '' : 's'}</p></li>
       </ul>
     </div>
   );

@@ -28,7 +28,7 @@ export default function AprilHome() {
       {/* Hero */}
       <section className="grid lg:grid-cols-[1.05fr,0.95fr] gap-10 items-center gentle-fade">
         <div>
-          <div className="font-smallcaps text-[11px] text-gold mb-4">Zodaci · A Personal Chart Library</div>
+          <div className="font-label text-xs tracking-[0.16em] text-primary mb-4">Zodaci · A Personal Chart Library</div>
           <h1 className="font-display leading-[0.95]">
             April.
             <br />
@@ -50,7 +50,7 @@ export default function AprilHome() {
               ['Chart Shape', 'Bucket · Moon Handle'],
             ].map(([k, v]) => (
               <div key={k}>
-                <dt className="font-smallcaps text-[10px] text-muted-foreground">{k}</dt>
+                <dt className="font-label text-[10px] tracking-[0.14em] text-muted-foreground">{k}</dt>
                 <dd className="mt-1 text-foreground">{v}</dd>
               </div>
             ))}
@@ -68,7 +68,7 @@ export default function AprilHome() {
           <h2 id="april-planets" className="sr-only">Planets</h2>
           <ul className="mt-6 grid grid-cols-3 gap-3 sm:grid-cols-5 lg:grid-cols-6">
             {PLACEMENTS.slice(0, 12).map(p => (
-              <li key={p.key}><Link to={`/planets/${p.key}`} className="flex flex-col items-center gap-2 rounded-xl border border-border bg-card/60 p-3 text-center hover:border-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+              <li key={p.key}><Link to={`/planets/${p.key}`} className="flex flex-col items-center gap-2 rounded-sm border border-[hsl(var(--brass)/0.4)] bg-card/60 p-3 text-center hover:border-[hsl(var(--brass)/0.75)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
                 <PlanetOrb planet={p.key} size={48} />
                 <span className="text-sm">{p.name}</span><span className="text-xs text-muted-foreground">{p.sign} {p.degree}°</span>
               </Link></li>
@@ -80,7 +80,7 @@ export default function AprilHome() {
       {/* Wheel */}
       <section className="vellum deckle p-6 sm:p-10 gentle-fade">
         <div className="text-center max-w-2xl mx-auto mb-8">
-          <div className="font-smallcaps text-[11px] text-gold">The Natal Wheel</div>
+          <div className="font-label text-xs tracking-[0.16em] text-primary">The Natal Wheel</div>
           <h2 className="font-display mt-2">Every glyph is a doorway.</h2>
           <p className="text-muted-foreground text-sm mt-3">
             Hover any planet to see its placement. Click a planet or house to open its complete interpretation.
@@ -91,15 +91,15 @@ export default function AprilHome() {
 
       {/* Module grid */}
       <section className="gentle-fade">
-        <div className="font-smallcaps text-[11px] text-gold mb-2">Explore</div>
+        <div className="font-label text-xs tracking-[0.16em] text-primary mb-2">Explore</div>
         <h2 className="font-display mb-8">The complete compendium.</h2>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {modules.map(m => (
-            <Link key={m.to} to={m.to} className="group block p-5 rounded border border-border bg-card/60 hover:border-gold hover:shadow-[var(--shadow-gold)] transition-all">
+            <Link key={m.to} to={m.to} className="group block p-5 rounded-sm border border-[hsl(var(--brass)/0.4)] bg-card/60 hover:border-[hsl(var(--brass)/0.75)] hover:shadow-[4px_4px_0_hsl(var(--accent)/0.3)] transition-all">
               <div className="font-display text-xl leading-tight">{m.title}</div>
               <div className="gold-rule my-3 w-12" />
               <div className="text-sm text-muted-foreground leading-relaxed">{m.desc}</div>
-              <div className="mt-4 font-smallcaps text-[10px] text-gold opacity-0 group-hover:opacity-100 transition-opacity">Open →</div>
+              <div className="mt-4 font-label text-[10px] tracking-[0.14em] text-primary opacity-0 group-hover:opacity-100 transition-opacity">Open →</div>
             </Link>
           ))}
         </div>
@@ -107,18 +107,18 @@ export default function AprilHome() {
 
       {/* Current window */}
       <section className="gentle-fade">
-        <div className="font-smallcaps text-[11px] text-gold mb-2">Current Window · 2022–2027</div>
+        <div className="font-label text-xs tracking-[0.16em] text-primary mb-2">Current Window · 2022–2027</div>
         <h2 className="font-display mb-6">You are standing at the threshold.</h2>
         <div className="grid md:grid-cols-2 gap-6">
           {PHASES.filter(p => p.current).map(p => (
-            <div key={p.id} className="p-6 border border-gold/40 rounded bg-card">
-              <div className="font-smallcaps text-[10px] text-gold">{p.years}</div>
+            <div key={p.id} className="p-6 border border-[hsl(var(--brass)/0.5)] rounded-sm bg-card">
+              <div className="font-label text-[10px] tracking-[0.14em] text-primary">{p.years}</div>
               <h3 className="font-display mt-2">{p.title}</h3>
               <p className="text-sm text-foreground/85 mt-3 leading-relaxed">{p.interpretation}</p>
             </div>
           ))}
           <div className="p-6 border border-border rounded bg-card/60">
-            <div className="font-smallcaps text-[10px] text-muted-foreground">Chart apex</div>
+            <div className="font-label text-[10px] tracking-[0.14em] text-muted-foreground">Chart apex</div>
             <h3 className="font-display mt-2">Pluto · Scorpio · House 10</h3>
             <p className="text-sm text-foreground/85 mt-3 leading-relaxed">
               {PLACEMENTS.find(p => p.key === 'pluto')?.interpretation.slice(0, 380)}…

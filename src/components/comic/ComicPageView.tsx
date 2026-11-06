@@ -24,7 +24,7 @@ export function ComicPageView({ page, compact = false, art }: { page: ComicPage;
             : <p className="absolute inset-0 p-3 italic leading-snug text-muted-foreground">{page.panels[0]?.scene}</p>}
           {page.section === 'Cover' ? (
             <div className="absolute inset-x-0 top-0 bg-gradient-to-b from-background/90 to-transparent p-3 sm:p-4">
-              <p className="font-smallcaps text-[10px] text-gold">AstroComic</p>
+              <p className="font-label text-[10px] tracking-[0.14em] text-primary">AstroComic</p>
               <p className={`font-display leading-tight ${compact ? 'text-sm' : 'text-lg sm:text-2xl'}`}>{page.title}</p>
             </div>
           ) : (
@@ -38,7 +38,7 @@ export function ComicPageView({ page, compact = false, art }: { page: ComicPage;
       ) : (
         <div className="flex flex-1 flex-col gap-2 p-2 sm:p-3">
           <div className="flex items-baseline justify-between gap-2 border-b border-foreground/30 pb-1">
-            <span className="font-smallcaps text-[9px] text-gold">{page.section}</span>
+            <span className="font-label text-[10px] tracking-[0.14em] text-primary">{page.section}</span>
             <span className="text-[9px] text-muted-foreground">{page.n}</span>
           </div>
           <p className={`font-display leading-tight ${compact ? 'text-xs' : 'text-base sm:text-lg'}`}>{page.title}</p>

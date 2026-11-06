@@ -170,7 +170,7 @@ function MegaPanel({ domain, onClose }: { domain: MemberDomain; onClose: () => v
         <div className={`grid gap-6 md:grid-cols-2 ${COLS[Math.min(columns.length, 5)]}`}>
           {columns.map(col => (
             <div key={col.title} data-mega-col className="min-w-0">
-              <p className="mb-2 px-2.5 font-smallcaps text-xs text-gold">{col.title}</p>
+              <p className="mb-2 px-2.5 font-label text-xs tracking-[0.16em] text-primary">{col.title}</p>
               <ul className="space-y-0.5">{col.items.map(item => <li key={item.to}><MenuItemLink item={item} onNavigate={onClose} /></li>)}</ul>
               {col.more && <Link to={col.more.to} onClick={onClose} data-mega-more className="mt-2 inline-flex min-h-11 items-center gap-1 rounded px-2.5 text-xs text-primary underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">{col.more.label}<ArrowRight className="h-3 w-3" aria-hidden="true" /></Link>}
             </div>
@@ -256,7 +256,7 @@ export function MemberHeader() {
 function SheetList({ columns, onNavigate }: { columns: MemberNavColumn[]; onNavigate: () => void }) {
   return <div className="space-y-6">{columns.map(col => (
     <section key={col.title} aria-label={col.title}>
-      <h3 className="mb-1 px-2 font-smallcaps text-xs text-gold">{col.title}</h3>
+      <h3 className="mb-1 px-2 font-label text-xs tracking-[0.16em] text-primary">{col.title}</h3>
       <ul className="space-y-0.5">{col.items.map(item => <li key={item.to}><MenuItemLink item={item} onNavigate={onNavigate} dense /></li>)}</ul>
       {col.more && <Link to={col.more.to} onClick={onNavigate} className="mt-1 inline-flex min-h-11 items-center gap-1 px-2 text-xs text-primary">{col.more.label}<ArrowRight className="h-3 w-3" aria-hidden="true" /></Link>}
     </section>
@@ -280,9 +280,9 @@ function AccountSheetBody({ onNavigate }: { onNavigate: () => void }) {
     <SheetHeader className="text-left"><SheetTitle className="sr-only">Account</SheetTitle><SheetDescription className="sr-only">Account, help and learning</SheetDescription><AccountSummary menu={menu} /></SheetHeader>
     {!menu.planLoading && <Link to="/pricing" onClick={onNavigate} className="my-4 flex items-center justify-between rounded-xl border border-primary/40 bg-primary/10 p-3 text-sm"><span>{PLAN_LABEL[menu.plan]} plan</span>{menu.plan !== 'creator' && <span className="text-primary">Upgrade →</span>}</Link>}
     <div className="space-y-6">
-      <section aria-label="Account"><h3 className="mb-1 px-2 font-smallcaps text-xs text-gold">Account</h3><ul>{ACCOUNT_MENU.map(a => link(a.to, a.label, a.icon))}</ul></section>
-      <section aria-label="Learn"><h3 className="mb-1 px-2 font-smallcaps text-xs text-gold">Learn</h3><SheetList columns={learn.map(c => ({ ...c, title: '' }))} onNavigate={onNavigate} /></section>
-      {(menu.admin || menu.editionSwitch.length > 0) && <section aria-label="Admin"><h3 className="mb-1 px-2 font-smallcaps text-xs text-gold">Admin</h3><ul>
+      <section aria-label="Account"><h3 className="mb-1 px-2 font-label text-xs tracking-[0.16em] text-primary">Account</h3><ul>{ACCOUNT_MENU.map(a => link(a.to, a.label, a.icon))}</ul></section>
+      <section aria-label="Learn"><h3 className="mb-1 px-2 font-label text-xs tracking-[0.16em] text-primary">Learn</h3><SheetList columns={learn.map(c => ({ ...c, title: '' }))} onNavigate={onNavigate} /></section>
+      {(menu.admin || menu.editionSwitch.length > 0) && <section aria-label="Admin"><h3 className="mb-1 px-2 font-label text-xs tracking-[0.16em] text-primary">Admin</h3><ul>
         {menu.admin && ADMIN_MENU.map(a => link(a.to, a.label, a.icon))}
         {menu.editionSwitch.map(({ label, icon: Icon, run }) => <li key={label}><button type="button" onClick={run} data-keep-wording className="flex min-h-11 w-full items-center gap-3 rounded-lg px-2 text-left text-sm hover:bg-muted/60"><Icon className="h-4 w-4 text-muted-foreground" aria-hidden="true" />{label}</button></li>)}
       </ul></section>}
@@ -307,14 +307,17 @@ export function MobileTabBar() {
     s.setSheet(null); go(domainById(id).hub);
   };
   return <>
-    <nav aria-label="Main tabs" data-mobile-tabbar className="fixed inset-x-0 bottom-0 z-50 border-t border-border bg-background/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-xl md:hidden">
+    <nav aria-label="Main tabs" data-mobile-tabbar className="field-dock fixed inset-x-0 bottom-0 z-50 border-t-2 border-[hsl(var(--brass)/0.55)] bg-background/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-xl md:hidden">
       <ul className="grid h-16 grid-cols-5">
         {TABS.map(t => {
           const Icon = t.id === 'account' ? UserRound : domainById(t.id).icon;
           const isActive = activeTab === t.id;
           return <li key={t.id} className="contents"><button type="button" onClick={() => tap(t.id, isActive)} aria-haspopup={t.id === 'account' || isActive ? 'dialog' : undefined} aria-expanded={s.sheet === t.id}
-            className={`flex h-16 flex-col items-center justify-center gap-1 text-[11px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring ${isActive ? 'text-gold' : 'text-muted-foreground'}`}>
-            <Icon className="h-5 w-5" aria-hidden="true" />{t.label}{isActive && <span className="sr-only">(current section)</span>}
+            className={`relative flex h-16 flex-col items-center justify-center gap-0.5 font-label text-xs tracking-[0.12em] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring ${isActive ? 'text-primary' : 'text-muted-foreground'}`}>
+            {isActive && <span aria-hidden="true" className="absolute inset-x-4 top-0 h-0.5 bg-primary" />}
+            <Icon className="h-5 w-5" aria-hidden="true" />
+            <span aria-hidden="true" className={`h-1 w-1 rounded-full ${isActive ? 'bg-primary' : 'bg-transparent'}`} />
+            {t.label}{isActive && <span className="sr-only">(current section)</span>}
           </button></li>;
         })}
       </ul>

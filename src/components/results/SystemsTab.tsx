@@ -31,7 +31,7 @@ export function SystemsTab({ chart, date, name, sex, plan, loading }: { chart: C
         <p className="rounded-lg border border-border bg-card p-4"><span className="font-medium">Year animal: {year ? `${year.stemElement} ${year.animal}` : '—'}</span><span className="block text-sm text-muted-foreground">Based on the solar-term year, so births in January or early February can belong to the previous animal.</span></p>
         <TierGate plan={plan} loading={loading} need="full" title="Four Pillars, element balance, clashes and harmonies">
           <div className="space-y-3">
-            <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">{chart.bazi.map(p => <li key={p.label} className="rounded-lg border border-border bg-card p-4 text-center"><p className="font-smallcaps text-xs text-gold">{p.label}</p><p className="font-display text-3xl">{p.stem}{p.branch}</p><p className="text-sm">{p.romanized}</p><p className="text-xs text-muted-foreground">{p.stemElement} {p.polarity} · {p.animal}</p></li>)}</ul>
+            <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">{chart.bazi.map(p => <li key={p.label} className="rounded-lg border border-border bg-card p-4 text-center"><p className="font-label text-xs tracking-[0.16em] text-primary">{p.label}</p><p className="font-display text-3xl">{p.stem}{p.branch}</p><p className="text-sm">{p.romanized}</p><p className="text-xs text-muted-foreground">{p.stemElement} {p.polarity} · {p.animal}</p></li>)}</ul>
             <p className="text-sm">Element balance: {Object.entries(chart.elements).map(([k, v]) => `${k} ${v}`).join(' · ')}.{Object.entries(chart.elements).filter(([, v]) => v === 0).length ? ` Missing: ${Object.entries(chart.elements).filter(([, v]) => v === 0).map(([k]) => k).join(', ')}.` : ''}</p>
             {relations.length ? <ul className="space-y-2">{relations.map((r, i) => <li key={i} className="rounded border border-border bg-card p-3 text-sm"><span className={r.kind === 'Clash' ? 'text-destructive' : 'text-gold'}>{r.kind}:</span> {r.text}</li>)}</ul> : <p className="text-sm text-muted-foreground">No clashes or harmonies form between your pillars.</p>}
           </div>
@@ -41,8 +41,8 @@ export function SystemsTab({ chart, date, name, sex, plan, loading }: { chart: C
       <section aria-labelledby="sy-num" className="space-y-3">
         <h2 id="sy-num" className="font-display text-2xl">Numerology</h2>
         <ul className="grid gap-3 sm:grid-cols-2">
-          <li className="rounded-lg border border-border bg-card p-4"><p className="font-smallcaps text-xs text-gold">Life Path</p><p className="font-display text-4xl">{lp}</p><p className="text-sm">{LP_MEANING[lp]}</p></li>
-          <li className="rounded-lg border border-border bg-card p-4"><p className="font-smallcaps text-xs text-gold">Birthday</p><p className="font-display text-4xl">{day}</p><p className="text-sm">A secondary talent that colours your Life Path.</p></li>
+          <li className="rounded-lg border border-border bg-card p-4"><p className="font-label text-xs tracking-[0.16em] text-primary">Life Path</p><p className="font-display text-4xl">{lp}</p><p className="text-sm">{LP_MEANING[lp]}</p></li>
+          <li className="rounded-lg border border-border bg-card p-4"><p className="font-label text-xs tracking-[0.16em] text-primary">Birthday</p><p className="font-display text-4xl">{day}</p><p className="text-sm">A secondary talent that colours your Life Path.</p></li>
         </ul>
         <TierGate plan={plan} loading={loading} need="full" title="Name numbers, Personal Year, Pinnacles and Challenges">
           <div className="space-y-5">

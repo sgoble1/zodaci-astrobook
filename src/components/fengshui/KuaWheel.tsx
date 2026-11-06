@@ -38,7 +38,7 @@ export function KuaWheel({ kua, label }: { kua: number; label?: string }) {
         <text x={cx} y={cy + 5} textAnchor="middle" fontSize="12" className="font-display" fill="hsl(var(--foreground))">Kua {kua}</text>
       </svg>
       <div className="parchment p-4 space-y-2">
-        <div className="font-smallcaps text-xs text-gold">{label ? `${label} · ` : ''}Kua {kua} · {KUA_ELEMENT[kua]} · {groupOf(kua)} group</div>
+        <div className="font-label text-xs tracking-[0.16em] text-primary">{label ? `${label} · ` : ''}Kua {kua} · {KUA_ELEMENT[kua]} · {groupOf(kua)} group</div>
         <h3 className="font-display text-2xl">{DIR_NAME[sel]} — {m}</h3>
         <p className="font-display">{info.meaning} {info.good ? '(auspicious)' : '(inauspicious)'}</p>
         <p className="text-sm">{info.use}</p>

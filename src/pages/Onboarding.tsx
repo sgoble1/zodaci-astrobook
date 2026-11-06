@@ -77,7 +77,7 @@ export default function Onboarding() {
   return (
     <article className="mx-auto max-w-lg space-y-6 py-6">
       <header>
-        <p className="font-smallcaps text-xs text-gold">Step {step + 1} of 5 · {STEPS[step]}</p>
+        <p className="font-label text-xs tracking-[0.16em] text-primary">Step {step + 1} of 5 · {STEPS[step]}</p>
         <h1 className="font-display text-3xl">{editing ? 'Edit your birth details' : "Let's create your chart"}</h1>
         <div className="mt-3 h-1.5 rounded bg-muted" aria-hidden><div className="h-full rounded bg-primary transition-all" style={{ width: `${((step + 1) / 5) * 100}%` }} /></div>
       </header>

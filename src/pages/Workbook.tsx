@@ -34,7 +34,7 @@ function Shell({ eyebrow, title, intro, children }: { eyebrow: string; title: st
   return (
     <div className="space-y-6">
       <header className="space-y-2">
-        <div className="font-smallcaps text-xs text-gold">{eyebrow}</div>
+        <div className="font-label text-xs tracking-[0.16em] text-primary">{eyebrow}</div>
         <h1 className="break-words text-4xl sm:text-5xl">{title}</h1>
         <p className="max-w-2xl text-muted-foreground">{intro}</p>
         <p role="note" className="max-w-2xl text-sm text-accent">🔒 Private to your account — your answers, check-ins and journal are never shared with Shane or anyone else.</p>
@@ -69,7 +69,7 @@ function Feedback({ entry, prefix }: { entry: WorkbookEntry; prefix: string }) {
   const passages = ((entry.data?.passages as CitedPassage[] | undefined) ?? []);
   return (
     <div className="mt-4 rounded-lg border border-gold/30 bg-card/60 p-4">
-      <div className="mb-2 flex items-center gap-2 font-smallcaps text-[10px] text-gold"><img loading="lazy" decoding="async" src={oracle} alt="" width={20} height={20} className="h-5 w-5" />Guidance from your chart</div>
+      <div className="mb-2 flex items-center gap-2 font-label text-[10px] tracking-[0.14em] text-primary"><img loading="lazy" decoding="async" src={oracle} alt="" width={20} height={20} className="h-5 w-5" />Guidance from your chart</div>
       <GuideMarkdown text={entry.feedback} idPrefix={prefix} />
       <PassageList passages={passages} text={entry.feedback} idPrefix={prefix} />
     </div>
@@ -153,7 +153,7 @@ function HomeInner({ userId }: { userId: string }) {
       </section>
 
       {today ? <section className="parchment deckle p-5 space-y-2" aria-labelledby="qotd">
-        <div className="font-smallcaps text-[10px] text-gold">Question of the day · {today.module.title}</div>
+        <div className="font-label text-[10px] tracking-[0.14em] text-primary">Question of the day · {today.module.title}</div>
         <h2 id="qotd" className="text-2xl leading-snug">{today.q}</h2>
         <p className="text-sm text-muted-foreground">{today.why}</p>
         <Button asChild><Link to={`/workbook/module/${today.module.slug}#q-${today.key}`}>Answer it now</Link></Button>
@@ -179,7 +179,7 @@ function HomeInner({ userId }: { userId: string }) {
               <li key={m.slug}>
                 <Link to={`/workbook/module/${m.slug}`} className="parchment block h-full overflow-hidden p-4 transition-colors hover:border-primary/50">
                   <div className="-mx-4 -mt-4 mb-3"><BoxArt seed={m.slug} label={m.title + m.placements} className="h-16 w-full" /></div>
-                  <div className="font-smallcaps text-[10px] text-gold">{m.placements}</div>
+                  <div className="font-label text-[10px] tracking-[0.14em] text-primary">{m.placements}</div>
                   <div className="mt-1 text-lg">{m.title}</div>
                   <div className="text-sm text-muted-foreground">{m.subtitle}</div>
                   <div className="mt-3 flex items-center gap-2 text-xs text-muted-foreground"><div className="h-1.5 flex-1 rounded bg-muted" aria-hidden><div className="h-full rounded bg-accent" style={{ width: `${(done / m.questions.length) * 100}%` }} /></div>{done}/{m.questions.length} answered</div>
@@ -359,7 +359,7 @@ function JournalInner({ userId }: { userId: string }) {
           <li key={e.id}>
             <details className="parchment p-4 group">
               <summary className="flex cursor-pointer list-none items-start justify-between gap-3 [&::-webkit-details-marker]:hidden">
-                <span className="min-w-0"><span className="block text-[10px] font-smallcaps text-gold">{e.kind === 'prompt' ? WORKBOOK_MODULES.find(m => m.slug === e.module)?.title ?? 'Guided' : e.kind === 'checkin' ? 'Check-in' : 'Reframe'} · {fmt(e.created_at)}</span><span className="block truncate">{e.question}</span></span>
+                <span className="min-w-0"><span className="block text-[10px] font-label tracking-[0.14em] text-primary">{e.kind === 'prompt' ? WORKBOOK_MODULES.find(m => m.slug === e.module)?.title ?? 'Guided' : e.kind === 'checkin' ? 'Check-in' : 'Reframe'} · {fmt(e.created_at)}</span><span className="block truncate">{e.question}</span></span>
                 <span className="text-xs text-muted-foreground group-open:hidden">Open</span>
               </summary>
               <p className="mt-3 whitespace-pre-wrap text-sm">{e.answer}</p>

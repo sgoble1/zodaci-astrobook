@@ -95,7 +95,7 @@ export function ReadingNavigator({ sections, contentRef, path, readingTitle, var
             <div className="absolute inset-x-0 top-0 rounded-full bg-primary transition-[height] duration-300" style={{ height: `${progress}%` }} />
           </div>
           <div className="min-w-0 flex-1 space-y-2">
-            <p className="flex items-center justify-between font-smallcaps text-xs text-gold"><span>In this reading</span><span className="tabular-nums text-muted-foreground">{progress}%</span></p>
+            <p className="flex items-center justify-between font-label text-xs tracking-[0.16em] text-primary"><span>In this reading</span><span className="tabular-nums text-muted-foreground">{progress}%</span></p>
             {list}
             {marked.size > 0 && <p className="border-t border-border pt-2 text-xs text-muted-foreground">{marked.size} bookmarked · find them under Bookmarks in the menu</p>}
           </div>

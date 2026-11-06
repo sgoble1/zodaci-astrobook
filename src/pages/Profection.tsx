@@ -31,22 +31,22 @@ export default function Profection() {
       {/* Time-lord data card */}
       <div className="grid md:grid-cols-2 gap-4">
         <div className="p-5 border border-gold/40 rounded bg-card">
-          <div className="font-smallcaps text-[10px] text-gold">Time Lord data</div>
+          <div className="font-label text-[10px] tracking-[0.14em] text-primary">Time Lord data</div>
           <table className="w-full text-sm mt-2">
             <tbody className="divide-y divide-border/70">
-              <tr><td className="py-2 font-smallcaps text-[10px] text-muted-foreground">House activated</td><td className="py-2">H{PROFECTION_35.house} · {PROFECTION_35.houseSign}</td></tr>
-              <tr><td className="py-2 font-smallcaps text-[10px] text-muted-foreground">Traditional Time Lord</td><td className="py-2">{PROFECTION_35.traditionalLord}</td></tr>
-              <tr><td className="py-2 font-smallcaps text-[10px] text-muted-foreground">Modern Time Lord</td><td className="py-2">{PROFECTION_35.modernLord}</td></tr>
-              <tr><td className="py-2 font-smallcaps text-[10px] text-muted-foreground">Time Lord in natal chart</td><td className="py-2">{PROFECTION_35.lordPosition}</td></tr>
+              <tr><td className="py-2 font-label text-[10px] tracking-[0.14em] text-muted-foreground">House activated</td><td className="py-2">H{PROFECTION_35.house} · {PROFECTION_35.houseSign}</td></tr>
+              <tr><td className="py-2 font-label text-[10px] tracking-[0.14em] text-muted-foreground">Traditional Time Lord</td><td className="py-2">{PROFECTION_35.traditionalLord}</td></tr>
+              <tr><td className="py-2 font-label text-[10px] tracking-[0.14em] text-muted-foreground">Modern Time Lord</td><td className="py-2">{PROFECTION_35.modernLord}</td></tr>
+              <tr><td className="py-2 font-label text-[10px] tracking-[0.14em] text-muted-foreground">Time Lord in natal chart</td><td className="py-2">{PROFECTION_35.lordPosition}</td></tr>
             </tbody>
           </table>
           <div className="gold-rule my-4" />
-          <div className="font-smallcaps text-[10px] text-gold mb-1">Alchemical theme</div>
+          <div className="font-label text-[10px] tracking-[0.14em] text-primary mb-1">Alchemical theme</div>
           <p className="italic text-foreground/85 text-sm">{PROFECTION_35.alchemicalTheme}</p>
           <SourceRefPanel source={PROFECTION_35.source} />
         </div>
         <div className="p-5 border border-border rounded bg-card/60">
-          <div className="font-smallcaps text-[10px] text-gold">Full interpretation</div>
+          <div className="font-label text-[10px] tracking-[0.14em] text-primary">Full interpretation</div>
           <p className="text-sm text-foreground/90 leading-relaxed mt-2">{PROFECTION_35.interpretation}</p>
         </div>
       </div>
@@ -95,7 +95,7 @@ export default function Profection() {
              key={focus.kind === 'beat' ? focus.data.id : 'eclipse'}>
           {focus.kind === 'beat' ? (
             <>
-              <div className="font-smallcaps text-[10px] text-gold">{focus.data.window}</div>
+              <div className="font-label text-[10px] tracking-[0.14em] text-primary">{focus.data.window}</div>
               <h3 className="font-display text-2xl mt-1">{focus.data.label}</h3>
               <div className="text-sm italic text-foreground/70 mt-1">{focus.data.focus}</div>
               <div className="gold-rule my-3 w-16" />
@@ -119,7 +119,7 @@ export default function Profection() {
               className={`text-left p-4 border rounded bg-card/60 hover:border-gold transition-colors ${
                 focus.kind === 'beat' && focus.data.id === b.id ? 'border-gold' : 'border-border'
               }`}>
-              <div className="font-smallcaps text-[10px] text-gold">{b.window}</div>
+              <div className="font-label text-[10px] tracking-[0.14em] text-primary">{b.window}</div>
               <div className="font-display text-base mt-1">{b.label}</div>
               <div className="text-xs text-muted-foreground mt-1">{b.focus}</div>
             </button>

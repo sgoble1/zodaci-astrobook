@@ -28,14 +28,14 @@ export default function SocialIntegration() {
     <header className="flex flex-wrap items-start gap-4">
       <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full border border-gold/40 bg-accent/10"><Users className="h-7 w-7 text-gold" aria-hidden /></div>
       <div className="space-y-2">
-        <div className="font-smallcaps text-xs text-gold">Workbook · Social Integration</div>
+        <div className="font-label text-xs tracking-[0.16em] text-primary">Workbook · Social Integration</div>
         <h1 className="text-4xl sm:text-5xl">Social Counselor</h1>
         <p className="max-w-2xl text-muted-foreground">Describe a human situation as if an observant outsider were studying it. The counselor explains what may be happening, connects it carefully to your chart, and gives practical words, boundaries, and next steps.</p>
         <p role="note" className="max-w-2xl rounded border border-accent/40 bg-accent/10 px-3 py-2 text-sm"><strong>Private to your account.</strong> These conversations are not shared with anyone using another account.</p>
       </div>
     </header>
     <section aria-labelledby="social-method" className="space-y-5 border-y border-border py-6">
-      <div className="max-w-3xl"><div className="font-smallcaps text-xs text-gold">How this tool was built</div><h2 id="social-method" className="mt-2 text-2xl">An AstroBook method, grounded in established communication skills</h2><p className="mt-2 text-sm leading-relaxed text-muted-foreground">Social Integration is not an ancient astrological school or a licensed therapy method. AstroBook combines an outsider’s-eye view of a situation with perspective-taking, fact-versus-assumption checks, cognitive reframing, assertive communication, boundaries, and your calculated chart. Its communication sequence resembles parts of Marshall Rosenberg’s Nonviolent Communication, but AstroBook is its own coaching framework.</p></div>
+      <div className="max-w-3xl"><div className="font-label text-xs tracking-[0.16em] text-primary">How this tool was built</div><h2 id="social-method" className="mt-2 text-2xl">An AstroBook method, grounded in established communication skills</h2><p className="mt-2 text-sm leading-relaxed text-muted-foreground">Social Integration is not an ancient astrological school or a licensed therapy method. AstroBook combines an outsider’s-eye view of a situation with perspective-taking, fact-versus-assumption checks, cognitive reframing, assertive communication, boundaries, and your calculated chart. Its communication sequence resembles parts of Marshall Rosenberg’s Nonviolent Communication, but AstroBook is its own coaching framework.</p></div>
       <div className="grid gap-4 md:grid-cols-3">
         {[
           { icon: Brain, title: 'See the pattern', body: 'Separate what was observed from the story about why it happened. Then consider more than one possible explanation.' },

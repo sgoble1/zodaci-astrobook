@@ -18,7 +18,7 @@ export default function HouseDetail() {
   return (
     <article className="space-y-10 max-w-3xl">
       <header>
-        <Link to="/houses" className="font-smallcaps text-[10px] text-muted-foreground hover:text-gold">← All houses</Link>
+        <Link to="/houses" className="font-label text-[10px] tracking-[0.14em] text-muted-foreground hover:text-gold">← All houses</Link>
         <div className="mt-4 flex items-baseline gap-4">
           <div className="font-display text-7xl text-gold leading-none">{h.number}</div>
           <div>

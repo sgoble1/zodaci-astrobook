@@ -55,7 +55,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
               {playing ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
             </button>
             <div className="flex-1 min-w-0">
-              <div className="font-smallcaps text-[10px] text-gold flex items-center gap-1"><Headphones className="w-3 h-3" />Now playing · {speed}×</div>
+              <div className="font-label text-[10px] tracking-[0.14em] text-primary flex items-center gap-1"><Headphones className="w-3 h-3" />Now playing · {speed}×</div>
               <Link to="/podcasts" className="block truncate text-sm hover:underline">{current.title}</Link>
             </div>
             {queue.length > 0 && <button onClick={playNext} aria-label="Next in queue" className="p-2 rounded hover:bg-muted"><SkipForward className="w-4 h-4" /></button>}

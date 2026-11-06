@@ -34,7 +34,7 @@ export default function MemberChartSection({ birth, focus }: { birth: MyBirth; f
   return (
     <article className="space-y-8">
       <header>
-        <p className="font-smallcaps text-xs text-gold">{birth.date}{birth.time ? ` · ${birth.time}` : ' · time unknown'} · {birth.placeLabel}</p>
+        <p className="font-label text-xs tracking-[0.16em] text-primary">{birth.date}{birth.time ? ` · ${birth.time}` : ' · time unknown'} · {birth.placeLabel}</p>
         <h1 className="font-display mt-1 text-4xl">{title}</h1>
         <p className="mt-2 max-w-2xl text-muted-foreground">{intro}</p>
       </header>
@@ -63,7 +63,7 @@ export default function MemberChartSection({ birth, focus }: { birth: MyBirth; f
         {!chart.aspects.length && <li className="text-sm text-muted-foreground">No major aspects found.</li>}</ul>}
 
       {focus === 'elements' && <><ul className="grid gap-3 sm:grid-cols-4">{Object.entries(chart.elements).map(([el, n]) => (
-        <li key={el} className="vellum flex flex-col items-center p-4 text-center"><ThemeArt label={el} badge={n} /><div className="mt-3 font-smallcaps text-xs text-gold">{el}</div></li>))}</ul>
+        <li key={el} className="vellum flex flex-col items-center p-4 text-center"><ThemeArt label={el} badge={n} /><div className="mt-3 font-label text-xs tracking-[0.16em] text-primary">{el}</div></li>))}</ul>
         <p className="text-sm text-muted-foreground">The highest count is what comes naturally; an element with 0–1 is something you may consciously build through habits, people or places.</p><ChartWheel r={chart} /></>}
 
       {focus === 'calculator' && <div className="overflow-x-auto"><table className="w-full text-sm"><thead><tr className="text-left"><th className="p-2">Point</th><th className="p-2">Position</th><th className="p-2">Longitude</th>{hasTime && <th className="p-2">House</th>}</tr></thead>

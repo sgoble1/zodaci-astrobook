@@ -25,7 +25,7 @@ export function SummarisePanel({ title, passages, prompt }: { title: string; pas
   return (
     <section className="parchment p-5 my-6">
       <div className="flex items-center justify-between gap-3 mb-2">
-        <div className="font-smallcaps text-xs text-gold">Summary from the sources</div>
+        <div className="font-label text-xs tracking-[0.16em] text-primary">Summary from the sources</div>
         <button onClick={run} disabled={busy || !passages.length} className="px-3 py-1.5 rounded bg-primary text-primary-foreground text-sm disabled:opacity-50">{busy ? 'Writing…' : sum ? 'Rewrite' : 'Summarise from the sources'}</button>
       </div>
       {!sum && !err && <p className="text-xs text-muted-foreground">A short overview written only from this text. Numbers like [3] point to the passage it came from.</p>}

@@ -49,7 +49,7 @@ export function AstroBookPublic() {
         <ProductArtworkGallery />
       </section>
       <section id="full-edition" aria-labelledby="fe-h" className="space-y-6">
-        <div className="max-w-3xl"><p className="font-smallcaps text-xs text-gold">Open the Collector’s edition</p><h2 id="fe-h" className="mt-1 font-display text-3xl sm:text-4xl">Three full pages from {SAMPLE_EDITION.owner}’s AstroBook</h2><p className="mt-3 text-muted-foreground">Exactly as they print: an illuminated plate for each placement, the calculated facts, then the interpretation. {SAMPLE_EDITION.note} Your book is written the same way from your own chart.</p></div>
+        <div className="max-w-3xl"><p className="font-label text-xs tracking-[0.16em] text-primary">Open the Collector’s edition</p><h2 id="fe-h" className="mt-1 font-display text-3xl sm:text-4xl">Three full pages from {SAMPLE_EDITION.owner}’s AstroBook</h2><p className="mt-3 text-muted-foreground">Exactly as they print: an illuminated plate for each placement, the calculated facts, then the interpretation. {SAMPLE_EDITION.note} Your book is written the same way from your own chart.</p></div>
         <EditionPages pages={SAMPLE_EDITION.pages} />
         <div className="flex flex-wrap gap-4"><Button asChild size="lg"><Link to={order()}>Start my AstroBook</Link></Button><Link to="/astrocomic" className="self-center text-accent">Read {SAMPLE_EDITION.owner.split(' ')[0]}’s comic issue →</Link></div>
       </section>
@@ -63,7 +63,7 @@ export function AstroBookPublic() {
       <section id="inside" className="space-y-6">
         <h2 className="font-display text-3xl">Six volumes, one sky.</h2>
         <p className="text-muted-foreground">Every AstroBook follows the same six-volume structure as our founders’ Masterbooks, written from your chart. Every version includes Volumes I–IV and VI; World Systems begins at Classic, and larger versions add chapters inside each volume. Compare them below.</p>
-        <ol className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{VOLUMES.map(v => <li key={v.n} className="vellum p-5"><ThemeArt kind={VOLUME_ART[v.n]} /><p className="mt-4 font-smallcaps text-xs text-gold">Volume {v.n}</p><h3 className="mt-1 text-xl">{v.title}</h3><p className="mt-2 text-sm text-muted-foreground">{VOLUME_DETAIL[v.n]}</p></li>)}</ol>
+        <ol className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{VOLUMES.map(v => <li key={v.n} className="vellum p-5"><ThemeArt kind={VOLUME_ART[v.n]} /><p className="mt-4 font-label text-xs tracking-[0.16em] text-primary">Volume {v.n}</p><h3 className="mt-1 text-xl">{v.title}</h3><p className="mt-2 text-sm text-muted-foreground">{VOLUME_DETAIL[v.n]}</p></li>)}</ol>
       </section>
       <section className="space-y-6">
         <h2 className="font-display text-3xl">How it works.</h2>
@@ -77,7 +77,7 @@ export function AstroBookPublic() {
       <section id="versions" className="space-y-6">
         <h2 className="font-display text-3xl">Choose your version.</h2>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">{BOOK_VERSIONS.map(v => <div key={v.id} className={`vellum flex flex-col p-5 ${v.id === 'classic' ? 'border-primary/70 shadow-[var(--shadow-gold)]' : ''}`}>
-          <p className="font-smallcaps text-xs text-gold">{v.trim ?? 'PDF download'}</p><h3 className="mt-1 text-xl">{v.name}</h3>
+          <p className="font-label text-xs tracking-[0.16em] text-primary">{v.trim ?? 'PDF download'}</p><h3 className="mt-1 text-xl">{v.name}</h3>
           <p className="mt-3 font-display text-4xl">{money(v.price)}</p><p className="text-xs text-muted-foreground">{v.format === 'digital' ? 'One-time purchase' : 'Free US shipping'} · {v.pages[0]}–{v.pages[1]} pages</p>
           <p className="mt-3 text-sm text-muted-foreground">{v.tagline}</p>
           <ul className="mt-4 flex-1 space-y-1.5">{v.inside.slice(0, 4).map(x => <li key={x} className="flex gap-2 text-xs"><Check className="h-4 w-4 shrink-0 text-accent" aria-hidden />{x}</li>)}</ul>

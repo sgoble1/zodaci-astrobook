@@ -34,7 +34,7 @@ export default function MemberFengShui({ birth, focus = 'directions' }: { birth:
   return (
     <article className="space-y-10">
       <header>
-        <p className="font-smallcaps text-xs text-gold">Feng Shui · from your birth details</p>
+        <p className="font-label text-xs tracking-[0.16em] text-primary">Feng Shui · from your birth details</p>
         <h1 className="font-display mt-1 text-4xl">{k ? `Kua ${k.kua} · ${KUA_ELEMENT[k.kua]} · ${groupOf(k.kua)} group` : 'Your Feng Shui directions'}</h1>
         <p className="mt-2 max-w-2xl text-muted-foreground">Eight Mansions directions from your Kua number, and the annual flying stars read against them. Calculated in the app from the classical method; your home’s layout is yours to apply.</p>
         <div className="mt-4 flex flex-wrap gap-2" role="tablist" aria-label="Feng Shui views">

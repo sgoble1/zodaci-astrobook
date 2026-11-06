@@ -23,7 +23,7 @@ export function RelSourceSection({ e }: { e: MbEntry }) {
   const srcName = src?.title ?? 'Masterbook';
   return (
     <article id={e.id} className="parchment p-5 scroll-mt-24">
-      <div className="font-smallcaps text-[10px] text-gold">{srcName} · {e.label}{e.page ? ` · p. ${e.page}` : ''}</div>
+      <div className="font-label text-[10px] tracking-[0.14em] text-primary">{srcName} · {e.label}{e.page ? ` · p. ${e.page}` : ''}</div>
       <h2 className="text-xl mt-1">{e.title}</h2>
       {e.excerpt && <blockquote className="mt-2 border-l-2 border-primary pl-3 text-sm text-muted-foreground italic">“{e.excerpt.slice(0, 260)}{e.excerpt.length > 260 ? '…' : ''}”</blockquote>}
       <div className="flex flex-wrap gap-3 mt-3 text-xs">
@@ -35,11 +35,11 @@ export function RelSourceSection({ e }: { e: MbEntry }) {
       </div>
       {open && (text === null ? <p className="text-sm text-muted-foreground mt-3">Opening…</p> : <>
         <SummarisePanel title={e.title} passages={toPassages(text, srcName, `${e.label} · ${e.title}`)} prompt={`Summarise what "${e.title}" says about love, partnership and relationships for April, in short headed sections. Use only the passages and cite them.`} />
-        {pages.length > 0 && src && <div className="text-xs mb-3"><span className="font-smallcaps text-gold">Source pages:</span> {pages.map(p => <Link key={p} to={`/masterbook/pdf/${encodeURIComponent(src.id)}?page=${p}`} className="underline mr-2">p. {p}</Link>)}</div>}
+        {pages.length > 0 && src && <div className="text-xs mb-3"><span className="font-label tracking-[0.14em] text-primary">Source pages:</span> {pages.map(p => <Link key={p} to={`/masterbook/pdf/${encodeURIComponent(src.id)}?page=${p}`} className="underline mr-2">p. {p}</Link>)}</div>}
         <div className="mb-prose text-sm max-h-[60vh] overflow-auto pr-2">
-          <ReactMarkdown remarkPlugins={[remarkGfm]} components={{ h6: ({ children }) => <h6 className="font-smallcaps text-[10px] text-gold border-t border-border pt-3 mt-6">{children}</h6> }}>{body}</ReactMarkdown>
+          <ReactMarkdown remarkPlugins={[remarkGfm]} components={{ h6: ({ children }) => <h6 className="font-label text-[10px] tracking-[0.14em] text-primary border-t border-border pt-3 mt-6">{children}</h6> }}>{body}</ReactMarkdown>
         </div>
-        <p className="text-[11px] text-muted-foreground mt-3"><span className="font-smallcaps text-gold">Citation</span> · {srcName} — {e.label}: {e.title}{e.page ? `, p. ${e.page}` : ''}. Transcribed verbatim.</p>
+        <p className="text-[11px] text-muted-foreground mt-3"><span className="font-label tracking-[0.14em] text-primary">Citation</span> · {srcName} — {e.label}: {e.title}{e.page ? `, p. ${e.page}` : ''}. Transcribed verbatim.</p>
       </>)}
     </article>
   );

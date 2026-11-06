@@ -28,7 +28,7 @@ export default function MyReadings() {
   return (
     <article className="space-y-8">
       <header>
-        <p className="font-smallcaps text-xs text-gold">{birth.name ? `${birth.name}'s readings` : 'Your readings'}</p>
+        <p className="font-label text-xs tracking-[0.16em] text-primary">{birth.name ? `${birth.name}'s readings` : 'Your readings'}</p>
         <h1 className="font-display mt-1 text-4xl">My readings</h1>
         <p className="mt-2 max-w-2xl text-muted-foreground">Each reading is written only from your calculated placements — no guessed family details or life events. {risingLine(chart) ?? ''}</p>
         <nav aria-label="Reading sections" className="mt-4 flex flex-wrap gap-2">
@@ -58,10 +58,10 @@ export default function MyReadings() {
           <BoxArt seed={r.art} label={r.title} className="aspect-square w-full rounded" />
           <div className="space-y-3">
             <h2 id={`${r.key}-h`} className="font-display text-2xl">{r.title}</h2>
-            <div><h3 className="font-smallcaps text-xs text-gold">Key facts</h3><ul className="mt-1 list-disc pl-5 text-sm">{r.facts.map(f => <li key={f}>{f}</li>)}</ul></div>
-            <div><h3 className="font-smallcaps text-xs text-gold">In plain words</h3><p className="text-sm">{r.plain}</p></div>
-            <div><h3 className="font-smallcaps text-xs text-gold">Daily life</h3><p className="text-sm">{r.daily}</p></div>
-            <div><h3 className="font-smallcaps text-xs text-gold">Reflection questions</h3><ul className="mt-1 list-disc pl-5 text-sm">{r.questions.map(q => <li key={q}>{q}</li>)}</ul></div>
+            <div><h3 className="font-label text-xs tracking-[0.16em] text-primary">Key facts</h3><ul className="mt-1 list-disc pl-5 text-sm">{r.facts.map(f => <li key={f}>{f}</li>)}</ul></div>
+            <div><h3 className="font-label text-xs tracking-[0.16em] text-primary">In plain words</h3><p className="text-sm">{r.plain}</p></div>
+            <div><h3 className="font-label text-xs tracking-[0.16em] text-primary">Daily life</h3><p className="text-sm">{r.daily}</p></div>
+            <div><h3 className="font-label text-xs tracking-[0.16em] text-primary">Reflection questions</h3><ul className="mt-1 list-disc pl-5 text-sm">{r.questions.map(q => <li key={q}>{q}</li>)}</ul></div>
           </div>
         </section>
       ))}

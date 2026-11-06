@@ -40,7 +40,7 @@ function Body({ rel, self }: { rel: Relationship; self: RelationshipSelf }) {
   return (
     <div className="space-y-8">
       <header className="space-y-2">
-        <div className="font-smallcaps text-xs text-gold">Relationship timeline</div>
+        <div className="font-label text-xs tracking-[0.16em] text-primary">Relationship timeline</div>
         <h1 className="text-4xl">{Me} & {rel.name} · Key transits</h1>
         <p className="text-muted-foreground max-w-3xl">When Jupiter, Saturn, Uranus, Neptune and Pluto make exact contacts (within 1°) to the combined chart and to each person’s Sun, Moon and Venus. Dates come from the ephemeris; meanings are app-written.{self.isApril ? ' Each entry links to the matching sections of your Masterbook.' : ''}</p>
         <div className="flex flex-wrap gap-3 text-sm items-center">

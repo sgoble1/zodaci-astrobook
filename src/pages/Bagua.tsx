@@ -38,7 +38,7 @@ export default function Bagua() {
               return (
                 <button key={d} onClick={() => pick(d)} aria-pressed={sel === d}
                   className={`rounded border-2 p-2 text-left transition ${k ? (k.auspicious ? 'border-gold/70 bg-gold/10' : 'border-oxblood/40 bg-oxblood/5') : 'border-border bg-muted/40'} ${sel === d ? 'ring-2 ring-foreground/70' : 'hover:ring-1 hover:ring-gold'}`}>
-                  <div className="font-smallcaps text-[10px] text-muted-foreground">{DIR_NAME[d]} · {g.gua}</div>
+                  <div className="font-label text-[10px] tracking-[0.14em] text-muted-foreground">{DIR_NAME[d]} · {g.gua}</div>
                   <div className="font-display text-sm leading-tight mt-1">{g.lifeArea}</div>
                   <div className="text-[10px] mt-1">{g.element}</div>
                   {k && <div className={`text-[9px] font-smallcaps mt-1 ${k.auspicious ? 'text-gold' : 'text-oxblood'}`}>{k.name}</div>}
@@ -51,18 +51,18 @@ export default function Bagua() {
 
         <div className="parchment p-5 space-y-4">
           <div className="flex justify-between items-start gap-3">
-            <div><div className="font-smallcaps text-[10px] text-gold">{DIR_NAME[sel]} · {gua.gua} · {gua.element}</div><h2 className="text-2xl">{gua.lifeArea}</h2></div>
+            <div><div className="font-label text-[10px] tracking-[0.14em] text-primary">{DIR_NAME[sel]} · {gua.gua} · {gua.element}</div><h2 className="text-2xl">{gua.lifeArea}</h2></div>
             <CopyLinkButton path={`/feng-shui/bagua?sector=${sel}`} label="Share" />
           </div>
           {kua && <div>
-            <div className="font-smallcaps text-[10px] text-gold flex items-center gap-2">Kua 1 direction (PDF) <ConfidenceBadge compact level={kua.standardNote ? 'ambiguous' : 'confirmed'} note={kua.standardNote ?? 'Quoted verbatim from the direction table.'} /></div>
+            <div className="font-label text-[10px] tracking-[0.14em] text-primary flex items-center gap-2">Kua 1 direction (PDF) <ConfidenceBadge compact level={kua.standardNote ? 'ambiguous' : 'confirmed'} note={kua.standardNote ?? 'Quoted verbatim from the direction table.'} /></div>
             <p className="mt-1"><b>{kua.name} — {kua.meaning}.</b> {kua.activation}<Cite source={{ doc: 'Complete Birth Chart Analysis & Feng Shui Guide', section: '18A · Direction table', page: 'pp. 115–116' }} /></p>
             {kua.standardNote && <p className="text-xs italic text-muted-foreground mt-1">{kua.standardNote}</p>}
           </div>}
-          <div><div className="font-smallcaps text-[10px] text-gold">Bagua guidance</div><p className="mt-1 text-sm">{gua.guidance}</p><p className="text-xs text-muted-foreground mt-1">Colours: {gua.color}</p></div>
-          <div className="text-sm"><span className="font-smallcaps text-[10px] text-gold mr-2">2026 annual star</span><Link className="underline" to={`/feng-shui/flying-stars?year=2026&sector=${sel}`}>{thisYear[sel]} · {STAR_INFO[thisYear[sel]].name}</Link></div>
-          {rooms.length > 0 && <div><div className="font-smallcaps text-[10px] text-gold">Rooms for this sector</div>{rooms.map(r => <a key={r.id} href={`#${r.id}`} className="block text-sm underline">{r.name}</a>)}</div>}
-          {crystals.length > 0 && <div><div className="font-smallcaps text-[10px] text-gold">Crystals placed here</div><div className="flex flex-wrap gap-1.5 mt-1">{crystals.map(c => <a key={c.id} href={`#${c.id}`} className="text-xs border rounded px-2 py-0.5 hover:bg-muted">{c.name}</a>)}</div></div>}
+          <div><div className="font-label text-[10px] tracking-[0.14em] text-primary">Bagua guidance</div><p className="mt-1 text-sm">{gua.guidance}</p><p className="text-xs text-muted-foreground mt-1">Colours: {gua.color}</p></div>
+          <div className="text-sm"><span className="font-label text-[10px] tracking-[0.14em] text-primary mr-2">2026 annual star</span><Link className="underline" to={`/feng-shui/flying-stars?year=2026&sector=${sel}`}>{thisYear[sel]} · {STAR_INFO[thisYear[sel]].name}</Link></div>
+          {rooms.length > 0 && <div><div className="font-label text-[10px] tracking-[0.14em] text-primary">Rooms for this sector</div>{rooms.map(r => <a key={r.id} href={`#${r.id}`} className="block text-sm underline">{r.name}</a>)}</div>}
+          {crystals.length > 0 && <div><div className="font-label text-[10px] tracking-[0.14em] text-primary">Crystals placed here</div><div className="flex flex-wrap gap-1.5 mt-1">{crystals.map(c => <a key={c.id} href={`#${c.id}`} className="text-xs border rounded px-2 py-0.5 hover:bg-muted">{c.name}</a>)}</div></div>}
           <ReasoningPanel reasoning={{
             inputs: [{ label: 'Kua number', value: '1 (Water, East Group)', source: KUA_FOUNDATION.source }, { label: 'Sector', value: DIR_NAME[sel] }],
             steps: [{ label: 'Kua directions', detail: 'The PDF’s 18A table assigns each compass direction a quality for Kua 1.' }, { label: 'Bagua', detail: 'Compass Bagua: each trigram rules a direction, element and life area.' }, { label: 'Cross-links', detail: 'Rooms and crystals are linked to a sector when the PDF names that direction or placement.' }],
@@ -92,7 +92,7 @@ export default function Bagua() {
         <div className="grid md:grid-cols-2 gap-4">
           {ROOMS.map(r => (
             <article key={r.id} id={r.id} className="parchment p-4 scroll-mt-24">
-              <div className="font-smallcaps text-[10px] text-gold">{r.dirs.map(d => DIR_NAME[d]).join(' · ')}</div>
+              <div className="font-label text-[10px] tracking-[0.14em] text-primary">{r.dirs.map(d => DIR_NAME[d]).join(' · ')}</div>
               <h3 className="text-xl">{r.name}</h3>
               <p className="text-sm mt-2">{r.text}<Cite source={r.source} /></p>
               <div className="flex gap-3 mt-2">{r.dirs.map(d => <button key={d} onClick={() => { pick(d); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="text-[11px] underline">show {d} on the map</button>)}<PdfLink s={r.source} /></div>
@@ -121,7 +121,7 @@ export default function Bagua() {
           {TWELVE_WEEKS.map((w, i) => (
             <li key={i} id={`week-${i + 1}`} className="pl-5 relative scroll-mt-24">
               <span className="absolute -left-[9px] top-1 w-4 h-4 rounded-full bg-gold" />
-              <details open={i === 0}><summary className="cursor-pointer"><span className="font-smallcaps text-[10px] text-gold mr-2">{w.weeks}</span><span className="font-display text-lg">{w.focus}</span></summary>
+              <details open={i === 0}><summary className="cursor-pointer"><span className="font-label text-[10px] tracking-[0.14em] text-primary mr-2">{w.weeks}</span><span className="font-display text-lg">{w.focus}</span></summary>
                 <p className="text-sm mt-1 max-w-3xl">{w.actions}<Cite source={w.source} /></p><PdfLink s={w.source} /></details>
             </li>
           ))}

@@ -45,7 +45,7 @@ export default function MasterbookChapter() {
       <article>
         <Link to="/masterbook" className="text-xs font-smallcaps text-muted-foreground hover:text-foreground">← Masterbook contents</Link>
         {e && <>
-          <div className="font-smallcaps text-xs text-gold mt-4">{e.part} · {e.label}</div>
+          <div className="font-label text-xs tracking-[0.16em] text-primary mt-4">{e.part} · {e.label}</div>
           <div className="flex items-start justify-between gap-4">
             <h1 className="text-3xl sm:text-4xl mt-2">{e.title}</h1>
             <CopyLinkButton />
@@ -58,23 +58,23 @@ export default function MasterbookChapter() {
           <div className="mb-prose">
             <ReactMarkdown remarkPlugins={[remarkGfm]} components={{
               h3: ({ children }) => { const t = String(children); return <h3 id={slug(t)} className="scroll-mt-24">{children}</h3>; },
-                          h6: ({ children }) => { const n = String(children).replace(/\D/g, ''); return <h6 id={`p${n}`} className="scroll-mt-24 font-smallcaps text-[10px] text-gold border-t border-border pt-3 mt-8 flex justify-between"><span>{children}</span>{src && <Link to={`/masterbook/pdf/${encodeURIComponent(src.id)}?page=${n}`} className="underline">View this page in the app</Link>}</h6>; },
+                          h6: ({ children }) => { const n = String(children).replace(/\D/g, ''); return <h6 id={`p${n}`} className="scroll-mt-24 font-label text-[10px] tracking-[0.14em] text-primary border-t border-border pt-3 mt-8 flex justify-between"><span>{children}</span>{src && <Link to={`/masterbook/pdf/${encodeURIComponent(src.id)}?page=${n}`} className="underline">View this page in the app</Link>}</h6>; },
             }}>{body}</ReactMarkdown>
           </div>
         )}
         {src && <div className="parchment p-4 mt-10 text-xs text-muted-foreground">
-          <span className="font-smallcaps text-gold">Source</span> · {src.title}{e ? ` — ${e.label}: ${e.title}` : ''} · transcribed verbatim. {e?.doc && src ? <Link to={`/masterbook/pdf/${encodeURIComponent(src.id)}?page=${e.page ?? 1}`} className="underline">Open the PDF in the app</Link> : <Link to="/sources" className="underline">View or download the original</Link>} · <Link to={`/ask${e?.doc ? `?doc=${e.doc}` : '?doc=masterbook'}`} className="underline">Ask about this document</Link>
+          <span className="font-label tracking-[0.14em] text-primary">Source</span> · {src.title}{e ? ` — ${e.label}: ${e.title}` : ''} · transcribed verbatim. {e?.doc && src ? <Link to={`/masterbook/pdf/${encodeURIComponent(src.id)}?page=${e.page ?? 1}`} className="underline">Open the PDF in the app</Link> : <Link to="/sources" className="underline">View or download the original</Link>} · <Link to={`/ask${e?.doc ? `?doc=${e.doc}` : '?doc=masterbook'}`} className="underline">Ask about this document</Link>
         </div>}
         <nav className="flex justify-between gap-4 mt-8">
           {prev ? <Link to={`/masterbook/${prev.id}`} className="parchment p-3 flex items-center gap-2 text-sm max-w-[48%]"><ChevronLeft className="w-4 h-4 shrink-0" /><span className="truncate">{prev.title}</span></Link> : <span />}
           {next && <Link to={`/masterbook/${next.id}`} className="parchment p-3 flex items-center gap-2 text-sm max-w-[48%] text-right"><span className="truncate">{next.title}</span><ChevronRight className="w-4 h-4 shrink-0" /></Link>}
         </nav>
       </article>
-      {toc.length > 1 && <details className="xl:hidden parchment p-4 h-fit"><summary className="cursor-pointer font-smallcaps text-xs text-gold">On this page</summary><div className="mt-3 space-y-2">{toc.map(t => <a key={t} href={`#${slug(t)}`} className="block text-sm text-muted-foreground hover:text-foreground">{t}</a>)}</div></details>}
+      {toc.length > 1 && <details className="xl:hidden parchment p-4 h-fit"><summary className="cursor-pointer font-label text-xs tracking-[0.16em] text-primary">On this page</summary><div className="mt-3 space-y-2">{toc.map(t => <a key={t} href={`#${slug(t)}`} className="block text-sm text-muted-foreground hover:text-foreground">{t}</a>)}</div></details>}
       {toc.length > 1 && (
         <aside className="hidden xl:block">
           <div className="sticky top-6 max-h-[85vh] overflow-y-auto text-xs space-y-1">
-            <div className="font-smallcaps text-[10px] text-gold mb-2">On this page</div>
+            <div className="font-label text-[10px] tracking-[0.14em] text-primary mb-2">On this page</div>
             {toc.map(t => <a key={t} href={`#${slug(t)}`} className="block text-muted-foreground hover:text-foreground leading-snug py-0.5">{t}</a>)}
           </div>
         </aside>

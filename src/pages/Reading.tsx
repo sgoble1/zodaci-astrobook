@@ -28,7 +28,7 @@ function Section({ id, n, title, level, note, children }: { id: string; n: strin
   return (
     <section id={id} className="scroll-mt-24 space-y-4">
       <div className="flex flex-wrap items-center gap-3 border-b border-gold/40 pb-2">
-        <span className="font-smallcaps text-xs text-gold">{n}</span><h2 className="text-3xl flex-1">{title}</h2>
+        <span className="font-label text-xs tracking-[0.16em] text-primary">{n}</span><h2 className="text-3xl flex-1">{title}</h2>
         <ConfidenceBadge level={level} note={note} /><CopyLinkButton hash={id} label="Link" />
       </div>
       {children}
@@ -62,7 +62,7 @@ function ComputedReading({ input }: { input: NonNullable<ReturnType<typeof fromP
   return (
     <div className="space-y-10">
       <header>
-        <div className="font-smallcaps text-xs text-gold">Computed reading</div>
+        <div className="font-label text-xs tracking-[0.16em] text-primary">Computed reading</div>
         <h1 className="text-4xl mt-2">Reading for {input.date} · {input.time ?? 'time unknown'} · {input.placeLabel}</h1>
         <p className="text-muted-foreground mt-2 max-w-2xl">This chart isn’t covered by the source documents, so everything here is calculated, and the meanings are short in-app keyword notes rather than quotes. <Link className="underline" to={`/chart-calculator?${toParams(input)}`}>Open in the calculator</Link> · <Link className="underline" to="/reading">April’s full sourced reading</Link></p>
         <div className="mt-2 flex flex-wrap gap-2">{r.flags.map((f, i) => <ConfidenceBadge key={i} level={f.level} note={`${f.topic}: ${f.note}`} />)}</div>
@@ -115,7 +115,7 @@ export default function Reading() {
   return (
     <div className="space-y-14">
       <header>
-        <div className="font-smallcaps text-xs text-gold">A single reading · every system in one place</div>
+        <div className="font-label text-xs tracking-[0.16em] text-primary">A single reading · every system in one place</div>
         <h1 className="text-4xl sm:text-5xl mt-2">April’s Complete Reading</h1>
         <p className="text-muted-foreground mt-3 max-w-2xl">{BIRTH.date} · {BIRTH.time} · {BIRTH.place}. This reading brings together the natal placements, the aspects, the Compendium’s Sabian symbols, fixed stars, asteroids and Arabic parts, and the Ba Zi pillars. Each claim shows its source, how confident it is, and how it was worked out.</p>
         <nav className="flex flex-wrap gap-2 mt-4">{toc.map(([id, t], i) => <a key={id} href={`#${id}`} className="text-xs border border-border rounded px-2 py-1 hover:bg-muted">{['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX'][i]}. {t}</a>)}</nav>
@@ -164,7 +164,7 @@ export default function Reading() {
       <Section id="bazi" n="VII" title="Chinese Four Pillars" level={dayMismatch ? 'ambiguous' : 'confirmed'} note={dayMismatch ? 'Year and Month pillars match the calculator, but the Day and Hour pillars in the source differ from the standard day count.' : 'Matches the calculator.'}>
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">{PILLARS.map(p => {
           const c = check.bazi.find(x => p.label.startsWith(x.label));
-          return <div key={p.id} className="parchment p-3"><div className="font-smallcaps text-[10px] text-gold">{p.label.split('·')[0]}</div><div className="font-display text-3xl">{p.stem}{p.branch} <span className="text-base">{p.romanized}</span></div><div className="text-xs text-muted-foreground">{p.element} · {p.animal}</div><p className="text-sm mt-1">{p.meaning}<Cite source={CHINESE_SOURCE} /></p>{c && c.romanized !== p.romanized && <p className="text-[11px] text-oxblood mt-1">Calculator: {c.stem}{c.branch} {c.romanized}</p>}<ReasoningPanel reasoning={p.reasoning} /></div>;
+          return <div key={p.id} className="parchment p-3"><div className="font-label text-[10px] tracking-[0.14em] text-primary">{p.label.split('·')[0]}</div><div className="font-display text-3xl">{p.stem}{p.branch} <span className="text-base">{p.romanized}</span></div><div className="text-xs text-muted-foreground">{p.element} · {p.animal}</div><p className="text-sm mt-1">{p.meaning}<Cite source={CHINESE_SOURCE} /></p>{c && c.romanized !== p.romanized && <p className="text-[11px] text-oxblood mt-1">Calculator: {c.stem}{c.branch} {c.romanized}</p>}<ReasoningPanel reasoning={p.reasoning} /></div>;
         })}</div>
         <p className="text-sm">Element balance: {ELEMENT_BALANCE.map(e => `${e.element} ${e.count}`).join(' · ')}.</p>
         <p className="max-w-3xl"><b>{LIFE_LESSON.headline}.</b> {LIFE_LESSON.body}<Cite source={CHINESE_SOURCE} /></p>
@@ -189,7 +189,7 @@ export default function Reading() {
       </Section>
 
       <Section id="check" n="IX" title="Calculation cross-check" level="derived" note="The source positions compared with the in-app ephemeris.">
-        <div className="overflow-x-auto"><table className="text-sm w-full"><thead><tr className="text-left font-smallcaps text-[10px] text-muted-foreground border-b border-border"><th className="py-1">Point</th><th>Source</th><th>Calculator</th><th>Δ</th></tr></thead><tbody>
+        <div className="overflow-x-auto"><table className="text-sm w-full"><thead><tr className="text-left font-label text-[10px] tracking-[0.14em] text-muted-foreground border-b border-border"><th className="py-1">Point</th><th>Source</th><th>Calculator</th><th>Δ</th></tr></thead><tbody>
           {check.bodies.filter(b => PLACEMENTS.some(p => p.key === b.key)).map(b => { const p = P(b.key as PlanetKey); const srcLon = ['Aries', 'Taurus', 'Gemini', 'Cancer', 'Leo', 'Virgo', 'Libra', 'Scorpio', 'Sagittarius', 'Capricorn', 'Aquarius', 'Pisces'].indexOf(p.sign) * 30 + p.degree + p.minute / 60; const d = Math.abs(((b.lon - srcLon + 540) % 360) - 180) * 60; return <tr key={b.key} className="border-b border-border/50"><td className="py-1">{b.glyph} {b.name}</td><td>{p.sign} {p.degree}°{String(p.minute).padStart(2, '0')}′</td><td>{b.sign} {b.deg}°{String(b.min).padStart(2, '0')}′</td><td className={d > 6 ? 'text-oxblood' : ''}>{d.toFixed(0)}′</td></tr>; })}
           <tr><td className="py-1">Ascendant</td><td>Sagittarius 29°28′</td><td>{fmtLon(check.asc!).text}</td><td>—</td></tr>
           <tr><td className="py-1">Midheaven</td><td>Libra 24°59′</td><td>{fmtLon(check.mc!).text}</td><td>—</td></tr>

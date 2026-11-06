@@ -65,7 +65,7 @@ export default function Admin() {
     // Admin tools name April and Shane exactly; the public "you" wording never applies here.
     <div className="space-y-8" data-keep-wording>
       <header className="space-y-3">
-        <div className="font-smallcaps text-xs text-gold flex items-center gap-1"><ShieldCheck className="w-3 h-3" />{isAdmin ? 'Admin' : 'Workspace'}</div>
+        <div className="font-label text-xs tracking-[0.16em] text-primary flex items-center gap-1"><ShieldCheck className="w-3 h-3" />{isAdmin ? 'Admin' : 'Workspace'}</div>
         <div className="flex flex-wrap items-end justify-between gap-4"><h1 className="text-4xl sm:text-5xl">{isAdmin ? 'Admin Dashboard' : 'My Workspace'}</h1>{isAdmin && <div className="flex flex-wrap items-center gap-2"><Link to="/developer" className="rounded-md border border-gold/40 px-3 py-2 text-sm text-gold">Developer dashboard</Link><AdminSearch onOpen={go} /></div>}</div>
         <p className="text-muted-foreground max-w-2xl">{isAdmin ? 'Run Zodaci from one place: content, orders and payments, members, and platform settings. Every admin change is written to the audit log.' : 'Your saved documents and relationships. Built-in source books remain unchanged.'}</p>
         {isAdmin && <div className="flex flex-wrap items-center gap-3"><Button asChild variant="outline"><Link to="/orders?all=1">Book order management</Link></Button><Button asChild variant="outline"><Link to="/dispatch">Dispatch books</Link></Button><Button asChild variant="outline"><Link to="/brand-launch">Brand launch & email list</Link></Button></div>}

@@ -40,7 +40,7 @@ export default function CreatorDashboard() {
   const ready = new Set((rows ?? []).map(r => r.page_key));
   return (
     <article className="mx-auto max-w-5xl space-y-10">
-      <header className="space-y-2"><p className="font-smallcaps text-xs text-gold">Cosmic</p><h1 className="font-display text-4xl">Your Cosmic dashboard</h1><p className="text-muted-foreground">{sub.periodEnd ? `${sub.cancelAtEnd ? 'Ends' : 'Renews'} ${new Date(sub.periodEnd).toLocaleDateString()}` : 'Active'} · <Link to="/pricing" className="underline">Manage plan</Link></p></header>
+      <header className="space-y-2"><p className="font-label text-xs tracking-[0.16em] text-primary">Cosmic</p><h1 className="font-display text-4xl">Your Cosmic dashboard</h1><p className="text-muted-foreground">{sub.periodEnd ? `${sub.cancelAtEnd ? 'Ends' : 'Renews'} ${new Date(sub.periodEnd).toLocaleDateString()}` : 'Active'} · <Link to="/pricing" className="underline">Manage plan</Link></p></header>
       <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{TOOLS.map(([to, t, d]) => <Link key={to} to={to} className="rounded-lg border border-border bg-card p-5 hover:border-primary focus-visible:outline focus-visible:outline-2"><h2 className="font-semibold">{t}</h2><p className="mt-1 text-sm text-muted-foreground">{d}</p></Link>)}</section>
       <section className="space-y-3">
         <h2 className="text-2xl">Your readings · {ready.size ? ALL_READINGS.filter(t => ready.has(`topic-${t.slug}`)).length : 0} of {ALL_READINGS.length} written</h2>

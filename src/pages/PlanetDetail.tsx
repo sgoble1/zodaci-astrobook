@@ -18,7 +18,7 @@ export default function PlanetDetail() {
   return (
     <article className="space-y-10 max-w-3xl">
       <header>
-        <Link to="/planets" className="font-smallcaps text-[10px] text-muted-foreground hover:text-gold">← All planets</Link>
+        <Link to="/planets" className="font-label text-[10px] tracking-[0.14em] text-muted-foreground hover:text-gold">← All planets</Link>
         <div className="mt-4 flex items-center gap-4">
           <PlanetOrb planet={p.key} size={112} label={p.name} />
           <div className="font-display text-5xl text-gold leading-none">{p.glyph}</div>
@@ -30,7 +30,7 @@ export default function PlanetDetail() {
           </div>
         </div>
         <div className="gold-rule my-6" />
-        <div className="font-smallcaps text-[11px] text-gold">{p.dignity}</div>
+        <div className="font-label text-xs tracking-[0.16em] text-primary">{p.dignity}</div>
         <div className="mt-2 text-lg italic text-foreground/85">{p.headline}</div>
       </header>
 
@@ -47,7 +47,7 @@ export default function PlanetDetail() {
               const o = PLACEMENTS.find(pl => pl.key === other)!;
               return (
                 <div key={i} className="p-4 border border-border rounded bg-card/60">
-                  <div className="font-smallcaps text-[11px] text-gold">
+                  <div className="font-label text-xs tracking-[0.16em] text-primary">
                     {a.type} · {p.glyph} → {o.glyph} · {o.name} · {a.orb}
                   </div>
                   <p className="mt-2 text-sm text-foreground/85 leading-relaxed">{a.interpretation}</p>

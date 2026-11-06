@@ -52,14 +52,14 @@ export default function Masterbook() {
   return (
     <div className="space-y-10">
       <header>
-        <div className="font-smallcaps text-xs text-gold">The Masterbook · complete text</div>
+        <div className="font-label text-xs tracking-[0.16em] text-primary">The Masterbook · complete text</div>
         <h1 className="text-4xl sm:text-5xl mt-2">April’s Astrological Masterbook</h1>
         {owns === false && <div className="mt-3"><SharedByNote ownerName="April" scope="edition" /></div>}
         <p className="text-muted-foreground mt-3 max-w-2xl">Every chapter, appendix, extended analysis and illustration plate from the Masterbook, reproduced in full{entries.length ? ` — ${entries.length} sections, about ${Math.round(total / 1000)}k words` : ''}. Pick any entry to read it.</p>
         <div className="flex flex-wrap gap-4 text-sm mt-3"><Link to="/masterbook/index" className="underline">Document index — every source & section</Link><Link to="/masterbook/upload" className="underline">Upload your own PDFs & spreadsheets</Link><Link to="/reading" className="underline">The complete reading</Link><Link to="/chart-calculator" className="underline">Chart calculator</Link><Link to="/feng-shui/bagua" className="underline">Feng Shui · Bagua & home</Link><Link to="/feng-shui/flying-stars" className="underline">Feng Shui · Flying Stars</Link></div>
         <Input placeholder="Search chapter titles and section headings…" value={q} onChange={e => setQ(e.target.value)} className="max-w-md mt-4" />
         <div className="flex flex-wrap items-center gap-2 mt-4 text-xs">
-          <span className="font-smallcaps text-[10px] text-gold mr-1">Arrange by</span>
+          <span className="font-label text-[10px] tracking-[0.14em] text-primary mr-1">Arrange by</span>
           {(['parts', 'topics'] as const).map(v => <button key={v} onClick={() => setView(v)} className={`px-3 py-1 rounded-full border ${view === v ? 'border-accent bg-accent/15' : 'border-border hover:bg-muted'}`}>{v === 'parts' ? 'Book order' : 'Topic'}</button>)}
         </div>
         <div className="flex flex-wrap gap-2 mt-3 text-xs">
@@ -77,7 +77,7 @@ export default function Masterbook() {
           <div className="grid sm:grid-cols-2 gap-3">
             {list.map(e => (
               <Link key={e.id} to={`/masterbook/${e.id}`} className="parchment p-4 hover:ring-1 hover:ring-accent transition block">
-                <div className="font-smallcaps text-[10px] text-gold">{e.label} · {Math.max(1, Math.round(e.words / 230))} min read</div>
+                <div className="font-label text-[10px] tracking-[0.14em] text-primary">{e.label} · {Math.max(1, Math.round(e.words / 230))} min read</div>
                 <div className="font-display text-lg leading-snug mt-1">{e.title}</div>
                 <p className="text-xs text-muted-foreground mt-2 line-clamp-2">{e.excerpt}</p>
                 <div className="flex flex-wrap gap-1 mt-2">{catsFor(e).slice(0, 3).map(c => <span key={c} className="text-[10px] border border-border rounded-full px-2 py-0.5 text-muted-foreground">{c}</span>)}{e.sections.length > 0 && <span className="text-[10px] text-muted-foreground px-1 py-0.5">{e.sections.length} sections</span>}</div>
@@ -95,7 +95,7 @@ export default function Masterbook() {
               const secs = (u.sections as { title: string }[] | null) ?? [];
               return (
                 <div key={u.id} className="parchment p-4">
-                  <div className="font-smallcaps text-[10px] text-gold">{u.category} · {secs.length} sections</div>
+                  <div className="font-label text-[10px] tracking-[0.14em] text-primary">{u.category} · {secs.length} sections</div>
                   <Link to={`/masterbook/u/${u.id}`} className="font-display text-lg leading-snug mt-1 block hover:underline">{u.title}</Link>
                   <div className="flex flex-wrap gap-x-3 gap-y-1 mt-2 text-xs">{secs.slice(0, 6).map((s, i) => <Link key={i} to={`/masterbook/u/${u.id}#s${i}`} className="text-muted-foreground hover:text-foreground underline">{s.title.slice(0, 40)}</Link>)}{secs.length > 6 && <span className="text-muted-foreground">+{secs.length - 6} more</span>}</div>
                 </div>

@@ -78,22 +78,22 @@ export default function StarMap() {
               );
             })}
           </svg>
-          <div className="font-smallcaps text-[10px] text-muted-foreground text-center mt-2">
+          <div className="font-label text-[10px] tracking-[0.14em] text-muted-foreground text-center mt-2">
             Positions stylised · click a star to open its entry
           </div>
         </div>
 
         {/* Active star detail */}
         <div className="p-6 border border-gold/40 rounded bg-card gentle-fade" key={active.id}>
-          <div className="font-smallcaps text-[10px] text-gold">Fixed Star</div>
+          <div className="font-label text-[10px] tracking-[0.14em] text-primary">Fixed Star</div>
           <h2 className="font-display text-3xl mt-1">{active.name}</h2>
           <div className="text-sm text-muted-foreground mt-1">
             {active.degree} · conj. {active.conjunct} · orb {active.orb}
           </div>
           <div className="gold-rule my-4 w-16" />
-          <div className="font-smallcaps text-[10px] text-gold mb-1">Meaning</div>
+          <div className="font-label text-[10px] tracking-[0.14em] text-primary mb-1">Meaning</div>
           <p className="italic text-foreground/85 text-sm mb-4">{active.meaning}</p>
-          <div className="font-smallcaps text-[10px] text-gold mb-1">Natal activation</div>
+          <div className="font-label text-[10px] tracking-[0.14em] text-primary mb-1">Natal activation</div>
           <p className="text-sm text-foreground/90 leading-relaxed">{active.activation}</p>
           <SourceRefPanel source={active.source} />
         </div>

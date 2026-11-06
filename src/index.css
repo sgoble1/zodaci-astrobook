@@ -161,7 +161,6 @@ button, a, input, textarea, select { max-width: 100%; }
 @media (max-width: 639px) {
   h1 { font-size: 2.5rem; overflow-wrap: anywhere; }
   h2 { font-size: 1.75rem; overflow-wrap: break-word; }
-  .parchment, .vellum { border-radius: 0.5rem; }
   input, textarea, select { font-size: 16px; }
   .font-smallcaps { letter-spacing: 0.08em; overflow-wrap: normal; word-break: normal; }
 }
@@ -183,23 +182,22 @@ button, a, input, textarea, select { max-width: 100%; }
   transition: border-color 400ms ease, box-shadow 400ms ease, transform 400ms ease;
 }
 .deckle {
-  border: 1px solid hsl(var(--glow-violet) / 0.25);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow-ink);
+  border: 1px solid hsl(var(--brass) / 0.45);
+  border-radius: var(--cut-card);
+  box-shadow: 4px 4px 0 hsl(var(--brass) / .22);
 }
 .vellum:hover, .parchment:hover, .deckle:hover {
-  border-color: hsl(var(--glow-violet) / 0.45);
-  box-shadow: var(--shadow-gold);
+  border-color: hsl(var(--brass) / 0.75);
+  box-shadow: 5px 5px 0 hsl(var(--accent) / .35);
 }
-.gradient-text {
-  background-image: linear-gradient(135deg, hsl(var(--glow-violet)), hsl(280 80% 68%) 45%, hsl(var(--glow-teal)));
-  -webkit-background-clip: text; background-clip: text; color: transparent;
-}
+/* Legacy name: now a flat shop-yellow ink, no violet/teal gradient (atomic print palette). */
+.gradient-text { color: hsl(var(--primary)); }
 h1 { color: hsl(var(--foreground)); }
 
+/* Legacy name: a brass print rule. */
 .gold-rule {
   height: 1px;
-  background: linear-gradient(to right, transparent, hsl(var(--glow-violet) / 0.7), hsl(var(--glow-teal) / 0.7), transparent);
+  background: linear-gradient(to right, hsl(var(--brass) / 0.7), hsl(var(--brass) / 0.35) 70%, transparent);
 }
 
 .text-gold { color: hsl(var(--gold)); }
@@ -831,9 +829,13 @@ body {
 }
 .obs-paper h1, .obs-paper h2, .obs-paper h3, .obs-paper h4 { color: hsl(var(--comic-navy)); background: none; -webkit-text-fill-color: currentColor; }
 .obs-paper .text-muted-foreground { color: hsl(var(--comic-navy) / .74); }
-.obs-paper .text-primary { color: hsl(36 78% 30%); }
+.obs-paper .text-primary, .obs-paper .text-gold, .atomic-box .text-gold { color: hsl(36 78% 30%); }
 .obs-paper .text-accent { color: hsl(var(--comic-brick)); }
 .obs-paper .text-foreground { color: hsl(var(--comic-navy)); }
+/* Form fields written on the cream plate read as paper slips, navy ink on light card. */
+.obs-paper :is(input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=file]), textarea, select) { background-color: hsl(42 70% 96%); color: hsl(var(--comic-navy)); border-color: hsl(var(--comic-navy) / .45); }
+.obs-paper :is(input, textarea)::placeholder { color: hsl(var(--comic-navy) / .5); }
+.obs-paper .border-border, .obs-paper .divide-border > * + * { border-color: hsl(var(--comic-navy) / .2); }
 
 
 /* Hero type: slab capitals in cream, tight leading; Yellowtail script stays the subheading. */
@@ -1061,7 +1063,8 @@ li:hover > .zodiac-coin { transform: rotate(-10deg); }
 .press-stack-front:hover, .press-stack-front:focus-visible { transform: rotate(-1.5deg) translateY(-6px); }
 .press-stack-comic:hover, .press-stack-comic:focus-visible { transform: rotate(2.5deg) translateY(-6px); }
 .press-stack > a:focus-visible { outline: 2px solid hsl(var(--comic-mustard)); outline-offset: 4px; border-radius: .3rem; }
-.press-stack-note { position: absolute; left: 0; bottom: 0; font-family: 'Bebas Neue', sans-serif; font-size: .8rem; letter-spacing: .16em; text-transform: uppercase; color: hsl(var(--comic-mustard)); }
+.press-stack { margin-bottom: 2.4rem; }
+.press-stack-note { position: absolute; inset-inline: 0; top: 100%; margin: 0; padding-top: .9rem; text-align: center; font-family: 'Bebas Neue', sans-serif; font-size: .8rem; letter-spacing: .16em; text-transform: uppercase; color: hsl(var(--comic-mustard)); }
 .press-cutout { filter: drop-shadow(5px 7px 0 hsl(var(--midnight) / .7)) drop-shadow(0 0 1.5px hsl(var(--comic-mustard))); }
 @media (prefers-reduced-motion: reduce) { .press-stack > a { transition: none; } }
 
@@ -1222,18 +1225,21 @@ li:hover > .zodiac-coin { transform: rotate(-10deg); }
 .art-tile:focus-visible { outline: 2px solid hsl(var(--ring)); outline-offset: 2px; }
 
 /* Shelf of real products: every book the same height, the same three-quarter stance and the same slow lift. */
-.shelf-track-real { align-items: flex-end; gap: 1.4rem; padding-top: 1.25rem; }
-.shelf-real { display: flex; flex-direction: column; align-items: center; gap: .6rem; width: 8.75rem; }
-.shelf-real-book { display: flex; align-items: flex-end; justify-content: center; height: 13rem; width: 100%; transform: perspective(900px) rotateY(-9deg); transform-origin: left center; transition: transform 1.6s cubic-bezier(.22,1,.36,1); }
+/* Books stand on one ledge (top-aligned rows of equal height); the caption sits clear of the ledge, two lines reserved so
+   one- and two-line titles keep every book at the same height. scroll-padding stops the first book snapping under the arrow. */
+.shelf-track-real { --shelf-top: 1.25rem; --shelf-book: 13rem; align-items: flex-start; gap: 1.6rem; padding-top: var(--shelf-top); padding-bottom: 1.25rem; scroll-padding-inline: 2.75rem; }
+.shelf-real { display: flex; flex-direction: column; align-items: center; gap: 1.35rem; width: 8.75rem; }
+.shelf-real-book { display: flex; align-items: flex-end; justify-content: center; height: var(--shelf-book, 13rem); width: 100%; transform: perspective(900px) rotateY(-9deg); transform-origin: left center; transition: transform 1.6s cubic-bezier(.22,1,.36,1); }
 .shelf-real-book .sample-book { height: 100%; aspect-ratio: 2 / 3; }
 .shelf-real-book .sample-book-body { height: 100%; }
 .shelf-real-cutout { height: 100%; width: auto; max-width: 100%; object-fit: contain; filter: drop-shadow(5px 7px 0 hsl(var(--comic-navy) / .28)) drop-shadow(0 10px 14px hsl(var(--midnight) / .35)); }
 .shelf-real:hover .shelf-real-book, .shelf-real:focus-visible .shelf-real-book { transform: perspective(900px) rotateY(-2deg) translateY(-7px); }
 .shelf-real:focus-visible { outline: none; }
 .shelf-real:focus-visible .shelf-real-caption { outline: 2px solid hsl(var(--comic-brick)); outline-offset: 3px; border-radius: 2px; }
-.shelf-real-caption { font-family: 'Bebas Neue', sans-serif; font-size: .85rem; letter-spacing: .12em; line-height: 1.1; text-align: center; color: hsl(var(--comic-navy)); }
-/* Wooden shelf edge under the books. */
-.shelf-track-real { background: linear-gradient(to top, transparent 0 2.6rem, hsl(var(--comic-navy) / .55) 2.6rem 2.75rem, hsl(30 45% 42% / .35) 2.75rem 3.3rem, transparent 3.3rem); }
+.shelf-real-caption { display: flex; align-items: flex-start; justify-content: center; min-height: 2.3em; max-width: 100%; padding-inline: .15rem; font-family: 'Bebas Neue', sans-serif; font-size: .9rem; letter-spacing: .1em; line-height: 1.15; text-align: center; text-wrap: balance; color: hsl(var(--comic-navy)); }
+/* Wooden shelf ledge directly beneath every book, measured from the top so it never runs through a cover. */
+.shelf-track-real { background: linear-gradient(to bottom, transparent 0 calc(var(--shelf-top) + var(--shelf-book)), hsl(var(--comic-navy) / .55) calc(var(--shelf-top) + var(--shelf-book)) calc(var(--shelf-top) + var(--shelf-book) + .15rem), hsl(30 45% 42% / .38) calc(var(--shelf-top) + var(--shelf-book) + .15rem) calc(var(--shelf-top) + var(--shelf-book) + .7rem), transparent calc(var(--shelf-top) + var(--shelf-book) + .7rem)); }
+@media (max-width: 639px) { .shelf-track-real { --shelf-book: 11.5rem; gap: 1.1rem; } .shelf-real { width: 7.75rem; } }
 
 /* Gift-shop department window: cut-out products on 1950s atomic backdrops, navy label strips. */
 .dept-grid { display: grid; gap: .75rem; grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -1358,3 +1364,13 @@ li:hover > .zodiac-coin { transform: rotate(-10deg); }
 /* Shared page poster header (Compatibility, Community, sign-in): hand-cut plate, brass rule, printed grain. */
 .poster-header { border-radius: var(--cut-plate); border: 1px solid hsl(var(--brass) / .5); box-shadow: 5px 5px 0 hsl(var(--accent) / .3); }
 .poster-header-grain { pointer-events: none; background: radial-gradient(hsl(var(--midnight) / .22) .7px, transparent 1px) 0 0 / 4px 4px; mix-blend-mode: multiply; }
+
+/* ══ Learn (Gap 16): lesson shelves and editorial cards on cream paper, with one slow lift ══ */
+.learn-shelf { scrollbar-width: thin; scrollbar-color: hsl(var(--brass) / .6) transparent; scroll-padding-inline: .25rem; padding-inline: .25rem; }
+.learn-shelf:focus-visible { outline: 2px solid hsl(var(--ring)); outline-offset: 3px; }
+.learn-card { transition: transform 1.4s cubic-bezier(.22,1,.36,1), box-shadow 1.4s cubic-bezier(.22,1,.36,1); }
+.learn-card img { transition: transform 6s cubic-bezier(.22,1,.36,1); }
+.learn-card:hover { transform: translateY(-4px); box-shadow: inset 0 0 40px hsl(30 40% 50% / .18), 7px 8px 0 hsl(var(--accent) / .4); }
+.learn-card:hover img { transform: scale(1.03); }
+.learn-card:focus-visible { outline: 2px solid hsl(var(--ring)); outline-offset: 3px; }
+@media (prefers-reduced-motion: reduce) { .learn-card, .learn-card img { transition: none; } .learn-card:hover, .learn-card:hover img { transform: none; } }

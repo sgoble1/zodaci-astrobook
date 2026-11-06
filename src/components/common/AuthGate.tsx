@@ -30,7 +30,7 @@ export function AuthGate({ children, what }: { children: (userId: string) => Rea
 
   return (
     <form onSubmit={submit} className="parchment deckle p-5 space-y-3 max-w-md">
-      <div className="font-smallcaps text-[10px] text-gold">Keeper’s access</div>
+      <div className="font-label text-[10px] tracking-[0.14em] text-primary">Keeper’s access</div>
       <p className="text-sm text-muted-foreground">Sign in with one of the approved April or Shane accounts to {what}. New public accounts cannot be created.</p>
       <Input type="email" required aria-label="Email address" autoComplete="email" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} />
       <Input type="password" required minLength={6} aria-label="Password" autoComplete="current-password" placeholder="Password" value={pw} onChange={e => setPw(e.target.value)} />

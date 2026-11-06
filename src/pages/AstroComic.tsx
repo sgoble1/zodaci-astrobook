@@ -69,7 +69,7 @@ export default function AstroComic() {
       <PaymentTestModeBanner />
       <section className="product-page-opening obs-panel">
         <div>
-          <p className="font-smallcaps text-xs text-gold">AstroComic by Zodaci</p>
+          <p className="font-label text-xs tracking-[0.16em] text-primary">AstroComic by Zodaci</p>
           <h1 className="mt-3 hero-headline">AstroComic</h1>
           <p className="mt-3 font-script text-3xl text-primary">Your sky becomes a story.</p>
           <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted-foreground">A printed 24-page digest every month. The planets become characters, your Sun, Moon and Rising drive the story, and that month’s real transits decide what happens.</p>
@@ -109,7 +109,7 @@ export default function AstroComic() {
       </section>
 
       <section aria-labelledby="book-h" className="space-y-6">
-        <div><p className="font-smallcaps text-xs text-gold">Inside a sample AstroBook</p><h2 id="book-h" className="mt-1 font-display text-3xl">Three full pages of {SAMPLE_EDITION.owner}’s book</h2><p className="mt-2 max-w-2xl text-muted-foreground">The comic tells the story; the book explains the chart behind it. {SAMPLE_EDITION.note}</p></div>
+        <div><p className="font-label text-xs tracking-[0.16em] text-primary">Inside a sample AstroBook</p><h2 id="book-h" className="mt-1 font-display text-3xl">Three full pages of {SAMPLE_EDITION.owner}’s book</h2><p className="mt-2 max-w-2xl text-muted-foreground">The comic tells the story; the book explains the chart behind it. {SAMPLE_EDITION.note}</p></div>
         <EditionPages pages={SAMPLE_EDITION.pages} />
         <Button asChild variant="outline"><Link to="/astrobook">See the AstroBook<ArrowRight /></Link></Button>
       </section>
@@ -132,7 +132,7 @@ export default function AstroComic() {
         <h2 id="cast-h" className="font-display text-3xl">Meet the cast</h2>
         <p className="mt-2 max-w-2xl text-muted-foreground">Ten planets, ten characters. Who leads your issue depends on your chart and the month’s sky.</p>
         <img src={cast} alt="The AstroComic cast lined up: Sovereign, Dreamer, Messenger, Enchantress, Warrior, Philosopher, Elder, Rebel, Mystic and Transformer" width={1920} height={832} loading="lazy" className="mt-6 w-full rounded-sm border-2 border-foreground/80" />
-        <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">{CAST.map(c => <div key={c.key} className="vellum p-4"><p className="font-smallcaps text-[10px] text-gold">{c.planet}</p><h3 className="mt-1 text-lg">{c.name}</h3><p className="mt-2 text-xs text-muted-foreground leading-relaxed">{c.look}; with {c.companion}.</p><p className="mt-2 text-xs leading-relaxed">{c.voice}</p></div>)}</div>
+        <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">{CAST.map(c => <div key={c.key} className="vellum p-4"><p className="font-label text-[10px] tracking-[0.14em] text-primary">{c.planet}</p><h3 className="mt-1 text-lg">{c.name}</h3><p className="mt-2 text-xs text-muted-foreground leading-relaxed">{c.look}; with {c.companion}.</p><p className="mt-2 text-xs leading-relaxed">{c.voice}</p></div>)}</div>
       </section>
 
       <section aria-labelledby="style-h" className="grid gap-10 lg:grid-cols-2">

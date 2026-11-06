@@ -57,7 +57,7 @@ export function MemberPlanetDetail({ birth, planetKey }: { birth: MyBirth; plane
       <header className="flex flex-wrap items-center gap-6">
         <PlanetOrb planet={b.key} size={96} />
         <div>
-          <p className="font-smallcaps text-xs text-gold">{birth.date}{birth.time ? ` · ${birth.time}` : ' · time unknown'} · {birth.placeLabel}</p>
+          <p className="font-label text-xs tracking-[0.16em] text-primary">{birth.date}{birth.time ? ` · ${birth.time}` : ' · time unknown'} · {birth.placeLabel}</p>
           <h1 className="font-display mt-1 text-4xl">Your {b.name} in {b.sign}</h1>
           <p className="mt-2 text-muted-foreground">{b.deg}°{String(b.min).padStart(2, '0')}′ {b.sign}{hasTime && b.house ? ` · ${ordinal(b.house)} house` : ''}{b.retro && !b.key.includes('Node') ? ' · retrograde' : ''} <ConfidenceBadge compact level={b.confidence} note={b.note} /></p>
         </div>
@@ -110,7 +110,7 @@ export function MemberHouseDetail({ birth, house }: { birth: MyBirth; house: num
       <header className="flex flex-wrap items-center gap-6">
         <ThemeArt kind="house" className="h-24 w-24" badge={house} />
         <div>
-          <p className="font-smallcaps text-xs text-gold">{birth.houseSystem} houses · {birth.placeLabel}</p>
+          <p className="font-label text-xs tracking-[0.16em] text-primary">{birth.houseSystem} houses · {birth.placeLabel}</p>
           <h1 className="font-display mt-1 text-4xl">Your {ordinal(house)} house</h1>
           <p className="mt-2 text-muted-foreground">{HOUSE_AREA[house][0].toUpperCase() + HOUSE_AREA[house].slice(1)} · begins at {cusp.text}</p>
         </div>

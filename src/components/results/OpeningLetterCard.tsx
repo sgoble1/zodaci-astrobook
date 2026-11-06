@@ -30,7 +30,7 @@ export function OpeningLetterCard({ chart, name, placeLabel, timeKnown }: { char
       <div className="relative">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
-            <p className="font-smallcaps text-xs text-gold">Written from your chart</p>
+            <p className="font-label text-xs tracking-[0.16em] text-primary">Written from your chart</p>
             <h2 id="opening-letter" className="font-display text-3xl">Your opening letter</h2>
           </div>
           <div className="flex gap-2">

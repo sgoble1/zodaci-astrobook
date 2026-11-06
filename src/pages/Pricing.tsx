@@ -156,7 +156,7 @@ export default function Pricing() {
           <table className="w-full min-w-[560px] text-sm">
             <thead><tr className="border-b border-border text-left"><th scope="col" className="p-3 font-medium">Feature</th>{(['free', 'full', 'creator'] as Tier[]).map(t => <th key={t} scope="col" className="p-3 text-center font-medium">{PLAN_NAME[t]}</th>)}</tr></thead>
             <tbody>{COMPARE.map(g => <Fragment key={g.group}>
-              <tr className="bg-muted/40"><th scope="rowgroup" colSpan={4} className="p-3 text-left font-smallcaps text-xs text-gold">{g.group}</th></tr>
+              <tr className="bg-muted/40"><th scope="rowgroup" colSpan={4} className="p-3 text-left font-label text-xs tracking-[0.16em] text-primary">{g.group}</th></tr>
               {g.rows.map(r => <tr key={r[0]} className="border-b border-border last:border-0"><th scope="row" className="p-3 text-left font-normal">{r[0]}</th>{r.slice(1).map((c, i) => <td key={i} className="p-3 text-center">{cell(c)}</td>)}</tr>)}
             </Fragment>)}</tbody>
           </table>
