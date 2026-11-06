@@ -144,31 +144,33 @@ export const PLANET_MEANINGS: PlanetLine[] = [
 type Cta = { to: string; label: string };
 type Heading = 'h1' | 'h2';
 
-/** Slide 1: the Cartographer points to the chart; headline, script subheading, a dial and the planets' meanings. */
+/**
+ * Slide 1: the Cartographer points straight at a lit zodiac dial. The dial is placed relative to her figure, so her
+ * finger meets it at every size; on phones the pair sits above the text, on wider slides beside it.
+ */
 export function ChartMapSlide({ heading = 'h1', title, script, lines, cta, secondary, planets = PLANET_MEANINGS, highlight, eager }: { heading?: Heading; title: ReactNode; script: string; lines: string[]; cta: Cta; secondary?: Cta; planets?: PlanetLine[]; highlight?: string; eager?: boolean }) {
   const H = heading;
   return (
     <div className="hero-night chartmap">
       <Starbursts />
-      <Link to="/forecast" className="chartmap-signal"><span aria-hidden>✦</span><span className="font-label text-sm">Forecast Center</span><span className="font-script text-xl text-primary">Tune into today's sky</span><ArrowRight aria-hidden className="h-4 w-4" /></Link>
-      <img src={cartographer} alt="The Cartographer, the observatory's chart specialist, points up toward the zodiac" width={820} height={1025} loading={eager ? 'eager' : 'lazy'} {...(eager ? { fetchpriority: 'high' } : {})} className="hero-cartographer chartmap-figure" />
+      <div className="chartmap-stage">
+        <div className="chartmap-figure-wrap">
+          <img src={cartographer} alt="The Cartographer, the observatory's chart specialist, points up at a zodiac wheel" width={820} height={1025} loading={eager ? 'eager' : 'lazy'} {...(eager ? { fetchpriority: 'high' } : {})} className="chartmap-figure" />
+          <div className="hero-projection chartmap-dial">
+            <AstroDial highlight={highlight} className="w-full" />
+            <FilmFx motes={14} specks={5} tone="glow" />
+          </div>
+        </div>
+      </div>
       <div className="chartmap-copy">
         <div>
           <H className="hero-headline">{title}</H>
           <p className="mt-2 font-script text-3xl text-primary sm:text-4xl">{script}</p>
         </div>
-        <div className="chartmap-body">
-          <div className="min-w-0 space-y-5">
-            <ul className="space-y-1 font-label text-sm tracking-[0.14em] text-foreground/85">{lines.map(l => <li key={l}>{l}</li>)}</ul>
-            <div className="flex flex-wrap gap-3">
-              <Button asChild variant="signal" size="lg" className="max-w-full"><Link to={cta.to}>{cta.label}<ArrowRight /></Link></Button>
-              {secondary && <Button asChild variant="outline" size="lg"><Link to={secondary.to}>{secondary.label}</Link></Button>}
-            </div>
-          </div>
-          <div className="hero-projection chartmap-dial">
-            <AstroDial highlight={highlight} className="w-full" />
-            <FilmFx motes={14} specks={5} tone="glow" />
-          </div>
+        <ul className="space-y-1 font-label text-sm tracking-[0.14em] text-foreground/85">{lines.map(l => <li key={l}>{l}</li>)}</ul>
+        <div className="flex flex-wrap gap-3">
+          <Button asChild variant="signal" size="lg" className="max-w-full"><Link to={cta.to}>{cta.label}<ArrowRight /></Link></Button>
+          {secondary && <Button asChild variant="outline" size="lg"><Link to={secondary.to}>{secondary.label}</Link></Button>}
         </div>
         <ul aria-label="What each planet describes" className="chartmap-planets">
           {planets.map(p => (
