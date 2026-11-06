@@ -33,7 +33,7 @@ const ASPECT_TONE: Record<string, string> = { Conjunction: 'hsl(var(--chart-ink)
  * Computed natal wheel: zodiac ring, houses, planets, aspect lines and an outer Ba Zi ring.
  * Every element is clickable and opens a detail panel with its confidence badge and source citation.
  */
-export function ChartWheel({ r, sourcesFor }: { r: ChartResult; sourcesFor?: (key: string) => { label: string; href: string }[] }) {
+export function ChartWheel({ r, sourcesFor, device = 'projector' }: { r: ChartResult; sourcesFor?: (key: string) => { label: string; href: string }[]; device?: ChartDevice }) {
   const [sel, setSel] = useState<Sel>(null);
   const asc = r.asc ?? 0;
   const S = 440, C = S / 2;

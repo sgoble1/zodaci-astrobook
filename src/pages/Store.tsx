@@ -151,7 +151,8 @@ export default function Store() {
             <select value={sort} onChange={e => set('sort', e.target.value, 'featured')} className="h-10 rounded-md border border-input bg-background px-3 text-sm">{(Object.keys(SORTS) as Sort[]).map(k => <option key={k} value={k}>{SORTS[k]}</option>)}</select>
           </label>
         </div>
-        {(type !== 'All' || sign !== 'All' || band || inStockOnly) && <div className="flex flex-wrap items-center gap-2" aria-label="Active filters">
+        {(collection !== 'all' || type !== 'All' || sign !== 'All' || band || inStockOnly) && <div className="flex flex-wrap items-center gap-2" aria-label="Active filters">
+          {collection !== 'all' && <Chip label="Atomic Zodiac Collection" onClear={() => change('collection', 'all')} />}
           {type !== 'All' && <Chip label={type} onClear={() => change('type', 'All')} />}
           {sign !== 'All' && <Chip label={`${sign} edition`} onClear={() => change('sign', 'All')} />}
           {band && <Chip label={band.label} onClear={() => change('price', 'all')} />}
@@ -162,7 +163,7 @@ export default function Store() {
         {products && shown.length === 0 && <div className="parchment space-y-3 p-8 text-center"><p className="text-muted-foreground">{products.length ? 'Nothing matches that search.' : 'New pieces are on their way — check back soon.'}</p>{(q || type !== 'All' || sign !== 'All' || band || inStockOnly) && <Button variant="outline" size="sm" onClick={() => setParams(new URLSearchParams(), { replace: true })}>Clear search and filters</Button>}</div>}
         {products && browsing && <div className="space-y-10">
           {shelves.map((sh, i) => <ShopShelf key={sh.id} id={sh.id} title={sh.title} script={sh.script} items={sh.items} onAdd={add} adding={loading}
-            onSeeAll={sh.seeAll ? () => change('type', sh.seeAll!) : undefined}
+            onSeeAll={sh.seeAll ? () => sh.seeAll === 'atomic' ? change('collection', 'atomic') : change('type', sh.seeAll!) : undefined}
             lead={i === 0 ? <>
               <SpotlightCard to="/astrobook" image={PRODUCT_ART.book.src} alt={PRODUCT_ART.book.alt} eyebrow="Written for you" title="The AstroBook" note="Your whole chart as a printed book: six volumes calculated from your birth moment, with the context you add." price={`From ${bookFrom}`} cta="Choose an edition" />
               <SpotlightCard to="/astrocomic" image={PRODUCT_ART.comic.src} alt={PRODUCT_ART.comic.alt} eyebrow={issue.purchased && session ? 'Your next issue' : 'Drawn for you'} title={`AstroComic ${comicCard.title}`} note={comicCard.note} price={COMIC_PLANS.single.label} cta={issue.purchased && session ? 'Order this issue' : 'See the comic'} />
@@ -214,7 +215,7 @@ export function ProductDetail() {
   const main = imgs[Math.min(image, imgs.length - 1)]?.node;
   const available = v ? v.availableForSale : inStock(product);
   const options = n.options.filter(o => !(o.name === 'Title' && o.values.length === 1 && o.values[0] === 'Default Title'));
-  const portrait = isPortraitProduct(n.title, n.productType ?? '');
+  const portrait = isPortraitProduct(n.title, n.productType ?? '', n.tags);
   const shown = shopTitle(n.title, n.productType ?? '');
   const isComic = /astro\s*comic/i.test(`${n.title} ${n.productType ?? ''}`);
   return (
