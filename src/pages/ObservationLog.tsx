@@ -30,6 +30,8 @@ export default function ObservationLog() {
   const load = useCallback(async () => {
     if (!uid) { setRows([]); return; }
     const r = await supabase.from('observation_log').select('id, observed_at, location, notes, tags, created_at').order('observed_at', { ascending: false }).limit(200);
+    const current = await supabase.auth.getSession();
+    if (current.data.session?.user.id !== uid) return;
     if (r.error) { if (missingTable(r.error.message)) setSetupNeeded(true); else setError('Your log could not be loaded. Check your connection and refresh the page.'); setRows([]); return; }
     setRows((r.data ?? []) as Observation[]);
   }, [uid]);
@@ -42,10 +44,11 @@ export default function ObservationLog() {
   const save = async (e: React.FormEvent) => {
     e.preventDefault(); setFieldError('');
     const iso = localInputToIso(at);
+    if (!uid) return setFieldError('Sign in before saving your observation.');
     if (!iso) return setFieldError('Enter the date and time you were looking up, for example 6 Nov 2026, 9:30 PM.');
     if (!notes.trim()) return setFieldError('Write a line about what you saw, even if it was only clouds.');
     setBusy(true);
-    const r = await supabase.from('observation_log').insert({ owner_id: uid!, observed_at: iso, location: location.trim().slice(0, 160), notes: notes.trim().slice(0, 4000), tags: parseTags(tags) });
+    const r = await supabase.from('observation_log').insert({ owner_id: uid, observed_at: iso, location: location.trim().slice(0, 160), notes: notes.trim().slice(0, 4000), tags: parseTags(tags) });
     setBusy(false);
     if (r.error) { if (missingTable(r.error.message)) setSetupNeeded(true); setFieldError('That observation was not saved. Please try again.'); return; }
     setNotes(''); setTags(''); setAt(nowLocal());

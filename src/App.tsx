@@ -121,6 +121,9 @@ const Orders = lazy(() => import('./pages/Orders'));
 const Dispatch = lazy(() => import('./pages/Dispatch'));
 const Learn = lazy(() => import('./pages/Learn'));
 const PersonalContext = lazy(() => import('./pages/PersonalContext'));
+const ContentCenter = lazy(() => import('./pages/ContentCenter'));
+const ObservationLog = lazy(() => import('./pages/ObservationLog'));
+const ReadingHistory = lazy(() => import('./pages/ReadingHistory'));
 const Workspaces = lazy(() => import('./pages/Workspaces'));
 const Wonderings = lazy(() => import('./pages/Wonderings'));
 const CounselorsIndex = lazy(() => import('./pages/Counselors').then(m => ({ default: m.CounselorsIndex })));
@@ -297,6 +300,9 @@ export default function App() {
             <Route path="/" element={<Home />} />
             <Route path="/explore" element={<ExploreDiscover />} />
             <Route path="/personal-context" element={<PersonalContext />} />
+            <Route path="/content-center" element={<ContentCenter />} />
+            <Route path="/observation-log" element={<ObservationLog />} />
+            <Route path="/reading-history" element={<ReadingHistory />} />
             <Route path="/workspaces" element={<Workspaces />} />
             <Route path="/shared-with-me" element={<SharedWithMe />} />
             <Route path="/wonderings" element={<Wonderings />} />

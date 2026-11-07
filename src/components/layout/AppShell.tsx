@@ -5,6 +5,7 @@ import { PageErrorBoundary } from '@/components/common/PageErrorBoundary';
 import { VerifySources } from '@/components/common/VerifySources';
 import { RouteMetaFallback } from '@/components/common/RouteMetaFallback';
 import { Link, Navigate, NavLink, Outlet, useLocation } from 'react-router-dom';
+import { useReadMarks } from '@/hooks/useReadingProgress';
 import { supabase } from '@/integrations/supabase/client';
 import { motion, useReducedMotion } from 'framer-motion';
 import ParticleField from '@/components/fx/ParticleField';
@@ -439,6 +440,7 @@ function SidebarInner({ mobile = false, onNavigate }: { mobile?: boolean; onNavi
   const allGroups = useContext(FounderGroupsContext) ?? APRIL_NAV_GROUPS;
   const edition = useContext(EditionContext);
   const { pathname, search } = useLocation();
+  const readMarks = useReadMarks(['/masterbook/', '/shane/', '/zac/']);
   useMenuTitleFallback(useMemo(() => allGroups.flatMap(g => [...g.items, ...(g.footer ?? []), ...(g.submenus ?? []).flatMap(s => s.items)]), [allGroups]));
   return (
     <div className={`founder-sidebar flex min-h-full flex-col gap-6 overflow-x-hidden ${mobile ? 'px-4 pb-8 pt-4' : 'h-full overflow-y-auto p-6'}`}>
@@ -464,7 +466,7 @@ function SidebarInner({ mobile = false, onNavigate }: { mobile?: boolean; onNavi
                     isActive ? 'bg-primary/10 border-primary/50 border-l-4 border-l-primary text-foreground' : 'text-muted-foreground hover:text-foreground hover:bg-muted/60'
                   }${n.created ? ' bg-created/20 text-foreground' : ''}${n.to === '/create' ? ' nav-create-glow' : ''}${glowId && n.to === `/p/${glowId}` ? ' nav-new-glow' : ''}`
                 }
-              ><span className="min-w-0"><span className="block">{n.label}{n.created ? <span className="sr-only"> (created page)</span> : null}{glowId && n.to === `/p/${glowId}` ? <span className="sr-only"> — just added</span> : null}</span>{n.hint && <span className="mt-0.5 block text-[11px] leading-snug text-muted-foreground/90">{n.hint}</span>}</span>{n.badge ? <span className="min-w-5 rounded-sm bg-primary px-1.5 text-center text-[10px] text-primary-foreground" aria-label={`${n.badge} new`}>{n.badge}</span> : null}</NavLink>
+              ><span className="min-w-0"><span className="block">{n.label}{readMarks.has(n.to) && <span className="ml-2 text-xs" title={`${readMarks.get(n.to)}% read`} aria-label={`${readMarks.get(n.to)}% read`}>{(readMarks.get(n.to) ?? 0) >= 95 ? '✓' : '◐'}</span>}{n.created ? <span className="sr-only"> (created page)</span> : null}{glowId && n.to === `/p/${glowId}` ? <span className="sr-only"> — just added</span> : null}</span>{n.hint && <span className="mt-0.5 block text-[11px] leading-snug text-muted-foreground/90">{n.hint}</span>}</span>{n.badge ? <span className="min-w-5 rounded-sm bg-primary px-1.5 text-center text-[10px] text-primary-foreground" aria-label={`${n.badge} new`}>{n.badge}</span> : null}</NavLink>
             ))}
             {g.submenus?.map(submenu => {
               const links = (

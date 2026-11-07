@@ -17,6 +17,8 @@ import { CreditBalance } from '@/components/common/CreditBalance';
 import { CurrentChapterPanel } from '@/components/observatory/CurrentChapterPanel';
 import { DashboardMosaic } from '@/components/observatory/DashboardMosaic';
 import { WhatsNew } from '@/components/common/WhatsNew';
+import { useRecentReading } from '@/hooks/useReadingProgress';
+import { ProgressCard } from '@/components/readings/ContinueReading';
 import { ChartWheelIcon, TelevisionIcon, LibraryIcon, StorefrontIcon, RingsIcon } from '@/components/icons/RetroIcons';
 
 type OrderSummary = { id: string; status: string; edition: string; format: string };
@@ -26,6 +28,7 @@ export function MemberDashboard() {
   const session = useSession();
   const access = usePlan();
   const bookmarks = useBookmarks();
+  const recent = useRecentReading(3);
   const [readings, setReadings] = useState<TopicRow[]>([]);
   const [orders, setOrders] = useState<OrderSummary[]>([]);
   const [visit, setVisit] = useState<ReadingVisit | null>(null);
@@ -58,6 +61,7 @@ export function MemberDashboard() {
     ]} />
     {chart && <div id="broadcast-studio" className="scroll-mt-24"><CurrentChapterPanel chart={chart} name={birth?.name} /></div>}
     <CreditBalance />
+    {recent.rows && recent.rows.length > 0 && <section className="space-y-4"><div className="flex flex-wrap items-center justify-between gap-3"><h2 className="text-2xl">Recently read</h2><Button asChild variant="ghost"><Link to="/reading-history">Reading history</Link></Button></div><ul className="grid gap-4 md:grid-cols-3">{recent.rows.map(row => <li key={row.path}><ProgressCard row={row} className="h-full" /></li>)}</ul></section>}
     <section className="grid items-center gap-6 sm:grid-cols-[7rem_minmax(0,1fr)]"><ThemeArt label={visit?.title ?? 'Your Big Three'} className="h-28 w-28" /><div className="space-y-4"><p className="text-xs text-gold">{!birth ? 'Begin here' : visit ? 'Continue reading' : 'Your chart is ready'}</p><h2>{!birth ? 'Meet your sky' : visit?.title ?? 'Your Big Three'}</h2>{!birth ? <p className="text-muted-foreground">Your birth date, time and place create your personal chart.</p> : visit ? <p className="text-muted-foreground">Return to your saved place.</p> : <p className="text-muted-foreground">Sun, Moon and Rising: a starting point for your personal readings.</p>}<Button asChild><Link to={destination}>{!birth ? 'Create my chart' : visit ? 'Continue reading' : 'Open my first reading'}<ArrowRight className="h-4 w-4" /></Link></Button></div></section>
     {chart && <section className="border-y border-border py-6"><div className="mb-5 flex items-center justify-between gap-3"><h2 className="text-2xl">Chart snapshot</h2><Button asChild variant="ghost"><Link to="/my-chart"><Orbit className="h-4 w-4" />My Chart</Link></Button></div><dl className="grid gap-4 sm:grid-cols-3">{placements.map(([label, value]) => <div key={label} className="border-l-2 border-primary pl-4"><dt className="text-xs text-muted-foreground">{label}</dt><dd className="mt-1 font-display text-2xl">{value}</dd></div>)}</dl>{!birth?.time && <p className="mt-4 text-sm text-muted-foreground">Birth time is unknown. Rising sign and houses are not shown.</p>}</section>}
     {loading ? <p role="status" className="text-muted-foreground">Loading your saved items…</p> : error ? <LoadError what="your dashboard" onRetry={() => setRetry(n => n + 1)} /> : <>

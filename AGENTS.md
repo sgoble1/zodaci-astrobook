@@ -37,6 +37,7 @@
 - blog_posts permits subscriber writes/explicit publication; drafts stay private.
 - Member editorial styles preserve archives; dashboard data/reading positions are owner-scoped.
 - Long markdown readings use NavigatedProse/ReadingNavigator for one consistent reader.
+- Reading progress and observations are owner-scoped; Content Center links context and reading history without claiming generated-content provenance that is not recorded.
 - Bookmark caches are owner-keyed/auth-invalidated; throw mutation errors to prevent stale exposure and false saves.
 
 ## Media and presentation

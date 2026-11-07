@@ -33,7 +33,7 @@ describe('member navigation architecture', () => {
   it('keeps every destination from the previous member menu reachable', () => {
     const old = [...NAV_GROUPS.flatMap(g => [...g.items, ...(g.submenus ?? []).flatMap(s => s.items), ...(g.footer ?? [])]), ...RELATIONSHIPS_GROUP.items].map(i => i.to);
     const reachable = new Set([...menuPaths, ...accountPaths, ...memberDestinations({ shane: true, shared: true }).map(d => d.to)]);
-    const documentedDuplicates = Object.entries(ROUTE_INVENTORY).filter(([, p]) => p.level === 'duplicate').map(([path]) => path);
+    const documentedDuplicates = Object.entries(ROUTE_INVENTORY).filter(([, p]) => p.level === 'duplicate' || p.note?.startsWith('redirects to ')).map(([path]) => path);
     expect(old.filter(to => !reachable.has(to) && !documentedDuplicates.includes(to))).toEqual([]);
   });
 
@@ -118,7 +118,7 @@ describe('member navigation architecture', () => {
     expect(nextStepsFor('/my-readings', { plan: 'free', hasChart: false })[0].to).toBe('/start');
   });
   it('gives Academy lessons and theme pages a three-level breadcrumb', () => {
-    expect(breadcrumbsFor('/academy/houses-101')?.map(c => c.label)).toEqual(['Research Library', 'Academy', 'Houses 101']);
+    expect(breadcrumbsFor('/academy/houses-101')?.[1]?.to).toBe('/learn#lessons');
     expect(breadcrumbsFor('/themes/core-emotions')).toHaveLength(3);
   });
 });

@@ -142,7 +142,7 @@ export function CurrentChapterPanel({ chart, name }: { chart: ChartResult; name?
               ))}</ul>
             </div>
           )}
-          <div className="mt-4 flex flex-wrap gap-2"><Button asChild variant="signal" size="sm"><Link to={LINK[active][0]}>{LINK[active][1]}</Link></Button><Button asChild variant="outline" size="sm"><Link to="/timeline">Timeline Hall</Link></Button></div>
+          <div className="mt-4 flex flex-wrap gap-2"><Button asChild variant="signal" size="sm"><Link to={LINK[active][0]}>{LINK[active][1]}</Link></Button><Button asChild variant="outline" size="sm"><Link to="/timeline">Timeline Hall</Link></Button><Button asChild variant="outline" size="sm"><Link to="/personal-context">Update my context</Link></Button></div>
         </div>
       </div>
       <div className="obs-panel min-w-0 p-4 sm:p-6">
