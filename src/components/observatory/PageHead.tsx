@@ -14,7 +14,7 @@ export function PageHead({ eyebrow, title, script, art, children, actions, class
       {art && <SpotArt kind={art} className="hidden h-24 w-24 shrink-0 sm:inline-flex" />}
       <div className="min-w-0 flex-1">
         <p className="font-label text-xs tracking-[0.16em] text-primary">{eyebrow}</p>
-        <Tag className="mt-1 font-display text-[clamp(2rem,5vw,3rem)] leading-[1.02]">{title}</Tag>
+        <Tag className="mt-1 break-words font-display text-3xl leading-snug sm:text-4xl">{title}</Tag>
         {script && <p className="mt-1 font-script text-2xl text-primary sm:text-[1.7rem]">{script}</p>}
         {children && <div className="mt-3 max-w-2xl leading-relaxed text-muted-foreground">{children}</div>}
       </div>

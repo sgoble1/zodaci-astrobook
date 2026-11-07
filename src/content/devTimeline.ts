@@ -2,6 +2,7 @@
 export type TimelineEvent = { date: string; title: string; summary: string; phase: 'Original build' | 'Current build' };
 
 export const DEV_TIMELINE: TimelineEvent[] = [
+  { date: '2026-11-07', phase: 'Current build', title: 'Private reading tools and context connections', summary: 'Connected Observation Log, Reading History and Content Center routes; recent readings on member dashboards and personal-context access from TV broadcasts. Corrected founder menu test typing.' },
   { date: '2025-10-01', phase: 'Original build', title: 'Project started as "Zodiactic"', summary: 'Full outline for personalised star-chart generation, explanations, saving and planning. Backend, sign-in, profiles and roles set up; MVP with birth data and natal charts.' },
   { date: '2025-10-02', phase: 'Original build', title: 'Phases 2–3: interpretations and premium', summary: 'Aspects, transits, retrograde tables and AI interpretations; Stripe enabled; progressions, synastry, historical parallels and action planner.' },
   { date: '2025-10-04', phase: 'Original build', title: 'All five stages completed', summary: 'Articles library (11 seeded), retrograde periods 2025–2027, 20 historical figures, 60+ cities, admin tools.' },

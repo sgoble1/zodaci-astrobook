@@ -5,6 +5,8 @@
 export type SiteUpdate = { date: string; title: string; text: string; to?: string; cta?: string };
 
 export const SITE_UPDATES: SiteUpdate[] = [
+  { date: '2026-11-07', title: 'Keep your place', text: 'Readings remember your last section. Your private reading history brings you back to it.', to: '/reading-history', cta: 'Reading history' },
+  { date: '2026-11-07', title: 'Observation Log and Content Center', text: 'Save private sky observations and review the personal examples you choose for future writing.', to: '/content-center', cta: 'Open Content Center' },
   { date: '2026-11-06', title: 'A new home for the gift shop', text: 'Shop the Atomic Zodiac Collection by department — posters, tees, mugs, stickers and books — with every sign in each.', to: '/store?collection=atomic', cta: 'Visit the shop' },
   { date: '2026-11-06', title: 'Real books on the Cosmic Archive shelf', text: 'The home page and your dashboard now show the actual AstroBook covers from the shop.', to: '/astrobook', cta: 'See AstroBook' },
   { date: '2026-11-05', title: 'Forecast Center', text: 'Today’s sky for everyone, plus broadcasts timed to your own chart when you’re signed in.', to: '/forecast', cta: 'Open Forecast' },
