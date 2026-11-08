@@ -4,8 +4,8 @@ import { eclLon, fmtLon, houseOf, type BodyPos, type ChartResult } from '@/lib/a
 /**
  * Retrograde periods from the ephemeris (no AI, no biography). A planet is retrograde on a UTC day when its
  * geocentric ecliptic longitude decreases across that day. Periods are found by daily sampling, so station dates are
- * accurate to the day. Shadow dates (Mercury, Venus, Mars) are the days the planet first reaches the degree it will
- * later turn direct at (pre-shadow) and finally passes the degree it turned retrograde at (post-shadow).
+ * accurate to within a day (UTC). Shadow dates (Mercury, Venus, Mars) are the UTC days the planet crosses the degree it will
+ * later turn direct at (pre-shadow) and, afterwards, the degree it turned retrograde at (post-shadow).
  */
 const DAY = 864e5;
 const BODIES: [string, string, string, Astronomy.Body][] = [
@@ -63,8 +63,8 @@ export function retrogradePeriods(from = new Date(), days = 365): RetroPeriod[] 
         if (stop.getTime() >= windowStart && start.getTime() <= windowEnd) {
           const p: RetroPeriod = { key, name, glyph, start, end: stop, from: pos(L[s]), to: pos(L[end]) };
           if (SHADOW.has(key)) {
-            for (let k = s; k > 0; k--) { if (step(L[k], L[end]) >= 0) { p.preShadow = new Date(origin + (k + 1) * DAY); break; } }
-            for (let k = end; k < L.length; k++) { if (step(L[s], L[k]) >= 0) { p.postShadow = new Date(origin + k * DAY); break; } }
+            for (let k = s; k > 0; k--) { if (step(L[k], L[end]) >= 0) { p.preShadow = new Date(origin + k * DAY); break; } }
+            for (let k = end; k < L.length; k++) { if (step(L[s], L[k]) >= 0) { p.postShadow = new Date(origin + (k - 1) * DAY); break; } }
           }
           out.push(p);
         }
