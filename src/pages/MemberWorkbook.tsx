@@ -57,7 +57,7 @@ export default function MemberWorkbook({ birth, focus }: { birth: MyBirth; focus
           <motion.section id={`wb-${m.id}`} key={m.id} initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.9, delay: i * 0.05 }} className={`obs-paper scroll-mt-28 space-y-3 p-5 ${focus === m.id ? 'ring-1 ring-[hsl(var(--brass)/0.6)]' : ''}`}>
             <h2 className="font-display text-xl">{m.title}</h2>
             <p className="text-sm text-foreground/80">{m.why}</p>
-            <ol className="list-decimal space-y-1.5 pl-5 text-sm">{m.steps.map(s => <li key={s}>{s}</li>)}</ol>
+            <ol className="list-decimal space-y-1.5 pl-5 text-sm">{m.steps.map((s, j) => <li key={`${j}-${s}`}>{s}</li>)}</ol>
             <MemberAnswer module={m.id} title={m.title} question={m.steps.join('\n')} />
           </motion.section>
         ))}
