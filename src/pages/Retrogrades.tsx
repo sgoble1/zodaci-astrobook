@@ -27,7 +27,7 @@ export default function Retrogrades() {
   const birth = useMyBirth();
   const chart = useMemo<ChartResult | null>(() => { if (!birth) return null; try { return computeChart(toChartInput(birth)); } catch { return null; } }, [birth]);
   if (april === undefined || birth === undefined) return <p role="status" className="text-muted-foreground">Opening the retrograde desk…</p>;
-  if (april && RETROGRADES_AT_BIRTH.length > 0) return <AprilRetrogrades chart={chart} />;
+  if (april && RETROGRADES_AT_BIRTH.length > 0) return <AprilRetrogrades />;
   return (
     <div className="space-y-8">
       <PageHead eyebrow="Retrograde desk · calculated from the ephemeris" title="Retrogrades" script="When a planet seems to turn back." art="planet">
@@ -143,8 +143,11 @@ function HowCalculated() {
   );
 }
 
-/** April's original chapter (her account only), restyled, followed by the same calculated coming-year list. */
-function AprilRetrogrades({ chart }: { chart: ChartResult | null }) {
+/**
+ * April's original chapter, restyled, followed by the general coming-year dates. Houses are left out here because an
+ * authorized viewer may be looking at her edition, and the viewer's own chart must never be placed on her page.
+ */
+function AprilRetrogrades() {
   return (
     <div className="space-y-10">
       <PageHead eyebrow="Part Two · Retrograde Navigation" title="Four planets, turned inward." art="planet">
@@ -173,7 +176,7 @@ function AprilRetrogrades({ chart }: { chart: ChartResult | null }) {
           );
         })}
       </div>
-      <ComingRetrogrades chart={chart} />
+      <ComingRetrogrades chart={null} />
       <SourceChapters match={/retrograde|\brx\b|stationing|shadow period/i} />
     </div>
   );
