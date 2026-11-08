@@ -45,9 +45,9 @@ function natalPoints(natal: ChartResult) {
 }
 
 const THEME: Record<string, string> = { sun: 'identity and vitality', moon: 'feelings and needs', mercury: 'thinking and conversations', venus: 'love, money and values', mars: 'drive and conflict', jupiter: 'growth and opportunity', saturn: 'responsibility and limits', uranus: 'change and freedom', neptune: 'dreams and uncertainty', pluto: 'power and deep change', asc: 'how you meet the world', mc: 'career and reputation' };
-const hitText = (t: string, type: string, n: string, retro: boolean) => {
+const hitText = (tName: string, tTheme: string, type: string, label: string, nTheme: string | undefined, retro: boolean) => {
   const a = ASPECTS.find(x => x.type === type)!;
-  return `Transiting ${t[0].toUpperCase()}${t.slice(1)} ${a.nature} your natal ${n}${retro ? ' while retrograde, so the theme is revisited rather than started fresh' : ''}.`;
+  return `${tName} (${tTheme}) ${a.nature} your ${label}${nTheme ? ` (${nTheme})` : ''}.${retro ? ` ${tName} is retrograde, so this is more often an old subject coming back than something new.` : ''}`;
 };
 
 /** Transits on a date, sorted by significance: applying first, then tighter orb, then slower planet. */
@@ -91,7 +91,7 @@ export function upcomingEvents(natal: ChartResult, from: Date, days = 90): Trans
         const oc = o(cur);
         if (oc < 1.2 && oc <= o(prev) && oc < o(nxt)) {
           const t = cur[i]; const label = n.key === 'asc' ? 'Ascendant' : n.key === 'mc' ? 'Midheaven' : n.name;
-          out.push({ date, kind: 'exact', title: `${t.name} ${a.symbol} natal ${label}`, detail: hitText(THEME[t.key], a.type, THEME[n.key] ?? label, t.retro), retro: t.retro, doubleRx: t.retro && natalRx.has(n.key), weight: WEIGHT[k] + (['sun', 'moon', 'asc', 'mc'].includes(n.key) ? 2 : 0), planet: k, natalKey: n.key });
+          out.push({ date, kind: 'exact', title: `${t.name} ${a.symbol} natal ${label}`, detail: hitText(t.name, THEME[t.key], a.type, label, THEME[n.key], t.retro), retro: t.retro, doubleRx: t.retro && natalRx.has(n.key), weight: WEIGHT[k] + (['sun', 'moon', 'asc', 'mc'].includes(n.key) ? 2 : 0), planet: k, natalKey: n.key });
         }
       }));
     });
