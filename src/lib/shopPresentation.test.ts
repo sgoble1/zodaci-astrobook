@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { atomicAestheticRank, comicIssueTitle, compareAtomicAesthetic, isAtomicZodiac, isPortraitProduct, nextUnorderedIssue, productPriority, shopTitle } from './shopPresentation';
+import { atomicAestheticRank, comicIssueTitle, compareAtomicAesthetic, isAtomicZodiac, isPortraitProduct, nextUnorderedIssue, productPriority, shopTitle, signPicks } from './shopPresentation';
 
 describe('featured shop order', () => {
   it('places AstroBooks and AstroComics before other products', () => {
@@ -56,5 +56,25 @@ describe('AstroComic issue title', () => {
   it('renames the issue-one listing without touching other products', () => {
     expect(shopTitle('AstroComic Issue #1 (Pre-order)', 'Comic Books')).toEqual({ title: 'AstroComic Issue #1', badge: 'Pre-order' });
     expect(shopTitle('Constellation Mug', 'Mugs')).toEqual({ title: 'Constellation Mug' });
+  });
+});
+
+describe('shop picks for a member’s own signs', () => {
+  const P = (title: string, tags: string[] = [], type = '') => ({ title, tags, productType: type });
+  const shop = [
+    P('Leopard print tote', [], 'Bag'), P('Leo Constellation Tee', ['leo'], 'T-Shirt'), P('Leo Atomic Zodiac Poster', ['Atomic Zodiac', 'Leo'], 'Poster'),
+    P('Pisces Mug', ['pisces'], 'Mug'), P('Virgo Notebook', ['Virgo'], 'Notebook'), P('Leo Sticker', ['leo'], 'Sticker'),
+  ];
+  it('picks Sun, Moon then Rising, Atomic Zodiac first, never matching Leopard for Leo', () => {
+    const picks = signPicks(shop, { sun: 'Leo', moon: 'Pisces', rising: 'Virgo' });
+    expect(picks.map(p => [p.role, p.product.title])).toEqual([['Sun', 'Leo Atomic Zodiac Poster'], ['Moon', 'Pisces Mug'], ['Rising', 'Virgo Notebook']]);
+  });
+  it('without a birth time there is no Rising pick; extra Sun picks fill the space', () => {
+    const picks = signPicks(shop, { sun: 'Leo', moon: 'Pisces', rising: null });
+    expect(picks.map(p => p.role)).toEqual(['Sun', 'Moon', 'Sun']);
+    expect(picks.some(p => /Leopard/.test(p.product.title))).toBe(false);
+  });
+  it('returns nothing when no product matches the signs', () => {
+    expect(signPicks(shop, { sun: 'Aries', moon: 'Taurus' })).toEqual([]);
   });
 });

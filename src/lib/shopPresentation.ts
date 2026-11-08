@@ -85,3 +85,28 @@ export function shopTitle(title: string, type = ''): { title: string; badge?: st
   if (!(/astro\s*comic/i.test(`${title} ${type}`) && /issue\s*#?\s*1\b/i.test(title))) return { title };
   return { title: 'AstroComic Issue #1', badge: /pre-?order/i.test(title) ? 'Pre-order' : undefined };
 }
+
+export type ChartSigns = { sun: string; moon?: string | null; rising?: string | null };
+export type SignPick<T> = { product: T; role: 'Sun' | 'Moon' | 'Rising'; sign: string };
+
+/** Whole-word sign match on catalog tags first, then the title (so "Leo" never matches "Leopard"). */
+export function productSign<T extends ShopPresentationProduct>(p: T, sign: string): boolean {
+  const word = new RegExp(`\\b${sign}\\b`, 'i');
+  return (p.tags ?? []).some(t => t.trim().toLowerCase() === sign.toLowerCase()) || word.test(p.title);
+}
+
+/**
+ * Up to `max` shop products for a member's own calculated signs: one for the Sun first, then the Moon, then the
+ * Rising sign (only passed when the birth time is known), then more Sun picks to fill. Atomic Zodiac pieces lead,
+ * in the curator's visual order; a product is never picked twice. Signs come only from the chart.
+ */
+export function signPicks<T extends ShopPresentationProduct>(products: T[], signs: ChartSigns, max = 3): SignPick<T>[] {
+  const order: [SignPick<T>['role'], string | null | undefined][] = [['Sun', signs.sun], ['Moon', signs.moon], ['Rising', signs.rising]];
+  const ranked = (sign: string) => products.filter(p => productSign(p, sign))
+    .sort((a, b) => Number(isAtomicZodiac(b)) - Number(isAtomicZodiac(a)) || compareAtomicAesthetic(a, b));
+  const used = new Set<T>(); const out: SignPick<T>[] = [];
+  const take = (role: SignPick<T>['role'], sign: string) => { const p = ranked(sign).find(x => !used.has(x)); if (p) { used.add(p); out.push({ product: p, role, sign }); } };
+  for (const [role, sign] of order) if (sign && out.length < max) take(role, sign);
+  while (out.length < max) { const before = out.length; take('Sun', signs.sun); if (out.length === before) break; }
+  return out;
+}
