@@ -49,7 +49,7 @@ describe('retrograde periods from the ephemeris', () => {
   });
 
   it('reads natal retrogrades from the chart, never the Node', () => {
-    // 1 Aug 2024 noon UTC: Mercury not yet retrograde; Saturn, Uranus? (direct), Neptune and Pluto retrograde.
+    // 10 Aug 2024 noon UTC: Mercury (Aug 5–28) and Saturn (Jun 29–Nov 15) were both retrograde.
     const chart = computeChart({ date: '2024-08-10', time: '12:00', lat: 51.5, lon: 0, tz: 'UTC', placeLabel: 'London', placeSource: 'geocoded', houseSystem: 'placidus' });
     const keys = natalRetrogrades(chart).map(b => b.key);
     expect(keys).toContain('mercury');
