@@ -4,6 +4,7 @@ import { z } from 'npm:zod@3';
 import { createResponsesCall, gatewayError } from '../_shared/responses.ts';
 import { counselorContext } from '../_shared/member-profile.ts';
 import { creditShortfall } from '../_shared/credits.ts';
+import { ATTRIBUTION_RULE, attributionNote, unattributedClaims } from '../_shared/attribution.ts';
 
 const json = (b: unknown, status = 200) => new Response(JSON.stringify(b), { status, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
 
@@ -43,7 +44,7 @@ ${who.context}
 ${personal ? `\nWhat ${who.name} chose to share about their life (context only — it never changes chart facts):\n${personal}\n` : ''}
 Write a complete, well-organised page in Markdown: a short introduction, then clear ## sections, and finish with "## Key takeaways".
 ${passages.length ? 'Ground claims in the numbered source passages where they apply and cite them inline, like [2] or [1][4]; quote short exact phrases where they help. Do not add a references list — the site shows the passages below the page.' : 'There are no source passages for this page: work only from the calculated chart above.'}
-Name the placement behind every chart claim. Analyse, calculate and reason step by step where the brief asks for it, showing the working briefly, and answer every question in the brief.
+Name the placement behind every chart claim. ${ATTRIBUTION_RULE} Analyse, calculate and reason step by step where the brief asks for it, showing the working briefly, and answer every question in the brief.
 Mark anything that is not from the chart or a passage as "(general astrological knowledge)". Never invent placements, dates, relatives, ancestry or life events. Be warm, accurate and constructive. Do not repeat the page title as a heading.`;
 
     const call = createResponsesCall(req, { apiKey, instructions, effort: 'low' }, [
@@ -52,7 +53,8 @@ Mark anything that is not from the chart or a passage as "(general astrological 
     const text = (await call.result.text).trim();
     if (!text) return json({ error: 'The page came back empty. Please try again.' }, 502);
     await admin.from('ai_usage').insert({ user_id: u.user.id, feature: FEATURE });
-    return json({ content: text });
+    const loose = unattributedClaims(text).length;
+    return json({ content: text, quality: attributionNote(loose) || null });
   } catch (e) {
     if (req.signal.aborted) return new Response(null, { status: 499, headers: corsHeaders });
     console.error('generate-page', e);
