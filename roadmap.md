@@ -400,10 +400,15 @@ Audit Oct 29: Chat/counselors already use the member's chart; podcast/custom pag
 - [x] Home shelf: books stand on one ledge, captions sit clear beneath (two lines reserved), first book no longer hides under the arrow; "Sample covers" note centred under the Take the Sky Home stack.
 - [ ] Theme sweep (Gaps 18, 23, 24, 29, 30, 31, 39, 41, 46): old small-caps/gold eyebrows → label style; founder banners/badges/links squared; header + phone dock (Gap 9); Learn sideways scroll.
 - [ ] April menus (Gap 5/6): Flying Stars intro + submenu, Interactive Bagua Map intro/rename, menu descriptors; Zac in podcasts + Workspaces hero (Gap 37); new founder topic groups (Gap 44).
-- [ ] Observation Log (Gap 11) and reading progress/history (Gap 45): owner-only tables, pages, dashboard "Recently read", sidebar read marks (tested).
-- [ ] Personal Context restyle + Content Center (Gaps 26, 27); "Your context" on the Current Chapter TV.
-- [ ] Page restyles: Relationships + detail (15), Counselors (21), My Readings (39), Retrogrades from the member's own chart (41), Pricing (19), Demo (23), AstroBook page (24), Learn (16).
-- [ ] Sign-based shop picks on dashboards (36); Investor unit economics/costs/scenarios with sources (47); placement-attribution rule in generation (25); workbook themes (32); Forecast themes/90-day timeline/coming-soon (33); TV depth (34).
+- [x] Observation Log (Gap 11) and reading progress/history (Gap 45): owner-only tables, pages, dashboard "Recently read", sidebar read marks (tested, Nov 7).
+- [x] Personal Context restyle + Content Center (Gaps 26, 27); "Update my context" on the Current Chapter TV (Nov 7).
+- [x] Page restyles (Nov 8): Relationships + detail (15), Counselors (21), My Readings (39), Pricing "same sky" plate (19), Learn (16, already in place). Retrogrades (41) now calculated from each member's own chart: born-retrograde planets, every retrograde period in the next 12 months with shadow dates and houses (tested against published 2024 dates); April keeps her chapter.
+- [ ] Demo (23) and AstroBook page (24) final pass.
+- [x] Sign-based shop picks on member dashboards (36, tested: Sun → Moon → Rising, Atomic Zodiac first, whole-word match).
+- [x] Placement attribution (25): reading writers require each claim to name its placement; one revision pass when 3+ claims lack one; custom pages report a quality note (tested, deployed).
+- [x] Workbook themes (32): "Based on your entries" on the member workbook (browser-only keyword count), opt-in "Add to my personal context" per reflection.
+- [x] Forecast (33): Coming soon banner, 90-day personal timeline by life area (workbook areas first), signal notes as paper cards.
+- [ ] Investor unit economics/costs/scenarios with sources (47); TV depth (34).
 - [ ] Reading Room articles expanded (22); April plate images (Gap 12); shop departments in sidebar (3B); three-column reader (4A, risk-checked).
 - [ ] Activity logs (Developer + dashboards) updated; tests; 393/1280 checks.
 - Note: V2.3 "Mystic Ink" image prompts are read as the atomic-zodiac style (owner decision). OG image (Gap 14) left to hosting per standing rule.

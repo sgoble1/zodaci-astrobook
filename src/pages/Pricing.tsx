@@ -33,7 +33,7 @@ const COMPARE: { group: string; rows: [string, boolean | string, boolean | strin
   { group: 'Create & keep', rows: [['AI credits each month', String(CREDIT_ALLOWANCE.free), String(CREDIT_ALLOWANCE.full), String(CREDIT_ALLOWANCE.creator)], ['Counselor and SmartChat conversations', 'Uses credits', 'Uses credits', 'Uses credits'], ['Saved relationship charts and compatibility', Y, Y, Y], ['Personal podcasts (audio narration)', N, N, Y], ['New Masterbook chapters', N, N, Y], ['Print or save any chart page', Y, Y, Y]] },
   { group: 'Community & AstroBook', rows: [['Read and reply to community posts', Y, Y, Y], ['Reading Room articles and Academy', Y, Y, Y], ['Order an AstroBook (sold separately)', Y, Y, Y]] },
 ];
-const cell = (v: boolean | string) => typeof v === 'string' ? v : v ? <Check className="mx-auto h-4 w-4 text-gold" aria-label="Included" /> : <Minus className="mx-auto h-4 w-4 text-muted-foreground" aria-label="Not included" />;
+const cell = (v: boolean | string) => typeof v === 'string' ? v : v ? <Check className="mx-auto h-4 w-4 text-primary" aria-label="Included" /> : <Minus className="mx-auto h-4 w-4 text-muted-foreground" aria-label="Not included" />;
 
 /** Public pricing: works signed out; a chosen plan is kept through sign-up and opens checkout on return. */
 export default function Pricing() {
@@ -92,16 +92,17 @@ export default function Pricing() {
         <p className="mx-auto max-w-2xl text-lg text-muted-foreground">Start free with the essentials of your chart. Open the full encyclopedia when you want the depth. No surprises.</p>
         <p className="text-sm"><Link to="/demo" className="text-primary underline underline-offset-4">Try the interactive demo first</Link></p>
         {sub.tier !== 'free' && <div className="flex flex-col items-center gap-1 pt-2">{billed && <Button variant="outline" onClick={manage}>Manage subscription · cancel, card & invoices</Button>}{sub.periodEnd && <p className="text-xs text-muted-foreground">{sub.status === 'granted' ? `${PLAN_NAME[sub.tier]} access granted until` : sub.cancelAtEnd ? 'Ends' : 'Renews'} {new Date(sub.periodEnd).toLocaleDateString()}</p>}{sub.status === 'past_due' && <p role="alert" className="text-sm text-destructive">Your last payment didn’t go through. Update your card in Manage subscription to keep your plan.</p>}</div>}
-        {legacy && <p className="mx-auto max-w-xl rounded-lg border border-gold/40 bg-card/60 p-3 text-sm">You’re on an original {sub.priceId?.startsWith('creator') ? 'Creator' : 'Full Access'} plan, kept at your original price with everything in {PLAN_NAME[sub.tier]}. Switching plans moves you to today’s prices.</p>}
+        {legacy && <p className="mx-auto max-w-xl obs-paper p-3 text-sm">You’re on an original {sub.priceId?.startsWith('creator') ? 'Creator' : 'Full Access'} plan, kept at your original price with everything in {PLAN_NAME[sub.tier]}. Switching plans moves you to today’s prices.</p>}
       </header>
+      {!open && <SameSky />}
       {open ? (
-        <section className="parchment space-y-3 p-4" aria-label="Checkout">
+        <section className="obs-paper space-y-3 p-4" aria-label="Checkout">
           <Button variant="outline" size="sm" onClick={close}>← Back to plans</Button>
           <StripeEmbeddedCheckout priceId={open} onError={m => { toast.error(m); close(); }} returnUrl={`${window.location.origin}/checkout/return?session_id={CHECKOUT_SESSION_ID}&next=${encodeURIComponent(returnTo)}`} />
         </section>
       ) : (<>
         <div role="radiogroup" aria-label="Billing period" className="mx-auto flex w-fit items-center gap-1 rounded-full border border-border p-1">
-          {[[false, 'Monthly'], [true, 'Annual']].map(([v, l]) => <Button type="button" variant={yearly === v ? 'default' : 'ghost'} role="radio" key={String(v)} onClick={() => setYearly(v as boolean)} aria-checked={yearly === v} className="rounded-full px-3 sm:px-5">{l as string}{v && <span className="ml-1 rounded-full bg-gold/20 px-2 py-0.5 text-xs text-gold">Save up to {maxYearlySavingPct()}%</span>}</Button>)}
+          {[[false, 'Monthly'], [true, 'Annual']].map(([v, l]) => <Button type="button" variant={yearly === v ? 'default' : 'ghost'} role="radio" key={String(v)} onClick={() => setYearly(v as boolean)} aria-checked={yearly === v} className="rounded-full px-3 sm:px-5">{l as string}{v && <span className="ml-1 rounded-sm bg-primary/20 px-2 py-0.5 text-xs text-primary">Save up to {maxYearlySavingPct()}%</span>}</Button>)}
         </div>
         <div className="grid gap-5 md:grid-cols-3">
           {CARDS.map((p, i) => {
@@ -116,11 +117,11 @@ export default function Pricing() {
             const switchable = billed && paid && !!pid && !current && sub.priceId !== pid;
             const label = `${PLAN_NAME[p.tier]} ${yearly ? 'annual' : 'monthly'} (${price} ${per})`;
             return (
-              <section key={p.slug} className={`parchment flex flex-col space-y-4 p-6 ${p.tier === 'full' ? 'border-gold ring-1 ring-gold/40' : ''}`} aria-labelledby={`plan-${i}`}>
-                <div className="flex items-center justify-between"><h2 id={`plan-${i}`} className="text-2xl">{PLAN_NAME[p.tier]}</h2>{p.tier === 'full' && <span className="rounded-full bg-gold/15 px-2 py-0.5 text-xs text-gold">Recommended</span>}</div>
-                <div><span className="font-display text-4xl">{price}</span> <span className="text-sm text-muted-foreground">{per}</span>{saving > 0 && <p className="text-xs text-gold">You save ${saving} a year</p>}</div>
+              <section key={p.slug} className={`obs-paper flex flex-col space-y-4 p-6 ${p.tier === 'full' ? 'border-[hsl(var(--brass)/0.7)] ring-1 ring-[hsl(var(--brass)/0.4)]' : ''}`} aria-labelledby={`plan-${i}`}>
+                <div className="flex items-center justify-between"><h2 id={`plan-${i}`} className="text-2xl">{PLAN_NAME[p.tier]}</h2>{p.tier === 'full' && <span className="rounded-sm bg-primary/15 px-2 py-0.5 font-label text-xs tracking-[0.12em] text-primary">Recommended</span>}</div>
+                <div><span className="font-display text-4xl">{price}</span> <span className="text-sm text-muted-foreground">{per}</span>{saving > 0 && <p className="text-xs font-semibold text-accent">You save ${saving} a year</p>}</div>
                 <p className="text-sm text-muted-foreground">{p.blurb}</p>
-                <ul className="flex-1 space-y-2 text-sm">{p.items.map(x => <li key={x} className="flex gap-2"><Check className="h-4 w-4 shrink-0 text-gold" aria-hidden />{x}</li>)}</ul>
+                <ul className="flex-1 space-y-2 text-sm">{p.items.map(x => <li key={x} className="flex gap-2"><Check className="h-4 w-4 shrink-0 text-primary" aria-hidden />{x}</li>)}</ul>
                 {!paid ? (sub.userId ? <Button asChild variant="outline" className="w-full"><Link to="/start">Open my free chart</Link></Button> : <Button asChild variant="outline" className="w-full"><Link to={signupLink('free')}>{p.cta}</Link></Button>)
                   : switchable ? <Button className="w-full" variant={below ? 'outline' : 'default'} onClick={() => setChange({ pid: pid!, label, up: !below && !(sub.tier === p.tier && !yearly) })}>{sub.tier === p.tier ? `Switch to ${yearly ? 'annual' : 'monthly'} — ${price}` : below ? `Switch to ${PLAN_NAME[p.tier]} — ${price}` : `Upgrade to ${PLAN_NAME[p.tier]} — ${price}`}</Button>
                   : current ? <Button disabled className="w-full">Your current plan</Button>
@@ -152,7 +153,7 @@ export default function Pricing() {
       <section className="space-y-4" aria-labelledby="pricing-faq"><h2 id="pricing-faq" className="font-display text-3xl">Questions</h2><Faq items={PRICING_FAQ} id="pricing-faq-schema" /></section>
       <section className="space-y-3" aria-labelledby="compare">
         <h2 id="compare" className="font-display text-3xl">Compare plans</h2>
-        <div className="overflow-x-auto rounded-lg border border-border">
+        <div className="obs-paper overflow-x-auto">
           <table className="w-full min-w-[560px] text-sm">
             <thead><tr className="border-b border-border text-left"><th scope="col" className="p-3 font-medium">Feature</th>{(['free', 'full', 'creator'] as Tier[]).map(t => <th key={t} scope="col" className="p-3 text-center font-medium">{PLAN_NAME[t]}</th>)}</tr></thead>
             <tbody>{COMPARE.map(g => <Fragment key={g.group}>
@@ -162,10 +163,37 @@ export default function Pricing() {
           </table>
         </div>
       </section>
-      <section aria-labelledby="astrobook-xsell" className="flex flex-wrap items-center justify-between gap-4 rounded-lg border border-gold/40 bg-card p-6">
+      <section aria-labelledby="astrobook-xsell" className="obs-panel flex flex-wrap items-center justify-between gap-4 p-6">
         <div><h2 id="astrobook-xsell" className="font-display text-2xl">Looking for the printed book?</h2><p className="text-sm text-muted-foreground">AstroBook turns your readings into a book, sold separately from plans. {digital && <>{digital.name} {money(digital.price)} · </>}{firstPrint && <>{firstPrint.name} paperback {money(firstPrint.price)}</>}{topPrint && topPrint !== firstPrint && <> up to {topPrint.name} {money(topPrint.price)}</>}. Printed versions ship free in the US.</p></div>
         <Button asChild variant="outline"><Link to="/astrobook">Shop AstroBook →</Link></Button>
       </section>
     </article>
+  );
+}
+
+const SAME_SKY = [
+  ['Sun sign horoscope', 'Written for 1 in 12 people', 'Everyone born in the same month or so gets the same text.'],
+  ['Big Three reading', 'Written for roughly 1 in 1,728', 'Sun, Moon and Rising together: 12 × 12 × 12 combinations.'],
+  ['Your Zodaci reading', 'Written for your birth minute', 'Every degree, house and aspect from your date, time and place. Only someone born the same minute in the same town shares it.'],
+] as const;
+
+/** Differentiation plate above the tiers: the arithmetic is exact, the third card says only what the calculation does. */
+function SameSky() {
+  return (
+    <section aria-labelledby="same-sky" className="obs-panel space-y-5 p-5 sm:p-7">
+      <div>
+        <p className="font-label text-xs tracking-[0.16em] text-primary">Why it’s different</p>
+        <h2 id="same-sky" className="plate-title mt-1">The same sky. A very different reading.</h2>
+      </div>
+      <ol className="grid gap-3 md:grid-cols-3">
+        {SAME_SKY.map(([t, k, d], i) => (
+          <li key={t} className={`obs-paper p-4 ${i === 2 ? 'ring-1 ring-[hsl(var(--brass)/0.5)]' : ''}`}>
+            <p className="font-label text-xs tracking-[0.14em] text-primary">{t}</p>
+            <p className="mt-1 font-display text-xl leading-tight">{k}</p>
+            <p className="mt-2 text-sm text-foreground/80">{d}</p>
+          </li>
+        ))}
+      </ol>
+    </section>
   );
 }

@@ -832,6 +832,7 @@ body {
 .obs-paper .text-primary, .obs-paper .text-gold, .atomic-box .text-gold { color: hsl(36 78% 30%); }
 .obs-paper .text-accent { color: hsl(var(--comic-brick)); }
 .obs-paper .text-foreground { color: hsl(var(--comic-navy)); }
+.obs-paper :is(.text-foreground\/80, .text-foreground\/85, .text-foreground\/90, .text-foreground\/75, .text-foreground\/70) { color: hsl(var(--comic-navy) / .84); }
 /* Form fields written on the cream plate read as paper slips, navy ink on light card. */
 .obs-paper :is(input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=file]), textarea, select) { background-color: hsl(42 70% 96%); color: hsl(var(--comic-navy)); border-color: hsl(var(--comic-navy) / .45); }
 .obs-paper :is(input, textarea)::placeholder { color: hsl(var(--comic-navy) / .5); }

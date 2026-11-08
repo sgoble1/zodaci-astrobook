@@ -5,6 +5,12 @@ import { computeChart, SIGN_KEYWORDS, type BodyPos } from '@/lib/astro';
 import { toChartInput, type MyBirth } from '@/lib/myBirth';
 import { MemberAnswer } from '@/components/workbook/MemberAnswer';
 import { FounderSourcePanel } from '@/components/readings/FounderSourcePanel';
+import { PageHead } from '@/components/observatory/PageHead';
+import { useMyThemes } from '@/hooks/useMyThemes';
+import { eventArea, LIFE_AREAS } from '@/lib/lifeAreas';
+import { upcomingEvents } from '@/lib/transitOverlay';
+import { ALL_READINGS } from '@/lib/topicReadings';
+import type { ChartResult } from '@/lib/astro';
 
 const ELEMENT: Record<string, string> = { Aries: 'Fire', Leo: 'Fire', Sagittarius: 'Fire', Taurus: 'Earth', Virgo: 'Earth', Capricorn: 'Earth', Gemini: 'Air', Libra: 'Air', Aquarius: 'Air', Cancer: 'Water', Scorpio: 'Water', Pisces: 'Water' };
 const ELEMENT_PRACTICE: Record<string, string> = {
@@ -42,23 +48,72 @@ export default function MemberWorkbook({ birth, focus }: { birth: MyBirth; focus
   const shown = focus ? modules.filter(m => m.id === focus).concat(modules.filter(m => m.id !== focus)) : modules;
   return (
     <article className="space-y-8">
-      <header className="space-y-2">
-        <div className="font-smallcaps text-xs text-muted-foreground">Your workbook</div>
-        <h1 className="font-display text-4xl">Exercises built from your chart</h1>
-        <p className="text-muted-foreground max-w-2xl">Each module is named after a placement in your own birth chart and explains, in plain language, why that exercise fits you. Nothing here is copied from another person’s chart.</p>
-      </header>
+      <PageHead eyebrow="Guided Workbook · your chart" title="Exercises built from your chart" script="Small practices, your own placements." art="written">
+        <p>Each module is named after a placement in your own birth chart and explains, in plain language, why that exercise fits you. Nothing here is copied from another person’s chart. Your reflections are private to your account.</p>
+      </PageHead>
+      <BasedOnEntries chart={chart} modules={modules} />
       <div className="grid gap-5 md:grid-cols-2">
         {shown.map((m, i) => (
-          <motion.section key={m.id} initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: i * 0.05 }} className={`rounded-lg border bg-card/60 p-5 space-y-3 ${focus === m.id ? 'border-primary ring-1 ring-primary/40' : 'border-border'}`}>
+          <motion.section id={`wb-${m.id}`} key={m.id} initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.9, delay: i * 0.05 }} className={`obs-paper scroll-mt-28 space-y-3 p-5 ${focus === m.id ? 'ring-1 ring-[hsl(var(--brass)/0.6)]' : ''}`}>
             <h2 className="font-display text-xl">{m.title}</h2>
-            <p className="text-sm text-muted-foreground">{m.why}</p>
-            <ol className="list-decimal pl-5 space-y-1.5 text-sm">{m.steps.map(s => <li key={s}>{s}</li>)}</ol>
-            <MemberAnswer module={m.id} question={m.steps.join('\n')} />
+            <p className="text-sm text-foreground/80">{m.why}</p>
+            <ol className="list-decimal space-y-1.5 pl-5 text-sm">{m.steps.map((s, j) => <li key={`${j}-${s}`}>{s}</li>)}</ol>
+            <MemberAnswer module={m.id} title={m.title} question={m.steps.join('\n')} />
           </motion.section>
         ))}
       </div>
       <p className="text-sm text-muted-foreground">Want to talk any of this through? <Link className="text-primary underline" to="/chat">Open SmartChat</Link>.</p>
       <FounderSourcePanel theme={focus === 'check-in' ? 'core-emotions' : focus === 'reframe' ? 'mind' : 'practices'} />
     </article>
+  );
+}
+
+const fmtDay = (d: Date) => d.toLocaleDateString(undefined, { month: 'short', day: 'numeric', timeZone: 'UTC' });
+
+/**
+ * "Based on your entries": the life areas the member keeps writing about (keyword counts in the browser, no AI),
+ * with matching readings, the module that fits best and the coming transits in those areas from their own chart.
+ */
+function BasedOnEntries({ chart, modules }: { chart: ChartResult; modules: { id: string; title: string }[] }) {
+  const themes = useMyThemes();
+  const now = useMemo(() => new Date(), []);
+  const areas = themes?.areas ?? [];
+  const transits = useMemo(() => {
+    if (!areas.length) return [];
+    const want = new Set(areas.map(a => a.area));
+    return upcomingEvents(chart, now, 90).filter(e => e.kind === 'exact' || e.kind === 'station').filter(e => { const a = eventArea(e, chart); return a && want.has(a); }).slice(0, 3);
+  }, [areas, chart, now]);
+  if (!themes) return null;
+  if (themes.entries === 0 || areas.length === 0) return (
+    <aside className="obs-panel p-5 text-sm text-foreground/80">
+      <p className="font-label text-xs tracking-[0.16em] text-primary">Based on your entries</p>
+      <p className="mt-1">{themes.entries === 0 ? 'Once you have saved a few reflections, this panel shows the parts of life you keep returning to, with readings and coming transits that match.' : 'Keep writing: no part of life stands out in your recent reflections yet.'}</p>
+    </aside>
+  );
+  const readings = [...new Set(areas.flatMap(a => LIFE_AREAS[a.area].readings))].map(slug => ALL_READINGS.find(r => r.slug === slug)).filter(Boolean).slice(0, 3) as { slug: string; title: string }[];
+  const next = areas.map(a => modules.find(m => m.id === LIFE_AREAS[a.area].module)).find(Boolean);
+  return (
+    <section aria-labelledby="based-on-entries" className="obs-panel space-y-4 p-5 sm:p-6">
+      <div>
+        <p className="font-label text-xs tracking-[0.16em] text-primary">Based on your entries</p>
+        <h2 id="based-on-entries" className="font-display text-2xl">You keep coming back to {areas.map(a => LIFE_AREAS[a.area].label.toLowerCase()).join(', ').replace(/, ([^,]*)$/, ' and $1')}</h2>
+        <p className="mt-1 text-xs text-muted-foreground">Counted from words in your last {themes.entries} {themes.entries === 1 ? 'reflection' : 'reflections'} (60 days), here in your browser. Nothing is sent or shared.</p>
+      </div>
+      <div className="grid gap-4 md:grid-cols-3">
+        <div className="obs-paper p-4">
+          <p className="font-label text-xs tracking-[0.14em] text-primary">Readings that match</p>
+          <ul className="mt-2 space-y-1.5 text-sm">{readings.map(r => <li key={r.slug}><Link className="underline underline-offset-4" to={`/my-readings/topic/${r.slug}`}>{r.title}</Link></li>)}</ul>
+        </div>
+        <div className="obs-paper p-4">
+          <p className="font-label text-xs tracking-[0.14em] text-primary">Your next module</p>
+          {next ? <a className="mt-2 block text-sm underline underline-offset-4" href={`#wb-${next.id}`}>{next.title}</a> : <p className="mt-2 text-sm text-muted-foreground">Any module below fits; start with the one that feels easiest.</p>}
+        </div>
+        <div className="obs-paper p-4">
+          <p className="font-label text-xs tracking-[0.14em] text-primary">Transits in these areas</p>
+          {transits.length ? <ul className="mt-2 space-y-1.5 text-sm">{transits.map((e, i) => <li key={i}><span className="font-semibold">{fmtDay(e.date)}</span> · {e.title}</li>)}</ul> : <p className="mt-2 text-sm text-muted-foreground">No exact contacts in these areas in the next 90 days.</p>}
+          <Link className="mt-2 inline-block font-label text-xs tracking-[0.14em] text-accent" to="/forecast#personal-broadcast">Full forecast →</Link>
+        </div>
+      </div>
+    </section>
   );
 }

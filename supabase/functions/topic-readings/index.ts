@@ -1,4 +1,5 @@
 import { readingJobIsCurrent } from '../_shared/reading-job-rules.ts';
+import { ATTRIBUTION_RULE, attributionNote, unattributedClaims } from '../_shared/attribution.ts';
 import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors';
 import { createClient } from 'npm:@supabase/supabase-js@2';
 import { z } from 'npm:zod@3';
@@ -84,7 +85,7 @@ const placementsTable = (p: any) => {
   const rows = (p.chart?.bodies ?? []).map((b: any) => `| ${b.name} | ${b.sign} ${b.deg}°${String(b.min).padStart(2, '0')}′${b.retro ? ' (retrograde)' : ''} | ${p.birth_time && b.house ? `House ${b.house}` : '—'} |`);
   return `## Placements behind this reading\n\n| Placement | Position | House |\n| --- | --- | --- |\n${rows.join('\n')}`;
 };
-const RULES = 'Use ONLY the placements listed. Never invent placements, aspects, relatives, events or biography. Explain each technical term in everyday words right after using it. Present meanings as reflective interpretation, not prediction. For sex and attraction, focus on consent, boundaries, communication and non-graphic adult reflection; never infer orientation, history, trauma or consent from a chart. Never sexualize minors. Every claim must name the exact placement it comes from. Do not write generic sun-sign content: combine sign + house + aspects + rulers so the reading could only belong to this chart.';
+const RULES = 'Use ONLY the placements listed. Never invent placements, aspects, relatives, events or biography. Explain each technical term in everyday words right after using it. Present meanings as reflective interpretation, not prediction. For sex and attraction, focus on consent, boundaries, communication and non-graphic adult reflection; never infer orientation, history, trauma or consent from a chart. Never sexualize minors. Every claim must name the exact placement it comes from. Do not write generic sun-sign content: combine sign + house + aspects + rulers so the reading could only belong to this chart. ' + ATTRIBUTION_RULE;
 
 /** Mirrors TONES in src/lib/perception.ts: the voice each member chose for their readings. */
 const TONE_NOTE: Record<string, string> = {
@@ -176,6 +177,15 @@ Deno.serve(async req => {
           wrong = wrongPlacements(content, profile.chart);
           if (wrong.length) throw new Error(`wrong placements ${wrong.join(', ')}`);
         }
+        // Placement attribution: one revision pass when several claims don't name their placement; never blocks saving.
+        let loose = unattributedClaims(content);
+        if (!teaser && loose.length >= 3) {
+          await ensureCurrent();
+          const tidy = createResponsesCall(req, { apiKey, background: true, signal: controller.signal, effort: 'low', instructions: `Revise this astrology chapter so each listed sentence names the chart placement it comes from (format: "… — this comes from your [Planet] in [Sign] in the [House] house"; leave out the house if the birth time is unknown). Use only these facts:\n${chartFacts(profile)}\nSentences to fix:\n${loose.slice(0, 12).map(x => `- ${x}`).join('\n')}\nReturn the full Markdown chapter, otherwise unchanged.` }, [{ role: 'user', content }]);
+          const revised = (await tidy.result.text).trim();
+          if (revised.length >= content.length * 0.8 && !wrongPlacements(revised, profile.chart).length) { content = revised; loose = unattributedClaims(content); }
+        }
+        if (loose.length) console.warn('topic attribution', slug, attributionNote(loose.length));
         if (content.length < (teaser ? 200 : 400)) throw new Error('too short');
         content = `${placementsTable(profile)}\n\n${content}`;
         await ensureCurrent();

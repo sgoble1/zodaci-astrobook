@@ -6,7 +6,10 @@ import { usePageMeta } from '@/hooks/usePageMeta';
 import { useMyBirth, toChartInput } from '@/lib/myBirth';
 import { computeChart } from '@/lib/astro';
 import { skyToday, skyEvents } from '@/lib/skyToday';
-import { upcomingEvents } from '@/lib/transitOverlay';
+import { upcomingEvents, type TransitEvent } from '@/lib/transitOverlay';
+import { eventArea, LIFE_AREAS, type LifeArea } from '@/lib/lifeAreas';
+import { useMyThemes } from '@/hooks/useMyThemes';
+import type { ChartResult } from '@/lib/astro';
 import { CurrentChapterPanel } from '@/components/observatory/CurrentChapterPanel';
 import { ForecastReel } from '@/components/observatory/ForecastReel';
 import { FilmFx } from '@/components/observatory/FilmFx';
@@ -51,10 +54,10 @@ export default function Forecast() {
     </section>
     <section className="space-y-6 border-t border-border pt-8" aria-labelledby="forecast-notes-h">
       <h2 id="forecast-notes-h" className="font-display text-3xl">Reading the signal</h2>
-      <div className="grid gap-7 md:grid-cols-3">
-        <div><MapIcon className="mb-3 text-primary" size={34} /><h3 className="font-display text-xl">Positions are calculated</h3><p className="mt-3 text-sm text-muted-foreground">Planetary longitudes come from Astronomy Engine in the tropical zodiac. Personal contacts compare today’s positions with the saved birth chart.</p></div>
-        <div><TelevisionIcon className="mb-3 text-primary" size={34} /><h3 className="font-display text-xl">Themes are interpretations</h3><p className="mt-3 text-sm text-muted-foreground">Career, relationships and growth are traditional symbolic lenses, not promises of events. Signal meters measure chart activity, not luck or a health diagnosis.</p></div>
-        <div><LibraryIcon className="mb-3 text-primary" size={34} /><h3 className="font-display text-xl">Timing has limits</h3><p className="mt-3 text-sm text-muted-foreground">Without a birth time, personal Moon, Rising and Midheaven contacts are omitted. Forecast dates are daily approximations rather than exact appointments.</p></div>
+      <div className="grid gap-4 md:grid-cols-3">
+        <div className="obs-paper p-5"><MapIcon className="mb-3 text-primary" size={34} /><h3 className="font-display text-xl">Positions are calculated</h3><p className="mt-3 text-sm text-muted-foreground">Planetary longitudes come from Astronomy Engine in the tropical zodiac. Personal contacts compare today’s positions with the saved birth chart.</p></div>
+        <div className="obs-paper p-5"><TelevisionIcon className="mb-3 text-primary" size={34} /><h3 className="font-display text-xl">Themes are interpretations</h3><p className="mt-3 text-sm text-muted-foreground">Career, relationships and growth are traditional symbolic lenses, not promises of events. Signal meters measure chart activity, not luck or a health diagnosis.</p></div>
+        <div className="obs-paper p-5"><LibraryIcon className="mb-3 text-primary" size={34} /><h3 className="font-display text-xl">Timing has limits</h3><p className="mt-3 text-sm text-muted-foreground">Without a birth time, personal Moon, Rising and Midheaven contacts are omitted. Forecast dates are daily approximations rather than exact appointments.</p></div>
       </div>
       <div className="flex flex-wrap gap-3"><Button asChild variant="outline"><Link to="/reading-room/transits">Read the transit guide</Link></Button><Button asChild variant="outline"><Link to="/learn">More from Learn</Link></Button></div>
     </section>
@@ -64,13 +67,83 @@ export default function Forecast() {
 function PersonalBroadcast({ now }: { now: Date }) {
   const birth = useMyBirth();
   const chart = useMemo(() => { if (!birth) return null; try { return computeChart(toChartInput(birth)); } catch { return null; } }, [birth]);
-  const events = useMemo(() => chart ? upcomingEvents(chart, now, 30) : [], [chart, now]);
+  const events90 = useMemo(() => chart ? upcomingEvents(chart, now, 90) : [], [chart, now]);
+  const events = useMemo(() => events90.filter(e => e.date.getTime() < now.getTime() + 30 * DAY), [events90, now]);
   if (birth === undefined) return <p role="status">Opening your chart…</p>;
   if (!birth || !chart) return <div className="space-y-4 border-y border-border py-6"><p className="text-muted-foreground">A saved birth chart is needed for your personal broadcast. Shared editions require the owner’s permission to open the whole chart.</p><Button asChild variant="signal"><StartLink>Open birth details</StartLink></Button></div>;
   return <div className="space-y-8">
     <div className="flex flex-wrap items-center justify-between gap-3"><p className="text-sm text-muted-foreground">{birth.name} · {birth.date} · {birth.time ?? 'Birth time unknown'} · {birth.placeLabel}</p><Button asChild variant="outline" size="sm"><Link to="/my-chart">Open chart</Link></Button></div>
     {!birth.time && <p role="note" className="border-l-2 border-primary pl-4 text-sm text-muted-foreground">Birth time unknown: no personal Moon, Ascendant or Midheaven contacts are included.</p>}
+    <ComingSoon events={events90} now={now} />
     <CurrentChapterPanel chart={chart} name={birth.name} />
     <div className="space-y-5"><h3 className="font-display text-2xl">{birth.name}’s forecast film</h3><p className="text-sm text-muted-foreground">Upcoming close slow-planet contacts, plus general stations and sign changes. Daily sampling locates the closest day, not an exact time.</p><ForecastReel key={`${birth.date}-${birth.time}-${birth.lat}-${birth.lon}`} frames={events} personal /></div>
+    <PersonalTimeline chart={chart} events={events90} now={now} />
   </div>;
+}
+
+const DAY = 864e5;
+const fmtDay = (d: Date) => d.toLocaleDateString(undefined, { month: 'short', day: 'numeric', timeZone: 'UTC' });
+const daysUntil = (d: Date, now: Date) => Math.max(0, Math.round((d.getTime() - Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), 12)) / DAY));
+
+/** The strongest personal contact or station in the next seven days, if any. */
+function ComingSoon({ events, now }: { events: TransitEvent[]; now: Date }) {
+  const soon = events.filter(e => e.kind !== 'ingress' && e.date.getTime() - now.getTime() <= 7 * DAY).sort((a, b) => b.weight - a.weight || a.date.getTime() - b.date.getTime())[0];
+  if (!soon) return null;
+  const n = daysUntil(soon.date, now);
+  return (
+    <aside aria-labelledby="coming-soon" className="obs-panel flex flex-col gap-2 p-5 sm:flex-row sm:items-center sm:gap-6">
+      <div className="shrink-0"><p className="font-label text-xs tracking-[0.16em] text-primary">Coming soon</p><p className="font-label text-2xl text-accent">{n === 0 ? 'Today' : n === 1 ? 'Tomorrow' : `In ${n} days`}</p></div>
+      <div className="min-w-0"><h3 id="coming-soon" className="font-display text-xl">{soon.title}</h3><p className="mt-1 text-sm text-foreground/80">{soon.detail} Closest around {fmtDay(soon.date)} (UTC).</p></div>
+    </aside>
+  );
+}
+
+/**
+ * Next 90 days of personal events grouped by life area. Areas the member keeps writing about in their own workbook
+ * come first and are marked; the matching happens in the browser on rows only they can read.
+ */
+function PersonalTimeline({ chart, events, now }: { chart: ChartResult; events: TransitEvent[]; now: Date }) {
+  const themes = useMyThemes();
+  const groups = useMemo(() => {
+    const by = new Map<LifeArea | 'sky', TransitEvent[]>();
+    for (const e of events) { const a = eventArea(e, chart) ?? 'sky'; by.set(a, [...(by.get(a) ?? []), e]); }
+    return by;
+  }, [events, chart]);
+  const mine = new Set((themes?.areas ?? []).map(t => t.area));
+  const order = (Object.keys(LIFE_AREAS) as LifeArea[]).filter(a => groups.has(a)).sort((a, b) => Number(mine.has(b)) - Number(mine.has(a)));
+  const sky = groups.get('sky') ?? [];
+  if (events.length === 0) return null;
+  return (
+    <section aria-labelledby="personal-timeline" className="space-y-5">
+      <div>
+        <p className="font-script text-2xl text-primary">The next ninety days.</p>
+        <h3 id="personal-timeline" className="mt-1 font-display text-2xl sm:text-3xl">Your personal transit timeline</h3>
+        <p className="mt-2 max-w-2xl text-sm text-muted-foreground">Exact slow-planet contacts to your chart, stations and sign changes, sorted by the part of life they traditionally touch.{themes && themes.areas.length > 0 ? ' Areas you have been writing about in your workbook come first.' : ''}</p>
+      </div>
+      <div className="grid gap-4 lg:grid-cols-2">
+        {order.map(a => {
+          const list = groups.get(a)!;
+          return (
+            <div key={a} className={`obs-paper p-5 ${mine.has(a) ? 'ring-1 ring-[hsl(var(--brass)/0.6)]' : ''}`}>
+              <div className="flex flex-wrap items-baseline justify-between gap-2">
+                <h4 className="font-display text-xl">{LIFE_AREAS[a].label}</h4>
+                {mine.has(a) && <span className="rounded-sm bg-primary/15 px-2 py-0.5 font-label text-[11px] tracking-[0.12em] text-primary">In your workbook</span>}
+              </div>
+              <p className="text-xs text-muted-foreground">{LIFE_AREAS[a].text}</p>
+              <ol className="mt-3 space-y-3">
+                {list.slice(0, 5).map((e, i) => (
+                  <li key={`${e.title}-${i}`} className="grid grid-cols-[4.5rem_minmax(0,1fr)] gap-3 border-t border-[hsl(var(--paper-ink)/0.15)] pt-3">
+                    <time className="font-label text-sm text-primary" dateTime={e.date.toISOString().slice(0, 10)}>{fmtDay(e.date)}</time>
+                    <div className="min-w-0"><p className="font-semibold leading-snug">{e.title}</p><p className="mt-1 text-sm text-foreground/80">{e.detail}</p></div>
+                  </li>
+                ))}
+              </ol>
+              {list.length > 5 && <p className="mt-3 text-xs text-muted-foreground">{list.length - 5} more in this area.</p>}
+            </div>
+          );
+        })}
+      </div>
+      {sky.length > 0 && <p className="text-sm text-muted-foreground">Also in the shared sky: {sky.slice(0, 6).map(e => `${e.title} (${fmtDay(e.date)})`).join(' · ')}{chart.input.time ? '' : '. Add a birth time to place these in your houses.'}</p>}
+    </section>
+  );
 }
