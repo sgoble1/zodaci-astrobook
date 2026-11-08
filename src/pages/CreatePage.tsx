@@ -55,6 +55,7 @@ export default function CreatePage() {
       if (fnErr || !data?.content) throw new Error(data?.error ?? 'The page could not be written right now.');
       await supabase.from('custom_pages').update({ content: data.content, status: 'ready', updated_at: new Date().toISOString() }).eq('id', row.id);
       window.dispatchEvent(new Event(CUSTOM_PAGES_CHANGED));
+      if (typeof data.quality === 'string' && data.quality) toast.message(data.quality, { description: 'Some sentences don’t say which placement they come from. Read those as general notes.' });
       navigate(`/p/${row.id}`);
     } catch (err) {
       await supabase.from('custom_pages').update({ status: 'failed' }).eq('id', row.id);
