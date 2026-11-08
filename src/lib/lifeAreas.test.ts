@@ -7,7 +7,7 @@ describe('life areas', () => {
   it('finds the areas a member keeps writing about, most mentioned first', () => {
     const texts = ['My boss moved the deadline again and money is tight.', 'Work was calmer; talked with a friend.', 'Another project at work.', 'Slept badly.'];
     const top = detectPatterns(texts);
-    expect(top[0]).toEqual({ area: 'work', hits: 5 });
+    expect(top[0]).toEqual({ area: 'work', hits: 6 }); // boss, deadline, money, Work, project, work
     expect(top.map(t => t.area)).not.toContain('love');
   });
   it('ignores an area mentioned only once', () => {
