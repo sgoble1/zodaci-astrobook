@@ -23,13 +23,14 @@ import type { RelationshipSelf } from '@/hooks/useRelationshipSelf';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { StartLink } from '@/components/common/StartLink';
 
-function Sec({ id, n, title, level, note, children }: { id: string; n: string; title: string; level: ConfidenceLevel; note: string; children: React.ReactNode }) {
+function Sec({ id, n, title, level, note, intro, children }: { id: string; n: string; title: string; level: ConfidenceLevel; note: string; intro?: string; children: React.ReactNode }) {
   return (
     <section id={id} className="scroll-mt-24 space-y-3">
-      <div className="module-heading border-b border-gold/40 pb-2">
-        <span className="font-label text-xs tracking-[0.16em] text-primary">{n}</span><h2 className="min-w-0 text-2xl">{title}</h2>
+      <div className="obs-panel module-heading p-4">
+        <span className="font-label text-xs tracking-[0.16em] text-primary">{n}</span><h2 className="min-w-0 font-display text-2xl">{title}</h2>
         <div className="module-heading-actions"><ConfidenceBadge level={level} note={note} /><CopyLinkButton hash={id} label="Link" /></div>
       </div>
+      {intro && <p className="max-w-3xl leading-relaxed text-foreground/80">{intro}</p>}
       {children}
     </section>
   );
@@ -97,12 +98,13 @@ function Detail({ rel, self }: { rel: Relationship; self: RelationshipSelf }) {
 
   return (
     <div className="space-y-10">
-      <header className="space-y-2">
-        <div className="font-label text-xs tracking-[0.16em] text-primary">Relationship · {rel.relation}</div>
-        <h1 className="text-4xl">{me === 'You' ? `You & ${N}` : `${me} & ${N}`}</h1>
+      <header className="obs-panel space-y-2 p-5 sm:p-7">
+        <div className="font-label text-xs tracking-[0.16em] text-primary">Relationship Bureau · {rel.relation}</div>
+        <h1 className="font-display text-3xl sm:text-4xl">{me === 'You' ? `You & ${N}` : `${me} & ${N}`}</h1>
+        <p className="font-script text-2xl text-primary">Two charts, one story.</p>
         <p className="text-muted-foreground">{N}: born {rel.birth_date}{timeKnown ? ` at ${rel.birth_time}` : ' (time unknown — noon used)'} in {rel.place_label} · {rel.sex === 'unspecified' ? 'sex not given' : rel.sex}. {me === 'You' ? 'You' : me}: {self.birth.date}{self.birth.time ? `, ${self.birth.time}` : ' (time unknown)'}, {self.birth.placeLabel}.</p>
         <div className="flex flex-wrap gap-2">{B.flags.map((f, i) => <ConfidenceBadge key={i} level={f.level} note={`${f.topic}: ${f.note}`} />)}</div>
-        <nav className="flex flex-wrap gap-3 text-xs pt-2">{[['chart', 'Their chart'], ['elements', 'Positions'], ['bazi', 'Ba Zi'], ['kua', 'Feng Shui'], ['overview', 'Overview'], ['needs', 'Needs & connections'], ['synastry', 'Contacts'], ['overlays', 'House overlays'], ['composite', 'Composite'], ['chinese', 'Chinese match'], ['numbers', 'Numerology'], ['notes', 'Notes']].map(([h, l]) => <a key={h} href={`#${h}`} className="underline">{l}</a>)}</nav>
+        <nav aria-label="Sections" className="flex flex-wrap gap-x-3 gap-y-1 pt-2 font-label text-xs tracking-[0.12em]">{[['chart', 'Their chart'], ['elements', 'Positions'], ['bazi', 'Ba Zi'], ['kua', 'Feng Shui'], ['overview', 'Overview'], ['needs', 'Needs & connections'], ['synastry', 'Contacts'], ['overlays', 'House overlays'], ['composite', 'Composite'], ['chinese', 'Chinese match'], ['numbers', 'Numerology'], ['notes', 'Notes']].map(([h, l]) => <a key={h} href={`#${h}`} className="underline">{l}</a>)}</nav>
         <div className="flex flex-wrap gap-2 pt-2"><Button size="sm" variant="outline" onClick={() => setEditing(true)}>Edit details</Button>
           <Button size="sm" asChild><Link to={`/relationships/${rel.id}/reading`}>Relationship reading</Link></Button>
           <Button size="sm" variant="outline" asChild><Link to={`/relationships/${rel.id}/timeline`}>Timeline</Link></Button>
@@ -118,20 +120,20 @@ function Detail({ rel, self }: { rel: Relationship; self: RelationshipSelf }) {
       </Sec>
 
       <Sec id="elements" n="II" title={`${N}’s positions and their meanings`} level={lvl} note="Meanings are short in-app keyword notes, not quotes from the source documents.">
-        <ul className="grid sm:grid-cols-2 gap-2 text-sm">{B.bodies.map(x => <li key={x.key} className="parchment p-3"><b>{x.glyph} {x.name} {x.deg}°{String(x.min).padStart(2, '0')}′ {x.sign}</b>{x.house ? ` · house ${x.house}` : ''}{x.retro && !x.key.includes('Node') ? ' · Rx' : ''} <ConfidenceBadge compact level={x.confidence} note={x.note} /><p>{BODY_KEYWORDS[x.key] ?? ''} expressed as {SIGN_KEYWORDS[x.sign]}{x.house ? `, in the area of ${HOUSE_THEME[x.house]}` : ''}.</p></li>)}</ul>
+        <ul className="grid sm:grid-cols-2 gap-2 text-sm">{B.bodies.map(x => <li key={x.key} className="obs-paper p-3"><b>{x.glyph} {x.name} {x.deg}°{String(x.min).padStart(2, '0')}′ {x.sign}</b>{x.house ? ` · house ${x.house}` : ''}{x.retro && !x.key.includes('Node') ? ' · Rx' : ''} <ConfidenceBadge compact level={x.confidence} note={x.note} /><p>{BODY_KEYWORDS[x.key] ?? ''} expressed as {SIGN_KEYWORDS[x.sign]}{x.house ? `, in the area of ${HOUSE_THEME[x.house]}` : ''}.</p></li>)}</ul>
         <h3 className="text-xl pt-2">{N}’s strongest natal aspects</h3>
         <ul className="text-sm grid sm:grid-cols-2 gap-1">{B.aspects.slice(0, 14).map((a, i) => <li key={i}>{a.a} {a.symbol} {a.b} <span className="text-muted-foreground">({a.type}, {a.orb.toFixed(1)}°)</span></li>)}</ul>
         <p className="text-sm">Elements: {Object.entries(balB.el).map(([k, v]) => `${k} ${v}`).join(' · ')} — Modes: {Object.entries(balB.mo).map(([k, v]) => `${k} ${v}`).join(' · ')}</p>
       </Sec>
 
       <Sec id="bazi" n="III" title={`${N}’s Four Pillars (Ba Zi)`} level={timeKnown ? 'derived' : 'ambiguous'} note="Standard sexagenary calculation; the Hour pillar needs a birth time.">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">{B.bazi.map(p => <div key={p.label} className="parchment p-3"><div className="font-label text-[10px] tracking-[0.14em] text-primary">{p.label}</div><div className="font-display text-2xl">{p.stem}{p.branch} {p.romanized}</div><div className="text-xs text-muted-foreground">{p.polarity} {p.stemElement} · {p.animal}</div><p className="text-[11px] mt-1">{p.note}</p></div>)}</div>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">{B.bazi.map(p => <div key={p.label} className="obs-paper p-3"><div className="font-label text-[10px] tracking-[0.14em] text-primary">{p.label}</div><div className="font-display text-2xl">{p.stem}{p.branch} {p.romanized}</div><div className="text-xs text-muted-foreground">{p.polarity} {p.stemElement} · {p.animal}</div><p className="text-[11px] mt-1">{p.note}</p></div>)}</div>
         <p className="text-sm">Day Master (the self): <b>{dB.polarity} {dB.stemElement}</b> · Year animal: <b>{yB.animal}</b> · Element count: {Object.entries(B.elements).map(([k, v]) => `${k} ${v}`).join(', ')}.</p>
       </Sec>
 
       <Sec id="kua" n="IV" title="Feng Shui · Kua directions" level="derived" note="Standard Eight Mansions formula; needs sex.">
         {kB ? <><KuaWheel kua={kB.kua} label={N} /><ReasoningPanel reasoning={{ inputs: [{ label: 'Birth date', value: rel.birth_date }, { label: 'Sex', value: rel.sex }], steps: kB.steps.map((s, i) => ({ label: `Step ${i + 1}`, detail: s })), output: `Kua ${kB.kua}`, confidence: 'derived', caveats: [] }} />
-          <div className="parchment p-4 text-sm space-y-1">{kA ? <><b>Living together:</b> {groupOf(kB.kua) === groupOf(kA.kua) ? `Both are in the ${groupOf(kA.kua)} group, so your good directions overlap.` : `${me === 'You' ? 'You' : me} (Kua ${kA.kua}, ${groupOf(kA.kua)}) and ${N} (Kua ${kB.kua}, ${groupOf(kB.kua)}) are in different groups, so your best directions don’t overlap. Usual remedy: each of you faces your own best direction at your desk; for the bed, choose one partner’s Nien Yen (love) direction.`}
+          <div className="obs-paper p-4 text-sm space-y-1">{kA ? <><b>Living together:</b> {groupOf(kB.kua) === groupOf(kA.kua) ? `Both are in the ${groupOf(kA.kua)} group, so your good directions overlap.` : `${me === 'You' ? 'You' : me} (Kua ${kA.kua}, ${groupOf(kA.kua)}) and ${N} (Kua ${kB.kua}, ${groupOf(kB.kua)}) are in different groups, so your best directions don’t overlap. Usual remedy: each of you faces your own best direction at your desk; for the bed, choose one partner’s Nien Yen (love) direction.`}
             <p>Shared good directions: {shared.length ? shared.map(d => DIR_NAME[d]).join(', ') : 'none'}. {myP} relationship direction: {DIR_NAME[KUA_TABLE[kA.kua]['Nien Yen']]}; {N}’s: {DIR_NAME[KUA_TABLE[kB.kua]['Nien Yen']]}.</p>
             {kA.source === 'guide' && <p className="text-xs text-muted-foreground">Kua {kA.kua} is the value stated in your Feng Shui guide. The standard formula gives Kua {kA.formula ?? '—'}{kA.formula ? ` (${KUA_ELEMENT[kA.formula]})` : ''}; the guide’s value is used here and the difference is kept visible.</p>}</>
             : <p>Add your own sex in <StartLink className="underline">your birth details</StartLink> to compare Kua directions.</p>}</div></>
@@ -139,7 +141,7 @@ function Detail({ rel, self }: { rel: Relationship; self: RelationshipSelf }) {
       </Sec>
 
       <Sec id="overview" n="V" title="Relationship overview" level={lvl} note="Weighted summary of the contacts between the two charts; interpretive.">
-        <div className="grid sm:grid-cols-3 gap-3 text-center">{([['Harmony', score.harmony], ['Fusion (conjunctions)', score.fusion], ['Growth energy', score.tension]] as const).map(([l, v]) => <div key={l} className="parchment p-3"><div className="font-display text-3xl">{v}</div><div className="text-xs">{l}</div></div>)}</div>
+        <div className="grid sm:grid-cols-3 gap-3 text-center">{([['Harmony', score.harmony], ['Fusion (conjunctions)', score.fusion], ['Growth energy', score.tension]] as const).map(([l, v]) => <div key={l} className="obs-paper p-3"><div className="font-display text-3xl">{v}</div><div className="text-xs">{l}</div></div>)}</div>
         <ul className="text-sm space-y-1">
           <li><b>Sun & Sun:</b> {signPair(b(A, 'sun').sign, b(B, 'sun').sign)}</li>
           <li><b>Moon & Moon:</b> {signPair(b(A, 'moon').sign, b(B, 'moon').sign)} {!timeKnown && <ConfidenceBadge compact level="ambiguous" note="Their Moon sign may change without a birth time." />}</li>
@@ -148,30 +150,30 @@ function Detail({ rel, self }: { rel: Relationship; self: RelationshipSelf }) {
           <li><b>Chinese years:</b> {yA.animal} & {yB.animal}: {animal.label}.</li>
         </ul>
         <div className="grid md:grid-cols-2 gap-3 text-sm">
-          <div className="parchment p-3"><h3 className="text-lg">Strengths</h3><ul className="list-disc pl-5">{harmonyTop.map((x, i) => <li key={i}>{x.text}</li>)}</ul></div>
-          <div className="parchment p-3"><h3 className="text-lg">Growth opportunities</h3><ul className="list-disc pl-5">{tensionTop.map((x, i) => <li key={i}>{x.text}</li>)}</ul></div>
+          <div className="obs-paper p-3"><h3 className="text-lg">Strengths</h3><ul className="list-disc pl-5">{harmonyTop.map((x, i) => <li key={i}>{x.text}</li>)}</ul></div>
+          <div className="obs-paper p-3"><h3 className="text-lg">Growth opportunities</h3><ul className="list-disc pl-5">{tensionTop.map((x, i) => <li key={i}>{x.text}</li>)}</ul></div>
         </div>
       </Sec>
 
       <Sec id="needs" n="V½" title="Needs, connections & coincidences" level={lvl} note="Built from saved birth facts and the calculated chart contacts shown on this page; interpretation is symbolic, not a claim about lived events.">
         <p className="text-sm text-muted-foreground">This reads the connection in both directions. It does not assume either person’s private history, family story, or behavior.</p>
         <div className="grid gap-3 md:grid-cols-2">
-          <div className="parchment p-4"><h3 className="text-lg">How {N} connects with {me === 'You' ? 'your' : `${me}’s`} needs</h3>{myNeeds.length ? <ul className="mt-2 list-disc space-y-2 pl-5 text-sm">{myNeeds.map((x, i) => <li key={`${x.aKey}-${x.bKey}-${i}`}>{x.text}</li>)}</ul> : <p className="mt-2 text-sm text-muted-foreground">No major Moon, Venus, Mars, or Saturn contact falls within the chart’s chosen limits.</p>}</div>
-          <div className="parchment p-4"><h3 className="text-lg">How {me === 'You' ? 'you connect' : `${me} connects`} with {N}’s needs</h3>{otherNeeds.length ? <ul className="mt-2 list-disc space-y-2 pl-5 text-sm">{otherNeeds.map((x, i) => <li key={`${x.aKey}-${x.bKey}-${i}`}>{x.text}</li>)}</ul> : <p className="mt-2 text-sm text-muted-foreground">No major Moon, Venus, Mars, or Saturn contact falls within the chart’s chosen limits.</p>}</div>
+          <div className="obs-paper p-4"><h3 className="text-lg">How {N} connects with {me === 'You' ? 'your' : `${me}’s`} needs</h3>{myNeeds.length ? <ul className="mt-2 list-disc space-y-2 pl-5 text-sm">{myNeeds.map((x, i) => <li key={`${x.aKey}-${x.bKey}-${i}`}>{x.text}</li>)}</ul> : <p className="mt-2 text-sm text-muted-foreground">No major Moon, Venus, Mars, or Saturn contact falls within the chart’s chosen limits.</p>}</div>
+          <div className="obs-paper p-4"><h3 className="text-lg">How {me === 'You' ? 'you connect' : `${me} connects`} with {N}’s needs</h3>{otherNeeds.length ? <ul className="mt-2 list-disc space-y-2 pl-5 text-sm">{otherNeeds.map((x, i) => <li key={`${x.aKey}-${x.bKey}-${i}`}>{x.text}</li>)}</ul> : <p className="mt-2 text-sm text-muted-foreground">No major Moon, Venus, Mars, or Saturn contact falls within the chart’s chosen limits.</p>}</div>
         </div>
         <div className="grid gap-3 md:grid-cols-2">
           <div><h3 className="text-lg">Strongest exact links</h3>{tightLinks.length ? <ul className="mt-2 space-y-2 text-sm">{tightLinks.map((x, i) => <li key={`${x.aKey}-${x.bKey}-${i}`}><b>{me === 'You' ? 'Your' : me} {x.aName} {x.symbol} {N} {x.bName}</b> · {x.orb.toFixed(2)}° apart<p>{x.text}</p></li>)}</ul> : <p className="mt-2 text-sm text-muted-foreground">No major contact is tighter than 1°.</p>}</div>
           <div><h3 className="text-lg">Shared patterns</h3>{coincidences.length ? <ul className="mt-2 list-disc space-y-1 pl-5 text-sm">{coincidences.map(x => <li key={x}>{x}</li>)}</ul> : <p className="mt-2 text-sm text-muted-foreground">No exact same-sign or same-number pattern appears in these calculations. Connection can still show through aspects and differences.</p>}</div>
         </div>
-        <div className="rounded-md border border-border p-4 text-sm"><h3 className="text-lg">Birthplace facts</h3><p>{me === 'You' ? 'You' : me}: {self.birth.placeLabel}. {N}: {rel.place_label}. The saved coordinates are about {km.toLocaleString()} km ({Math.round(km * 0.621371).toLocaleString()} miles) apart in a straight line.</p><p className="mt-1 text-xs text-muted-foreground">This is geography only. AstroBook does not turn birthplace distance or a matching place name into a personality claim.</p></div>
+        <div className="obs-paper p-4 text-sm"><h3 className="text-lg">Birthplace facts</h3><p>{me === 'You' ? 'You' : me}: {self.birth.placeLabel}. {N}: {rel.place_label}. The saved coordinates are about {km.toLocaleString()} km ({Math.round(km * 0.621371).toLocaleString()} miles) apart in a straight line.</p><p className="mt-1 text-xs text-muted-foreground">This is geography only. AstroBook does not turn birthplace distance or a matching place name into a personality claim.</p></div>
       </Sec>
 
-      <Sec id="synastry" n="VI" title="Planet-to-planet contacts (synastry)" level={lvl} note="Orbs: conjunction/opposition 7°, trine/square 6°, sextile 4°. With no birth time, Moon contacts over 3° are left out.">
+      <Sec id="synastry" n="VI" title="Planet-to-planet contacts (synastry)" level={lvl} note="Orbs: conjunction/opposition 7°, trine/square 6°, sextile 4°. With no birth time, Moon contacts over 3° are left out." intro="Planet contacts show where your energies meet directly: conjunctions blend, trines flow, squares create productive friction.">
         <p className="text-sm text-muted-foreground">{ia.length} contacts found; strongest first.</p>
         <ul className="space-y-1 text-sm">{top.map((x, i) => <li key={i} className="border-b border-border/50 pb-1"><b>{me === 'You' ? 'Your' : me} {x.aName} {x.symbol} {N} {x.bName}</b> <span className="text-xs text-muted-foreground">{x.type} · {x.orb.toFixed(1)}° · {x.tone}</span>{x.uncertain && <ConfidenceBadge compact level="ambiguous" note="Involves an untimed Moon." />}<p>{x.text}</p></li>)}</ul>
       </Sec>
 
-      <Sec id="overlays" n="VII" title="House overlays" level={timeKnown ? 'derived' : 'ambiguous'} note="Which area of life each person’s planets light up in the other’s chart.">
+      <Sec id="overlays" n="VII" title="House overlays" level={timeKnown ? 'derived' : 'ambiguous'} note="Which area of life each person’s planets light up in the other’s chart." intro="House overlays show which area of life the other person activates: their planets fall into your houses and light up those themes.">
         <div className="grid md:grid-cols-2 gap-4 text-sm">
           <div><h3 className="text-lg">{N}’s planets in {me === 'You' ? 'your' : `${me}’s`} houses</h3>{ovBA ? <ul>{ovBA.map(o => <li key={o.body.key}>{o.body.glyph} {o.body.name} → house {o.house} <span className="text-muted-foreground">({o.theme})</span></li>)}</ul> : <p className="text-muted-foreground">Needs your birth time.</p>}</div>
           <div><h3 className="text-lg">{myP} planets in {N}’s houses</h3>{ovAB ? <ul>{ovAB.map(o => <li key={o.body.key}>{o.body.glyph} {o.body.name} → house {o.house} <span className="text-muted-foreground">({o.theme})</span></li>)}</ul> : <p className="text-muted-foreground">Needs {N}’s birth time.</p>}</div>
