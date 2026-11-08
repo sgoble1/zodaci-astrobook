@@ -107,13 +107,13 @@ export default function About() {
       </motion.section>
 
       <motion.section {...fade} aria-labelledby="founders-h" className="space-y-6">
-        <div className="mx-auto max-w-3xl text-center"><h2 id="founders-h" className="plate-title">Built from three founder editions</h2><p className="mt-3 text-muted-foreground">Before anyone else could order one, Zodaci wrote complete editions for its founders. Those books set the depth every member’s AstroBook follows. They stay private to their owners; nothing from them appears on this site.</p></div>
+        <div className="mx-auto max-w-3xl text-center"><h2 id="founders-h" className="plate-title">Built from three founder editions</h2><p className="mt-3 text-muted-foreground">Before anyone else could order one, Zodaci wrote complete editions for its founders. Those books set the depth every member’s AstroBook follows. They stay private to their owners; nothing from them appears on this site. All three build models have been optimized and combined into one beautiful, functional, working model that brings optimal, life changing insights to each user.&nbsp;</p></div>
         <ul className="grid gap-5 md:grid-cols-3">{FOUNDER_EDITIONS.map(([t, d]) => <li key={t} className="atomic-box p-6 text-center"><SpotArt kind="astrobook" className="mx-auto h-20 w-20" /><h3 className="mt-3 font-label text-xl tracking-[0.06em]">{t}</h3><p className="mt-1 text-sm text-muted-foreground">{d}</p></li>)}</ul>
       </motion.section>
 
       <motion.section {...fade} className="mx-auto max-w-3xl space-y-4">
         <h2 className="plate-title">Our inspirations</h2>
-        <p className="text-lg text-muted-foreground">Hellenistic and modern psychological astrology, Vedic Jyotish, Chinese Ba Zi, the Maya Tzolk’in and other traditions — read with curiosity and respect for where each comes from. Astronomy keeps us exact; psychology keeps us humane; good writing keeps it all readable.</p>
+        <p className="text-lg text-muted-foreground">Hellenistic and modern psychological astrology, Vedic Jyotish, Chinese Ba Zi, the Maya Tzolk’in and other traditions — read with curiosity and respect for where each comes from. Astronomy keeps us exact; psychology keeps us humane; good writing keeps it all readable. We take multiple cultural interperatations, rip them arpart, and combine them into your insights. we use aspects from different interpatitive styles and combine them into one and allow the user to input personal cotnetxt, and get extremely accurate, relative results tht are personalized down to a tee.&nbsp; Everything that can possibly be deducted acruately is extracted and given to you.&nbsp;</p>
       </motion.section>
 
       <motion.section {...fade} className="obs-paper space-y-4 p-8 text-center sm:p-10">
