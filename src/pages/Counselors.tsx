@@ -6,6 +6,8 @@ import { AuthGate } from '@/components/common/AuthGate';
 import { Button } from '@/components/ui/button';
 import { MessageResponse } from '@/components/ai-elements/message';
 import oracle from '@/assets/oracle-within.png';
+import { PageHead } from '@/components/observatory/PageHead';
+import { SpotArt, type SpotKind } from '@/components/art/SpotArt';
 
 type Key = 'oracle' | 'social';
 type Counselor = {
@@ -43,22 +45,36 @@ function RetryNote({ what, onRetry }: { what: string; onRetry: () => void }) {
 
 const fmt = (d: string) => new Date(d).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' });
 const PrivacyNote = () => (
-  <p className="flex items-start gap-2 rounded-md border border-border bg-muted/40 p-3 text-sm text-muted-foreground">
+  <p className="obs-paper flex items-start gap-2 p-3 text-sm text-foreground/80">
     <Lock className="mt-0.5 h-4 w-4 shrink-0" aria-hidden /> Your sessions are private to your account. They never appear in shared spaces or in your other counselor's chats.
   </p>
 );
 
 export function CounselorsIndex() {
+  const art: Record<Key, SpotKind> = { oracle: 'compass', social: 'radio' };
   return (
     <article className="mx-auto max-w-4xl space-y-6">
-      <header><h1 className="font-display text-3xl">Counselors</h1><p className="text-muted-foreground">Meet the counselors and find your past sessions.</p></header>
+      <PageHead eyebrow="Observatory Counselors" title="Chart-aware guidance" script="Tuned to your own sky." art="counsel">
+        <p>Both counselors read from your calculated birth chart, so you never have to explain your placements from scratch. They are AI companions, not licensed therapists; for a crisis, contact local emergency services.</p>
+      </PageHead>
       <PrivacyNote />
       <ul className="grid gap-4 sm:grid-cols-2">
         {COUNSELORS.map(c => (
-          <li key={c.key} className="rounded-lg border border-border bg-card p-5">
-            <h2 className="font-display text-xl"><Link className="hover:underline focus-visible:underline" to={`/counselors/${c.key}`}>{c.name}</Link></h2>
-            <p className="text-sm text-muted-foreground">{c.role}</p>
-            <p className="mt-2 text-sm">{c.plain}</p>
+          <li key={c.key} className="obs-paper relative flex flex-col p-5">
+            <div className="flex items-start gap-4">
+              <SpotArt kind={art[c.key]} className="h-16 w-16 shrink-0" />
+              <div className="min-w-0">
+                <p className="font-label text-xs tracking-[0.14em] text-primary">{c.role}</p>
+                <h2 className="font-display text-2xl leading-tight"><Link className="hover:underline focus-visible:underline" to={`/counselors/${c.key}`}>{c.name}</Link></h2>
+              </div>
+            </div>
+            <p className="mt-3 text-sm leading-relaxed text-foreground/85">{c.plain}</p>
+            <p className="mt-4 font-label text-xs tracking-[0.14em] text-primary">Good for</p>
+            <ul className="mt-1 space-y-0.5 text-sm text-muted-foreground">{c.specialties.map(x => <li key={x}>· {x}</li>)}</ul>
+            <div className="mt-auto flex flex-wrap gap-2 pt-4">
+              <Button asChild size="sm"><Link to={c.chatPath}>Start a session</Link></Button>
+              <Button asChild size="sm" variant="outline"><Link to={`/counselors/${c.key}`}>Profile and past sessions</Link></Button>
+            </div>
           </li>
         ))}
       </ul>
