@@ -11,3 +11,6 @@
 - AstroBook content is built by buildVolumes() in bookVolumes.ts (six volumes, chart-derived, readings woven in by volumeFor); BOOK_VERSIONS.inside and VersionCompare must describe exactly what it writes.
 - Cover artwork variants (per trim shape, with pixel sizes) live in content/coverDesigns.ts; designVariant picks the closest shape so print PPI stays testable.
 - shopPresentation owns featured merchandising priority, Atomic Zodiac detection/curated ordering and the next unordered issue calculation; atomic classification uses catalog tags (some titles omit the collection name), and recommendations use owner-scoped confirmed live comic records, never pending checkout rows.
+- shopDepartments groups original catalog types; department filters compose with collection and sign filters so browsing never changes atomic classification.
+- investorEconomics derives prices from the product registries and labels fallback costs as estimates, never supplier quotes or realized profit.
+- currentChapter keeps broadcast reflections deterministic from aspect and natal point; no generated biography or predicted events.

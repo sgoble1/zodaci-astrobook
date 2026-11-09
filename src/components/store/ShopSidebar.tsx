@@ -2,6 +2,8 @@ import { SIGNS, SIGN_GLYPH } from '@/lib/astro';
 import { iconForProductType } from '@/components/icons/registry';
 import { ChartWheelIcon, RetroEmblem, StorefrontIcon } from '@/components/icons/RetroIcons';
 import { cn } from '@/lib/utils';
+import { SHOP_DEPARTMENTS, departmentFor } from '@/lib/shopDepartments';
+import { Button } from '@/components/ui/button';
 
 export const PRICE_BANDS = [
   { id: 'under-20', label: 'Under $20', min: 0, max: 20 },
@@ -40,7 +42,18 @@ export function ShopSidebar({ types, signs, total, atomicCount, filters, onChang
         <h2 className="shop-sidebar-h">Departments</h2>
         <ul className="mt-2 space-y-0.5">
           <li><DeptButton active={filters.type === 'All'} onClick={() => pick('type', 'All')} icon={StorefrontIcon} label="Everything" count={filters.collection === 'atomic' ? atomicCount : total} /></li>
-          {types.map(t => <li key={t.name}><DeptButton active={filters.type === t.name} onClick={() => pick('type', t.name)} icon={iconForProductType(t.name)} label={t.name} count={t.count} /></li>)}
+          {SHOP_DEPARTMENTS.map(d => {
+            const children = types.filter(t => departmentFor(t.name) === d.id);
+            if (!children.length) return null;
+            const active = filters.type === `dept:${d.id}` || children.some(t => t.name === filters.type);
+            return <li key={d.id}>
+              <DeptButton active={filters.type === `dept:${d.id}`} onClick={() => pick('type', `dept:${d.id}`)} icon={iconForProductType(children[0].name)} label={d.name} count={children.reduce((sum, t) => sum + t.count, 0)} />
+              <details open={active || undefined} className="ml-3 border-l border-border pl-2">
+                <summary className="cursor-pointer py-1 font-label text-xs text-muted-foreground">Product types</summary>
+                <ul>{children.map(t => <li key={t.name}><DeptButton active={filters.type === t.name} onClick={() => pick('type', t.name)} icon={iconForProductType(t.name)} label={t.name} count={t.count} /></li>)}</ul>
+              </details>
+            </li>;
+          })}
         </ul>
       </div>
       {signs.length > 0 && <div>
@@ -67,10 +80,10 @@ export function ShopSidebar({ types, signs, total, atomicCount, filters, onChang
 
 function DeptButton({ active, onClick, icon, label, count }: { active: boolean; onClick: () => void; icon: Parameters<typeof RetroEmblem>[0]['icon']; label: string; count: number }) {
   return (
-    <button type="button" aria-pressed={active} onClick={onClick} className={cn('shop-dept', active && 'shop-dept-on')}>
+    <Button type="button" variant="ghost" aria-pressed={active} onClick={onClick} className={cn('shop-dept h-auto w-full justify-start whitespace-normal', active && 'shop-dept-on')}>
       <RetroEmblem icon={icon} size={30} active={active} />
-      <span className="min-w-0 flex-1 truncate text-left">{label}</span>
+      <span className="min-w-0 flex-1 text-left">{label}</span>
       <span className="font-label text-xs text-muted-foreground">{count}</span>
-    </button>
+    </Button>
   );
 }

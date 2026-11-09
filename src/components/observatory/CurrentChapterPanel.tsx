@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState, type KeyboardEvent } from 'react'
 import { Link } from 'react-router-dom';
 import type { ChartResult } from '@/lib/astro';
 import { transitPositions, transitsTo, upcomingEvents } from '@/lib/transitOverlay';
-import { broadcastChannels, compassFrom, shortDay, type ChannelId, type CompassDomain } from '@/lib/currentChapter';
+import { broadcastChannels, compassFrom, contactReflection, shortDay, type ChannelId, type CompassDomain } from '@/lib/currentChapter';
 import { STAFF } from '@/lib/observatory';
 import { RetroTV, SignalMeter, PanelTitle, StatusLight } from './Observatory';
 import { StaffPortrait } from './StaffPortrait';
@@ -26,7 +26,13 @@ const LINK: Record<ChannelId, [string, string]> = {
 
 /** Broadcast Studio: five retro-TV channels plus the six Life Compass signals, all from today's real sky. */
 export function CurrentChapterPanel({ chart, name }: { chart: ChartResult; name?: string }) {
-  const now = useMemo(() => new Date(), []);
+  const [now, setNow] = useState(() => new Date());
+  useEffect(() => {
+    const refresh = () => { if (!document.hidden) setNow(new Date()); };
+    const interval = window.setInterval(refresh, 5 * 60_000);
+    document.addEventListener('visibilitychange', refresh);
+    return () => { window.clearInterval(interval); document.removeEventListener('visibilitychange', refresh); };
+  }, []);
   const hits = useMemo(() => { try { return transitsTo(chart, now); } catch { return []; } }, [chart, now]);
   const events = useMemo(() => { try { return upcomingEvents(chart, now, 31); } catch { return []; } }, [chart, now]);
   const sky = useMemo(() => { try { return transitPositions(now); } catch { return []; } }, [now]);
@@ -118,14 +124,18 @@ export function CurrentChapterPanel({ chart, name }: { chart: ChartResult; name?
             </dl>
           )}
           <p className="mt-4 leading-relaxed text-muted-foreground">{ch.summary}</p>
-          {ch.contacts.length > 1 && (
+          <p className="mt-2 font-label text-xs text-muted-foreground">Calculated <time dateTime={now.toISOString()}>{now.toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short', timeZone: 'UTC' })} UTC</time> · interpretations, not predictions</p>
+          {ch.hit && <div className="mt-4 border-l-2 border-primary pl-4"><h4 className="font-label text-primary">A question for this contact</h4><p className="mt-2 text-sm text-muted-foreground">{contactReflection(ch.hit).focus}</p><p className="mt-2 text-sm">{contactReflection(ch.hit).prompt}</p></div>}
+          {!chart.input.time && <p className="mt-3 text-sm text-muted-foreground">Birth time unknown: personal Moon and angle contacts are omitted.</p>}
+          {ch.contacts.length > 0 && (
             <div className="mt-4">
               <p className="font-label text-xs tracking-widest text-primary">Live on this channel</p>
-              <ul className="mt-2 divide-y divide-border/60 rounded-xl border border-border/70">
+              <ul className="mt-2 divide-y divide-border/60 border-y border-border/70">
                 {ch.contacts.map(c => (
                   <li key={`${c.transit.key}-${c.natalKey}-${c.type}`} className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5 px-3 py-2 text-sm">
                     <span className="font-medium">{c.transit.glyph}&#xFE0E; {c.transit.name} {c.symbol}&#xFE0E; natal {c.natalName}</span>
                     <span className="font-label text-xs text-muted-foreground">orb {c.orb.toFixed(1)}° · {c.applying ? 'building' : 'easing'}</span>
+                    <p className="w-full text-muted-foreground">{c.text}</p>
                   </li>
                 ))}
               </ul>
@@ -135,9 +145,9 @@ export function CurrentChapterPanel({ chart, name }: { chart: ChartResult; name?
             <div className="mt-4">
               <p className="font-label text-xs tracking-widest text-primary">{ch.id === 'window' ? 'Biggest events this month' : 'Coming up on this channel'}</p>
               <ul className="mt-2 space-y-2">{ch.events.map(e => (
-                <li key={`${e.title}-${e.date.toISOString()}`} className="parchment flex gap-3 p-3 text-sm">
-                  <span className="font-label w-12 shrink-0 text-primary">{shortDay(e.date)}</span>
-                  <span className="min-w-0"><span className="font-medium">{e.title}</span><span className="block text-muted-foreground">{e.detail}</span></span>
+                <li key={`${e.title}-${e.date.toISOString()}`} className="flex gap-3 border-t border-border p-3 text-sm">
+                  <time dateTime={e.date.toISOString()} className="font-label w-12 shrink-0 text-primary">{shortDay(e.date)}</time>
+                  <span className="min-w-0"><span className="font-medium">{e.title}</span><span className="block text-muted-foreground">{e.detail}</span><span className="mt-1 block font-label text-xs text-muted-foreground">{e.kind === 'exact' ? 'Personal chart contact' : 'Shared sky event'} · approximate UTC day</span></span>
                 </li>
               ))}</ul>
             </div>

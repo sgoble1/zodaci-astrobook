@@ -46,8 +46,8 @@ function natalPoints(natal: ChartResult) {
 
 const THEME: Record<string, string> = { sun: 'identity and vitality', moon: 'feelings and needs', mercury: 'thinking and conversations', venus: 'love, money and values', mars: 'drive and conflict', jupiter: 'growth and opportunity', saturn: 'responsibility and limits', uranus: 'change and freedom', neptune: 'dreams and uncertainty', pluto: 'power and deep change', asc: 'how you meet the world', mc: 'career and reputation' };
 const hitText = (tName: string, tTheme: string, type: string, label: string, nTheme: string | undefined, retro: boolean) => {
-  const a = ASPECTS.find(x => x.type === type)!;
-  return `${tName} (${tTheme}) ${a.nature} your ${label}${nTheme ? ` (${nTheme})` : ''}.${retro ? ` ${tName} is retrograde, so this is more often an old subject coming back than something new.` : ''}`;
+  const a = ASPECTS.find(x => x.type === type);
+  return `${tName} (${tTheme}) ${a?.nature ?? 'contacts'} your ${label}${nTheme ? ` (${nTheme})` : ''}.${retro ? ` ${tName} is retrograde; astrology traditionally associates this with review.` : ''}`;
 };
 
 /** Transits on a date, sorted by significance: applying first, then tighter orb, then slower planet. */
@@ -62,7 +62,7 @@ export function transitsTo(natal: ChartResult, date: Date): TransitHit[] {
       const applying = Math.abs(sep(next[i].lon, n.lon) - a.angle) < orb;
       const label = n.key === 'asc' ? 'Ascendant' : n.key === 'mc' ? 'Midheaven' : n.name;
       out.push({ transit: t, natalKey: n.key, natalName: label, natalRetro: n.retro, type: a.type, symbol: a.symbol, orb, applying, weight: WEIGHT[t.key] + (applying ? 1 : 0) + (orb < 1 ? 1 : 0),
-        text: `${hitText(THEME[t.key], a.type, THEME[n.key] ?? label, t.retro)}` });
+        text: hitText(t.name, THEME[t.key], a.type, label, THEME[n.key], t.retro) });
     }
   }));
   return out.sort((x, y) => Number(y.applying) - Number(x.applying) || x.orb - y.orb || y.weight - x.weight);

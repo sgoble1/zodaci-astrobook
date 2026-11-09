@@ -21,6 +21,7 @@ import { COMIC_PLANS } from '@/lib/comic';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { StaffPortrait } from '@/components/observatory/StaffPortrait';
 import giftTower from '@/assets/home/gift-shop-tower.jpg';
+import { matchesShopType, shopFilterLabel } from '@/lib/shopDepartments';
 
 function useAdd() {
   const addItem = useCartStore(s => s.addItem);
@@ -114,7 +115,7 @@ export default function Store() {
   const shown = useMemo(() => {
     const words = q.toLowerCase().split(/\s+/).filter(Boolean);
     const list = (products ?? []).filter(p => (collection === 'all' || isAtomicZodiac(p.node))
-      && (type === 'All' || p.node.productType === type)
+      && matchesShopType(p.node.productType ?? '', type)
       && (sign === 'All' || signOf(p) === sign.toLowerCase())
       && (!band || (priceOf(p) >= band.min && priceOf(p) < band.max))
       && (!inStockOnly || inStock(p))
@@ -173,7 +174,7 @@ export default function Store() {
         </div>
         {(collection !== 'all' || type !== 'All' || sign !== 'All' || band || inStockOnly) && <div className="flex flex-wrap items-center gap-2" aria-label="Active filters">
           {collection !== 'all' && <Chip label="Atomic Zodiac Collection" onClear={() => change('collection', 'all')} />}
-          {type !== 'All' && <Chip label={type} onClear={() => change('type', 'All')} />}
+          {type !== 'All' && <Chip label={shopFilterLabel(type)} onClear={() => change('type', 'All')} />}
           {sign !== 'All' && <Chip label={`${sign} edition`} onClear={() => change('sign', 'All')} />}
           {band && <Chip label={band.label} onClear={() => change('price', 'all')} />}
           {inStockOnly && <Chip label="Ready to order" onClear={() => change('inStock', false)} />}
