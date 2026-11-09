@@ -43,6 +43,24 @@ export function compassFrom(hits: TransitHit[]): Record<CompassDomain, number> {
 
 export type { ChartResult };
 
+/** Reflection prompts describe symbolic contacts; they never predict an event or diagnose a person. */
+export function contactReflection(hit: TransitHit): { focus: string; prompt: string } {
+  const tension = hit.type === 'Square' || hit.type === 'Opposition';
+  const themes: Record<string, [string, string]> = {
+    sun: ['priorities and self-expression', 'Which commitment still reflects what matters to you?'],
+    moon: ['feelings and everyday needs', 'What helps you feel settled when your routine changes?'],
+    mercury: ['conversations and decisions', 'Which assumption could you check before deciding?'],
+    venus: ['relationships, spending and values', 'Where do your choices match what you value?'],
+    mars: ['effort and boundaries', 'Where would a smaller, deliberate step be useful?'],
+    jupiter: ['learning and opportunity', 'Which opportunity is worth the time it asks of you?'],
+    saturn: ['responsibility and structure', 'Which responsibility needs a clearer limit?'],
+    asc: ['how you meet other people', 'What would you like to communicate more clearly?'],
+    mc: ['work and public commitments', 'Which next step would make your work more sustainable?'],
+  };
+  const [focus, prompt] = themes[hit.natalKey] ?? ['long-term change', 'What has changed, and what would you like to keep?'];
+  return { focus: `${tension ? 'Traditionally read as friction around' : 'Traditionally read as a connection around'} ${focus}.`, prompt };
+}
+
 /* ── Broadcast Engine: five retro-TV channels, each wired to its specialist's slice of the real sky. ── */
 
 export type ChannelId = 'chapter' | 'career' | 'relationship' | 'window' | 'growth';

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { broadcastChannels, chapterFrom, compassFrom, moonPhase } from './currentChapter';
+import { broadcastChannels, chapterFrom, compassFrom, moonPhase, contactReflection } from './currentChapter';
 import type { TransitEvent, TransitHit } from './transitOverlay';
 
 const hit = (t: string, natal: string, weight: number, orb = 1): TransitHit => ({
@@ -8,6 +8,11 @@ const hit = (t: string, natal: string, weight: number, orb = 1): TransitHit => (
 });
 
 describe('current chapter', () => {
+  it('reflection focus follows the natal point and aspect, not biography', () => {
+    expect(contactReflection(hit('saturn', 'mc', 6)).focus).toBe('Traditionally read as friction around work and public commitments.');
+    expect(contactReflection({ ...hit('jupiter', 'venus', 4), type: 'Trine' }).focus).toBe('Traditionally read as a connection around relationships, spending and values.');
+    expect(contactReflection(hit('saturn', 'mc', 6)).prompt).toBe('Which next step would make your work more sustainable?');
+  });
   it('uses the strongest slow-planet transit, ignoring fast planets', () => {
     const c = chapterFrom([hit('moon', 'sun', 9), hit('saturn', 'mc', 6), hit('jupiter', 'venus', 4)]);
     expect(c.hit?.transit.key).toBe('saturn');
