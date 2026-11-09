@@ -10,6 +10,7 @@ import { ThemeArt } from '@/components/common/ThemeArt';
 import { PRODUCT_ART } from '@/content/productArtwork';
 import launchArt from '@/assets/pages/investors-atomic-launch.jpg';
 import { BUILD_CREDIT_SNAPSHOT, creditCost, formatUsd, DOLLARS_PER_BUILD_CREDIT } from '@/lib/devCost';
+import { InvestorEconomics } from '@/components/common/InvestorEconomics';
 
 const low = BOOK_VERSIONS[0]; const high = BOOK_VERSIONS[BOOK_VERSIONS.length - 1];
 const PRODUCTS: [string, string, string][] = [
@@ -149,6 +150,7 @@ export default function Investors() {
         <p className="text-xs text-muted-foreground">Projection on top of the membership table above; rates are assumptions, not results. Printed creations are planned through the existing print partner.</p>
       </section>
 
+      <InvestorEconomics />
       <PrintPartnerMatrix />
 
       <section aria-labelledby="inv-n" className="grid gap-8 md:grid-cols-2">

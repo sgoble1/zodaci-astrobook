@@ -43,8 +43,8 @@ export function unitEconomics(): UnitRow[] {
   for (const v of BOOK_VERSIONS) {
     const c = BOOK_COSTING.find(x => x.edition === v.id);
     if (!c) continue;
-    const price = c.price / 100;
-    rows.push({ group: 'AstroBook', item: v.name, price, fees: c.fees / 100, cost: (c.print + c.shipping) / 100, costNote: c.print ? 'Print + shipping (saved costing)' : 'Digital, no print', net: round2((c.price - c.fees - c.print - c.shipping) / 100) });
+    const price = v.price / 100;
+    rows.push({ group: 'AstroBook', item: v.name, price, fees: c.fees / 100, cost: (c.print + c.shipping) / 100, costNote: c.print ? 'Estimated print + shipping; not a supplier quote' : 'Digital, no print', net: round2((v.price - c.fees - c.print - c.shipping) / 100) });
   }
   rows.push(
     row('AstroComic', 'Monthly, per issue', COMIC_PLANS.monthly.cents / 100, ASSUMPTIONS.comicPrint, 'Print, before shipping'),
@@ -71,9 +71,14 @@ export type ScenarioLine = { line: string; buyers: number; gross: number; costs:
  */
 export function scenario(s: Scenario): { lines: ScenarioLine[]; gross: number; costs: number; net: number; arpu: number } {
   const units = unitEconomics();
-  const u = (group: string, item: string) => units.find(r => r.group === group && r.item === item)!;
-  const classic = units.find(r => r.group === 'AstroBook' && /classic/i.test(r.item)) ?? units.find(r => r.group === 'AstroBook')!;
-  const pack = units.find(r => r.group === 'Credit pack' && r.price === 20) ?? units.find(r => r.group === 'Credit pack')!;
+  const u = (group: string, item: string) => {
+    const unit = units.find(r => r.group === group && r.item === item);
+    if (!unit) throw new Error(`Missing economics input: ${group} / ${item}`);
+    return unit;
+  };
+  const classic = units.find(r => r.group === 'AstroBook' && /classic/i.test(r.item));
+  const pack = units.find(r => r.group === 'Credit pack' && r.price === 20);
+  if (!classic || !pack) throw new Error('Missing Classic edition or $20 credit pack');
   const mk = (line: string, share: number, unit: UnitRow, times = 1): ScenarioLine => {
     const buyers = Math.round(s.members * share);
     const gross = buyers * unit.price * times, costs = buyers * (unit.fees + unit.cost) * times;
