@@ -1,6 +1,8 @@
 project_id = "dtjnnubicttztkluhuge"
 
 [functions]
+  [functions.observatory-consult]
+    verify_jwt = false
   [functions.admin-stripe-overview]
     verify_jwt = false
   [functions.auth-email-hook]

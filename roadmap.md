@@ -9,22 +9,21 @@ Ready (optional polish):
 - [ ] After the next publish, delete the retired demo podcast asset (zodaci-demo-episode.mp3) so the live site never points at a removed file.
 
 Blocked — AI credits:
-- [ ] Shane's 63 chapter corrections (Phase 11, last) · Personal AstroComic Issue #1 per buyer and Issue #2 · P3b Intelligence Layer / P12 AI Observatory.
+- [ ] P3b Intelligence Layer (P12 Observatory and Shane's corrections done Nov 10).
 
 Blocked — owner or outside accounts:
 - [ ] Shane Masterbook birth-detail confirmation (23 chapters) · Zac's documents (Phase 11) · April's archive unlock and signed-in April check.
 - [ ] Lulu keys + printed sample · AstroComic printer · notify.zodaci.com DNS records · Resend and Search Console connections · licensed Sabian text · asteroid reference degrees · real testimonials and member counts · approved test purchase.
 - [ ] Owner decisions: World Systems (Volume V) starting edition; AstroBook page-depth targets.
 
-## Nov 10 evening request (in progress)
-- [ ] Shane's 63 chapter corrections saved into his Masterbook (AI credits now available).
-- [ ] April's 16 chapter plates redrawn in the atomic-zodiac style; matching chart-accurate plates for Shane's and Zac's editions.
-- [ ] Personal AstroComic Issue #1 for each buyer and Issue #2 (write + draw from the buyer's chart).
-- [ ] AI Observatory: "Consult the Observatory" answers from chart + transits + chapter + journal + goals, with sources.
-- [ ] 3D AstroBook preview spine: real spine text, cover art wraps onto the spine without cut-off.
-- [ ] Expand Zac's content; review founder full-edition experience (April, Shane, Zac).
-- [ ] Home slideshow: rebalance the main slide layout and chart; new picture and redesigned slide 2 in the current theme.
-- [ ] Layout and flow review across all pages.
+## Nov 10 evening request
+- [x] Shane's Masterbook corrections: all 63 chapters scanned without AI; flagged chapters patched sentence by sentence and saved (original backup kept). See status note below for any chapter still flagged.
+- [x] AI Observatory: /observatory "Consult the Observatory" (chart + today's sky + Current Chapter + Observation Log + opted-in context, source tags, Pro/credit gated); in the Readings menu.
+- [x] 3D AstroBook preview and openable book/comic: printed spine (name + title), cover colour carried round the fold, no squeezed crop.
+- [x] Home slideshow: Cartographer slide rebalanced with a map key, bigger dial; slide 2 redrawn (faces looking up, current comic style, all 12 signs checked) with cleaner phone layout.
+- [ ] April's 16 chapter plates redrawn + matching chart-accurate plates for Shane's and Zac's editions — not started (workspace credits ran low).
+- [ ] Personal AstroComic Issue #1 / Issue #2: no comic subscribers yet, so there is no buyer issue to write or draw. Drafting per buyer (buildComicIssue, issue 1 then 2) and Admin artwork already exist; runs when the first subscriber joins.
+- [ ] Expand Zac's content; founder full-edition walkthrough (April, Shane, Zac); layout and flow review of every page — not started (credits).
 
 ## Nov 10 — AstroBook / AstroComic / Demo fixes (done)
 - [x] One sample reader everywhere: Rosalind Vance (Collector cover) for the sample book, comic, demo reading, podcast and live sample chart; Pluto line fixed (6th house, 4.3° before the Descendant).

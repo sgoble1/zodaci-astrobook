@@ -170,17 +170,17 @@ Deno.serve(async (req) => {
       });
       for await (const part of r.textStream) out += part;
     } catch (e) { const g = gatewayError(e); return json({ error: g.message }, g.status); }
-    let text = original; let applied = 0; const missed: string[] = [];
+    let text = original; let applied = 0; const missed: string[] = []; const edits: { find: string; replace: string }[] = [];
     for (const m of out.matchAll(/@@FIND\n([\s\S]*?)\n@@REPLACE\n([\s\S]*?)\n@@END/g)) {
       const find = m[1].trim(), repl = m[2].trim();
       if (!find || find === repl) continue;
-      if (text.includes(find)) { text = text.split(find).join(repl); applied++; } else missed.push(find.slice(0, 80));
+      if (text.includes(find)) { text = text.split(find).join(repl); applied++; edits.push({ find, replace: repl }); } else missed.push(find.slice(0, 80));
     }
     if (!applied) return json({ id, applied: 0, missed, none: /^\s*NONE\s*$/.test(out) });
-    if (body.dryRun) return json({ id, applied, missed, text });
+    if (body.dryRun) return json({ id, applied, missed, edits });
     const res = await persist(id, text, original.length);
     const saved = await res.json();
-    return json({ ...saved, applied, missed, after: scanChapter(text).flagged.length });
+    return json({ ...saved, applied, missed, edits, after: scanChapter(text).flagged.length });
   }
 
   // Save a reviewed correction produced by an earlier dry run (owner only; same length guard).

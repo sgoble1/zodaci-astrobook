@@ -71,6 +71,8 @@
 ## Page metadata
 - usePageMeta owns route-aware titles, descriptions, self-referencing social URLs/canonicals and indexing boundaries; member discussions remain noindex and private-subdomain exclusions are preserved. Static head remains the social-crawler fallback.
 - Astral Research Authority world: place/staff/member-character registry lives in src/lib/observatory.ts and shared observatory pieces in src/components/observatory/; pages read their place from the registry so the world stays consistent.
+- Consult the Observatory (observatory-consult) answers only from the member's chart, browser-computed sky lines, Current Chapter, own Observation Log and opted-in context, with inline source tags; Pro/credit gated, nothing saved, so answers stay owner-scoped and verifiable.
+- Shane's Masterbook corrections scan chapters deterministically and patch only flagged sentences with exact find/replace (backup kept), so correct text is never rewritten and AI spend stays small.
 - Current Chapter and Life Compass derive only from today's transits (src/lib/currentChapter.ts), never AI or biography, so the landing stays truthful without credits.
 - DashboardMosaic is the shared dashboard opening; retain CurrentChapterPanel beneath it, with founder TVs receiving their authorized edition chart directly to prevent viewer-chart substitution.
 - /forecast separates public skyToday/skyEvents bulletins from signed-in useMyBirth broadcasts; reuse CurrentChapterPanel and ForecastReel so chart privacy and deterministic timing stay consistent.

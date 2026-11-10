@@ -5,6 +5,8 @@
 export type SiteUpdate = { date: string; title: string; text: string; to?: string; cta?: string };
 
 export const SITE_UPDATES: SiteUpdate[] = [
+  { date: '2026-11-10', title: 'Consult the Observatory', text: 'Ask one question and get an answer drawn from your own chart, today’s sky, your Current Chapter, your Observation Log and the notes you chose to share, with each point labelled by its source.', to: '/observatory', cta: 'Ask a question' },
+  { date: '2026-11-10', title: 'A fresh home slideshow', text: 'The Cartographer slide now has a proper map key beside her dial, and the faces slide has new artwork in the shop’s golden-age comic style. AstroBooks in the 3D previews now show a printed spine.', to: '/', cta: 'See the home page' },
   { date: '2026-11-10', title: 'Open an AstroBook and turn its pages', text: 'The AstroBook page now opens a real sample book: bookplate, birth facts, planets, houses, aspects and illustrated chapters. Signed in, you can open one built from your own chart.', to: '/astrobook#full-edition', cta: 'Open the book' },
   { date: '2026-11-10', title: 'A new sample AstroComic', text: 'The Garden Gate is a six-page sample issue in the shop’s golden-age comic style, opened like a printed digest. Every placement in it is calculated.', to: '/astrocomic', cta: 'Read the sample' },
   { date: '2026-11-10', title: 'A side panel for every chapter', text: 'On wide screens, readings show sections on the left and chapter facts on the right: reading time and the placements and houses the chapter names.', to: '/my-readings', cta: 'Open my readings' },

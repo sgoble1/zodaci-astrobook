@@ -26,6 +26,7 @@ export const PLACES: [string, Place][] = [
   ['/dashboard', { name: 'Broadcast Studio', host: 'broadcaster', motto: 'Your current chapter, on air', scene: 'broadcast-studio' }],
   ['/chart', { name: 'Astral Mapping Center', host: 'cartographer', motto: 'The measured sky at your birth', scene: 'astral-mapping' }],
   ['/my-chart', { name: 'Astral Mapping Center', host: 'cartographer', motto: 'The measured sky at your birth', scene: 'astral-mapping' }],
+  ['/observatory', { name: 'Grand Observatory', host: 'director', motto: 'One question, read against your own sky', scene: 'observation-deck' }],
   ['/observation-log', { name: 'Observation Deck', host: 'cartographer', motto: 'What you saw, logged against the real sky', scene: 'observation-deck' }],
   ['/forecast', { name: 'Navigation Chamber', host: 'navigator', motto: 'Timing and the road ahead', scene: 'navigation-chamber' }],
   ['/transits', { name: 'Navigation Chamber', host: 'navigator', motto: 'Timing and the road ahead', scene: 'navigation-chamber' }],

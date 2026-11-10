@@ -60,7 +60,7 @@ export const MEMBER_DOMAINS: MemberDomain[] = [
     id: 'readings', label: 'Readings', hub: '/my-readings', hubLabel: 'All my readings', icon: BookOpenText,
     description: 'Readings written only from your own placements.',
     tabs: ['/my-readings', '/chat', '/wonderings', '/counselors', '/workbook', '/retrogood', '/create'],
-    prefixes: ['/my-readings', '/workbook', '/counselors', '/chat', '/topics', '/readings', '/reading', '/p', '/ask', '/sources', '/observation-log', '/content-center'],
+    prefixes: ['/my-readings', '/workbook', '/counselors', '/chat', '/topics', '/readings', '/reading', '/p', '/ask', '/sources', '/observation-log', '/observatory', '/content-center'],
     columns: [
       { title: 'My readings', more: { to: '/my-readings#topics', label: `All ${TOPIC_READINGS.length} topics & ${CORE_THEMES.length} core themes` }, items: [
         { to: '/my-readings', label: 'All my readings', description: 'Topics, core themes and quick readings', icon: BookOpenText },
@@ -79,7 +79,8 @@ export const MEMBER_DOMAINS: MemberDomain[] = [
         { to: '/workbook/companion', label: 'The Oracle Within', description: 'A private, reflective conversation', icon: Moon },
       ] },
       { title: 'Observation Log', items: [
-        { to: '/observation-log', label: 'Observation Log', description: 'Your own sky notes, with the real sky that day', icon: Telescope, badge: 'New' },
+        { to: '/observatory', label: 'Consult the Observatory', description: 'One question, answered from your chart, sky and log', icon: Telescope, badge: 'New' },
+        { to: '/observation-log', label: 'Observation Log', description: 'Your own sky notes, with the real sky that day', icon: Telescope },
         { to: '/workbook', label: 'Guided Workbook', description: 'Exercises for your placements', icon: NotebookPen },
         { to: '/workbook/check-in', label: 'Daily Check-in', description: 'Name what is happening today', icon: Activity },
         { to: '/workbook/reframe', label: 'Thought Reframe', description: 'Facts, alternatives and a kinder response', icon: RefreshCcw },
@@ -402,7 +403,7 @@ export const ROUTE_INVENTORY: Record<string, Placement> = {
   '/themes': P('learn', 'secondary'), '/themes/:slug': P('learn', 'tertiary', 'from Core themes explained'), '/faq': P('learn', 'secondary'), '/privacy': P('public', 'utility', 'footer'), '/terms': P('public', 'utility', 'footer'),
   '/astrocomic': P('public', 'utility', 'public product page; members use /my-comic'), '/store': P('public', 'utility', 'public shop'), '/product/:handle': P('public', 'tertiary', 'from the shop'), '/academy': P('learn', 'duplicate', 'redirects to /learn#lessons'), '/academy/:slug': P('learn', 'tertiary', 'from Learn lessons'), '/compatibility': P('explore', 'secondary'),
   '/brand-launch': P('public', 'utility', 'launch kit'), '/contents': P('april', 'utility'), '/contents/:id': P('april', 'utility'), '/read': P('april', 'utility'), '/read/document/:slug': P('april', 'utility'), '/read/:id': P('april', 'utility'),
-  '/': P('account', 'duplicate', 'members are sent to /dashboard'), '/explore': P('explore', 'primary'), '/personal-context': P('account', 'utility'), '/workspaces': P('explore', 'secondary'), '/observation-log': P('readings', 'secondary'), '/content-center': P('readings', 'secondary'), '/reading-history': P('book', 'secondary'),
+  '/': P('account', 'duplicate', 'members are sent to /dashboard'), '/explore': P('explore', 'primary'), '/personal-context': P('account', 'utility'), '/workspaces': P('explore', 'secondary'), '/observation-log': P('readings', 'secondary'), '/observatory': P('readings', 'secondary'), '/content-center': P('readings', 'secondary'), '/reading-history': P('book', 'secondary'),
   '/wonderings': P('readings', 'secondary'), '/start': P('chart', 'secondary'), '/my-chart': P('chart', 'primary'), '/retrogood': P('readings', 'secondary'), '/our-charts': P('chart', 'secondary', 'shared-space accounts'), '/siblings': P('explore', 'secondary'),
   '/findings': P('chart', 'secondary'), '/results': P('chart', 'secondary'), '/my-readings': P('readings', 'primary'), '/my-readings/topic/:slug': P('readings', 'tertiary', 'every topic and core theme is listed on the Readings hub'),
   '/my-astrobook': P('book', 'primary'), '/auth': P('account', 'utility'), '/reset-password': P('account', 'utility'), '/pricing': P('account', 'utility'), '/creator': P('account', 'utility', 'Cosmic Studio'),
