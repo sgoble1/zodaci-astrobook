@@ -35,7 +35,7 @@ draw_tracked((W - sw) / 2, 158, line, small, GOLD, 5)
 title = ImageFont.truetype(SLAB, 78)
 for i, word in enumerate(['THE GARDEN', 'GATE']):
     tw = title.getlength(word)
-    d.text(((W - tw) / 2 - 150 if False else 56, 206 + i * 86), word, font=title, fill=CREAM, stroke_width=5, stroke_fill=NAVY)
+    d.text((56, 206 + i * 86), word, font=title, fill=CREAM, stroke_width=5, stroke_fill=NAVY)
 
 # Bottom strip: who the issue is for and the calculated Big Three.
 d.rectangle([0, H - 118, W, H], fill=NAVY)
