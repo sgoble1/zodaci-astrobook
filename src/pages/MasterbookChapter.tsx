@@ -13,6 +13,7 @@ import { SummarisePanel, toPassages } from '@/components/common/SummarisePanel';
 import { loadProtectedText } from '@/lib/protectedContent';
 import { useOwnsEdition } from '@/lib/editionSharing';
 import { ShareChapterButton, SharedByNote } from '@/components/sharing/EditionSharing';
+import { ReadingInsights } from '@/components/readings/ReadingInsights';
 
 const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 60);
 
@@ -41,8 +42,8 @@ export default function MasterbookChapter() {
   if (text === '') return <p>Section not found. <Link className="underline" to="/masterbook">Back to the Masterbook</Link></p>;
 
   return (
-    <div className="grid xl:grid-cols-[1fr_220px] gap-10">
-      <article>
+    <div className={`grid gap-10 xl:grid-cols-[minmax(0,1fr)_220px] ${toc.length > 1 ? '2xl:-mx-20 2xl:gap-8 2xl:grid-cols-[13rem_minmax(0,1fr)_14rem]' : '2xl:grid-cols-[minmax(0,1fr)_15rem]'}`}>
+      <article className="min-w-0 2xl:order-2">
         <Link to="/masterbook" className="text-xs font-smallcaps text-muted-foreground hover:text-foreground">← Masterbook contents</Link>
         {e && <>
           <div className="font-label text-xs tracking-[0.16em] text-primary mt-4">{e.part} · {e.label}</div>
@@ -62,6 +63,7 @@ export default function MasterbookChapter() {
             }}>{body}</ReactMarkdown>
           </div>
         )}
+        {text && <ReadingInsights content={text} sections={toc.length} className="mt-10 2xl:hidden" />}
         {src && <div className="parchment p-4 mt-10 text-xs text-muted-foreground">
           <span className="font-label tracking-[0.14em] text-primary">Source</span> · {src.title}{e ? ` — ${e.label}: ${e.title}` : ''} · transcribed verbatim. {e?.doc && src ? <Link to={`/masterbook/pdf/${encodeURIComponent(src.id)}?page=${e.page ?? 1}`} className="underline">Open the PDF in the app</Link> : <Link to="/sources" className="underline">View or download the original</Link>} · <Link to={`/ask${e?.doc ? `?doc=${e.doc}` : '?doc=masterbook'}`} className="underline">Ask about this document</Link>
         </div>}
@@ -72,13 +74,14 @@ export default function MasterbookChapter() {
       </article>
       {toc.length > 1 && <details className="xl:hidden parchment p-4 h-fit"><summary className="cursor-pointer font-label text-xs tracking-[0.16em] text-primary">On this page</summary><div className="mt-3 space-y-2">{toc.map(t => <a key={t} href={`#${slug(t)}`} className="block text-sm text-muted-foreground hover:text-foreground">{t}</a>)}</div></details>}
       {toc.length > 1 && (
-        <aside className="hidden xl:block">
-          <div className="sticky top-6 max-h-[85vh] overflow-y-auto text-xs space-y-1">
+        <aside className="hidden xl:block 2xl:order-1">
+          <div className="sticky top-24 max-h-[calc(100dvh-7rem)] overflow-y-auto text-xs space-y-1">
             <div className="font-label text-[10px] tracking-[0.14em] text-primary mb-2">On this page</div>
             {toc.map(t => <a key={t} href={`#${slug(t)}`} className="block text-muted-foreground hover:text-foreground leading-snug py-0.5">{t}</a>)}
           </div>
         </aside>
       )}
+      {text && <div className="hidden 2xl:order-3 2xl:block"><ReadingInsights content={text} sections={toc.length} sticky /></div>}
     </div>
   );
 }

@@ -140,7 +140,7 @@ function ChapterView({ area, id, entries, text, owns, full, onRetry }: { area: E
       {text === null ? <p role="status" className="text-muted-foreground">Opening the chapter…</p>
         : text === 'denied' ? <NoEditionAccess owner={copy.name} onRetry={onRetry} />
         : text === '' ? <div className="space-y-3"><p role="alert">This chapter couldn’t be opened. Check your connection and try again.</p><Button variant="outline" onClick={onRetry}>Try again</Button></div>
-        : <NavigatedProse content={text} path={`${copy.base}/${id}`} title={e?.title ?? `${copy.name}’s chapter`} headingLevel={headingLevel} />}
+        : <NavigatedProse content={text} path={`${copy.base}/${id}`} title={e?.title ?? `${copy.name}’s chapter`} headingLevel={headingLevel} insights />}
       <p className="parchment mt-10 p-4 text-xs text-muted-foreground"><span className="font-label tracking-[0.14em] text-primary">Source</span> · {copy.source}</p>
       <nav className="mt-8 flex justify-between gap-4" aria-label="Chapters">
         {prev ? <Link to={`${copy.base}/${prev.id}`} className="parchment flex max-w-[48%] items-center gap-2 p-3 text-sm"><ChevronLeft className="h-4 w-4 shrink-0" aria-hidden="true" /><span className="truncate">{prev.title}</span></Link> : <span />}

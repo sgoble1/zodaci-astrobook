@@ -5,6 +5,8 @@
 export type SiteUpdate = { date: string; title: string; text: string; to?: string; cta?: string };
 
 export const SITE_UPDATES: SiteUpdate[] = [
+  { date: '2026-11-10', title: 'A side panel for every chapter', text: 'On wide screens, readings show sections on the left and chapter facts on the right: reading time and the placements and houses the chapter names.', to: '/my-readings', cta: 'Open my readings' },
+  { date: '2026-11-10', title: 'The Writing Room', text: 'My readings, Personal context and the Content Center now share one Writing Room, with a new desk illustration.', to: '/content-center', cta: 'Visit the Writing Room' },
   { date: '2026-11-10', title: 'More guides in Learn', text: 'New guides cover unknown birth times, aspect orbs and checking forecasts. Each guide now keeps your reading position when you sign in.', to: '/learn#guides', cta: 'Read the guides' },
   { date: '2026-11-10', title: 'A clearer sample room', text: 'The demo compares Pro and Cosmic with the same tools and different monthly credits. Its printed chapter uses a calculated fictional reader.', to: '/demo', cta: 'Open the demo' },
   { date: '2026-11-09', title: 'More on every TV channel', text: 'See each contact explained, its timing and a reflection question, with calculation times and birth-time limits.', to: '/dashboard#broadcast-studio', cta: 'Tune in' },

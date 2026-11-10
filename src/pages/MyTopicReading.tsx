@@ -68,7 +68,7 @@ export default function MyTopicReading({ slugOverride }: { slugOverride?: string
       </header>
       {row && !preview && readingIsOlder(row.updated_at, birthSavedAt) && <aside className="border-l-2 border-accent pl-4 text-sm text-muted-foreground">Your birth details changed after this reading was saved. Rewrite it to use your current chart; generation limits apply.</aside>}
       {row ? <div>
-        <div><NavigatedProse content={shown} path={`/my-readings/topic/${slug}`} title={meta?.title ?? row.title} />
+        <div><NavigatedProse content={shown} path={`/my-readings/topic/${slug}`} title={meta?.title ?? row.title} insights />
         {preview && <div className="relative mt-8">
           <div aria-hidden="true" className="pointer-events-none select-none space-y-4 opacity-60 blur-sm">
             {['How this shows up in daily life', 'Strengths & watch-outs', 'Practices to try', 'Reflection questions'].map(h => <div key={h} className="space-y-2"><p className="font-display text-2xl">{h}</p><div className="h-3 w-full rounded bg-muted" /><div className="h-3 w-11/12 rounded bg-muted" /><div className="h-3 w-4/5 rounded bg-muted" /></div>)}

@@ -37,7 +37,7 @@
 - Starters use one sequential per-visit queue after paid entitlement/saved birth data; stop on failure.
 - blog_posts permits subscriber writes/explicit publication; drafts stay private.
 - Member editorial styles preserve archives; dashboard data/reading positions are owner-scoped.
-- Long markdown readings use NavigatedProse/ReadingNavigator for one consistent reader.
+- Long markdown readings use NavigatedProse/ReadingNavigator for one consistent reader; chapter readers opt into the ReadingInsights column (facts parsed from the chapter text only, three columns only on 2xl) so the reader never claims facts the text doesn't state.
 - Reading progress and observations are owner-scoped; Content Center links context and reading history without claiming generated-content provenance that is not recorded.
 - Bookmark caches are owner-keyed/auth-invalidated; throw mutation errors to prevent stale exposure and false saves.
 

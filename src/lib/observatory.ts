@@ -18,7 +18,7 @@ export const STAFF: Record<StaffId, { title: string; department: string }> = {
 
 /** Each place has one 1950s scene illustration (banner art) and one icon; components map the key to files. */
 export type PlaceScene = 'broadcast-studio' | 'astral-mapping' | 'navigation-chamber' | 'cosmic-archive' | 'relationship-bureau' | 'research-library'
-  | 'timeline-hall' | 'founder-command' | 'grand-observatory' | 'observation-deck' | 'gift-shop' | 'radio-room' | 'comic-press';
+  | 'timeline-hall' | 'founder-command' | 'grand-observatory' | 'observation-deck' | 'gift-shop' | 'radio-room' | 'comic-press' | 'writing-room';
 export interface Place { name: string; host: StaffId; motto: string; scene: PlaceScene }
 
 /** Route prefix → place. First match wins; order from most to least specific. */
@@ -34,7 +34,9 @@ export const PLACES: [string, Place][] = [
   ['/masterbook', { name: 'Cosmic Archive', host: 'archivist', motto: 'The full edition, chapter by chapter', scene: 'cosmic-archive' }],
   ['/library', { name: 'Cosmic Archive', host: 'archivist', motto: 'Everything you have collected', scene: 'cosmic-archive' }],
   ['/reading-history', { name: 'Cosmic Archive', host: 'archivist', motto: 'Where you stopped, chapter by chapter', scene: 'cosmic-archive' }],
-  ['/content-center', { name: 'Research Library', host: 'researcher', motto: 'Your context and what was written from it', scene: 'research-library' }],
+  ['/content-center', { name: 'Writing Room', host: 'researcher', motto: 'Your context and what was written from it', scene: 'writing-room' }],
+  ['/personal-context', { name: 'Writing Room', host: 'researcher', motto: 'The examples only you can supply', scene: 'writing-room' }],
+  ['/my-readings', { name: 'Writing Room', host: 'researcher', motto: 'Written from your chart, for you alone', scene: 'writing-room' }],
   ['/relationships', { name: 'Relationship Bureau', host: 'curator', motto: 'Charts side by side', scene: 'relationship-bureau' }],
   ['/siblings', { name: 'Relationship Bureau', host: 'curator', motto: 'Brothers and sisters, side by side', scene: 'relationship-bureau' }],
   ['/compatibility', { name: 'Relationship Bureau', host: 'curator', motto: 'Charts side by side', scene: 'relationship-bureau' }],

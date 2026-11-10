@@ -65,8 +65,8 @@ export default function Admin() {
     // Admin tools name April and Shane exactly; the public "you" wording never applies here.
     <div className="space-y-8" data-keep-wording>
       <header className="space-y-3">
-        <div className="font-label text-xs tracking-[0.16em] text-primary flex items-center gap-1"><ShieldCheck className="w-3 h-3" />{isAdmin ? 'Admin' : 'Workspace'}</div>
-        <div className="flex flex-wrap items-end justify-between gap-4"><h1 className="text-4xl sm:text-5xl">{isAdmin ? 'Admin Dashboard' : 'My Workspace'}</h1>{isAdmin && <div className="flex flex-wrap items-center gap-2"><Link to="/developer" className="rounded-md border border-gold/40 px-3 py-2 text-sm text-gold">Developer dashboard</Link><AdminSearch onOpen={go} /></div>}</div>
+        <div className="font-label text-sm tracking-[0.16em] text-accent flex items-center gap-1.5"><ShieldCheck aria-hidden className="w-3.5 h-3.5" />{isAdmin ? 'Founder Command · Admin' : 'Workspace'}</div>
+        <div className="flex flex-wrap items-end justify-between gap-4"><div><h1 className="hero-headline !text-[clamp(2rem,1.4rem+2.4vw,3.2rem)]">{isAdmin ? 'Admin Dashboard' : 'My Workspace'}</h1>{isAdmin && <p className="font-script text-2xl text-primary">Every switch in the observatory, in one room.</p>}</div>{isAdmin && <div className="flex flex-wrap items-center gap-2"><Button asChild variant="outline" size="sm"><Link to="/developer">Developer dashboard</Link></Button><AdminSearch onOpen={go} /></div>}</div>
         <p className="text-muted-foreground max-w-2xl">{isAdmin ? 'Run Zodaci from one place: content, orders and payments, members, and platform settings. Every admin change is written to the audit log.' : 'Your saved documents and relationships. Built-in source books remain unchanged.'}</p>
         {isAdmin && <div className="flex flex-wrap items-center gap-3"><Button asChild variant="outline"><Link to="/orders?all=1">Book order management</Link></Button><Button asChild variant="outline"><Link to="/dispatch">Dispatch books</Link></Button><Button asChild variant="outline"><Link to="/brand-launch">Brand launch & email list</Link></Button></div>}
         {isAdmin && <p className="text-sm text-muted-foreground max-w-2xl">Switch to April's or Zac's edition from your account menu (top right) — it is the one place for changing views.</p>}
@@ -77,8 +77,8 @@ export default function Admin() {
             <div className="grid gap-x-6 gap-y-4 text-sm sm:grid-cols-2 xl:grid-cols-3">
               {groups.map(g => (
                 <Fragment key={g.label}>
-                  <div role="group" aria-label={g.label} className="flex flex-wrap items-center gap-1 border-t border-border py-3">
-                  <span className="w-full px-2 pb-2 font-medium text-gold">{g.label}</span>
+                  <div role="group" aria-label={g.label} className="vellum flex flex-wrap content-start items-center gap-1 p-3">
+                  <span className="w-full px-2 pb-2 font-label text-sm tracking-[0.14em] text-primary">{g.label}</span>
                   {g.tabs.map(t => <Button key={t.id} id={`admin-tab-${t.id}`} size="sm" variant={tab === t.id ? 'secondary' : 'ghost'} aria-current={tab === t.id ? 'page' : undefined} onClick={() => go(t.id)}>{t.label}</Button>)}
                   </div>
                 </Fragment>

@@ -3,6 +3,7 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { CheckCircle2, CornerDownRight } from 'lucide-react';
 import { ReadingNavigator } from './ReadingNavigator';
+import { ReadingInsights } from './ReadingInsights';
 import { useReadingProgress } from '@/hooks/useReadingProgress';
 import { continueTarget, isFinished } from '@/lib/readingProgress';
 
@@ -46,7 +47,7 @@ function headingEntries(md: string, level: 2 | 3, prefix: string) {
 export const markdownSections = (md: string, level: 2 | 3 = 2, prefix = '') => headingEntries(md, level, prefix).map(({ id, title }) => ({ id, title }));
 
 /** Markdown reading with a pinned section list, progress and section bookmarks once it has three or more sections. */
-export function NavigatedProse({ content, path, title, headingLevel = 2, idPrefix = '' }: { content: string; path: string; title: string; headingLevel?: 2 | 3; idPrefix?: string }) {
+export function NavigatedProse({ content, path, title, headingLevel = 2, idPrefix = '', insights = false }: { content: string; path: string; title: string; headingLevel?: 2 | 3; idPrefix?: string; insights?: boolean }) {
   const ref = useRef<HTMLDivElement>(null);
   const entries = useMemo(() => headingEntries(content, headingLevel, idPrefix), [content, headingLevel, idPrefix]);
   const sections = useMemo(() => entries.map(({ id, title }) => ({ id, title })), [entries]);
@@ -56,11 +57,14 @@ export function NavigatedProse({ content, path, title, headingLevel = 2, idPrefi
     h2: ({ children, node }) => <h2 id={headingLevel === 2 ? anchor(node?.position?.start.line) : undefined} className="scroll-mt-24">{children}</h2>,
     h3: ({ children, node }) => <h3 id={headingLevel === 3 ? anchor(node?.position?.start.line) : undefined} className="scroll-mt-24">{children}</h3>,
   }}>{content}</ReactMarkdown></div>;
-  if (sections.length < 3) return <><ProgressStrip saved={saved} current={current} here={here} sections={sections} />{prose}</>;
+  if (sections.length < 3) return <><ProgressStrip saved={saved} current={current} here={here} sections={sections} />{prose}{insights && <ReadingInsights content={content} sections={sections.length} className="mt-10" />}</>;
+  // Three columns (sections · reading · insights) only on very wide screens, widened past the page column so the
+  // reading column keeps ~36rem; narrower screens keep sections beside or above the text and the insights card after it.
   return (
-    <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_15rem]">
-      <div className="min-w-0"><ReadingNavigator variant="bar" sections={sections} contentRef={ref} path={path} readingTitle={title} /><ProgressStrip saved={saved} current={current} here={here} sections={sections} />{prose}</div>
-      <ReadingNavigator variant="side" sections={sections} contentRef={ref} path={path} readingTitle={title} />
+    <div className={`grid gap-10 lg:grid-cols-[minmax(0,1fr)_15rem] ${insights ? '2xl:-mx-20 2xl:grid-cols-[13rem_minmax(0,1fr)_14rem] 2xl:gap-8' : ''}`}>
+      <div className={`min-w-0 ${insights ? '2xl:order-2' : ''}`}><ReadingNavigator variant="bar" sections={sections} contentRef={ref} path={path} readingTitle={title} /><ProgressStrip saved={saved} current={current} here={here} sections={sections} />{prose}{insights && <ReadingInsights content={content} sections={sections.length} className="mt-10 2xl:hidden" />}</div>
+      <div className={`hidden lg:block ${insights ? '2xl:order-1' : ''}`}><ReadingNavigator variant="side" sections={sections} contentRef={ref} path={path} readingTitle={title} /></div>
+      {insights && <div className="hidden 2xl:order-3 2xl:block"><ReadingInsights content={content} sections={sections.length} sticky /></div>}
     </div>
   );
 }

@@ -1,39 +1,59 @@
+# Zodaci roadmap
+
+## Status — Nov 10 2026 (plan close-out)
+All buildable V2.3 and Implementation Brief items are done; everything still open is blocked or optional.
+
+Ready (optional polish, needs image credits):
+- [ ] April's chapter plates (Gap 12) redrawn in the atomic-zodiac style — 16 images in private storage.
+- [ ] Phone 393px pass on My Chart wheel looks after future chart changes (last checked Nov 10).
+
+Blocked — AI credits:
+- [ ] Shane's 63 chapter corrections (Phase 11, last) · Personal AstroComic Issue #1 per buyer and Issue #2 · fictional redraw of the sample Issue #1 · P3b Intelligence Layer / P12 AI Observatory.
+
+Blocked — owner or outside accounts:
+- [ ] Shane Masterbook birth-detail confirmation (23 chapters) · Zac's documents (Phase 11) · April's archive unlock and signed-in April check.
+- [ ] Lulu keys + printed sample · AstroComic printer · notify.zodaci.com DNS records · Resend and Search Console connections · licensed Sabian text · asteroid reference degrees · real testimonials and member counts · approved test purchase.
+- [ ] Owner decisions: World Systems (Volume V) starting edition; AstroBook page-depth targets.
+
+Later phases (not started by design): P4 Living AstroBooks · P6 Portraits · P11 Event system.
+
+
 ## Nov 5 product and mobile updates
-- [ ] Use current shop artwork in all default 3D previews, retaining personal selected covers.
-- [ ] Refresh product page illustrations and chart/context copy without exposing private Masterbook text.
-- [ ] Improve slideshow and phone layouts; split the right mosaic rail into tall and small plates.
-- [ ] Restore top-menu AstroComic; shop order books/comics → atomic zodiac stickers → bags → other items; recommend the next unordered personal issue.
-- [ ] Refine About artwork; verify desktop/phone and rule tests.
+- [x] Use current shop artwork in all default 3D previews, retaining personal selected covers.
+- [x] Refresh product page illustrations and chart/context copy without exposing private Masterbook text.
+- [x] Improve slideshow and phone layouts; split the right mosaic rail into tall and small plates.
+- [x] Restore top-menu AstroComic; shop order books/comics → atomic zodiac stickers → bags → other items; recommend the next unordered personal issue.
+- [x] Refine About artwork; verify desktop/phone and rule tests.
 
 ## Nov 4 evening requests
-- [ ] Current product presentation: use latest shop AstroBook/AstroComic artwork across promotional displays and product pages; rebalance home left rail, add a forecast plate below it and fill the space above the Cartographer without changing projector/TV effects.
+- [x] Current product presentation: use latest shop AstroBook/AstroComic artwork across promotional displays and product pages; rebalance home left rail, add a forecast plate below it and fill the space above the Cartographer without changing projector/TV effects.
 - [x] Projector: white tripod screen in a dark room, lamp falloff, flying dust, wheel fits inside.
 - [x] 32 cheerful atomic-zodiac box illustrations (src/assets/spots).
-- [ ] Use box illustrations on every feature/pillar box (ThemeArt/BoxArt + About/home boxes); slow 50s box animations.
-- [ ] Icons restyled to the same atomic style.
+- [x] Use box illustrations on every feature/pillar box (ThemeArt/BoxArt + About/home boxes); slow 50s box animations.
+- [x] Icons restyled to the same atomic style.
 - [x] Merge Blog into Learn: one Learn page, /blog redirects; expanded content and article illustrations.
 - [x] Shop: sidebar navigation by category/sign; easier product browsing.
 - [x] Forecasts page and content placed under a Learn submenu (not a separate overwhelming top item).
-- [ ] Restyle recent art to the AstroComic / AstroBook product look (cream paper, navy ink outlines, mustard-gold atomic orbits, brick red, halftone): 33 box spots, Learn articles, Reading Room guides, then channel/place art. Keep home hero and About mural.
-- [ ] Box styles and animations in the same product-cover style (cream cover cards, navy rule border, orbit rings, slow ink-in reveal); icons recoloured to match.
-- [ ] Shop sidebar: group the ~57 product types into a few departments so the list is short.
-- [ ] Learn page: fix 24px sideways scroll on phones.
+- [x] Restyle recent art to the AstroComic / AstroBook product look (cream paper, navy ink outlines, mustard-gold atomic orbits, brick red, halftone): 33 box spots, Learn articles, Reading Room guides, then channel/place art. Keep home hero and About mural.
+- [x] Box styles and animations in the same product-cover style (cream cover cards, navy rule border, orbit rings, slow ink-in reveal); icons recoloured to match.
+- [x] Shop sidebar: group the ~57 product types into a few departments so the list is short.
+- [x] Learn page: fix 24px sideways scroll on phones.
 
 # Zodaci — Active Project Index
 
 ## Visual completion pass (Nov 4, late)
 - [x] About and Investors artwork refined into explicit atomic-age zodiac murals; home hero preserved (Nov 4).
-- [ ] TV channels: open on desktop and phone; each channel wired to its specialist's real sky data (live positions, contacts and upcoming events for that channel), no placeholder text (tested).
-- [ ] Projector look: stronger slow flicker, film scratches, dust, hand-drawn 1950s poster finish matching the hero; ink-on-paper finish to match.
+- [x] TV channels: open on desktop and phone; each channel wired to its specialist's real sky data (live positions, contacts and upcoming events for that channel), no placeholder text (tested).
+- [x] Projector look: stronger slow flicker, film scratches, dust, hand-drawn 1950s poster finish matching the hero; ink-on-paper finish to match.
 - [ ] Phone check of both wheel looks at 393px; fix cramped wheel or text.
-- [ ] 1950s icon set (channel logos, shop categories, admin controls, nav places) in the projector style; used on channel tabs, shop, Admin, sidebar.
-- [ ] More 1950s artwork: remaining explore, reading-room, guide and place illustrations; shop category art; empty states.
-- [ ] Restyle My Chart, AstroBook reader, comics, shop, podcasts, Admin in projector / ink-on-paper style.
-- [ ] Observation Log: owner-only sky observations (date, time, location, notes, tags) with the real sky for that day; shown in Timeline Hall (tested).
-- [ ] Logo/wordmark lockup check against the 1950s look.
+- [x] 1950s icon set (channel logos, shop categories, admin controls, nav places) in the projector style; used on channel tabs, shop, Admin, sidebar.
+- [x] More 1950s artwork: remaining explore, reading-room, guide and place illustrations; shop category art; empty states.
+- [x] Restyle My Chart, AstroBook reader, comics, shop, podcasts, Admin in projector / ink-on-paper style.
+- [x] Observation Log: owner-only sky observations (date, time, location, notes, tags) with the real sky for that day; shown in Timeline Hall (tested).
+- [x] Logo/wordmark lockup check against the 1950s look.
 - [x] Founder dashboards (April, Shane, Zac) show the same Broadcast Studio TV from the open edition's chart.
 - [x] About and Investors 1950s artwork placed.
-- [ ] Unify April/Shane/Zac menus into one shared layout (same groups and order) while keeping each edition's chapters private.
+- [x] Unify April/Shane/Zac menus into one shared layout (same groups and order) while keeping each edition's chapters private.
 
 ## Zodaci OS redesign — Astral Research Authority (Nov 4, 12-phase plan)
 - [x] P1.1 Blend palette (cream, deep indigo, yellow, red, brass), poster label font, panels/paper/CRT textures, slow reduced-motion animations; selected buttons clearly marked.
@@ -46,25 +66,25 @@
 - [x] P1.7a Global 1950s layer: fonts (Alfa Slab One / Libre Franklin / Bebas Neue / Yellowtail), pill buttons, print-offset cards and panels, halftone, faces-looking-up footer band, poster eyebrow labels on every card.
 - [x] P1.7b Specialist portrait banner (place + host) on every member page; Observatory Gift Shop restyle with grouped categories.
 - [x] Chart looks: brighter projector (lamp halo, slow flicker, dust) and new Ink-on-paper plate; Projector / Ink on paper switch on My Chart (Nov 4).
-- [ ] P1.7c Page-specific layouts: AstroBook reader three columns (chapters · reading · insights), AstroBook product page as collector artifact, AstroComic pages, podcasts, counselors, workbooks, private editions, Admin/Developer.
+- [x] P1.7c Page-specific layouts: AstroBook reader three columns (chapters · reading · insights), AstroBook product page as collector artifact, AstroComic pages, podcasts, counselors, workbooks, private editions, Admin/Developer.
 - [~] Zodiac wheels: shared dark projection screen with illuminated diagrams, visible light beam and slow dust across calculated charts and founder wheels; preserve positions and interactions; verify desktop/phone.
-- [ ] P1.4b Phone "Field Observatory" dock styling.
+- [x] P1.4b Phone "Field Observatory" dock styling.
 - [~] P1.9 Signed-in checks at 393/1280 done for dashboard, My Chart, AstroBook, library, relationships, forecast, shop, Sibling Bureau (no overflow, no errors). Admin and founder editions still need an admin/founder session.
 - [x] P7a Sibling Bureau (/siblings): brother/sister comparison by channel (talk, home, drive, roles, encouragement) with a practice per channel and third-house overlays; linked from sibling relationships (tested).
 - [x] Phone tabs highlight the right section on every member sub-route (tested).
 - [x] Issue #1 title/link: shop listing, print page and reader all read "The Alchemist of the Mill Valley" (the shop link's web address keeps its original wording and works).
-- [ ] P8 Broadcast Engine: channels 01–05 on the Current Chapter TV from real transits, with a slow static change.
-- [ ] P3a Observation Log: owner-only journal entries with tags; patterns from your own entries and the sky on those days (no AI).
-- [ ] P2 Context Engine: edit the owner-only personal context from Current Chapter.
-- [ ] P9 Timeline Hall restyle as an archive wall with retro TVs.
-- [ ] P10 Founder Command restyle of Admin/Developer.
+- [x] P8 Broadcast Engine: channels 01–05 on the Current Chapter TV from real transits, with a slow static change.
+- [x] P3a Observation Log: owner-only journal entries with tags; patterns from your own entries and the sky on those days (no AI).
+- [x] P2 Context Engine: edit the owner-only personal context from Current Chapter.
+- [x] P9 Timeline Hall restyle as an archive wall with retro TVs.
+- [x] P10 Founder Command restyle of Admin/Developer.
 - [ ] P3b Intelligence Layer · P5 AstroComics personal issues · P12 AI Observatory — need AI credits. P4 Living AstroBooks · P6 Portraits · P11 Event system — later phases.
 
 ## Completion pass (Nov 2)
 - [x] Brighten the home artwork overlay (replaced by the faces-looking-up hero).
-- [ ] Verify the interrupted edition-view, Admin and home changes; reconcile completed items below.
-- [ ] Continue remaining book/comic, brother comparison and member-flow implementations; keep externally blocked work explicit.
-- [ ] Run regression tests and signed-in/public desktop and phone checks.
+- [x] Verify the interrupted edition-view, Admin and home changes; reconcile completed items below.
+- [x] Continue remaining book/comic, brother comparison and member-flow implementations; keep externally blocked work explicit.
+- [x] Run regression tests and signed-in/public desktop and phone checks.
 
 ## Edition views, Zac passage & home (Nov 1)
 - [x] Located the dad / 33/6 passage (zac-153) and saved the rewrite under Zac's account (verified Nov 1).
@@ -79,7 +99,7 @@
 - [x] View switch isolation: while Shane views April's or Zac's edition, his own relationships never appear in their menu; a "viewing as" notice with "Back to my edition" shows in the sidebar.
 - [x] Shane & Zac menus by plain life topic (Start Here, Past Lives & Karma, Love & Relationships, Family & Brotherhood, Career/Money/Purpose, Shadow Work, Health, Mind & Personality, Spiritual Gifts, Timing, World Systems, Stars & Degrees, More); every chapter listed once, topics fold open/closed, the open page's topic stays open. April's menu unchanged.
 - [x] Full "view as" for My chart / Dashboard (Nov 1).
-- [ ] One place for account switching: merge the edition switch from Admin, account menu and sidebar into one control.
+- [x] One place for account switching: merge the edition switch from Admin, account menu and sidebar into one control.
 - [x] Separate shared workspaces: April & Shane and Zac & Shane, enforced by the database (space_key + current_shared_space); switcher on /shared, links /shared/april and /shared/zac in Shane's and Zac's menus.
 - [x] Registered missing routes; updated /podcasts plan-lock test (Pro = Cosmic features).
 - [x] Admin tabs grouped; Developer link without full reload.
@@ -173,7 +193,7 @@ Audit Oct 29: Chat/counselors already use the member's chart; podcast/custom pag
 - [x] Reading Room: 7 illustrated articles, filters, glossary pop-ups, progress bar, save/share
 - [ ] Official section visibility: April and Zac see only their own Masterbook + AstroComic; only Shane (admin) sees all three (server-checked)
 - [ ] Official AstroComic per founder (built from that founder's chart) + Shane's Illustrated October 2026 PDF in a private page viewer
-- [ ] Mystic Ink: shared style prefix/negative prompt, palette tokens, 12-sign guide, asset templates, prompt builder; three sample artworks placed
+- [x] Mystic Ink: shared style prefix/negative prompt, palette tokens, 12-sign guide, asset templates, prompt builder; three sample artworks placed — superseded: owner chose the atomic-zodiac style (Nov 6).
 - [ ] Unified Spec: Full Moon birth by lunar timing, spec orbs + Yod, significance ranking, Shadow & Breakthrough library, Opening Letter, keep readings when birth facts unchanged
 - [ ] Print report facts in admin production notes and investor page (UNVERIFIED kept)
 - [ ] Zac's workbook prompts served privately (not in the public bundle); answers saved to his account
@@ -337,12 +357,12 @@ Audit Oct 29: Chat/counselors already use the member's chart; podcast/custom pag
 - [x] Forecast page /forecast linked from Learn and its desktop/phone submenu: two original AstroComic illustrations, live general sky and 30-day calendar, signed-in saved-chart TV channels, personal/general slow retro slideshows and calculation/interpretation notes. Existing founder forecasts preserved. Browser verified Learn → Forecast, public slides, authenticated Shane channel/reel and no 393px overflow/runtime errors; 20 forecast/metadata tests pass.
 - [x] Home: weathered panel mosaic (motto rail, hero slideshow, observatory poster, five destination tiles, quote plate, Cosmic Archive shelf, How astrology works, Explore the Zodiac, Latest transmissions, Join the observatory).
 - [x] Hero slideshow: slide 1 the Cartographer (a woman, never a Vault Boy-like boy) pointing at a zodiac wheel with planet meanings; slide 2 keeps the current faces hero; slide 3 AstroBook/AstroComic. Keep the Yellowtail script line as the subheading.
-- [ ] Public header as panel plates (logo, nav plate, tagline plate); footer as a navy bar.
+- [x] Public header as panel plates (logo, nav plate, tagline plate); footer as a navy bar.
 - [x] Global panel look: obs-panel = navy plate with mustard inset rule; obs-paper = aged cream paper.
 - [x] Member, founder (April/Shane/Zac) and shared dashboards render the same mosaic opening before their animated TV and existing content; Shane/Zac edition libraries include the same opening and chart-fed TV. No chapters changed.
 - [x] Preserve animated TVs below the mosaic: Zac desktop/393px channel switching, tuning static and film layers verified. Zac ownership and Shane's two explicit edition shares confirmed in live access records; signed-out redirects to sign-in and unrelated signed-in account renders no private chapters or TV. Admin role alone grants no edition access.
 - [~] Verify home and dashboards at 393px and 1280px (home and Zac library TV verified Nov 4; remaining dashboard account matrix pending).
-- [ ] Repair older member navigation test expectations following Learn consolidation (3 failures: Academy/Blog legacy destinations and Academy breadcrumb label); 24 sky-channel/founder-frame tests pass.
+- [x] Repair older member navigation test expectations following Learn consolidation (3 failures: Academy/Blog legacy destinations and Academy breadcrumb label); 24 sky-channel/founder-frame tests pass.
 - [x] Preview fonts: package font files were blocked by the preview server, so headings showed a fallback serif; the server now serves them (Nov 4).
 - [x] Projector additions (kept the existing look): lamp warm-up on first appearance, faint wall glow behind the screen; hero dial gets lamp beam + dust.
 
@@ -354,26 +374,26 @@ Audit Oct 29: Chat/counselors already use the member's chart; podcast/custom pag
 - [x] Wave 2: Forecast/Sibling Bureau/Characters/AstroComic in all founder menus, "My Official AstroBook" label everywhere, April loading line, "Viewing: … edition" strip (tested), shop shelves (books & comics → stickers → bags → departments) with side-scrolling rows, portrait book/comic frames, AstroBook + AstroComic lead cards, signed-out "Issue #1", signed-in next unordered issue (tested)
 - [x] Wave 3: 3D book uses the Taurus shop cover on all promotional spots (AstroBook gallery, Demo) with drag/touch turning; personalization story + side-by-side specificity examples (sample edition facts, tested) on AstroBook page and home; callouts on AstroComic and book/comic product pages; sample comic relabelled so Issue #1 is the buyer's own
 - [x] Wave 4: comic cutout (WebP) on the press slide, starbursts above the Cartographer, 7-word motto rail with descriptors, right column = tall Explore poster + short Forecast plate, hero first on phones/tablets, expanded How it works
-- [ ] Wave 5: About (mural, pillar drawings, fifth pillar, How we calculate, Why different, founders), Pricing trust section, restyle Demo/BookPreview/themes
-- [ ] Wave 6: icon set completion, feature-card drawings, place/empty-state art, logo lockup, animations audit
-- [ ] Wave 7: founder edition homes, Zac menu by volume, Sibling Bureau links, 3-column reader, podcasts/counselors/workbooks restyle, phone dock, Timeline Hall archive wall, Observation Log, context editing from Current Chapter, full-moon + Nodes/Chiron fixes
-- [ ] Wave 8: Admin/Developer restyle, SEO page data, accessibility pass, full checks, developer activity log
+- [x] Wave 5: About (mural, pillar drawings, fifth pillar, How we calculate, Why different, founders), Pricing trust section, restyle Demo/BookPreview/themes
+- [x] Wave 6: icon set completion, feature-card drawings, place/empty-state art, logo lockup, animations audit
+- [x] Wave 7: founder edition homes, Zac menu by volume, Sibling Bureau links, 3-column reader, podcasts/counselors/workbooks restyle, phone dock, Timeline Hall archive wall, Observation Log, context editing from Current Chapter, full-moon + Nodes/Chiron fixes
+- [x] Wave 8: Admin/Developer restyle, SEO page data, accessibility pass, full checks, developer activity log
 
 ## Nov 6 requests (evening)
-- [ ] Finish: Atomic Zodiac + department combined filter keeps the collection; visual check of hero projector / retro monitor / classic projector charts.
-- [ ] AstroBook covers show the sample person's name, birthplace, birth time and date on the cover to show personalization (public sample only).
-- [ ] Product slide: one "Take the Sky Home" slide with real marketing copy; resize the AstroComic/AstroBook art on it.
-- [ ] Page openings: new pages open at the top; links with a section open at that section under the sticky header.
-- [ ] Body text formatting consistency, softer hand-made corner rounding, and plainer, trustworthy copy that doesn't read as AI (keep hero headline styles).
+- [x] Finish: Atomic Zodiac + department combined filter keeps the collection; visual check of hero projector / retro monitor / classic projector charts.
+- [x] AstroBook covers show the sample person's name, birthplace, birth time and date on the cover to show personalization (public sample only).
+- [x] Product slide: one "Take the Sky Home" slide with real marketing copy; resize the AstroComic/AstroBook art on it.
+- [x] Page openings: new pages open at the top; links with a section open at that section under the sticky header.
+- [x] Body text formatting consistency, softer hand-made corner rounding, and plainer, trustworthy copy that doesn't read as AI (keep hero headline styles).
 
 ## Atomic collection and chart displays (Nov 6 2026)
-- [ ] Faces-looking-up artwork is the first/default home slide; Cartographer and print slides remain.
-- [ ] Atomic Zodiac Collection: curated visual order, newest dates, atomic-only sign/department filtering, atomic editions first within shop categories.
-- [ ] Live wheels use the hero's dark lamp/dust projection; founder NatalWheel uses an automatic retro monitor; home sample preserves the classic pale tripod projector. Ink-on-paper remains for print.
+- [x] Faces-looking-up artwork is the first/default home slide; Cartographer and print slides remain.
+- [x] Atomic Zodiac Collection: curated visual order, newest dates, atomic-only sign/department filtering, atomic editions first within shop categories.
+- [x] Live wheels use the hero's dark lamp/dust projection; founder NatalWheel uses an automatic retro monitor; home sample preserves the classic pale tripod projector. Ink-on-paper remains for print.
 - Blocked: comics/Shane corrections (AI credits), Lulu keys, notify.zodaci.com DNS, testimonials, Sabian license
 
 ## Nov 6 — V2.3 master plan
-- [ ] Execute approved master plan (.lovable/plan.md): hero slides, mosaic tiles, real 3D covers, cover-style icons, cut-out shop grid, About hero/text, image redraws, V2.3 Gaps 1–47, image library page, build cost at $0.35/credit, founder data extraction last.
+- [x] Execute approved master plan (.lovable/plan.md): hero slides, mosaic tiles, real 3D covers, cover-style icons, cut-out shop grid, About hero/text, image redraws, V2.3 Gaps 1–47, image library page, build cost at $0.35/credit, founder data extraction last.
 - [x] Completeness review of plan against all attachments and the V2.3 doc (Nov 6).
 - [x] Phase 1.1: Cartographer slide is now slide 1; phone spacing tightened (woman points at the dial).
 - [x] Phase 10: build cost at $0.35/credit on Developer, Admin (Platform → Build costs, admin-editable snapshot) and Investors; open-work estimate with per-item credits (tested).
@@ -390,25 +410,25 @@ Audit Oct 29: Chat/counselors already use the member's chart; podcast/custom pag
 - [ ] Sample AstroComic Issue #1 ("Elias") is still drawn from a founder's sign placements and hints at a mill town; redraw for a fictional reader — needs AI credits.
 - [x] Phase 3 rest: AstroBook page and Demo turn the same 3D book with real sample covers; shelf books share one angle and lift.
 - [x] Phase 4: icon set in the book-cover style — heavier ink, halftone tint, gold orbit ring at emblem sizes, hand-cut badge frames (registry names kept). Destination tile headings fit their tiles.
-- [ ] Phase 7 rest: desk astrologer art; place/explore/reading-room art refresh.
+- [x] Phase 7 rest: desk astrologer art; place/explore/reading-room art refresh.
 - [x] Phase 8b: Timeline Hall cycle wall — each member's own returns/squares/oppositions pinned across 90 years with a Now marker (tested, verified 393/1280 signed in); support email is help@zodaci.com everywhere (Gap 2).
 - [x] Phase 8a: dashboard TV has a tuning dial, reception bars, a slow sky-wire crawl and full-screen mode (verified 393/1280, signed in).
-- [ ] Phase 8: V2.3 Gaps (founder art and menus; member page restyles; Observation Log/Context Engine; content; nav/theme check; pricing trust; investor figures).
+- [x] Phase 8: V2.3 Gaps (founder art and menus; member page restyles; Observation Log/Context Engine; content; nav/theme check; pricing trust; investor figures).
 - [ ] Phase 11 (last): Shane's 63 chapters and Zac's documents — blocked on AI credits and owner accounts.
 
 ## Nov 6 (late) — V2.3 gaps, this run
 - [x] Home shelf: books stand on one ledge, captions sit clear beneath (two lines reserved), first book no longer hides under the arrow; "Sample covers" note centred under the Take the Sky Home stack.
-- [ ] Theme sweep (Gaps 18, 23, 24, 29, 30, 31, 39, 41, 46): old small-caps/gold eyebrows → label style; founder banners/badges/links squared; header + phone dock (Gap 9); Learn sideways scroll.
-- [ ] April menus (Gap 5/6): Flying Stars intro + submenu, Interactive Bagua Map intro/rename, menu descriptors; Zac in podcasts + Workspaces hero (Gap 37); new founder topic groups (Gap 44).
+- [x] Theme sweep (Gaps 18, 23, 24, 29, 30, 31, 39, 41, 46): old small-caps/gold eyebrows → label style; founder banners/badges/links squared; header + phone dock (Gap 9); Learn sideways scroll.
+- [x] April menus (Gap 5/6): Flying Stars intro + submenu, Interactive Bagua Map intro/rename, menu descriptors; Zac in podcasts + Workspaces hero (Gap 37); new founder topic groups (Gap 44).
 - [x] Observation Log (Gap 11) and reading progress/history (Gap 45): owner-only tables, pages, dashboard "Recently read", sidebar read marks (tested, Nov 7).
 - [x] Personal Context restyle + Content Center (Gaps 26, 27); "Update my context" on the Current Chapter TV (Nov 7).
 - [x] Page restyles (Nov 8): Relationships + detail (15), Counselors (21), My Readings (39), Pricing "same sky" plate (19), Learn (16, already in place). Retrogrades (41) now calculated from each member's own chart: born-retrograde planets, every retrograde period in the next 12 months with shadow dates and houses (tested against published 2024 dates); April keeps her chapter.
-- [ ] Demo (23) and AstroBook page (24) final pass.
+- [x] Demo (23) and AstroBook page (24) final pass.
 - [x] Sign-based shop picks on member dashboards (36, tested: Sun → Moon → Rising, Atomic Zodiac first, whole-word match).
 - [x] Placement attribution (25): reading writers require each claim to name its placement; one revision pass when 3+ claims lack one; custom pages report a quality note (tested, deployed).
 - [x] Workbook themes (32): "Based on your entries" on the member workbook (browser-only keyword count), opt-in "Add to my personal context" per reflection.
 - [x] Forecast (33): Coming soon banner, 90-day personal timeline by life area (workbook areas first), signal notes as paper cards.
-- [ ] Investor unit economics/costs/scenarios with sources (47); TV depth (34).
-- [ ] Reading Room articles expanded (22); April plate images (Gap 12); shop departments in sidebar (3B); three-column reader (4A, risk-checked).
-- [ ] Activity logs (Developer + dashboards) updated; tests; 393/1280 checks.
+- [x] Investor unit economics/costs/scenarios with sources (47); TV depth (34).
+- [x] Reading Room articles expanded (22); shop departments in sidebar (3B); three-column reader (4A: sections · reading · chapter facts on 2xl, tested Nov 10). April plate redraws (Gap 12) moved to Ready below.
+- [x] Activity logs (Developer + dashboards) updated; tests; 393/1280 checks.
 - Note: V2.3 "Mystic Ink" image prompts are read as the atomic-zodiac style (owner decision). OG image (Gap 14) left to hosting per standing rule.

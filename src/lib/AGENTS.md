@@ -14,3 +14,4 @@
 - shopDepartments groups original catalog types; department filters compose with collection and sign filters so browsing never changes atomic classification.
 - investorEconomics derives prices from the product registries and labels fallback costs as estimates, never supplier quotes or realized profit.
 - currentChapter keeps broadcast reflections deterministic from aspect and natal point; no generated biography or predicted events.
+- readingInsights parses only the reading's own text (written placements, houses, length); it never reads the chart or infers anything about the reader.

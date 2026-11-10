@@ -17,7 +17,7 @@ export const CHANNEL_ICONS: Record<ChannelId, RetroIconComponent> = {
 export const PLACE_ICONS: Record<PlaceScene, RetroIconComponent> = {
   'broadcast-studio': TelevisionIcon, 'astral-mapping': MapIcon, 'navigation-chamber': ShipWheelIcon, 'cosmic-archive': ArchiveIcon,
   'relationship-bureau': RingsIcon, 'research-library': LibraryIcon, 'timeline-hall': HourglassIcon, 'founder-command': ConsoleIcon,
-  'grand-observatory': ObservatoryIcon, 'observation-deck': TelescopeIcon, 'gift-shop': StorefrontIcon, 'radio-room': RadioIcon, 'comic-press': PressIcon,
+  'grand-observatory': ObservatoryIcon, 'observation-deck': TelescopeIcon, 'gift-shop': StorefrontIcon, 'radio-room': RadioIcon, 'comic-press': PressIcon, 'writing-room': PenIcon,
 };
 
 /** Admin console: section and control icons. */

@@ -1380,3 +1380,6 @@ li:hover > .zodiac-coin { transform: rotate(-10deg); }
 .learn-card:hover img { transform: scale(1.03); }
 .learn-card:focus-visible { outline: 2px solid hsl(var(--ring)); outline-offset: 3px; }
 @media (prefers-reduced-motion: reduce) { .learn-card, .learn-card img { transition: none; } .learn-card:hover, .learn-card:hover img { transform: none; } }
+
+/* Phone and tablet: keep the hero projector beam inside the page so it never adds sideways scroll. */
+@media (max-width: 1279px) { .chart-hero-beam { right: 0; } }
