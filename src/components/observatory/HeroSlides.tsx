@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { FilmFx } from '@/components/observatory/FilmFx';
 import cartographer from '@/assets/home/cartographer-guide.jpg';
-import facesHero from '@/assets/home-heads-hero.jpg';
+import facesHero from '@/assets/home/faces-looking-up-atomic.jpg';
 import sunFace from '@/assets/spots/self.jpg';
 import { PRODUCT_ART } from '@/content/productArtwork';
 import comicCutout from '@/assets/products/astrocomic-cutout.webp';
@@ -183,31 +183,36 @@ export function ChartMapSlide({ heading = 'h1', title, script, lines, cta, secon
           <Button asChild variant="signal" size="lg" className="max-w-full"><Link to={cta.to}>{cta.label}<ArrowRight /></Link></Button>
           {secondary && <Button asChild variant="outline" size="lg"><Link to={secondary.to}>{secondary.label}</Link></Button>}
         </div>
-        <ul aria-label="What each planet describes" className="chartmap-planets">
-          {planets.map(p => (
-            <li key={p.name} className="flex min-w-0 items-center gap-2">
-              <span aria-hidden className="hero-planet-glyph">{p.glyph + TP}</span>
-              <span className="min-w-0"><span className="block font-label text-xs tracking-[0.12em] text-primary">{p.name}{p.sign ? ` · ${p.sign}` : ''}</span><span className="block text-[0.7rem] leading-tight text-muted-foreground">{p.meaning}</span></span>
-            </li>
-          ))}
-        </ul>
+      </div>
+      <div className="chartmap-key">
+        <p aria-hidden className="chartmap-key-title">Map key</p>
+          <ul aria-label="What each planet describes" className="chartmap-planets">
+            {planets.map(p => (
+              <li key={p.name} className="flex min-w-0 items-center gap-2">
+                <span aria-hidden className="hero-planet-glyph">{p.glyph + TP}</span>
+                <span className="min-w-0"><span className="block font-label text-xs tracking-[0.12em] text-primary">{p.name}{p.sign ? ` · ${p.sign}` : ''}</span><span className="block text-[0.7rem] leading-tight text-muted-foreground">{p.meaning}</span></span>
+              </li>
+            ))}
+          </ul>
       </div>
     </div>
   );
 }
 
-/** Default slide: the original home hero — a row of 1950s faces looking up at the sky. */
+/** Slide 2: a row of 1950s faces looking up at the zodiac wheel; the copy sits in the open sky to the left of the wheel. */
 export function LookUpSlide({ heading = 'h2', title, script, text, cta, secondary, eager }: { heading?: Heading; title: ReactNode; script: string; text: ReactNode; cta: Cta; secondary?: Cta; eager?: boolean }) {
   const H = heading;
   return (
-    <div className="relative isolate flex min-h-full flex-col justify-start overflow-hidden">
-      <img src={facesHero} alt="A row of 1950s-style faces at the bottom of the frame gaze up at a zodiac wheel, planets and starbursts in an indigo night sky" width={1920} height={1088} loading={eager ? 'eager' : 'lazy'} {...(eager ? { fetchpriority: 'high' } : {})} className="absolute inset-0 -z-20 h-full w-full object-cover object-[30%_100%] sm:object-bottom" />
-      <div aria-hidden className="absolute inset-0 -z-10 bg-gradient-to-b from-background/85 via-background/40 to-transparent sm:bg-gradient-to-r sm:from-background/85 sm:via-background/30 sm:to-transparent" />
-      <div className="px-6 pb-48 pt-10 sm:px-12 sm:pb-56 sm:pt-14">
-        <H className="hero-headline max-w-2xl">{title}</H>
+    <div className="hero-night lookup-slide">
+      <img src={facesHero} alt="A row of 1950s faces along the bottom of the frame gaze up at a cream and gold zodiac wheel ringed by orbiting planets in a navy night sky" width={1920} height={1088} loading={eager ? 'eager' : 'lazy'} {...(eager ? { fetchpriority: 'high' } : {})} className="lookup-art" />
+      <div aria-hidden className="lookup-shade" />
+      <FilmFx motes={10} specks={4} tone="glow" />
+      <div className="lookup-copy">
+        <H className="hero-headline">{title}</H>
         <p className="mt-2 font-script text-3xl text-primary sm:text-4xl">{script}</p>
-        <div className="mt-4 max-w-lg text-lg leading-relaxed text-foreground/90">{text}</div>
-        <div className="mt-6 flex flex-wrap gap-3"><Button asChild size="lg" variant="signal"><Link to={cta.to}>{cta.label}<ArrowRight /></Link></Button>{secondary && <Button asChild variant="outline" size="lg"><Link to={secondary.to}>{secondary.label}</Link></Button>}</div>
+        <span aria-hidden className="lookup-rule" />
+        <div className="max-w-md text-lg leading-relaxed text-foreground/90">{text}</div>
+        <div className="mt-2 flex flex-wrap gap-3"><Button asChild size="lg" variant="signal"><Link to={cta.to}>{cta.label}<ArrowRight /></Link></Button>{secondary && <Button asChild variant="outline" size="lg"><Link to={secondary.to}>{secondary.label}</Link></Button>}</div>
       </div>
     </div>
   );

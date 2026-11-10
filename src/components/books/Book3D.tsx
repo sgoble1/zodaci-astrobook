@@ -7,7 +7,7 @@ import { DEFAULT_CROP } from '@/lib/coverLayout';
  * Interactive 3D AstroBook mockup scaled from the printer spec: US Trade 6 × 9 in softcover,
  * perfect-bound. Spine thickness approximates page count on 80 lb satin stock (~0.0045 in/page).
  */
-export function Book3D({ pages = 250, trimPt = [432, 648], label = '6″ × 9″ · softcover perfect binding', hardcover = false, coverSrc: fixedSrc, name = '', detail, design, onPick }: { pages?: number; trimPt?: [number, number]; label?: string; hardcover?: boolean; coverSrc?: string; name?: string; /** Birth line under the name on designed previews. */ detail?: string; design?: string; /** When given, the preview chips choose the real cover instead of only previewing one. */ onPick?: (key: string) => void }) {
+export function Book3D({ pages = 250, trimPt = [432, 648], label = '6″ × 9″ · softcover perfect binding', hardcover = false, coverSrc: fixedSrc, name = '', detail, design, onPick, spineTitle = 'Zodaci AstroBook' }: { spineTitle?: string; pages?: number; trimPt?: [number, number]; label?: string; hardcover?: boolean; coverSrc?: string; name?: string; /** Birth line under the name on designed previews. */ detail?: string; design?: string; /** When given, the preview chips choose the real cover instead of only previewing one. */ onPick?: (key: string) => void }) {
   const [picked, setCover] = useState(() => COVER_DESIGNS.find(d => d.key === design) ?? COVER_DESIGNS[0]);
   const cover = COVER_DESIGNS.find(d => d.key === design) ?? picked;
   // Without a finished cover, show the chosen design with the same name, subtitle and wordmark as the printed book.
@@ -33,7 +33,11 @@ export function Book3D({ pages = 250, trimPt = [432, 648], label = '6″ × 9″
           style={{ width: w, height: h, transformStyle: 'preserve-3d', transform: `rotateY(${angle}deg) rotateX(4deg)` }}
         >
           <img loading="lazy" decoding="async" draggable={false} src={src} alt="" className="absolute inset-0 h-full w-full rounded-r-sm object-cover shadow-2xl" style={{ transform: `translateZ(${spinePx / 2}px)` }} />
-          <div className="absolute inset-y-0 bg-muted" style={{ left: -spinePx / 2, width: spinePx, transform: 'rotateY(-90deg)', backgroundImage: `url(${src})`, backgroundSize: 'cover', filter: 'brightness(0.6)' }} />
+          {/* Spine: the cover's own left edge stretched round the fold (no squeezed crop or mirrored type), with the printed spine text. */}
+          <div className="b3d-spine" style={{ left: -spinePx / 2, width: spinePx, transform: 'rotateY(-90deg)' }}>
+            <span className="b3d-spine-art" style={{ backgroundImage: `url(${src})`, backgroundSize: `${w * 32}px ${h}px`, backgroundPosition: `${-Math.round(w * 0.42)}px center` }} />
+            <span className="ob-spine-text">{name && spinePx >= 18 && <span className="ob-spine-name">{name}</span>}<span className="ob-spine-title">{spineTitle}</span></span>
+          </div>
           <div className="absolute inset-y-1 bg-card" style={{ left: w - spinePx / 2 - 2, width: spinePx, transform: 'rotateY(90deg)', backgroundImage: 'repeating-linear-gradient(90deg, hsl(var(--foreground) / 0.08) 0 1px, transparent 1px 3px)' }} />
           <div className="absolute inset-0 rounded-r-sm bg-card" style={{ transform: `translateZ(-${spinePx / 2}px)` }} />
         </div>

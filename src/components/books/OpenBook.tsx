@@ -9,13 +9,16 @@ import type { BookLeaf } from '@/content/sampleBookLeaves';
  * either page or a swipe); the closed book sits centred on its cover and closes again on its back cover. Every printed
  * face is also listed as plain text beside the book, so the pages read at any size and with a screen reader.
  */
-export function OpenBook({ leaves, kind = 'book', label, layout = 'side', footer }: { leaves: BookLeaf[]; kind?: 'book' | 'comic'; label: string; layout?: 'side' | 'stacked'; footer?: ReactNode }) {
+export function OpenBook({ leaves, kind = 'book', label, layout = 'side', footer, spine }: { leaves: BookLeaf[]; kind?: 'book' | 'comic'; label: string; layout?: 'side' | 'stacked'; footer?: ReactNode; /** Text printed down the spine (shown while the book is closed). */ spine?: { title: string; name?: string } }) {
   const n = leaves.length;
   const [at, setAt] = useState(0);
   const go = useCallback((d: number) => setAt(a => Math.max(0, Math.min(n, a + d))), [n]);
   const swipe = useRef<number | null>(null);
   const swiped = useRef(false);
   const state = at === 0 ? 'closed' : at === n ? 'back' : 'open';
+  // Leaf spacing sets the block's thickness, so the spine is as deep as the stacked pages.
+  const gap = kind === 'comic' ? 0.7 : 1;
+  const cover = leaves[0]?.front.kind === 'cover' ? leaves[0].front.src : null;
   const visible: BookFace[] = state === 'closed' ? [leaves[0].front] : state === 'back' ? [leaves[n - 1].back] : [leaves[at - 1].back, leaves[at].front];
   const pageNos = visible.map(f => ('page' in f ? f.page : undefined)).filter((p): p is number => p != null);
   const where = state === 'closed' ? 'Front cover' : state === 'back' ? 'Back cover' : pageNos.length ? `Pages ${pageNos.join('–')}` : at === 1 ? 'Inside the cover' : 'Endpapers';
@@ -39,9 +42,10 @@ export function OpenBook({ leaves, kind = 'book', label, layout = 'side', footer
       <div className="min-w-0">
         <div className="ob-stage" data-kind={kind} onPointerDown={down} onPointerUp={up} onPointerCancel={() => { swipe.current = null; }}>
           <div className="ob-book" data-state={state} role="region" aria-roledescription={kind === 'comic' ? 'comic digest' : 'book'} aria-label={`${label}. ${where}. Use the arrow keys to turn pages.`} tabIndex={0} onKeyDown={onKey}>
+            {spine && <BookSpine title={spine.title} name={spine.name} src={cover} stack={n * gap} />}
             {leaves.map((leaf, i) => {
               const turned = i < at;
-              const z = turned ? -(i + 1) * 0.6 : (n - i) * 0.6;
+              const z = turned ? -(i + 1) * gap : (n - i) * gap;
               return (
                 <div key={i} className="ob-leaf" data-turned={turned} aria-hidden onClick={() => tap(turned)} style={{ transform: `rotateY(${turned ? -180 : 0}deg) translateZ(${z}px)` }}>
                   <div className="ob-face ob-face-front"><Face f={leaf.front} kind={kind} /></div>
@@ -59,6 +63,20 @@ export function OpenBook({ leaves, kind = 'book', label, layout = 'side', footer
         {footer}
       </div>
       {layout === 'side' ? reader : <details className="ob-details"><summary className="cursor-pointer text-sm text-primary">Read these pages as text</summary>{reader}</details>}
+    </div>
+  );
+}
+
+/**
+ * The spine, hinged on the cover's left edge. The cover's own left edge is stretched across it, so the cover's colour
+ * bands carry round the fold without a seam, a squeezed crop or mirrored lettering.
+ */
+function BookSpine({ title, name, src, stack }: { title: string; name?: string; src: string | null; stack: number }) {
+  // At least a tenth of the page width deep, extending behind the back cover when the leaf stack itself is thinner.
+  return (
+    <div className="ob-spine" aria-hidden style={{ ['--ob-stack' as string]: `${stack}px`, ['--ob-spine-art' as string]: src ? `url(${src})` : 'none' }}>
+      <span className="ob-spine-art" />
+      <span className="ob-spine-text">{name && <span className="ob-spine-name">{name}</span>}<span className="ob-spine-title">{title}</span></span>
     </div>
   );
 }

@@ -16,6 +16,16 @@ Blocked — owner or outside accounts:
 - [ ] Lulu keys + printed sample · AstroComic printer · notify.zodaci.com DNS records · Resend and Search Console connections · licensed Sabian text · asteroid reference degrees · real testimonials and member counts · approved test purchase.
 - [ ] Owner decisions: World Systems (Volume V) starting edition; AstroBook page-depth targets.
 
+## Nov 10 evening request (in progress)
+- [ ] Shane's 63 chapter corrections saved into his Masterbook (AI credits now available).
+- [ ] April's 16 chapter plates redrawn in the atomic-zodiac style; matching chart-accurate plates for Shane's and Zac's editions.
+- [ ] Personal AstroComic Issue #1 for each buyer and Issue #2 (write + draw from the buyer's chart).
+- [ ] AI Observatory: "Consult the Observatory" answers from chart + transits + chapter + journal + goals, with sources.
+- [ ] 3D AstroBook preview spine: real spine text, cover art wraps onto the spine without cut-off.
+- [ ] Expand Zac's content; review founder full-edition experience (April, Shane, Zac).
+- [ ] Home slideshow: rebalance the main slide layout and chart; new picture and redesigned slide 2 in the current theme.
+- [ ] Layout and flow review across all pages.
+
 ## Nov 10 — AstroBook / AstroComic / Demo fixes (done)
 - [x] One sample reader everywhere: Rosalind Vance (Collector cover) for the sample book, comic, demo reading, podcast and live sample chart; Pluto line fixed (6th house, 4.3° before the Descendant).
 - [x] New sample comic The Garden Gate (lettered cover + six drawn pages + five scripted) replaces the founder-derived issue on AstroComic, Demo and the print page; old issue and art removed. Every placement tested.
