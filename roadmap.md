@@ -15,6 +15,8 @@ Blocked — owner or outside accounts:
 - [ ] Lulu keys + printed sample · AstroComic printer · notify.zodaci.com DNS records · Resend and Search Console connections · licensed Sabian text · asteroid reference degrees · real testimonials and member counts · approved test purchase.
 - [ ] Owner decisions: World Systems (Volume V) starting edition; AstroBook page-depth targets.
 
+Fixed Nov 10: members' Content Center, Observation Log, Reading History and password reset were replaced by My readings (missing from the member page list) — now open, tested and browser-checked; My Chart phone sideways scroll fixed.
+
 Later phases (not started by design): P4 Living AstroBooks · P6 Portraits · P11 Event system.
 
 
