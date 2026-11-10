@@ -26,6 +26,53 @@ Rules:
 - Never invent biography, family details, events, or people. Do not add notes about the editing.
 - Output only the full corrected chapter text in the same format as the input.`;
 
+
+// ---- Deterministic scan: find statements about Shane's own placements that contradict the verified chart. ----
+const SIGNS = ['Aries', 'Taurus', 'Gemini', 'Cancer', 'Leo', 'Virgo', 'Libra', 'Scorpio', 'Sagittarius', 'Capricorn', 'Aquarius', 'Pisces'];
+const FACT_SIGN: Record<string, string> = { Sun: 'Aries', Moon: 'Taurus', Mercury: 'Pisces', Venus: 'Aries', Mars: 'Cancer', Jupiter: 'Libra', Saturn: 'Aquarius', Uranus: 'Capricorn', Neptune: 'Capricorn', Pluto: 'Scorpio', 'North Node': 'Sagittarius', 'South Node': 'Gemini', Chiron: 'Leo', Ascendant: 'Leo', Rising: 'Leo', Midheaven: 'Taurus' };
+const FACT_HOUSE: Record<string, number> = { Sun: 9, Moon: 10, Mercury: 8, Venus: 9, Mars: 12, Jupiter: 3, Saturn: 7, Uranus: 6, Neptune: 6, Pluto: 4, 'North Node': 5, 'South Node': 11, Chiron: 1 };
+const BODY = Object.keys(FACT_SIGN).join('|');
+const SIGN = SIGNS.join('|');
+const RX = [
+  { re: new RegExp(`\\b(${BODY})\\b(?:\\s+(?:is|sits|was|placed|located))?\\s+in\\s+(${SIGN})\\b`, 'g'), body: 1, sign: 2 },
+  { re: new RegExp(`\\b(${SIGN})\\s+(${BODY})\\b`, 'g'), body: 2, sign: 1 },
+];
+const HOUSE_RX = new RegExp(`\\b(${BODY})\\b[^.\\n]{0,40}?\\b(\\d{1,2})(?:st|nd|rd|th)\\s+house`, 'g');
+// Statements about other people, transits or progressions are left alone.
+const OTHER = /\b(transit|transiting|progress|April|Zac|Brandon|partner's|his brother|her\b)/i;
+
+export function scanChapter(text: string) {
+  const paras = text.split(/\n{2,}/);
+  const flagged = new Set<number>();
+  const samples: string[] = [];
+  paras.forEach((para, i) => {
+    for (const { re, body, sign } of RX) {
+      for (const m of para.matchAll(re)) {
+        const b = m[body] === 'Rising' ? 'Ascendant' : m[body];
+        if (FACT_SIGN[b] && FACT_SIGN[b] !== m[sign]) { if (!OTHER.test(para)) { flagged.add(i); if (samples.length < 4) samples.push(m[0]); } }
+      }
+    }
+    for (const m of para.matchAll(HOUSE_RX)) {
+      const h = FACT_HOUSE[m[1]]; if (h && Number(m[2]) !== h && !OTHER.test(para)) { flagged.add(i); if (samples.length < 4) samples.push(m[0]); }
+    }
+  });
+  return { paras, flagged: [...flagged].sort((a, b) => a - b), samples };
+}
+
+const PATCH_INSTRUCTIONS = `You are a careful astrology editor fixing errors in excerpts from one chapter of Shane's private Masterbook.
+The verified chart facts below are authoritative:
+${SHANE_FACTS}
+
+Correct only statements about Shane's own natal placements that contradict these facts (wrong sign, degree, house, retrograde status, rising sign, chart ruler, impossible aspects), and the sentences that interpret those wrong placements.
+Rewrite each wrong sentence so it fits the correct placement, in the same voice, length and depth. Leave statements about other people, transits and progressions untouched. Never invent biography, family details, events or people.
+Output each correction exactly as:
+@@FIND
+<an exact, unique passage copied character for character from the excerpt — one or more whole sentences>
+@@REPLACE
+<the corrected passage>
+@@END
+Output nothing else. If nothing contradicts the facts, output only: NONE`;
+
 const json = (body: unknown, status = 200) => new Response(JSON.stringify(body), { status, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
 
 Deno.serve(async (req) => {
@@ -94,10 +141,47 @@ Deno.serve(async (req) => {
     const saved = await bucket.upload('zac/workbook.json', new Blob([next], { type: 'application/json' }), { upsert: true });
     return saved.error ? json({ error: saved.error.message }, 500) : json({ saved: true });
   }
+
+  // Scan every chapter without AI; only flagged chapters are sent for correction.
+  if (body.action === 'scan') {
+    const rows = Object.entries(edition).filter(([k]) => !k.endsWith('.json')).map(([id, text]) => { const r = scanChapter(text); return { id, flagged: r.flagged.length, samples: r.samples }; });
+    return json({ chapters: rows.length, flagged: rows.filter(r => r.flagged > 0) });
+  }
   if (body.action === 'list') return json({ ids: Object.keys(edition).filter(k => !k.endsWith('.json')) });
   const id = String(body.id ?? '');
   const original = edition[id];
   if (!original || id.endsWith('.json')) return json({ error: 'Unknown chapter.' }, 404);
+
+
+  // Patch mode: send only the flagged paragraphs (and the paragraph after each), apply exact find/replace edits.
+  if (body.action === 'patch') {
+    const { paras, flagged } = scanChapter(original);
+    if (!flagged.length) return json({ id, applied: 0, skipped: 'no contradictions found' });
+    const keep = [...new Set(flagged.flatMap(i => [i, i + 1]).filter(i => i < paras.length))].sort((a, b) => a - b);
+    const excerpt = [paras[0].slice(0, 200), ...keep.filter(i => i > 0).map(i => paras[i])].join('\n\n');
+    const key = Deno.env.get('LOVABLE_API_KEY')!;
+    const prov = createOpenAI({ baseURL: GATEWAY_URL, apiKey: key, headers: { 'Lovable-API-Key': key, 'X-Lovable-AIG-SDK': 'vercel-ai-sdk' } });
+    let out = '';
+    try {
+      const r = streamText({
+        model: prov.responses(CHAT_MODEL), instructions: PATCH_INSTRUCTIONS, maxRetries: 1, maxOutputTokens: 6000,
+        messages: [{ role: 'user', content: `Chapter id: ${id}\n\n${excerpt}` }],
+        providerOptions: { openai: { store: false, forceReasoning: true, reasoningEffort: 'low', reasoningSummary: 'auto', include: ['reasoning.encrypted_content'] } },
+      });
+      for await (const part of r.textStream) out += part;
+    } catch (e) { const g = gatewayError(e); return json({ error: g.message }, g.status); }
+    let text = original; let applied = 0; const missed: string[] = [];
+    for (const m of out.matchAll(/@@FIND\n([\s\S]*?)\n@@REPLACE\n([\s\S]*?)\n@@END/g)) {
+      const find = m[1].trim(), repl = m[2].trim();
+      if (!find || find === repl) continue;
+      if (text.includes(find)) { text = text.split(find).join(repl); applied++; } else missed.push(find.slice(0, 80));
+    }
+    if (!applied) return json({ id, applied: 0, missed, none: /^\s*NONE\s*$/.test(out) });
+    if (body.dryRun) return json({ id, applied, missed, text });
+    const res = await persist(id, text, original.length);
+    const saved = await res.json();
+    return json({ ...saved, applied, missed, after: scanChapter(text).flagged.length });
+  }
 
   // Save a reviewed correction produced by an earlier dry run (owner only; same length guard).
   if (body.action === 'save') {
