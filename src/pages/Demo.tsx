@@ -9,6 +9,10 @@ import { SampleChartDemo } from '@/components/brand/SampleChartDemo';
 import { ComicFlipbook } from '@/components/comic/ComicFlipbook';
 import { ISSUE_1 } from '@/content/comicIssue1';
 import { PLAN_NAME, PLAN_PRICE } from '@/lib/plans';
+import { DEMO_PLANS } from '@/content/demoPlans';
+import { SAMPLE_EDITION } from '@/content/sampleEdition';
+import { PosterHeader } from '@/components/observatory/PosterHeader';
+import libraryArt from '@/assets/reading-room/atomic-research-library.jpg';
 import episode from '@/assets/zodaci-demo-episode.mp3.asset.json';
 import plate2 from '@/assets/plates/plate-02.jpg';
 import plate5 from '@/assets/plates/plate-05.jpg';
@@ -16,7 +20,6 @@ import plate8 from '@/assets/plates/plate-08.jpg';
 import plate11 from '@/assets/plates/plate-11.jpg';
 import plate13 from '@/assets/plates/plate-13.jpg';
 import plate16 from '@/assets/plates/plate-16.jpg';
-import pisces from '@/assets/mystic/pisces-opener.jpg';
 
 /** Fictional sample profile — no real member data is used on this page. */
 const SAMPLE = { name: 'Jules Harbor', facts: 'Sun Virgo · Moon Pisces · Rising Scorpio' };
@@ -35,7 +38,7 @@ const SCRIPT = `Welcome to your Zodaci podcast. Today, ${SAMPLE.name}, we're exp
 
 function PodcastPlayer() {
   return (
-    <div className="glass rounded-lg p-6 space-y-4">
+    <div className="obs-paper p-6 space-y-4">
       <div className="flex flex-wrap items-baseline justify-between gap-2"><p className="font-display text-xl">Your emotional world, Jules</p><p className="text-sm text-muted-foreground">Sample episode · 54 seconds · studio voice</p></div>
       <audio controls preload="none" src={episode.url} className="w-full">Your browser cannot play this sample.</audio>
       <p className="text-sm text-muted-foreground">This is the same voice members hear. Real episodes run 2 to 8 minutes and are written from your own readings, with sources.</p>
@@ -45,11 +48,7 @@ function PodcastPlayer() {
 }
 
 type DemoTier = 'free' | 'full' | 'creator';
-const TIER_SHOWS: Record<DemoTier, { sections: number; points: string[] }> = {
-  free: { sections: 1, points: ['Your full calculated chart', 'Sun, Moon and Rising explained', 'The opening section of each reading'] },
-  full: { sections: 7, points: ['Every section of every reading', 'All planets plus Chiron and the Nodes', 'Your Masterbook to read online'] },
-  creator: { sections: 7, points: ['Everything in Pro', 'New Masterbook chapters on any topic you choose', 'Podcast episodes in a studio voice', 'Arabic Parts, profections and deeper timing'] },
-};
+const TIER_SHOWS = DEMO_PLANS;
 
 /** Illustrated six-volume Masterbook, the structure every member book follows. */
 const VOLUMES = [
@@ -61,11 +60,7 @@ const VOLUMES = [
   { n: 'VI', title: 'Cycles of Time', art: plate16, text: 'Saturn and Jupiter returns, profections and the transits ahead.' },
 ];
 
-const MASTER_SAMPLE = [
-  'Volume I · Chapter 2 — The Moon in Pisces in the Fifth House',
-  'Your Moon sits at 18° Pisces in the fifth house, the room of play, romance and making things. Pisces is a mutable water sign ruled by Neptune, so feelings here want somewhere to go: music, drawing, a story, someone to care for. You take in atmospheres and other people’s moods long before you can name them, and making something is how you work out which of them are yours.',
-  'The Moon’s ruler, Neptune, decides how this plays out. In Jules’s chart Neptune trines the Virgo Sun, so the softness has a practical outlet: care becomes something you do, not just something you feel. The square from Saturn adds the lesson. Feelings that never get named turn into tiredness. This chapter ends with three practices matched to these placements, and the next one follows the same Moon through the houses it rules.',
-];
+const MASTER_SAMPLE = SAMPLE_EDITION.pages[2];
 
 export default function Demo() {
   usePageMeta('Interactive Demo — Free, Pro and Cosmic | Zodaci', 'Switch between Free, Pro and Cosmic on a sample chart, read an illustrated Masterbook chapter, hear a studio-voiced podcast and flip through AstroComic and AstroBook — no sign-up needed.');
@@ -75,12 +70,10 @@ export default function Demo() {
 
   return (
     <main className="mx-auto max-w-5xl space-y-16 px-5 py-12">
-      <header className="space-y-3">
-        <div className="font-label text-xs tracking-[0.16em] text-primary">Interactive demo · fictional sample chart</div>
-        <h1 className="text-4xl md:text-5xl">See every plan, inside and out</h1>
-        <p className="max-w-2xl text-muted-foreground">This demo uses a made-up person, {SAMPLE.name} ({SAMPLE.facts}). Your own readings are written from your exact birth time and place.</p>
-        <div className="flex flex-wrap gap-2"><Button asChild><Link to="/auth?mode=signup&next=/start">Start free with your chart</Link></Button><Button asChild variant="outline"><Link to="/pricing">Compare plans</Link></Button></div>
-      </header>
+      <PosterHeader img={libraryArt} alt="Two astronomers studying charts in a mid-century research library" eyebrow="Zodaci · Sample room" title="The Zodaci demo" script="Open a book. Tune into a reading." tall>
+        <p>Fictional readers, sample chapters and a calculated chart. None of these examples belongs to a member.</p>
+      </PosterHeader>
+      <div className="flex flex-wrap gap-2"><Button asChild><Link to="/auth?mode=signup&next=/start">Start free with your chart</Link></Button><Button asChild variant="outline"><Link to="/pricing">Compare plans</Link></Button></div>
 
       <section aria-label="Zodaci in 24 seconds"><PromoVideo /></section>
 
@@ -89,7 +82,7 @@ export default function Demo() {
       <section className="space-y-5" aria-labelledby="reading-h">
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div><div className="font-label text-xs tracking-[0.16em] text-primary">Core theme reading</div><h2 id="reading-h" className="text-3xl">Emotional World</h2></div>
-          <div role="radiogroup" aria-label="Show the demo as" className="flex rounded-full border border-border p-1">{(['free', 'full', 'creator'] as DemoTier[]).map(t => <button key={t} type="button" role="radio" aria-checked={tier === t} onClick={() => setTier(t)} className={`rounded-full px-4 py-1.5 text-sm transition-colors duration-500 ${tier === t ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:text-foreground'}`}>{PLAN_NAME[t]}{t !== 'free' && <span className="ml-1 opacity-75">{PLAN_PRICE[t].month.replace('/month', '')}</span>}</button>)}</div>
+          <div role="group" aria-label="Show the demo as" className="flex flex-wrap gap-1 border border-border p-1">{(['free', 'full', 'creator'] as DemoTier[]).map(t => <Button key={t} size="sm" variant={tier === t ? 'default' : 'ghost'} aria-pressed={tier === t} onClick={() => setTier(t)}>{PLAN_NAME[t]}{t !== 'free' && <span className="ml-1 opacity-75">{PLAN_PRICE[t].month.replace('/month', '')}</span>}</Button>)}</div>
         </div>
         <div className="grid gap-6 md:grid-cols-[200px_1fr]">
           <nav aria-label="Sections" className="space-y-2 text-sm">
@@ -99,6 +92,7 @@ export default function Demo() {
             <ul className="space-y-1 border-t border-border pt-3 text-xs">{TIER_SHOWS[tier].points.map(p => <li key={p}>✦ {p}</li>)}</ul>
           </nav>
           <article className="space-y-6">
+            <p className="border-b border-border pb-4 text-sm text-muted-foreground">Jules Harbor is an invented writing example ({SAMPLE.facts}), not a verified full chart. The calculated chart above and Rosalind’s chapter below are separate samples. Pro and Cosmic include the same tools; Cosmic has more monthly credits.</p>
             {shown.map(s => <div key={s.title} className="space-y-2"><h3 className="text-xl">{s.title}</h3><p className="leading-relaxed text-muted-foreground">{s.body}</p></div>)}
             {tier === 'free' && <div className="rounded-lg border border-primary/40 bg-primary/5 p-5"><p className="font-medium">Six more sections are locked on Free.</p><p className="text-sm text-muted-foreground">Pro writes the complete reading for every core theme.</p><Button asChild size="sm" className="mt-3"><Link to="/pricing">Unlock Pro</Link></Button></div>}
           </article>
@@ -106,16 +100,16 @@ export default function Demo() {
       </section>
 
       <section className="space-y-6" aria-labelledby="mb-h">
-        <div><div className="font-label text-xs tracking-[0.16em] text-primary">AstroBook and Masterbook</div><h2 id="mb-h" className="text-3xl">A whole book about one chart</h2><p className="max-w-2xl text-muted-foreground">Your AstroBook is written in the same six volumes as our founders’ own editions, calculated from your placements. On Pro you read your Masterbook chapters online; Cosmic adds new chapters on any topic you choose.</p></div>
+        <div><div className="font-label text-xs tracking-[0.16em] text-primary">AstroBook and Masterbook</div><h2 id="mb-h" className="text-3xl">A whole book about one chart</h2><p className="max-w-2xl text-muted-foreground">Six volumes organize your placements, houses, aspects and timing. Pro and Cosmic both include online chapters and custom topics. Writing uses your available AI credits; a subscription does not automatically write all six volumes.</p></div>
         <ol className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{VOLUMES.map(v => <li key={v.n} className="vellum overflow-hidden"><img src={v.art} alt={`Illustrated plate for Volume ${v.n}, ${v.title}`} width={800} height={1000} loading="lazy" className="aspect-[4/3] w-full object-cover" /><div className="p-4"><p className="font-label text-[10px] tracking-[0.14em] text-primary">Volume {v.n}</p><h3 className="text-xl">{v.title}</h3><p className="mt-1 text-sm text-muted-foreground">{v.text}</p></div></li>)}</ol>
-        <article className="parchment grid gap-6 p-6 md:grid-cols-[240px_1fr]" aria-label="Sample Masterbook chapter">
-          <img src={pisces} alt="Storybook illustration for the Moon in Pisces" width={800} height={1000} loading="lazy" className="w-full rounded-sm border border-border object-cover" />
-          <div className="space-y-3"><p className="font-label text-xs tracking-[0.16em] text-primary">Sample chapter · Jules Harbor</p><h3 className="text-2xl">{MASTER_SAMPLE[0]}</h3>{MASTER_SAMPLE.slice(1).map(t => <p key={t.slice(0, 20)} className="leading-relaxed">{t}</p>)}<p className="text-xs text-muted-foreground">Jules is fictional. In your Masterbook every degree, house and aspect is calculated from your own birth moment.</p></div>
+        <article className="obs-paper grid gap-6 p-6 md:grid-cols-[240px_minmax(0,1fr)]" aria-label="Sample Masterbook chapter">
+          <img src={MASTER_SAMPLE.image} alt={MASTER_SAMPLE.imageAlt} width={1024} height={1024} loading="lazy" className="w-full border border-border object-cover" />
+          <div className="min-w-0 space-y-3"><p className="font-label text-xs text-primary">Sample chapter · {SAMPLE_EDITION.owner}</p><h3 className="text-2xl">{MASTER_SAMPLE.title}</h3><p className="font-label text-sm text-accent">{MASTER_SAMPLE.placement}</p>{MASTER_SAMPLE.body.map(t => <p key={t.slice(0, 20)} className="leading-relaxed">{t}</p>)}<p className="text-xs text-muted-foreground">Rosalind is fictional. These positions are calculated from the birth details printed on the sample Collector cover. The prose is interpretation, not a biography.</p></div>
         </article>
       </section>
 
       <section className="space-y-5" aria-labelledby="pod-h">
-        <div><div className="font-label text-xs tracking-[0.16em] text-primary">Cosmic plan</div><h2 id="pod-h" className="text-3xl">Podcast studio</h2><p className="text-muted-foreground">Turn any reading into a narrated episode saved to your library.</p></div>
+        <div><div className="font-label text-xs tracking-[0.16em] text-primary">Pro & Cosmic</div><h2 id="pod-h" className="text-3xl">Podcast studio</h2><p className="text-muted-foreground">Turn a reading into a narrated episode saved to your private library. Both paid plans include the studio; generation uses AI credits.</p></div>
         <PodcastPlayer />
       </section>
 
