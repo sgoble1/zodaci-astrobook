@@ -17,6 +17,14 @@ Blocked — owner or outside accounts:
 
 Fixed Nov 10: members' Content Center, Observation Log, Reading History and password reset were replaced by My readings (missing from the member page list) — now open, tested and browser-checked; My Chart phone sideways scroll fixed.
 
+## Nov 10 — AstroBook / AstroComic / Demo fixes (this run)
+- [ ] One sample reader everywhere: Rosalind Vance (Collector cover) for the sample book, comic preview, demo reading, podcast and sample chart; fix the Pluto house line in her sample pages.
+- [ ] New sample comic for Rosalind in the shop's golden-age comic style (cover + six drawn pages + scripted pages), replacing the founder-derived "Elias" issue on AstroComic, Demo and the print page.
+- [ ] AstroComic page: remove the AstroBook pages and book photos; hero becomes a 3D comic digest that opens and turns pages.
+- [ ] AstroBook: 3D book opens and turns through real interior pages (bookplate, birth facts, planet table, plates); signed-in members can open one built from their own chart; cover section loses the unrelated photo.
+- [ ] Demo: same reader across reading, podcast, chart, comic and book; re-voice the podcast for her.
+- [ ] Tests, browser checks at 393/1280, activity logs.
+
 Later phases (not started by design): P4 Living AstroBooks · P6 Portraits · P11 Event system.
 
 
