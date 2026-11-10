@@ -208,7 +208,9 @@ Deno.serve(async (req) => {
   return await persist(id, text, original.length);
 
   async function persist(id: string, text: string, before: number) {
-    if (!(await load('shane/edition.original.json'))) {
+    // Check the one-time backup by listing, not downloading, so large editions stay within the worker's memory.
+    const { data: listed } = await bucket.list('shane', { search: 'edition.original.json' });
+    if (!listed?.some(f => f.name === 'edition.original.json')) {
       const backup = await bucket.upload('shane/edition.original.json', new Blob([JSON.stringify(edition)], { type: 'application/json' }), { upsert: false });
       if (backup.error && !/exists/i.test(backup.error.message)) return json({ error: 'Backup failed; nothing saved.' }, 500);
     }

@@ -17,7 +17,7 @@ Blocked — owner or outside accounts:
 - [ ] Owner decisions: World Systems (Volume V) starting edition; AstroBook page-depth targets.
 
 ## Nov 10 evening request
-- [x] Shane's Masterbook corrections: all 63 chapters scanned without AI; flagged chapters patched sentence by sentence and saved (original backup kept). See status note below for any chapter still flagged.
+- [x] Shane's Masterbook corrections: all 63 chapters scanned without AI; flagged chapters patched sentence by sentence and saved (original backup kept). 41 chapters corrected and saved; the rest had no wrong facts about Shane. One chapter (sm-29, one Capricorn Moon mention) fails on the server's memory limit and is still open.
 - [x] AI Observatory: /observatory "Consult the Observatory" (chart + today's sky + Current Chapter + Observation Log + opted-in context, source tags, Pro/credit gated); in the Readings menu.
 - [x] 3D AstroBook preview and openable book/comic: printed spine (name + title), cover colour carried round the fold, no squeezed crop.
 - [x] Home slideshow: Cartographer slide rebalanced with a map key, bigger dial; slide 2 redrawn (faces looking up, current comic style, all 12 signs checked) with cleaner phone layout.
