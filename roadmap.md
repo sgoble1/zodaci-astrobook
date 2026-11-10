@@ -4,7 +4,7 @@
 All buildable V2.3, Implementation Brief and AstroBook/AstroComic/Demo items are done; everything still open is blocked or optional.
 
 Ready (optional polish):
-- [x] April's sixteen Compendium illustrations refreshed Nov 10: four coordinated atomic-zodiac sheets split into sixteen private images; saved with an original-edition backup, all sixteen verified in her authorized gallery. Symbolic scenes do not claim biography; readings and chart modules unchanged. Separate Birth Chart Book plates remain unchanged.
+- [x] April's private artwork refreshed Nov 10: sixteen Compendium illustrations, fifteen Birth Chart Book plates and six Explore pictures. Two additional six-picture sheets supplied missing subjects; existing new artwork reused only for matching themes. All replacements read back exactly, original editions backed up, readings/chart modules unchanged. Authorized gallery, book chapter and Explore verified; nine privacy tests pass. Fixed chapter Markdown stripping authorized JPEG images.
 - [ ] Phone 393px pass on My Chart wheel looks after future chart changes (last checked Nov 10).
 - [ ] After the next publish, delete the retired demo podcast asset (zodaci-demo-episode.mp3) so the live site never points at a removed file.
 
@@ -21,7 +21,7 @@ Blocked — owner or outside accounts:
 - [x] AI Observatory: /observatory "Consult the Observatory" (chart + today's sky + Current Chapter + Observation Log + opted-in context, source tags, Pro/credit gated); in the Readings menu.
 - [x] 3D AstroBook preview and openable book/comic: printed spine (name + title), cover colour carried round the fold, no squeezed crop.
 - [x] Home slideshow: Cartographer slide rebalanced with a map key, bigger dial; slide 2 redrawn (faces looking up, current comic style, all 12 signs checked) with cleaner phone layout.
-- [ ] Matching artwork for Shane's and Zac's editions remains open; April's sixteen Compendium illustrations are refreshed and verified (Nov 10). Separate Birth Chart Book plates are not part of that gallery refresh.
+- [ ] Matching artwork for Shane's and Zac's editions remains open; April's Compendium, Birth Chart Book plates and Explore artwork are refreshed and verified (Nov 10).
 - [ ] Personal AstroComic Issue #1 / Issue #2: no comic subscribers yet, so there is no buyer issue to write or draw. Drafting per buyer (buildComicIssue, issue 1 then 2) and Admin artwork already exist; runs when the first subscriber joins.
 - [ ] Expand Zac's content; founder full-edition walkthrough (April, Shane, Zac); layout and flow review of every page — not started (credits).
 

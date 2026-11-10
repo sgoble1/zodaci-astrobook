@@ -8,12 +8,12 @@ import { privateImage } from '@/content/privateAssets';
 import { MemberExploreHub } from '@/components/layout/ExploreHub';
 
 const ART: Record<string, { src: string; alt: string }> = {
-  chart: { src: 'explore/chart.jpg', alt: 'Etched zodiac wheel above an open book' },
-  timing: { src: 'explore/timing.jpg', alt: 'Star-filled hourglass beside a road of moon phases' },
-  growth: { src: 'explore/growth.jpg', alt: 'Woman with a lantern watching a seedling grow from a journal' },
-  relationships: { src: 'explore/relationships.jpg', alt: 'Two overlapping zodiac wheels above reaching hands' },
-  home: { src: 'explore/home.jpg', alt: 'Calm room with a compass and bagua pattern on the floor' },
-  sources: { src: 'explore/sources.jpg', alt: 'Candlelit library with open astrology books' },
+  chart: { src: 'explore/chart.jpg', alt: 'Atomic-zodiac dial beside an open notebook' },
+  timing: { src: 'explore/timing.jpg', alt: 'Star-filled hourglass beside a brass compass' },
+  growth: { src: 'explore/growth.jpg', alt: 'Woman reflecting in her journal at a warm observatory desk' },
+  relationships: { src: 'explore/relationships.jpg', alt: 'Two adults comparing overlapping zodiac diagrams' },
+  home: { src: 'explore/home.jpg', alt: 'Mid-century room with a water vase, compass and symbolic bagua pattern' },
+  sources: { src: 'explore/sources.jpg', alt: 'Woman reading an astronomical reference book in a lamp-lit library' },
 };
 
 type DiscoveryItem = {
@@ -107,7 +107,7 @@ function AprilDiscover() {
           </div>
           <span className="text-xs text-muted-foreground">{visibleItems.length} places to explore</span>
         </div>
-        {april && ART[active] && <img loading="lazy" decoding="async" src={privateImage(ART[active].src)} alt={ART[active].alt} width={1152} height={640} className="mt-5 aspect-[16/7] w-full rounded border border-border object-cover gentle-fade" />}
+        {april && ART[active] && <img loading="lazy" decoding="async" src={privateImage(ART[active].src)} alt={ART[active].alt} width={640} height={640} className="mt-5 aspect-square w-full max-w-lg rounded border border-border object-contain gentle-fade" />}
         <div className="mt-5 grid gap-4 sm:grid-cols-2">
           {visibleItems.map(item => (
             <article key={`${item.category}-${item.to}`} className="overflow-hidden rounded border border-border bg-card/60 p-5">

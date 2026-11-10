@@ -2,7 +2,8 @@ import { LoadFailed } from '@/components/common/LoadFailed';
 import { withPlates } from '@/content/plates';
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import ReactMarkdown from 'react-markdown';
+import ReactMarkdown, { defaultUrlTransform } from 'react-markdown';
+import { privateImage } from '@/content/privateAssets';
 import remarkGfm from 'remark-gfm';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { loadIndex, type MbEntry } from './Masterbook';
@@ -57,7 +58,13 @@ export default function MasterbookChapter() {
         {text && e && <SummarisePanel key={id} title={e.title} passages={toPassages(text, src?.title ?? 'Masterbook', `${e.label} · ${e.title}`)} />}
         {text === null ? <p className="text-muted-foreground">Opening the page…</p> : (
           <div className="mb-prose">
-            <ReactMarkdown remarkPlugins={[remarkGfm]} components={{
+            <ReactMarkdown remarkPlugins={[remarkGfm]} urlTransform={url => {
+              // Only edition-loaded JPEG plates may bypass Markdown's data-URL block.
+              for (let n = 2; n <= 16; n++) {
+                if (url.startsWith('data:image/jpeg;base64,') && url === privateImage(`plates/plate-${String(n).padStart(2, '0')}.jpg`)) return url;
+              }
+              return defaultUrlTransform(url);
+            }} components={{
               h3: ({ children }) => { const t = String(children); return <h3 id={slug(t)} className="scroll-mt-24">{children}</h3>; },
                           h6: ({ children }) => { const n = String(children).replace(/\D/g, ''); return <h6 id={`p${n}`} className="scroll-mt-24 font-label text-[10px] tracking-[0.14em] text-primary border-t border-border pt-3 mt-8 flex justify-between"><span>{children}</span>{src && <Link to={`/masterbook/pdf/${encodeURIComponent(src.id)}?page=${n}`} className="underline">View this page in the app</Link>}</h6>; },
             }}>{body}</ReactMarkdown>
