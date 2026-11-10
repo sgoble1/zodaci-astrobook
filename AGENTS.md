@@ -21,6 +21,7 @@
 - Signed-out AppShell shows public chrome only on SIGNED_OUT_PATHS, otherwise /auth?next=; no member menu/data.
 
 ## Charts and content
+- Public guides use the shared NavigatedProse reader; demo plan comparisons use content/demoPlans and calculated chapter samples use sampleEdition to avoid divergent access claims or invented degrees.
 - ChartWheel renders computed charts; fixed-star contacts parse Compendium star degrees.
 - Live zodiac wheels share ChartProjection and global chart tokens so member, public and founder slides remain consistent without changing chart geometry. Default is the dark hero projector; NatalWheel uses the retro monitor automatically and SampleChartDemo preserves the classic pale tripod projector.
 - Relationships use owner-only RLS; Needs use saved birth facts, never invented biography.

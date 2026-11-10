@@ -5,6 +5,8 @@
 export type SiteUpdate = { date: string; title: string; text: string; to?: string; cta?: string };
 
 export const SITE_UPDATES: SiteUpdate[] = [
+  { date: '2026-11-10', title: 'More guides in Learn', text: 'New guides cover unknown birth times, aspect orbs and checking forecasts. Each guide now keeps your reading position when you sign in.', to: '/learn#guides', cta: 'Read the guides' },
+  { date: '2026-11-10', title: 'A clearer sample room', text: 'The demo compares Pro and Cosmic with the same tools and different monthly credits. Its printed chapter uses a calculated fictional reader.', to: '/demo', cta: 'Open the demo' },
   { date: '2026-11-09', title: 'More on every TV channel', text: 'See each contact explained, its timing and a reflection question, with calculation times and birth-time limits.', to: '/dashboard#broadcast-studio', cta: 'Tune in' },
   { date: '2026-11-09', title: 'Browse by department', text: 'Books, stickers, bags, clothing, home goods and stationery now group the shop’s product types. Atomic Zodiac and sign filters still work together.', to: '/store', cta: 'Browse the shop' },
   { date: '2026-11-08', title: 'Your forecast and workbook', text: 'See 90 days of chart contacts by life area. Workbook reflections can be added to private personal context only when you choose.', to: '/forecast', cta: 'Open Forecast' },
