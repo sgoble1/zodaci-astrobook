@@ -7,10 +7,8 @@ import { StripeEmbeddedCheckout } from '@/components/payments/StripeEmbeddedChec
 import { PaymentTestModeBanner } from '@/components/payments/PaymentTestModeBanner';
 import { ComicPageView } from '@/components/comic/ComicPageView';
 import { ComicFlipbook } from '@/components/comic/ComicFlipbook';
-import { ISSUE_1, ISSUE_1_SCRIPTED } from '@/content/comicIssue1';
+import { SAMPLE_ISSUE, SAMPLE_ISSUE_SCRIPTED } from '@/content/sampleComic';
 import { ComicReader } from '@/components/comic/ComicReader';
-import { EditionPages } from '@/components/book/EditionPages';
-import { SAMPLE_EDITION } from '@/content/sampleEdition';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { useJsonLd } from '@/hooks/useJsonLd';
 import { useSession } from '@/hooks/useLibrary';
@@ -21,8 +19,8 @@ import { ART_RULES, buildComicIssue, CAST, COMIC_FAQ, COMIC_PLANS, COMIC_SPEC, f
 import cast from '@/assets/astrocomic-cast.jpg';
 import skyPanel from '@/assets/astrocomic-sky-panel.jpg';
 import letterPanel from '@/assets/astrocomic-letter-panel.jpg';
-import { ProductArtworkGallery } from '@/components/books/ProductArtworkGallery';
-import { PRODUCT_ART } from '@/content/productArtwork';
+import { OpenComicDigest } from '@/components/books/OpenAstroBook';
+import { SAMPLE_READER } from '@/content/sampleBookLeaves';
 import { PersonalizationCallout } from '@/components/books/PersonalizationStory';
 import { useNextComicIssue } from '@/hooks/useNextComicIssue';
 import { comicIssueTitle } from '@/lib/shopPresentation';
@@ -98,34 +96,28 @@ export default function AstroComic() {
           {session && <p className="mt-4 text-sm"><Link to="/my-comic" className="text-primary underline underline-offset-4">Already subscribed? Open My AstroComic</Link></p>}
           <PersonalizationCallout product="comic" className="mt-6" />
         </div>
-        <ProductArtworkGallery comic />
+        <div className="product-art-gallery obs-paper p-3 sm:p-4" aria-label="Sample AstroComic digest"><OpenComicDigest /></div>
       </section>
 
       <section aria-labelledby="issue1-h">
-        <h2 id="issue1-h" className="font-display text-3xl">Read the sample issue: {ISSUE_1.title}</h2>
-        <p className="mt-2 mb-8 max-w-2xl text-muted-foreground">Seven drawn pages in the Lantern &amp; Ink style, written from one real chart. It shows the craft; your own Issue #1 is a new story drawn from your chart. Turn the pages here, or open the full sample to read every panel before you subscribe.</p>
-        <ComicFlipbook issue={ISSUE_1} />
-        <div className="mt-8 flex flex-wrap gap-3"><ComicReader issue={ISSUE_1} scripted={ISSUE_1_SCRIPTED} /><Button asChild size="lg" variant="outline"><Link to="/astrocomic/print-issue-1">Print the sample — sizes &amp; pages<ArrowRight /></Link></Button></div>
-      </section>
-
-      <section aria-labelledby="book-h" className="space-y-6">
-        <div><p className="font-label text-xs tracking-[0.16em] text-primary">Inside a sample AstroBook</p><h2 id="book-h" className="mt-1 font-display text-3xl">Three full pages of {SAMPLE_EDITION.owner}’s book</h2><p className="mt-2 max-w-2xl text-muted-foreground">The comic tells the story; the book explains the chart behind it. {SAMPLE_EDITION.note}</p></div>
-        <EditionPages pages={SAMPLE_EDITION.pages} />
-        <Button asChild variant="outline"><Link to="/astrobook">See the AstroBook<ArrowRight /></Link></Button>
+        <h2 id="issue1-h" className="font-display text-3xl">Read the sample issue: {SAMPLE_ISSUE.title}</h2>
+        <p className="mt-2 mb-8 max-w-2xl text-muted-foreground">Six drawn pages for {SAMPLE_READER.name}, the same fictional reader as our sample AstroBook. Every placement named in the story is calculated for her birth minute. Your own Issue #1 is a new story drawn from your chart and that month’s sky.</p>
+        <ComicFlipbook issue={SAMPLE_ISSUE} />
+        <div className="mt-8 flex flex-wrap gap-3"><ComicReader issue={SAMPLE_ISSUE} scripted={SAMPLE_ISSUE_SCRIPTED} /><Button asChild size="lg" variant="outline"><Link to="/astrocomic/print-issue-1">Print the sample — sizes &amp; pages<ArrowRight /></Link></Button></div>
       </section>
 
       <section id="preview" aria-labelledby="preview-h" className="scroll-mt-6">
         <div className="flex flex-wrap items-end justify-between gap-4">
-          <div><h2 id="preview-h" className="font-display text-3xl">{personal ? `Your first three pages, ${preview.reader}` : 'A three-page preview'}</h2><p className="mt-2 max-w-2xl text-muted-foreground">{personal ? `Calculated from your saved chart for ${preview.monthLabel}. The story centers on: ${preview.mainEvent}.` : `Shown for our fictional reader Olivia Chen (Pisces Sun). Sign in with your birth details to preview your own issue.`}</p></div>
+          <div><h2 id="preview-h" className="font-display text-3xl">{personal ? `Your first three pages, ${preview.reader}` : 'A three-page preview'}</h2><p className="mt-2 max-w-2xl text-muted-foreground">{personal ? `Calculated from your saved chart for ${preview.monthLabel}. The story centers on: ${preview.mainEvent}.` : `Shown for our fictional reader ${SAMPLE_READER.name} (Taurus Sun, Cancer Moon). Sign in with your birth details to preview your own issue.`}</p></div>
           {!personal && <Button asChild variant="outline"><Link to={session ? '/start' : `/auth?mode=signup&next=${encodeURIComponent('/astrocomic#preview')}`}>Preview my own issue</Link></Button>}
         </div>
         <div className="mt-8 grid gap-5 sm:grid-cols-3">{preview.pages.slice(0, 3).map(p => <ComicPageView key={p.n} page={p} art={PREVIEW_ART} />)}</div>
-        <p className="mt-3 text-xs text-muted-foreground">Sample illustrations accompany {personal ? 'your calculated sky positions and personal letter' : 'Olivia’s calculated sky positions and letter'}. Each printed issue receives artwork for its own story.</p>
+        <p className="mt-3 text-xs text-muted-foreground">Sample illustrations accompany {personal ? 'your calculated sky positions and personal letter' : `${SAMPLE_READER.name.split(' ')[0]}’s calculated sky positions and letter`}. Each printed issue receives artwork for its own story.</p>
       </section>
 
       <section aria-labelledby="inside-h" className="grid gap-10 lg:grid-cols-2">
         <div><h2 id="inside-h" className="font-display text-3xl">What’s in every issue</h2><ol className="mt-6 divide-y divide-border border-y border-border">{PAGE_MAP.map(([n, t]) => <li key={n} className="grid grid-cols-[4rem_1fr] gap-3 py-2.5 text-sm"><span className="text-gold">p. {n}</span><span>{t}</span></li>)}</ol></div>
-        <div><img src={PRODUCT_ART.collection.src} alt={PRODUCT_ART.collection.alt} width={1536} height={1024} loading="lazy" className="w-full rounded-sm border-2 border-foreground/80" /><p className="mt-3 text-sm text-muted-foreground">Illustrative print collection · AstroComic alongside the AstroBook shop editions.</p></div>
+        <figure><img src={SAMPLE_ISSUE.pages[1].art} alt={SAMPLE_ISSUE.pages[1].panels[0].visualPrompt} width={1536} height={1024} loading="lazy" className="w-full rounded-sm border-2 border-foreground/80" /><figcaption className="mt-3 text-sm text-muted-foreground">Page {SAMPLE_ISSUE.pages[1].pageNumber} of the sample issue, {SAMPLE_ISSUE.pages[1].actTitle}: {SAMPLE_ISSUE.pages[1].placement}.</figcaption></figure>
       </section>
 
       <section aria-labelledby="cast-h">

@@ -64,6 +64,20 @@ export function tightestAspects(c: ChartResult, n = 3): string[] {
 
 const VOLUME_LIST = ['I · The Celestial Matrix', 'II · The Twelve Temples', 'III · Planetary Geometry', 'IV · The Esoteric Points', 'V · World Systems', 'VI · Cycles of Time'];
 
+/** House cusps, 1st to 12th, as sign and degree. Only for a known birth time. */
+export function houseRows(c: ChartResult): [string, string][] {
+  return (c.cusps ?? []).slice(0, 12).map((lon, k) => [`${ORDINAL[k + 1]}${k === 0 ? ' · Ascendant' : k === 9 ? ' · Midheaven' : ''}`, degreeLabel(lon)]);
+}
+
+const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+/** Birth line in the cover style, e.g. "Born 3 May 1987 · 6:42 a.m. · Asheville, North Carolina". */
+export function birthLineOf(date: string, time: string | null, place: string) {
+  const [y, m, d] = date.split('-').map(Number);
+  let t = 'time unknown';
+  if (time) { const [h, min] = time.split(':').map(Number); t = `${h % 12 || 12}:${String(min).padStart(2, '0')} ${h < 12 ? 'a.m.' : 'p.m.'}`; }
+  return `Born ${d} ${MONTHS[m - 1]} ${y} · ${t} · ${place}`;
+}
+
 export interface BookInteriorInput {
   name: string; birthLine: string; chart: ChartResult; timed: boolean; edition: string;
   /** Finished illustrated pages (plate + text) to bind after the chart pages; omitted for chart-only previews. */
@@ -73,18 +87,24 @@ export interface BookInteriorInput {
 }
 
 /**
- * Interior of an openable AstroBook, inside front cover to inside back cover. The bookplate, title page, birth facts
- * and planet table are calculated from the chart; illustrated pages are bound in only when supplied.
+ * Interior of an openable AstroBook, inside front cover to inside back cover. The bookplate, title page, birth facts,
+ * planet table, house cusps and closest contacts are calculated from the chart; illustrated pages are bound in only
+ * when supplied, each plate on a left page facing its text.
  */
 export function bookInterior(i: BookInteriorInput): BookFace[] {
+  let page = 1;
   const faces: BookFace[] = [
     { kind: 'endpaper', eyebrow: 'Ex libris', heading: i.name, lines: [i.birthLine, i.owner === 'sample' ? 'A fictional reader · a real calculation' : 'Calculated from your saved birth details'] },
     { kind: 'title', name: i.name, subtitle: 'Your exact placement in print', edition: `AstroBook · ${i.edition}`, note: 'Six volumes written from one birth chart' },
-    { kind: 'facts', eyebrow: 'Volume I · The Celestial Matrix', heading: 'Birth facts', rows: birthFactRows(i.chart, i.timed), note: i.timed ? `${(i.chart.input.houseSystem ?? 'placidus').replace(/^./, s => s.toUpperCase())} houses · tropical zodiac` : 'Birth time unknown: houses and angles are left out rather than guessed', page: 1 },
-    { kind: 'facts', eyebrow: 'Volume I · The Celestial Matrix', heading: 'The planets', rows: planetRows(i.chart, i.timed), note: `Closest contacts: ${tightestAspects(i.chart).join(' · ')}`, page: 2 },
+    { kind: 'facts', eyebrow: 'Volume I · The Celestial Matrix', heading: 'Birth facts', rows: birthFactRows(i.chart, i.timed), note: i.timed ? `${(i.chart.input.houseSystem ?? 'placidus').replace(/^./, s => s.toUpperCase())} houses · tropical zodiac` : 'Birth time unknown: houses and angles are left out rather than guessed', page: page++ },
+    { kind: 'facts', eyebrow: 'Volume I · The Celestial Matrix', heading: 'The planets', rows: planetRows(i.chart, i.timed), note: 'Tropical zodiac · ℞ marks a planet in retrograde motion', page: page++ },
   ];
-  let page = 3;
-  for (const p of i.pages ?? []) {
+  if (i.timed && i.chart.cusps?.length) faces.push({ kind: 'facts', eyebrow: 'Volume II · The Twelve Temples', heading: 'House cusps', rows: houseRows(i.chart), note: 'Each house runs from its cusp to the next', page: page++ });
+  faces.push({ kind: 'list', eyebrow: 'Volume III · Planetary Geometry', heading: 'Closest contacts', items: tightestAspects(i.chart, 8), note: 'The number is the orb: how far each aspect is from exact', page: page++ });
+  const pages = i.pages ?? [];
+  // A plate must land on a left page (a leaf's back) so it faces its own text.
+  if (pages.length && faces.length % 2 === 1) faces.push({ kind: 'blank' });
+  for (const p of pages) {
     faces.push({ kind: 'plate', src: p.image, alt: p.imageAlt, caption: `Plate ${p.n} · ${p.placement}`, page: page++ });
     faces.push({ kind: 'text', eyebrow: p.volume, title: p.title, placement: p.placement, facts: p.facts.map(f => [f.label, f.value]), body: p.body, reflection: p.reflection, page: page++ });
   }

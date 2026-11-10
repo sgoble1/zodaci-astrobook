@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import type { AstroComicShowcase } from '@/content/comicIssue1';
+import type { AstroComicShowcase } from '@/content/sampleComic';
 
 /**
  * 3D page-turning preview: cover plus every illustrated page. Tilts toward the pointer, turns with buttons, arrow keys
@@ -39,11 +39,13 @@ export function ComicFlipbook({ issue }: { issue: AstroComicShowcase }) {
                 {p == null ? (
                   <>
                     <img src={issue.cover} alt={issue.coverAlt} width={1024} height={1536} className="absolute inset-0 h-full w-full object-cover" />
-                    <div className="absolute inset-x-0 top-0 bg-gradient-to-b from-background/80 via-background/30 to-transparent px-4 pb-10 pt-4">
-                      <p className="font-label text-[10px] tracking-[0.14em] text-primary">{issue.banner}</p>
-                      <p className="mt-1 font-display text-2xl leading-tight sm:text-3xl">{issue.title}</p>
-                    </div>
-                    <p className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-background/95 to-transparent p-4 text-xs italic">{issue.subCaption}</p>
+                    {!issue.lettered && <>
+                      <div className="absolute inset-x-0 top-0 bg-gradient-to-b from-background/80 via-background/30 to-transparent px-4 pb-10 pt-4">
+                        <p className="font-label text-[10px] tracking-[0.14em] text-primary">{issue.banner}</p>
+                        <p className="mt-1 font-display text-2xl leading-tight sm:text-3xl">{issue.title}</p>
+                      </div>
+                      <p className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-background/95 to-transparent p-4 text-xs italic">{issue.subCaption}</p>
+                    </>}
                   </>
                 ) : (
                   <div className="flex h-full flex-col gap-2 p-2.5">
@@ -80,7 +82,7 @@ export function ComicFlipbook({ issue }: { issue: AstroComicShowcase }) {
         {page ? (
           <ol className="mt-5 space-y-4">{page.panels.map((p, i) => <li key={i} className="border-l-2 border-gold/60 pl-4"><p className="text-xs text-muted-foreground">Panel {i + 1}</p><p className="mt-1 leading-relaxed">{p.narration}</p>{p.dialogue && <p className="mt-1 font-semibold">{p.dialogue}</p>}</li>)}</ol>
         ) : (
-          <p className="mt-4 leading-relaxed text-muted-foreground">Seven drawn pages, one real chart. The rising sign sets the scene, the Sun lights the action, the Moon brings the story home — then Mercury, Mars, Saturn and the North Node each take a page. Turn the page to read the script beside the art.</p>
+          <p className="mt-4 leading-relaxed text-muted-foreground">{issue.intro}</p>
         )}
         {at === leaves - 1 && <p className="mt-6 font-label text-xs tracking-[0.16em] text-primary">{issue.footer}</p>}
       </div>

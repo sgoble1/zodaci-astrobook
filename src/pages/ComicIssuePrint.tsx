@@ -2,8 +2,8 @@ import { Link } from 'react-router-dom';
 import { ArrowRight, Printer, ShoppingBag } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { usePageMeta } from '@/hooks/usePageMeta';
-import { ISSUE_1, ISSUE_1_SCRIPTED } from '@/content/comicIssue1';
-import { COMIC_SPEC } from '@/lib/comic';
+import { SAMPLE_ISSUE, SAMPLE_ISSUE_SCRIPTED } from '@/content/sampleComic';
+import { COMIC_PLANS, COMIC_SPEC, firstIssueMonth, monthLabel, shipBy } from '@/lib/comic';
 
 /** Print formats for Issue 1. Trim/bleed match comicPrint.ts (5.5 × 8.5 in digest, 0.125 in bleed, 0.25 in safe zone). */
 const FORMATS = [
@@ -11,47 +11,52 @@ const FORMATS = [
   { name: 'Cover art print', size: '11 × 17 in (279 × 432 mm)', pages: 'Single sheet', binding: 'Unbound, matte poster stock', file: '11.25 × 17.25 in with bleed · 3375 × 5175 px at 300 DPI' },
 ];
 
-/** Issue 1 page plan: cover drawn, three acts scripted with one finished illustration each; the rest follow the standard 24-page issue map. */
+/** How the sample Issue #1 fills 24 pages: cover and six story pages drawn, five scripted, the rest from the standard issue map. */
 const PLAN: [string, string, 'Drawn' | 'Scripted' | 'Planned'][] = [
-  ['1', 'Cover — The Alchemist of the Mill Valley', 'Drawn'],
-  ...ISSUE_1.pages.map(p => [String(p.pageNumber + 1), `${p.actTitle} (${p.placement})`, 'Drawn'] as [string, string, 'Drawn']),
-  ...ISSUE_1_SCRIPTED.map(p => [String(p.pageNumber + 1), `${p.title} (${p.placement})`, 'Scripted'] as [string, string, 'Scripted']),
-  ['14–21', 'Retrograde Watch, Lunar Calendar, House Focus, Reflection Prompts, Constellation', 'Planned'],
-  ['22', 'Next issue: The Starry Compass', 'Planned'],
+  ['1', `Cover — ${SAMPLE_ISSUE.title}`, 'Drawn'],
+  ...SAMPLE_ISSUE.pages.map(p => [String(p.pageNumber + 1), `${p.actTitle} (${p.placement})`, 'Drawn'] as [string, string, 'Drawn']),
+  ...SAMPLE_ISSUE_SCRIPTED.map(p => [String(p.pageNumber + 1), `${p.title} (${p.placement})`, 'Scripted'] as [string, string, 'Scripted']),
+  [`${SAMPLE_ISSUE.pages.length + SAMPLE_ISSUE_SCRIPTED.length + 2}–21`, 'Retrograde Watch, Lunar Calendar, House Focus, Reflection Prompts, Constellation', 'Planned'],
+  ['22', 'Next month preview', 'Planned'],
   ['23–24', 'About Zodaci · Back cover', 'Planned'],
 ];
 
-/** Pre-order delivery plan. Dates are estimates; the stage that is done is derived from the drawn/scripted page lists. */
-const DELIVERY: [string, string, string][] = [
-  ['Pre-orders open', 'Now', 'Order today; you are charged at checkout and your copy is reserved.'],
-  ['Final pages drawn', 'By Nov 20, 2026', `${ISSUE_1_SCRIPTED.length} scripted pages are drawn and lettered; ${ISSUE_1.pages.length} are already finished.`],
-  ['Print proof approved', 'By Nov 25, 2026', 'A physical proof is checked for colour, trim and binding.'],
-  ['Printing', 'Nov 26 – Dec 5, 2026', 'Full print run: 5.5 × 8.5 in, saddle-stitched.'],
-  ['Ships to you', 'Early December 2026', 'US delivery in 3–7 business days after shipping, with tracking by email.'],
-];
+/** What happens after ordering your own Issue #1. The ship-by date comes from the same rule as checkout. */
+function deliverySteps(today = new Date()): [string, string, string][] {
+  const first = firstIssueMonth(today);
+  const ship = shipBy(first).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
+  return [
+    ['You order', 'Today', 'Sign in with your saved birth details and pay once. Your issue is for your own chart, not the sample.'],
+    ['Your story is written', `Before ${monthLabel(first)}`, 'Your Sun, Moon and Rising cast the story; that month’s transits to your chart decide what happens.'],
+    ['Drawn and lettered', `Before ${monthLabel(first)}`, 'Pages are drawn in the same golden-age ink style as the sample and checked against your placements.'],
+    ['Printed', 'Early in the month', 'Full colour, 5.5 × 8.5 in, saddle-stitched.'],
+    ['Ships to you', `By ${ship}`, 'US delivery only, with tracking by email.'],
+  ];
+}
 
 export default function ComicIssuePrint() {
-  usePageMeta(`Print AstroComic Issue #${ISSUE_1.issueNumber} — ${ISSUE_1.title} | Zodaci`, 'Sizes, page count and print specifications for AstroComic Issue 1, The Alchemist of the Mill Valley, with a link to order a printed copy.');
+  usePageMeta(`How AstroComic Issue #1 prints — sample: ${SAMPLE_ISSUE.title} | Zodaci`, `Sizes, page count and print specifications for AstroComic Issue #1, shown with the sample issue ${SAMPLE_ISSUE.title}. Order your own Issue #1, written from your chart, for ${COMIC_PLANS.single.label}.`);
+  const delivery = deliverySteps();
   return (
     <article className="space-y-16">
       <nav aria-label="Breadcrumb" className="text-sm text-muted-foreground"><Link to="/astrocomic" className="underline underline-offset-4">AstroComic</Link> / Print Issue #1</nav>
       <section className="grid items-center gap-10 lg:grid-cols-[1fr_340px]">
         <div>
-          <p className="font-label text-xs tracking-[0.16em] text-primary">{ISSUE_1.banner}</p>
-          <h1 className="mt-3 font-display text-5xl leading-[0.95]">Print Issue #1:<br />{ISSUE_1.title}</h1>
-          <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted-foreground">A 24-page digest comic in the Lantern &amp; Ink style, printed in full color and saddle-stitched. Pre-order now — estimated to ship in early December 2026.</p>
+          <p className="font-label text-xs tracking-[0.16em] text-primary">{SAMPLE_ISSUE.banner}</p>
+          <h1 className="mt-3 font-display text-5xl leading-[0.95]">How Issue #1 prints</h1>
+          <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted-foreground">A 24-page digest comic, printed in full colour and saddle-stitched. The pages here belong to the sample issue, {SAMPLE_ISSUE.title}, drawn for a fictional reader. The sample isn’t sold; your own Issue #1 is written and drawn from your chart.</p>
           <div className="mt-8 flex flex-wrap gap-3">
-            <Button asChild size="lg"><Link to="/product/astrocomic-issue-1-the-alchemist-of-williamsville"><ShoppingBag />Pre-order a printed copy · $18.99</Link></Button>
-            <Button asChild variant="outline" size="lg"><Link to="/astrocomic">Read the preview<ArrowRight /></Link></Button>
+            <Button asChild size="lg"><Link to="/astrocomic?plan=single"><ShoppingBag />Order my own Issue #1 · {COMIC_PLANS.single.label}</Link></Button>
+            <Button asChild variant="outline" size="lg"><Link to="/astrocomic#issue1-h">Read the sample<ArrowRight /></Link></Button>
           </div>
         </div>
-        <img src={ISSUE_1.cover} alt={ISSUE_1.coverAlt} width={1024} height={1536} className="mx-auto w-full max-w-xs rounded-sm border-2 border-foreground/80 shadow-2xl" />
+        <img src={SAMPLE_ISSUE.cover} alt={SAMPLE_ISSUE.coverAlt} width={1024} height={1536} className="mx-auto w-full max-w-xs rounded-sm border-2 border-foreground/80 shadow-2xl" />
       </section>
 
       <section aria-labelledby="deliv-h" className="space-y-4">
-        <h2 id="deliv-h" className="font-display text-3xl">Pre-order delivery timeline</h2>
-        <p className="text-muted-foreground">Estimated dates. If anything slips we email every pre-order with the new date, and you can cancel for a full refund before it ships.</p>
-        <ol className="grid gap-4 md:grid-cols-5">{DELIVERY.map(([t, d, n], i) => <li key={t} className="vellum p-4"><p className="font-label text-xs tracking-[0.16em] text-primary">{d}</p><h3 className="mt-1 text-lg">{t}</h3><p className="mt-1 text-sm text-muted-foreground">{n}</p></li>)}</ol>
+        <h2 id="deliv-h" className="font-display text-3xl">From order to your door</h2>
+        <p className="text-muted-foreground">Dates follow the monthly schedule at checkout. If anything slips we email you the new date.</p>
+        <ol className="grid gap-4 md:grid-cols-5">{delivery.map(([t, d, n], i) => <li key={t} className="vellum p-4"><p className="font-label text-xs tracking-[0.16em] text-primary">{d}</p><h3 className="mt-1 text-lg">{t}</h3><p className="mt-1 text-sm text-muted-foreground">{n}</p></li>)}</ol>
       </section>
 
       <section aria-labelledby="formats-h">
@@ -67,7 +72,7 @@ export default function ComicIssuePrint() {
       <section aria-labelledby="plan-h" className="grid gap-10 lg:grid-cols-2">
         <div>
           <h2 id="plan-h" className="font-display text-3xl">Page count: 24</h2>
-          <p className="mt-2 text-muted-foreground">Saddle-stitched books are printed in multiples of four. Here is how Issue #1 fills its 24 pages.</p>
+          <p className="mt-2 text-muted-foreground">Saddle-stitched books are printed in multiples of four. Here is how the sample Issue #1 fills its 24 pages; yours follows the same map.</p>
           <ol className="mt-6 divide-y divide-border border-y border-border">{PLAN.map(([n, t, done]) => <li key={n} className="grid grid-cols-[4.5rem_1fr_auto] gap-3 py-2.5 text-sm"><span className="text-gold">p. {n}</span><span>{t}</span><span className={done === 'Drawn' ? 'text-gold' : 'text-muted-foreground'}>{done}</span></li>)}</ol>
         </div>
         <div>

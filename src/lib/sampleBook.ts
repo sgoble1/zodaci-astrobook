@@ -7,15 +7,18 @@ import { renderCoverJpeg } from '@/lib/coverRender';
 import { DEFAULT_CROP } from '@/lib/coverLayout';
 import { versionOf } from '@/lib/books';
 
-/** A fictional reader used for the public sample book, so visitors can see the real format. */
+/**
+ * The fictional reader used for the public sample book: the same Rosalind Vance printed on the sample Collector cover,
+ * so the sample book, comic, demo and chart all describe one calculated birth moment.
+ */
 export const SAMPLE_BIRTH: MyBirth = {
-  name: 'Olivia Chen',
-  date: '1992-03-14',
-  time: '07:23',
-  placeLabel: 'Portland, Oregon, USA',
-  lat: 45.5152,
-  lon: -122.6784,
-  tz: 'America/Los_Angeles',
+  name: 'Rosalind Vance',
+  date: '1987-05-03',
+  time: '06:42',
+  placeLabel: 'Asheville, North Carolina',
+  lat: 35.5951,
+  lon: -82.5515,
+  tz: 'America/New_York',
   houseSystem: 'placidus',
 };
 
@@ -38,7 +41,7 @@ const SAMPLE_CHAPTERS = [
   {
     title: 'Your Big Three',
     content: `## A sample from a real AstroBook
-This is a genuine AstroBook, written for a fictional reader ("Olivia Chen", born March 14, 1992 at 7:23 am in Portland, Oregon) so you can see exactly how your book is laid out, formatted and written. Your own book will be written entirely from your chart.
+This is a genuine AstroBook, written for a fictional reader ("Rosalind Vance", born May 3, 1987 at 6:42 am in Asheville, North Carolina) so you can see exactly how your book is laid out, formatted and written. Your own book will be written entirely from your chart.
 
 ## The Sun: your core self
 The Sun describes the center of the chart: the self that grows more visible over a lifetime. In this sample chart, the Sun's sign colors everything else — the ambitions, the way love is given, even the way rest is taken. Read the Sun as a promise rather than a task: it is what a person is becoming, and the chart's other placements show the tools they have for the journey.

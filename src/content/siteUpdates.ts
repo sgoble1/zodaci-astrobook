@@ -5,6 +5,8 @@
 export type SiteUpdate = { date: string; title: string; text: string; to?: string; cta?: string };
 
 export const SITE_UPDATES: SiteUpdate[] = [
+  { date: '2026-11-10', title: 'Open an AstroBook and turn its pages', text: 'The AstroBook page now opens a real sample book: bookplate, birth facts, planets, houses, aspects and illustrated chapters. Signed in, you can open one built from your own chart.', to: '/astrobook#full-edition', cta: 'Open the book' },
+  { date: '2026-11-10', title: 'A new sample AstroComic', text: 'The Garden Gate is a six-page sample issue in the shop’s golden-age comic style, opened like a printed digest. Every placement in it is calculated.', to: '/astrocomic', cta: 'Read the sample' },
   { date: '2026-11-10', title: 'A side panel for every chapter', text: 'On wide screens, readings show sections on the left and chapter facts on the right: reading time and the placements and houses the chapter names.', to: '/my-readings', cta: 'Open my readings' },
   { date: '2026-11-10', title: 'The Writing Room', text: 'My readings, Personal context and the Content Center now share one Writing Room, with a new desk illustration.', to: '/content-center', cta: 'Visit the Writing Room' },
   { date: '2026-11-10', title: 'More guides in Learn', text: 'New guides cover unknown birth times, aspect orbs and checking forecasts. Each guide now keeps your reading position when you sign in.', to: '/learn#guides', cta: 'Read the guides' },

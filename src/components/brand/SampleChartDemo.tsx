@@ -5,8 +5,10 @@ import { Button } from '@/components/ui/button';
 import { ChartWheel } from '@/components/chart/ChartWheel';
 import { computeChart } from '@/lib/astro';
 import { withDemoAsteroids } from '@/lib/demoAsteroids';
+import { LEAD_COVER as SAMPLE_READER } from '@/content/coverSamples';
 
 const SAMPLES = [
+  { label: `${SAMPLE_READER.name} · 3 May 1987 · Asheville`, ...SAMPLE_READER.birth },
   { label: 'Summer solstice 2000 · London', date: '2000-06-21', time: '12:00', lat: 51.5074, lon: -0.1278, tz: 'Europe/London', placeLabel: 'London, UK' },
   { label: 'New Year 1995 · New York', date: '1995-01-01', time: '09:30', lat: 40.7128, lon: -74.006, tz: 'America/New_York', placeLabel: 'New York, USA' },
   { label: 'Spring equinox 1988 · Sydney', date: '1988-03-20', time: '18:15', lat: -33.8688, lon: 151.2093, tz: 'Australia/Sydney', placeLabel: 'Sydney, Australia' },

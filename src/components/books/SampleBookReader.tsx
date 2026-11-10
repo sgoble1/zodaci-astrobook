@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { BookOpen, ChevronLeft, ChevronRight, ZoomIn, ZoomOut } from 'lucide-react';
 import type { PDFDocumentProxy } from 'pdfjs-dist';
 import { Button } from '@/components/ui/button';
-import { composeSampleBook } from '@/lib/sampleBook';
+import { composeSampleBook, SAMPLE_BIRTH } from '@/lib/sampleBook';
 
 /** Inline reader for the public sample AstroBook PDF, rendered page by page with pdf.js. */
 function Reader({ blob, maxPages }: { blob: Blob; maxPages?: number }) {
@@ -95,7 +95,7 @@ export function SampleBook({ maxPages, cta }: { maxPages?: number; cta?: React.R
   return (
     <div className="space-y-4">
       <Reader blob={blob} maxPages={maxPages} />
-      <p className="text-xs text-muted-foreground">Sample book · fictional reader "Olivia Chen" · Classic version · your AstroBook is written from your own chart.</p>
+      <p className="text-xs text-muted-foreground">Sample book · fictional reader "{SAMPLE_BIRTH.name}" · Classic version · your AstroBook is written from your own chart.</p>
       {cta}
     </div>
   );

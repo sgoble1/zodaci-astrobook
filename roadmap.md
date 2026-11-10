@@ -1,32 +1,33 @@
 # Zodaci roadmap
 
 ## Status — Nov 10 2026 (plan close-out)
-All buildable V2.3 and Implementation Brief items are done; everything still open is blocked or optional.
+All buildable V2.3, Implementation Brief and AstroBook/AstroComic/Demo items are done; everything still open is blocked or optional.
 
-Ready (optional polish, needs image credits):
-- [ ] April's chapter plates (Gap 12) redrawn in the atomic-zodiac style — 16 images in private storage.
+Ready (optional polish):
+- [ ] April's chapter plates (Gap 12) redrawn in the atomic-zodiac style — 16 images in private storage (image credits).
 - [ ] Phone 393px pass on My Chart wheel looks after future chart changes (last checked Nov 10).
+- [ ] After the next publish, delete the retired demo podcast asset (zodaci-demo-episode.mp3) so the live site never points at a removed file.
 
 Blocked — AI credits:
-- [ ] Shane's 63 chapter corrections (Phase 11, last) · Personal AstroComic Issue #1 per buyer and Issue #2 · fictional redraw of the sample Issue #1 · P3b Intelligence Layer / P12 AI Observatory.
+- [ ] Shane's 63 chapter corrections (Phase 11, last) · Personal AstroComic Issue #1 per buyer and Issue #2 · P3b Intelligence Layer / P12 AI Observatory.
 
 Blocked — owner or outside accounts:
 - [ ] Shane Masterbook birth-detail confirmation (23 chapters) · Zac's documents (Phase 11) · April's archive unlock and signed-in April check.
 - [ ] Lulu keys + printed sample · AstroComic printer · notify.zodaci.com DNS records · Resend and Search Console connections · licensed Sabian text · asteroid reference degrees · real testimonials and member counts · approved test purchase.
 - [ ] Owner decisions: World Systems (Volume V) starting edition; AstroBook page-depth targets.
 
+## Nov 10 — AstroBook / AstroComic / Demo fixes (done)
+- [x] One sample reader everywhere: Rosalind Vance (Collector cover) for the sample book, comic, demo reading, podcast and live sample chart; Pluto line fixed (6th house, 4.3° before the Descendant).
+- [x] New sample comic The Garden Gate (lettered cover + six drawn pages + five scripted) replaces the founder-derived issue on AstroComic, Demo and the print page; old issue and art removed. Every placement tested.
+- [x] AstroComic page: AstroBook pages and book photos removed; hero is a 3D comic digest that opens and turns pages.
+- [x] AstroBook: 3D book opens and turns through bookplate, title, birth facts, planets, house cusps, closest contacts and plates facing their text; signed-in members switch to a book built from their own chart (browser-checked); cover section photo removed.
+- [x] Demo: same reader across chart, reading, chapter, podcast (re-voiced in the studio voice, 1 min 15 s), comic and book.
+- [x] Print page sells only the buyer's own Issue #1 ($18.99), with the schedule from checkout.
+- [x] Tests (sampleComic, bookLeaves; full suite 568 passing), browser checks at 393/1280, activity logs.
+
 Fixed Nov 10: members' Content Center, Observation Log, Reading History and password reset were replaced by My readings (missing from the member page list) — now open, tested and browser-checked; My Chart phone sideways scroll fixed.
 
-## Nov 10 — AstroBook / AstroComic / Demo fixes (this run)
-- [ ] One sample reader everywhere: Rosalind Vance (Collector cover) for the sample book, comic preview, demo reading, podcast and sample chart; fix the Pluto house line in her sample pages.
-- [ ] New sample comic for Rosalind in the shop's golden-age comic style (cover + six drawn pages + scripted pages), replacing the founder-derived "Elias" issue on AstroComic, Demo and the print page.
-- [ ] AstroComic page: remove the AstroBook pages and book photos; hero becomes a 3D comic digest that opens and turns pages.
-- [ ] AstroBook: 3D book opens and turns through real interior pages (bookplate, birth facts, planet table, plates); signed-in members can open one built from their own chart; cover section loses the unrelated photo.
-- [ ] Demo: same reader across reading, podcast, chart, comic and book; re-voice the podcast for her.
-- [ ] Tests, browser checks at 393/1280, activity logs.
-
 Later phases (not started by design): P4 Living AstroBooks · P6 Portraits · P11 Event system.
-
 
 ## Nov 5 product and mobile updates
 - [x] Use current shop artwork in all default 3D previews, retaining personal selected covers.

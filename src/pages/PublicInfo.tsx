@@ -12,13 +12,15 @@ import { CosmicTeaser } from '@/components/books/CosmicTeaser';
 import { ProductArtworkGallery } from '@/components/books/ProductArtworkGallery';
 import { PersonalizationStory } from '@/components/books/PersonalizationStory';
 import { WhyZodaciLine } from '@/components/brand/WhyZodaci';
-import { BOOK_PRODUCT_SAMPLES, PRODUCT_ART } from '@/content/productArtwork';
+import { BOOK_PRODUCT_SAMPLES } from '@/content/productArtwork';
 import { SampleCover } from '@/components/books/SampleCover';
 import { ThemeArt } from '@/components/common/ThemeArt';
 import { SampleBook } from '@/components/books/SampleBookReader';
 import { VOLUMES } from '@/lib/bookVolumes';
-import { EditionPages } from '@/components/book/EditionPages';
+import { OpenAstroBook } from '@/components/books/OpenAstroBook';
 import { SAMPLE_EDITION } from '@/content/sampleEdition';
+import { SAMPLE_BIRTH } from '@/lib/sampleBook';
+import { birthLineOf } from '@/lib/bookLeaves';
 
 /** The six volumes of every AstroBook, described from what buildVolumes() actually writes. */
 const VOLUME_ART = { I: 'chart', II: 'house', III: 'aspect', IV: 'healing', V: 'sign', VI: 'year' } as const;
@@ -48,9 +50,9 @@ export function AstroBookPublic() {
         </div>
         <ProductArtworkGallery />
       </section>
-      <section id="full-edition" aria-labelledby="fe-h" className="space-y-6">
-        <div className="max-w-3xl"><p className="font-label text-xs tracking-[0.16em] text-primary">Open the Collector’s edition</p><h2 id="fe-h" className="mt-1 font-display text-3xl sm:text-4xl">Three full pages from {SAMPLE_EDITION.owner}’s AstroBook</h2><p className="mt-3 text-muted-foreground">Exactly as they print: an illuminated plate for each placement, the calculated facts, then the interpretation. {SAMPLE_EDITION.note} Your book is written the same way from your own chart.</p></div>
-        <EditionPages pages={SAMPLE_EDITION.pages} />
+      <section id="full-edition" aria-labelledby="fe-h" className="scroll-mt-6 space-y-6">
+        <div className="max-w-3xl"><p className="font-label text-xs tracking-[0.16em] text-primary">Open the Collector’s edition</p><h2 id="fe-h" className="mt-1 font-display text-3xl sm:text-4xl">Open {SAMPLE_EDITION.owner}’s AstroBook</h2><p className="mt-3 text-muted-foreground">Turn the pages: her bookplate, title page, birth facts, planet table, house cusps and closest aspects, then three illustrated chapters, each plate facing its text. {SAMPLE_EDITION.note} Signed in with your birth details, you can open one built from your own chart.</p></div>
+        <div className="obs-paper p-4 sm:p-6"><OpenAstroBook /></div>
         <div className="flex flex-wrap gap-4"><Button asChild size="lg"><Link to={order()}>Start my AstroBook</Link></Button><Link to="/astrocomic" className="self-center text-accent">Read {SAMPLE_EDITION.owner.split(' ')[0]}’s comic issue →</Link></div>
       </section>
       <PersonalizationStory />
@@ -59,7 +61,7 @@ export function AstroBookPublic() {
         <div className="space-y-4"><h2 className="font-display text-3xl">Astronomy first, then the writing.</h2><p className="text-muted-foreground">Every AstroBook starts with the positions of the Sun, Moon and planets for the minute and place you were born. The interpretation comes after, and the book marks which is which.</p><p className="text-muted-foreground">Two people born on the same day still get different books: the Rising sign and houses shift every few minutes, and the Moon moves about a degree every two hours.</p></div>
         <div className="grid grid-cols-3 gap-4">{BOOK_PRODUCT_SAMPLES.map(s => <figure key={s.label}><SampleCover sample={s.sample} /><figcaption className="mt-3 text-center text-xs leading-snug text-muted-foreground"><span className="block font-label text-sm tracking-[0.1em] text-primary">{s.label}</span>For {s.sample.name}</figcaption></figure>)}</div>
       </section>
-      <section className="grid items-center gap-8 md:grid-cols-2" aria-labelledby="cover-preview-title"><div><h2 id="cover-preview-title" className="plate-title">Make the cover yours</h2><p className="mt-3 text-muted-foreground">The sample covers above are printed for fictional readers. Type your own name and birth details here to see yours; nothing you type is saved.</p><img src={PRODUCT_ART.collection.src} alt={PRODUCT_ART.collection.alt} width={1536} height={1024} loading="lazy" className="mt-5 w-full rounded-sm" /></div><div className="obs-paper p-5"><CoverCustomizer /></div></section>
+      <section className="grid items-center gap-8 md:grid-cols-2" aria-labelledby="cover-preview-title"><div><h2 id="cover-preview-title" className="plate-title">Make the cover yours</h2><p className="mt-3 text-muted-foreground">The sample covers above are printed for fictional readers. Type your own name and birth details here to see yours; nothing you type is saved.</p><p className="mt-3 text-sm text-muted-foreground">Each cover prints your name, your birth line and your Sun, Moon and Rising, the same way as the samples.</p></div><div className="obs-paper p-5"><CoverCustomizer /></div></section>
       <section id="inside" className="space-y-6">
         <h2 className="font-display text-3xl">Six volumes, one sky.</h2>
         <p className="text-muted-foreground">Every AstroBook follows the same six-volume structure as our founders’ Masterbooks, written from your chart. Every version includes Volumes I–IV and VI; World Systems begins at Classic, and larger versions add chapters inside each volume. Compare them below.</p>
@@ -88,7 +90,7 @@ export function AstroBookPublic() {
       </section>
       <section id="look-inside" className="space-y-6">
         <h2 className="font-display text-3xl">Look inside before you order.</h2>
-        <p className="text-muted-foreground">A short fictional sample for Olivia Chen, born March 14, 1992 in Portland, with calculated chart facts and illustrative passages. Your own book is written from your chart, adds your finished readings, and shows its real page count before payment. Turn the first pages below, or <Link to="/book-preview" className="underline text-accent">read the full sample book</Link>.</p>
+        <p className="text-muted-foreground">A short fictional sample for {SAMPLE_BIRTH.name}, {birthLineOf(SAMPLE_BIRTH.date, SAMPLE_BIRTH.time, SAMPLE_BIRTH.placeLabel).replace(/^Born/, 'born')}, with calculated chart facts and the same chapter layout as a real book. Your own book is written from your chart, adds your finished readings, and shows its real page count before payment. Turn the first pages below, or <Link to="/book-preview" className="underline text-accent">read the full sample book</Link>.</p>
         <SampleBook maxPages={6} cta={<Button asChild variant="outline"><Link to="/book-preview">Read the full sample<ArrowRight /></Link></Button>} />
       </section>
       <section id="teaser" className="grid gap-8 rounded-xl border border-gold/30 bg-card p-8 md:grid-cols-2">

@@ -3,17 +3,15 @@ import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { PromoVideo } from '@/components/brand/PromoVideo';
 import { usePageMeta } from '@/hooks/usePageMeta';
-import { Book3D } from '@/components/books/Book3D';
-import { PROMO_3D_COVER } from '@/content/productArtwork';
+import { OpenAstroBook, OpenComicDigest } from '@/components/books/OpenAstroBook';
+import { SAMPLE_READER } from '@/content/sampleBookLeaves';
 import { SampleChartDemo } from '@/components/brand/SampleChartDemo';
-import { ComicFlipbook } from '@/components/comic/ComicFlipbook';
-import { ISSUE_1 } from '@/content/comicIssue1';
 import { PLAN_NAME, PLAN_PRICE } from '@/lib/plans';
 import { DEMO_PLANS } from '@/content/demoPlans';
 import { SAMPLE_EDITION } from '@/content/sampleEdition';
 import { PosterHeader } from '@/components/observatory/PosterHeader';
 import libraryArt from '@/assets/reading-room/atomic-research-library.jpg';
-import episode from '@/assets/zodaci-demo-episode.mp3.asset.json';
+import episode from '@/assets/rosalind-emotional-world.mp3.asset.json';
 import plate2 from '@/assets/plates/plate-02.jpg';
 import plate5 from '@/assets/plates/plate-05.jpg';
 import plate8 from '@/assets/plates/plate-08.jpg';
@@ -21,28 +19,37 @@ import plate11 from '@/assets/plates/plate-11.jpg';
 import plate13 from '@/assets/plates/plate-13.jpg';
 import plate16 from '@/assets/plates/plate-16.jpg';
 
-/** Fictional sample profile — no real member data is used on this page. */
-const SAMPLE = { name: 'Jules Harbor', facts: 'Sun Virgo · Moon Pisces · Rising Scorpio' };
+/**
+ * The demo's one fictional reader: Rosalind Vance from the sample Collector cover. Every placement named below is
+ * calculated for her printed birth moment (checked in sampleComic.test.ts and sampleEdition.test.ts); the prose is
+ * interpretation, not biography. No member data is used on this page.
+ */
+const SAMPLE = { name: SAMPLE_READER.name, first: SAMPLE_READER.name.split(' ')[0], facts: 'Sun Taurus · Moon Cancer · Rising Taurus' };
 
 const SECTIONS = [
-  { title: 'The shape of your emotional weather', body: 'With the Moon in Pisces, feelings arrive like tides rather than headlines. You often know what a room feels before anyone speaks, and you absorb moods long before you can name them. This is a gift for empathy and a challenge for boundaries: the work is learning which feelings are yours to carry. Pisces is a mutable water sign, so your emotional state is fluid and responsive — it shifts with music, weather, the people beside you. On good days this makes you wonderfully attuned; on hard days it can leave you unsure where you end and others begin. A useful question to keep close is simply: "Did I walk in feeling this, or did I pick it up here?"' },
-  { title: 'How you protect what matters', body: 'Scorpio rising gives a guarded first impression. You test trust quietly and reveal yourself in layers. People who earn your confidence find a loyalty that is fierce and lasting. This rising sign works like a filter over your Pisces Moon: underneath the composed, watchful exterior is someone who feels everything. The protection is not coldness — it is discernment. You would rather know a few people deeply than be known lightly by many. When you feel safe, your intensity becomes warmth; when you feel exposed, it can turn into silence or sharpness. Naming your need for privacy out loud helps others respect it instead of guessing at it.' },
-  { title: 'Where the Virgo Sun steadies you', body: 'Your Virgo Sun turns sensitivity into service. Routines, lists and small acts of care are how you metabolize big emotions. When life feels overwhelming, tending to something concrete brings you back to yourself. The Sun and Moon sit in opposite signs — Virgo and Pisces — which is a classic tension between precision and surrender. Virgo wants to sort and improve; Pisces wants to dissolve and feel. Neither is wrong. Your healthiest rhythm alternates between them: a structured morning, an unstructured evening; a plan for the week with room left open for intuition. When you honor both, you become someone who can hold others\' feelings and still help them take the next practical step.' },
-  { title: 'Love and closeness', body: 'In relationships, this combination looks for someone who is both gentle and dependable. You notice small details — how a partner speaks to strangers, whether they remember what you said last week — and these details tell you more than grand gestures do. You may hold back at first, then give generously once trust is established. The risk is over-giving: Pisces can merge, Virgo can over-function, and Scorpio can keep score silently. Healthy closeness for you means saying what you need early, letting others care for you in return, and remembering that being useful is not the same as being loved.' },
-  { title: 'Patterns under pressure', body: 'Under stress you may withdraw, overanalyze, or try to fix everyone else first. Noticing this early — a tight jaw, a too-long to-do list, scrolling instead of sleeping — is the cue to rest rather than push. Scorpio rising tends to go underground when hurt, Virgo tends to critique itself, and Pisces tends to escape into daydreams or distraction. None of these are failures; they are signals. A simple three-step reset works well for this chart: step away from people for a short time, do one small physical task with your hands, then speak one honest sentence to someone you trust.' },
-  { title: 'Your strengths at work and in daily life', body: 'Your best work combines careful craft with deep care for people. Fields that reward attention to detail and emotional intelligence — healing, editing, research, design, counseling, caregiving — tend to suit this mix. You are often the person who notices what everyone else missed, and you quietly raise the standard of whatever you touch. Guard against perfectionism by deciding in advance what "good enough" looks like for each task.' },
-  { title: 'Practices for this chart', body: 'Weekly water-side walks, a written "whose feeling is this?" check-in, and one boundary per week said out loud. Small, repeatable, and matched to your placements. Add a monthly "unscheduled day" to give your Pisces Moon space to drift, and keep a short evening list of three things you did well to soften the Virgo inner critic. Over time, these practices turn sensitivity from something that happens to you into something you can steer.' },
+  { title: 'The shape of your emotional weather', body: 'Your Moon is in Cancer, the sign it rules, at 13°28′. A Moon in its own sign works at full strength: you know what you need to feel safe, and it is usually simple. A lit kitchen, the people you have chosen, a place that stays the same while the rest of the week changes. The Moon sits in your 3rd house, the house of daily talk, short trips, neighbours and siblings. You often understand a feeling only once you have said it out loud, to someone close at hand. A phone call or a letter can settle you faster than an hour alone with your thoughts. When you feel unsure, ask yourself who you have not talked to yet today.' },
+  { title: 'How you meet the world', body: 'Taurus was rising when you were born, at 12°47′, and your Sun had cleared the horizon by less than a third of a degree. That puts the Sun almost exactly on your Ascendant. People tend to read you as calm and unhurried before they know you, and with the Sun this close, that first impression is close to the truth. You take a room in before you act in it. Your Moon makes an easy sextile to both the Sun (1.0°) and the Ascendant (0.7°), so your moods, your will and the way you come across tend to agree. People can usually tell how you feel, and they are usually right.' },
+  { title: 'Where the Taurus Sun steadies you', body: 'Your Sun is in Taurus but on the 12th-house side of the horizon, with Mercury, Venus and Jupiter beside it. The 12th house is the quiet room before sunrise: rest, solitude and work done out of sight. You may need more time alone than people expect from someone so steady in company, and you may do your best thinking before anyone else is up. Taurus steadies you through the body and the senses. When feelings get large, something concrete brings you back: cooking, gardening, mending a thing that is broken, walking the same route again. Give yourself that hour without having to explain it.' },
+  { title: 'Love and closeness', body: 'Venus rules your Taurus Ascendant, which makes it your chart ruler, and it sits in Aries with Jupiter 1.7° away. You know what you like the moment you see it, and you can be generous and quick with affection. Your Moon squares both Venus (0.5°) and Jupiter (1.2°). One part of you wants to stay by the warm window and keep things safe; the other wants to go out and say yes. Neither is wrong. Across the chart, Pluto stands opposite your Ascendant in Scorpio, just short of the house of partners, so the relationships that change you tend to be honest and intense. The ones that last are the ones where neither of you has to pretend.' },
+  { title: 'Patterns under pressure', body: 'Mars and Chiron sit together in Gemini, 0.3° apart, in your 2nd house of money, tools and self-worth. In astrology, your drive and your sore spot share one place. Under pressure this can look like doing five things at once to prove you are capable, then doubting the lot. Saturn in Sagittarius stands opposite them (1.9° from Mars) and asks for patience: measure twice, cut once. A useful reset for this chart has three steps. Stop and pick one task. Finish it with your hands. Then tell one person what you got done.' },
+  { title: 'Your strengths at work and in daily life', body: 'The tightest aspect in your chart is Mercury trine Neptune, exact to less than a tenth of a degree. Practical Taurus thinking meets imagination with no friction: you can picture something and then work out how to make it. Neptune sits in Capricorn in your 9th house, so big ideas tend to arrive with a plan attached. Your Midheaven is in Capricorn at 26°43′, and its ruler Saturn is in your 8th house of shared resources and commitments. Public progress tends to come step by step and through work you share with others. Work that rewards patience, design and making real things tends to suit this mix.' },
+  { title: 'Practices for this chart', body: 'Keep one quiet hour each morning for your 12th-house planets, before messages and plans. Make one call or write one note a day for your 3rd-house Moon; it does more for your mood than you expect. When a decision pulls you two ways, write down what the warm window wants and what the open road wants before choosing. Once a month, finish one repair you have been putting off, for the Mars and Chiron pair. Small, repeatable and matched to your placements.' },
 ];
 
-const SCRIPT = `Welcome to your Zodaci podcast. Today, ${SAMPLE.name}, we're exploring your emotional world. Your Moon in Pisces means you feel the tide of a room before anyone speaks. Your Scorpio rising guards that softness, and your Virgo Sun turns it into steady, practical care.`;
+const SCRIPT = [
+  `Welcome to your Zodaci podcast. Today, ${SAMPLE.first}, we're looking at your emotional world.`,
+  'Your Moon is in Cancer, its own sign. So feeling safe comes down to home, and to the people you’ve chosen. It sits in your third house, which means you often understand a feeling only once you’ve said it out loud… a phone call, a letter, a talk on the way somewhere.',
+  'Now, here’s the thing. Your Sun rose just a few minutes before you were born, almost exactly on your Taurus Ascendant. What people see first is very close to who you are. And your Moon makes an easy sextile to both of them, within a degree. Your moods, your will and the way you come across tend to agree.',
+  'The tension? Your Moon squares Venus and Jupiter in Aries. One part of you wants to stay by the warm window. The other wants to say yes to the road. You don’t have to choose forever. Just notice which one is asking… tonight.',
+];
 
 function PodcastPlayer() {
   return (
     <div className="obs-paper p-6 space-y-4">
-      <div className="flex flex-wrap items-baseline justify-between gap-2"><p className="font-display text-xl">Your emotional world, Jules</p><p className="text-sm text-muted-foreground">Sample episode · 54 seconds · studio voice</p></div>
+      <div className="flex flex-wrap items-baseline justify-between gap-2"><p className="font-display text-xl">Your emotional world, {SAMPLE.first}</p><p className="text-sm text-muted-foreground">Sample episode · 1 min 15 sec · studio voice</p></div>
       <audio controls preload="none" src={episode.url} className="w-full">Your browser cannot play this sample.</audio>
-      <p className="text-sm text-muted-foreground">This is the same voice members hear. Real episodes run 2 to 8 minutes and are written from your own readings, with sources.</p>
-      <details className="text-sm"><summary className="cursor-pointer text-primary">Read the script</summary><p className="mt-2 text-muted-foreground">{SCRIPT}</p></details>
+      <p className="text-sm text-muted-foreground">This is the same voice members hear, reading {SAMPLE.first}’s calculated placements. Real episodes run 2 to 8 minutes and are written from your own readings, with sources.</p>
+      <details className="text-sm"><summary className="cursor-pointer text-primary">Read the script</summary><div className="mt-2 space-y-2 text-muted-foreground">{SCRIPT.map(p => <p key={p.slice(0, 20)}>{p}</p>)}</div></details>
     </div>
   );
 }
@@ -63,7 +70,7 @@ const VOLUMES = [
 const MASTER_SAMPLE = SAMPLE_EDITION.pages[2];
 
 export default function Demo() {
-  usePageMeta('Interactive Demo — Free, Pro and Cosmic | Zodaci', 'Switch between Free, Pro and Cosmic on a sample chart, read an illustrated Masterbook chapter, hear a studio-voiced podcast and flip through AstroComic and AstroBook — no sign-up needed.');
+  usePageMeta('Interactive Demo — Free, Pro and Cosmic | Zodaci', 'One fictional reader, one calculated chart: switch between Free, Pro and Cosmic, read an illustrated chapter, hear a studio-voiced podcast and open her AstroComic and AstroBook — no sign-up needed.');
   const [tier, setTier] = useState<DemoTier>('creator');
   const shown = SECTIONS.slice(0, TIER_SHOWS[tier].sections);
   const words = shown.reduce((n, s) => n + s.body.split(/\s+/).length + s.title.split(/\s+/).length, 0);
@@ -92,7 +99,7 @@ export default function Demo() {
             <ul className="space-y-1 border-t border-border pt-3 text-xs">{TIER_SHOWS[tier].points.map(p => <li key={p}>✦ {p}</li>)}</ul>
           </nav>
           <article className="space-y-6">
-            <p className="border-b border-border pb-4 text-sm text-muted-foreground">Jules Harbor is an invented writing example ({SAMPLE.facts}), not a verified full chart. The calculated chart above and Rosalind’s chapter below are separate samples. Pro and Cosmic include the same tools; Cosmic has more monthly credits.</p>
+            <p className="border-b border-border pb-4 text-sm text-muted-foreground">{SAMPLE.name} is a fictional reader ({SAMPLE.facts}). Every placement in this reading is calculated for {SAMPLE_READER.printed.born.replace(/^Born /, '')}; the chart above and the chapter, podcast, comic and book below all use the same birth moment. Pro and Cosmic include the same tools; Cosmic has more monthly credits.</p>
             {shown.map(s => <div key={s.title} className="space-y-2"><h3 className="text-xl">{s.title}</h3><p className="leading-relaxed text-muted-foreground">{s.body}</p></div>)}
             {tier === 'free' && <div className="rounded-lg border border-primary/40 bg-primary/5 p-5"><p className="font-medium">Six more sections are locked on Free.</p><p className="text-sm text-muted-foreground">Pro writes the complete reading for every core theme.</p><Button asChild size="sm" className="mt-3"><Link to="/pricing">Unlock Pro</Link></Button></div>}
           </article>
@@ -104,7 +111,7 @@ export default function Demo() {
         <ol className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{VOLUMES.map(v => <li key={v.n} className="vellum overflow-hidden"><img src={v.art} alt={`Illustrated plate for Volume ${v.n}, ${v.title}`} width={800} height={1000} loading="lazy" className="aspect-[4/3] w-full object-cover" /><div className="p-4"><p className="font-label text-[10px] tracking-[0.14em] text-primary">Volume {v.n}</p><h3 className="text-xl">{v.title}</h3><p className="mt-1 text-sm text-muted-foreground">{v.text}</p></div></li>)}</ol>
         <article className="obs-paper grid gap-6 p-6 md:grid-cols-[240px_minmax(0,1fr)]" aria-label="Sample Masterbook chapter">
           <img src={MASTER_SAMPLE.image} alt={MASTER_SAMPLE.imageAlt} width={1024} height={1024} loading="lazy" className="w-full border border-border object-cover" />
-          <div className="min-w-0 space-y-3"><p className="font-label text-xs text-primary">Sample chapter · {SAMPLE_EDITION.owner}</p><h3 className="text-2xl">{MASTER_SAMPLE.title}</h3><p className="font-label text-sm text-accent">{MASTER_SAMPLE.placement}</p>{MASTER_SAMPLE.body.map(t => <p key={t.slice(0, 20)} className="leading-relaxed">{t}</p>)}<p className="text-xs text-muted-foreground">Rosalind is fictional. These positions are calculated from the birth details printed on the sample Collector cover. The prose is interpretation, not a biography.</p></div>
+          <div className="min-w-0 space-y-3"><p className="font-label text-xs text-primary">Sample chapter · {SAMPLE_EDITION.owner}</p><h3 className="text-2xl">{MASTER_SAMPLE.title}</h3><p className="font-label text-sm text-accent">{MASTER_SAMPLE.placement}</p>{MASTER_SAMPLE.body.map(t => <p key={t.slice(0, 20)} className="leading-relaxed">{t}</p>)}<p className="text-xs text-muted-foreground">{SAMPLE.first} is fictional. These positions are calculated from the birth details printed on the sample Collector cover. The prose is interpretation, not a biography.</p></div>
         </article>
       </section>
 
@@ -115,12 +122,15 @@ export default function Demo() {
 
       <section className="space-y-5" aria-labelledby="comic-h">
         <div><div className="font-label text-xs tracking-[0.16em] text-primary">AstroComic · sold separately</div><h2 id="comic-h" className="text-3xl">Your month, as a comic</h2></div>
-        <ComicFlipbook issue={ISSUE_1} />
+        <p className="max-w-2xl text-muted-foreground">{SAMPLE.first}’s sample issue, The Garden Gate: her Taurus Rising, Cancer Moon and tightest aspects, each drawn as a page. Open the digest and turn it.</p>
+        <OpenComicDigest layout="side" />
+        <Button asChild variant="outline"><Link to="/astrocomic">See AstroComic plans</Link></Button>
       </section>
 
       <section className="space-y-5" aria-labelledby="book-h">
         <div><div className="font-label text-xs tracking-[0.16em] text-primary">Printed AstroBook</div><h2 id="book-h" className="text-3xl">Hold your chart in your hands</h2></div>
-        <Book3D coverSrc={PROMO_3D_COVER.src} hardcover label="Collector AstroBook · sample cover for a fictional reader" />
+        <p className="max-w-2xl text-muted-foreground">Open {SAMPLE.first}’s Collector edition: bookplate, birth facts, planets, houses and aspects, then illustrated chapters. Signed in with your birth details, open one built from your own chart.</p>
+        <OpenAstroBook next="/demo#book-h" />
         <div className="flex flex-wrap justify-center gap-2"><Button asChild variant="outline"><Link to="/book-preview">Flip through sample pages</Link></Button><Button asChild><Link to="/astrobook">See editions & prices</Link></Button></div>
       </section>
     </main>

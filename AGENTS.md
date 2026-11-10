@@ -47,7 +47,7 @@
 - make-podcast saves script→TTS WAV in private library storage/library_items; bounded duration presets synchronize script length/source depth.
 - Queue/speed/resume use per-device localStorage; PDF viewer uses pdfjs-dist legacy.
 - Shared recommendations/media use generic shared_item_comments/reactions keyed by item_type/item_id.
-- Founder illustrated showcases are showcase.json + plates in private storage, served by protected-content; the public sample edition (content/sampleEdition.ts) is calculated for the fictional Collector-cover reader, never a founder chart, checked by test.
+- Founder illustrated showcases are showcase.json + plates in private storage, served by protected-content. Public samples (sampleEdition, sampleComic, sampleBook, demo) all use the one fictional Collector-cover reader via content/sampleBookLeaves, never a founder chart, checked by tests; openable books render plain BookFace data from lib/bookLeaves so pages, reading text and tests agree.
 - Feature gates (meetsPlan/planAllows and server checks) treat Pro and Cosmic alike; Cosmic differs only in credits.
 - Creator Studio designs are drawn client-side from the saved chart (lib/creations.ts) and saved as library_items kind 'creation' under {uid}/creation/, insertable only with has_paid_plan.
 - Credit packs are one-time purchases recorded in credit_ledger by the verified webhook (ref = checkout session, live only); usage beyond the monthly allowance draws them down once via an ai_usage trigger.

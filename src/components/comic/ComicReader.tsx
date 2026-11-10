@@ -1,7 +1,7 @@
 import { BookOpen } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import type { AstroComicShowcase } from '@/content/comicIssue1';
+import type { AstroComicShowcase } from '@/content/sampleComic';
 
 type Scripted = { pageNumber: number; title: string; placement: string; summary: string };
 
@@ -13,7 +13,7 @@ export function ComicReader({ issue, scripted = [], label = 'Read the full examp
       <DialogContent className="max-h-[92vh] max-w-5xl overflow-y-auto p-0">
         <div className="relative">
           <img src={issue.cover} alt={issue.coverAlt} width={1024} height={1536} className="mx-auto max-h-[80vh] w-auto" />
-          <div className="absolute inset-x-0 top-0 bg-gradient-to-b from-background/85 to-transparent p-6 pb-16 text-center">
+          <div className={issue.lettered ? 'sr-only' : 'absolute inset-x-0 top-0 bg-gradient-to-b from-background/85 to-transparent p-6 pb-16 text-center'}>
             <p className="font-label text-xs tracking-[0.16em] text-primary">{issue.banner}</p>
             <DialogTitle className="mt-2 font-display text-4xl font-normal">{issue.title}</DialogTitle>
             <DialogDescription className="mt-2 italic">{issue.subCaption}</DialogDescription>
