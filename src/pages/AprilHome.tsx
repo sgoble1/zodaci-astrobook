@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { NatalWheel } from '@/components/chart/NatalWheel';
 import { BIRTH, PHASES, PLACEMENTS } from '@/content/april';
 import { UpdatesFeed } from '@/components/common/UpdatesFeed';
-import heroImg from '@/assets/hero-threshold.jpg';
+import heroImg from '@/assets/pages/april-observatory-atlas.jpg';
 import { SharedChatFeed } from '@/components/shared/SharedChatFeed';
 import { Button } from '@/components/ui/button';
 import { PlanetOrb } from '@/components/chart/PlanetOrb';
@@ -57,7 +57,7 @@ export default function AprilHome() {
           </dl>
         </div>
         <div className="deckle p-2 bg-vellum">
-          <img loading="lazy" decoding="async" src={heroImg} alt="A woman viewed from behind stands at the threshold of a great celestial doorway; above her a natal chart in antique gold." width={1600} height={1024} className="w-full h-auto" />
+          <img loading="lazy" decoding="async" src={heroImg} alt="An illustrated woman holds an open star atlas beside a brass zodiac armillary in an observatory window." width={1536} height={1024} className="w-full h-auto" />
         </div>
       </section>
 
