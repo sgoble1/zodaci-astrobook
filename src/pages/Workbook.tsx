@@ -119,7 +119,7 @@ function QuestionCard({ userId, module, question, existing, index }: { userId: s
 
 export function WorkbookHome() {
   return (
-    <Shell eyebrow="April's Workbook" title="Your Workbook" intro="A private, guided space built from your chart. Answer questions that make you think, get chart-aware feedback, check in each day, reframe hard moments and talk things through with The Oracle Within.">
+    <Shell eyebrow="My Workbook" title="Your Workbook" intro="A private, guided space built from your chart. Answer questions that make you think, get chart-aware feedback, check in each day, reframe hard moments and talk things through with The Oracle Within.">
       {userId => <HomeInner userId={userId} />}
     </Shell>
   );

@@ -3,6 +3,10 @@ import { canWriteAllReadings, loadMyTopicReadings, writeTopicReading, FREE_READI
 import { readingStatus } from '@/lib/readingExperience';
 import { supabase } from '@/integrations/supabase/client';
 import { onAccountChange } from '@/lib/authEvents';
+import { ADMIN_EDITION_KEY } from '@/hooks/useAprilSpace';
+
+/** True while this tab views another founder's edition; topic readings are owner-keyed, so we never write the viewer's own here. */
+export const viewingOtherEdition = () => typeof window !== 'undefined' && ['april', 'zac'].includes(window.sessionStorage.getItem(ADMIN_EDITION_KEY) ?? '');
 
 /** Core themes free members may preview (opening section only). */
 export const isPreviewTheme = (slug: string) => !FREE_READINGS.includes(slug) && CORE_THEMES.some(t => t.slug === slug);
@@ -36,6 +40,7 @@ export function useOnDemandReading(slug: string | undefined) {
       setPreview(!full && isPreviewTheme(slug));
       setRow(upgrading ? null : r);
       if (r && !upgrading && ['ready', 'preview'].includes(readingStatus(r.status))) return;
+      if (viewingOtherEdition()) { setRow(r ?? null); setLocked(!r); if (!r) setError("Readings save to your own account, so they aren't written while you view another edition. Leave the edition view to write this one."); return; }
       if (!full && !FREE_READINGS.includes(slug) && !isPreviewTheme(slug)) { setLocked(true); return; }
       setRow(null);
       setWriting(true);
