@@ -1,5 +1,12 @@
 # Zodaci roadmap
 
+## Nov 12 — Unfinished items from archived docs + Current Implementation Plan Doc
+Full plan: .lovable/plan/unfinished-work-plan-archived-docs-current-implementation-pl-2026-11-12.md
+- [x] Comic and cover art instructions switched from "Mystic Ink" to 1950s Atomic Zodiac (comic-art, book-cover redeployed).
+- [x] Checked, already working: Personal Context "Create a chapter about this" fills the Creator Studio topic; Instructions search text with April's placements is shown only inside the April space (members get the member guide).
+- [ ] Wave 1 privacy/account switching · Wave 2 the 20 member pages still importing April's chart · Wave 3 founder edition fixes · Wave 4 results/navigation · Wave 5 orders/checkout/admin · Wave 6 page titles + FAQ, saved characters · Wave 8 Ops-doc leftovers · Wave 9 Blueprint programs (registry, Agency, Museum, Archive, gifts, admin sidebar) · Wave 10 founder inventory.
+- [ ] Wave 7 (needs AI credits): sm-29 correction, Shane/Zac artwork, buyer comics, long readings, Volumes IV–VI, Zac extraction.
+
 ## Status — Nov 10 2026 (plan close-out)
 All buildable V2.3, Implementation Brief and AstroBook/AstroComic/Demo items are done; everything still open is blocked or optional.
 
