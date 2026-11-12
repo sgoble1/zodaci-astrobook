@@ -19,21 +19,21 @@ export function ComicReader({ issue, scripted = [], label = 'Read the full examp
             <DialogDescription className="mt-2 italic">{issue.subCaption}</DialogDescription>
           </div>
         </div>
-        <div className="space-y-14 p-5 sm:p-10">
+        <div className="comic-sheet m-3 space-y-14 p-5 sm:m-5 sm:p-10">
           {issue.pages.map(p => (
             <section key={p.pageNumber} aria-label={`Page ${p.pageNumber}: ${p.actTitle}`} className="space-y-3">
-              <div className="flex items-baseline justify-between border-b border-border pb-2"><h3 className="font-display text-2xl">{p.actTitle}</h3><span className="font-label text-xs tracking-[0.16em] text-primary">{p.placement} · p.{p.pageNumber}</span></div>
-              <div className="relative overflow-hidden border-2 border-foreground/80">
+              <div className="comic-rule flex items-baseline justify-between pb-2"><h3 className="font-display text-2xl uppercase">{p.actTitle}</h3><span className="comic-tag text-xs">{p.placement} · p.{p.pageNumber}</span></div>
+              <div className="comic-cell">
                 <img src={p.art} alt={p.panels[0].visualPrompt} width={1536} height={1024} loading="lazy" className="w-full" />
-                <p className="absolute left-3 top-3 max-w-md border border-gold/60 bg-background/90 px-3 py-2 text-sm leading-snug">{p.panels[0].narration}</p>
+                <p className="comic-caption absolute left-3 top-3 max-w-md text-sm">{p.panels[0].narration}</p>
               </div>
               <div className="grid gap-3 sm:grid-cols-2">
                 {p.panels.slice(1).map((panel, k) => (
-                  <div key={k} className="relative min-h-40 overflow-hidden border-2 border-foreground/80 p-3">
-                    <img src={p.art} alt="" aria-hidden width={1536} height={1024} loading="lazy" className="absolute inset-0 h-full w-full object-cover opacity-45" style={{ objectPosition: k ? '85% 45%' : '20% 40%', transform: 'scale(1.6)' }} />
+                  <div key={k} className="comic-cell min-h-40 p-3">
+                    <img src={p.art} alt="" aria-hidden width={1536} height={1024} loading="lazy" className="absolute inset-0 h-full w-full object-cover opacity-50" style={{ objectPosition: k ? '85% 45%' : '20% 40%', transform: 'scale(1.6)' }} />
                     <div className="relative flex h-full flex-col justify-end gap-2">
-                      <p className="border border-gold/60 bg-background/90 px-2 py-1 text-sm">{panel.narration}</p>
-                      {panel.dialogue && <p className="w-fit rounded-2xl bg-foreground px-3 py-1 text-sm text-background">{panel.dialogue}</p>}
+                      <p className="comic-caption text-sm">{panel.narration}</p>
+                      {panel.dialogue && <p className="comic-balloon mb-2 text-sm">{panel.dialogue}</p>}
                     </div>
                   </div>
                 ))}
@@ -44,10 +44,10 @@ export function ComicReader({ issue, scripted = [], label = 'Read the full examp
             <section aria-label="Scripted pages" className="space-y-3">
               <h3 className="font-display text-2xl">Still to be drawn</h3>
               <p className="text-sm text-muted-foreground">These pages are written and laid out; their art is in production.</p>
-              <ol className="grid gap-3 sm:grid-cols-2">{scripted.map(s => <li key={s.pageNumber} className="vellum p-4"><p className="font-label text-xs tracking-[0.16em] text-primary">p.{s.pageNumber} · {s.placement}</p><p className="mt-1 font-display text-lg">{s.title}</p><p className="mt-1 text-sm text-muted-foreground">{s.summary}</p></li>)}</ol>
+              <ol className="grid gap-3 sm:grid-cols-2">{scripted.map(s => <li key={s.pageNumber} className="comic-card p-4"><p className="font-label text-xs tracking-[0.16em] text-primary">p.{s.pageNumber} · {s.placement}</p><p className="mt-1 font-display text-lg">{s.title}</p><p className="mt-1 text-sm text-muted-foreground">{s.summary}</p></li>)}</ol>
             </section>
           )}
-          <p className="text-center font-label text-xs tracking-[0.16em] text-primary">{issue.footer}</p>
+          <p className="text-center"><span className="comic-tag text-xs">{issue.footer}</span></p>
         </div>
       </DialogContent>
     </Dialog>

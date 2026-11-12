@@ -384,7 +384,7 @@ function AprilShell({ children, edition = 'april' }: { children: ReactNode; edit
             <div className="gold-rule mb-6" />
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
               <div className="font-smallcaps text-xs">Your private edition</div>
-              <div className="font-smallcaps text-xs">An Illuminated Compendium · Ink on Vellum · Touched with Gold</div>
+              <div className="font-smallcaps text-xs">Zodaci Astral Research Authority · Printed from the measured sky</div>
             </div>
           </div>
         </footer>

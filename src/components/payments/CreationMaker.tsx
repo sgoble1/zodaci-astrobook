@@ -7,7 +7,7 @@ import { toChartInput, useMyBirth } from '@/lib/myBirth';
 import { CREATION_SIZE, affirmationFor, journalPrompts, placementLine, type CreationKind } from '@/lib/creations';
 import { useLibrary, type LibraryItem } from '@/hooks/useLibrary';
 
-const STYLES = { night: 'Midnight & gold', violet: 'Violet nebula', dawn: 'Gold dawn' } as const;
+const STYLES = { night: 'Midnight & gold', violet: 'Indigo nebula', dawn: 'Gold dawn' } as const;
 type Style = keyof typeof STYLES;
 const tok = (name: string, a = 1) => `hsl(${getComputedStyle(document.documentElement).getPropertyValue(`--${name}`).trim()} / ${a})`;
 const CARD_PLANETS = ['sun', 'moon', 'mercury', 'venus', 'mars', 'jupiter', 'saturn'];

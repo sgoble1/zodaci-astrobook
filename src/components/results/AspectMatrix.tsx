@@ -34,7 +34,7 @@ export function AspectMatrix({ chart }: { chart: ChartResult }) {
               })}</tr>))}</tbody>
         </table>
       </div>
-      <div aria-live="polite" className="min-h-16 rounded-lg border border-border bg-card p-4 text-sm">{sel ? <><p className="font-medium">{sel.a} {sel.symbol} {sel.b} · {sel.type} · {sel.orb.toFixed(2)}° from exact</p><p className="mt-1">{aspectText(sel, chart.bodies)}</p></> : <p className="text-muted-foreground">Select a symbol to read what that aspect means for you. Gold = conjunction, violet = flowing, red = tension.</p>}</div>
+      <div aria-live="polite" className="min-h-16 rounded-lg border border-border bg-card p-4 text-sm">{sel ? <><p className="font-medium">{sel.a} {sel.symbol} {sel.b} · {sel.type} · {sel.orb.toFixed(2)}° from exact</p><p className="mt-1">{aspectText(sel, chart.bodies)}</p></> : <p className="text-muted-foreground">Select a symbol to read what that aspect means for you. Brass = conjunction, yellow = flowing, red = tension.</p>}</div>
     </div>
   );
 }

@@ -30,10 +30,10 @@ const ParticleField = () => {
     window.addEventListener("resize", resize);
 
     const colors = [
-      "hsla(263, 70%, 58%, ",  // zodaci purple
-      "hsla(280, 80%, 65%, ",  // zodaci glow
-      "hsla(175, 80%, 45%, ",  // solutiodex teal
-      "hsla(185, 90%, 55%, ",  // solutiodex glow
+      "hsla(45, 100%, 55%, ",  // shop yellow
+      "hsla(42, 52%, 54%, ",   // brass
+      "hsla(41, 58%, 88%, ",   // archive cream
+      "hsla(357, 74%, 56%, ",  // shop red
     ];
 
     const count = Math.min(80, Math.floor((window.innerWidth * window.innerHeight) / 15000));

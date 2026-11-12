@@ -2,7 +2,7 @@ import { useId } from 'react';
 import { cn } from '@/lib/utils';
 import { SpotArt } from '@/components/art/SpotArt';
 
-/** Small hand-drawn style illustrations in the logo palette (purple planet, yellow land, white clouds). */
+/** Small hand-drawn style illustrations in the logo palette (Blend palette: cream, indigo, yellow, red, brass). */
 export type ArtKind = 'chart' | 'self' | 'love' | 'purpose' | 'healing' | 'year' | 'planet' | 'sign' | 'house' | 'aspect' | 'fire' | 'earth' | 'air' | 'water';
 
 const RULES: [RegExp, ArtKind][] = [

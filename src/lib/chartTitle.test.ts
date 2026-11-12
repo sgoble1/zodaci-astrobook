@@ -12,8 +12,8 @@ describe('chartTitle', () => {
   it('mentions Rising only when known', () => {
     expect(chartTitle({ sun: 'Aries', moon: 'Cancer' }).subtitle).toBe('Aries Sun · Cancer Moon');
   });
-  it('matches Air charts to Violet Dusk', () => {
-    expect(COVER_DESIGNS.find(d => d.key === COVER_FOR_ELEMENT.Air.key)?.label).toBe('Violet Dusk');
+  it('matches Air charts to Indigo Dusk', () => {
+    expect(COVER_DESIGNS.find(d => d.key === COVER_FOR_ELEMENT.Air.key)?.label).toBe('Indigo Dusk');
   });
   it('recommends only covers that are still offered', () => {
     for (const m of Object.values(COVER_FOR_ELEMENT)) expect(COVER_DESIGNS.some(d => d.key === m.key)).toBe(true);

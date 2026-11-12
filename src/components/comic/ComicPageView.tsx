@@ -16,42 +16,41 @@ export function ComicPageView({ page, compact = false, art }: { page: ComicPage;
   const full = page.section === 'Cover' || page.section === 'Back Cover';
   const fullArt = art?.[`${page.n}-0`];
   return (
-    <figure className={`comic-page relative flex flex-col overflow-hidden rounded-sm border-2 border-foreground/80 bg-background ${compact ? 'aspect-[11/17] text-[10px]' : 'aspect-[11/17] text-xs sm:text-sm'}`} aria-label={`Page ${page.n}: ${page.title}`}>
+    <figure className={`comic-page comic-sheet relative flex flex-col overflow-hidden ${full ? 'comic-sheet-cover' : ''} ${compact ? 'aspect-[11/17] text-[10px]' : 'aspect-[11/17] text-xs sm:text-sm'}`} aria-label={`Page ${page.n}: ${page.title}`}>
       {full ? (
         <div className="relative flex-1">
           {page.section === 'Cover' || fullArt
-            ? <img src={fullArt ?? cover} alt={fullArt ? page.panels[0]?.scene ?? '' : ''} width={1024} height={1584} loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
-            : <p className="absolute inset-0 p-3 italic leading-snug text-muted-foreground">{page.panels[0]?.scene}</p>}
+            ? <img src={fullArt ?? cover} alt={fullArt ? page.panels[0]?.scene ?? '' : ''} width={1024} height={1536} loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
+            : <p className="comic-direction absolute inset-0 p-3 leading-snug">{page.panels[0]?.scene}</p>}
           {page.section === 'Cover' ? (
-            <div className="absolute inset-x-0 top-0 bg-gradient-to-b from-background/90 to-transparent p-3 sm:p-4">
-              <p className="font-label text-[10px] tracking-[0.14em] text-primary">AstroComic</p>
-              <p className={`font-display leading-tight ${compact ? 'text-sm' : 'text-lg sm:text-2xl'}`}>{page.title}</p>
+            <div className="comic-title-band absolute inset-x-0 top-0 px-3 py-2 sm:px-4 sm:py-3">
+              <p className={`comic-issue-line ${compact ? 'text-[8px]' : 'text-[10px] sm:text-xs'}`}>AstroComic{page.panels[0]?.caption ? ` · ${page.panels[0].caption.replace(/^AstroComic\s*·\s*/i, '')}` : ''}</p>
+              <p className={`font-display uppercase leading-[1.05] ${compact ? 'text-[11px]' : 'text-lg sm:text-2xl'}`}>{page.title}</p>
             </div>
           ) : (
-            <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-background/95 to-transparent p-3 sm:p-4">
+            <div className="comic-title-band absolute inset-x-0 bottom-0 border-b-0 border-t-[3px] border-t-[hsl(var(--comic-ink))] px-3 py-2 sm:px-4 sm:py-3">
               <p className={`font-display leading-tight ${compact ? 'text-xs' : 'text-base sm:text-lg'}`}>{page.body?.[0] ?? 'AstroComic by Zodaci'}</p>
-              <p className="text-[10px] text-muted-foreground">{page.title}</p>
+              <p className="comic-issue-line text-[10px]">{page.title}</p>
             </div>
           )}
-          {page.section === 'Cover' && page.panels[0]?.caption && <p className="absolute bottom-2 right-2 rounded-sm bg-background/80 px-2 py-0.5 text-[10px]">{page.panels[0].caption}</p>}
         </div>
       ) : (
         <div className="flex flex-1 flex-col gap-2 p-2 sm:p-3">
-          <div className="flex items-baseline justify-between gap-2 border-b border-foreground/30 pb-1">
-            <span className="font-label text-[10px] tracking-[0.14em] text-primary">{page.section}</span>
-            <span className="text-[9px] text-muted-foreground">{page.n}</span>
+          <div className="comic-rule flex items-baseline justify-between gap-2 pb-1">
+            <span className={`comic-tag ${compact ? 'text-[8px]' : 'text-[10px]'}`}>{page.section}</span>
+            <span className="comic-pagenum text-[10px]">{page.n}</span>
           </div>
-          <p className={`font-display leading-tight ${compact ? 'text-xs' : 'text-base sm:text-lg'}`}>{page.title}</p>
+          <p className={`font-display uppercase leading-tight ${compact ? 'text-[11px]' : 'text-base sm:text-lg'}`}>{page.title}</p>
           <div className="grid flex-1 auto-rows-min grid-cols-2 gap-1.5">
             {page.panels.map((panel, i) => {
               const src = art?.[`${page.n}-${i}`];
               return (
-                <div key={i} className={`comic-panel relative flex flex-col justify-between overflow-hidden border-2 border-foreground/80 bg-card/70 p-2 ${SHAPE[panel.shape]}`}>
+                <div key={i} className={`comic-panel comic-cell flex flex-col justify-between p-2 ${SHAPE[panel.shape]}`}>
                   {src && <img src={src} alt={panel.scene} loading="lazy" className="absolute inset-0 h-full w-full object-cover" />}
-                  {!src && (isQrPanel(panel) ? <QrMark /> : <p className="italic text-muted-foreground leading-snug">{panel.scene}</p>)}
-                  <div className="relative space-y-1">
-                    {panel.caption && <p className="border border-gold/60 bg-background/90 px-1.5 py-0.5 leading-snug">{panel.caption}</p>}
-                    {panel.balloons?.map((b, j) => <p key={j} className={`w-fit max-w-[85%] rounded-2xl border border-foreground/60 bg-foreground px-2 py-1 text-background leading-snug ${j % 2 ? 'ml-auto' : ''}`}><span className="font-semibold">{b.who}:</span> {b.text}</p>)}
+                  {!src && (isQrPanel(panel) ? <QrMark /> : <p className="comic-direction leading-snug">{panel.scene}</p>)}
+                  <div className="relative space-y-2">
+                    {panel.caption && <p className="comic-caption">{panel.caption}</p>}
+                    {panel.balloons?.map((b, j) => <p key={j} className={`comic-balloon ${j % 2 ? 'ml-auto' : ''}`}><span className="font-bold uppercase">{b.who}:</span> {b.text}</p>)}
                   </div>
                 </div>
               );
@@ -74,7 +73,7 @@ function QrMark() {
   }, []);
   return (
     <div className="flex flex-col items-start gap-1">
-      <svg viewBox={`-2 -2 ${size + 4} ${size + 4}`} role="img" aria-label="QR code for zodaci.com/my-chart" className="h-16 w-16 shrink-0 rounded-sm bg-foreground fill-background">
+      <svg viewBox={`-2 -2 ${size + 4} ${size + 4}`} role="img" aria-label="QR code for zodaci.com/my-chart" className="h-16 w-16 shrink-0 rounded-sm bg-[hsl(var(--comic-balloon))] fill-[hsl(var(--comic-ink))]">
         {cells.map(([x, y]) => <rect key={`${x}-${y}`} x={x} y={y} width={1.02} height={1.02} />)}
       </svg>
       <span className="break-words leading-snug">zodaci.com/my-chart</span>

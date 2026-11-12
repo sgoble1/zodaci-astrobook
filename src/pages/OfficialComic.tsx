@@ -14,7 +14,7 @@ import letterPanel from '@/assets/astrocomic-letter-panel.jpg';
 import fontUrl from '@/assets/fonts/manuscript.ttf?url';
 import { StartLink } from '@/components/common/StartLink';
 
-// Shared Lantern & Ink scenes; every chart position and letter on the page is calculated for this edition.
+// Shared Atomic Zodiac scenes; every chart position and letter on the page is calculated for this edition.
 const ART: Record<string, string> = { '1-0': cover, '2-0': skyPanel, '3-0': letterPanel };
 /** Official issues are numbered from the first official month (October 2026). */
 const FIRST_OFFICIAL = Date.UTC(2026, 9, 1);

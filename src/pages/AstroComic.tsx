@@ -116,20 +116,20 @@ export default function AstroComic() {
       </section>
 
       <section aria-labelledby="inside-h" className="grid gap-10 lg:grid-cols-2">
-        <div><h2 id="inside-h" className="font-display text-3xl">What’s in every issue</h2><ol className="mt-6 divide-y divide-border border-y border-border">{PAGE_MAP.map(([n, t]) => <li key={n} className="grid grid-cols-[4rem_1fr] gap-3 py-2.5 text-sm"><span className="text-gold">p. {n}</span><span>{t}</span></li>)}</ol></div>
-        <figure><img src={SAMPLE_ISSUE.pages[1].art} alt={SAMPLE_ISSUE.pages[1].panels[0].visualPrompt} width={1536} height={1024} loading="lazy" className="w-full rounded-sm border-2 border-foreground/80" /><figcaption className="mt-3 text-sm text-muted-foreground">Page {SAMPLE_ISSUE.pages[1].pageNumber} of the sample issue, {SAMPLE_ISSUE.pages[1].actTitle}: {SAMPLE_ISSUE.pages[1].placement}.</figcaption></figure>
+        <div><h2 id="inside-h" className="font-display text-3xl">What’s in every issue</h2><ol className="mt-6 divide-y divide-border border-y border-border">{PAGE_MAP.map(([n, t]) => <li key={n} className="grid grid-cols-[4rem_1fr] gap-3 py-2.5 text-sm"><span className="font-label tracking-wider text-primary">p. {n}</span><span>{t}</span></li>)}</ol></div>
+        <figure><img src={SAMPLE_ISSUE.pages[1].art} alt={SAMPLE_ISSUE.pages[1].panels[0].visualPrompt} width={1536} height={1024} loading="lazy" className="comic-frame w-full" /><figcaption className="mt-3 text-sm text-muted-foreground">Page {SAMPLE_ISSUE.pages[1].pageNumber} of the sample issue, {SAMPLE_ISSUE.pages[1].actTitle}: {SAMPLE_ISSUE.pages[1].placement}.</figcaption></figure>
       </section>
 
       <section aria-labelledby="cast-h">
         <h2 id="cast-h" className="font-display text-3xl">Meet the cast</h2>
         <p className="mt-2 max-w-2xl text-muted-foreground">Ten planets, ten characters. Who leads your issue depends on your chart and the month’s sky.</p>
-        <img src={cast} alt="The AstroComic cast lined up: Sovereign, Dreamer, Messenger, Enchantress, Warrior, Philosopher, Elder, Rebel, Mystic and Transformer" width={1920} height={832} loading="lazy" className="mt-6 w-full rounded-sm border-2 border-foreground/80" />
-        <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">{CAST.map(c => <div key={c.key} className="vellum p-4"><p className="font-label text-[10px] tracking-[0.14em] text-primary">{c.planet}</p><h3 className="mt-1 text-lg">{c.name}</h3><p className="mt-2 text-xs text-muted-foreground leading-relaxed">{c.look}; with {c.companion}.</p><p className="mt-2 text-xs leading-relaxed">{c.voice}</p></div>)}</div>
+        <img src={cast} alt="The AstroComic cast lined up: Sovereign, Dreamer, Messenger, Enchantress, Warrior, Philosopher, Elder, Rebel, Mystic and Transformer" width={1920} height={832} loading="lazy" className="comic-frame mt-6 w-full" />
+        <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">{CAST.map(c => <div key={c.key} className="comic-card p-4"><p><span className="comic-tag text-[10px]">{c.planet}</span></p><h3 className="mt-2 font-display text-lg uppercase">{c.name}</h3><p className="mt-2 text-xs text-muted-foreground leading-relaxed">{c.look}; with {c.companion}.</p><p className="mt-2 text-xs leading-relaxed">{c.voice}</p></div>)}</div>
       </section>
 
       <section aria-labelledby="style-h" className="grid gap-10 lg:grid-cols-2">
-        <div><h2 id="style-h" className="font-display text-3xl">Lantern &amp; Ink</h2><ul className="mt-5 space-y-2 text-sm">{ART_RULES.rules.map(r => <li key={r} className="flex gap-2"><Sparkles aria-hidden className="mt-0.5 h-4 w-4 shrink-0 text-gold" />{r}</li>)}</ul>
-          <div className="mt-6 flex flex-wrap gap-3" aria-label="Print palette">{ART_RULES.palette.map(([name, hex]) => <div key={hex} className="text-center text-[10px]"><span className="block h-10 w-10 rounded-full border border-border" style={{ backgroundColor: hex }} aria-hidden /><span className="mt-1 block">{name}</span></div>)}</div>
+        <div><h2 id="style-h" className="font-display text-3xl">Atomic Zodiac</h2><p className="mt-2 text-muted-foreground">The house style: a 1950s golden-age comic, inked and printed like the newsstand digests it remembers.</p><ul className="mt-5 space-y-2 text-sm">{ART_RULES.rules.map(r => <li key={r} className="flex gap-2"><Sparkles aria-hidden className="mt-0.5 h-4 w-4 shrink-0 text-gold" />{r}</li>)}</ul>
+          <div className="mt-6 flex flex-wrap gap-3" aria-label="Print palette">{ART_RULES.palette.map(([name, hex]) => <div key={hex} className="text-center text-[10px]"><span className="block h-10 w-10 rounded-full border-2 border-foreground/80" style={{ backgroundColor: hex }} aria-hidden /><span className="mt-1 block">{name}</span></div>)}</div>
         </div>
         <div><h2 className="font-display text-3xl">Printed to spec</h2><dl className="mt-5 divide-y divide-border border-y border-border text-sm">{COMIC_SPEC.map(([k, v]) => <div key={k} className="grid grid-cols-[7rem_1fr] gap-3 py-2.5"><dt className="text-muted-foreground">{k}</dt><dd>{v}</dd></div>)}</dl><p className="mt-4 text-sm text-muted-foreground">Ships by the 8th of each month, US addresses only. Pause for up to three months or skip any month from My AstroComic.</p></div>
       </section>

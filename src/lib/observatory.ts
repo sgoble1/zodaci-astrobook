@@ -33,7 +33,6 @@ export const PLACES: [string, Place][] = [
   ['/astrobook', { name: 'Cosmic Archive', host: 'archivist', motto: 'Astral dossiers, issued to you', scene: 'cosmic-archive' }],
   ['/my-astrobook', { name: 'Cosmic Archive', host: 'archivist', motto: 'Astral dossiers, issued to you', scene: 'cosmic-archive' }],
   ['/masterbook', { name: 'Cosmic Archive', host: 'archivist', motto: 'The full edition, chapter by chapter', scene: 'cosmic-archive' }],
-  ['/library', { name: 'Cosmic Archive', host: 'archivist', motto: 'Everything you have collected', scene: 'cosmic-archive' }],
   ['/archive', { name: 'Cosmic Archive', host: 'archivist', motto: 'Every record you have kept, by date', scene: 'cosmic-archive' }],
   ['/investigations', { name: 'Investigations Bureau', host: 'analyst', motto: 'Case files opened on your own sky', scene: 'research-library' }],
   ['/museum', { name: 'Museum of the Sky', host: 'historian', motto: 'Your placements, framed and labelled', scene: 'timeline-hall' }],

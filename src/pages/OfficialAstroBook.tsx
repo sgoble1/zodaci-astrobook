@@ -71,7 +71,7 @@ function EditionShelf({ row }: { row: OfficialEditionRow }) {
           <div className="flex flex-1 flex-col gap-3">
             <div className="font-label text-xs tracking-[0.16em] text-primary">Official AstroComic</div>
             <h3 className="text-2xl leading-tight">{row.is_own ? 'Your AstroComic' : `${row.display_name}’s AstroComic`}</h3>
-            <p className="flex-1 text-sm text-muted-foreground">A 24-page issue drawn from {row.is_own ? 'your' : `${row.display_name}’s`} own chart and this month’s sky, in the Lantern &amp; Ink comic style.{row.birth ? '' : ' Birth details are needed before it can be drawn.'}</p>
+            <p className="flex-1 text-sm text-muted-foreground">A 24-page issue drawn from {row.is_own ? 'your' : `${row.display_name}’s`} own chart and this month’s sky, in the Atomic Zodiac comic style.{row.birth ? '' : ' Birth details are needed before it can be drawn.'}</p>
             <div><Button asChild variant={row.birth ? 'default' : 'outline'}><Link to={comicTo}><Sparkles className="mr-1.5 h-4 w-4" aria-hidden="true" />Read the AstroComic</Link></Button></div>
           </div>
         </div>

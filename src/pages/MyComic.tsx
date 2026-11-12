@@ -18,6 +18,11 @@ import { buildComicIssue, COMIC_PLANS, monthKey, monthLabel, nextIssueMonth, shi
 import { usePageMeta } from '@/hooks/usePageMeta';
 import type { Database } from '@/integrations/supabase/types';
 import { StartLink } from '@/components/common/StartLink';
+import skyPanel from '@/assets/astrocomic-sky-panel.jpg';
+import letterPanel from '@/assets/astrocomic-letter-panel.jpg';
+
+// Shared scenes for the preview; positions and the letter beside them are calculated from the member's chart.
+const PREVIEW_ART: Record<string, string> = { '2-0': skyPanel, '3-0': letterPanel };
 
 type Sub = Database['public']['Tables']['comic_subscriptions']['Row'];
 type Issue = Database['public']['Tables']['comic_issues']['Row'];
@@ -68,7 +73,7 @@ function MyComicInner() {
       <header><p className="font-label text-xs tracking-[0.16em] text-primary">AstroComic</p><h1 className="mt-2 font-display text-4xl sm:text-5xl">My AstroComic</h1></header>
       {returning && !current && <p role="status" className="parchment flex items-center gap-3 p-4">{waited > 20 ? 'Confirmation is taking longer than expected. Please don’t pay again — check back in a few minutes.' : <><Loader2 aria-hidden className="h-4 w-4 animate-spin" />Confirming your payment…</>}</p>}
       {current ? <SubscriptionPanel key={current.id} sub={current} issues={issues} onChange={load} /> : !returning && (
-        <section className="vellum p-6 sm:p-8"><h2 className="font-display text-2xl">No AstroComic yet</h2><p className="mt-2 text-muted-foreground">A personalized 24-page comic each month, printed and mailed to you.</p><Button asChild className="mt-5"><Link to="/astrocomic">See plans</Link></Button></section>
+        <section className="comic-card p-6 sm:p-8"><p><span className="comic-tag text-xs">Not subscribed</span></p><h2 className="mt-3 font-display text-2xl uppercase">No AstroComic yet</h2><p className="mt-2 text-muted-foreground">A personalized 24-page comic each month, printed and mailed to you.</p><Button asChild className="mt-5"><Link to="/astrocomic">See plans</Link></Button></section>
       )}
       <Archive issues={issues} />
       {birth && <NextPreview birthName={birth.name} chartInput={toChartInput(birth)} month={current ? nextIssueMonth({ ...current, plan: current.plan as ComicPlan }, issues.filter(i => i.subscription_id === current.id && i.status === 'shipped').map(i => i.issue_month)) : null} />}
@@ -182,7 +187,7 @@ function NextPreview({ birthName, chartInput, month }: { birthName: string; char
   return (
     <section aria-labelledby="next-h" className="space-y-4">
       <div className="flex flex-wrap items-end justify-between gap-3"><div><h2 id="next-h" className="font-display text-2xl">Preview: {issue.monthLabel}</h2><p className="mt-1 text-sm text-muted-foreground">Planned from your chart and that month’s sky: {issue.mainEvent}.</p></div><Button variant="outline" size="sm" onClick={() => setAll(a => !a)}>{all ? 'Show first pages' : 'See all 24 pages'}</Button></div>
-      <div className={`grid gap-3 ${all ? 'grid-cols-2 sm:grid-cols-4' : 'sm:grid-cols-3'}`}>{(all ? issue.pages : issue.pages.slice(0, 3)).map(p => <ComicPageView key={p.n} page={p} compact={all} />)}</div>
+      <div className={`grid gap-3 ${all ? 'grid-cols-2 sm:grid-cols-4' : 'sm:grid-cols-3'}`}>{(all ? issue.pages : issue.pages.slice(0, 3)).map(p => <ComicPageView key={p.n} page={p} compact={all} art={PREVIEW_ART} />)}</div>
     </section>
   );
 }

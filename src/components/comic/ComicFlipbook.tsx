@@ -34,7 +34,7 @@ export function ComicFlipbook({ issue }: { issue: AstroComicShowcase }) {
             const turned = i < at; const p = i === 0 ? null : issue.pages[i - 1];
             return (
               <div key={i} aria-hidden={i !== at}
-                className="absolute inset-0 origin-left overflow-hidden rounded-sm border-2 border-foreground/80 bg-background shadow-2xl transition-transform duration-[1200ms] ease-in-out [backface-visibility:hidden] motion-reduce:transition-none"
+                className="comic-sheet absolute inset-0 origin-left overflow-hidden transition-transform duration-[1200ms] ease-in-out [backface-visibility:hidden] motion-reduce:transition-none"
                 style={{ transform: turned ? 'rotateY(-165deg)' : 'rotateY(0deg)', zIndex: turned ? i : leaves - i }}>
                 {p == null ? (
                   <>
@@ -49,18 +49,18 @@ export function ComicFlipbook({ issue }: { issue: AstroComicShowcase }) {
                   </>
                 ) : (
                   <div className="flex h-full flex-col gap-2 p-2.5">
-                    <div className="flex items-baseline justify-between border-b border-foreground/30 pb-1"><span className="font-label text-[10px] tracking-[0.14em] text-primary">{p.placement}</span><span className="text-[9px] text-muted-foreground">{p.pageNumber}</span></div>
-                    <p className="font-display text-base leading-tight">{p.actTitle}</p>
-                    <div className="relative min-h-0 flex-[3] overflow-hidden border-2 border-foreground/80">
+                    <div className="comic-rule flex items-baseline justify-between pb-1"><span className="comic-tag text-[10px]">{p.placement}</span><span className="comic-pagenum text-[10px]">{p.pageNumber}</span></div>
+                    <p className="font-display text-base uppercase leading-tight">{p.actTitle}</p>
+                    <div className="comic-cell min-h-0 flex-[3]">
                       <img src={p.art} alt={p.panels[0].visualPrompt} width={1536} height={1024} loading="lazy" className="h-full w-full object-cover" />
-                      <p className="absolute left-1.5 top-1.5 max-w-[80%] border border-gold/60 bg-background/90 px-1.5 py-0.5 text-[10px] leading-snug">{p.panels[0].narration}</p>
+                      <p className="comic-caption absolute left-1.5 top-1.5 max-w-[80%] text-[10px]">{p.panels[0].narration}</p>
                     </div>
                     <div className="grid min-h-0 flex-[2] grid-cols-2 gap-1.5">
                       {p.panels.slice(1).map((panel, k) => (
-                        <div key={k} className="relative flex flex-col justify-end gap-1 overflow-hidden border-2 border-foreground/80 bg-card/70 p-1.5">
-                          <img src={p.art} alt="" aria-hidden width={1536} height={1024} loading="lazy" className="absolute inset-0 h-full w-full object-cover opacity-40" style={{ objectPosition: k ? '85% 50%' : '15% 40%', transform: 'scale(1.8)' }} />
-                          <p className="relative border border-gold/60 bg-background/90 px-1 py-0.5 text-[9px] leading-snug">{panel.narration}</p>
-                          {panel.dialogue && <p className="relative w-fit rounded-2xl bg-foreground px-1.5 py-0.5 text-[9px] text-background">{panel.dialogue}</p>}
+                        <div key={k} className="comic-cell flex flex-col justify-end gap-2 p-1.5">
+                          <img src={p.art} alt="" aria-hidden width={1536} height={1024} loading="lazy" className="absolute inset-0 h-full w-full object-cover opacity-50" style={{ objectPosition: k ? '85% 50%' : '15% 40%', transform: 'scale(1.8)' }} />
+                          <p className="comic-caption text-[9px]">{panel.narration}</p>
+                          {panel.dialogue && <p className="comic-balloon mb-2 text-[9px]">{panel.dialogue}</p>}
                         </div>
                       ))}
                     </div>
@@ -80,7 +80,7 @@ export function ComicFlipbook({ issue }: { issue: AstroComicShowcase }) {
         <p className="font-label text-xs tracking-[0.16em] text-primary">Issue #{issue.issueNumber} · {issue.subject.sunSign} Sun · {issue.subject.moonSign} Moon · {issue.subject.risingSign} Rising</p>
         <h3 className="mt-2 font-display text-3xl">{page ? page.actTitle : issue.title}</h3>
         {page ? (
-          <ol className="mt-5 space-y-4">{page.panels.map((p, i) => <li key={i} className="border-l-2 border-gold/60 pl-4"><p className="text-xs text-muted-foreground">Panel {i + 1}</p><p className="mt-1 leading-relaxed">{p.narration}</p>{p.dialogue && <p className="mt-1 font-semibold">{p.dialogue}</p>}</li>)}</ol>
+          <ol className="mt-5 space-y-4">{page.panels.map((p, i) => <li key={i} className="border-l-[3px] border-accent pl-4"><p className="text-xs text-muted-foreground">Panel {i + 1}</p><p className="mt-1 leading-relaxed">{p.narration}</p>{p.dialogue && <p className="mt-1 font-semibold">{p.dialogue}</p>}</li>)}</ol>
         ) : (
           <p className="mt-4 leading-relaxed text-muted-foreground">{issue.intro}</p>
         )}

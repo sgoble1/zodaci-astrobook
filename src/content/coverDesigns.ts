@@ -21,7 +21,7 @@ export const COVER_DESIGNS: CoverDesign[] = [
   { key: 'midnight-stars', label: 'Midnight Stars', kind: 'art', detail: 'Black night sky with fine gold stars and a faint violet glow.', src: coverMidnightStars, variants: [{ src: coverMidnightStars, size: [1280, 1920] }, { src: coverMidnightStarsLetter, size: [1488, 1920] }, { src: coverMidnightStarsSquare, size: [1920, 1920] }] },
   { key: 'midnight-ember', label: 'Midnight Ember', kind: 'art', detail: 'The Midnight Stars design in wine-plum with rose-gold stars.', src: coverMidnightEmber, variants: [{ src: coverMidnightEmber, size: [1280, 1920] }, { src: coverMidnightEmberLetter, size: [1488, 1920] }, { src: coverMidnightEmberSquare, size: [1920, 1920] }] },
   { key: 'solid-midnight', label: 'Solid Midnight', kind: 'solid', detail: 'Deep-midnight cloth with a fine grain, faint stars and a gold inset line.', colors: ['#0D1028'], accent: '#D4A853' },
-  { key: 'gradient-violet-dusk', label: 'Violet Dusk', kind: 'gradient', detail: 'Midnight fading into violet, with grain and a scatter of stars.', colors: ['#07080F', '#2A1458', '#8B5CF6'], accent: '#E9D9A6' },
+  { key: 'gradient-violet-dusk', label: 'Indigo Dusk', kind: 'gradient', detail: 'Deep indigo fading into evening blue, with grain and a scatter of yellow stars.', colors: ['#12123A', '#1E1E5A', '#3A3A8C'], accent: '#FFC61A' },
   { key: 'gradient-gold-dawn', label: 'Gold Dawn', kind: 'gradient', detail: 'Midnight rising into soft gold, with grain and a scatter of stars.', colors: ['#07080F', '#3A2A12', '#D4A853'], accent: '#F4E3B5' },
 ];
 

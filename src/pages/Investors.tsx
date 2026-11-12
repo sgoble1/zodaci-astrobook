@@ -16,7 +16,7 @@ const low = BOOK_VERSIONS[0]; const high = BOOK_VERSIONS[BOOK_VERSIONS.length - 
 const PRODUCTS: [string, string, string][] = [
   ['self', 'Memberships', `Free, Pro ${PLAN_PRICE.full.month} and Cosmic ${PLAN_PRICE.creator.month}. Readings, counselors, workbook, podcasts and a Masterbook written from each member’s own calculated chart.`],
   ['sign', 'AstroBook', `A six-volume personal book in five editions, ${money(low.price)} to ${money(high.price)}, printed on demand. Same structure and depth as our founders’ Masterbooks.`],
-  ['year', 'AstroComic', 'A monthly illustrated comic in the original Lantern & Ink style, starring the member’s chart. Issue #1 is open for print pre-order.'],
+  ['year', 'AstroComic', 'A monthly illustrated comic in the original Atomic Zodiac style (1950s golden-age comic), starring the member’s chart. Issue #1 is open for print pre-order.'],
   ['chart', 'Shop', 'Posters, sticker sheets and notebooks, sold and fulfilled through a live Shopify storefront.'],
 ];
 const LIVE = [
@@ -45,7 +45,7 @@ const SOCIAL = [
 const FUTURE = [
   ['Chart-matched shop', 'Each member sees posters, stickers, notebooks, gifts and print editions picked from their own placements — a Leo Rising gets gold-leaf Leo art, a Capricorn Moon a structured planner. Recommendations come from the chart the member already has, so no extra data is needed.'],
   ['Make your own comic hero', 'Members design their AstroComic character: face, hair, skin tone, build, clothing and signature colours, saved once and reused in every monthly issue.'],
-  ['Three illustration styles', 'Choose how each issue is drawn: Lantern & Ink (storybook ink and lamplight), Celestial Manga (clean line and screen tones) or Painted Myth (rich painted fantasy). Same chart story, three looks.'],
+  ['Three illustration styles', 'Choose how each issue is drawn: Atomic Zodiac (1950s golden-age comic, the house style), Celestial Manga (clean line and screen tones) or Painted Myth (rich painted fantasy). Same chart story, three looks.'],
   ['Creator Studio downloads', 'Members make and keep their own pieces — phone wallpapers, printable chart posters, affirmation cards, journal pages, podcast episodes and comic panels — saved to their library.'],
 ];
 const WHY_TRUST = [

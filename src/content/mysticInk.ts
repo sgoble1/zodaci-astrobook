@@ -7,15 +7,14 @@ export const MYSTIC_INK_PREFIX = 'Original illustration in the Zodaci "Atomic Zo
 
 export const MYSTIC_INK_NEGATIVE = 'Avoid: Vault Boy or Fallout characters, jumpsuits, thumbs-up poses, mascots, fantasy, crystals, cyberpunk, neon, cute storybook rendering, plastic 3D render look, anime styling, photographic realism, copies of any existing cover, film still, character or logo, readable text inside the artwork.';
 
-/** Section 4 colour system. Hex values are pigment references for artwork; the UI uses the matching --mi-* tokens. */
+/** Atomic Zodiac print palette ("Blend"). Hex values are pigment references for artwork; the UI uses the matching theme tokens. */
 export const MYSTIC_PALETTE = [
-  { key: 'indigo', name: 'Midnight Indigo', hex: '#1B1F4B', use: 'Night skies, page backgrounds, deepest shadows' },
-  { key: 'plum', name: 'Royal Plum', hex: '#4A2C5E', use: 'Headings, shadows, secondary backgrounds' },
-  { key: 'teal', name: 'Deep Teal', hex: '#1F5F6B', use: 'Water, mist, cool shadows' },
-  { key: 'gold', name: 'Burnished Gold', hex: '#C9A24B', use: 'Constellation lines, star glow, ornaments, buttons' },
-  { key: 'rose', name: 'Rose Coral', hex: '#C77D8E', use: 'Warm highlights, skin glow, accents' },
-  { key: 'parchment', name: 'Pearl Parchment', hex: '#F2E6CF', use: 'Page and card backgrounds, text on dark' },
-  { key: 'ink', name: 'Ink Brown', hex: '#2B1B14', use: 'Linework and body text on light' },
+  { key: 'cream', name: 'Archive Cream', hex: '#EFE3C8', use: 'Paper, page and card backgrounds, text on dark' },
+  { key: 'indigo', name: 'Deep Indigo', hex: '#1E1E5A', use: 'Night skies, outlines, deepest shadows' },
+  { key: 'yellow', name: 'Shop Yellow', hex: '#FFC61A', use: 'Caption boxes, starbursts, highlights' },
+  { key: 'red', name: 'Shop Red', hex: '#E23B44', use: 'Title bands, accents, warm shadows' },
+  { key: 'brass', name: 'Brass', hex: '#B8963E', use: 'Instruments, orbit rings, ornaments' },
+  { key: 'ink', name: 'Ink Black', hex: '#14141C', use: 'Linework and lettering' },
 ] as const;
 
 export type ZodiacSign = 'Aries' | 'Taurus' | 'Gemini' | 'Cancer' | 'Leo' | 'Virgo' | 'Libra' | 'Scorpio' | 'Sagittarius' | 'Capricorn' | 'Aquarius' | 'Pisces';
@@ -30,7 +29,7 @@ export const SIGN_STYLE: SignStyle[] = [
   { sign: 'Leo', accents: 'saffron and amber', figure: 'Lion', motif: 'sickle and mane of stars' },
   { sign: 'Virgo', accents: 'wheat gold and sage', figure: 'Maiden with wheat', motif: 'long reclining star figure' },
   { sign: 'Libra', accents: 'rose quartz and bronze', figure: 'Scales', motif: 'balanced star quadrilateral' },
-  { sign: 'Scorpio', accents: 'deep crimson and violet', figure: 'Scorpion', motif: 'curving tail of stars' },
+  { sign: 'Scorpio', accents: 'deep crimson and indigo', figure: 'Scorpion', motif: 'curving tail of stars' },
   { sign: 'Sagittarius', accents: 'copper and sky blue', figure: 'Archer', motif: 'teapot-shaped bow of stars' },
   { sign: 'Capricorn', accents: 'slate green and silver', figure: 'Sea-goat', motif: 'triangular star sweep' },
   { sign: 'Aquarius', accents: 'aqua and silver', figure: 'Water bearer', motif: 'zigzag stream of stars' },

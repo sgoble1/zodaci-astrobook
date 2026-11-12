@@ -1507,3 +1507,38 @@ li:hover > .zodiac-coin { transform: rotate(-10deg); }
   body.printing-report header, body.printing-report nav[aria-label="Breadcrumb"], body.printing-report [data-founder-dock], body.printing-report aside { display: none !important; }
   body.printing-report .founder-report { max-width: none; }
 }
+
+/* ── Golden-age comic sheet (AstroComic pages, reader, flipbook, previews): cream newsprint, heavy ink gutters,
+   halftone, yellow caption boxes, round white balloons with black outlines, red section tags. ── */
+:root { --comic-ink: 232 30% 9%; --comic-balloon: 42 60% 97%; --comic-yellow: 45 100% 55%; --comic-red: 357 74% 56%; }
+.comic-sheet { color: hsl(var(--comic-ink)); border: 3px solid hsl(var(--comic-ink)); border-radius: 2px;
+  background: radial-gradient(hsl(var(--comic-red) / .09) .9px, transparent 1.2px) 0 0 / 6px 6px, radial-gradient(hsl(var(--comic-navy) / .07) .8px, transparent 1.1px) 3px 3px / 6px 6px, linear-gradient(175deg, hsl(42 70% 92%), hsl(var(--spot-paper)) 60%, hsl(38 50% 80%));
+  box-shadow: inset 0 0 40px hsl(30 45% 35% / .18), 5px 6px 0 hsl(var(--comic-red) / .55); }
+.comic-sheet .text-muted-foreground { color: hsl(var(--comic-navy) / .78); }
+.comic-sheet h2, .comic-sheet h3, .comic-sheet .font-display { color: hsl(var(--comic-ink)); background: none; -webkit-text-fill-color: currentColor; text-shadow: 1.5px 1.5px 0 hsl(var(--comic-yellow) / .7); }
+.comic-sheet-cover { box-shadow: 5px 6px 0 hsl(var(--comic-red) / .55); }
+.comic-tag { display: inline-block; padding: .05rem .4rem; background: hsl(var(--comic-red)); color: hsl(var(--comic-balloon)); border: 1.5px solid hsl(var(--comic-ink)); font-family: 'Bebas Neue', sans-serif; letter-spacing: .1em; line-height: 1.35; transform: rotate(-1.2deg); }
+.comic-pagenum { font-family: 'Bebas Neue', sans-serif; letter-spacing: .08em; color: hsl(var(--comic-ink)); }
+.comic-rule { border-bottom: 2.5px solid hsl(var(--comic-ink)); }
+.comic-cell { position: relative; overflow: hidden; border: 3px solid hsl(var(--comic-ink)); background: radial-gradient(hsl(var(--comic-navy) / .1) .9px, transparent 1.2px) 0 0 / 5px 5px, hsl(42 66% 93%); }
+.comic-cell > img { filter: saturate(1.05) contrast(1.04); }
+.comic-direction { font-style: italic; color: hsl(var(--comic-navy) / .82); }
+.comic-caption { width: fit-content; max-width: 92%; padding: .15rem .45rem; background: hsl(var(--comic-yellow)); color: hsl(var(--comic-ink)); border: 2px solid hsl(var(--comic-ink)); box-shadow: 2px 2px 0 hsl(var(--comic-ink)); font-weight: 600; line-height: 1.3; letter-spacing: .01em; }
+.comic-balloon { position: relative; width: fit-content; max-width: 86%; padding: .3rem .7rem; background: hsl(var(--comic-balloon)); color: hsl(var(--comic-ink)); border: 2px solid hsl(var(--comic-ink)); border-radius: 999px / 70%; line-height: 1.3; }
+.comic-balloon::after { content: ''; position: absolute; bottom: -9px; left: 22%; width: 12px; height: 11px; background: hsl(var(--comic-balloon)); border-right: 2px solid hsl(var(--comic-ink)); border-bottom: 2px solid hsl(var(--comic-ink)); clip-path: polygon(0 0, 100% 0, 100% 100%); transform: skewX(-18deg); }
+.comic-balloon.ml-auto::after { left: auto; right: 22%; transform: scaleX(-1) skewX(-18deg); }
+.comic-title-band { background: hsl(var(--comic-red)); color: hsl(var(--comic-balloon)); border-bottom: 3px solid hsl(var(--comic-ink)); }
+.comic-title-band .font-display { color: hsl(var(--comic-balloon)); -webkit-text-fill-color: currentColor; text-shadow: 2px 2px 0 hsl(var(--comic-ink)); }
+.comic-issue-line { font-family: 'Bebas Neue', sans-serif; letter-spacing: .14em; color: hsl(var(--comic-yellow)); }
+.comic-burst { position: absolute; display: grid; place-items: center; width: 3.4rem; aspect-ratio: 1; background: hsl(var(--comic-yellow)); color: hsl(var(--comic-ink)); border: 0; font: 400 .8rem/1 'Bebas Neue', sans-serif; letter-spacing: .06em; text-align: center; clip-path: polygon(50% 0,61% 23%,85% 12%,79% 37%,100% 50%,79% 63%,85% 88%,61% 77%,50% 100%,39% 77%,15% 88%,21% 63%,0 50%,21% 37%,15% 12%,39% 23%); filter: drop-shadow(2px 2px 0 hsl(var(--comic-ink))); }
+.comic-list li { border-left: 3px solid hsl(var(--comic-red)); }
+/* Product-page comic boxes: same cream sheet for cast cards and the scripted-page list. */
+.comic-card { color: hsl(var(--comic-ink)); border: 2.5px solid hsl(var(--comic-ink)); border-radius: var(--cut-card, 4px); background: radial-gradient(hsl(var(--comic-navy) / .07) .9px, transparent 1.2px) 0 0 / 5px 5px, linear-gradient(170deg, hsl(42 72% 92%), hsl(var(--spot-paper)) 60%, hsl(38 50% 82%)); box-shadow: 4px 4px 0 hsl(var(--comic-red) / .55); }
+.comic-card .text-muted-foreground { color: hsl(var(--comic-navy) / .78); }
+.comic-card .text-primary { color: hsl(var(--comic-red)); }
+.comic-card h3, .comic-card h2 { color: hsl(var(--comic-ink)); -webkit-text-fill-color: currentColor; background: none; }
+.comic-frame { border: 3px solid hsl(var(--comic-ink)); box-shadow: 5px 6px 0 hsl(var(--comic-red) / .5); border-radius: 2px; }
+/* Buttons printed on cream comic stock: ink text on a yellow plate (outline buttons stay ink-on-paper). */
+.comic-card .btn-quiet, .comic-sheet .btn-quiet { background: hsl(var(--comic-yellow)); color: hsl(var(--comic-ink)); border: 2px solid hsl(var(--comic-ink)); box-shadow: 2px 2px 0 hsl(var(--comic-ink)); }
+.comic-card .btn-quiet:hover, .comic-sheet .btn-quiet:hover { background: hsl(45 100% 62%); }
+.comic-card .border-foreground\/15, .comic-sheet .border-foreground\/15 { border-color: hsl(var(--comic-ink) / .6); color: hsl(var(--comic-ink)); }

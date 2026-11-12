@@ -8,6 +8,7 @@ Full plan: .lovable/plan/zodaci-final-master-plan-everything-still-unfinished-20
 - [ ] Stage 1b navigation audit, AstroComic golden-age restyle, site-wide image/theme consistency (user asked Nov 12).
 - [ ] Stage 2 leftover free items · Stage 3 verification sweep.
 - [ ] Stage 4 all AI-credit work in full (user asked Nov 12: include everything) · Stage 5 Living AstroBooks, Portraits, Event system, Observatory upgrade.
+- Nov 12 (later): user asked to continue and finish everything EXCEPT, for now, the long readings, AstroBook Volumes IV–VI and the founder comics (Stage 4 items 7–9 deferred).
 
 ## Nov 12 — Unfinished items from archived docs + Current Implementation Plan Doc
 Full plan: .lovable/plan/unfinished-work-plan-archived-docs-current-implementation-pl-2026-11-12.md
