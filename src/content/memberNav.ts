@@ -1,7 +1,7 @@
 import type { LucideIcon } from 'lucide-react';
 import {
   Activity, Atom, BookHeart, BookOpen, BookOpenText, Calculator, CalendarClock, CalendarRange, CircleHelp, Compass, Crown, Gift, Globe2,
-  GraduationCap, Hash, Headphones, Heart, HeartHandshake, Info, LayoutDashboard, Library, ListChecks, MessageCircle, MessagesSquare, Moon,
+  GraduationCap, Hash, Landmark, Headphones, Heart, HeartHandshake, Info, LayoutDashboard, Library, ListChecks, MessageCircle, MessagesSquare, Moon,
   NotebookPen, Orbit, Package, PenLine, PlayCircle, Printer, RefreshCcw, Repeat, ScrollText, Search, Settings2, ShieldCheck, Sparkles, Star,
   Share2, Sun, Telescope, Truck, UserRound, Users, Wand2, Waypoints,
 } from 'lucide-react';
@@ -60,7 +60,7 @@ export const MEMBER_DOMAINS: MemberDomain[] = [
     id: 'readings', label: 'Readings', hub: '/my-readings', hubLabel: 'All my readings', icon: BookOpenText,
     description: 'Readings written only from your own placements.',
     tabs: ['/my-readings', '/chat', '/wonderings', '/counselors', '/workbook', '/retrogood', '/create'],
-    prefixes: ['/my-readings', '/workbook', '/counselors', '/chat', '/topics', '/readings', '/reading', '/p', '/ask', '/sources', '/observation-log', '/observatory', '/content-center'],
+    prefixes: ['/my-readings', '/workbook', '/counselors', '/chat', '/investigations', '/museum', '/topics', '/readings', '/reading', '/p', '/ask', '/sources', '/observation-log', '/observatory', '/content-center'],
     columns: [
       { title: 'My readings', more: { to: '/my-readings#topics', label: `All ${TOPIC_READINGS.length} topics & ${CORE_THEMES.length} core themes` }, items: [
         { to: '/my-readings', label: 'All my readings', description: 'Topics, core themes and quick readings', icon: BookOpenText },
@@ -70,6 +70,10 @@ export const MEMBER_DOMAINS: MemberDomain[] = [
         { to: topic('love'), label: topicTitle('love'), description: 'How you love and what you need', icon: Heart },
         { to: topic('career'), label: topicTitle('career'), description: 'Work, calling and direction', icon: Crown },
         { to: topic('purpose'), label: topicTitle('purpose'), description: 'What your chart points you toward', icon: Compass },
+      ] },
+      { title: 'Bureau & Museum', items: [
+        { to: '/investigations', label: 'Investigations Bureau', description: 'Seven case files read from your chart', icon: Search, badge: 'New' },
+        { to: '/museum', label: 'Museum of the Sky', description: 'Your placements framed in five galleries', icon: Landmark, badge: 'New' },
       ] },
       { title: 'Ask & talk', items: [
         { to: '/chat', label: 'SmartChat', description: 'Ask anything about your chart', icon: MessageCircle },
@@ -94,7 +98,7 @@ export const MEMBER_DOMAINS: MemberDomain[] = [
     id: 'book', label: 'Cosmic Archive', hub: '/my-astrobook', hubLabel: 'Open my library', icon: BookHeart,
     description: 'Your Masterbook, printed AstroBook, audio and keepsakes.',
     tabs: ['/my-astrobook', '/my-masterbook', '/books', '/orders', '/podcasts', '/my-comic'],
-    prefixes: ['/shane', '/april', '/zac', '/astrobook', '/astrocomic', '/official-astrobook', '/masterbook', '/library', '/shared-with-me', '/contents', '/read'],
+    prefixes: ['/shane', '/april', '/zac', '/astrobook', '/astrocomic', '/official-astrobook', '/masterbook', '/library', '/archive', '/shared-with-me', '/contents', '/read'],
     columns: [
       { title: 'My AstroBook', items: [
         { to: '/my-masterbook', label: 'My Masterbook', description: 'Your foundational chapters', icon: BookHeart, badge: 'Popular' },
@@ -105,6 +109,7 @@ export const MEMBER_DOMAINS: MemberDomain[] = [
       { title: 'Library', items: [
         { to: '/my-astrobook', label: 'My Library', description: 'Everything that is yours, searchable', icon: Library },
         { to: '/reading-history', label: 'Reading history', description: 'Every chapter you opened, and where you stopped', icon: BookOpen },
+        { to: '/archive', label: 'The Archive', description: 'Everything you made and kept, by date', icon: ScrollText, badge: 'New' },
         { to: '/podcasts', label: 'Podcasts', description: 'Turn readings into audio episodes', icon: Headphones },
         { to: '/my-comic', label: 'My AstroComic', description: 'Your illustrated monthly issue', icon: Package },
         { to: '/store', label: 'Zodaci Shop', description: 'Posters, stickers and notebooks', icon: Package },
@@ -405,7 +410,7 @@ export const ROUTE_INVENTORY: Record<string, Placement> = {
   '/brand-launch': P('public', 'utility', 'launch kit'), '/contents': P('april', 'utility'), '/contents/:id': P('april', 'utility'), '/read': P('april', 'utility'), '/read/document/:slug': P('april', 'utility'), '/read/:id': P('april', 'utility'),
   '/': P('account', 'duplicate', 'members are sent to /dashboard'), '/explore': P('explore', 'primary'), '/personal-context': P('account', 'utility'), '/workspaces': P('explore', 'secondary'), '/observation-log': P('readings', 'secondary'), '/observatory': P('readings', 'secondary'), '/content-center': P('readings', 'secondary'), '/reading-history': P('book', 'secondary'),
   '/wonderings': P('readings', 'secondary'), '/start': P('chart', 'secondary'), '/my-chart': P('chart', 'primary'), '/retrogood': P('readings', 'secondary'), '/our-charts': P('chart', 'secondary', 'shared-space accounts'), '/siblings': P('explore', 'secondary'),
-  '/findings': P('chart', 'secondary'), '/results': P('chart', 'secondary'), '/my-readings': P('readings', 'primary'), '/my-readings/topic/:slug': P('readings', 'tertiary', 'every topic and core theme is listed on the Readings hub'),
+  '/investigations': P('readings', 'secondary'), '/investigations/:caseId': P('readings', 'tertiary', 'from the Investigations Bureau'), '/museum': P('readings', 'secondary'), '/museum/:gallery': P('readings', 'tertiary', 'from the Museum lobby'), '/archive': P('book', 'secondary'), '/findings': P('chart', 'secondary'), '/results': P('chart', 'secondary'), '/my-readings': P('readings', 'primary'), '/my-readings/topic/:slug': P('readings', 'tertiary', 'every topic and core theme is listed on the Readings hub'),
   '/my-astrobook': P('book', 'primary'), '/auth': P('account', 'utility'), '/reset-password': P('account', 'utility'), '/pricing': P('account', 'utility'), '/creator': P('account', 'utility', 'Cosmic Studio'),
   '/my-comic': P('book', 'secondary'), '/referrals': P('explore', 'secondary'), '/checkout/return': P('account', 'utility'), '/my-masterbook': P('book', 'secondary'), '/books': P('book', 'secondary'), '/orders': P('book', 'secondary'),
   '/dispatch': P('admin', 'utility'), '/instructions': P('learn', 'secondary'), '/birth-chart': P('chart', 'duplicate', 'renders My Chart for members'), '/chart-guide': P('chart', 'duplicate', 'renders My Chart for members'),

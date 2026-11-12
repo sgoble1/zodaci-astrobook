@@ -25,7 +25,7 @@ export default function Community() {
     if (id) { const r = await supabase.from('community_replies').select('*').eq('post_id',id).order('created_at'); if(r.error) setError('Could not load replies.'); else setReplies(r.data || []); }
     setLoading(false);
   };
-  useEffect(() => { setLoading(true); setBody(''); setCompose(false); void load(); const timer=window.setInterval(load,10000); return () => window.clearInterval(timer); },[id,session]);
+  useEffect(() => { setLoading(true); setBody(''); setCompose(false); void load(); const timer=window.setInterval(() => { if (document.visibilityState === 'visible') void load(); }, 10000); return () => window.clearInterval(timer); },[id,session]);
   const submit = async () => {
     if(!session) return; setBusy(true); setError('');
     const result = id ? await supabase.from('community_replies').insert({post_id:id,author_id:session.user.id,author_name:name.trim(),body:body.trim()}) : await supabase.from('community_posts').insert({author_id:session.user.id,author_name:name.trim(),title:title.trim(),body:body.trim(),category:category === 'All' ? categories[0] : category});

@@ -35,7 +35,7 @@ export function UpdatesFeed({ limit = 6 }: { limit?: number }) {
     const ch = supabase.channel(`updates-feed-${Math.random().toString(36).slice(2)}`);
     ['library_items', 'custom_pages', 'shared_media', 'shared_recommendations','blog_posts'].forEach(t => ch.on('postgres_changes', { event: '*', schema: 'public', table: t }, () => void load()));
     ch.subscribe();
-    const t = setInterval(() => void load(), 120000);
+    const t = setInterval(() => { if (document.visibilityState === 'visible') void load(); }, 120000);
     return () => { clearInterval(t); void supabase.removeChannel(ch); };
   }, []);
   const UPDATES = useMemo(() => [...live, ...STATIC].sort((a, b) => toTime(b.date) - toTime(a.date)), [live]);

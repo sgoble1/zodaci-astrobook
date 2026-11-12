@@ -5,6 +5,7 @@ import { computeChart, type ChartInput } from '@/lib/astro';
 import { interAspects, scoreSummary, composite, signPair, possessive } from '@/lib/synastry';
 import { useRelationships } from '@/hooks/useRelationships';
 import { useShaneAccount } from '@/hooks/useShaneAccount';
+import { useZacAccount } from '@/hooks/useZacAccount';
 import { useWholeEditionAccess } from '@/lib/editionSharing';
 import { AuthGate } from '@/components/common/AuthGate';
 import { SelfGate } from '@/components/relationships/SelfGate';
@@ -25,10 +26,12 @@ function Compare({ self }: { self: RelationshipSelf }) {
   const [params, setParams] = useSearchParams();
   const { items, loading } = useRelationships();
   const isShane = useShaneAccount();
+  const isZac = useZacAccount() && !isShane;
   // April's archive chart is used only when this account may read her whole edition and hasn't saved her separately.
   const aprilShared = useWholeEditionAccess('april');
   const wanted = params.get('with');
-  const defaultFor = self.isApril ? /shane/i : isShane ? /april/i : null;
+  // Each founder opens on their partner in the shared space: April and Zac on Shane, Shane on April.
+  const defaultFor = self.isApril || isZac ? /shane/i : isShane ? /april/i : null;
   const picked = items.find(r => r.id === wanted) ?? (defaultFor ? items.find(r => defaultFor.test(r.name)) : undefined) ?? items[0];
   const useArchiveApril = !picked && isShane && aprilShared === true && !self.isApril;
   const partnerName = picked?.name ?? (useArchiveApril ? 'April' : '');

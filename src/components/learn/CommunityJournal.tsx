@@ -18,7 +18,7 @@ export function CommunityJournal() {
   const [compose,setCompose] = useState(false); const [title,setTitle] = useState(''); const [body,setBody] = useState(''); const [name,setName] = useState(''); const [error,setError] = useState(''); const [busy,setBusy] = useState(false);
   const load = async () => { const { data,error:err } = await supabase.from('blog_posts').select('*').order('created_at',{ ascending:false }); if(err) setError(err.message); else setPosts(data || []); };
   useEffect(() => {
-    void load(); const timer = window.setInterval(load,10000);
+    void load(); const timer = window.setInterval(() => { if (document.visibilityState === 'visible') void load(); }, 10000);
     const channel = supabase.channel(`blog-${crypto.randomUUID()}`).on('postgres_changes',{ event:'*',schema:'public',table:'blog_posts' },load).subscribe();
     return () => { window.clearInterval(timer); void supabase.removeChannel(channel); };
   },[sub.userId]);

@@ -92,6 +92,10 @@ function AprilEditionInner() {
   const { birth } = ed;
   return (
     <article className="mx-auto max-w-4xl space-y-14 p-5 sm:p-10">
+      <nav aria-label="Leave the report" className="flex flex-wrap items-center justify-between gap-3 text-sm print:hidden">
+        <Link to="/dashboard" className="inline-flex min-h-10 items-center rounded-full border border-border px-4 text-muted-foreground hover:border-gold hover:text-foreground">← Back to Zodaci</Link>
+        <button type="button" onClick={() => window.print()} className="inline-flex min-h-10 items-center rounded-full border border-border px-4 text-muted-foreground hover:border-gold hover:text-foreground">Print this report</button>
+      </nav>
       <header className="space-y-4 text-center">
         <ZodaciLogo compact />
         <div className="font-label text-xs tracking-[0.16em] text-primary">A shared chart report</div>

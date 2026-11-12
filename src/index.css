@@ -1475,3 +1475,14 @@ li:hover > .zodiac-coin { transform: rotate(-10deg); }
 .ob-details { border-top: 1px solid hsl(var(--border)); padding-top: .75rem; }
 .ob-details .ob-reader { margin-top: .5rem; max-height: 22rem; overflow-y: auto; }
 @media (prefers-reduced-motion: reduce) { .ob-book, .ob-leaf, .ob-book::before, .ob-book::after { transition: none; } }
+
+/* Investigations Bureau case folders and Museum of the Sky plates (semantic tokens only). */
+.case-folder { position: relative; padding-top: 1.35rem; }
+.case-folder-tab { position: absolute; top: 0; left: 1.1rem; z-index: 1; padding: .3rem .8rem .25rem; color: hsl(var(--comic-navy)); background: hsl(var(--brass) / .85); border-radius: 4px 7px 0 0 / 5px 6px 0 0; box-shadow: 2px -1px 0 hsl(var(--comic-navy) / .35); }
+.case-folder > .obs-paper { transition: transform 1.1s cubic-bezier(.2,.7,.2,1), box-shadow 1.1s cubic-bezier(.2,.7,.2,1); }
+.case-folder:hover > .obs-paper, .case-folder:focus-visible > .obs-paper { transform: translateY(-3px) rotate(-.3deg); }
+.museum-arch { display: inline-flex; padding: .6rem; border: 3px double hsl(var(--brass) / .7); border-radius: 999px 999px 6px 7px; background: hsl(var(--paper) / .5); }
+.museum-frame { border-bottom: 3px double hsl(var(--brass) / .6); background: radial-gradient(ellipse at 50% 30%, hsl(var(--paper) / .65), transparent 70%); box-shadow: inset 0 0 0 6px hsl(var(--brass) / .18); }
+.museum-door > .obs-paper, .museum-plate > figure { transition: transform 1.2s cubic-bezier(.2,.7,.2,1); }
+.museum-door:hover > .obs-paper, .museum-door:focus-visible > .obs-paper { transform: translateY(-3px); }
+@media (prefers-reduced-motion: reduce) { .case-folder > .obs-paper, .museum-door > .obs-paper, .museum-plate > figure { transition: none; transform: none !important; } }

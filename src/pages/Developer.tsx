@@ -42,7 +42,7 @@ export default function Developer({ view = 'board' }: { view?: 'board' | 'timeli
   useEffect(() => {
     if (!admin) return;
     const ch = supabase.channel(`dev-items-${Math.random().toString(36).slice(2)}`).on('postgres_changes', { event: '*', schema: 'public', table: 'dev_items' }, () => void load()).subscribe();
-    const t = setInterval(() => void load(), 60_000);
+    const t = setInterval(() => { if (document.visibilityState === 'visible') void load(); }, 60_000);
     return () => { supabase.removeChannel(ch); clearInterval(t); };
   }, [admin, load]);
 

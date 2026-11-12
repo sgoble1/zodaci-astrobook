@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { MapPin, Plus, Telescope, Trash2 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useSession } from '@/hooks/useLibrary';
@@ -24,7 +24,10 @@ export default function ObservationLog() {
   const [setupNeeded, setSetupNeeded] = useState(false);
   const [error, setError] = useState('');
   const [open, setOpen] = useState<string | null>(null);
-  const [at, setAt] = useState(nowLocal); const [location, setLocation] = useState(''); const [notes, setNotes] = useState(''); const [tags, setTags] = useState('');
+  const [at, setAt] = useState(nowLocal); const [location, setLocation] = useState(''); const [notes, setNotes] = useState('');
+  const [params] = useSearchParams();
+  // Case files and galleries link here with a topic tag already filled in.
+  const [tags, setTags] = useState(() => (params.get('tag') ?? '').replace(/[^\w ,-]/g, '').slice(0, 40));
   const [busy, setBusy] = useState(false); const [fieldError, setFieldError] = useState('');
 
   const load = useCallback(async () => {

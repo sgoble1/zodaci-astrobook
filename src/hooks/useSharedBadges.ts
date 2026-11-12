@@ -27,7 +27,7 @@ export function useSharedBadges() {
     const ch = supabase.channel(channelName)
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'shared_messages' }, load)
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'shared_wonderings' }, load).subscribe();
-    const t = window.setInterval(load, 60000);
+    const t = window.setInterval(() => { if (document.visibilityState === 'visible') void load(); }, 60000);
     const stop = onAccountChange(() => load());
     return () => { live = false; supabase.removeChannel(ch); clearInterval(t); stop(); };
   }, []);

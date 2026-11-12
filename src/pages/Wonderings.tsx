@@ -23,7 +23,7 @@ export default function Wonderings() {
     if (directory.error || questions.error) { setError('This workspace could not be opened.'); return; }
     setMembers(directory.data ?? []); setItems(questions.data ?? []);
   }, [space, session?.user.id]); // eslint-disable-line react-hooks/exhaustive-deps
-  useEffect(() => { void load(); const timer = window.setInterval(load, 10000); return () => window.clearInterval(timer); }, [load]);
+  useEffect(() => { void load(); const timer = window.setInterval(() => { if (document.visibilityState === 'visible') void load(); }, 10000); return () => window.clearInterval(timer); }, [load]);
   useEffect(() => { setTarget(''); }, [space]);
   if (!session) return <article className="space-y-4"><h1 className="text-4xl">Wonderings</h1><Button asChild><Link to="/auth">Sign in</Link></Button></article>;
   return <article className="space-y-8"><header><p className="text-xs text-gold font-smallcaps">Connection & curiosity</p><h1 className="text-4xl mt-2">Wonderings</h1><p className="mt-3 text-muted-foreground">Questions for invited people, and private reflections about people you have added. A suggestion is an invitation to ask, not a claim about someone.</p></header>

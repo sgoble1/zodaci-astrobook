@@ -63,7 +63,7 @@ export function ActivityFeed() {
     setLoading(false);
   };
   // Refresh every 30 seconds while this tab is on screen.
-  useEffect(() => { void load(); const timer = window.setInterval(load, 30000); return () => window.clearInterval(timer); }, [who, days, members.length]);
+  useEffect(() => { void load(); const timer = window.setInterval(() => { if (document.visibilityState === 'visible') void load(); }, 30000); return () => window.clearInterval(timer); }, [who, days, members.length]);
 
   const stats = useMemo(() => {
     const leaves = rows.filter(r => r.kind === 'page_leave');

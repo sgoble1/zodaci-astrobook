@@ -21,7 +21,7 @@ export function AprilMonitor() {
     if (a.error || e.error || u.error) { setErr('April’s activity could not be loaded.'); return; }
     setO(((a.data ?? []) as Overview[])[0] ?? null); setEvents((e.data ?? []) as Ev[]); setUsage((u.data ?? []) as Use[]);
   };
-  useEffect(() => { void load(); const t = window.setInterval(() => void load(), 30000); return () => window.clearInterval(t); }, [kind]); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => { void load(); const t = window.setInterval(() => { if (document.visibilityState === 'visible') void load(); }, 30000); return () => window.clearInterval(t); }, [kind]); // eslint-disable-line react-hooks/exhaustive-deps
   if (err) return <p role="alert" className="text-destructive">{err} <Button variant="link" className="h-auto p-0" onClick={() => void load()}>Retry</Button></p>;
   if (!o) return <div role="status" aria-label="Loading April's activity" className="h-40 animate-pulse rounded bg-muted" />;
   if (!o.found) return <p className="text-muted-foreground">April’s account hasn’t been created yet.</p>;

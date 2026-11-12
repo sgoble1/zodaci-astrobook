@@ -123,6 +123,11 @@ const Learn = lazy(() => import('./pages/Learn'));
 const PersonalContext = lazy(() => import('./pages/PersonalContext'));
 const ContentCenter = lazy(() => import('./pages/ContentCenter'));
 const ObservationLog = lazy(() => import('./pages/ObservationLog'));
+const Investigations = lazy(() => import('./pages/Investigations'));
+const CaseFilePage = lazy(() => import('./pages/Investigations').then(m => ({ default: m.CaseFilePage })));
+const Museum = lazy(() => import('./pages/Museum'));
+const MuseumGalleryPage = lazy(() => import('./pages/Museum').then(m => ({ default: m.MuseumGalleryPage })));
+const ArchivePage = lazy(() => import('./pages/Archive'));
 const Observatory = lazy(() => import('./pages/Observatory'));
 const ReadingHistory = lazy(() => import('./pages/ReadingHistory'));
 const Workspaces = lazy(() => import('./pages/Workspaces'));
@@ -303,6 +308,11 @@ export default function App() {
             <Route path="/personal-context" element={<PersonalContext />} />
             <Route path="/content-center" element={<ContentCenter />} />
             <Route path="/observation-log" element={<ObservationLog />} />
+            <Route path="/investigations" element={<Investigations />} />
+            <Route path="/investigations/:caseId" element={<CaseFilePage />} />
+            <Route path="/museum" element={<Museum />} />
+            <Route path="/museum/:gallery" element={<MuseumGalleryPage />} />
+            <Route path="/archive" element={<ArchivePage />} />
             <Route path="/observatory" element={<Observatory />} />
             <Route path="/reading-history" element={<ReadingHistory />} />
             <Route path="/workspaces" element={<Workspaces />} />
