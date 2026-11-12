@@ -18,7 +18,7 @@ export function SharedEditionDashboard() {
   if (!birth || !chart) return <div role="alert" className="space-y-4"><h1>Shared chart unavailable</h1><p className="text-muted-foreground">This chart needs verified birth details and permission from its owner.</p><Button asChild><Link to="/shared-with-me">Shared editions</Link></Button></div>;
   const placements = [['Sun', chart.bodies.find(b => b.key === 'sun')?.sign], ['Moon', chart.bodies.find(b => b.key === 'moon')?.sign], ['Rising', chart.asc !== null && birth.time ? fmtLon(chart.asc).sign : 'Time unknown']];
   return <article className="space-y-10">
-    <DashboardMosaic chart={chart} name={birth.name} hasTime={Boolean(birth.time)} primary={{ to: edition === 'zac' ? '/zac' : '/masterbook', label: 'Read the edition' }} secondary={{ to: '/my-chart', label: 'View chart' }} onAir={{ cta: { to: '#broadcast-studio', label: 'Tune in' } }} destinations={[
+    <DashboardMosaic chart={chart} name={birth.name} hasTime={Boolean(birth.time)} primary={{ to: edition === 'zac' ? '/zac' : '/masterbook', label: 'Read the edition' }} secondary={{ to: '/my-chart', label: 'View chart' }} onAir={{ cta: { to: '#broadcast-studio', label: 'Tune in' } }} press={edition ? { book: { to: '/official-astrobook', label: 'Official AstroBook' }, comic: { to: `/official-astrobook/comic/${edition}`, label: 'Official AstroComic' } } : undefined} destinations={[
       { to: '/my-chart', title: 'Shared chart', text: '', cta: 'Open', icon: ChartWheelIcon },
       { to: '#broadcast-studio', title: 'Broadcast Studio', text: '', cta: 'Open', icon: TelevisionIcon },
       { to: edition === 'zac' ? '/zac' : '/masterbook', title: 'Edition library', text: '', cta: 'Open', icon: LibraryIcon },

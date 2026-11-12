@@ -5,7 +5,9 @@ import { markdownSections, NavigatedProse } from '@/components/readings/Navigate
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { loadProtectedJson, loadProtectedText, ContentLockedError, ACCESS_CHANGED_EVENT } from '@/lib/protectedContent';
-import { CATEGORIES, catsFor, type MbEntry } from './Masterbook';
+import type { MbEntry } from './Masterbook';
+import { CATEGORIES, catsFor } from '@/lib/chapterTopics';
+import { ArrangeToggle, BirthFacts, ChapterCard, ChapterPart, EditionModules, EditionTitle, TopicFilter } from '@/components/observatory/EditionPieces';
 import { NoEditionAccess, PrivateEditionGate } from '@/components/common/PrivateEditionGate';
 import { FounderAccuracy } from '@/components/readings/FounderAccuracy';
 import { useSession } from '@/hooks/useLibrary';
@@ -19,8 +21,7 @@ import { chartTitle, dominantElement } from '@/lib/chartTitle';
 import { balance } from '@/lib/resultsEngine';
 import { ChartWheel } from '@/components/chart/ChartWheel';
 import { PlanetOrb } from '@/components/chart/PlanetOrb';
-import { ThemeArt, artFor } from '@/components/common/ThemeArt';
-import { BoxArt } from '@/components/common/BoxArt';
+import { ThemeArt } from '@/components/common/ThemeArt';
 import { DashboardMosaic } from '@/components/observatory/DashboardMosaic';
 import { CurrentChapterPanel } from '@/components/observatory/CurrentChapterPanel';
 import { WhatsNew } from '@/components/common/WhatsNew';
@@ -157,9 +158,16 @@ function EditionHome({ area, entries, owns, full }: { area: EditionKey; entries:
   const chart = useEditionChart(area, full === true);
   const [q, setQ] = useState('');
   const [cat, setCat] = useState<string | null>(null);
-  const list = useMemo(() => (entries ?? []).filter(e => (!cat || catsFor(e).includes(cat)) && (e.title + ' ' + e.sections.join(' ')).toLowerCase().includes(q.toLowerCase())), [entries, q, cat]);
+  const [view, setView] = useState<'parts' | 'topics'>('parts');
+  const list = useMemo(() => (entries ?? []).filter(e => (!cat || catsFor(e).includes(cat)) && (e.title + ' ' + e.label + ' ' + e.sections.join(' ') + ' ' + (e.excerpt ?? '')).toLowerCase().includes(q.toLowerCase())), [entries, q, cat]);
   const total = (entries ?? []).reduce((a, e) => a + e.words, 0);
-  const parts = [...new Set(list.map(e => e.part))];
+  const groups = useMemo(() => {
+    const m = new Map<string, MbEntry[]>();
+    list.forEach(e => { const keys = view === 'parts' ? [e.part] : (catsFor(e).length ? catsFor(e) : ['Other']); keys.forEach(k => m.set(k, [...(m.get(k) ?? []), e])); });
+    const out = [...m.entries()];
+    if (view === 'topics') out.sort((a, b) => { const o = (k: string) => { const i = CATEGORIES.findIndex(c => c[0] === k); return i < 0 ? 99 : i; }; return o(a[0]) - o(b[0]); });
+    return out;
+  }, [list, view]);
   const sun = chart?.bodies.find(b => b.key === 'sun');
   const moon = chart?.bodies.find(b => b.key === 'moon');
   const rising = chart?.asc != null ? fmtLon(chart.asc) : null;
@@ -194,20 +202,12 @@ function EditionHome({ area, entries, owns, full }: { area: EditionKey; entries:
       </>}
       <section className="gentle-fade grid items-center gap-10 lg:grid-cols-[1.1fr,0.9fr]">
         <div>
-          <div className="mb-4 font-label text-xs tracking-[0.16em] text-primary">{copy.eyebrow}</div>
-          <h2 className="font-display leading-[0.95]">{copy.name}.<br /><span className="font-script text-primary">{copy.tagline}</span></h2>
-          <div className="gold-rule my-6 max-w-md" />
+          <EditionTitle eyebrow={copy.eyebrow} name={copy.name} tagline={copy.tagline} as={full === true && chart ? 'h2' : 'h1'} />
           {!owns && <div className="mb-4"><SharedByNote ownerName={copy.name} scope="edition" /></div>}
           <p className="max-w-xl text-lg leading-relaxed text-foreground/85">The complete book{entries ? ` — ${entries.length} chapters, about ${Math.round(total / 1000)}k words —` : ''} {copy.blurb}</p>
           {named && <p className="mt-6 font-display text-2xl text-gold">{named.title}</p>}
           {named && <p className="mt-1 max-w-xl text-sm text-muted-foreground" title={named.why}>{named.subtitle}</p>}
-          {birth && (
-            <dl className="mt-8 grid grid-cols-2 gap-4 text-xs sm:grid-cols-4">
-              {[['Born', birth.date], ['Time', birth.time ?? 'Unknown'], ['Place', birth.placeLabel], ['Rising', rising ? `${rising.sign} ${rising.deg}°` : '—']].map(([k, v]) => (
-                <div key={k}><dt className="font-label text-[10px] tracking-[0.14em] text-muted-foreground">{k}</dt><dd className="mt-1 text-foreground">{v}</dd></div>
-              ))}
-            </dl>
-          )}
+          {birth && <BirthFacts facts={[['Born', birth.date], ['Time', birth.time ?? 'Unknown'], ['Place', birth.placeLabel], ['Rising', rising ? `${rising.sign} ${rising.deg}°` : '—']]} />}
           <div className="mt-8 flex flex-wrap gap-3">
             {entries?.[0] && <Button asChild><Link to={`${copy.base}/${entries[0].id}`} className="font-smallcaps text-xs">Begin reading</Link></Button>}
             <Button variant="outline" className="font-smallcaps text-xs" onClick={() => document.getElementById(`${area}-contents`)?.scrollIntoView({ behavior: 'smooth' })}>Contents</Button>
@@ -243,20 +243,7 @@ function EditionHome({ area, entries, owns, full }: { area: EditionKey; entries:
 
       {area === 'shane' && full && <FounderAccuracy />}
 
-      {modules.length > 0 && (
-        <section className="gentle-fade" aria-labelledby={`${area}-explore`}>
-          <div className="mb-2 font-label text-xs tracking-[0.16em] text-primary">Explore</div>
-          <h2 id={`${area}-explore`} className="font-display mb-6">Around the book.</h2>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {modules.map(m => (
-              <Link key={m.to} to={m.to} className="group flex gap-4 rounded-sm border border-[hsl(var(--brass)/0.4)] bg-card/60 p-5 transition-all hover:border-[hsl(var(--brass)/0.75)] hover:shadow-[4px_4px_0_hsl(var(--accent)/0.3)]">
-                <ThemeArt label={m.title} className="h-14 w-14" />
-                <span className="min-w-0"><span className="block font-display text-xl leading-tight">{m.title}</span><span className="gold-rule my-2 block w-10" /><span className="block text-sm leading-relaxed text-muted-foreground">{m.desc}</span></span>
-              </Link>
-            ))}
-          </div>
-        </section>
-      )}
+      <EditionModules id={`${area}-explore`} heading="Around the book." modules={modules} />
 
       {owns && <EditionSharingPanel edition={area} />}
 
@@ -268,22 +255,18 @@ function EditionHome({ area, entries, owns, full }: { area: EditionKey; entries:
             <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" aria-hidden="true" />
             <Input aria-label="Search chapters and sections" placeholder="Search chapters and sections…" value={q} onChange={e => setQ(e.target.value)} className="pl-9" />
           </div>
-          <div className="mt-3 flex flex-wrap gap-2 text-xs">
-            <Button size="sm" variant={!cat ? 'secondary' : 'outline'} onClick={() => setCat(null)}>All</Button>
-            {CATEGORIES.map(([c]) => { const n = (entries ?? []).filter(e => catsFor(e).includes(c)).length; return n ? <Button key={c} size="sm" variant={cat === c ? 'secondary' : 'outline'} onClick={() => setCat(cat === c ? null : c)}>{c} <span className="ml-1 text-muted-foreground">{n}</span></Button> : null; })}
-          </div>
+          <div className="mt-4"><ArrangeToggle value={view} onChange={setView} /></div>
+          <div className="mt-3"><TopicFilter entries={entries ?? []} value={cat} onChange={setCat} /></div>
         </div>
         {!entries && <p role="status" className="text-muted-foreground">Opening {copy.name}’s edition…</p>}
         {entries && list.length === 0 && <div className="glass-card max-w-md p-5 text-sm"><p>No chapters match “{q}”.</p><Button size="sm" variant="outline" className="mt-3" onClick={() => { setQ(''); setCat(null); }}>Clear search</Button></div>}
-        {parts.map(p => (
-          <section key={p} aria-label={p} className="vellum deckle p-5 sm:p-7">
-            <div className="mb-5 flex items-center gap-4">
-              <ThemeArt label={p} kind={artFor(p)} className="h-14 w-14" />
-              <div><h3 className="font-display text-2xl">{p}</h3><p className="text-xs text-muted-foreground">{list.filter(e => e.part === p).length} chapters</p></div>
-            </div>
-            <ChapterGrid area={area} entries={list.filter(e => e.part === p)} />
-          </section>
-        ))}
+        <div className="space-y-5">
+          {groups.map(([g, items], idx) => (
+            <ChapterPart key={g} title={g} count={items.length} open={idx === 0 || !!q || !!cat}>
+              {items.map(e => <ChapterCard key={e.id} to={`${copy.base}/${e.id}`} entry={e} seed={`${area}-${e.id}`} />)}
+            </ChapterPart>
+          ))}
+        </div>
       </section>
     </div>
   );
@@ -291,18 +274,5 @@ function EditionHome({ area, entries, owns, full }: { area: EditionKey; entries:
 
 function ChapterGrid({ area, entries }: { area: EditionKey; entries: MbEntry[] }) {
   const base = EDITION_COPY[area].base;
-  return (
-    <div className="grid gap-3 md:grid-cols-2">
-      {entries.map(e => (
-        <Link key={e.id} to={`${base}/${e.id}`} className="parchment block overflow-hidden transition-colors hover:border-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
-          <BoxArt seed={`${area}-${e.id}`} label={e.title} className="h-16 w-full" />
-          <div className="p-4">
-            <div className="text-xs text-muted-foreground">{e.label} · {e.words.toLocaleString()} words</div>
-            <div className="mt-1 font-medium">{e.title}</div>
-            {e.sections.length > 0 && <div className="mt-2 line-clamp-2 text-xs text-muted-foreground">{e.sections.slice(0, 4).join(' · ')}</div>}
-          </div>
-        </Link>
-      ))}
-    </div>
-  );
+  return <div className="grid gap-3 md:grid-cols-2">{entries.map(e => <ChapterCard key={e.id} to={`${base}/${e.id}`} entry={e} seed={`${area}-${e.id}`} />)}</div>;
 }

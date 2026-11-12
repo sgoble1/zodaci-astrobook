@@ -7,6 +7,9 @@ import { SharedChatFeed } from '@/components/shared/SharedChatFeed';
 import { Button } from '@/components/ui/button';
 import { PlanetOrb } from '@/components/chart/PlanetOrb';
 import { chartTitle } from '@/lib/chartTitle';
+import { EditionTV } from '@/components/observatory/EditionTV';
+import { BirthFacts, EditionModules, EditionTitle } from '@/components/observatory/EditionPieces';
+import { useMyBirth } from '@/lib/myBirth';
 
 const modules = [
   { to: '/birth-chart', title: 'The Birth Chart', desc: "The full snapshot — recorded birth data, sourced placements, independent calculations, chart shape, elemental balance and chart rulers." },
@@ -23,18 +26,15 @@ const modules = [
 export default function AprilHome() {
   const sign = (k: string) => PLACEMENTS.find(p => p.key === k)?.sign;
   const named = sign('sun') ? chartTitle({ sun: sign('sun')!, moon: sign('moon') }) : null;
+  const birth = useMyBirth();
   return (
     <div className="space-y-16">
+      {/* The same opening mosaic and Broadcast Studio as Shane's and Zac's editions, fed by the open edition's chart. */}
+      <div className="space-y-10"><EditionTV opening /></div>
       {/* Hero */}
       <section className="grid lg:grid-cols-[1.05fr,0.95fr] gap-10 items-center gentle-fade">
         <div>
-          <div className="font-label text-xs tracking-[0.16em] text-primary mb-4">Zodaci · A Personal Chart Library</div>
-          <h1 className="font-display leading-[0.95]">
-            April.
-            <br />
-            <span className="italic text-muted-foreground">A complete map of the sky at the moment of birth.</span>
-          </h1>
-          <div className="gold-rule my-6 max-w-md" />
+          <EditionTitle eyebrow="Zodaci · April’s Masterbook" name="April" tagline="A complete map of the sky at the moment of birth." as={birth ? 'h2' : 'h1'} />
           <p className="text-lg leading-relaxed text-foreground/85 max-w-xl">
             An interactive companion to the twenty-section birth chart report, the 70-year timeline, the retrograde navigation guide and the feng shui implementation manual. Every planet, house, aspect, life phase and gua is explorable. Every panel is drawn directly from the uploaded source documents.
           </p>
@@ -42,19 +42,7 @@ export default function AprilHome() {
             <Button asChild><Link to="/explore" className="font-smallcaps text-xs">Explore</Link></Button>
             <Button asChild variant="outline" className="h-auto min-h-10 whitespace-normal"><Link to="/timeline" className="font-smallcaps text-xs">Current Window · The Great Opening</Link></Button>
           </div>
-          <dl className="mt-10 grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs">
-            {[
-              ['Born', BIRTH.date],
-              ['Time', BIRTH.time],
-              ['Place', BIRTH.place],
-              ['Chart Shape', 'Bucket · Moon Handle'],
-            ].map(([k, v]) => (
-              <div key={k}>
-                <dt className="font-label text-[10px] tracking-[0.14em] text-muted-foreground">{k}</dt>
-                <dd className="mt-1 text-foreground">{v}</dd>
-              </div>
-            ))}
-          </dl>
+          <BirthFacts facts={[['Born', BIRTH.date], ['Time', BIRTH.time], ['Place', BIRTH.place], ['Chart shape', 'Bucket · Moon Handle']]} />
         </div>
         <div className="deckle p-2 bg-vellum">
           <img loading="lazy" decoding="async" src={heroImg} alt="An illustrated woman holds an open star atlas beside a brass zodiac armillary in an observatory window." width={1536} height={1024} className="w-full h-auto" />
@@ -63,14 +51,15 @@ export default function AprilHome() {
 
       {PLACEMENTS.length > 0 && (
         <section aria-labelledby="april-planets" className="gentle-fade">
-          {named && <p className="font-display text-2xl text-gold">{named.title}</p>}
+          <div className="font-label text-xs tracking-[0.16em] text-primary">The planets</div>
+          <h2 id="april-planets" className="font-display mt-1">Every placement, and its chapter.</h2>
+          {named && <p className="mt-4 font-display text-2xl text-gold">{named.title}</p>}
           {named && <p className="mt-1 text-sm text-muted-foreground max-w-2xl">{named.subtitle}</p>}
-          <h2 id="april-planets" className="sr-only">Planets</h2>
           <ul className="mt-6 grid grid-cols-3 gap-3 sm:grid-cols-5 lg:grid-cols-6">
             {PLACEMENTS.slice(0, 12).map(p => (
               <li key={p.key}><Link to={`/planets/${p.key}`} className="flex flex-col items-center gap-2 rounded-sm border border-[hsl(var(--brass)/0.4)] bg-card/60 p-3 text-center hover:border-[hsl(var(--brass)/0.75)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
                 <PlanetOrb planet={p.key} size={48} />
-                <span className="text-sm">{p.name}</span><span className="text-xs text-muted-foreground">{p.sign} {p.degree}°</span>
+                <span className="text-sm">{p.name}</span><span className="text-xs text-muted-foreground">{p.sign} {p.degree}°{p.house ? ` · H${p.house}` : ''}</span>
               </Link></li>
             ))}
           </ul>
@@ -89,21 +78,7 @@ export default function AprilHome() {
         <NatalWheel />
       </section>
 
-      {/* Module grid */}
-      <section className="gentle-fade">
-        <div className="font-label text-xs tracking-[0.16em] text-primary mb-2">Explore</div>
-        <h2 className="font-display mb-8">The complete compendium.</h2>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {modules.map(m => (
-            <Link key={m.to} to={m.to} className="group block p-5 rounded-sm border border-[hsl(var(--brass)/0.4)] bg-card/60 hover:border-[hsl(var(--brass)/0.75)] hover:shadow-[4px_4px_0_hsl(var(--accent)/0.3)] transition-all">
-              <div className="font-display text-xl leading-tight">{m.title}</div>
-              <div className="gold-rule my-3 w-12" />
-              <div className="text-sm text-muted-foreground leading-relaxed">{m.desc}</div>
-              <div className="mt-4 font-label text-[10px] tracking-[0.14em] text-primary opacity-0 group-hover:opacity-100 transition-opacity">Open →</div>
-            </Link>
-          ))}
-        </div>
-      </section>
+      <EditionModules id="april-explore" heading="The complete compendium." modules={modules} />
 
       {/* Current window */}
       <section className="gentle-fade">

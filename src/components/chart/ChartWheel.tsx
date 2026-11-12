@@ -71,7 +71,7 @@ export function ChartWheel({ r, sourcesFor, device = 'projector' }: { r: ChartRe
   });
   const uid = useId().replace(/:/g, '');
   return (
-    <div className="grid lg:grid-cols-[minmax(0,460px)_1fr] gap-6 items-start">
+    <div className="chart-wheel-host"><div className="chart-wheel-grid">
       <ChartProjection device={device}>
       <svg viewBox={`0 0 ${S} ${S}`} className="w-full max-w-[460px] mx-auto" role="group" aria-label="Natal chart wheel — choose any planet, sign, aspect or pillar for details">
         <defs>
@@ -135,6 +135,6 @@ export function ChartWheel({ r, sourcesFor, device = 'projector' }: { r: ChartRe
           </div>
         )}
       </aside>
-    </div>
+    </div></div>
   );
 }

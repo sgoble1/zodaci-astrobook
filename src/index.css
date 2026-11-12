@@ -1542,3 +1542,8 @@ li:hover > .zodiac-coin { transform: rotate(-10deg); }
 .comic-card .btn-quiet, .comic-sheet .btn-quiet { background: hsl(var(--comic-yellow)); color: hsl(var(--comic-ink)); border: 2px solid hsl(var(--comic-ink)); box-shadow: 2px 2px 0 hsl(var(--comic-ink)); }
 .comic-card .btn-quiet:hover, .comic-sheet .btn-quiet:hover { background: hsl(45 100% 62%); }
 .comic-card .border-foreground\/15, .comic-sheet .border-foreground\/15 { border-color: hsl(var(--comic-ink) / .6); color: hsl(var(--comic-ink)); }
+
+/* Chart wheel lays out by the width it is given, not the window: in a narrow column the detail panel drops below the wheel. */
+.chart-wheel-host { container-type: inline-size; }
+.chart-wheel-grid { display: grid; gap: 1.5rem; align-items: start; }
+@container (min-width: 760px) { .chart-wheel-grid { grid-template-columns: minmax(0, 460px) 1fr; } }
