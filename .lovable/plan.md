@@ -13,6 +13,24 @@ Everything below is in scope and gets built, including all AI-credit work. Free 
 6. Keep the "view as" choice when a new tab opens. Clear it on sign-out.
 7. Name Zac's edition the same everywhere. Add Our Charts to Zac's menu, with Shane as the default comparison.
 
+## Stage 1b — Site-wide consistency: navigation, AstroComic theme, pictures
+Navigation
+1. Check every menu against the shared page list: public header, member sidebar, founder menus, phone bottom bar, Account dropdown, footer and search. Fix any link that is missing, dead, duplicated or in the wrong group.
+2. Use one naming for each page everywhere. Follow the saved menu order.
+3. Give every page a breadcrumb trail and a Next step, and a way back from deep pages such as Volume II, the readers and the shared spaces.
+4. Group the Account dropdown, and show a short welcome for new members.
+
+AstroComic and product pages
+5. Restyle /astrocomic, My Comic, the comic reader and the official comic pages in the golden-age comic look: heavy black outlines, halftone, and cream, indigo, mustard and red.
+6. Use the same product pictures, 3D previews and prices on the shop, the home "Take the Sky Home" slide, Books, Pricing and the checkout pages.
+7. AstroComic stays its own section and its own top-menu item.
+
+Pictures and theme
+8. List every image on the site, then replace any that are off-style (old Mystic Ink art, the dark violet theme, generic stock art, mismatched planets or icons) with 1950s atomic-zodiac art. The home hero and the slides you like stay.
+9. Use one set of icons, box illustrations, corners, fonts and projector or TV styles on every page, dashboards included.
+10. Remove leftover old colors and fonts, including violet, gold and Indigo Signal, so the cream, indigo, yellow, red, brass and black palette applies everywhere.
+11. Before-and-after screenshots of every page on phone and desktop, so you can review the changes.
+
 ## Stage 2 — Leftover free items from the archived docs (no credits)
 1. Signup-first buttons on public pages. Signing in from Community brings you back where you were. Theme buttons. A working interactive chart on Demo.
 2. Workbook label, Wonderings link, the "Create a chapter about this" topic, onboarding returning to the right edition, and the podcast player overlapping the progress bar.
