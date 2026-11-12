@@ -3,7 +3,8 @@
 ## Nov 12 — Final master plan (everything still unfinished)
 Full plan: .lovable/plan/zodaci-final-master-plan-everything-still-unfinished-2026-11-12.md
 - [x] Stage 1.1–1.2: April's report uses the same planet spheres as Shane/Zac, with sign/house/dignity badges and chapter links.
-- [ ] Stage 1.3–1.7 founder frame, view-as persistence, naming.
+- [x] Stage 1.6 view-as choice carries into new tabs, cleared on sign-out (tested).
+- [ ] Stage 1.3–1.5, 1.7 founder frame, shared card look, naming.
 - [ ] Stage 1b navigation audit, AstroComic golden-age restyle, site-wide image/theme consistency (user asked Nov 12).
 - [ ] Stage 2 leftover free items · Stage 3 verification sweep.
 - [ ] Stage 4 all AI-credit work in full (user asked Nov 12: include everything) · Stage 5 Living AstroBooks, Portraits, Event system, Observatory upgrade.

@@ -13,19 +13,31 @@ let cached: { uid: string; view: string | null; ok: boolean } | null = null;
 /** Which shared edition this tab is viewing ('april' | 'zac'), chosen from the edition switch. Presentation only. */
 export const ADMIN_EDITION_KEY = 'zodaci-admin-edition';
 export type SharedEditionView = 'april' | 'zac';
-if (typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('edition') === 'april') {
-  sessionStorage.setItem(ADMIN_EDITION_KEY, 'april');
+/** The choice is kept per tab, and copied into new tabs from the last choice until sign-out clears it. */
+const setView = (v: SharedEditionView | null) => {
+  try {
+    if (v) { sessionStorage.setItem(ADMIN_EDITION_KEY, v); localStorage.setItem(ADMIN_EDITION_KEY, v); }
+    else { sessionStorage.removeItem(ADMIN_EDITION_KEY); localStorage.removeItem(ADMIN_EDITION_KEY); }
+  } catch { /* storage blocked */ }
+};
+export const seedViewFromLastTab = (session: Storage, local: Storage) => {
+  const last = local.getItem(ADMIN_EDITION_KEY);
+  if (session.getItem(ADMIN_EDITION_KEY) === null && (last === 'april' || last === 'zac')) session.setItem(ADMIN_EDITION_KEY, last);
+};
+if (typeof window !== 'undefined') {
+  try { seedViewFromLastTab(sessionStorage, localStorage); } catch { /* storage blocked */ }
+  if (new URLSearchParams(window.location.search).get('edition') === 'april') setView('april');
 }
 const readView = (): string | null => (typeof window === 'undefined' ? null : sessionStorage.getItem(ADMIN_EDITION_KEY));
 export const viewingSharedEdition = (): SharedEditionView | null => { const v = readView(); return v === 'april' || v === 'zac' ? v : null; };
 /** Shane's owner accounts (presentation only — admin rights are checked by the database role). */
 export const isAdminEmail = (email?: string | null) => isShaneAccount(email);
 export function openAprilEditionTab() { window.open(`${window.location.origin}/?edition=april`, '_blank', 'noopener'); }
-export function viewAprilEditionInApp() { sessionStorage.setItem(ADMIN_EDITION_KEY, 'april'); window.location.href = '/'; }
+export function viewAprilEditionInApp() { setView('april'); window.location.href = '/'; }
 /** Open Zac's edition in this tab (the server still checks that Zac shared it with this account). */
-export function viewZacEditionInApp() { sessionStorage.setItem(ADMIN_EDITION_KEY, 'zac'); window.location.href = '/zac'; }
+export function viewZacEditionInApp() { setView('zac'); window.location.href = '/zac'; }
 export const viewingZacAsAdmin = (_email?: string | null) => viewingSharedEdition() === 'zac';
-export function leaveAprilEdition() { sessionStorage.removeItem(ADMIN_EDITION_KEY); window.location.href = '/'; }
+export function leaveAprilEdition() { setView(null); window.location.href = '/'; }
 const listeners = new Set<(v: boolean | undefined) => void>();
 
 let revision = 0;
@@ -89,6 +101,7 @@ export function isSameAccountEvent(event: string, nextUid: string | null, curren
 
 supabase.auth.onAuthStateChange((event, session) => {
   const nextUid = session?.user.id ?? null;
+  if (event === 'SIGNED_OUT') setView(null);
   if (isSameAccountEvent(event, nextUid, cached?.uid ?? checkingUid)) return;
   revision++;
   setFailed(false);
