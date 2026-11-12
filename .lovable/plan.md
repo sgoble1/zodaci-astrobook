@@ -60,6 +60,27 @@ Switch the 22 pages that still import April's chart (checked) to the signed-in m
 - AI Observatory consult, the "Sex & Attraction" reading, the 18 long-form topic readings, and the AstroBook Volume IV–VI writing.
 - Zac's six-volume content extraction (founder data last, as agreed).
 
+
+## Wave 8 — Remaining Current Implementation Plan Doc items (no credits)
+From "Zodaci Updtes Ops", not yet listed above:
+- Remove April's details hardcoded into the Topic, Chinese and Numerology AI requests and filters. Each member's request uses their own chart.
+- Ask for sex or gender at onboarding, which Kua needs (optional, with a "prefer not to say" choice). Make chart placements clickable everywhere they appear.
+- Public shared workspaces from the pasted spec. They stay separate from private spaces, as the existing rule requires.
+- The classic-view banner and breadcrumbs currently name April only. Make them work for each founder.
+- Replace the empty AstroBook Volume IV–VI pages with honest "being written" pages. The writing itself is in Wave 7.
+
+## Wave 9 — Master Platform Blueprint programs (new; none exist in the app yet)
+The Blueprint names five sections. The app has none of these yet: no Museum or Agency pages, no content registry, no related-content panels, no Star Scroll, and no gift collections.
+1. Content registry: a list of every page and content item, recording who owns it and how they cross-link. It drives the "Related" panels on readings and searches only titles, never private text.
+2. Agency "Investigations": guided topics (relationships, purpose, career, money, health, spirituality, patterns), each built from existing readings and chart facts.
+3. Museum galleries: childhood, relationships, purpose, future and legacy rooms, using saved readings and Observation Log entries. Owner-only; no invented biography.
+4. Archive: one page for reports, books, the timeline, discoveries and earlier versions of readings, starting with the reading history already in the app.
+5. Products: Star Scroll redesign, gift collections in the shop, and personalized certificates (the app already has some certificate pieces).
+6. Admin: revenue and analytics in a sidebar layout, plus a founder audit view.
+
+## Wave 10 — Founder preservation check
+- Before any founder content migration, run a full inventory of Shane's, April's and Zac's chapters and assets. Compare counts against the source documents so nothing is lost.
+
 ## Blocked outside the app
 - Resend and Google Search Console connections, and the email DNS records.
 - Sabian symbols licensing; asteroid degree data.
