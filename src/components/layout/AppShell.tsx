@@ -80,7 +80,7 @@ function useShaneGroups(enabled: boolean, area: 'shane' | 'zac' = 'shane'): NavG
     const shared = { ...SHARED_GROUP, items: [...spaceLinks, ...sharedItems] };
     const relationships = { ...RELATIONSHIPS_GROUP, items: [...RELATIONSHIPS_GROUP.items, ...(viewingOther ? [] : rels.map(r => ({ to: `/relationships/${r.id}`, label: `↳ ${r.name}${r.relation ? ` · ${r.relation}` : ''}` })))] };
     const sharedLinks: NavItem[] = sharedEditions.filter(e => e !== area).map(editionLink);
-    const chapterGroup = { title: area === 'zac' ? 'Zac’s Library by Topic' : 'Masterbook by Topic', items: chapters === null ? [{ to: `/${area}`, label: 'Loading chapters…' }] : chapters.length ? [] : [{ to: `/${area}`, label: 'Chapters couldn’t load — open the edition' }], submenus: topics.map(t => ({ label: `${t.label} · ${t.items.length}`, items: t.items.map(c => ({ to: `/${area}/${c.id}`, label: shortChapterLabel(c.id, c.title || c.label) })) })) } as NavGroup;
+    const chapterGroup = { title: area === 'zac' ? 'Astrological Library by Topic' : 'Masterbook by Topic', items: chapters === null ? [{ to: `/${area}`, label: 'Loading chapters…' }] : chapters.length ? [] : [{ to: `/${area}`, label: 'Chapters couldn’t load — open the edition' }], submenus: topics.map(t => ({ label: `${t.label} · ${t.items.length}`, items: t.items.map(c => ({ to: `/${area}/${c.id}`, label: shortChapterLabel(c.id, c.title || c.label) })) })) } as NavGroup;
     if (area === 'zac') return clarifyFounderGroups(universalFounderMenu<NavGroup>({
       ...frameGroups('zac'),
       edition: [{ title: 'My Edition', items: [{ to: '/zac', label: 'My Astrological Library' }, { to: '/zac/workbook', label: 'My Workbook' }] }, chapterGroup],

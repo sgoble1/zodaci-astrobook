@@ -67,7 +67,7 @@ function useDirectory() {
 
 function SharedNav({ value, space }: { value: string; space: SharedSpaceKey }) {
   const books = space === 'zac'
-    ? [['shane', '/shane', 'Shane’s Masterbook', BookOpen], ['zac', '/zac', 'Zac’s Masterbook', BookOpen]] as const
+    ? [['shane', '/shane', 'Shane’s Masterbook', BookOpen], ['zac', '/zac', 'Zac’s Astrological Library', BookOpen]] as const
     : [['shane', '/shane', 'Shane’s Masterbook', BookOpen], ['april', '/masterbook', 'April’s Masterbook', BookOpen]] as const;
   const links = [
     ['overview', '/shared', 'Dashboard', Users], ['chat', '/shared/conversations', 'Conversations', MessageCircle], ['posts', '/shared/posts', 'Posts', FileText], ['notes', '/shared/notes', 'Notes', StickyNote],

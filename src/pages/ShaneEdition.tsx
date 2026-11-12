@@ -53,7 +53,7 @@ export const EDITION_COPY: Record<EditionKey, { name: string; base: string; titl
     ],
   },
   zac: {
-    name: 'Zac', base: '/zac', title: 'Zac’s Astrological Library', eyebrow: 'Zodaci · Zac’s Library',
+    name: 'Zac', base: '/zac', title: 'Zac’s Astrological Library', eyebrow: 'Zodaci · Zac’s Astrological Library',
     tagline: 'Six volumes drawn from one noon sky — July 10, 1987.',
     blurb: 'six volumes: the natal chart, Vedic and Chinese systems, family and career, world traditions, the 360° life map and the road ahead.',
     source: 'Zachary — Volumes I–VI, a gift from Shane, transcribed in full.',

@@ -266,7 +266,6 @@ export default function App() {
         <Routes>
           <Route path="/index" element={<Navigate to="/welcome" replace />} />
           <Route path="/welcome" element={<BrandLanding />} />
-          <Route path="/april" element={<AprilEdition />} />
           <Route element={<PublicSiteLayout />}>
             <Route path="/about" element={<About />} />
             <Route path="/characters" element={<Characters />} />
@@ -386,6 +385,7 @@ export default function App() {
             <Route path="/chart-elements" element={<ChartElements />} />
             <Route path="/masterbook/bagua-wheel" element={<BaguaWheelPage />} />
             <Route path="/masterbook/:id" element={<MasterbookChapter />} />
+            <Route path="/april" element={<AprilEdition />} />
             <Route path="/shane" element={<ShaneEdition />} />
             <Route path="/shane/:id" element={<ShaneEdition />} />
             <Route path="/zac" element={<ZacEdition />} />

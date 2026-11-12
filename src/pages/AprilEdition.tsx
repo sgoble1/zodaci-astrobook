@@ -8,7 +8,6 @@ import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ThemeArt } from '@/components/common/ThemeArt';
 import { PlanetOrb } from '@/components/chart/PlanetOrb';
-import { ZodaciLogo } from '@/components/brand/ZodaciLogo';
 import {
   BIRTH, PLACEMENTS, ANGLES, HOUSES, ASPECTS, PHASES, RETROGRADES_AT_BIRTH,
   KUA_INFO, BAGUA, NUMEROLOGY, PALETTE_NOTE,
@@ -49,6 +48,14 @@ function Section({ id, title, kicker, children }: { id: string; title: string; k
   );
 }
 
+/** Prints only the report sheet; the site menus around it stay off the paper. */
+const printReport = () => {
+  document.body.classList.add('printing-report');
+  const done = () => { document.body.classList.remove('printing-report'); window.removeEventListener('afterprint', done); };
+  window.addEventListener('afterprint', done);
+  window.print();
+};
+
 function AprilEditionInner() {
   const [ed, setEd] = useState<Edition | null>(null);
   const [error, setError] = useState('');
@@ -82,7 +89,7 @@ function AprilEditionInner() {
 
   if (error) {
     return (
-      <div role="alert" className="mx-auto max-w-2xl space-y-4 p-8 text-center">
+      <div role="alert" className="mx-auto max-w-2xl space-y-4 py-8 text-center">
         <p className="text-muted-foreground">{error}</p>
         {signedOut ? <Button asChild><Link to="/auth?next=%2Fapril">Sign in</Link></Button> : <Button onClick={() => void load()}>Try again</Button>}
       </div>
@@ -92,13 +99,12 @@ function AprilEditionInner() {
 
   const { birth } = ed;
   return (
-    <article className="mx-auto max-w-4xl space-y-14 p-5 sm:p-10">
-      <nav aria-label="Leave the report" className="flex flex-wrap items-center justify-between gap-3 text-sm print:hidden">
-        <Link to="/dashboard" className="inline-flex min-h-10 items-center rounded-full border border-border px-4 text-muted-foreground hover:border-gold hover:text-foreground">← Back to Zodaci</Link>
-        <button type="button" onClick={() => window.print()} className="inline-flex min-h-10 items-center rounded-full border border-border px-4 text-muted-foreground hover:border-gold hover:text-foreground">Print this report</button>
+    <article className="founder-report mx-auto max-w-4xl space-y-14">
+      <nav aria-label="Report actions" className="flex flex-wrap items-center justify-between gap-3 text-sm print:hidden">
+        <Link to="/official-astrobook" className="inline-flex min-h-10 items-center rounded-full border border-border px-4 text-muted-foreground hover:border-gold hover:text-foreground">← Official editions</Link>
+        <button type="button" onClick={printReport} className="inline-flex min-h-10 items-center rounded-full border border-border px-4 text-muted-foreground hover:border-gold hover:text-foreground">Print this report</button>
       </nav>
       <header className="space-y-4 text-center">
-        <ZodaciLogo compact />
         <div className="font-label text-xs tracking-[0.16em] text-primary">A shared chart report</div>
         <h1 className="text-4xl sm:text-6xl">{birth.name || "April's"} Edition</h1>
         <p className="mx-auto max-w-2xl text-muted-foreground">
@@ -276,5 +282,5 @@ function AprilEditionInner() {
 
 /** April's shared report: opens for April's own account and the accounts she shared her edition with (no password). */
 export default function AprilEdition() {
-  return <PrivateEditionGate standalone><AprilEditionInner /></PrivateEditionGate>;
+  return <PrivateEditionGate><AprilEditionInner /></PrivateEditionGate>;
 }

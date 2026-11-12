@@ -1501,3 +1501,9 @@ li:hover > .zodiac-coin { transform: rotate(-10deg); }
 /* On a keepsake the wheel is a printed plate: no tap-for-details panel, wheel centred at full width. */
 .keepsake-wheel > div { display: block !important; }
 .keepsake-wheel .chart-projection-detail { display: none !important; }
+
+/* Founder report printed from inside the site frame: only the report sheet reaches the paper. */
+@media print {
+  body.printing-report header, body.printing-report nav[aria-label="Breadcrumb"], body.printing-report [data-founder-dock], body.printing-report aside { display: none !important; }
+  body.printing-report .founder-report { max-width: none; }
+}
