@@ -81,7 +81,7 @@ export function nextIssueMonth(sub: { plan: ComicPlan; status: string; created_a
 
 export type ComicPanel = { shape: 'wide' | 'square' | 'oval' | 'bleed' | 'tall'; scene: string; caption?: string; balloons?: { who: string; text: string }[] };
 export type ComicPage = { n: number; section: string; title: string; panels: ComicPanel[]; body?: string[] };
-export type ComicIssue = { guide?: ComicGuide; title: string; month: string; monthLabel: string; issueNumber: number; reader: string; signs: { sun: string; moon: string | null; rising: string | null }; mainEvent: string; pages: ComicPage[] };
+export type ComicIssue = { guide?: ComicGuide; title: string; month: string; monthLabel: string; issueNumber: number; reader: string; signs: { sun: string; moon: string | null; rising: string | null }; mainEvent: string; pages: ComicPage[]; /** Which planet characters carry the story (CAST keys), so artwork can show the right ones. */ cast?: { lead: string; natal: string | null; retro: string | null } };
 
 const THEME: Record<string, string> = { sun: 'who you are becoming', moon: 'what you need to feel safe', mercury: 'how you think and talk', venus: 'what and whom you love', mars: 'what you go after', jupiter: 'where you grow', saturn: 'what you are building', uranus: 'where you want freedom', neptune: 'what you dream', pluto: 'what you are ready to change', asc: 'how you meet the world', mc: 'your public path' };
 const HOUSE_FOCUS: [string, string][] = [
@@ -240,7 +240,7 @@ export function buildComicIssue(natal: ChartResult, opts: { reader: string; mont
   add({ section: 'About Zodaci', title: 'Your chart, any time', panels: [{ shape: 'square', scene: 'QR code to zodaci.com/my-chart beside the Zodaci logo.' }], body: ['Scan to open your full calculated chart, readings and the Results page.', 'AstroComic is a creative reflection on your chart and this month’s sky — not prediction or advice.'] });
   add({ section: 'Back Cover', title: `Issue ${issueNumber} · ${label}`, panels: [{ shape: 'bleed', scene: 'The full cast in silhouette along a horizon of moon phases.' }], body: ['AstroComic by Zodaci'] });
 
-  return { title: `${first}’s Sky · ${label}`, month: monthKey(month), monthLabel: label, issueNumber, reader: first, signs, mainEvent: main.headline, pages, ...(guide ? { guide } : {}) };
+  return { title: `${first}’s Sky · ${label}`, month: monthKey(month), monthLabel: label, issueNumber, reader: first, signs, mainEvent: main.headline, pages, cast: { lead: tc.key, natal: nc?.key ?? null, retro: rx[0]?.key ?? null }, ...(guide ? { guide } : {}) };
 }
 
 function ordinal(n: number) { return n === 1 ? '1st' : n === 2 ? '2nd' : n === 3 ? '3rd' : `${n}th`; }

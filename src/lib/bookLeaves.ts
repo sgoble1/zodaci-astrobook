@@ -7,8 +7,12 @@ import type { AstroComicShowcase } from '@/content/sampleComic';
  * One printed face of a page in the openable 3D book. Faces are plain data so the same pages can be drawn in the
  * book, read aloud in the side panel and checked in tests. Chart faces come only from a calculated chart.
  */
+/** Calculated facts printed on a personal cover: every word comes from the saved birth details and the chart. */
+export type CoverFacts = { name: string; title: string; subtitle: string; signs: string; birthLine: string; ruler: string; rulerName: string; sunSign: string; glyph: string };
+
 export type BookFace =
   | { kind: 'cover'; src: string; alt: string }
+  | { kind: 'jacket'; cover: CoverFacts; art: string; edition: string }
   | { kind: 'endpaper'; eyebrow: string; heading: string; lines: string[] }
   | { kind: 'title'; name: string; subtitle: string; edition: string; note: string }
   | { kind: 'facts'; eyebrow: string; heading: string; rows: [string, string][]; note?: string; page?: number }
@@ -138,6 +142,7 @@ export function toLeaves(cover: BookFace, interior: BookFace[], back: BookFace):
 export function faceText(f: BookFace): { heading: string; lines: string[] } | null {
   switch (f.kind) {
     case 'cover': return { heading: 'Front cover', lines: [f.alt] };
+    case 'jacket': return { heading: 'Front cover', lines: [`${f.cover.name} · ${f.cover.title}`, f.cover.signs, f.cover.birthLine, `AstroBook · ${f.edition}`] };
     case 'endpaper': return { heading: `${f.eyebrow}: ${f.heading}`, lines: f.lines };
     case 'title': return { heading: f.name, lines: [f.subtitle, f.edition, f.note] };
     case 'facts': return { heading: f.heading, lines: [...f.rows.map(([k, v]) => `${k}: ${v}`), ...(f.note ? [f.note] : [])] };
