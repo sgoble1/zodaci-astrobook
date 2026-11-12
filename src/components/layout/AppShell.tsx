@@ -188,7 +188,7 @@ function PlanGuard({ children }: { children: ReactNode }) {
   return planAllows(plan, need) ? <>{children}</> : <PlanLock need={need} />;
 }
 
-const KEEP_NAME_PATHS = ['/shared', '/our-charts', '/podcasts', '/shane', '/zac', '/admin', '/investors', '/official-astrobook', '/developer'];
+const KEEP_NAME_PATHS = ['/april', '/shared', '/our-charts', '/podcasts', '/shane', '/zac', '/admin', '/investors', '/official-astrobook', '/developer'];
 const SIGNED_OUT_PATHS = ['/auth', '/pricing', '/books', '/reset-password'];
 const GROUP_COLORS = ['--primary', '--oxblood', '--accent', '--candle', '--gold-bright', '--starlight', '--gold', '--glow-violet'];
 

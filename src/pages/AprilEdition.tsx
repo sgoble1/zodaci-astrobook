@@ -106,7 +106,7 @@ function AprilEditionInner() {
       </nav>
       <header className="space-y-4 text-center">
         <div className="font-label text-xs tracking-[0.16em] text-primary">A shared chart report</div>
-        <h1 className="text-4xl sm:text-6xl">{birth.name || "April's"} Edition</h1>
+        <h1 className="text-4xl sm:text-6xl">{`${birth.name || 'April'}’s`} Edition</h1>
         <p className="mx-auto max-w-2xl text-muted-foreground">
           The original chart readings, prepared from April's verified birth chart. Shared by April with the accounts she chose — please keep this page private.
         </p>
