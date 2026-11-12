@@ -12,8 +12,8 @@ const BOOK_VERSION: Record<string, { lookup: string; price: number; format: 'pri
   digital: { lookup: 'astrobook_digital_v2', price: 2499, format: 'digital' },
   pocket: { lookup: 'astrobook_pocket', price: 3499, format: 'print' },
   classic: { lookup: 'astrobook_classic', price: 5999, format: 'print' },
-  signature: { lookup: 'astrobook_signature', price: 9700, format: 'print' },
-  linen: { lookup: 'astrobook_linen', price: 14900, format: 'print' },
+  signature: { lookup: 'astrobook_signature_v2', price: 12900, format: 'print' },
+  linen: { lookup: 'astrobook_linen_v2', price: 18900, format: 'print' },
 };
 /** Mirrors COMIC_PLANS in src/lib/comic.ts. AstroComic never grants a Zodaci plan tier. */
 const COMIC: Record<string, { lookup: string; price: number; mode: 'subscription' | 'payment' }> = {

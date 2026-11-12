@@ -17,8 +17,8 @@ describe('investor unit economics use the live prices', () => {
   });
   it('AstroBook rows use the saved print, shipping and fee costs', () => {
     const linen = find('AstroBook', /Linen/);
-    expect(linen.price).toBe(149);
-    expect(linen.net).toBe(+(149 - 4.62 - 69 - 12.99).toFixed(2));
+    expect(linen.price).toBe(189);
+    expect(linen.net).toBe(+(189 - 5.78 - 88.31 - 13.99).toFixed(2));
     const digital = find('AstroBook', /Digital/);
     expect(digital.cost).toBe(0);
     expect(digital.net).toBe(23.97);

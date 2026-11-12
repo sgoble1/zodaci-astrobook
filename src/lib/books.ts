@@ -21,9 +21,9 @@ export const BOOK_VERSIONS: BookVersion[] = [
     inside: ['Everything in Digital (without journal pages)', 'Your birth-moment verse', 'Printed and bound for your shelf'] },
   { id: 'classic', name: 'Classic', price: 5999, format: 'print', lookup: 'astrobook_classic', trim: '6 × 9 in', trimPt: [432, 648], binding: 'Paperback, perfect-bound', paper: 'Premium color · 80# white coated', cover: 'Matte cover with your name in gold tones', pages: [120, 150], depth: 'expanded', journal: 12, ship: '5–7 business days (US)', tagline: 'The full reading, with your topic chapters.', lulu: 'US Trade 6×9 · Premium Color 80# White Coated · Paperback Perfect Bound · Matte cover',
     inside: ['Everything in Pocket, as all six volumes', 'World Systems: Vedic sidereal snapshot, Chinese year pillar and Life Path number', 'Your finished topic readings as extra chapters', 'Your birth-sky wheel and aspect grid', 'Chiron, the Nodes and sensitive points', 'RetroGOOD: your retrograde planets', 'Solar return preview for your next birthday', '12 journal pages'] },
-  { id: 'signature', name: 'Signature Hardcover', price: 9700, format: 'print', lookup: 'astrobook_signature', trim: '8.5 × 8.5 in', trimPt: [612, 612], binding: 'Hardcover, case wrap', paper: 'Premium color · 80# white coated', cover: 'Matte case wrap with your cover art', pages: [180, 300], depth: 'expanded', journal: 20, ship: '7–10 business days (US)', tagline: 'A square hardcover made to keep.', lulu: 'Square 8.5×8.5 · Premium Color 80# White Coated · Hardcover Case Wrap · Matte',
+  { id: 'signature', name: 'Signature Hardcover', price: 12900, format: 'print', lookup: 'astrobook_signature_v2', trim: '8.5 × 8.5 in', trimPt: [612, 612], binding: 'Hardcover, case wrap', paper: 'Premium color · 80# white coated', cover: 'Matte case wrap with your cover art', pages: [180, 300], depth: 'expanded', journal: 20, ship: '7–10 business days (US)', tagline: 'A square hardcover made to keep.', lulu: 'Square 8.5×8.5 · Premium Color 80# White Coated · Hardcover Case Wrap · Matte',
     inside: ['Everything in Classic', 'The Story of Your Sky', 'Midpoints and the planets on them', 'Element and modality balance', 'Relationship primer: Venus, Mars and your 7th house', 'More of your aspects (up to 36)', '20 journal pages'] },
-  { id: 'linen', name: "Collector's Linen", price: 14900, format: 'print', lookup: 'astrobook_linen', trim: '8.5 × 11 in', trimPt: [612, 792], binding: 'Linen hardcover, foil-stamped spine', paper: 'Premium color · 80# white coated', cover: 'Midnight linen with foil-stamped title and name', pages: [320, 360], depth: 'expanded', journal: 30, ship: '10–14 business days (US)', tagline: 'Our most complete edition, bound in linen.', lulu: 'US Letter 8.5×11 · Premium Color 80# White Coated · Linen Hardcover (navy) · Foil stamp',
+  { id: 'linen', name: "Collector's Linen", price: 18900, format: 'print', lookup: 'astrobook_linen_v2', trim: '8.5 × 11 in', trimPt: [612, 792], binding: 'Linen hardcover, foil-stamped spine', paper: 'Premium color · 80# white coated', cover: 'Midnight linen with foil-stamped title and name', pages: [320, 360], depth: 'expanded', journal: 30, ship: '10–14 business days (US)', tagline: 'Our most complete edition, bound in linen.', lulu: 'US Letter 8.5×11 · Premium Color 80# White Coated · Linen Hardcover (navy) · Foil stamp',
     inside: ['Everything in Signature', 'The Hermetic lots and fixed-star contacts', 'Planet mythology', '12-month sky forecast from your chart', '12 personal affirmations', 'Up to 3 relationship comparisons from your saved people (or your synastry keys if none are saved)', 'Numbered collector’s certificate page', '30 journal pages'] },
 ];
 export const versionOf = (edition: string): BookVersion | undefined => BOOK_VERSIONS.find(v => v.id === edition);
@@ -46,13 +46,13 @@ export function bookBase(edition: string, format: BookFormat = 'print') {
 export const bookTotal = (edition: string, extras: number, format: BookFormat = 'print') => bookBase(edition, format) + extras * EXTRA_SECTION_PRICE;
 export const money = (cents: number) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(cents / 100);
 
-/** Estimated unit costs used until the admin enters real Lulu quotes (admin "Print costs" table overrides these). */
+/** Lulu list print cost at each version's mid page target (Pocket 68, Classic 135, Signature 240, Linen 340), US ground shipping and card fees (2.9% + 30¢). Estimated unit costs used until the admin enters real Lulu quotes (admin "Print costs" table overrides these). */
 export const BOOK_COSTING: { edition: AnyEdition; print: number; shipping: number; fees: number; price: number }[] = [
   { edition: 'digital', print: 0, shipping: 0, fees: 102, price: 2499 },
-  { edition: 'pocket', print: 650, shipping: 499, fees: 131, price: 3499 },
-  { edition: 'classic', print: 2350, shipping: 699, fees: 204, price: 5999 },
-  { edition: 'signature', print: 4100, shipping: 899, fees: 311, price: 9700 },
-  { edition: 'linen', print: 6900, shipping: 1299, fees: 462, price: 14900 },
+  { edition: 'pocket', print: 500, shipping: 499, fees: 131, price: 3499 },
+  { edition: 'classic', print: 2074, shipping: 699, fees: 204, price: 5999 },
+  { edition: 'signature', print: 6253, shipping: 999, fees: 404, price: 12900 },
+  { edition: 'linen', print: 8831, shipping: 1399, fees: 578, price: 18900 },
   { edition: 'standard', print: 2400, shipping: 900, fees: 220, price: 5900 },
   { edition: 'expanded', print: 3800, shipping: 1100, fees: 310, price: 8900 },
 ];

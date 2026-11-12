@@ -34,7 +34,7 @@ function CoverThumb({ spec, alt, blur = false }: { spec: CoverSpec; alt: string;
 }
 
 export default function Books() {
-  usePageMeta('AstroBook · Your personal astrology book in five versions', 'Order AstroBook, written from your own birth chart: Digital PDF $24.99, Pocket $34.99, Classic $59.99, Signature Hardcover $97 or Collector’s Linen $149. Free US shipping.');
+  usePageMeta('AstroBook · Your personal astrology book in five versions', 'Order AstroBook, written from your own birth chart: Digital PDF $24.99, Pocket $34.99, Classic $59.99, Signature Hardcover $129 or Collector’s Linen $189. Free US shipping.');
   const sub = useSubscription(); const birth = useMyBirth(); const nav = useNavigate();
   const [params] = useSearchParams();
   const initial = params.get('version');

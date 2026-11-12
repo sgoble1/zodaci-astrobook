@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { BOOK_VERSIONS, bookTotal, contentDepth, editionName, marginPct, versionOf } from './books';
+import { BOOK_COSTING, BOOK_VERSIONS, bookTotal, contentDepth, editionName, marginPct, versionOf } from './books';
 import { moonPhase, nextSolarReturn } from './bookExtras';
 import { buildVolumes, chineseYear, lahiri, lifePath, profection, volumeFor } from './bookVolumes';
 import { manuscriptManifest } from './manuscriptManifest';
@@ -11,9 +11,9 @@ describe('AstroBook versions and prices', () => {
   it('Digital PDF is $24.99', () => expect(bookTotal('digital', 0, 'digital')).toBe(2499));
   it('Pocket is $34.99', () => expect(bookTotal('pocket', 0)).toBe(3499));
   it('Classic is $59.99', () => expect(bookTotal('classic', 0)).toBe(5999));
-  it('Signature Hardcover is $97', () => expect(bookTotal('signature', 0)).toBe(9700));
-  it("Collector's Linen is $149", () => expect(bookTotal('linen', 0)).toBe(14900));
-  it('extra sections stay $6.99 each', () => expect(bookTotal('linen', 2)).toBe(14900 + 1398));
+  it('Signature Hardcover is $129', () => expect(bookTotal('signature', 0)).toBe(12900));
+  it("Collector's Linen is $189", () => expect(bookTotal('linen', 0)).toBe(18900));
+  it('extra sections stay $6.99 each', () => expect(bookTotal('linen', 2)).toBe(18900 + 1398));
   it('only the Digital version is a download', () => expect(BOOK_VERSIONS.filter(v => v.format === 'digital').map(v => v.id)).toEqual(['digital']));
   it('legacy Standard orders keep their $59 price', () => expect(bookTotal('standard', 0)).toBe(5900));
   it('Classic and above include topic readings; Digital and Pocket do not', () => {
@@ -22,6 +22,13 @@ describe('AstroBook versions and prices', () => {
   });
   it('names earlier editions clearly', () => expect(editionName('expanded', 'print')).toContain('earlier edition'));
   it('computes margin percentages', () => expect(marginPct(5999, 3600)).toBe(40));
+  it('every printed version keeps at least a 40% margin at its Lulu cost estimate', () => {
+    for (const v of BOOK_VERSIONS.filter(b => b.format === 'print')) {
+      const c = BOOK_COSTING.find(x => x.edition === v.id)!;
+      expect(c.price).toBe(v.price);
+      expect(marginPct(v.price, c.print + c.shipping + c.fees)).toBeGreaterThanOrEqual(40);
+    }
+  });
   it('Signature is an 8.5 inch square', () => expect(versionOf('signature')?.trimPt).toEqual([612, 612]));
 });
 
