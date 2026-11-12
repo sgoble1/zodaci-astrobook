@@ -7,6 +7,7 @@ import { ContentLockedError } from '@/lib/protectedContent';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ThemeArt } from '@/components/common/ThemeArt';
+import { PlanetOrb } from '@/components/chart/PlanetOrb';
 import { ZodaciLogo } from '@/components/brand/ZodaciLogo';
 import {
   BIRTH, PLACEMENTS, ANGLES, HOUSES, ASPECTS, PHASES, RETROGRADES_AT_BIRTH,
@@ -138,12 +139,18 @@ function AprilEditionInner() {
           {ed.placements.map(p => (
             <section key={p.key} className="parchment rounded-lg p-5">
               <div className="flex items-start gap-4">
-                <ThemeArt kind="planet" className="h-16 w-16" />
+                <PlanetOrb planet={p.name} size={64} label={`${p.name} in ${p.sign}`} />
                 <div className="min-w-0">
                   <h3 className="text-2xl">{p.glyph} {p.name} in {p.sign}</h3>
+                  <div className="mt-1 flex flex-wrap gap-1.5 font-label text-[10px] tracking-[0.12em]">
+                    <span className="rounded-sm border border-border px-1.5 py-0.5">{p.sign} {p.degree}°</span>
+                    <span className="rounded-sm border border-border px-1.5 py-0.5">House {p.house}</span>
+                    {p.dignity && <span className="rounded-sm border border-border px-1.5 py-0.5">{p.dignity}</span>}
+                  </div>
                   <p className="mt-1 text-xs text-muted-foreground">
                     {p.degree}°{String(p.minute).padStart(2, '0')}′ · house {p.house} · {p.motion} · {p.dignity}
                   </p>
+                  <p className="mt-1 text-xs"><Link className="text-primary underline-offset-2 hover:underline" to={`/planets/${p.key}`}>Open the {p.name} chapter</Link> · <Link className="text-primary underline-offset-2 hover:underline" to={`/houses/${p.house}`}>House {p.house} chapter</Link></p>
                 </div>
               </div>
               <p className="mt-3 font-display text-lg text-gold">{p.headline}</p>
@@ -162,6 +169,7 @@ function AprilEditionInner() {
                 <div className="min-w-0">
                   <h3 className="text-2xl">House {h.number} · {h.name}</h3>
                   <p className="mt-1 text-xs text-muted-foreground">Cusp {h.cusp} · ruler {h.ruler}{h.planets.length ? ` · ${h.planets.join(', ')}` : ''}</p>
+                  <p className="mt-1 text-xs"><Link className="text-primary underline-offset-2 hover:underline" to={`/houses/${h.number}`}>Open the House {h.number} chapter</Link></p>
                 </div>
               </div>
               <p className="mt-3 text-sm italic text-foreground/80">{h.summary}</p>
