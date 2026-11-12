@@ -2,7 +2,7 @@
 
 Sources combined: "Current Implementation Plan Doc", the 23 "Old Completed Archived Update Docs", the Nov 12 unfinished-work plan (Waves 1–10), every open line in the roadmap, and open requests from chat. Items already finished and verified (Keepsakes, Museum, Investigations, Archive, gift shelf, Related panels, Admin rail, founder inventory, new book prices and page counts) are left out.
 
-Order: free fixes first, then a verification sweep, then credit work in small batches, then outside-account items. Founder content is touched last, after a fresh inventory, and nothing is removed.
+Everything below is in scope and gets built, including all AI-credit work. Free fixes run first because they are cheapest. Credit work comes next, run in full and in small saved batches. Outside-account items are set up as soon as the owner supplies access. Founder content is touched last, after a fresh inventory, and nothing is removed.
 
 ## Stage 1 — Founder editions look and feel the same (no credits)
 1. April's report (/april): swap the flat placeholder planet and house pictures for the same planet spheres Shane and Zac use, with sign, degree and house badges.
@@ -30,7 +30,7 @@ Order: free fixes first, then a verification sweep, then credit work in small ba
 3. Regression tests for each rule changed above: edition isolation, which chart each page uses, official visibility, order guards, spec rules.
 4. Fresh security scan. Fix only real findings.
 
-## Stage 4 — AI-credit work, cheapest first
+## Stage 4 — All AI-credit work (built in full, cheapest first)
 Ways to keep credits low:
 - Patch only the flagged sentences instead of rewriting whole chapters.
 - Make one sheet of 9–16 pictures and cut it into separate images. This method was already used for April.
@@ -44,14 +44,21 @@ Order, with rough cost:
 4. Zac's six-volume content organized from his 198 existing chapters. This is mostly sorting in code, with AI only for headings and summaries: medium.
 5. Zac's chapter pictures: about 13 sheets, medium.
 6. Redraw the sample AstroComic for a fictional reader instead of a founder: one sheet plus a script, small.
-7. AstroBook Volumes IV–VI writing, and the 18 long topic readings including "Sex & Attraction". Generated once per member when they open them, so no upfront cost.
-8. Personal AstroComic Issue #1, then #2: runs automatically when the first comic buyer joins.
-9. Intelligence Layer: one shared summary of chart, transits and context feeding Current Chapter, forecasts and books. Built mainly in code, with one short AI summary per member, saved and reused.
+7. AstroBook Volumes IV–VI: write all three in full for April, Shane and Zac and for the fictional sample reader. Members get theirs written once, the first time they open them.
+8. The 18 long topic readings, including "Sex & Attraction", written in full for all three founders and the sample reader.
+9. Founder AstroComics: Issue #1 and #2 scripts and art for April, Shane and Zac. Shane's 24-panel script is already reviewed.
+10. New-theme pictures for every page that still shows old art (About, Investor, Charts, Explore, Learn, shop departments). The home slides you like stay as they are.
+11. Buyer AstroComic Issue #1 and #2: switch on the automatic writing and drawing for each buyer, and test the whole run with the fictional sample reader.
+12. Intelligence Layer: one shared summary of chart, transits and context feeding Current Chapter, forecasts and books. Built mainly in code, with one short AI summary per member, saved and reused.
 
-## Stage 5 — Larger later programs (own small plans when reached)
-- Living AstroBooks that refresh when context changes.
-- Portrait system: photo to observatory character.
+## Stage 5 — Larger programs (built in full in this plan)
+- Living AstroBooks: books that refresh their chapters when your context or forecasts change, rewriting only the chapters affected.
+- Portrait system: upload a photo and get it drawn as your observatory character. Uses image credits for each portrait.
 - Event system: one activity record so pages update together. This extends the existing activity log.
+- AI Observatory upgrade: answers drawn from your chart, current chapter, journal and goals, linked to the Intelligence Layer.
+
+## Rough total credit budget
+Shane fixes and pictures, Zac's content and pictures, founder volumes, readings and comics, site pictures and the sample comic: roughly 150–250 credits, run in batches. Each batch is checked against your balance before it starts and stops cleanly if credits run out, then resumes from where it stopped.
 
 ## Blocked outside the app (owner action)
 - Email sender DNS for notify.zodaci.com. Lovable email replaces Resend, so Resend is not needed.
