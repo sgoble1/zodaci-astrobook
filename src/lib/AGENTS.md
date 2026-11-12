@@ -16,3 +16,6 @@
 - currentChapter keeps broadcast reflections deterministic from aspect and natal point; no generated biography or predicted events.
 - readingInsights parses only the reading's own text (written placements, houses, length); it never reads the chart or infers anything about the reader.
 - memberRoutes lists the pages every account opens as itself; any new member page must be added there (tested) or non-founders get the readings fallback instead.
+- keepsakes builds certificate/Star Scroll rows from calculated positions only; the keepsake number is a stable reprint label, never presented as an official record.
+- founderAudit compares counts (chapters, words, files) with the saved platform_settings snapshot; it never handles founder text.
+- memberCharacter maps saved member_characters to comic stand-ins; unknown ids draw none.

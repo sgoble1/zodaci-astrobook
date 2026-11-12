@@ -77,6 +77,7 @@ export default function Admin() {
       <AuthGate what="open your workspace">{() => (
         <div className={isAdmin ? 'grid gap-6 lg:grid-cols-[15rem_minmax(0,1fr)] lg:items-start' : 'space-y-6'}>
           <aside className={isAdmin ? 'space-y-4 lg:sticky lg:top-20 lg:max-h-[calc(100vh-6rem)] lg:overflow-y-auto lg:pr-1' : ''}>
+          {isAdmin && <RevenueRail onOpen={t => go(t)} />}
           <nav aria-label="Admin sections" className="pb-2">
             <div className={`grid gap-x-6 gap-y-4 text-sm sm:grid-cols-2 ${isAdmin ? 'lg:grid-cols-1 lg:gap-y-3' : 'xl:grid-cols-3'}`}>
               {groups.map(g => (
@@ -89,7 +90,6 @@ export default function Admin() {
               ))}
             </div>
           </nav>
-          {isAdmin && <RevenueRail onOpen={t => go(t)} />}
           </aside>
           <div className="min-w-0 space-y-6">
           {isAdmin && tab === 'upload' && <UploadPanel userId={session?.user.id ?? ''} />}

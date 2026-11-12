@@ -19,6 +19,7 @@
 - Workspace Wonderings use separate member policies; relationship notes remain owner-only.
 - Public community tables stay separate from private workspaces; public reads/owner-only posting must not expose private feeds.
 - Signed-out AppShell shows public chrome only on SIGNED_OUT_PATHS, otherwise /auth?next=; no member menu/data.
+- PublicWording rewrites the person April to "you" but never the month (dates, month lists, option/time/select), so birth dates stay correct.
 
 ## Charts and content
 - Public guides use the shared NavigatedProse reader; demo plan comparisons use content/demoPlans and calculated chapter samples use sampleEdition to avoid divergent access claims or invented degrees.

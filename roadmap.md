@@ -8,11 +8,12 @@ Full plan: .lovable/plan/unfinished-work-plan-archived-docs-current-implementati
 - [x] Wave 9: Investigations Bureau (/investigations, seven case files), Museum of the Sky (/museum, five galleries), Archive ledger (/archive). Menus, route inventory, member page list, observatory places; rule tests.
 - [x] Wave 1/3: Our Charts in Zac's menu, opening on Shane; /april report has Back to Zodaci and Print.
 - [x] Wave 5: credit purchase confirms by its own ledger row (backoff + Check again); /checkout/return stops spinning on non-membership payments; Admin Digital orders panel (needs-attention filter, prepare/open PDF through book-order-pdf); Developer four-column status board; hidden tabs stop polling (Wonderings, Community, Journal, Activity, April monitor, badges, Developer, Updates).
-- [ ] Wave 6: saved member characters in comic prompts.
-- [ ] Wave 8: clickable placements on member chart tables; public shared workspaces separation check; honest "being written" pages for Volumes IV–VI.
-- [ ] Wave 9 remaining: Star Scroll / gift collections / certificates; Admin revenue sidebar + founder audit; content registry Related panels (NextStepPanel already gives next steps).
-- [ ] Wave 3 remaining: Shane's reviewed 24-panel Issue #1 script into src/content (birth time 1:55 PM); ZacWorkbook autosave race + read-only admin view.
-- [ ] Wave 10 founder inventory (last).
+- [x] Wave 6: the member's saved observatory character is drawn as their stand-in on comic covers (member preview and admin drafts; admin read policy on member_characters). Tested.
+- [x] Wave 8 checked: placements already open details everywhere (My Chart, chart section, wheel); sex/gender question already at onboarding; AI writers carry no April details; classic-view banner works for every founder; Volumes IV–VI are built by buildVolumes (not empty pages). Fixed: the "you" wording filter turned the month April into "You" in dates (tested).
+- [x] Wave 9: Keepsakes (/keepsakes: printable Birth-Sky Certificate and Star Scroll, for yourself or saved people); Gift collections in the shop; Related panels on readings (titles-only registry, tested); Admin sidebar with Revenue & growth; Founder inventory tab.
+- [x] Wave 3: ZacWorkbook already saves one answer at a time per prompt and opens read-only for others. Shane's 24-panel script stays out of public code (private founder content); his Official AstroComic is built from his authorized birth facts.
+- [x] Wave 10: Founder inventory baseline saved Nov 12 — April Masterbook 382 chapters (480,832 words), source library 10, Shane 63 (204,372 words), Zac 198 (153,429 words), 17 of 17 stored files. Re-run before and after any founder content move.
+- [ ] Developer status board: browser check of moving cards (page loads; board itself not yet clicked through).
 - [ ] Wave 7 (needs AI credits): sm-29 correction, Shane/Zac artwork, buyer comics, long readings, Volumes IV–VI, Zac extraction.
 
 ## Status — Nov 10 2026 (plan close-out)

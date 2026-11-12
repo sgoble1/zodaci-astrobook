@@ -5,6 +5,10 @@
 export type SiteUpdate = { date: string; title: string; text: string; to?: string; cta?: string };
 
 export const SITE_UPDATES: SiteUpdate[] = [
+  { date: '2026-11-12', title: 'Keepsakes: certificates and Star Scrolls', text: 'Print a Birth-Sky Certificate or a tall Star Scroll with your wheel, planets, houses and closest aspects — for yourself, or as a gift from birth details you saved for someone.', to: '/keepsakes', cta: 'Make a keepsake' },
+  { date: '2026-11-12', title: 'Gift collections in the shop', text: 'New ways to shop for someone else: gifts under $20, little gifts, prints for their wall, a pick-their-Sun-sign shelf, and a printed AstroBook shipped with a card.', to: '/store', cta: 'Browse gifts' },
+  { date: '2026-11-12', title: 'Related readings', text: 'Every reading now ends with readings on the same theme and the matching case file, gallery or tool, so you can keep going without hunting through menus.', to: '/my-readings', cta: 'Open my readings' },
+  { date: '2026-11-12', title: 'Your character in your comic', text: 'The observatory character you choose now appears on your AstroComic cover as your stand-in.', to: '/characters', cta: 'Choose a character' },
   { date: '2026-11-12', title: 'The Investigations Bureau', text: 'Seven case files — relationships, purpose, career, money, health, spirituality and patterns — each gathering the placements, houses, rulers and closest aspects in your own chart, plus what today’s sky is touching. Every line names the calculation behind it.', to: '/investigations', cta: 'Open my case files' },
   { date: '2026-11-12', title: 'Museum of the Sky', text: 'Five galleries hang your own placements as framed plates: Roots & Belonging, Relationships, Purpose, Future Exhibitions with real dates ahead, and Legacy with your long life cycles.', to: '/museum', cta: 'Visit the Museum' },
   { date: '2026-11-12', title: 'The Archive', text: 'One dated ledger of everything you have made and kept: readings and their rewrites, pages, podcasts, creations, book and comic orders, observations, bookmarks and workbook answers.', to: '/archive', cta: 'Open the Archive' },
