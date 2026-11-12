@@ -21,6 +21,7 @@ import { MemberCharts } from '@/components/admin/MemberCharts';
 import { ActivityFeed } from '@/components/admin/ActivityFeed';
 import { MarketingPages } from '@/components/admin/MarketingPages';
 import { PrintOrders } from '@/components/admin/PrintOrders';
+import { DigitalOrders } from '@/components/admin/DigitalOrders';
 import { GrowthStats } from '@/components/admin/GrowthStats';
 import { UpgradeFunnel } from '@/components/admin/UpgradeFunnel';
 import { AdminSearch } from '@/components/admin/AdminSearch';
@@ -94,7 +95,7 @@ export default function Admin() {
             {tab === 'growth' && <div className="space-y-8"><GrowthStats /><UpgradeFunnel /></div>}
             {tab === 'activity' && <ActivityFeed />}
             {tab === 'charts' && <MemberCharts />}
-            {tab === 'orders' && <PrintOrders />}
+            {tab === 'orders' && <div className="space-y-8"><PrintOrders /><DigitalOrders /></div>}
             {tab === 'shop' && <ShopAdmin />}
             {tab === 'studio' && <AiStudioAdmin />}
             {tab === 'comic' && <ComicQueue />}

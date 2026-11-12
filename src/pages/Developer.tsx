@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { BuildCostCard, useBuildCreditSnapshot } from '@/components/admin/BuildCostCard';
 import { buildCostLine } from '@/lib/devCost';
 import { Link } from 'react-router-dom';
-import { Plus, Trash2 } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Plus, Trash2 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -15,6 +15,10 @@ const KINDS = { feature: 'Feature', bug: 'Bug', gap: 'Gap', plan: 'Future plan' 
 const STATUSES = { todo: 'To do', doing: 'In progress', blocked: 'Blocked', done: 'Done' } as const;
 const STAT_LABELS: [string, string][] = [['members', 'Accounts'], ['members_7d', 'New this week'], ['readings', 'Readings written'], ['readings_7d', 'Readings this week'], ['podcasts', 'Podcasts'], ['creations', 'Creator Studio saves'], ['ai_uses_month', 'AI calls this month'], ['ai_credits_month', 'Member credits used'], ['paid_live', 'Paid memberships'], ['book_orders', 'Paid book orders'], ['comic_subs', 'Comic subscriptions'], ['events_24h', 'Activity, last 24 h'], ['contact_open', 'Unanswered messages']];
 const sel = 'h-9 rounded-md border border-input bg-background px-2 text-sm';
+const ORDER: Item['status'][] = ['todo', 'doing', 'blocked', 'done'];
+const PRIORITY = { 1: 'High', 2: 'Medium', 3: 'Low' } as Record<number, string>;
+const LAYOUT_KEY = 'zodaci-dev-layout';
+const DONE_SHOWN = 12;
 
 /** Admin-only developer dashboard. Everyone with admin can read; only the developer (Shane) can change items — enforced by the database. */
 export default function Developer({ view = 'board' }: { view?: 'board' | 'timeline' }) {
@@ -26,6 +30,9 @@ export default function Developer({ view = 'board' }: { view?: 'board' | 'timeli
   const [filter, setFilter] = useState<'all' | Item['kind']>('all');
   const [draft, setDraft] = useState({ title: '', kind: 'feature' as Item['kind'], area: 'General' });
   const [err, setErr] = useState('');
+  const [layout, setLayout] = useState<'board' | 'list'>(() => (typeof localStorage !== 'undefined' && localStorage.getItem(LAYOUT_KEY) === 'list' ? 'list' : 'board'));
+  const [allDone, setAllDone] = useState(false);
+  const chooseLayout = (l: 'board' | 'list') => { setLayout(l); try { localStorage.setItem(LAYOUT_KEY, l); } catch { /* private mode */ } };
   const { snap } = useBuildCreditSnapshot();
 
   const load = useCallback(async () => {
@@ -110,12 +117,40 @@ export default function Developer({ view = 'board' }: { view?: 'board' | 'timeli
 
       <section aria-labelledby="dv-l" className="space-y-3">
         <div className="flex flex-wrap items-center justify-between gap-3"><h2 id="dv-l" className="text-2xl">Implementation list</h2>
-          <select aria-label="Filter by type" className={sel} value={filter} onChange={e => setFilter(e.target.value as typeof filter)}><option value="all">All</option>{Object.entries(KINDS).map(([k, l]) => <option key={k} value={k}>{l}s</option>)}</select></div>
+          <div className="flex flex-wrap items-center gap-2">
+            <div role="group" aria-label="Layout" className="flex gap-1">{(['board', 'list'] as const).map(l => <Button key={l} size="sm" variant={layout === l ? 'default' : 'outline'} aria-pressed={layout === l} onClick={() => chooseLayout(l)}>{l === 'board' ? 'Status board' : 'List'}</Button>)}</div>
+            <select aria-label="Filter by type" className={sel} value={filter} onChange={e => setFilter(e.target.value as typeof filter)}><option value="all">All</option>{Object.entries(KINDS).map(([k, l]) => <option key={k} value={k}>{l}s</option>)}</select>
+          </div></div>
         {dev && <div className="flex flex-wrap gap-2"><Input aria-label="New item" className="max-w-sm" placeholder="New item…" value={draft.title} onChange={e => setDraft({ ...draft, title: e.target.value })} onKeyDown={e => e.key === 'Enter' && add()} />
           <select aria-label="Type" className={sel} value={draft.kind} onChange={e => setDraft({ ...draft, kind: e.target.value as Item['kind'] })}>{Object.entries(KINDS).map(([k, l]) => <option key={k} value={k}>{l}</option>)}</select>
           <Input aria-label="Area" className="w-36" value={draft.area} onChange={e => setDraft({ ...draft, area: e.target.value })} /><Button onClick={add}><Plus className="h-4 w-4" aria-hidden />Add</Button></div>}
         {err && <p role="alert" className="text-sm text-destructive">{err}</p>}
-        <ul className="space-y-2">{shown.map(i => (
+        {layout === 'board' ? (
+          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+            {ORDER.map((st, col) => {
+              const list = shown.filter(i => i.status === st).sort((a, b) => a.priority - b.priority || Date.parse(b.updated_at) - Date.parse(a.updated_at));
+              const visible = st === 'done' && !allDone ? list.slice(0, DONE_SHOWN) : list;
+              return (
+                <section key={st} aria-labelledby={`col-${st}`} className="obs-paper flex flex-col gap-3 p-3">
+                  <h3 id={`col-${st}`} className="flex items-center justify-between font-label !text-sm tracking-[0.14em]"><span>{STATUSES[st]}</span><span className="rounded-full border border-[hsl(var(--comic-navy)/0.3)] px-2 text-xs">{list.length}</span></h3>
+                  {visible.length === 0 && <p className="text-xs text-muted-foreground">Nothing here.</p>}
+                  <ul className="space-y-2">{visible.map(i => (
+                    <li key={i.id} className="rounded-[var(--cut-card)] border border-[hsl(var(--comic-navy)/0.22)] bg-background/5 p-3 text-sm">
+                      <div className="flex flex-wrap items-center gap-1.5 text-[11px]"><span className="rounded-full border border-[hsl(var(--comic-navy)/0.3)] px-1.5">{KINDS[i.kind]}</span><span className="text-muted-foreground">{PRIORITY[i.priority] ?? 'Medium'} · {i.area}</span></div>
+                      <p className={`mt-1 font-medium ${i.status === 'done' ? 'line-through opacity-70' : ''}`}>{i.title}</p>
+                      {i.blocker && <p className="mt-1 text-xs text-accent">Blocked by: {i.blocker}</p>}
+                      {dev && <div className="mt-2 flex items-center justify-between gap-1">
+                        <Button size="sm" variant="ghost" className="h-7 px-2" disabled={col === 0} aria-label={`Move ${i.title} to ${col > 0 ? STATUSES[ORDER[col - 1]] : ''}`} onClick={() => save(i.id, { status: ORDER[col - 1] })}><ChevronLeft className="h-4 w-4" aria-hidden /></Button>
+                        <Button size="sm" variant="ghost" className="h-7 px-2" aria-label={`Delete ${i.title}`} onClick={() => remove(i.id)}><Trash2 className="h-3.5 w-3.5" aria-hidden /></Button>
+                        <Button size="sm" variant="ghost" className="h-7 px-2" disabled={col === ORDER.length - 1} aria-label={`Move ${i.title} to ${col < ORDER.length - 1 ? STATUSES[ORDER[col + 1]] : ''}`} onClick={() => save(i.id, { status: ORDER[col + 1] })}><ChevronRight className="h-4 w-4" aria-hidden /></Button>
+                      </div>}
+                    </li>))}</ul>
+                  {st === 'done' && list.length > DONE_SHOWN && <Button size="sm" variant="ghost" onClick={() => setAllDone(v => !v)}>{allDone ? 'Show fewer' : `Show all ${list.length}`}</Button>}
+                </section>
+              );
+            })}
+          </div>
+        ) : <ul className="space-y-2">{shown.map(i => (
           <li key={i.id} className="flex flex-wrap items-start gap-3 rounded-lg border border-border/60 bg-card/40 p-3">
             <span className="rounded-full border border-gold/40 px-2 py-0.5 text-xs text-gold">{KINDS[i.kind]}</span>
             <div className="min-w-[14rem] flex-1"><p className={i.status === 'done' ? 'text-muted-foreground line-through' : ''}>{i.title}</p><p className="text-xs text-muted-foreground">{i.area}{i.details ? ` · ${i.details}` : ''}{i.blocker ? ` · Blocked by: ${i.blocker}` : ''}</p></div>
@@ -124,7 +159,7 @@ export default function Developer({ view = 'board' }: { view?: 'board' | 'timeli
               <select aria-label={`Priority of ${i.title}`} className={sel} value={i.priority} onChange={e => save(i.id, { priority: Number(e.target.value) })}><option value={1}>High</option><option value={2}>Medium</option><option value={3}>Low</option></select>
               <Button size="sm" variant="ghost" aria-label={`Delete ${i.title}`} onClick={() => remove(i.id)}><Trash2 className="h-4 w-4" aria-hidden /></Button>
             </> : <span className="text-xs text-muted-foreground">{STATUSES[i.status]}</span>}
-          </li>))}</ul>
+          </li>))}</ul>}
       </section>
     </article>
   );

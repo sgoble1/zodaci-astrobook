@@ -4,7 +4,15 @@
 Full plan: .lovable/plan/unfinished-work-plan-archived-docs-current-implementation-pl-2026-11-12.md
 - [x] Comic and cover art instructions switched from "Mystic Ink" to 1950s Atomic Zodiac (comic-art, book-cover redeployed).
 - [x] Checked, already working: Personal Context "Create a chapter about this" fills the Creator Studio topic; Instructions search text with April's placements is shown only inside the April space (members get the member guide).
-- [ ] Wave 1 privacy/account switching · Wave 2 the 20 member pages still importing April's chart · Wave 3 founder edition fixes · Wave 4 results/navigation · Wave 5 orders/checkout/admin · Wave 6 page titles + FAQ, saved characters · Wave 8 Ops-doc leftovers · Wave 9 Blueprint programs (registry, Agency, Museum, Archive, gifts, admin sidebar) · Wave 10 founder inventory.
+- [x] Verified already in place (no change needed): members never render April's pages (PublicChartFallback swaps in their own chart for every April-importing route, tested in memberRoutes); same-account sign-in refreshes don't tear pages down (isSameAccountEvent); edition view is per tab by design; ActivityFeed opens on everyone; AI-pause reset exists in AI Studio; /faq exists; pages without their own title get RouteMetaFallback; My Readings filters, referral capture, Volume II links, glyphs in /april placements, Shane's menu lists April's Masterbook when shared; Illustrated PDF is Shane's own file (others have showcases).
+- [x] Wave 9: Investigations Bureau (/investigations, seven case files), Museum of the Sky (/museum, five galleries), Archive ledger (/archive). Menus, route inventory, member page list, observatory places; rule tests.
+- [x] Wave 1/3: Our Charts in Zac's menu, opening on Shane; /april report has Back to Zodaci and Print.
+- [x] Wave 5: credit purchase confirms by its own ledger row (backoff + Check again); /checkout/return stops spinning on non-membership payments; Admin Digital orders panel (needs-attention filter, prepare/open PDF through book-order-pdf); Developer four-column status board; hidden tabs stop polling (Wonderings, Community, Journal, Activity, April monitor, badges, Developer, Updates).
+- [ ] Wave 6: saved member characters in comic prompts.
+- [ ] Wave 8: clickable placements on member chart tables; public shared workspaces separation check; honest "being written" pages for Volumes IV–VI.
+- [ ] Wave 9 remaining: Star Scroll / gift collections / certificates; Admin revenue sidebar + founder audit; content registry Related panels (NextStepPanel already gives next steps).
+- [ ] Wave 3 remaining: Shane's reviewed 24-panel Issue #1 script into src/content (birth time 1:55 PM); ZacWorkbook autosave race + read-only admin view.
+- [ ] Wave 10 founder inventory (last).
 - [ ] Wave 7 (needs AI credits): sm-29 correction, Shane/Zac artwork, buyer comics, long readings, Volumes IV–VI, Zac extraction.
 
 ## Status — Nov 10 2026 (plan close-out)

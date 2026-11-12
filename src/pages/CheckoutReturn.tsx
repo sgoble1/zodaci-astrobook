@@ -19,7 +19,7 @@ export default function CheckoutReturn() {
   const sub = useSubscription();
   const paid = !sub.loading && sub.tier !== 'free';
   const [attempt, setAttempt] = useState(0);
-  const [state, setState] = useState<'checking' | 'pending' | 'failed'>('checking');
+  const [state, setState] = useState<'checking' | 'pending' | 'failed' | 'other'>('checking');
   const [message, setMessage] = useState<string | null>(null);
   const done = useRef(false);
   const next = params.get('next');
@@ -32,6 +32,7 @@ export default function CheckoutReturn() {
     const { data, error } = await supabase.functions.invoke('sync-checkout', { body: { sessionId, environment } });
     if (error || data?.error) { setMessage(data?.error ?? null); return 'failed' as const; }
     if (data?.status === 'active' || data?.status === 'trialing') { refreshSubscription(); return 'active' as const; }
+    if (data?.status === 'not_membership') return 'other' as const;
     return 'pending' as const;
   }, [sessionId]);
 
@@ -41,6 +42,7 @@ export default function CheckoutReturn() {
     const t = window.setTimeout(async () => {
       const r = await check();
       if (r === 'active') { done.current = true; return; }
+      if (r === 'other') { done.current = true; setState('other'); return; }
       if (r === 'failed' && attempt >= 2) { setState('failed'); return; }
       setAttempt(a => a + 1);
     }, RETRY_MS[attempt]);
@@ -49,6 +51,8 @@ export default function CheckoutReturn() {
 
   const retry = () => { done.current = false; setMessage(null); setState('checking'); setAttempt(0); };
   if (!sessionId) return <article className="mx-auto max-w-xl space-y-4 py-12 text-center"><h1 className="font-display text-3xl">No payment found</h1><Button asChild><Link to="/pricing">See plans</Link></Button></article>;
+  // A credit pack or AstroComic payment confirms on its own page; never spin here waiting for a membership.
+  if (state === 'other') return <article className="mx-auto max-w-xl space-y-4 py-12 text-center" aria-live="polite"><h1 className="font-display text-3xl">This payment isn’t a membership</h1><p className="text-muted-foreground">Credit packs are confirmed on the Credits page and AstroComic subscriptions on My AstroComic. Please don’t pay again.</p><div className="flex flex-wrap justify-center gap-3"><Button asChild><Link to={`/credits?session_id=${encodeURIComponent(sessionId)}`}>Check my credits</Link></Button><Button asChild variant="outline"><Link to={`/my-comic?session_id=${encodeURIComponent(sessionId)}`}>Check my AstroComic</Link></Button></div></article>;
   const stuck = !paid && state !== 'checking';
   return (
     <article className="mx-auto max-w-xl space-y-5 py-12 text-center" aria-live="polite">
