@@ -31,7 +31,7 @@ function Lobby({ name }: { name: string }) {
               <div className="obs-paper flex h-full flex-col items-center gap-3 p-6 text-center">
                 <p className="font-label text-[11px] tracking-[0.2em] text-primary">{g.wing}</p>
                 <div className="museum-arch"><SpotArt kind={g.art} className="h-24 w-24" /></div>
-                <h2 className="font-display text-xl">{g.name}</h2>
+                <h2 className="font-display !text-xl">{g.name}</h2>
                 <p className="text-sm leading-relaxed">{g.intro}</p>
                 <span className="mt-auto inline-flex items-center gap-1 text-sm font-medium text-primary transition-transform duration-700 group-hover:translate-x-1">Enter the gallery <ArrowRight className="h-4 w-4" aria-hidden /></span>
               </div>

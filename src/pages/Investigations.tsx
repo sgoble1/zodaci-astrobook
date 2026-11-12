@@ -33,7 +33,7 @@ function Bureau({ chart, name }: { chart: ChartResult; name: string }) {
               <span className="case-folder-tab font-label text-[11px] tracking-[0.18em]">File {spec.number}</span>
               <div className="obs-paper flex h-full flex-col gap-3 p-5">
                 <div className="flex items-start justify-between gap-3">
-                  <h2 className="font-display text-xl leading-snug">{spec.title}</h2>
+                  <h2 className="font-display !text-xl leading-snug">{spec.title}</h2>
                   <SpotArt kind={spec.art} className="h-14 w-14 shrink-0" />
                 </div>
                 <p className="text-sm leading-relaxed">{spec.question}</p>
@@ -95,17 +95,17 @@ function CaseFileView({ chart, id }: { chart: ChartResult; id: CaseId }) {
         </section>
         <aside className="space-y-6">
           <section aria-labelledby="active" className="obs-panel space-y-3 p-5">
-            <h2 id="active" className="flex items-center gap-2 font-label text-sm tracking-[0.14em]"><Radio className="h-4 w-4 text-primary" aria-hidden /> In today’s sky</h2>
+            <h2 id="active" className="flex items-center gap-2 font-label !text-sm tracking-[0.14em]"><Radio className="h-4 w-4 text-primary" aria-hidden /> In today’s sky</h2>
             {file.activeNow.length ? <ul className="space-y-3 text-sm">{file.activeNow.map(h => <li key={`${h.transit.key}-${h.natalKey}-${h.type}`}><p className="font-medium">{h.transit.name} {h.symbol} your {h.natalName}</p><p className="text-muted-foreground">{h.type}, {h.orb.toFixed(1)}° {h.applying ? 'and closing' : 'and separating'}. {h.text}</p></li>)}</ul>
               : <p className="text-sm text-muted-foreground">No planet is closely touching the points in this file today.</p>}
           </section>
           <section aria-labelledby="coming" className="obs-panel space-y-3 p-5">
-            <h2 id="coming" className="flex items-center gap-2 font-label text-sm tracking-[0.14em]"><CalendarClock className="h-4 w-4 text-primary" aria-hidden /> Coming up</h2>
+            <h2 id="coming" className="flex items-center gap-2 font-label !text-sm tracking-[0.14em]"><CalendarClock className="h-4 w-4 text-primary" aria-hidden /> Coming up</h2>
             {file.upcoming.length ? <ul className="space-y-2 text-sm">{file.upcoming.map(e => <li key={`${e.title}-${e.date.toISOString()}`}><span className="font-label tracking-wide">{day(e.date)}</span> · {e.title}</li>)}</ul>
               : <p className="text-sm text-muted-foreground">No exact contacts to these points in the next four months.</p>}
           </section>
           <section aria-labelledby="questions" className="obs-paper space-y-3 p-5">
-            <h2 id="questions" className="font-display text-lg">Questions for your notebook</h2>
+            <h2 id="questions" className="font-display !text-lg">Questions for your notebook</h2>
             <ul className="list-disc space-y-2 pl-5 text-sm">{file.questions.map(q => <li key={q}>{q}</li>)}</ul>
           </section>
           <div className="flex flex-col gap-2">

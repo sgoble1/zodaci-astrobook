@@ -73,7 +73,7 @@ export default function Archive() {
           <div className="space-y-10">
             {shown.map(g => (
               <section key={g.key} aria-labelledby={`m-${g.key}`} className="space-y-3">
-                <h2 id={`m-${g.key}`} className="font-label text-sm tracking-[0.18em] text-primary">{g.label} · {g.entries.length}</h2>
+                <h2 id={`m-${g.key}`} className="font-label !text-sm tracking-[0.18em] text-primary">{g.label} · {g.entries.length}</h2>
                 <ol className="divide-y divide-border rounded-[var(--cut-card)] border border-border">
                   {g.entries.map(e => (
                     <li key={e.id}>
