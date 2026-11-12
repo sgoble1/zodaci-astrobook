@@ -128,6 +128,7 @@ const CaseFilePage = lazy(() => import('./pages/Investigations').then(m => ({ de
 const Museum = lazy(() => import('./pages/Museum'));
 const MuseumGalleryPage = lazy(() => import('./pages/Museum').then(m => ({ default: m.MuseumGalleryPage })));
 const ArchivePage = lazy(() => import('./pages/Archive'));
+const Keepsakes = lazy(() => import('./pages/Keepsakes'));
 const Observatory = lazy(() => import('./pages/Observatory'));
 const ReadingHistory = lazy(() => import('./pages/ReadingHistory'));
 const Workspaces = lazy(() => import('./pages/Workspaces'));
@@ -313,6 +314,7 @@ export default function App() {
             <Route path="/museum" element={<Museum />} />
             <Route path="/museum/:gallery" element={<MuseumGalleryPage />} />
             <Route path="/archive" element={<ArchivePage />} />
+            <Route path="/keepsakes" element={<Keepsakes />} />
             <Route path="/observatory" element={<Observatory />} />
             <Route path="/reading-history" element={<ReadingHistory />} />
             <Route path="/workspaces" element={<Workspaces />} />

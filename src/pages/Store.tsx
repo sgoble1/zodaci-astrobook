@@ -1,4 +1,5 @@
 import { Fragment, useEffect, useMemo, useState } from 'react';
+import { GiftCollections } from '@/components/store/GiftCollections';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { Loader2, Search, SlidersHorizontal, Store as StoreIcon, X } from 'lucide-react';
 import { toast } from 'sonner';
@@ -201,6 +202,7 @@ export default function Store() {
               <SpotlightCard to="/astrobook" image={PRODUCT_ART.book.src} alt={PRODUCT_ART.book.alt} eyebrow="Written for you" title="The AstroBook" note="Your whole chart as a printed book: six volumes calculated from your birth moment, with the context you add." price={`From ${bookFrom}`} cta="Choose an edition" />
               <SpotlightCard to="/astrocomic" image={PRODUCT_ART.comic.src} alt={PRODUCT_ART.comic.alt} eyebrow={issue.purchased && session ? 'Your next issue' : 'Drawn for you'} title={`AstroComic ${comicCard.title}`} note={comicCard.note} price={COMIC_PLANS.single.label} cta={issue.purchased && session ? 'Order this issue' : 'See the comic'} />
             </> : undefined} />)}
+          <GiftCollections signs={signs} />
         </div>}
         {(!browsing || !products) && <ul className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
           {shown.slice(0, limit).map(p => <li key={p.node.id}><ProductCard p={p} onAdd={add} adding={loading} /></li>)}

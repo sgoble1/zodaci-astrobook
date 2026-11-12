@@ -23,6 +23,8 @@ import { MarketingPages } from '@/components/admin/MarketingPages';
 import { PrintOrders } from '@/components/admin/PrintOrders';
 import { DigitalOrders } from '@/components/admin/DigitalOrders';
 import { GrowthStats } from '@/components/admin/GrowthStats';
+import { RevenueRail } from '@/components/admin/RevenueRail';
+import { FounderAudit } from '@/components/admin/FounderAudit';
 import { UpgradeFunnel } from '@/components/admin/UpgradeFunnel';
 import { AdminSearch } from '@/components/admin/AdminSearch';
 import { AuditLog } from '@/components/admin/AuditLog';
@@ -73,9 +75,10 @@ export default function Admin() {
         {isAdmin && <p className="text-sm text-muted-foreground max-w-2xl">Switch to April's or Zac's edition from your account menu (top right) — it is the one place for changing views.</p>}
       </header>
       <AuthGate what="open your workspace">{() => (
-        <div className="space-y-6">
+        <div className={isAdmin ? 'grid gap-6 lg:grid-cols-[15rem_minmax(0,1fr)] lg:items-start' : 'space-y-6'}>
+          <aside className={isAdmin ? 'space-y-4 lg:sticky lg:top-20 lg:max-h-[calc(100vh-6rem)] lg:overflow-y-auto lg:pr-1' : ''}>
           <nav aria-label="Admin sections" className="pb-2">
-            <div className="grid gap-x-6 gap-y-4 text-sm sm:grid-cols-2 xl:grid-cols-3">
+            <div className={`grid gap-x-6 gap-y-4 text-sm sm:grid-cols-2 ${isAdmin ? 'lg:grid-cols-1 lg:gap-y-3' : 'xl:grid-cols-3'}`}>
               {groups.map(g => (
                 <Fragment key={g.label}>
                   <div role="group" aria-label={g.label} className="vellum flex flex-wrap content-start items-center gap-1 p-3">
@@ -86,6 +89,9 @@ export default function Admin() {
               ))}
             </div>
           </nav>
+          {isAdmin && <RevenueRail onOpen={t => go(t)} />}
+          </aside>
+          <div className="min-w-0 space-y-6">
           {isAdmin && tab === 'upload' && <UploadPanel userId={session?.user.id ?? ''} />}
           {tab === 'sections' && <SectionsPanel ownerId={isAdmin ? null : session?.user.id ?? ''} />}
           {tab === 'relationships' && <RelationshipsAdmin userId={session?.user.id ?? ''} />}
@@ -110,7 +116,9 @@ export default function Admin() {
             {tab === 'shared' && <SharedSpacesPanel />}
             {tab === 'images' && <ImageLibrary />}
             {tab === 'costs' && <BuildCostCard editable />}
+            {tab === 'founders' && <FounderAudit />}
           </>}
+          </div>
         </div>
       )}</AuthGate>
     </div>

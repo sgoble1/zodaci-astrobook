@@ -98,7 +98,7 @@ export const MEMBER_DOMAINS: MemberDomain[] = [
     id: 'book', label: 'Cosmic Archive', hub: '/my-astrobook', hubLabel: 'Open my library', icon: BookHeart,
     description: 'Your Masterbook, printed AstroBook, audio and keepsakes.',
     tabs: ['/my-astrobook', '/my-masterbook', '/books', '/orders', '/podcasts', '/my-comic'],
-    prefixes: ['/shane', '/april', '/zac', '/astrobook', '/astrocomic', '/official-astrobook', '/masterbook', '/library', '/archive', '/shared-with-me', '/contents', '/read'],
+    prefixes: ['/shane', '/april', '/zac', '/astrobook', '/astrocomic', '/official-astrobook', '/masterbook', '/library', '/archive', '/keepsakes', '/shared-with-me', '/contents', '/read'],
     columns: [
       { title: 'My AstroBook', items: [
         { to: '/my-masterbook', label: 'My Masterbook', description: 'Your foundational chapters', icon: BookHeart, badge: 'Popular' },
@@ -113,6 +113,7 @@ export const MEMBER_DOMAINS: MemberDomain[] = [
         { to: '/podcasts', label: 'Podcasts', description: 'Turn readings into audio episodes', icon: Headphones },
         { to: '/my-comic', label: 'My AstroComic', description: 'Your illustrated monthly issue', icon: Package },
         { to: '/store', label: 'Zodaci Shop', description: 'Posters, stickers and notebooks', icon: Package },
+        { to: '/keepsakes', label: 'Keepsakes & gifts', description: 'Print a Birth-Sky Certificate or Star Scroll', icon: Gift, badge: 'New' },
       ] },
       { title: 'Editions', items: [
         { to: '/shane', label: 'Shane’s Full Masterbook', description: 'Your private founder edition', icon: Crown, audience: 'shane' },
@@ -410,7 +411,7 @@ export const ROUTE_INVENTORY: Record<string, Placement> = {
   '/brand-launch': P('public', 'utility', 'launch kit'), '/contents': P('april', 'utility'), '/contents/:id': P('april', 'utility'), '/read': P('april', 'utility'), '/read/document/:slug': P('april', 'utility'), '/read/:id': P('april', 'utility'),
   '/': P('account', 'duplicate', 'members are sent to /dashboard'), '/explore': P('explore', 'primary'), '/personal-context': P('account', 'utility'), '/workspaces': P('explore', 'secondary'), '/observation-log': P('readings', 'secondary'), '/observatory': P('readings', 'secondary'), '/content-center': P('readings', 'secondary'), '/reading-history': P('book', 'secondary'),
   '/wonderings': P('readings', 'secondary'), '/start': P('chart', 'secondary'), '/my-chart': P('chart', 'primary'), '/retrogood': P('readings', 'secondary'), '/our-charts': P('chart', 'secondary', 'shared-space accounts'), '/siblings': P('explore', 'secondary'),
-  '/investigations': P('readings', 'secondary'), '/investigations/:caseId': P('readings', 'tertiary', 'from the Investigations Bureau'), '/museum': P('readings', 'secondary'), '/museum/:gallery': P('readings', 'tertiary', 'from the Museum lobby'), '/archive': P('book', 'secondary'), '/findings': P('chart', 'secondary'), '/results': P('chart', 'secondary'), '/my-readings': P('readings', 'primary'), '/my-readings/topic/:slug': P('readings', 'tertiary', 'every topic and core theme is listed on the Readings hub'),
+  '/investigations': P('readings', 'secondary'), '/investigations/:caseId': P('readings', 'tertiary', 'from the Investigations Bureau'), '/museum': P('readings', 'secondary'), '/museum/:gallery': P('readings', 'tertiary', 'from the Museum lobby'), '/archive': P('book', 'secondary'), '/keepsakes': P('book', 'secondary'), '/findings': P('chart', 'secondary'), '/results': P('chart', 'secondary'), '/my-readings': P('readings', 'primary'), '/my-readings/topic/:slug': P('readings', 'tertiary', 'every topic and core theme is listed on the Readings hub'),
   '/my-astrobook': P('book', 'primary'), '/auth': P('account', 'utility'), '/reset-password': P('account', 'utility'), '/pricing': P('account', 'utility'), '/creator': P('account', 'utility', 'Cosmic Studio'),
   '/my-comic': P('book', 'secondary'), '/referrals': P('explore', 'secondary'), '/checkout/return': P('account', 'utility'), '/my-masterbook': P('book', 'secondary'), '/books': P('book', 'secondary'), '/orders': P('book', 'secondary'),
   '/dispatch': P('admin', 'utility'), '/instructions': P('learn', 'secondary'), '/birth-chart': P('chart', 'duplicate', 'renders My Chart for members'), '/chart-guide': P('chart', 'duplicate', 'renders My Chart for members'),

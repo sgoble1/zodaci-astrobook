@@ -51,6 +51,7 @@ export const PLACES: [string, Place][] = [
   ['/podcasts', { name: 'Radio Room', host: 'broadcaster', motto: 'Your chart, read aloud', scene: 'radio-room' }],
   ['/my-comic', { name: 'Comic Press', host: 'archivist', motto: 'Your sky, drawn panel by panel', scene: 'comic-press' }],
   ['/astrocomic', { name: 'Comic Press', host: 'archivist', motto: 'Your sky, drawn panel by panel', scene: 'comic-press' }],
+  ['/keepsakes', { name: 'Observatory Gift Shop', host: 'curator', motto: 'Printed from the measured sky', scene: 'gift-shop' }],
   ['/store', { name: 'Observatory Gift Shop', host: 'curator', motto: 'Souvenirs from your own sky', scene: 'gift-shop' }],
   ['/admin', { name: 'Founder Command', host: 'director', motto: 'Operations of the Authority', scene: 'founder-command' }],
   ['/developer', { name: 'Founder Command', host: 'director', motto: 'Operations of the Authority', scene: 'founder-command' }],

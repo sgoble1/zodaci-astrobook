@@ -28,7 +28,7 @@ export const ADMIN_TAB_ICONS: Record<AdminTab, RetroIconComponent> = {
   access: LockIcon, charts: ChartWheelIcon, upload: UploadIcon, sections: PenIcon, index: SearchIcon, relationships: RingsIcon,
   shop: StorefrontIcon, studio: SparkIcon, orders: BookIcon, comic: ComicIcon, stripe: CoinIcon, shared: ConversationIcon, april: EyeIcon,
   growth: RisingIcon, activity: PeopleIcon, marketing: RocketIcon, newsletter: EnvelopeIcon, credits: LedgerIcon, audit: StampIcon, settings: GearIcon, launch: ShieldIcon,
-  images: PrintIcon, costs: CoinIcon,
+  images: PrintIcon, costs: CoinIcon, founders: LedgerIcon,
 };
 
 /** Shop category icon from the product type's own words; unknown types get a price tag. */

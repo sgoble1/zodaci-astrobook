@@ -1486,3 +1486,18 @@ li:hover > .zodiac-coin { transform: rotate(-10deg); }
 .museum-door > .obs-paper, .museum-plate > figure { transition: transform 1.2s cubic-bezier(.2,.7,.2,1); }
 .museum-door:hover > .obs-paper, .museum-door:focus-visible > .obs-paper { transform: translateY(-3px); }
 @media (prefers-reduced-motion: reduce) { .case-folder > .obs-paper, .museum-door > .obs-paper, .museum-plate > figure { transition: none; transform: none !important; } }
+
+/* Keepsakes: printable certificate and Star Scroll on cream stock with a double brass rule. */
+.keepsake-sheet { color: hsl(var(--comic-navy)); background: hsl(var(--spot-paper)); border-radius: var(--cut-plate); box-shadow: inset 0 0 50px hsl(30 40% 50% / .2), 5px 5px 0 hsl(var(--primary) / .45); }
+.keepsake-sheet h2, .keepsake-sheet h3 { color: hsl(var(--comic-navy)); background: none; -webkit-text-fill-color: currentColor; }
+.keepsake-border { margin: 10px; border: 3px double hsl(var(--brass)); outline: 1px solid hsl(var(--comic-navy) / .35); outline-offset: 5px; background: radial-gradient(circle at 50% 0%, hsl(var(--brass) / .14), transparent 55%); }
+.keepsake-sheet .font-script { color: hsl(var(--comic-brick)); }
+.keepsake-wheel { max-width: 30rem; margin: 0 auto; }
+@media print {
+  body.printing-keepsake * { visibility: hidden !important; }
+  body.printing-keepsake .keepsake-sheet, body.printing-keepsake .keepsake-sheet * { visibility: visible !important; }
+  body.printing-keepsake .keepsake-sheet { position: absolute; left: 0; top: 0; width: 100%; max-width: none; box-shadow: none; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
+/* On a keepsake the wheel is a printed plate: no tap-for-details panel, wheel centred at full width. */
+.keepsake-wheel > div { display: block !important; }
+.keepsake-wheel .chart-projection-detail { display: none !important; }

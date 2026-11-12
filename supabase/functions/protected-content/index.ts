@@ -54,6 +54,31 @@ const STORED_FILES: Record<string, Record<string, { path: string; kind: 'json' |
 };
 const SIGNED_URL_SECONDS = 600;
 
+const words = (t: string) => (t.match(/\S+/g) ?? []).length;
+function countSource(src: Record<string, string>) {
+  const chapters = Object.keys(src).filter(k => k !== 'index.json');
+  let indexed = 0;
+  try { const ix = JSON.parse(src['index.json'] ?? '[]'); indexed = Array.isArray(ix) ? ix.length : Object.keys(ix ?? {}).length; } catch { indexed = 0; }
+  return { chapters: chapters.length, indexed, words: chapters.reduce((n, k) => n + words(src[k] ?? ''), 0) };
+}
+// deno-lint-ignore no-explicit-any
+async function auditCounts(admin: any) {
+  const archive = await loadArchive();
+  const areas: { area: string; edition: string; chapters: number; indexed: number; words: number; error?: string }[] = [];
+  for (const area of ['masterbook', 'library'] as const) areas.push({ area, edition: AREA_EDITION[area], ...countSource(archive[area]) });
+  for (const area of ['shane', 'zac'] as const) {
+    try { areas.push({ area, edition: AREA_EDITION[area], ...countSource(await loadStored(area)) }); }
+    catch { areas.push({ area, edition: AREA_EDITION[area], chapters: 0, indexed: 0, words: 0, error: 'Edition file missing' }); }
+  }
+  const files: { area: string; file: string; present: boolean }[] = [];
+  for (const [area, map] of Object.entries(STORED_FILES)) for (const [file, f] of Object.entries(map)) {
+    const slash = f.path.lastIndexOf('/');
+    const { data } = await admin.storage.from('private-content').list(f.path.slice(0, slash), { search: f.path.slice(slash + 1), limit: 5 });
+    files.push({ area, file, present: (data ?? []).some((o: { name: string }) => o.name === f.path.slice(slash + 1)) });
+  }
+  return { areas, files };
+}
+
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
   if (req.method !== 'POST') return json({ error: 'Method not allowed.' }, 405);
@@ -67,6 +92,13 @@ Deno.serve(async (req) => {
     if (authError || !user.user) return json({ error: 'Sign in to open your private edition.', code: 'SIGNED_OUT' }, 401);
 
     const body = await req.json().catch(() => ({}));
+    // Founder preservation audit: admins get counts only (chapters, words, stored files) — never titles or text.
+    if (body?.action === 'audit') {
+      const { data: isAdmin, error: roleError } = await client.rpc('has_role', { _user_id: user.user.id, _role: 'admin' });
+      if (roleError) throw roleError;
+      if (isAdmin !== true) return json({ error: 'Admins only.', code: 'NO_ACCESS' }, 403);
+      return json({ audit: await auditCounts(createClient(url, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!)), checkedAt: new Date().toISOString() });
+    }
     const area = typeof body?.area === 'string' && AREA_EDITION[body.area] ? body.area as string : '';
     const file = typeof body?.file === 'string' && /^[a-zA-Z0-9._-]{1,140}$/.test(body.file) ? body.file : '';
     if (!area || !file) return json({ error: 'Invalid document request.' }, 400);

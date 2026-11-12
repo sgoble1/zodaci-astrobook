@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useMyCharacter } from '@/lib/memberCharacter';
 import { Link, useSearchParams } from 'react-router-dom';
 import { Loader2, PauseCircle, PlayCircle, Truck, BookOpen, Download } from 'lucide-react';
 import { toast } from 'sonner';
@@ -176,7 +177,8 @@ function Archive({ issues }: { issues: Issue[] }) {
 function NextPreview({ birthName, chartInput, month }: { birthName: string; chartInput: ReturnType<typeof toChartInput>; month: Date | null }) {
   const [all, setAll] = useState(false);
   const target = month ?? (() => { const n = new Date(); return new Date(Date.UTC(n.getUTCFullYear(), n.getUTCMonth() + 1, 1)); })();
-  const issue = useMemo(() => buildComicIssue(computeChart(chartInput), { reader: birthName || 'Reader', month: target, issueNumber: 1 }), [chartInput.date, chartInput.time, chartInput.lat, chartInput.lon, target.getTime()]); // eslint-disable-line react-hooks/exhaustive-deps
+  const guide = useMyCharacter();
+  const issue = useMemo(() => buildComicIssue(computeChart(chartInput), { reader: birthName || 'Reader', month: target, issueNumber: 1, guide }), [chartInput.date, chartInput.time, chartInput.lat, chartInput.lon, target.getTime(), guide?.name]); // eslint-disable-line react-hooks/exhaustive-deps
   return (
     <section aria-labelledby="next-h" className="space-y-4">
       <div className="flex flex-wrap items-end justify-between gap-3"><div><h2 id="next-h" className="font-display text-2xl">Preview: {issue.monthLabel}</h2><p className="mt-1 text-sm text-muted-foreground">Planned from your chart and that month’s sky: {issue.mainEvent}.</p></div><Button variant="outline" size="sm" onClick={() => setAll(a => !a)}>{all ? 'Show first pages' : 'See all 24 pages'}</Button></div>

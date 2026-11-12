@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { guideFor } from '@/lib/memberCharacter';
 import { BookOpen, Download, Printer, RefreshCw, Sparkles } from 'lucide-react';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
@@ -60,9 +61,12 @@ export function ComicQueue() {
   const draftAll = async () => {
     if (!toDraft.length) return;
     setBusy('draft');
+    // Each subscriber's chosen observatory character becomes their stand-in on the cover (admin read policy).
+    const chosen = await supabase.from('member_characters').select('user_id,character_id').in('user_id', toDraft.map(r => r.s.user_id));
+    const characterOf = new Map((chosen.data ?? []).map(c => [c.user_id, c.character_id]));
     const made = toDraft.map(r => {
       const chart = computeChart({ date: r.s.birth_date!, time: r.s.birth_time || null, lat: r.s.lat!, lon: r.s.lon!, tz: r.s.tz!, placeLabel: r.s.place_label ?? '', placeSource: 'geocoded', houseSystem: (r.s.house_system as HouseSystem) || 'placidus' });
-      const script = buildComicIssue(chart, { reader: r.s.display_name || r.s.shipping_address?.name || 'Reader', month, issueNumber: r.number });
+      const script = buildComicIssue(chart, { reader: r.s.display_name || r.s.shipping_address?.name || 'Reader', month, issueNumber: r.number, guide: guideFor(characterOf.get(r.s.user_id)) });
       return { user_id: r.s.user_id, subscription_id: r.s.subscription_id, issue_month: key, issue_number: r.number, status: 'draft', title: script.title.slice(0, 200), script: script as never };
     });
     const { error } = await supabase.from('comic_issues').upsert(made, { onConflict: 'subscription_id,issue_month', ignoreDuplicates: true });

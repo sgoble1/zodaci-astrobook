@@ -81,7 +81,7 @@ export function nextIssueMonth(sub: { plan: ComicPlan; status: string; created_a
 
 export type ComicPanel = { shape: 'wide' | 'square' | 'oval' | 'bleed' | 'tall'; scene: string; caption?: string; balloons?: { who: string; text: string }[] };
 export type ComicPage = { n: number; section: string; title: string; panels: ComicPanel[]; body?: string[] };
-export type ComicIssue = { title: string; month: string; monthLabel: string; issueNumber: number; reader: string; signs: { sun: string; moon: string | null; rising: string | null }; mainEvent: string; pages: ComicPage[] };
+export type ComicIssue = { guide?: ComicGuide; title: string; month: string; monthLabel: string; issueNumber: number; reader: string; signs: { sun: string; moon: string | null; rising: string | null }; mainEvent: string; pages: ComicPage[] };
 
 const THEME: Record<string, string> = { sun: 'who you are becoming', moon: 'what you need to feel safe', mercury: 'how you think and talk', venus: 'what and whom you love', mars: 'what you go after', jupiter: 'where you grow', saturn: 'what you are building', uranus: 'where you want freedom', neptune: 'what you dream', pluto: 'what you are ready to change', asc: 'how you meet the world', mc: 'your public path' };
 const HOUSE_FOCUS: [string, string][] = [
@@ -159,8 +159,12 @@ const ASPECT_STORY: Record<string, [string, string]> = {
 };
 
 /** Build the 24-page issue plan for one reader and one month. Deterministic: same chart + month = same issue. */
-export function buildComicIssue(natal: ChartResult, opts: { reader: string; month: Date; issueNumber: number }): ComicIssue {
-  const { reader, month, issueNumber } = opts;
+/** The member's chosen observatory character (member_characters), drawn as their stand-in. Never a likeness of the real person. */
+export type ComicGuide = { name: string; blurb: string };
+
+export function buildComicIssue(natal: ChartResult, opts: { reader: string; month: Date; issueNumber: number; guide?: ComicGuide | null }): ComicIssue {
+  const { reader, month, issueNumber, guide } = opts;
+  const standIn = guide ? ` In the lower corner, ${guide.name} — the reader’s chosen observatory character (${guide.blurb.toLowerCase()}) — looks up at the constellation.` : '';
   const first = reader.trim().split(/\s+/)[0] || 'Reader';
   const label = monthLabel(month);
   const days = new Date(Date.UTC(month.getUTCFullYear(), month.getUTCMonth() + 1, 0)).getUTCDate();
@@ -190,7 +194,7 @@ export function buildComicIssue(natal: ChartResult, opts: { reader: string; mont
   const pages: ComicPage[] = [];
   const add = (p: Omit<ComicPage, 'n'>) => pages.push({ n: pages.length + 1, ...p });
 
-  add({ section: 'Cover', title: `${first}’s Sky · ${label}`, panels: [{ shape: 'bleed', scene: `Full-bleed golden-thread constellation of ${sun}. ${tc.name} (${tc.planet}) in the foreground with ${tc.companion}. Title, month and ${SIGN_GLYPH[SIGNS.indexOf(sun as typeof SIGNS[number])]} in the top third.`, caption: `AstroComic · Issue ${issueNumber}` }] });
+  add({ section: 'Cover', title: `${first}’s Sky · ${label}`, panels: [{ shape: 'bleed', scene: `Full-bleed golden-thread constellation of ${sun}. ${tc.name} (${tc.planet}) in the foreground with ${tc.companion}. Title, month and ${SIGN_GLYPH[SIGNS.indexOf(sun as typeof SIGNS[number])]} in the top third.${standIn}`, caption: `AstroComic · Issue ${issueNumber}` }] });
   add({ section: 'Your Sky This Month', title: 'Where the planets are', panels: [{ shape: 'wide', scene: 'A star-map table with ten small character tokens placed on the zodiac ring.' }], body: sky.map(p => `${p.name} in ${p.sign} ${p.deg}°${p.retro ? ' — retrograde' : ''}`) });
   add({ section: 'Letter from the Stars', title: `Dear ${first},`, panels: [{ shape: 'oval', scene: `Sovereign writing by lamplight, ${moon ? 'Dreamer reading over his shoulder' : 'an owl on the desk'}.` }], body: [
     `This month the sky is busy around ${THEME[main.natalKey] ?? 'your chart'} — ${exact[0] ? `${tc.planet} reaches your natal ${nc?.planet ?? (main.natalKey === 'asc' ? 'Ascendant' : 'Midheaven')}` : `the Sun moves through ${sunNow.sign}`}, and your ${sun} Sun takes it personally, in the best way.`,
@@ -236,7 +240,7 @@ export function buildComicIssue(natal: ChartResult, opts: { reader: string; mont
   add({ section: 'About Zodaci', title: 'Your chart, any time', panels: [{ shape: 'square', scene: 'QR code to zodaci.com/my-chart beside the Zodaci logo.' }], body: ['Scan to open your full calculated chart, readings and the Results page.', 'AstroComic is a creative reflection on your chart and this month’s sky — not prediction or advice.'] });
   add({ section: 'Back Cover', title: `Issue ${issueNumber} · ${label}`, panels: [{ shape: 'bleed', scene: 'The full cast in silhouette along a horizon of moon phases.' }], body: ['AstroComic by Zodaci'] });
 
-  return { title: `${first}’s Sky · ${label}`, month: monthKey(month), monthLabel: label, issueNumber, reader: first, signs, mainEvent: main.headline, pages };
+  return { title: `${first}’s Sky · ${label}`, month: monthKey(month), monthLabel: label, issueNumber, reader: first, signs, mainEvent: main.headline, pages, ...(guide ? { guide } : {}) };
 }
 
 function ordinal(n: number) { return n === 1 ? '1st' : n === 2 ? '2nd' : n === 3 ? '3rd' : `${n}th`; }

@@ -1,11 +1,11 @@
 /** Admin dashboard sections: Editions, Products, Orders, Shared Spaces, Members & growth, Platform. The open tab lives in ?tab= so links and reloads keep it. */
-export type AdminTab = 'upload' | 'sections' | 'index' | 'relationships' | 'marketing' | 'growth' | 'activity' | 'charts' | 'orders' | 'shop' | 'comic' | 'stripe' | 'studio' | 'newsletter' | 'april' | 'credits' | 'audit' | 'settings' | 'launch' | 'access' | 'shared' | 'images' | 'costs';
+export type AdminTab = 'upload' | 'sections' | 'index' | 'relationships' | 'marketing' | 'growth' | 'activity' | 'charts' | 'orders' | 'shop' | 'comic' | 'stripe' | 'studio' | 'newsletter' | 'april' | 'credits' | 'audit' | 'founders' | 'settings' | 'launch' | 'access' | 'shared' | 'images' | 'costs';
 export type AdminTabGroup = { label: string; tabs: { id: AdminTab; label: string; adminOnly?: boolean }[] };
 
 export const ADMIN_TAB_GROUPS: AdminTabGroup[] = [
   { label: 'Editions', tabs: [
     { id: 'access', label: 'Edition access', adminOnly: true }, { id: 'charts', label: 'Member charts', adminOnly: true },
-    { id: 'upload', label: 'Upload documents', adminOnly: true }, { id: 'sections', label: 'Edit sections' }, { id: 'index', label: 'Document Index', adminOnly: true },
+    { id: 'upload', label: 'Upload documents', adminOnly: true }, { id: 'sections', label: 'Edit sections' }, { id: 'index', label: 'Document Index', adminOnly: true }, { id: 'founders', label: 'Founder inventory', adminOnly: true },
     { id: 'relationships', label: 'Relationships' },
   ] },
   { label: 'Products', tabs: [
