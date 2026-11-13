@@ -11,6 +11,8 @@ export type FounderNote = { date: string; title: string; text: string; to?: stri
 export const noteKey = (n: FounderNote) => `${n.date}:${n.for.join('+')}:${n.title}`;
 
 export const FOUNDER_NEWS: FounderNote[] = [
+  { date: '2026-11-13', for: ['april', 'zac'], title: 'Photos into notes and characters', text: 'You can now turn a diary photo or PDF into a written note, and turn a photo of yourself into a comic character. Photos aren’t kept, and you see everything before it’s saved.' },
+  { date: '2026-11-13', for: ['shane'], title: 'C2 file reading and C3 photo characters', text: 'context-extract (1 credit, streamed transcription, nothing stored) and photo-character (3 credits, photo discarded, drawing saved privately) are live and tested.' },
   { date: '2026-11-13', for: ['april', 'zac'], title: 'Dreams can be read now', text: 'In the Dream Ledger, one tap writes a short reading of a dream from your chart and that night’s sky. The design studio is now called the Cosmic Studio.' },
   { date: '2026-11-13', for: ['shane'], title: 'C1 dream readings, Cosmic Studio rename, Lulu check', text: 'dream-reading function live (1 credit). Creator Studio renamed Cosmic Studio. Lulu keys are saved, but the Lulu test system rejects them — they may be live-account keys.' },
   { date: '2026-11-13', for: ['april', 'zac'], title: 'The site feels lighter', text: 'Pages should scroll more smoothly, and the demo page now walks a visitor through Zodaci in four simple steps. Your own pages are unchanged.' },

@@ -5,6 +5,8 @@
 export type SiteUpdate = { date: string; title: string; text: string; to?: string; cta?: string };
 
 export const SITE_UPDATES: SiteUpdate[] = [
+  { date: '2026-11-13', title: 'Draw yourself as a character', text: 'On the characters page, upload a photo and the Cosmic Studio draws you in the observatory’s 1950s comic style. The photo isn’t kept.', to: '/characters', cta: 'Try it' },
+  { date: '2026-11-13', title: 'Add notes from a photo or PDF', text: 'On your personal details page, fill a note from a diary photo, PDF or text file. You check the text before anything is saved.', to: '/personal-context', cta: 'Add a note' },
   { date: '2026-11-13', title: 'Dream readings', text: 'In your Dream Ledger, tap “Read this dream” for a short reading based on your chart and that night’s sky. It uses one credit and stays private.', to: '/dreams', cta: 'Open the ledger' },
   { date: '2026-11-13', title: 'Meet the Cosmic Studio', text: 'Creator Studio is now called the Cosmic Studio. Everything you made there is still in place.' },
   { date: '2026-11-13', title: 'A walk-through on the demo page', text: 'The demo page now has a four-step walk-through: birth details, your chart, a reading and your book, shown with our fictional sample reader. The sample AstroBook also gains a life-cycles page.', to: '/demo', cta: 'Try the demo' },

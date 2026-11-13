@@ -1,5 +1,5 @@
 // deno-lint-ignore-file no-explicit-any
-const COST: Record<string, number> = { "book-cover-request": 3, "creator-chapter": 2, "creator-podcast": 5 };
+const COST: Record<string, number> = { "book-cover-request": 3, "creator-chapter": 2, "creator-podcast": 5, "photo-character": 3 };
 export const creditCost = (feature: string) => COST[feature] ?? 1;
 
 /** Returns an error message when the member's monthly credits can't cover this feature, else null. Mirrors credit_status() in the database. */

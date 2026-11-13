@@ -9,3 +9,5 @@
 - Consult the Observatory (observatory-consult) answers only from the member's chart, browser-computed sky lines, Current Chapter, own Observation Log and opted-in context, with inline source tags; Pro/credit gated, nothing saved, so answers stay owner-scoped and verifiable.
 - Shane's Masterbook corrections (edition-correct) scan chapters deterministically and patch only flagged sentences with exact find/replace (backup kept), so correct text is never rewritten and AI spend stays small.
 - dream-reading writes one symbolic reading of the member's own saved dream (chart + browser-computed night sky only, 1 credit, Pro/Cosmic) onto that dream_entries row through the member's session.
+- context-extract streams a verbatim transcription of the member's own photo/PDF (1 credit, Pro/Cosmic); nothing is stored — the member reviews and saves it as personal context.
+- photo-character draws a member's own photo (consent required, never stored) as a 1950s comic stand-in, 3 credits, saved only as a private library_items 'creation' under {uid}/creation/.
