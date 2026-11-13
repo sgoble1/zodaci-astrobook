@@ -7,6 +7,7 @@ import { refreshSubscription, useSubscription } from '@/hooks/useSubscription';
 import { getStripeEnvironment } from '@/lib/stripe';
 import { internalDestination } from '@/lib/internalDestination';
 import { usePageMeta } from '@/hooks/usePageMeta';
+import { functionErrorMessage } from '@/lib/functionError';
 
 const RETRY_MS = [0, 2000, 4000, 8000, 15000, 30000];
 const envOrNull = () => { try { return getStripeEnvironment(); } catch { return null; } };
@@ -30,7 +31,7 @@ export default function CheckoutReturn() {
     const environment = envOrNull();
     if (!sessionId || !environment) return 'failed' as const;
     const { data, error } = await supabase.functions.invoke('sync-checkout', { body: { sessionId, environment } });
-    if (error || data?.error) { setMessage(data?.error ?? null); return 'failed' as const; }
+    if (error || data?.error) { setMessage(await functionErrorMessage(error, data, 'The payment provider didn’t recognise this payment link.')); return 'failed' as const; }
     // AstroBook/AstroComic answers carry a kind and confirm on their own pages, never as a membership.
     if (data?.status === 'not_membership' || data?.kind) return 'other' as const;
     if (data?.status === 'active' || data?.status === 'trialing') { refreshSubscription(); return 'active' as const; }
@@ -55,12 +56,15 @@ export default function CheckoutReturn() {
   // A credit pack or AstroComic payment confirms on its own page; never spin here waiting for a membership.
   if (state === 'other') return <article className="mx-auto max-w-xl space-y-4 py-12 text-center" aria-live="polite"><h1 className="font-display text-3xl">This payment isn’t a membership</h1><p className="text-muted-foreground">Credit packs are confirmed on the Credits page and AstroComic subscriptions on My AstroComic. Please don’t pay again.</p><div className="flex flex-wrap justify-center gap-3"><Button asChild><Link to={`/credits?session_id=${encodeURIComponent(sessionId)}`}>Check my credits</Link></Button><Button asChild variant="outline"><Link to={`/my-comic?session_id=${encodeURIComponent(sessionId)}`}>Check my AstroComic</Link></Button></div></article>;
   const stuck = !paid && state !== 'checking';
+  // A rejected reference is an answer, not a delay: say so instead of asking the member to keep waiting.
+  const failed = !paid && state === 'failed';
   return (
     <article className="mx-auto max-w-xl space-y-5 py-12 text-center" aria-live="polite">
       {paid ? <CheckCircle2 className="mx-auto h-12 w-12 text-gold" aria-hidden /> : <Loader2 className={`mx-auto h-12 w-12 text-gold ${stuck ? '' : 'animate-spin motion-reduce:animate-none'}`} aria-hidden />}
-      <h1 className="font-display text-3xl">{paid ? `Welcome to ${name}` : stuck ? 'Still confirming your payment' : 'Confirming your payment…'}</h1>
+      <h1 className="font-display text-3xl">{paid ? `Welcome to ${name}` : failed ? 'We couldn’t confirm this payment' : stuck ? 'Still confirming your payment' : 'Confirming your payment…'}</h1>
       <p className="text-muted-foreground">{paid
         ? `Your plan is active. Your own Masterbook and full readings are unlocked. Starting readings are created after birth details are saved; other readings are written when opened. Generation is subject to availability and usage limits.${sub.tier ? ' You can now generate podcasts and new chapters from your chart.' : ''}`
+        : failed ? 'Nothing was unlocked from this link. If you were charged, your plan will appear on your account once the payment provider confirms it, so please don’t pay again. Check again, or open your account.'
         : stuck ? 'Your bank or the payment provider hasn’t confirmed it yet. Please don’t pay again — check again in a minute, or open your account. Some payment methods take longer to settle.' : 'We’re checking with the payment provider. Access changes only after the payment is verified.'}</p>
       {stuck && message && <p role="alert" className="text-sm text-destructive">{message}</p>}
       {stuck && <div className="flex flex-wrap justify-center gap-3"><Button onClick={retry}>Check again</Button><Button asChild variant="outline"><Link to="/dashboard">Open my account</Link></Button></div>}

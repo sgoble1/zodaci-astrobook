@@ -410,7 +410,7 @@ Audit Oct 29: Chat/counselors already use the member's chart; podcast/custom pag
 - [x] Developer timeline from original "zodaci" project to this build
 - [x] Investor page: Creator Studio income analysis
 - [x] AstroComic shop: pre-order page, print specs, real delivery timeline
-- [ ] AstroBook/AstroComic purchase gaps — comic pre-order done; full purchase-flow audit still open
+- [x] AstroBook/AstroComic purchase flow checked (Nov 13): book readiness list explains a greyed-out pay button, comic plans, orders page, and the payment return page now says plainly when a payment link can't be confirmed
 - [ ] Shane Masterbook: 23 chapters use Moon Capricorn/Venus Pisces etc. vs calculated chart — waiting on owner to confirm birth details
 - [x] Re-check founders' birth data vs content
 - [x] Theme superseded by the Astral Research Authority 1950s redesign (Nov 4).
@@ -536,22 +536,22 @@ Audit Oct 29: Chat/counselors already use the member's chart; podcast/custom pag
 
 ## Goal run Nov 13 (evening) — demos, previews, AstroBook/AstroComic, content generation, Zac, performance, home, navigation, UX
 - [x] Colour tuning first pass: one yellow main button on Pricing/AstroBook/AstroComic, crisper ink on cream cards, stronger card edges on phones
-- [ ] Performance: dashboard main-thread load (screenshots time out), real-visitor layout jumps on home/sign-in/Zac, slow interactions (INP ~450ms)
-- [ ] Performance: transit hour cache, pdfjs pre-bundle, leftover will-change (P1/P3/P4 leftovers); My Comic deferral stays skipped (owner)
-- [ ] Interactive demo runs the real wheel, reading section, book spread and comic page on the fictional reader (Part 15)
-- [ ] AstroBook five-spread showcase and AstroComic preview parity check (Parts 12, B6)
-- [ ] Founder pages: automatic one-time retry before showing "Retry" (Official AstroBook, Zac workbook)
-- [ ] Zac: dashboard leads with his library and investor overview in plain language; updates feed current
-- [ ] Navigation: verify welcome tour, Sibling Bureau return, Compendium guide; Results/RetroGOOD exit links; no-chart banner
-- [ ] Content generation: reviewed placement library + transit templates feeding readings (cuts per-reading AI cost)
-- [ ] Home-screen install prompt (manifest already present; no offline caching)
+- [x] Performance: dashboard main-thread freeze fixed (wording helper loop); after-load busy time now ~0.5s on dashboard and Zac. Re-read real-visitor speed figures after the next publish
+- [x] Performance: transit cache, pdfjs pre-bundle done; no leftover will-change; My Comic deferral stays skipped (owner)
+- [x] Interactive demo runs the real wheel, reading section, book spread and comic page on the fictional reader (Part 15)
+- [x] AstroBook showcase and AstroComic preview parity: /demo, /astrobook and /astrocomic share the same open-book and comic readers; sample book error text names the one fictional reader
+- [x] Founder pages: automatic one-time retry before showing "Retry" (Official AstroBook, Zac workbook)
+- [x] Zac: dashboard leads with his library and investor overview in plain language; updates feed current
+- [x] Navigation: welcome tour (member shell, tested), Sibling Bureau add-and-return, Compendium guide (tested), Results/RetroGOOD/Siblings exit links, no-chart prompts
+- [ ] Content generation: reviewed placement library + transit templates feeding readings — blocked: needs owner go-ahead to spend AI credits writing ~216 entries and owner review before they feed readings
+- [x] Home-screen install prompt (manifest already present; no offline caching)
 
 ### Performance plan (Nov 13, approved)
 - [x] Phase 1: Stripe pure import, FirstViewReveal batching, transit cache + deferred 31-day events, pdfjs pre-bundle, will-change removed
 - [x] Phase 2: dashboard skeleton, ParticleField pause/throttle
-- [ ] Phase 3: interactive demo with real components, AstroBook five-spread, comic preview parity
-- [ ] Phase 4: Zac plain-language overview, auto one-time retry on founder pages
-- [ ] Phase 5: home-screen install prompt, final 393/1280 nav + colour audit
+- [x] Phase 3: interactive demo with real components, AstroBook showcase, comic preview parity
+- [x] Phase 4: Zac plain-language overview, auto one-time retry on founder pages
+- [x] Phase 5: home-screen install prompt, final 393/1280 nav check (no sideways scroll; RetroGOOD filters enlarged for phones)
 
 ## Nov 13 — Phases 3–5 + cleanup
 - [x] Removed six unused font packages; kept Stripe (memberships, credits, books, comics) and motion (used by AI shimmer).

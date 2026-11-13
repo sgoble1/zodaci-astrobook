@@ -34,7 +34,7 @@ export function RetroExplorer({ planets, tone }: { planets: RetroPlanet[]; tone:
     <div className="space-y-4">
       <div className="flex flex-wrap gap-2" role="group" aria-label="Filter by tier">
         {(['All', ...TIERS] as const).map(t => <button key={t} type="button" aria-pressed={filter === t} onClick={() => setFilter(t)} disabled={t !== 'All' && !counts[t]}
-          className={`rounded-full border px-3 py-1 text-sm transition-colors duration-500 disabled:opacity-40 ${filter === t ? 'border-primary bg-primary/15' : 'border-border hover:border-primary/60'}`}>{t === 'All' ? `All ${planets.length}` : `${TIER_GLYPH[t]} ${t} ${counts[t]}`}</button>)}
+          className={`min-h-11 rounded-full border px-4 py-2 text-sm transition-colors duration-500 disabled:opacity-40 sm:min-h-0 sm:px-3 sm:py-1 ${filter === t ? 'border-primary bg-primary/15' : 'border-border hover:border-primary/60'}`}>{t === 'All' ? `All ${planets.length}` : `${TIER_GLYPH[t]} ${t} ${counts[t]}`}</button>)}
       </div>
       <ul className="space-y-3">{shown.map(p => (
         <li key={p.key} className="rounded-lg border border-border bg-card">

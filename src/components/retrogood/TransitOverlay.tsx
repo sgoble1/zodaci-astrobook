@@ -17,7 +17,7 @@ export function TransitOverlay({ chart }: { chart: ChartResult }) {
     <div className="space-y-6">
       <div className="flex flex-wrap items-end gap-3">
         <label className="text-sm">Date<Input type="date" className="mt-1 w-auto" value={day} onChange={e => e.target.value && setDay(e.target.value)} /></label>
-        <button type="button" className="text-sm text-primary underline" onClick={() => setDay(toInput(new Date()))}>Today</button>
+        <button type="button" className="min-h-11 px-2 text-sm text-primary underline sm:min-h-0" onClick={() => setDay(toInput(new Date()))}>Today</button>
         <p className="text-sm text-muted-foreground">{rx.length ? `Retrograde on this date: ${rx.map(p => p.name).join(', ')}.` : 'No planets are retrograde on this date.'}</p>
       </div>
       <section aria-labelledby="tr-now">
