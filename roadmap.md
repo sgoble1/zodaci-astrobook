@@ -1,5 +1,7 @@
 # Zodaci roadmap
 
+> Master resource: docs/master-implementation-resource.md (all docs + chat merged, Nov 13 2026). Follow its tracks A→F.
+
 ## Nov 12 — Final master plan (everything still unfinished)
 Full plan: .lovable/plan/zodaci-final-master-plan-everything-still-unfinished-2026-11-12.md
 - [x] Stage 1.1–1.2: April's report uses the same planet spheres as Shane/Zac, with sign/house/dignity badges and chapter links.
