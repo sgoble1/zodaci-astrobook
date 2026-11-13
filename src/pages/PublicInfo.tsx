@@ -46,7 +46,7 @@ export function AstroBookPublic() {
           <p className="font-script text-3xl text-primary">Your stars, your story.</p>
           <p className="text-lg text-muted-foreground">An AstroBook is your birth chart written out in six volumes: who you are, your houses, planets and aspects, the finer points, other traditions, and timing for the year ahead. Every chapter is worked out from the minute and place you were born.</p>
           <p className="text-sm text-muted-foreground">{BOOK_VERSIONS.filter(v => v.id === 'digital' || v.id === 'pocket' || v.id === 'linen').map(v => `${v.name} ${money(v.price)}`).join(' · ')} · free US shipping on printed versions</p>
-          <div className="flex flex-wrap items-center gap-4"><Button asChild size="lg"><Link to={order()}>Order your AstroBook</Link></Button><Link to="/book-preview" className="text-accent">Read a sample book →</Link><Link to="/demo" className="text-accent">Try the interactive demo →</Link></div>
+          <div className="flex flex-wrap items-center gap-4"><Button asChild size="lg" variant="primary"><Link to={order()}>Order your AstroBook</Link></Button><Link to="/book-preview" className="text-accent">Read a sample book →</Link><Link to="/demo" className="text-accent">Try the interactive demo →</Link></div>
         </div>
         <ProductArtworkGallery />
       </section>

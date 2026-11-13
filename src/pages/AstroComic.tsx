@@ -81,7 +81,7 @@ export default function AstroComic() {
             ); })}
           </div>
           <div className="mt-6 flex flex-wrap items-center gap-3">
-            <Button size="lg" onClick={buy}>{plan === 'single' ? 'Buy one issue' : 'Subscribe'}<ArrowRight /></Button>
+            <Button size="lg" variant="primary" onClick={buy}>{plan === 'single' ? 'Buy one issue' : 'Subscribe'}<ArrowRight /></Button>
             <Button asChild variant="outline" size="lg"><a href="#preview">See your preview</a></Button>
           </div>
           <p className="mt-4 flex flex-wrap gap-x-5 gap-y-1 text-sm text-muted-foreground"><span className="flex items-center gap-1.5"><CalendarDays aria-hidden className="h-4 w-4" />First issue: {monthLabel(first)}, ships by {shipBy(first).toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' })}</span><span className="flex items-center gap-1.5"><Package aria-hidden className="h-4 w-4" />US delivery included</span></p>
@@ -139,7 +139,7 @@ export default function AstroComic() {
 
       <section aria-labelledby="comic-faq-h" className="max-w-3xl"><h2 id="comic-faq-h" className="font-display text-3xl mb-6">Questions</h2><Faq items={COMIC_FAQ} id="astrocomic-faq" /></section>
 
-      <section className="vellum p-6 text-center sm:p-10"><h2 className="font-display text-3xl">Start with {monthLabel(first)}.</h2><p className="mt-3 text-muted-foreground">{COMIC_PLANS.monthly.label} · {COMIC_PLANS.yearly.label} · single issue {COMIC_PLANS.single.label}</p><Button size="lg" className="mt-6" onClick={() => { window.scrollTo({ top: 0, behavior: 'smooth' }); buy(); }}>{plan === 'single' ? 'Buy one issue' : 'Subscribe'}<ArrowRight /></Button><p className="mx-auto mt-6 max-w-xl text-xs text-muted-foreground">AstroComic is a creative reflection on your chart and the month’s sky — not prediction or advice. It is sold separately and does not change your Zodaci plan.</p></section>
+      <section className="vellum p-6 text-center sm:p-10"><h2 className="font-display text-3xl">Start with {monthLabel(first)}.</h2><p className="mt-3 text-muted-foreground">{COMIC_PLANS.monthly.label} · {COMIC_PLANS.yearly.label} · single issue {COMIC_PLANS.single.label}</p><Button size="lg" variant="primary" className="mt-6" onClick={() => { window.scrollTo({ top: 0, behavior: 'smooth' }); buy(); }}>{plan === 'single' ? 'Buy one issue' : 'Subscribe'}<ArrowRight /></Button><p className="mx-auto mt-6 max-w-xl text-xs text-muted-foreground">AstroComic is a creative reflection on your chart and the month’s sky — not prediction or advice. It is sold separately and does not change your Zodaci plan.</p></section>
     </article>
   );
 }

@@ -126,8 +126,8 @@ export default function Pricing() {
                   : switchable ? <Button className="w-full" variant={below ? 'outline' : 'default'} onClick={() => setChange({ pid: pid!, label, up: !below && !(sub.tier === p.tier && !yearly) })}>{sub.tier === p.tier ? `Switch to ${yearly ? 'annual' : 'monthly'} — ${price}` : below ? `Switch to ${PLAN_NAME[p.tier]} — ${price}` : `Upgrade to ${PLAN_NAME[p.tier]} — ${price}`}</Button>
                   : current ? <Button disabled className="w-full">Your current plan</Button>
                   : below ? <Button disabled variant="outline" className="w-full">Included in your plan</Button>
-                  : sub.userId ? <Button className="w-full" onClick={() => pid && startCheckout(pid)}>{p.cta} — {price}</Button>
-                  : <Button asChild className="w-full"><Link to={signupLink(p.slug)}>{p.cta}</Link></Button>}
+                  : sub.userId ? <Button className="w-full" variant={p.tier === 'full' ? 'primary' : 'default'} onClick={() => pid && startCheckout(pid)}>{p.cta} — {price}</Button>
+                  : <Button asChild className="w-full" variant={p.tier === 'full' ? 'primary' : 'default'}><Link to={signupLink(p.slug)}>{p.cta}</Link></Button>}
               </section>
             );
           })}

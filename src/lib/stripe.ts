@@ -1,4 +1,7 @@
-import { loadStripe, Stripe } from "@stripe/stripe-js";
+// The "pure" entry adds Stripe's script only when checkout actually opens; the default entry injects it (and its
+// fraud-signal iframe) on every page that imports this file, which kept member pages busy for seconds.
+import { loadStripe } from "@stripe/stripe-js/pure";
+import type { Stripe } from "@stripe/stripe-js";
 
 type StripeEnv = 'sandbox' | 'live';
 const clientToken = import.meta.env.VITE_PAYMENTS_CLIENT_TOKEN;

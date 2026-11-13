@@ -533,3 +533,15 @@ Audit Oct 29: Chat/counselors already use the member's chart; podcast/custom pag
 - [x] Larger tap targets for My Readings topic chips and "Show all topics"
 - [ ] Lulu AstroComic printing — paused by owner, finish later (deploy + quote check)
 - [x] Ready-made public pages (title, description, summary) shown instantly before the app loads; home page code fetched in parallel
+
+## Goal run Nov 13 (evening) — demos, previews, AstroBook/AstroComic, content generation, Zac, performance, home, navigation, UX
+- [x] Colour tuning first pass: one yellow main button on Pricing/AstroBook/AstroComic, crisper ink on cream cards, stronger card edges on phones
+- [ ] Performance: dashboard main-thread load (screenshots time out), real-visitor layout jumps on home/sign-in/Zac, slow interactions (INP ~450ms)
+- [ ] Performance: transit hour cache, pdfjs pre-bundle, leftover will-change (P1/P3/P4 leftovers); My Comic deferral stays skipped (owner)
+- [ ] Interactive demo runs the real wheel, reading section, book spread and comic page on the fictional reader (Part 15)
+- [ ] AstroBook five-spread showcase and AstroComic preview parity check (Parts 12, B6)
+- [ ] Founder pages: automatic one-time retry before showing "Retry" (Official AstroBook, Zac workbook)
+- [ ] Zac: dashboard leads with his library and investor overview in plain language; updates feed current
+- [ ] Navigation: verify welcome tour, Sibling Bureau return, Compendium guide; Results/RetroGOOD exit links; no-chart banner
+- [ ] Content generation: reviewed placement library + transit templates feeding readings (cuts per-reading AI cost)
+- [ ] Home-screen install prompt (manifest already present; no offline caching)

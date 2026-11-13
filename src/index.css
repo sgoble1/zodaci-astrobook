@@ -779,7 +779,7 @@ body {
   box-shadow: inset 0 0 36px hsl(30 45% 40% / .15), 5px 5px 0 hsl(var(--comic-brick) / .6);
   transition: transform 1.4s cubic-bezier(.22,1,.36,1), box-shadow 1.4s ease; }
 .atomic-box h2, .atomic-box h3, .atomic-box h4 { color: hsl(var(--comic-navy)); background: none; -webkit-text-fill-color: currentColor; }
-.atomic-box .text-muted-foreground { color: hsl(var(--comic-navy) / .76); }
+.atomic-box .text-muted-foreground { color: hsl(var(--comic-navy) / .82); }
 .atomic-box .text-primary { color: hsl(36 78% 30%); }
 .atomic-box .text-accent { color: hsl(var(--comic-brick)); }
 .atomic-box:hover, .atomic-box:focus-within { transform: translateY(-3px) rotate(-.3deg); box-shadow: inset 0 0 36px hsl(30 45% 40% / .15), 8px 9px 0 hsl(var(--comic-brick) / .65); }
@@ -830,11 +830,17 @@ body {
   box-shadow: inset 0 0 46px hsl(30 45% 38% / .22), 0 2px 0 hsl(var(--midnight)), var(--shadow-ink);
 }
 .obs-paper h1, .obs-paper h2, .obs-paper h3, .obs-paper h4 { color: hsl(var(--comic-navy)); background: none; -webkit-text-fill-color: currentColor; }
-.obs-paper .text-muted-foreground { color: hsl(var(--comic-navy) / .74); }
+.obs-paper .text-muted-foreground { color: hsl(var(--comic-navy) / .82); }
 .obs-paper .text-primary, .obs-paper .text-gold, .atomic-box .text-gold { color: hsl(36 78% 30%); }
 .obs-paper .text-accent { color: hsl(var(--comic-brick)); }
 .obs-paper .text-foreground { color: hsl(var(--comic-navy)); }
 .obs-paper :is(.text-foreground\/80, .text-foreground\/85, .text-foreground\/90, .text-foreground\/75, .text-foreground\/70) { color: hsl(var(--comic-navy) / .84); }
+/* Colour tuning (Part 22): on phones the navy plates sit closer together, so their brass edge is drawn stronger to keep cards distinct. */
+@media (max-width: 639px) {
+  .obs-panel { box-shadow: inset 0 0 0 1px hsl(var(--brass) / .75), inset 0 0 60px hsl(var(--midnight) / .55), 0 2px 0 hsl(var(--midnight)), var(--shadow-ink); }
+}
+/* The one main action on a screen uses the shop-yellow primary button; on cream plates it keeps a navy ink edge so it reads as printed. */
+.obs-paper .bg-primary { box-shadow: 0 0 0 1.5px hsl(var(--comic-navy)), 3px 3px 0 hsl(var(--comic-navy) / .8); }
 /* Form fields written on the cream plate read as paper slips, navy ink on light card. */
 .obs-paper :is(input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=file]), textarea, select) { background-color: hsl(42 70% 96%); color: hsl(var(--comic-navy)); border-color: hsl(var(--comic-navy) / .45); }
 .obs-paper :is(input, textarea)::placeholder { color: hsl(var(--comic-navy) / .5); }
