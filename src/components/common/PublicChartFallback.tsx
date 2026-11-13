@@ -7,6 +7,7 @@ import { MemberSystem, MemberSystemsDashboard } from '@/pages/MemberSystem';
 import PersonalTiming from '@/pages/PersonalTiming';
 import MyTopicReading from '@/pages/MyTopicReading';
 import MemberStarMap from '@/pages/MemberStarMap';
+import MemberCompendium from '@/pages/MemberCompendium';
 import MemberWorkbook from '@/pages/MemberWorkbook';
 import MemberChartSection, { type ChartFocus } from '@/pages/MemberChartSection';
 const CHART_FOCUS: Record<string, ChartFocus> = { '/planets': 'planets', '/houses': 'houses', '/aspects': 'aspects', '/chart-elements': 'elements', '/chart-calculator': 'calculator' };
@@ -40,6 +41,8 @@ export function PublicChartFallback() {
   const shane = useShaneAccount();
   const zac = useZacAccount();
   if (birth === undefined) return null;
+  // The Compendium is one founder's private reference; members get a guide to the same references from their own chart.
+  if (pathname === '/compendium' && !shane) return <MemberCompendium />;
   if (!birth) return (
     <article className="mx-auto max-w-xl space-y-4 py-12 text-center">
       <h1 className="font-display text-3xl">This page is built from your own chart</h1>

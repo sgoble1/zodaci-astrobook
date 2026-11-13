@@ -26,5 +26,7 @@ describe('sibling lens', () => {
     expect(isSiblingRelation('older sister')).toBe(true);
     expect(isSiblingRelation('Friend')).toBe(false);
     expect(isSiblingRelation('Brother-in-law')).toBe(false);
+    for (const r of ['Twin sister', 'Half-brother', 'half sister', 'Stepbrother', 'step-sister', 'Stepsiblings', 'Sis', 'little bro']) expect(isSiblingRelation(r)).toBe(true);
+    for (const r of ['Sister in law', 'sister-in-law', 'Stepmother', 'Brotherhood friend', 'Basis']) expect(isSiblingRelation(r)).toBe(false);
   });
 });

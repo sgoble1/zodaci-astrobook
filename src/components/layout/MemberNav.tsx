@@ -13,7 +13,7 @@ import { computeChart } from '@/lib/astro';
 import { readingVisitKey, type ReadingVisit } from '@/lib/readingExperience';
 import type { Plan } from '@/content/navigation';
 import {
-  ACCOUNT_MENU, ADMIN_MENU, ADMIN_PATHS, MEMBER_DOMAINS, domainById, domainFor, domainForMenuGroup, itemLock, memberDestinations, visibleColumns, withSharedEditions,
+  ACCOUNT_MENU, ADMIN_MENU, ADMIN_PATHS, MEMBER_DOMAINS, MOBILE_TABS, domainById, domainFor, domainForMenuGroup, itemLock, memberDestinations, visibleColumns, withSharedEditions,
   type DomainId, type MemberDomain, type MemberNavColumn, type MemberNavItem,
 } from '@/content/memberNav';
 import { ZodaciLogo } from '@/components/brand/ZodaciLogo';
@@ -291,7 +291,7 @@ function AccountSheetBody({ onNavigate }: { onNavigate: () => void }) {
   </>;
 }
 
-const TABS: { id: DomainId | 'account'; label: string }[] = [{ id: 'chart', label: 'Chart' }, { id: 'readings', label: 'Readings' }, { id: 'book', label: 'Book' }, { id: 'explore', label: 'Explore' }, { id: 'account', label: 'Account' }];
+const TABS = MOBILE_TABS;
 export const hidesTabBar = (path: string) => ADMIN_PATHS.some(p => path === p || path.startsWith(`${p}/`));
 
 /** Phone navigation: five fixed tabs; each opens a sheet with the hub and every item in that domain. */

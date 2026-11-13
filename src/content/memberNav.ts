@@ -232,6 +232,15 @@ export function domainItems(domain: MemberDomain, ctx: NavContext = { shane: tru
 }
 export const domainById = (id: DomainId) => MEMBER_DOMAINS.find(d => d.id === id)!;
 
+/** Phone tab bar, left to right. Learn has no tab of its own: it opens from Account on a phone. */
+export const MOBILE_TABS: { id: DomainId | 'account'; label: string }[] = [{ id: 'chart', label: 'Chart' }, { id: 'readings', label: 'Readings' }, { id: 'book', label: 'Book' }, { id: 'explore', label: 'Explore' }, { id: 'account', label: 'Account' }];
+
+/** The menu entry for a path (first match across every domain), for copy that has to name where a tool lives. */
+export function menuItemFor(path: string): { domain: MemberDomain; item: MemberNavItem } | null {
+  for (const domain of MEMBER_DOMAINS) for (const col of domain.columns) for (const item of col.items) if (item.to === path) return { domain, item };
+  return null;
+}
+
 /** Lock badge for an item: the plan it needs when the member's plan is lower, otherwise null. */
 export function itemLock(plan: Plan, to: string): Plan | null {
   const need = requiredPlan(to.split('#')[0]);

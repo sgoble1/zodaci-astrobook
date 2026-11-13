@@ -9,3 +9,11 @@ describe('member pages open as themselves instead of the readings fallback', () 
     expect(isPublicPath(path)).toBe(false);
   });
 });
+
+import { COMPENDIUM_FOR_MEMBERS } from '@/pages/MemberCompendium';
+import { domainFor as compendiumDomainFor } from '@/content/memberNav';
+describe('member Compendium guide', () => {
+  it('only points members at their own chart pages and lessons', () => {
+    for (const c of COMPENDIUM_FOR_MEMBERS) expect(compendiumDomainFor(c.to.split('#')[0])).not.toBeNull();
+  });
+});

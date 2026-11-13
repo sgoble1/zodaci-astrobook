@@ -4,17 +4,11 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { useSession } from '@/hooks/useLibrary';
+import { tourSteps } from '@/content/welcomeTour';
 
 const KEY = 'zodaci-welcome-tour-v1';
-const STEPS = [
-  { icon: '✦', title: 'Welcome to Zodaci', body: 'Everything here is calculated from your own birth moment and written in plain language. Here’s a 30-second tour of where things live.' },
-  { icon: '☉', title: 'Your chart', body: 'Open Chart at the top (or the Chart tab on a phone). Tap any planet for what it means, its sign, house and links to other planets. Hover dotted words for quick explanations.', to: '/my-chart' },
-  { icon: '❦', title: 'Readings', body: 'Readings holds your in-depth topics and core themes — love, career, purpose, sex & attraction and more. They write themselves after you save your birth details; a progress bar shows what is being written.', to: '/my-readings' },
-  { icon: '✚', title: 'Create your own topic', body: 'In Readings → Reflect, “Create a Topic & Page” writes a brand-new page about anything you’re curious about, from your chart.', to: '/create' },
-  { icon: '♪', title: 'Podcasts & Library', body: 'Book holds your Masterbook, printed AstroBook, orders and Podcasts — turn readings into audio, keep them private or share them with your workspace.', to: '/podcasts' },
-  { icon: '☾', title: 'Timing, workbook & chat', body: 'Explore shows transits, turning points, relationships and other traditions. The Workbook has exercises for your placements, and SmartChat answers questions about your chart.', to: '/chat' },
-  { icon: '⚙', title: 'Your account', body: 'The account button (top right, or the Account tab on a phone) holds plans, birth details, workspaces, orders, help and Learn. Every page ends with ideas for where to go next. You can replay this tour from Instructions & Help.' },
-];
+/** Steps come from the menu registry, so section names always match the menus. */
+const STEPS = tourSteps();
 
 export function replayWelcomeTour() { localStorage.removeItem(KEY); window.dispatchEvent(new Event('zodaci-tour')); }
 
@@ -33,17 +27,17 @@ export function WelcomeTour() {
     <Dialog open={open} onOpenChange={o => !o && close()}>
       <DialogContent className="max-w-md overflow-hidden">
         <AnimatePresence mode="wait">
-          <motion.div key={i} initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }} transition={{ duration: 0.45 }} className="space-y-4 text-center">
+          <motion.div key={i} initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }} transition={{ duration: 0.6 }} className="space-y-4 text-center">
             <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary/15 text-3xl text-primary">{s.icon}</div>
             <DialogTitle className="font-display text-2xl">{s.title}</DialogTitle>
             <DialogDescription className="text-base">{s.body}</DialogDescription>
-            {s.to && <Button asChild variant="link" onClick={close}><Link to={s.to}>Take me there</Link></Button>}
+            {s.to && <Button asChild variant="link" onClick={close}><Link to={s.to}>{s.cta ?? 'Take me there'}</Link></Button>}
           </motion.div>
         </AnimatePresence>
         <div className="flex items-center justify-between pt-2">
-          <div className="flex gap-1.5" aria-label={`Step ${i + 1} of ${STEPS.length}`}>{STEPS.map((_, k) => <span key={k} className={`h-1.5 rounded-full transition-all duration-500 ${k === i ? 'w-6 bg-primary' : 'w-1.5 bg-muted'}`} />)}</div>
+          <div className="flex gap-1.5" role="img" aria-label={`Step ${i + 1} of ${STEPS.length}`}>{STEPS.map((_, k) => <span key={k} className={`h-1.5 rounded-full transition-all duration-500 ${k === i ? 'w-6 bg-primary' : 'w-1.5 bg-muted'}`} />)}</div>
           <div className="flex gap-2">
-            <Button variant="ghost" size="sm" onClick={close}>Skip</Button>
+            {i > 0 ? <Button variant="ghost" size="sm" onClick={() => setI(i - 1)}>Back</Button> : <Button variant="ghost" size="sm" onClick={close}>Skip</Button>}
             <Button size="sm" onClick={() => i < STEPS.length - 1 ? setI(i + 1) : close()}>{i < STEPS.length - 1 ? 'Next' : 'Start exploring'}</Button>
           </div>
         </div>

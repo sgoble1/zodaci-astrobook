@@ -22,6 +22,8 @@ export default function Siblings() {
   return <AuthGate what="compare sibling charts">{() => <SelfGate>{self => <SiblingView self={self} />}</SelfGate>}</AuthGate>;
 }
 
+const ADD_SIBLING = `/relationships?add=sibling&next=${encodeURIComponent('/siblings')}`;
+
 function SiblingView({ self }: { self: RelationshipSelf }) {
   const [params, setParams] = useSearchParams();
   const { items, loading } = useRelationships();
@@ -35,8 +37,8 @@ function SiblingView({ self }: { self: RelationshipSelf }) {
   if (!picked || !lens) return (
     <article className="obs-paper mx-auto max-w-xl space-y-4 p-8 text-center">
       <h1 className="font-display text-3xl uppercase">The Sibling Bureau</h1>
-      <p className="text-muted-foreground">Save a brother or sister under Relationships, with the relation set to “Brother” or “Sister”, and this page compares your two charts channel by channel.</p>
-      <Button asChild variant="signal"><Link to="/relationships">Add a sibling<ArrowRight /></Link></Button>
+      <p className="text-muted-foreground">Add a brother, sister, twin, half- or step-sibling with their birth date, and this page compares your two charts channel by channel. You come straight back here after saving.</p>
+      <Button asChild variant="signal"><Link to={ADD_SIBLING}>Add a sibling<ArrowRight /></Link></Button>
     </article>
   );
   const { channels, thirdHouse, summary } = lens;
@@ -47,6 +49,9 @@ function SiblingView({ self }: { self: RelationshipSelf }) {
         <h1 className="mt-4 font-display text-4xl uppercase leading-none sm:text-5xl">The Sibling Bureau</h1>
         <p className="mt-2 font-script text-2xl text-primary sm:text-3xl">{me === 'You' ? 'You' : me} &amp; {picked.name}</p>
         <p className="mt-3 max-w-2xl text-muted-foreground">Read from both calculated charts. It shows patterns and things to try — it does not describe your family history or events.</p>
+        <div className="mt-4 flex flex-wrap items-center gap-3">
+          <Link to={ADD_SIBLING} className="inline-flex min-h-10 items-center text-sm text-primary underline-offset-4 hover:underline">Add another sibling</Link>
+        </div>
         {siblings.length > 1 && (
           <div className="mt-4 flex flex-wrap items-center gap-2">
             <Label htmlFor="sibling-pick" className="text-sm">Compare with</Label>

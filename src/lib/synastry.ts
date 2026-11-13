@@ -226,4 +226,5 @@ export function siblingLens(A: ChartResult, B: ChartResult, aLabel: string, bLab
   return { channels, thirdHouse: { aInB: third(A, B), bInA: third(B, A) }, summary: scoreSummary(ia) };
 }
 
-export const isSiblingRelation = (relation: string) => /\b(brother|sister|sibling|twin)s?\b/i.test(relation) && !/in-law/i.test(relation);
+/** Brother, sister, sibling, twin, half- and step-siblings (written joined, hyphenated or spaced), bro/sis; in-laws excluded. */
+export const isSiblingRelation = (relation: string) => /\b(?:half[- ]?|step[- ]?)?(?:brother|sister|sibling|twin|bro|sis)s?\b/i.test(relation) && !/in[- ]?law/i.test(relation);

@@ -1,4 +1,5 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { internalDestination } from '@/lib/internalDestination';
 import { useState } from 'react';
 import { AuthGate } from '@/components/common/AuthGate';
 import { Button } from '@/components/ui/button';
@@ -18,7 +19,11 @@ const WHAT_YOU_GET = [
 export default function Relationships() {
   usePageMeta('Your relationships · Zodaci', 'Compare your chart with the people in your life.');
   const { items, loading } = useRelationships();
-  const [adding, setAdding] = useState(false);
+  const [params] = useSearchParams();
+  // ?add=sibling opens the form pre-set (from the Sibling Bureau); ?next= returns there after saving.
+  const preset = params.get('add') === 'sibling' ? 'Sibling' : null;
+  const back = params.get('next') ? internalDestination(params.get('next'), '') : '';
+  const [adding, setAdding] = useState(!!preset);
   const nav = useNavigate();
   return (
     <div className="space-y-8">
@@ -46,7 +51,7 @@ export default function Relationships() {
               </li>
             ))}</ul>
           )}
-          {adding ? <PersonForm initial={EMPTY} submitLabel="Add relationship" onSave={async p => { const r = await saveRelationship(p); nav(`/relationships/${r.id}`); }} />
+          {adding ? <PersonForm initial={preset ? { ...EMPTY, relation: preset } : EMPTY} submitLabel={preset ? 'Add sibling' : 'Add relationship'} onSave={async p => { const r = await saveRelationship(p); nav(back ? `${back}${back.includes('?') ? '&' : '?'}with=${r.id}` : `/relationships/${r.id}`); }} />
             : <Button onClick={() => setAdding(true)}>Add a relationship</Button>}
         </div>}
       </AuthGate>
