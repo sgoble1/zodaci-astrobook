@@ -25,6 +25,7 @@ import { ThemeArt } from '@/components/common/ThemeArt';
 import { DashboardMosaic } from '@/components/observatory/DashboardMosaic';
 import { CurrentChapterPanel } from '@/components/observatory/CurrentChapterPanel';
 import { FounderNews } from '@/components/common/FounderNews';
+import { LoadFailed } from '@/components/common/LoadFailed';
 import { ChartWheelIcon, TelevisionIcon, LibraryIcon, StorefrontIcon, PressIcon } from '@/components/icons/RetroIcons';
 
 type EditionKey = 'shane' | 'zac';
@@ -90,7 +91,7 @@ function EditionInner({ area }: { area: EditionKey }) {
   const owns = useOwnsEdition(area);
   const full = useWholeEditionAccess(area);
   const [entries, setEntries] = useState<MbEntry[] | null>(null);
-  const [denied, setDenied] = useState(false);
+  const [denied, setDenied] = useState<ContentLockedError | null>(null);
   const [err, setErr] = useState('');
   const [text, setText] = useState<string | null>(null);
   const [retry, setRetry] = useState(0);
@@ -102,10 +103,10 @@ function EditionInner({ area }: { area: EditionKey }) {
   }, []);
   useEffect(() => {
     let active = true;
-    setEntries(null); setErr(''); setDenied(false);
+    setEntries(null); setErr(''); setDenied(null);
     if (session) void loadEditionIndex(area).then(e => { if (active) setEntries(e); }).catch(e => {
       if (!active) return;
-      if (e instanceof ContentLockedError) setDenied(true);
+      if (e instanceof ContentLockedError) setDenied(e);
       else setErr(`${copy.name}’s edition couldn’t be opened. Check your connection and try again.`);
     });
     return () => { active = false; };
@@ -113,12 +114,12 @@ function EditionInner({ area }: { area: EditionKey }) {
   useEffect(() => {
     let active = true;
     setText(null);
-    if (id && session) void loadProtectedText(area, `${id}.md`).then(t => { if (active) setText(t); }).catch(e => { if (active) setText(e instanceof ContentLockedError ? 'denied' : ''); });
+    if (id && session) void loadProtectedText(area, `${id}.md`).then(t => { if (active) setText(t); }).catch(e => { if (active) setText(e instanceof ContentLockedError ? (e.signedOut ? 'signed-out' : 'denied') : ''); });
     if (!window.location.hash) window.scrollTo(0, 0);
     return () => { active = false; };
   }, [id, session?.user.id, retry, area]);
 
-  if (denied) return <div className="space-y-4"><h1 className="text-4xl">{copy.title}</h1><NoEditionAccess owner={copy.name} onRetry={() => setRetry(v => v + 1)} /></div>;
+  if (denied) return <div className="space-y-4"><h1 className="text-4xl">{copy.title}</h1><LoadFailed error={denied} onRetry={() => setRetry(v => v + 1)} /></div>;
   if (err) return <div className="space-y-4"><h1 className="text-4xl">{copy.title}</h1><p role="alert" className="text-muted-foreground">{err}</p><Button variant="outline" onClick={() => setRetry(v => v + 1)}>Try again</Button></div>;
   if (id) return <ChapterView area={area} id={id} entries={entries} text={text} owns={owns === true} full={full === true} onRetry={() => setRetry(v => v + 1)} />;
   return <EditionHome area={area} entries={entries} owns={owns === true} full={full} />;
@@ -149,6 +150,7 @@ function ChapterView({ area, id, entries, text, owns, full, onRetry }: { area: E
       <div className="gold-rule my-6" />
       <p role="note" className="mb-6 border-l-2 border-accent pl-4 text-sm text-muted-foreground">{copy.note}</p>
       {text === null ? <p role="status" className="text-muted-foreground">Opening the chapter…</p>
+        : text === 'signed-out' ? <LoadFailed error={new ContentLockedError(true)} onRetry={onRetry} />
         : text === 'denied' ? <NoEditionAccess owner={copy.name} onRetry={onRetry} />
         : text === '' ? <div className="space-y-3"><p role="alert">This chapter couldn’t be opened. Check your connection and try again.</p><Button variant="outline" onClick={onRetry}>Try again</Button></div>
         : <NavigatedProse content={text} path={`${copy.base}/${id}`} title={e?.title ?? `${copy.name}’s chapter`} headingLevel={headingLevel} insights />}

@@ -40,11 +40,15 @@ export function loadProtectedText(area: Area, file: string): Promise<string> {
 async function fetchProtectedText(area: Area, file: string): Promise<string> {
   const { data: s } = await supabase.auth.getSession();
   if (!s.session) throw new ContentLockedError(true);
-  const { data, error } = await supabase.functions.invoke('protected-content', { body: { area, file } });
+  const { data, error } = await supabase.functions.invoke('protected-content', {
+    body: { area, file }, headers: { Authorization: `Bearer ${s.session.access_token}` },
+  });
   if (error || !data?.content) {
-    const status = (error as { context?: Response } | null)?.context?.status;
-    if (status === 401 || status === 403 || data?.code === 'NO_ACCESS' || data?.code === 'SIGNED_OUT') throw new ContentLockedError(status === 401);
-    throw new Error(data?.error ?? 'This document could not be opened. Please try again.');
+    const context = (error as { context?: Response } | null)?.context;
+    const detail = context ? await context.clone().json().catch(() => null) : data;
+    if (context?.status === 401 || detail?.code === 'SIGNED_OUT') throw new ContentLockedError(true);
+    if (context?.status === 403 || detail?.code === 'NO_ACCESS') throw new ContentLockedError();
+    throw new Error(detail?.error ?? 'This document could not be opened. Please try again.');
   }
   return data.content as string;
 }
