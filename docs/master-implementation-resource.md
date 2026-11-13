@@ -595,5 +595,5 @@ Checked against chat messages #1182–#1261. Everything below was said in chat b
 - Book/comic prices: Shopify or plans/books files
 - Whether to keep the old demo video on Investors/About
 
-## 26.5 Price note to confirm
-- Chat on Nov 13 used Collector's Linen at **$189**; an older saved note says $149. books.ts is the source of truth, so confirm which is right before any copy or investor update.
+## 26.5 Price check
+- Collector's Linen is **$189** in the site's price list (confirmed); the older $149 note is out of date.
