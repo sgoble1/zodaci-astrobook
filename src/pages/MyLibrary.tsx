@@ -9,6 +9,8 @@ import { Input } from '@/components/ui/input';
 import { Progress } from '@/components/ui/progress';
 import { supabase } from '@/integrations/supabase/client';
 import { useSession } from '@/hooks/useLibrary';
+import { useMyBirth, toChartInput } from '@/lib/myBirth';
+import { PersonalPreviewDrawer } from '@/components/books/PersonalPreviewDrawer';
 import { usePlan } from '@/hooks/usePlan';
 import { useCustomPages } from '@/hooks/useCustomPages';
 import { STARTER_CHAPTERS } from '@/lib/starterChapters';
@@ -30,6 +32,7 @@ type Order = { id: string; status: string; edition: string; format: string };
 /** Book hub: Masterbook progress, latest AstroBook order, media, and a searchable index of everything that's yours. */
 export default function MyLibrary() {
   const session = useSession();
+  const birth = useMyBirth();
   const { plan, loading: planLoading } = usePlan();
   const custom = useCustomPages();
   const [chapters, setChapters] = useState<number | null>(null);
@@ -75,7 +78,7 @@ export default function MyLibrary() {
           <div className="flex items-start gap-4"><span className="grid h-12 w-12 shrink-0 place-items-center rounded-xl border border-border text-gold"><Printer className="h-6 w-6" aria-hidden="true" /></span>
             <div className="min-w-0 space-y-1"><h2 className="font-display text-2xl">AstroBook in print</h2>
               {order ? <p className="text-sm text-muted-foreground"><span className="capitalize">{order.edition}</span> · {order.format === 'digital' ? 'Digital PDF' : 'Printed book'} — {statusLabel(order.status)}</p> : <p className="text-sm text-muted-foreground">Five versions, from a digital PDF to a linen hardcover.</p>}</div></div>
-          <div className="mt-5 flex flex-wrap gap-2">{order ? <Button asChild><Link to={`/orders?order=${order.id}`}><Truck className="h-4 w-4" aria-hidden="true" />Track my order</Link></Button> : <Button asChild><Link to="/books">Design my book</Link></Button>}<Button asChild variant="outline"><Link to="/book-preview">Preview a sample</Link></Button></div>
+          <div className="mt-5 flex flex-wrap gap-2">{order ? <Button asChild><Link to={`/orders?order=${order.id}`}><Truck className="h-4 w-4" aria-hidden="true" />Track my order</Link></Button> : <Button asChild><Link to="/books">Design my book</Link></Button>}{birth ? <PersonalPreviewDrawer name={birth.name} input={toChartInput(birth)} /> : <Button asChild variant="outline"><Link to="/book-preview">Preview a sample</Link></Button>}</div>
         </div>
       </section>
 

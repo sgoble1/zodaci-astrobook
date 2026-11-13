@@ -18,11 +18,9 @@ import { buildComicIssue, COMIC_PLANS, monthKey, monthLabel, nextIssueMonth, shi
 import { usePageMeta } from '@/hooks/usePageMeta';
 import type { Database } from '@/integrations/supabase/types';
 import { StartLink } from '@/components/common/StartLink';
-import skyPanel from '@/assets/astrocomic-sky-panel.jpg';
-import letterPanel from '@/assets/astrocomic-letter-panel.jpg';
-
-// Shared scenes for the preview; positions and the letter beside them are calculated from the member's chart.
-const PREVIEW_ART: Record<string, string> = { '2-0': skyPanel, '3-0': letterPanel };
+import { comicPreviewArt } from '@/content/castArt';
+import { PREVIEW_PAGES } from '@/lib/personalPreview';
+import { PersonalPreviewDrawer } from '@/components/books/PersonalPreviewDrawer';
 
 type Sub = Database['public']['Tables']['comic_subscriptions']['Row'];
 type Issue = Database['public']['Tables']['comic_issues']['Row'];
@@ -76,7 +74,7 @@ function MyComicInner() {
         <section className="comic-card p-6 sm:p-8"><p><span className="comic-tag text-xs">Not subscribed</span></p><h2 className="mt-3 font-display text-2xl uppercase">No AstroComic yet</h2><p className="mt-2 text-muted-foreground">A personalized 24-page comic each month, printed and mailed to you.</p><Button asChild className="mt-5"><Link to="/astrocomic">See plans</Link></Button></section>
       )}
       <Archive issues={issues} />
-      {birth && <NextPreview birthName={birth.name} chartInput={toChartInput(birth)} month={current ? nextIssueMonth({ ...current, plan: current.plan as ComicPlan }, issues.filter(i => i.subscription_id === current.id && i.status === 'shipped').map(i => i.issue_month)) : null} />}
+      {birth && <NextPreview birthName={birth.name} chartInput={toChartInput(birth)} issueNumber={(current ? issues.filter(i => i.subscription_id === current.id).reduce((m, i) => Math.max(m, i.issue_number), 0) : 0) + 1} month={current ? nextIssueMonth({ ...current, plan: current.plan as ComicPlan }, issues.filter(i => i.subscription_id === current.id && i.status === 'shipped').map(i => i.issue_month)) : null} />}
       {birth === null && <p className="text-sm text-muted-foreground">Save your birth details on <StartLink className="underline">your chart</StartLink> so each issue can be drawn from it.</p>}
       {subs.filter(s => !['active', 'paused', 'past_due'].includes(s.status)).length > 0 && <section><h2 className="text-lg">Earlier plans</h2><ul className="mt-3 space-y-1 text-sm text-muted-foreground">{subs.filter(s => !['active', 'paused', 'past_due'].includes(s.status)).map(s => <li key={s.id}>{COMIC_PLANS[s.plan as ComicPlan]?.name ?? s.plan} · {s.status} · since {fmt(s.created_at)}</li>)}</ul></section>}
     </article>
@@ -179,15 +177,17 @@ function Archive({ issues }: { issues: Issue[] }) {
   );
 }
 
-function NextPreview({ birthName, chartInput, month }: { birthName: string; chartInput: ReturnType<typeof toChartInput>; month: Date | null }) {
+function NextPreview({ birthName, chartInput, month, issueNumber }: { birthName: string; chartInput: ReturnType<typeof toChartInput>; month: Date | null; issueNumber: number }) {
   const [all, setAll] = useState(false);
   const target = month ?? (() => { const n = new Date(); return new Date(Date.UTC(n.getUTCFullYear(), n.getUTCMonth() + 1, 1)); })();
   const guide = useMyCharacter();
-  const issue = useMemo(() => buildComicIssue(computeChart(chartInput), { reader: birthName || 'Reader', month: target, issueNumber: 1, guide }), [chartInput.date, chartInput.time, chartInput.lat, chartInput.lon, target.getTime(), guide?.name]); // eslint-disable-line react-hooks/exhaustive-deps
+  const issue = useMemo(() => buildComicIssue(computeChart(chartInput), { reader: birthName || 'Reader', month: target, issueNumber: issueNumber, guide }), [chartInput.date, chartInput.time, chartInput.lat, chartInput.lon, target.getTime(), guide?.name, issueNumber]); // eslint-disable-line react-hooks/exhaustive-deps
+  // Shared sky/letter scenes and the planet characters each panel names; every position beside them is calculated.
+  const art = useMemo(() => comicPreviewArt(issue, 24), [issue]);
   return (
     <section aria-labelledby="next-h" className="space-y-4">
-      <div className="flex flex-wrap items-end justify-between gap-3"><div><h2 id="next-h" className="font-display text-2xl">Preview: {issue.monthLabel}</h2><p className="mt-1 text-sm text-muted-foreground">Planned from your chart and that month’s sky: {issue.mainEvent}.</p></div><Button variant="outline" size="sm" onClick={() => setAll(a => !a)}>{all ? 'Show first pages' : 'See all 24 pages'}</Button></div>
-      <div className={`grid gap-3 ${all ? 'grid-cols-2 sm:grid-cols-4' : 'sm:grid-cols-3'}`}>{(all ? issue.pages : issue.pages.slice(0, 3)).map(p => <ComicPageView key={p.n} page={p} compact={all} art={PREVIEW_ART} />)}</div>
+      <div className="flex flex-wrap items-end justify-between gap-3"><div><h2 id="next-h" className="font-display text-2xl">Preview: {issue.monthLabel}</h2><p className="mt-1 text-sm text-muted-foreground">Planned from your chart and that month’s sky: {issue.mainEvent}.</p></div><div className="flex flex-wrap gap-2"><PersonalPreviewDrawer name={birthName} input={chartInput} firstIssue={issueNumber} defaultTab="comic" trigger={<Button variant="outline" size="sm">Next three issues</Button>} /><Button variant="outline" size="sm" onClick={() => setAll(a => !a)}>{all ? 'Show the first ten pages' : 'See all 24 pages'}</Button></div></div>
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">{(all ? issue.pages : issue.pages.filter(p => p.n <= PREVIEW_PAGES)).map(p => <ComicPageView key={p.n} page={p} compact art={art} />)}</div>
     </section>
   );
 }

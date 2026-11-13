@@ -3,7 +3,8 @@ import { BookOpen, Sparkles } from 'lucide-react';
 import { Book3D } from '@/components/books/Book3D';
 import { Button } from '@/components/ui/button';
 import { usePageMeta } from '@/hooks/usePageMeta';
-import { OFFICIAL_BOOKS, ownerLabel, useOfficialEditions, type OfficialEditionRow } from '@/lib/officialEditions';
+import { OFFICIAL_BOOKS, officialChartInput, ownerLabel, useOfficialEditions, type OfficialEditionRow } from '@/lib/officialEditions';
+import { PersonalPreviewDrawer } from '@/components/books/PersonalPreviewDrawer';
 import { PRODUCT_ART } from '@/content/productArtwork';
 
 /**
@@ -60,6 +61,7 @@ function EditionShelf({ row }: { row: OfficialEditionRow }) {
             <p className="flex-1 text-sm text-muted-foreground">{book.detail}</p>
             <div className="flex flex-wrap gap-2">
               <Button asChild><Link to={book.masterbook}><BookOpen className="mr-1.5 h-4 w-4" aria-hidden="true" />{book.readLabel}</Link></Button>
+              {row.birth && <PersonalPreviewDrawer name={row.display_name} input={officialChartInput(row.birth)} possessive={row.is_own ? 'your' : `${row.display_name}’s`} />}
               {row.is_own && <Button asChild variant="outline"><Link to="/books">Order a print</Link></Button>}
             </div>
           </div>
@@ -72,7 +74,7 @@ function EditionShelf({ row }: { row: OfficialEditionRow }) {
             <div className="font-label text-xs tracking-[0.16em] text-primary">Official AstroComic</div>
             <h3 className="text-2xl leading-tight">{row.is_own ? 'Your AstroComic' : `${row.display_name}’s AstroComic`}</h3>
             <p className="flex-1 text-sm text-muted-foreground">A 24-page issue drawn from {row.is_own ? 'your' : `${row.display_name}’s`} own chart and this month’s sky, in the Atomic Zodiac comic style.{row.birth ? '' : ' Birth details are needed before it can be drawn.'}</p>
-            <div><Button asChild variant={row.birth ? 'default' : 'outline'}><Link to={comicTo}><Sparkles className="mr-1.5 h-4 w-4" aria-hidden="true" />Read the AstroComic</Link></Button></div>
+            <div className="flex flex-wrap gap-2"><Button asChild variant={row.birth ? 'default' : 'outline'}><Link to={comicTo}><Sparkles className="mr-1.5 h-4 w-4" aria-hidden="true" />Read the AstroComic</Link></Button>{row.birth && <PersonalPreviewDrawer name={row.display_name} input={officialChartInput(row.birth)} possessive={row.is_own ? 'your' : `${row.display_name}’s`} defaultTab="comic" trigger={<Button variant="outline">Next issues, first ten pages</Button>} />}</div>
           </div>
         </div>
       </div>

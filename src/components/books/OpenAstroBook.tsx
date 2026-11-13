@@ -35,7 +35,7 @@ export function OpenAstroBook({ layout = 'side', next = '/astrobook#full-edition
     </p>
   );
   const note = own
-    ? <p className="mt-2 text-center text-xs text-muted-foreground">Calculated in your browser from your saved birth details{own.time ? '' : '; with no birth time, houses and angles are left out'}. Chapters are added from your own readings when you order. Nothing here is saved.</p>
+    ? <p className="mt-2 text-center text-xs text-muted-foreground">The cover and first ten pages, calculated in your browser from your saved birth details{own.time ? '' : '; with no birth time, houses and angles are left out'}. The full book continues through all six volumes. Nothing here is saved.</p>
     : <p className="mt-2 text-center text-xs text-muted-foreground">{SAMPLE_READER.name} is fictional. Every position in her book is calculated for {SAMPLE_READER.printed.born.replace(/^Born /, '')}.</p>;
   return <OpenBook key={own ? 'mine' : 'sample'} leaves={leaves} label={own ? 'Your AstroBook, built from your chart' : `Sample Collector AstroBook for ${SAMPLE_READER.name}`} layout={layout} spine={{ title: 'Zodaci AstroBook', name: own ? own.name || undefined : SAMPLE_READER.name }} footer={<>{switcher}{note}</>} />;
 }

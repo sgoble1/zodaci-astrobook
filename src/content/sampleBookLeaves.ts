@@ -4,6 +4,8 @@ import { LEAD_COVER } from '@/content/coverSamples';
 import { SAMPLE_EDITION } from '@/content/sampleEdition';
 import { SAMPLE_ISSUE } from '@/content/sampleComic';
 import { birthLineOf, bookInterior, comicInterior, toLeaves, type BookFace } from '@/lib/bookLeaves';
+import { bookPreview } from '@/lib/personalPreview';
+import { castFull } from '@/content/castArt';
 
 export type BookLeaf = { front: BookFace; back: BookFace };
 
@@ -28,17 +30,18 @@ export function sampleBookLeaves(): BookLeaf[] {
 }
 
 /**
- * A chart-only AstroBook for a signed-in member, built in the browser from their saved birth details. It binds no
- * written chapters (those come from their own readings), and leaves out houses and angles when the time is unknown.
+ * The cover and first ten pages of a member's own AstroBook, built in the browser from their saved birth details with
+ * the same chapters the printed book opens with (buildVolumes). Houses and angles are left out when the time is unknown.
  */
 export function memberBookLeaves(birth: MyBirth, coverSrc: string): BookLeaf[] {
-  const timed = !!birth.time;
   const name = birth.name?.trim() || 'Your AstroBook';
-  return toLeaves(
-    { kind: 'cover', src: coverSrc, alt: `Your AstroBook cover preview, printed with ${name}` },
-    bookInterior({ name, birthLine: birthLineOf(birth.date, birth.time, birth.placeLabel), chart: computeChart(toChartInput(birth)), timed, edition: 'your edition', owner: 'member' }),
-    BOOK_BACK,
-  );
+  return personalBookLeaves({ name, birthLine: birthLineOf(birth.date, birth.time, birth.placeLabel), chart: computeChart(toChartInput(birth)), coverSrc });
+}
+
+/** Same first ten pages for any authorized chart (a founder's edition, or the member's own). */
+export function personalBookLeaves({ name, birthLine, chart, coverSrc, editionLabel = 'Classic Edition' }: { name: string; birthLine: string; chart: ChartResult; coverSrc: string; editionLabel?: string }): BookLeaf[] {
+  const { cover, faces } = bookPreview({ name, birthLine, chart, editionLabel, artFor: castFull });
+  return toLeaves({ kind: 'cover', src: coverSrc, alt: `AstroBook cover printed with ${cover.name}` }, faces, BOOK_BACK);
 }
 
 /** The sample AstroComic digest for the same reader. */

@@ -315,6 +315,36 @@ export type NextStep = { label: string; description: string; to: string; badge?:
 export type NextStepContext = { plan: Plan; moonSign?: string; hasChart: boolean; lastVisit?: { path: string; title: string } | null };
 
 const CURATED: Record<string, NextStep[]> = {
+  '/personal-context': [
+    { label: 'Ask a question with your notes', description: 'Consult the Observatory uses what you chose to share', to: '/observatory' },
+    { label: 'Log something you noticed', description: 'Dated notes in your Observation Log', to: '/observation-log' },
+    { label: 'Open your Writing Room', description: 'Readings and the examples they may use', to: '/content-center' },
+  ],
+  '/credits': [
+    { label: 'Ask the Observatory', description: 'One question answered from your chart', to: '/observatory' },
+    { label: 'Make a podcast episode', description: 'Turn a chapter into audio', to: '/podcasts' },
+    { label: 'Compare plans', description: 'Pro and Cosmic share features; credits differ', to: '/pricing' },
+  ],
+  '/creator': [
+    { label: 'Make a keepsake', description: 'Certificates and Star Scrolls from your chart', to: '/keepsakes' },
+    { label: 'Browse the gift shop', description: 'Atomic Zodiac prints, books and more', to: '/store' },
+    { label: 'See your saved designs', description: 'Everything you made, in the Archive', to: '/archive' },
+  ],
+  '/investors': [
+    { label: 'See the product', description: 'The sample AstroBook, opened', to: '/astrobook' },
+    { label: 'Read about Zodaci', description: 'Why it exists and how it works', to: '/about' },
+    { label: 'Visit the shop', description: 'What is for sale today', to: '/store' },
+  ],
+  '/developer': [
+    { label: 'Full project timeline', description: 'Every build round, by date', to: '/developer/timeline' },
+    { label: 'Investor page', description: 'Figures and capabilities as investors see them', to: '/investors' },
+    { label: 'What members see', description: 'Your dashboard and its updates', to: '/dashboard' },
+  ],
+  '/developer/timeline': [
+    { label: 'Back to the status board', description: 'Open items and build costs', to: '/developer' },
+    { label: 'Investor page', description: 'Capabilities as investors see them', to: '/investors' },
+    { label: 'What members see', description: 'Your dashboard and its updates', to: '/dashboard' },
+  ],
   '/my-chart': [
     { label: 'See your current transits', description: 'What is moving through your chart now', to: '/transits' },
     { label: 'Start your first reading', description: 'Your Big Three, written from your placements', to: topic('big-three') },
