@@ -1,3 +1,4 @@
+import { episodeTitle } from '@/lib/episodeTitle';
 import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import { Pause, Play, SkipForward, X, Headphones } from 'lucide-react';
@@ -56,7 +57,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
             </button>
             <div className="flex-1 min-w-0">
               <div className="font-label text-[10px] tracking-[0.14em] text-primary flex items-center gap-1"><Headphones className="w-3 h-3" />Now playing · {speed}×</div>
-              <Link to="/podcasts" className="block truncate text-sm hover:underline">{current.title}</Link>
+              <Link to="/podcasts" className="block truncate text-sm hover:underline">{episodeTitle(current.title)}</Link>
             </div>
             {queue.length > 0 && <button onClick={playNext} aria-label="Next in queue" className="p-2 rounded hover:bg-muted"><SkipForward className="w-4 h-4" /></button>}
             <button onClick={stop} aria-label="Close player" className="p-2 rounded hover:bg-muted"><X className="w-4 h-4" /></button>

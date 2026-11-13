@@ -1,3 +1,4 @@
+import { episodeTitle } from '@/lib/episodeTitle';
 import { confirmAction } from '@/components/common/ConfirmHost';
 import { PodcastMaker } from '@/components/podcast/PodcastMaker';
 import { useEffect, useRef, useState } from 'react';
@@ -60,7 +61,7 @@ export default function Podcasts() {
     .sort((a, b) => sort === 'title' ? a.title.localeCompare(b.title) : sort === 'series' ? (a.category ?? '').localeCompare(b.category ?? '') || a.title.localeCompare(b.title) : sort === 'oldest' ? +new Date(a.created_at) - +new Date(b.created_at) : +new Date(b.created_at) - +new Date(a.created_at));
 
   return (
-    <div className="space-y-10">
+    <div className={`space-y-10 ${current?.url ? "pb-40" : ""}`}>
       <header>
         <div className="font-label text-xs tracking-[0.16em] text-primary">The Listening Room</div>
         <h1 className="text-4xl sm:text-5xl mt-2">Podcasts & Audio Readings</h1>
@@ -70,11 +71,11 @@ export default function Podcasts() {
       {current?.url && (
         <div className="parchment deckle p-5">
           <div className="font-label text-[10px] tracking-[0.14em] text-primary">Now playing · controls in the mini player</div>
-          <div className="font-display text-xl mt-1">{current.title}</div>
+          <div className="font-display text-xl mt-1">{episodeTitle(current.title)}</div>
           <div className="flex flex-wrap items-center gap-2 mt-3 text-xs">
             <span className="font-label text-[10px] tracking-[0.14em] text-primary mr-1">Speed</span>
             {[0.75, 1, 1.25, 1.5, 1.75, 2].map(r => (
-              <button key={r} onClick={() => setSpeed(r)} className={`px-2 py-1 rounded border ${speed === r ? 'border-accent bg-accent/15' : 'border-border hover:bg-muted'}`}>{r}×</button>
+              <button key={r} onClick={() => setSpeed(r)} aria-pressed={speed === r} className={`min-h-9 min-w-11 px-2 py-1 rounded border ${speed === r ? 'border-accent bg-accent/15' : 'border-border hover:bg-muted'}`}>{r}×</button>
             ))}
             {queue.length > 0 && <button onClick={playNext} className="ml-auto flex items-center gap-1 px-2 py-1 rounded border border-border hover:bg-muted"><SkipForward className="w-3.5 h-3.5" />Next in queue</button>}
           </div>
@@ -91,7 +92,7 @@ export default function Podcasts() {
             {queue.map((id, i) => { const ep = byId(id); if (!ep) return null; return (
               <li key={id} className="flex items-center gap-2">
                 <span className="text-muted-foreground w-5">{i + 1}.</span>
-                <button className="flex-1 text-left hover:underline truncate" onClick={() => play(ep)}>{ep.title}</button>
+                <button className="flex-1 text-left hover:underline truncate" onClick={() => play(ep)}>{episodeTitle(ep.title)}</button>
                 <button aria-label="Move up" disabled={i === 0} className="px-1 disabled:opacity-30" onClick={() => setQueue(qu => { const n = [...qu]; [n[i - 1], n[i]] = [n[i], n[i - 1]]; return n; })}>↑</button>
                 <button aria-label="Remove from queue" className="p-1" onClick={() => setQueue(qu => qu.filter(x => x !== id))}><ListX className="w-4 h-4" /></button>
               </li>); })}
@@ -115,29 +116,29 @@ export default function Podcasts() {
           shown.length === 0 ? <p className="text-sm text-muted-foreground italic">No {library} episodes match this search{session ? ' — create or upload one below.' : '.'}</p> :
           <ul className="grid gap-3">
             {shown.map(ep => (
-              <li key={ep.id} className={`parchment p-4 flex gap-4 items-start ${current?.id === ep.id ? 'ring-1 ring-accent' : ''}`}>
-                <button onClick={() => play(ep)} aria-label={`Play ${ep.title}`} className="relative shrink-0 w-20 h-20 overflow-hidden rounded border border-accent/50 grid place-items-center hover:bg-accent/15">
+              <li key={ep.id} className={`parchment p-4 flex flex-wrap gap-x-4 gap-y-3 items-start sm:flex-nowrap ${current?.id === ep.id ? 'ring-1 ring-accent' : ''}`}>
+                <button onClick={() => play(ep)} aria-label={`Play ${episodeTitle(ep.title)}`} className="relative shrink-0 w-16 h-16 sm:w-20 sm:h-20 overflow-hidden rounded border border-accent/50 grid place-items-center hover:bg-accent/15">
                   {ep.cover_url ? <img loading="lazy" decoding="async" src={ep.cover_url} alt="" className="absolute inset-0 h-full w-full object-cover"/> : <Headphones className="w-6 h-6" />}
                 </button>
-                <div className="flex-1 min-w-0">
-                  <button onClick={() => play(ep)} className="font-display text-lg text-left hover:underline">{ep.title}</button>
+                <div className="flex-1 min-w-0 basis-[calc(100%-5rem)] sm:basis-auto">
+                  <button onClick={() => play(ep)} className="font-display text-lg text-left [overflow-wrap:anywhere] hover:underline">{episodeTitle(ep.title)}</button>
                   <div className="text-xs text-muted-foreground">{ep.category && <>{ep.category} · </>}{new Date(ep.created_at).toLocaleDateString()} · <EpisodeLength ep={ep} /> · {fmtSize(ep.size_bytes)}{positions[ep.id] > 5 && <> · <span className="text-gold">resume at {fmt(positions[ep.id])}</span></>}</div>
                   <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-muted-foreground"><span className="inline-flex items-center gap-1">{ep.workspace_id || ep.shared_with_space ? <><Users className="h-3.5 w-3.5"/>Shared workspace</> : <><Lock className="h-3.5 w-3.5"/>Private to you</>}</span>
                     {founders && !canAssign(ep) && ep.belongs_to && PERSON_LABEL[ep.belongs_to] && <span className={`rounded-sm px-2 py-0.5 font-label tracking-[0.1em] ${PERSON_BADGE[ep.belongs_to] ?? 'bg-muted text-foreground'}`}>{PERSON_LABEL[ep.belongs_to]}</span>}
-                    {canAssign(ep) && <select aria-label={`Whose episode is ${ep.title}`} value={ep.belongs_to ?? ''} className="h-8 border border-input rounded bg-background px-2" onChange={e => void assign(ep, e.target.value)}><option value="">{ep.belongs_to ? 'Not assigned' : 'Assign to…'}</option><option value={partner}>{PERSON_LABEL[partner]}</option><option value="shane">Shane's</option><option value="both">Both of ours</option>{ep.belongs_to && ep.belongs_to !== partner && !['shane', 'both'].includes(ep.belongs_to) && <option value={ep.belongs_to}>{PERSON_LABEL[ep.belongs_to]}</option>}</select>}
+                    {canAssign(ep) && <select aria-label={`Whose episode is ${episodeTitle(ep.title)}`} value={ep.belongs_to ?? ''} className="h-8 border border-input rounded bg-background px-2" onChange={e => void assign(ep, e.target.value)}><option value="">{ep.belongs_to ? 'Not assigned' : 'Assign to…'}</option><option value={partner}>{PERSON_LABEL[partner]}</option><option value="shane">Shane's</option><option value="both">Both of ours</option>{ep.belongs_to && ep.belongs_to !== partner && !['shane', 'both'].includes(ep.belongs_to) && <option value={ep.belongs_to}>{PERSON_LABEL[ep.belongs_to]}</option>}</select>}
                   </div>
-                  {session?.user.id === ep.owner_id && !ep.shared_with_space && <select aria-label={`Visibility of ${ep.title}`} value={ep.workspace_id ?? ''} className="mt-3 h-10 max-w-full border border-input rounded bg-background px-2 text-sm" onChange={async e=>{const r=await supabase.from('library_items').update({workspace_id:e.target.value||null,shared_with_space:false}).eq('id',ep.id);if(r.error)toast.error(r.error.message);else void lib.reload();}}><option value="">Private</option>{spaces.map(s=><option key={s.id} value={s.id}>{s.name}</option>)}</select>}
+                  {session?.user.id === ep.owner_id && !ep.shared_with_space && <select aria-label={`Visibility of ${episodeTitle(ep.title)}`} value={ep.workspace_id ?? ''} className="mt-3 h-10 max-w-full border border-input rounded bg-background px-2 text-sm" onChange={async e=>{const r=await supabase.from('library_items').update({workspace_id:e.target.value||null,shared_with_space:false}).eq('id',ep.id);if(r.error)toast.error(r.error.message);else void lib.reload();}}><option value="">Private</option>{spaces.map(s=><option key={s.id} value={s.id}>{s.name}</option>)}</select>}
                   {ep.description && <p className="text-sm mt-1">{ep.description}</p>}
                   {Array.isArray(ep.sections) && ep.sections.length > 0 && <EpisodeSources episode={ep} />}
                 </div>
-                <div className="flex shrink-0 flex-wrap justify-end gap-1">
-                  <button className="p-2 rounded hover:bg-muted" aria-label={queue.includes(ep.id) ? 'Remove from queue' : 'Add to queue'}
+                <div className="flex w-full flex-wrap items-center justify-end gap-1 border-t border-border/60 pt-2 sm:w-auto sm:shrink-0 sm:border-0 sm:pt-0">
+                  <button className="grid h-10 w-10 place-items-center rounded hover:bg-muted" aria-label={queue.includes(ep.id) ? 'Remove from queue' : 'Add to queue'}
                     onClick={() => setQueue(qu => qu.includes(ep.id) ? qu.filter(x => x !== ep.id) : [...qu, ep.id])}>
                     {queue.includes(ep.id) ? <ListX className="w-4 h-4" /> : <ListPlus className="w-4 h-4" />}
                   </button>
-                  {ep.url && <a href={ep.url} download={ep.file_name} className="p-2 rounded hover:bg-muted" aria-label="Download"><Download className="w-4 h-4" /></a>}
+                  {ep.url && <a href={ep.url} download={ep.file_name} className="grid h-10 w-10 place-items-center rounded hover:bg-muted" aria-label="Download"><Download className="w-4 h-4" /></a>}
                   {canAssign(ep) && <Button variant="ghost" size="sm" onClick={async () => { try { await lib.setShared(ep, !ep.shared_with_space); toast.success(ep.shared_with_space ? 'Episode is now private' : 'Episode shared with April & Shane'); } catch (error) { toast.error((error as Error).message); } }}>{ep.shared_with_space ? <Lock className="h-4 w-4"/> : <Users className="h-4 w-4"/>}{ep.shared_with_space ? 'Make private' : 'Share'}</Button>}
-                  {(isAdmin || session?.user.id === ep.owner_id) && <button className="p-2 rounded hover:bg-muted" aria-label={`Delete ${ep.title}`} onClick={async () => { if (await confirmAction('Delete this episode?')) { try { await lib.remove(ep); if (current?.id === ep.id) setCurrent(null); toast.success('Episode deleted'); } catch (error) { toast.error((error as Error).message || 'The episode could not be deleted.'); } } }}><Trash2 className="w-4 h-4" /></button>}
+                  {(isAdmin || session?.user.id === ep.owner_id) && <button className="grid h-10 w-10 place-items-center rounded hover:bg-muted" aria-label={`Delete ${episodeTitle(ep.title)}`} onClick={async () => { if (await confirmAction('Delete this episode?')) { try { await lib.remove(ep); if (current?.id === ep.id) setCurrent(null); toast.success('Episode deleted'); } catch (error) { toast.error((error as Error).message || 'The episode could not be deleted.'); } } }}><Trash2 className="w-4 h-4" /></button>}
                 </div>
               </li>
             ))}
