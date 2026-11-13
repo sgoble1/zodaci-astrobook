@@ -105,3 +105,14 @@ export const MARKET = [
   { figure: '30%', text: 'of U.S. adults consult astrology, tarot cards or fortune tellers at least once a year; most say they do it for fun.', source: 'Pew Research Center, May 2025 (survey of 9,593 adults)', url: 'https://www.pewresearch.org/religion/2025/05/21/3-in-10-americans-consult-astrology-tarot-cards-or-fortune-tellers/' },
   { figure: '$50M ARR', text: 'Nebula (OBRIO) in 2023, with about 30 million users after roughly 250% growth that year.', source: 'Tech.eu, December 2023', url: 'https://tech.eu/2023/12/05/obrio/' },
 ] as const;
+
+/** Supplier shortlist from the owner's supplier worksheets (Nov 2026). Planning estimates, not signed quotes. */
+export const SUPPLIERS = [
+  { product: 'Crewneck sweatshirt', supplier: 'Printful · Gildan 18000', estimate: '≈51% margin', status: 'Recommended', note: 'Print-on-demand, no inventory.' },
+  { product: 'Hoodie', supplier: 'Printful · Gildan 18500', estimate: '≈53% margin', status: 'Recommended', note: 'Same catalog and checkout as sweatshirts.' },
+  { product: 'Woven blanket', supplier: 'Prodigi', estimate: '≈65% margin', status: 'Recommended', note: 'Higher price point; check sample quality first.' },
+  { product: 'Zodiac pendant', supplier: 'Made by Cooper', estimate: '≈$5.82 per unit', status: 'Sample first', note: 'Bulk order; needs storage and packing.' },
+  { product: 'Oracle deck', supplier: 'QinPrinting', estimate: '≈80% margin', status: 'Sample first', note: 'Minimum order quantity applies.' },
+  { product: 'Incense', supplier: 'Norden', estimate: 'Conditional', status: 'On hold', note: 'Depends on labeling and shipping rules.' },
+  { product: 'Bundle kitting', supplier: 'Fulfillrite', estimate: '—', status: 'Declined for now', note: 'Revisit once order volume justifies it.' },
+] as const;

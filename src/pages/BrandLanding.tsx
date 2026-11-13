@@ -4,6 +4,8 @@ import { SpotArt, type SpotKind } from '@/components/art/SpotArt';
 import { PublicHeader } from '@/components/brand/PublicHeader';
 import { Button } from '@/components/ui/button';
 import { SampleChartDemo } from '@/components/brand/SampleChartDemo';
+import { SampleBook } from '@/components/books/SampleBookReader';
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { GlobalFooter } from '@/components/brand/GlobalFooter';
 import { ContactForm } from '@/components/brand/ContactForm';
 import { usePageMeta } from '@/hooks/usePageMeta';
@@ -142,7 +144,8 @@ export default function BrandLanding() {
 
       <ZodiacPlate />
 
-      <section aria-labelledby="live-h" className="obs-panel p-5 sm:p-8"><PanelTitle eyebrow="Astral Mapping Center" live><span id="live-h">Live chart</span></PanelTitle><SampleChartDemo /></section>
+      <section aria-labelledby="live-h" className="obs-panel p-5 sm:p-8"><PanelTitle eyebrow="Astral Mapping Center" live><span id="live-h">Live chart</span></PanelTitle><SampleChartDemo />
+        <div className="mt-6 flex flex-wrap items-center gap-3"><Sheet><SheetTrigger asChild><Button variant="outline">Read the first ten pages</Button></SheetTrigger><SheetContent side="right" className="w-full overflow-y-auto sm:max-w-2xl"><SheetHeader><SheetTitle>The first ten pages</SheetTitle><SheetDescription>A sample AstroBook for a fictional reader, written from a calculated chart. Yours is written from your own chart.</SheetDescription></SheetHeader><div className="mt-6"><SampleBook maxPages={10} cta={<Button asChild><Link to="/auth?next=/start">Start your own chart</Link></Button>} /></div></SheetContent></Sheet><Button asChild><Link to="/auth?next=/start">Start your own chart</Link></Button></div></section>
 
       <section aria-label="Zodaci at a glance" className="obs-panel"><dl className="grid grid-cols-2 gap-5 px-5 py-6 lg:grid-cols-4">{FACTS.map(([n, l]) => <div key={l}><dt className="sr-only">{l}</dt><dd className="font-display text-3xl text-primary">{n}</dd><dd aria-hidden className="text-sm text-muted-foreground">{l}</dd></div>)}</dl></section>
 

@@ -60,18 +60,24 @@ export function PublicLibrary() {
 function LibraryInner() {
   const { entries, loading, error, denied, retry } = useRoomIndex();
   const [q, setQ] = useState('');
+  const [part, setPart] = useState<string | null>(null);
+  const parts = useMemo(() => [...new Set(entries.map(e => e.part))], [entries]);
   const groups = useMemo(() => {
     const needle = q.trim().toLowerCase();
     const m = new Map<string, MbEntry[]>();
-    entries.filter(e => !needle || [e.title, e.label, e.part, ...e.sections].join(' ').toLowerCase().includes(needle))
+    entries.filter(e => (!part || e.part === part) && (!needle || [e.title, e.label, e.part, ...e.sections].join(' ').toLowerCase().includes(needle)))
       .forEach(e => m.set(e.part, [...(m.get(e.part) ?? []), e]));
     return [...m.entries()];
-  }, [entries, q]);
+  }, [entries, q, part]);
   return (
     <Frame>
       <h1 className="font-display text-4xl mb-2">Every source, chapter and section</h1>
       <p className="text-muted-foreground mb-6">{entries.length ? `Browse and read ${entries.length === 1 ? 'the 1 chapter' : `all ${entries.length} chapters`} open to your account. ` : ''}This room and every chapter open only for the edition’s owner and the people she shares it with.</p>
-      <Input aria-label="Find a chapter or section" value={q} onChange={e => setQ(e.target.value)} placeholder="Find a chapter or section…" className="mb-8" />
+      <Input aria-label="Find a chapter or section" value={q} onChange={e => setQ(e.target.value)} placeholder="Find a chapter or section…" className="mb-4" />
+      {parts.length > 1 && <div role="group" aria-label="Show one document" className="mb-8 flex flex-wrap gap-2">
+        <Button size="sm" variant={part ? 'outline' : 'default'} aria-pressed={!part} onClick={() => setPart(null)}>All documents</Button>
+        {parts.map(p => <Button key={p} size="sm" variant={part === p ? 'default' : 'outline'} aria-pressed={part === p} onClick={() => setPart(part === p ? null : p)}>{p}</Button>)}
+      </div>}
       {loading && <p role="status">Opening the chapter index…</p>}
       {denied && <NoEditionAccess owner="April" onRetry={retry} />}
       {error && <div className="space-y-3"><p role="alert">The chapter index couldn’t be opened.</p><Button variant="outline" onClick={retry}>Try again</Button></div>}
@@ -86,7 +92,7 @@ function LibraryInner() {
             {list.map(e => (
               <li key={e.id} className="p-4">
                 <Link to={`/read/${e.id}`} className="font-medium hover:underline">{e.title}</Link>
-                <span className="text-xs text-muted-foreground ml-2">{e.label} · {e.words.toLocaleString()} words</span>
+                <span className="text-xs text-muted-foreground ml-2">{e.label} · {e.words.toLocaleString()} words · about {Math.max(1, Math.round(e.words / 230))} min</span>
                 {e.sections.length > 0 && <p className="text-xs text-muted-foreground mt-1">{e.sections.slice(0, 12).join(' · ')}</p>}
               </li>
             ))}
