@@ -27,6 +27,16 @@ const cache = new Map<string, Promise<string>>();
 supabase.auth.onAuthStateChange((event) => { if (event !== 'TOKEN_REFRESHED') cache.clear(); });
 if (typeof window !== 'undefined') window.addEventListener(ACCESS_CHANGED_EVENT, () => cache.clear());
 
+/** Clear only the rejected session, never a different account that signed in during the request. */
+export async function rejectPrivateSession(accessToken: string): Promise<never> {
+  const { data } = await supabase.auth.getSession();
+  if (data.session?.access_token === accessToken) {
+    cache.clear();
+    await supabase.auth.signOut({ scope: 'local' }).catch(() => undefined);
+  }
+  throw new ContentLockedError(true);
+}
+
 export function loadProtectedText(area: Area, file: string): Promise<string> {
   const key = `${area}/${file}`;
   const hit = cache.get(key);
@@ -46,7 +56,7 @@ async function fetchProtectedText(area: Area, file: string): Promise<string> {
   if (error || !data?.content) {
     const context = (error as { context?: Response } | null)?.context;
     const detail = context ? await context.clone().json().catch(() => null) : data;
-    if (context?.status === 401 || detail?.code === 'SIGNED_OUT') throw new ContentLockedError(true);
+    if (context?.status === 401 || detail?.code === 'SIGNED_OUT') return rejectPrivateSession(s.session.access_token);
     if (context?.status === 403 || detail?.code === 'NO_ACCESS') throw new ContentLockedError();
     throw new Error(detail?.error ?? 'This document could not be opened. Please try again.');
   }

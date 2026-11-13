@@ -1,5 +1,5 @@
 import { supabase } from '@/integrations/supabase/client';
-import { ContentLockedError } from '@/lib/protectedContent';
+import { ContentLockedError, rejectPrivateSession } from '@/lib/protectedContent';
 
 import { retryOnce } from './retryOnce';
 
@@ -18,7 +18,7 @@ async function attemptDownload(): Promise<Record<string, Record<string, unknown>
   });
   const context = (error as { context?: Response } | null)?.context;
   const detail = context ? await context.clone().json().catch(() => null) : data;
-  if (context?.status === 401 || detail?.code === 'SIGNED_OUT') throw new ContentLockedError(true);
+  if (context?.status === 401 || detail?.code === 'SIGNED_OUT') return rejectPrivateSession(session.session.access_token);
   if (context?.status === 403 || detail?.code === 'NO_ACCESS') throw new ContentLockedError();
   if (error || typeof data?.url !== 'string') throw new Error(detail?.error ?? 'The private edition could not load.');
   const download = await fetch(data.url, { signal: AbortSignal.timeout(20000) });
