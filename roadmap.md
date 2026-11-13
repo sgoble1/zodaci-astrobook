@@ -8,7 +8,7 @@ Order follows resource Part 6.3. Ticked when done and tested.
 - [x] R2 Shop basket: queued actions, buyer-facing errors with retry, expired-cart rebuild, missing line IDs restored, prices/lines refreshed from Shopify, line paging, timeouts + read-only retries, buyers never see Shopify billing text (Admin gets detail), catalog truncation flagged (tested).
 - [x] R3 (sending waits on the owner setting up the email domain) Lovable email switch (Lulu shipped, newsletter, contact) + signup/contact abuse limits, byte limit, no repeat welcome, confirmation, stored consent, delivery status, contact "saved" response (tests).
 - [x] R4 Payment webhook recovery records + Admin reconcile list + referral award retry (tests).
-- [ ] R5 (done Nov 13: activity logs, founder feeds, investor live-vs-planned; open: board edit/undo/paging, glance retry) Developer board errors/edit/undo/paging; founder glance error+retry, credit packs in balance, stable note IDs; investor page live vs planned; activity logs + founder feeds + investor update.
+- [x] R5 Developer board errors/edit/undo/paging; founder glance error+retry, credit packs in balance, stable note IDs; investor page live vs planned; activity logs + founder feeds + investor update.
 - [ ] R6 Track B batches 9–42 (audit each, finish gaps), then the 6.2 signed-in verification sweep.
 - [ ] R7 Tracks C–D (AI-credit work) only after R1–R6; Track E items stay listed with their owner asks.
 

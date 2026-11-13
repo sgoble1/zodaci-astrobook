@@ -24,6 +24,7 @@ const LIVE = [
   'Personal readings by tier, chart-aware AI counselors that replay full sessions, workbook tools and a shared “Reading Together” space for couples.',
   'Studio-voiced personal podcasts written from each member’s chart, saved to a private library.',
   'Creator Studio: chart wallpapers, posters, journal pages and affirmation cards to download or save, plus one-time AI credit packs.',
+  'Chart-matched shop picks: members see shop items chosen from their own Sun, Moon and Rising signs, and pick one of twelve drawn observatory characters to represent them across the site.',
   'Other Systems: Vedic, Chinese Ba Zi, numerology, Feng Shui and Flying Stars, Nine Star Ki, Tzolk’in and more — all from the same birth data.',
   'Six-volume AstroBook builder with cover designer, previews and print-ready PDFs; three fully illustrated sample pages on the public site.',
   'AstroComic Issue #1: seven drawn pages, a 3D page-turning preview, a full read-through and a print pre-order with specs and a delivery timeline.',
@@ -43,14 +44,13 @@ const SOCIAL = [
   ['Explain every match', 'Each score shows the exact aspects behind it, so members see why they connect and where they may clash.'],
 ];
 const FUTURE = [
-  ['Chart-matched shop', 'Each member sees posters, stickers, notebooks, gifts and print editions picked from their own placements — a Leo Rising gets gold-leaf Leo art, a Capricorn Moon a structured planner. Recommendations come from the chart the member already has, so no extra data is needed.'],
-  ['Make your own comic hero', 'Members design their AstroComic character: face, hair, skin tone, build, clothing and signature colours, saved once and reused in every monthly issue.'],
+  ['Make your own comic hero', 'Today members choose one of twelve drawn characters to represent them. Next, a full designer: face, hair, skin tone, build, clothing and signature colours, saved once and reused in every monthly issue.'],
   ['Three illustration styles', 'Choose how each issue is drawn: Atomic Zodiac (1950s golden-age comic, the house style), Celestial Manga (clean line and screen tones) or Painted Myth (rich painted fantasy). Same chart story, three looks.'],
-  ['Creator Studio downloads', 'Members make and keep their own pieces — phone wallpapers, printable chart posters, affirmation cards, journal pages, podcast episodes and comic panels — saved to their library.'],
+  ['Printed creations', 'Order a Creator Studio poster as a framed print, a card set as a deck or journal pages as a bound planner, made by the existing print partner.'],
 ];
 const WHY_TRUST = [
   ['Calculated, not guessed', 'Positions come from a published astronomical engine using the exact birth time, place and historical time zone. Automated tests check planets, angles and houses against professional references to within one degree.'],
-  ['Every reading cites its facts', 'Readings separate the chart facts (sign, degree, house, aspect) from the interpretation, so members can see exactly what each sentence is built on.'],
+  ['Facts shown beside the reading', 'Long readings show the placements their text names (sign, house, aspect) in a facts column, and source answers carry inline source tags, so members can check what a passage is built on.'],
   ['Honest about uncertainty', 'No birth time means no houses or Rising sign claims. Near a sign boundary, the reading says so. Nothing about family or childhood is invented from symbols.'],
   ['Delivered to one person', 'Each reading, book, podcast and comic is written for one saved chart and kept private to that account.'],
 ];
@@ -67,7 +67,7 @@ type Metrics = { members: number; charts: number; paid: number; readings: number
 
 const STUDIO = [
   ['Live today', 'Pro and Cosmic members design phone wallpapers, 8 × 12 in chart posters, journal and planner pages and affirmation cards from their exact placements, then download them or keep them in a private library. They can also write new Masterbook chapters and voiced podcasts on any topic.'],
-  ['Why it earns', 'Every design is a ready-made product: one tap turns a poster into a framed print, a card set into a deck, a journal page into a bound planner. Each member makes things only they can have, so the urge to print and gift is strong.'],
+  ['Why it earns', 'Every design is one of a kind, made from one person’s chart, so it is a natural gift. Ordering a design as a framed print, deck or bound planner is planned next; today members download or save them.'],
   ['Credit packs', `AI creations use credits. Members who want more buy one-time packs from $${CREDIT_PACKS[0].price} to $${CREDIT_PACKS[CREDIT_PACKS.length - 1].price} — revenue that grows with engagement, on top of the membership.`],
   ['With the social network', 'Shared creations spread the brand: a friend sees a chart poster, makes their own, then orders a couple’s print. Social + Creator Studio + shop is a loop where every share can become a sale.'],
 ];
@@ -139,7 +139,7 @@ export default function Investors() {
           <p className="mt-3 text-muted-foreground">Yearly revenue if Zodaci reaches each audience size, using today’s real prices (Pro {PLAN_PRICE.full.month}, Cosmic {PLAN_PRICE.creator.month}, books {money(low.price)}–{money(high.price)}). Conversion rates are assumptions in line with typical subscription apps, shown so you can judge them.</p></div>
         <div className="overflow-x-auto"><table className="w-full text-sm"><thead><tr className="text-left text-muted-foreground"><th className="p-2">Free members</th><th className="p-2">Pro</th><th className="p-2">Cosmic</th><th className="p-2">Buy a book</th><th className="p-2">Shop, 2 orders/yr</th><th className="p-2 text-right">Yearly revenue</th></tr></thead>
           <tbody>{SCENARIOS.map(x => <tr key={x.members} className="border-t border-border/60"><td className="p-2">{x.members.toLocaleString()}</td><td className="p-2">{x.pro * 100}%</td><td className="p-2">{x.cosmic * 100}%</td><td className="p-2">{x.book * 100}%</td><td className="p-2">{x.shop * 100}%</td><td className="p-2 text-right font-display text-xl text-gold">{usd(yearly(x))}</td></tr>)}</tbody></table></div>
-        <p className="text-sm text-muted-foreground">Assumes an average book of ${BOOK_AVG} and shop order of ${SHOP_AVG}; excludes comics, gifts and costs. Development cost so far this billing period: {formatUsd(creditCost(BUILD_CREDIT_SNAPSHOT.usedThisPeriod))} ({BUILD_CREDIT_SNAPSHOT.usedThisPeriod} build credits at {formatUsd(DOLLARS_PER_BUILD_CREDIT)} each). The bigger upside is the combination: a social network gives every member reasons to return daily, and every visit shows products matched to their chart — compatibility gifts, couple’s books, friends’ posters — so community activity turns directly into shop and book sales.</p>
+        <p className="text-sm text-muted-foreground">Assumes an average book of ${BOOK_AVG} and shop order of ${SHOP_AVG}; excludes comics, gifts and costs. This is a simple gross-revenue view; the “Prices, costs and contribution” section below uses its own conversion assumptions and subtracts estimated costs, so its totals differ on purpose. Development cost so far this billing period: {formatUsd(creditCost(BUILD_CREDIT_SNAPSHOT.usedThisPeriod))} ({BUILD_CREDIT_SNAPSHOT.usedThisPeriod} build credits at {formatUsd(DOLLARS_PER_BUILD_CREDIT)} each). The bigger upside is the combination: a social network gives every member reasons to return daily, and every visit shows products matched to their chart — compatibility gifts, couple’s books, friends’ posters — so community activity turns directly into shop and book sales.</p>
       </section>
 
       <section aria-labelledby="inv-cs" className="space-y-5">

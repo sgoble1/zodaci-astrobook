@@ -7,6 +7,9 @@ import type { OfficialEdition } from '@/lib/officialEditions';
  */
 export type FounderNote = { date: string; title: string; text: string; to?: string; cta?: string; for: OfficialEdition[] };
 
+/** Stable list key: date + audience + title, so two notes with the same title on different days never collide. */
+export const noteKey = (n: FounderNote) => `${n.date}:${n.for.join('+')}:${n.title}`;
+
 export const FOUNDER_NEWS: FounderNote[] = [
   { date: '2026-11-13', for: ['april', 'shane', 'zac'], title: 'The shop basket tells you what happened', text: 'If adding something to your basket fails, you’ll see a short note and a Try again button instead of nothing happening.', to: '/store', cta: 'Visit the shop' },
   { date: '2026-11-13', for: ['shane'], title: 'Payments that need a look', text: 'Admin → Payments now lists any payment the site received but couldn’t finish, and friend-referral rewards retry on their own.', to: '/admin?tab=stripe', cta: 'Open Payments' },
