@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { NatalWheel } from '@/components/chart/NatalWheel';
 import { BIRTH, PHASES, PLACEMENTS } from '@/content/april';
 import { UpdatesFeed } from '@/components/common/UpdatesFeed';
+import { MyFounderNews } from '@/components/common/FounderNews';
 import heroImg from '@/assets/pages/april-observatory-atlas.jpg';
 import { SharedChatFeed } from '@/components/shared/SharedChatFeed';
 import { Button } from '@/components/ui/button';
@@ -102,6 +103,7 @@ export default function AprilHome() {
           </div>
         </div>
       </section>
+      <MyFounderNews />
       <SharedChatFeed />
       <UpdatesFeed />
     </div>

@@ -10,6 +10,8 @@ import { PRICE_BANDS, ShopSidebar, type PriceBand, type ShopFilters } from '@/co
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { PRODUCT_BY_HANDLE_QUERY, storefrontApiRequest, fetchAllProducts, formatMoney, inStock, type ShopifyProduct } from '@/lib/shopify';
 import { useCartStore } from '@/stores/cartStore';
+import { EMPTY_DETAILS, detailsValid, needsBirthDetails, toLineAttributes, type CartAttribute, type PersonalDetails } from '@/lib/shopifyCart';
+import { PersonalDetailsForm } from '@/components/store/PersonalDetailsForm';
 import { PRIORITY_SHELVES, comicIssueTitle, compareAtomicAesthetic, isAtomicZodiac, isPortraitProduct, productPriority, shopTitle } from '@/lib/shopPresentation';
 import { PersonalizationCallout } from '@/components/books/PersonalizationStory';
 import { ProductCard, ShopShelf, SpotlightCard } from '@/components/store/ShopShelves';
@@ -27,11 +29,12 @@ import { matchesShopType, shopFilterLabel } from '@/lib/shopDepartments';
 function useAdd() {
   const addItem = useCartStore(s => s.addItem);
   const loading = useCartStore(s => s.isLoading);
-  const add = async (product: ShopifyProduct, variantId?: string) => {
+  const add = async (product: ShopifyProduct, variantId?: string, attributes?: CartAttribute[]) => {
     const v = product.node.variants.edges.find(e => e.node.id === variantId)?.node ?? product.node.variants.edges.find(e => e.node.availableForSale)?.node;
-    if (!v || !v.availableForSale) { toast.error('That item is sold out right now.'); return; }
-    await addItem({ product, variantId: v.id, variantTitle: v.title, price: v.price, quantity: 1, selectedOptions: v.selectedOptions });
+    if (!v || !v.availableForSale) { toast.error('That item is sold out right now.'); return false; }
+    await addItem({ product, variantId: v.id, variantTitle: v.title, price: v.price, quantity: 1, selectedOptions: v.selectedOptions, attributes });
     toast.success('Added to cart', { description: product.node.title, position: 'top-center' });
+    return true;
   };
   return { add, loading };
 }
@@ -228,6 +231,8 @@ export function ProductDetail() {
   const [attempt, setAttempt] = useState(0);
   const [variantId, setVariantId] = useState('');
   const [image, setImage] = useState(0);
+  const [details, setDetails] = useState<PersonalDetails>(EMPTY_DETAILS);
+  const [tried, setTried] = useState(false);
   const { add, loading } = useAdd();
   usePageMeta(product ? `${product.node.title} · Zodaci Shop` : 'Zodaci Shop', product?.node.description.slice(0, 150) || 'Zodaci Shop product.');
   useEffect(() => {
@@ -257,6 +262,13 @@ export function ProductDetail() {
   const portrait = isPortraitProduct(n.title, n.productType ?? '', n.tags);
   const shown = shopTitle(n.title, n.productType ?? '');
   const isComic = /astro\s*comic/i.test(`${n.title} ${n.productType ?? ''}`);
+  const personal = needsBirthDetails(n);
+  const addThis = async () => {
+    if (!personal) return void add(product, variantId);
+    setTried(true);
+    if (!detailsValid(details)) { document.querySelector<HTMLElement>('[aria-invalid="true"]')?.focus(); return; }
+    if (await add(product, variantId, toLineAttributes(details, v?.title))) { setDetails(EMPTY_DETAILS); setTried(false); }
+  };
   return (
     <div className="mx-auto max-w-5xl space-y-10 px-4 py-10">
       <div className="flex items-center justify-between"><Link to="/store" className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline">← The shop</Link><CartDrawer /></div>
@@ -271,7 +283,8 @@ export function ProductDetail() {
           {shown.badge && <p className="inline-block rounded-full bg-accent px-3 py-0.5 font-label text-sm tracking-wider text-accent-foreground">{shown.badge}</p>}
           <p className="text-2xl font-semibold">{formatMoney(v?.price ?? n.priceRange.minVariantPrice)}</p>
           {n.variants.edges.length > 1 && <div className="space-y-2"><p className="text-sm text-muted-foreground">{options.map(o => o.name).join(' / ') || 'Option'}</p><div className="flex flex-wrap gap-2">{n.variants.edges.map(e => <Button key={e.node.id} size="sm" aria-pressed={e.node.id === variantId} variant={e.node.id === variantId ? 'default' : 'outline'} disabled={!e.node.availableForSale} onClick={() => setVariantId(e.node.id)}>{e.node.title}{!e.node.availableForSale && ' · sold out'}</Button>)}</div></div>}
-          {available ? <Button size="lg" onClick={() => add(product, variantId)} disabled={loading}>{loading ? <Loader2 className="h-4 w-4 animate-spin" aria-label="Adding" /> : 'Add to cart'}</Button> : <Button size="lg" variant="outline" disabled>Sold out</Button>}
+          {available && personal && <PersonalDetailsForm value={details} onChange={setDetails} showErrors={tried} product={isComic ? 'comic' : /book/i.test(n.productType ?? '') ? 'book' : 'piece'} />}
+          {available ? <Button size="lg" onClick={() => void addThis()} disabled={loading}>{loading ? <Loader2 className="h-4 w-4 animate-spin" aria-label="Adding" /> : 'Add to cart'}</Button> : <Button size="lg" variant="outline" disabled>Sold out</Button>}
           <p className="whitespace-pre-line text-muted-foreground">{n.description}</p>
           {portrait && <PersonalizationCallout product={isComic ? 'comic' : 'book'} />}
           {(options.length > 0 || v) && <section aria-labelledby="specs" className="space-y-2 border-t border-border pt-4">

@@ -7,6 +7,7 @@ import { fmtLon, type ChartResult } from '@/lib/astro';
 import { fetchAllProducts, formatMoney, inStock, type ShopifyProduct } from '@/lib/shopify';
 import { signPicks, type ChartSigns } from '@/lib/shopPresentation';
 import { useCartStore } from '@/stores/cartStore';
+import { needsBirthDetails } from '@/lib/shopifyCart';
 
 /** The member's own calculated signs. Rising only when the birth time is known; never guessed from anything else. */
 export function chartSigns(chart: ChartResult, timed: boolean): ChartSigns | null {
@@ -67,7 +68,7 @@ export function SignRecommendations({ chart, timed }: { chart: ChartResult; time
                 <p className="font-label text-xs tracking-[0.14em] text-primary">Your {role} sign · {sign}</p>
                 <Link to={`/product/${p.node.handle}`} className="font-display text-lg leading-snug hover:underline">{p.node.title}</Link>
                 <p className="text-sm text-muted-foreground">{formatMoney(p.node.priceRange.minVariantPrice)}</p>
-                <Button size="sm" variant="outline" className="mt-auto w-fit" disabled={adding} onClick={() => void add(p)}>Add to cart</Button>
+                {needsBirthDetails(p.node) ? <Button asChild size="sm" variant="outline" className="mt-auto w-fit"><Link to={`/product/${p.node.handle}`}>Personalise</Link></Button> : <Button size="sm" variant="outline" className="mt-auto w-fit" disabled={adding} onClick={() => void add(p)}>Add to cart</Button>}
               </div>
             </li>
           );

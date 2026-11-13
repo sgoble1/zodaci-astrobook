@@ -4,6 +4,7 @@ import { ArrowRight, ChevronLeft, ChevronRight, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { formatMoney, inStock, type ShopifyProduct } from '@/lib/shopify';
 import { isAtomicZodiac, isPortraitProduct, shopTitle } from '@/lib/shopPresentation';
+import { needsBirthDetails } from '@/lib/shopifyCart';
 import { cn } from '@/lib/utils';
 
 type Add = (p: ShopifyProduct) => void;
@@ -31,7 +32,9 @@ export function ProductCard({ p, onAdd, adding, className }: { p: ShopifyProduct
         <p className="line-clamp-2 text-sm text-muted-foreground">{p.node.description}</p>
         <div className="mt-auto flex items-center justify-between gap-2 pt-2">
           <span className="font-label text-lg tracking-wider text-primary">{p.node.variants.edges.length > 1 ? 'From ' : ''}{formatMoney(p.node.priceRange.minVariantPrice)}</span>
-          {available
+          {available && needsBirthDetails(p.node)
+            ? <Button asChild size="sm" variant="signal"><Link to={`/product/${p.node.handle}`} aria-label={`Personalise ${title}`}>Personalise</Link></Button>
+            : available
             ? <Button size="sm" variant="signal" onClick={() => onAdd(p)} disabled={adding} aria-label={`Add ${title} to cart`}>{adding ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden /> : 'Add to cart'}</Button>
             : <Button size="sm" variant="outline" disabled>Sold out</Button>}
         </div>

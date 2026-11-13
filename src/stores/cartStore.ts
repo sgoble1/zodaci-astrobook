@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import { storefrontApiRequest, type ShopifyProduct } from '@/lib/shopify';
+import { lineKey, sameAttributes, type CartAttribute } from '@/lib/shopifyCart';
 
 export interface CartItem {
   lineId: string | null;
@@ -10,12 +11,18 @@ export interface CartItem {
   price: { amount: string; currencyCode: string };
   quantity: number;
   selectedOptions: Array<{ name: string; value: string }>;
+  /** Fulfilment details for personalised items (see lib/shopifyCart). */
+  attributes?: CartAttribute[];
+  /** Cart identity: variant plus attributes. Older saved carts fall back to the variant id. */
+  key?: string;
 }
+
+export const keyOf = (i: Pick<CartItem, 'key' | 'variantId' | 'attributes'>) => i.key ?? lineKey(i.variantId, i.attributes);
 
 type UserError = { field: string[] | null; message: string };
 
 const CART_QUERY = `query cart($id: ID!) { cart(id: $id) { id totalQuantity } }`;
-const LINES = `lines(first: 100) { edges { node { id merchandise { ... on ProductVariant { id } } } } }`;
+const LINES = `lines(first: 100) { edges { node { id attributes { key value } merchandise { ... on ProductVariant { id } } } } }`;
 const CART_CREATE = `mutation cartCreate($input: CartInput!) { cartCreate(input: $input) { cart { id checkoutUrl ${LINES} } userErrors { field message } } }`;
 const CART_ADD = `mutation cartLinesAdd($cartId: ID!, $lines: [CartLineInput!]!) { cartLinesAdd(cartId: $cartId, lines: $lines) { cart { id ${LINES} } userErrors { field message } } }`;
 const CART_UPDATE = `mutation cartLinesUpdate($cartId: ID!, $lines: [CartLineUpdateInput!]!) { cartLinesUpdate(cartId: $cartId, lines: $lines) { cart { id } userErrors { field message } } }`;
@@ -24,10 +31,12 @@ const CART_REMOVE = `mutation cartLinesRemove($cartId: ID!, $lineIds: [ID!]!) { 
 export function formatCheckoutUrl(checkoutUrl: string): string {
   try { const url = new URL(checkoutUrl); url.searchParams.set('channel', 'online_store'); return url.toString(); } catch { return checkoutUrl; }
 }
+const lineInput = (item: CartItem) => ({ quantity: item.quantity, merchandiseId: item.variantId, ...(item.attributes?.length ? { attributes: item.attributes } : {}) });
+type LineNode = { node: { id: string; attributes?: CartAttribute[]; merchandise: { id: string } } };
 const notFound = (errs: UserError[]) => errs.some(e => /cart not found|does not exist/i.test(e.message));
 
 async function createCart(item: CartItem) {
-  const data = await storefrontApiRequest(CART_CREATE, { input: { lines: [{ quantity: item.quantity, merchandiseId: item.variantId }] } });
+  const data = await storefrontApiRequest(CART_CREATE, { input: { lines: [lineInput(item)] } });
   if (data?.data?.cartCreate?.userErrors?.length) { console.error('Cart creation failed:', data.data.cartCreate.userErrors); return null; }
   const cart = data?.data?.cartCreate?.cart;
   const lineId = cart?.lines?.edges?.[0]?.node?.id;
@@ -35,11 +44,11 @@ async function createCart(item: CartItem) {
   return { cartId: cart.id as string, checkoutUrl: formatCheckoutUrl(cart.checkoutUrl), lineId: lineId as string };
 }
 async function addLine(cartId: string, item: CartItem) {
-  const data = await storefrontApiRequest(CART_ADD, { cartId, lines: [{ quantity: item.quantity, merchandiseId: item.variantId }] });
+  const data = await storefrontApiRequest(CART_ADD, { cartId, lines: [lineInput(item)] });
   const errs: UserError[] = data?.data?.cartLinesAdd?.userErrors || [];
   if (notFound(errs)) return { success: false, cartNotFound: true };
   if (errs.length) return { success: false };
-  const line = (data?.data?.cartLinesAdd?.cart?.lines?.edges || []).find((l: { node: { merchandise: { id: string } } }) => l.node.merchandise.id === item.variantId);
+  const line = (data?.data?.cartLinesAdd?.cart?.lines?.edges || []).find((l: LineNode) => l.node.merchandise.id === item.variantId && sameAttributes(l.node.attributes, item.attributes));
   return { success: true, lineId: line?.node?.id as string | undefined };
 }
 async function updateLine(cartId: string, lineId: string, quantity: number) {
@@ -58,8 +67,9 @@ async function removeLine(cartId: string, lineId: string) {
 interface CartStore {
   items: CartItem[]; cartId: string | null; checkoutUrl: string | null; isLoading: boolean; isSyncing: boolean;
   addItem: (item: Omit<CartItem, 'lineId'>) => Promise<void>;
-  updateQuantity: (variantId: string, quantity: number) => Promise<void>;
-  removeItem: (variantId: string) => Promise<void>;
+  /** Lines are addressed by keyOf(item), so the same variant made for two people stays separate. */
+  updateQuantity: (key: string, quantity: number) => Promise<void>;
+  removeItem: (key: string) => Promise<void>;
   clearCart: () => void; syncCart: () => Promise<void>; getCheckoutUrl: () => string | null;
 }
 
@@ -67,45 +77,46 @@ export const useCartStore = create<CartStore>()(persist((set, get) => ({
   items: [], cartId: null, checkoutUrl: null, isLoading: false, isSyncing: false,
   addItem: async (item) => {
     const { items, cartId, clearCart } = get();
-    const existing = items.find(i => i.variantId === item.variantId);
+    const key = lineKey(item.variantId, item.attributes);
+    const existing = items.find(i => keyOf(i) === key);
     set({ isLoading: true });
     try {
       if (!cartId) {
         const r = await createCart({ ...item, lineId: null });
-        if (r) set({ cartId: r.cartId, checkoutUrl: r.checkoutUrl, items: [{ ...item, lineId: r.lineId }] });
+        if (r) set({ cartId: r.cartId, checkoutUrl: r.checkoutUrl, items: [{ ...item, key, lineId: r.lineId }] });
       } else if (existing) {
         if (!existing.lineId) return;
         const q = existing.quantity + item.quantity;
         const r = await updateLine(cartId, existing.lineId, q);
-        if (r.success) set({ items: get().items.map(i => i.variantId === item.variantId ? { ...i, quantity: q } : i) });
+        if (r.success) set({ items: get().items.map(i => keyOf(i) === key ? { ...i, quantity: q } : i) });
         else if (r.cartNotFound) clearCart();
       } else {
         const r = await addLine(cartId, { ...item, lineId: null });
-        if (r.success) set({ items: [...get().items, { ...item, lineId: r.lineId ?? null }] });
+        if (r.success) set({ items: [...get().items, { ...item, key, lineId: r.lineId ?? null }] });
         else if (r.cartNotFound) clearCart();
       }
     } catch (e) { console.error('Failed to add item:', e); } finally { set({ isLoading: false }); }
   },
-  updateQuantity: async (variantId, quantity) => {
-    if (quantity <= 0) return get().removeItem(variantId);
+  updateQuantity: async (key, quantity) => {
+    if (quantity <= 0) return get().removeItem(key);
     const { items, cartId, clearCart } = get();
-    const item = items.find(i => i.variantId === variantId);
+    const item = items.find(i => keyOf(i) === key);
     if (!item?.lineId || !cartId) return;
     set({ isLoading: true });
     try {
       const r = await updateLine(cartId, item.lineId, quantity);
-      if (r.success) set({ items: get().items.map(i => i.variantId === variantId ? { ...i, quantity } : i) });
+      if (r.success) set({ items: get().items.map(i => keyOf(i) === key ? { ...i, quantity } : i) });
       else if (r.cartNotFound) clearCart();
     } catch (e) { console.error(e); } finally { set({ isLoading: false }); }
   },
-  removeItem: async (variantId) => {
+  removeItem: async (key) => {
     const { items, cartId, clearCart } = get();
-    const item = items.find(i => i.variantId === variantId);
+    const item = items.find(i => keyOf(i) === key);
     if (!item?.lineId || !cartId) return;
     set({ isLoading: true });
     try {
       const r = await removeLine(cartId, item.lineId);
-      if (r.success) { const next = get().items.filter(i => i.variantId !== variantId); if (next.length) set({ items: next }); else clearCart(); }
+      if (r.success) { const next = get().items.filter(i => keyOf(i) !== key); if (next.length) set({ items: next }); else clearCart(); }
       else if (r.cartNotFound) clearCart();
     } catch (e) { console.error(e); } finally { set({ isLoading: false }); }
   },

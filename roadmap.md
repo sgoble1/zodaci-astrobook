@@ -487,7 +487,11 @@ Audit Oct 29: Chat/counselors already use the member's chart; podcast/custom pag
 - [x] Batch 4 (part): welcome "first ten pages" sample drawer
 - [x] Batch 5 (part): shipped email with tracking from print webhook
 - [x] Batch 7 (part): four SVG teaching diagrams on Learn
-- [ ] Batch 1b: next-step links on dead-end pages
-- [ ] Batch 4b: per-person first-ten-page previews
-- [ ] Batch 5b: automatic print dispatch after 2h hold (needs Lulu keys); monthly credit refresh check
-- [ ] Batches 6, 8–42: pending, run in order as credits allow
+- [x] Batch 1b: next-step links on dead-end pages (context, credits, creator, investors, developer)
+- [x] Batch 3b: plain-language "What's new for you" notes + account glance on April's, Shane's and Zac's homes (content/founderNews)
+- [x] Batch 4b: per-person first-ten-page AstroBook + AstroComic previews (library, official editions, comic page)
+- [x] Batch 5b: monthly credit refresh confirmed (calendar-month allowance in credit_status)
+- [ ] Batch 5c: automatic print dispatch after a hold — blocked: needs Lulu production keys and Shane's go-ahead (spends real money)
+- [x] Batch 6: personalised shop items ("personalized" tag) collect recipient birth details as cart-line attributes; cart lines keyed per recipient
+- [x] Batch 8: AstroComic issue switcher (next three issues) and planet cast art on previews
+- [ ] Batches 9–42: run in order

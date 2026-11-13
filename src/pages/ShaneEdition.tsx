@@ -24,7 +24,7 @@ import { PlanetOrb } from '@/components/chart/PlanetOrb';
 import { ThemeArt } from '@/components/common/ThemeArt';
 import { DashboardMosaic } from '@/components/observatory/DashboardMosaic';
 import { CurrentChapterPanel } from '@/components/observatory/CurrentChapterPanel';
-import { WhatsNew } from '@/components/common/WhatsNew';
+import { FounderNews } from '@/components/common/FounderNews';
 import { ChartWheelIcon, TelevisionIcon, LibraryIcon, StorefrontIcon } from '@/components/icons/RetroIcons';
 
 type EditionKey = 'shane' | 'zac';
@@ -198,7 +198,7 @@ function EditionHome({ area, entries, owns, full }: { area: EditionKey; entries:
           { to: '/store', title: 'Gift shop', text: '', cta: 'Open', icon: StorefrontIcon },
         ]} />
         <div id="edition-broadcast" className="scroll-mt-24"><CurrentChapterPanel chart={chart} name={copy.name} /></div>
-        <WhatsNew count={2} />
+        <FounderNews edition={area} owns={owns} count={3} />
       </>}
       <section className="gentle-fade grid items-center gap-10 lg:grid-cols-[1.1fr,0.9fr]">
         <div>

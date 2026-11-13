@@ -19,3 +19,4 @@
 - keepsakes builds certificate/Star Scroll rows from calculated positions only; the keepsake number is a stable reprint label, never presented as an official record.
 - founderAudit compares counts (chapters, words, files) with the saved platform_settings snapshot; it never handles founder text.
 - memberCharacter maps saved member_characters to comic stand-ins; unknown ids draw none.
+- shopifyCart decides which shop listings collect recipient birth details (explicit 'personalized' tag only) and sends them as underscore cart-line attributes; cart lines are keyed by variant + attributes so two recipients never merge.

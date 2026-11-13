@@ -1,6 +1,7 @@
 import { MemberDashboard } from '@/components/common/MemberDashboard';
 import { useAprilSpace } from '@/hooks/useAprilSpace';
 import { UpdatesFeed } from '@/components/common/UpdatesFeed';
+import { MyFounderNews } from '@/components/common/FounderNews';
 import { Link } from 'react-router-dom';
 import { AuthGate } from '@/components/common/AuthGate';
 import { useBookmarks } from '@/hooks/useBookmarks';
@@ -68,6 +69,7 @@ export default function Dashboard() {
     <div className="space-y-6">
       <EditionTV opening />
       <AuthGate what="see your dashboard">{() => <Inner />}</AuthGate>
+      <MyFounderNews />
       <SharedChatFeed />
       <UpdatesFeed limit={4} />
     </div>
