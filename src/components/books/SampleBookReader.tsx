@@ -86,7 +86,7 @@ export function SampleBook({ maxPages, cta }: { maxPages?: number; cta?: React.R
     return (
       <div className="space-y-3">
         <Button size="lg" disabled={state === 'busy'} onClick={() => void open()}><BookOpen />{state === 'busy' ? 'Composing the sample book…' : 'Open the sample book'}</Button>
-        {state === 'error' && <div role="alert" className="space-y-2"><p className="text-destructive text-sm">The sample book could not be composed.</p><Button variant="outline" onClick={() => void open()}>Retry sample</Button><p className="text-sm text-muted-foreground">Jules Harbor’s fictional sample includes chart facts, personal themes, work, relationships and reflection passages. No real member’s readings are used.</p></div>}
+        {state === 'error' && <div role="alert" className="space-y-2"><p className="text-destructive text-sm">The sample book could not be composed.</p><Button variant="outline" onClick={() => void open()}>Retry sample</Button><p className="text-sm text-muted-foreground">{SAMPLE_BIRTH.name}’s fictional sample includes chart facts, personal themes, work, relationships and reflection passages. No real member’s readings are used.</p></div>}
         <p className="text-xs text-muted-foreground">A short fictional sample with calculated chart facts and illustrative editorial passages. Your purchased book’s content and actual length are reviewed separately.</p>
       </div>
     );
