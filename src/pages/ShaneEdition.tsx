@@ -128,6 +128,15 @@ function ChapterView({ area, id, entries, text, owns, full, onRetry }: { area: E
   const i = (entries ?? []).findIndex(e => e.id === id);
   const e = entries?.[i]; const prev = i > 0 ? entries?.[i - 1] : undefined; const next = i >= 0 ? entries?.[i + 1] : undefined;
   const headingLevel = markdownSections(text ?? '', 3).length > 1 ? 3 : 2;
+  // The index lists every chapter this account may open, so an id outside it is a wrong address, not a connection problem.
+  if (entries && i < 0) return (
+    <article className="min-w-0 space-y-4">
+      <Link to={copy.base} className="font-smallcaps text-xs text-muted-foreground hover:text-foreground">← {full ? copy.title : `Shared from ${copy.name}’s Masterbook`}</Link>
+      <h1 className="text-3xl">Chapter not found</h1>
+      <p className="text-muted-foreground">{full ? `There is no chapter at this address in ${copy.name}’s edition.` : `This chapter isn’t one ${copy.name} has shared with you.`}</p>
+      <Button asChild variant="outline"><Link to={copy.base}>See the chapters</Link></Button>
+    </article>
+  );
   return (
     <article className="min-w-0">
       <Link to={copy.base} className="font-smallcaps text-xs text-muted-foreground hover:text-foreground">← {full ? copy.title : `Shared from ${copy.name}’s Masterbook`}</Link>
