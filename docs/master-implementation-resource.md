@@ -1,4 +1,6 @@
-# Zodaci Master Implementation Resource (Nov 13 2026)
+# Zodaci Master Implementation Resource — v2 (Nov 13 2026)
+
+v2 keeps every item from v1 and adds Part 6 (about 90 new items from a second pass). Work order is unchanged: do Part 6 Track A items alongside Track A.
 
 ## What you get
 One markdown file, `Zodaci_Master_Implementation_Resource.md`, saved to Files (and linked from roadmap.md as the single source to follow). It merges:
@@ -264,3 +266,115 @@ Status: Done / Partial / Missing / Blocked / Superseded. Cost: F free, L low AI,
 
 ## 5.9 Superseded — never rebuild
 Old subscription and book prices · Cormorant/Inter/DM Serif fonts · purple/teal/nebula themes · Mystic Ink/Helquist/Celestial Noir · Fallout imagery · Resend · Stripe refund/dispute/coupon admin · fake reviews/counts/scarcity/loading delays · client email allowlists or `admins` table · `/app/*` URLs · forcing demos to a named founder · title-based comic personalization.
+
+---
+
+# Part 6 — Deep analysis additions (v2, Nov 13 2026)
+Everything above is kept. These items were found in a second pass over all 26 documents, the code and chat history. None repeat Parts 1–5. Resend, Stripe refund/dispute admin, and old styles stay excluded.
+
+## 6.1 From code checked against documents
+### Shop cart (Shopify) — Track A, free
+| Item | Where | Status | Remains |
+|---|---|---|---|
+| Cart create/add/update/remove failures are silent (logged only) | cartStore.ts | Bug | Show a clear message and retry to the buyer |
+| Overlapping cart clicks use stale data | cartStore.ts | Bug | Queue cart actions |
+| Lines without a Shopify line ID can't be changed or removed | cartStore.ts | Bug | Rebuild those lines |
+| Expired cart clears everything | cartStore.ts | Partial | Recreate cart and repeat the action |
+| Sync checks only quantity; prices can go stale | cartStore.ts | Partial | Refresh lines and prices from Shopify |
+| Only first 100 cart lines / 20 variants / 20 catalog pages read | cartStore.ts, shopify.ts | Partial | Page through; flag truncation |
+| No timeout or retry on shop requests | shopify.ts | Missing | Bounded timeout + retry |
+| Buyers can see Shopify billing instructions meant for the owner | shopify.ts | Bug | Neutral "shop unavailable" for buyers; detail for admins |
+| Cart failure tests | — | Missing | Rejected, expired, overlapping, missing-ID cases |
+
+### Contact form and newsletter (moving to Lovable email) — Track A, free
+| Item | Status | Remains |
+|---|---|---|
+| No rate limit on newsletter signup or contact form | Missing | Per-address/IP limit before saving or sending |
+| Size limit trusts the request header only | Partial | Limit actual bytes read |
+| Re-signing up resends the welcome email | Bug | Send only on a new subscription |
+| No address confirmation (double opt-in) | Missing | Confirm before marketing sends |
+| Unsubscribe is "reply to unsubscribe" | Partial | One-click unsubscribe link + suppression list |
+| Consent time/form version not stored | Partial | Store with the signup |
+| Delivery failures not recorded; missing admin notify address silent | Bug | Record status; show warning in Admin |
+| Contact form returns "invalid" after the message was already saved | Bug | Return saved; retry the notice separately |
+| Contact form also still uses Resend | Superseded | Include in the Lovable email switch |
+| Tests for repeat signup, size, throttle, email down | Missing | Add |
+
+### Memberships and credit packs (Stripe) — Track A, free
+| Item | Status | Remains |
+|---|---|---|
+| Rejected credit-pack events only logged | Partial | Save a failure record visible in Admin |
+| Subscription with no linked account only logged | Partial | Hold for matching + Admin reconcile list |
+| Failed referral award not retried | Partial | Save and retry |
+| Webhook partial-failure and replay tests | Missing | Add |
+| Masterbook copy implies only Cosmic can write chapters/podcasts | Bug | Fix: Pro and Cosmic share features |
+| Prices typed directly in MyTopicReading, PublicInfo, Books, AstroComic page descriptions | Partial | Read from plans.ts / books.ts |
+
+### Developer dashboard — Track A/B, free
+| Item | Status | Remains |
+|---|---|---|
+| Load errors show as an empty board; stats skeleton never ends | Bug | Error + retry |
+| Every save error says "Only the developer…" | Bug | Separate permission vs network errors |
+| Access-check failure looks like "no access" | Partial | Retry option |
+| Double add on Enter + click; delete with no confirm/undo | Partial/Missing | Guard + undo |
+| Can't edit an item's title/details/priority/blocker/cost | Partial | Edit drawer |
+| "Show all" only shows loaded rows; refresh bursts reload everything | Partial | Server paging; debounce |
+| Saved layout read can crash in private browsing; 28px buttons | Bug/Partial | Safe read; larger touch targets |
+| Developer board tests | Missing | Add |
+
+### Admin image library — Track B, free
+Keyboard arrows on area tabs · description on the enlarged image · reliable download · broken-image fallback · rename "used on the site" to "in the image archive" unless usage is actually checked.
+
+### Founder update feeds — Track A, free
+"Your account at a glance" shows "…" forever if credits/orders fail (add error + retry) · include bought credit packs in the balance · Show all/fewer accessible and reset per edition · stable note IDs instead of titles.
+
+### Investor page — Track A, free (one item owner)
+| Item | Status | Remains |
+|---|---|---|
+| Creator Studio downloads listed as both future and live | Bug | Split "live now" from "planned" |
+| "One tap turns any design into a framed print/deck/planner" | Partial | Mark planned unless built |
+| Two different scenario models (page vs economics panel) | Partial | One model, or explain the difference |
+| Profit view excludes salaries, ads, shipping, artwork | Partial | Owner supplies cost budget (O) |
+| Universal promises ("every reading cites its facts") | Partial | Tie to what tests prove, or soften |
+
+### Scan results (no action unless noted)
+- No image tags missing alt text; no migration table without row security (policies themselves still need the Track A audit).
+- 72 page files don't call page titles directly — check which are covered by shared wrappers before the SEO batch (Batch 18).
+- Newsletter and contact are intentionally open to signed-out visitors; the fix is abuse limits, not sign-in.
+- Limits: deployed settings (email domain, gateway limits) can't be seen from code; check them before marking items missing.
+
+## 6.2 From chat history — interrupted or untested sessions (verify, then close)
+Many of these were finished later; each needs one check, not a rebuild.
+| Item | Chat source | Status | Cost | Remains |
+|---|---|---|---|---|
+| Shared Media Library folders (create/rename/delete, drag-to-folder, move, uploader-only delete) | Oct 4 (credits ran out, untested) | Verify | F | One signed-in check as Shane + April |
+| Relationship "coincidences" section (birthplaces, matching placements, shared numbers) | Oct 4 | Verify | F | Confirm present in April's Relationships; facts only |
+| Public footer, public AstroBook page, FAQ, Privacy, Terms | Oct 14 | Verify | F/O | Privacy and Terms were AI-drafted: owner/legal review before launch |
+| Plan comparison table on Pricing; community preview for visitors; About reading list | Oct 14 | Verify | F | Confirm live |
+| zodaci.com lands on the home page, not sign-in | Oct 14 | Verify | F | Check signed-out on custom domain |
+| Community "members can read all posts" scan warning | Oct 14 | Open | F | Mark as intended in security findings |
+| Admin "View April's content here" + return | Oct 19 | Verify | F | Must respect current rule: admin role alone never opens an edition |
+| /april shared report (now account-shared, no passwords) | Oct 19 | Verify | F | Old password wording removed everywhere |
+| Topic illustrations in chat results | Oct 19 | Missing? | L | Confirm or drop |
+| AstroComic product + subscriber pages (pause/skip/history/tracking) | Oct 20 | Verify | F | All routes reachable, no dead home links |
+| Referral award (friend 7 days Pro, referrer 30 days on first payment) | Oct 20 | Verify | F/O | Confirm switched on; reward type still an owner decision |
+| Academy 14 lessons reachable | Oct 20 | Verify | F | Link check |
+| Compatibility page (Master Build formula) | Oct 20 | Verify | F | Page exists + tests |
+| Section guide on long readings; book order tracking stages; honesty note in footer | Oct 20 | Verify | F | Confirm each |
+| Rename "Creator Studio" to "Cosmic Studio" | Oct 20 | Partial | F | Only 2 places use the new name; pick one name and apply everywhere (owner confirm) |
+| Character voices and "how we make every reading" copy written by AI | Oct 20 | Open | O | Owner review |
+| Promo film plays on published site (WebM + MP4) | Oct 21 | Verify | F | Press play on live welcome page |
+| April classic-view Masterbook finishes loading; Timeline next links; Escape closes menus | Oct 21 | Verify | F | Signed-in April check at 1280 and 393 |
+| Film numbers test (38 readings, 4 house systems, 14 lessons) | Oct 21 | Keep | F | Update film or numbers together |
+| Contact form email still uses Resend | Code check | Superseded | F | Move contact-message to Lovable email with Lulu + newsletter |
+
+## 6.3 Updated order of work (first five free batches)
+1. Privacy/bug fixes from Track A + shared-edition reading hook + Masterbook plan-copy fix
+2. Shop cart reliability (6.1 cart table) + tests
+3. Lovable email switch for Lulu, newsletter and contact + abuse limits, confirmation, unsubscribe
+4. Payment webhook recovery records + Admin reconcile list + tests
+5. Developer dashboard, founder feed and investor accuracy fixes; then update activity logs, founder feeds and investor page (5-round rule)
+Then Track B batches 9–42, then the 6.2 verification sweep in one signed-in browser session, then Tracks C–D.
+
+## 6.4 Still excluded (no longer applies)
+Resend (all four places it is used get switched, not extended) · Stripe refund/dispute/coupon admin · old prices, fonts, themes, Fallout · invented testimonials/counts · edition passwords (accounts and shares only now) · /app URLs · admins table.

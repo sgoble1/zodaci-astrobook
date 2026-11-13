@@ -1,6 +1,6 @@
 # Zodaci roadmap
 
-> Master resource: docs/master-implementation-resource.md (all docs + chat merged, Nov 13 2026). Follow its tracks A→F.
+> Master resource: docs/master-implementation-resource.md (all docs + chat merged, Nov 13 2026; v2 adds Part 6). Follow its tracks A→F.
 
 ## Nov 12 — Final master plan (everything still unfinished)
 Full plan: .lovable/plan/zodaci-final-master-plan-everything-still-unfinished-2026-11-12.md
