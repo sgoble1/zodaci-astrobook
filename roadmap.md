@@ -507,3 +507,11 @@ Audit Oct 29: Chat/counselors already use the member's chart; podcast/custom pag
 - [x] Batch 6: personalised shop items ("personalized" tag) collect recipient birth details as cart-line attributes; cart lines keyed per recipient
 - [x] Batch 8: AstroComic issue switcher (next three issues) and planet cast art on previews
 - [ ] Batches 9–42: run in order
+
+## Master resource v3 batches (Nov 13 2026)
+- [x] B1–B12, V0, P1, P3, P4, P5, C1 (dream readings), C2 (diary photo/PDF reading), C3 (photo characters)
+- [x] Cosmic Studio name (replaces Creator Studio)
+- [x] D1 sample Issue #1: existing art already shows the fictional reader Rosalind Vance consistently; no redraw needed unless the owner asks
+- [-] P2 My Comic deferral — skipped by owner (risky)
+- [ ] E1 Lulu sandbox proof — blocked: sandbox rejects saved keys (need sandbox keys or go-ahead for production)
+- [ ] Owner decisions: email sender domain, legal sign-off Privacy/Terms, referral reward
