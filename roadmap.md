@@ -525,3 +525,10 @@ Audit Oct 29: Chat/counselors already use the member's chart; podcast/custom pag
 - [ ] Cover customizer travels with order + Lulu cover-dimensions check — blocked on working Lulu keys
 - [x] Museum microfilm reader, Investigations "Archive this case", citation drawer
 - [x] Print & Physical Goods pavilion tabs, staff question chips, 393px tap-target pass (public pages; signed-in pages not rechecked)
+
+## UX/navigation/design pass (Nov 13, "start from the beginning and complete all mentioned")
+- [x] Audit: five hubs, phone tabs, breadcrumbs, homepage demo, book preview, context flow already built (B1–B12)
+- [x] Phone check signed in (393px): dashboard, chart, timeline, other systems, consult, archive, readings, explore, shop — no sideways scrolling
+- [x] Fixed Explore crash for founder accounts (menu data missing outside member layout)
+- [x] Larger tap targets for My Readings topic chips and "Show all topics"
+- [ ] Lulu AstroComic printing — paused by owner, finish later (deploy + quote check)

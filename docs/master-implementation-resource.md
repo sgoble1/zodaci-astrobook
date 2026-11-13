@@ -597,3 +597,7 @@ Checked against chat messages #1182–#1261. Everything below was said in chat b
 
 ## 26.5 Price check
 - Collector's Linen is **$189** in the site's price list (confirmed); the older $149 note is out of date.
+
+# Part 27 — UX pass status (Nov 13 2026)
+- Parts 11, 12, 14, 15 verified built. Signed-in 393px pass done on nine member hubs; Explore founder crash fixed; topic chip tap size raised to 44px.
+- Still open: prerendered public HTML, PWA install, Search Console (owner), Part 22 colour tuning per section (review with owner screenshots).

@@ -6,6 +6,7 @@ import { useAprilSpace } from '@/hooks/useAprilSpace';
 import { BoxArt } from '@/components/common/BoxArt';
 import { privateImage } from '@/content/privateAssets';
 import { MemberExploreHub } from '@/components/layout/ExploreHub';
+import { EnsureMemberNav } from '@/components/layout/MemberNav';
 
 const ART: Record<string, { src: string; alt: string }> = {
   chart: { src: 'explore/chart.jpg', alt: 'Atomic-zodiac dial beside an open notebook' },
@@ -58,7 +59,7 @@ const items: DiscoveryItem[] = [
 
 export default function ExploreDiscover() {
   const april = useAprilSpace();
-  if (!april) return <MemberExploreHub />;
+  if (!april) return <EnsureMemberNav><MemberExploreHub /></EnsureMemberNav>;
   return <AprilDiscover />;
 }
 

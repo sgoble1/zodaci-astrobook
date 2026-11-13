@@ -41,6 +41,11 @@ export function useNavState() {
 }
 
 /** One place that resolves who the member is for every navigation surface (header, tabs, wayfinding). */
+/** Wraps children in MemberNavProvider only when no provider is already above (founder shells render member pages too). */
+export function EnsureMemberNav({ children }: { children: ReactNode }) {
+  return useContext(NavStateContext) ? <>{children}</> : <MemberNavProvider>{children}</MemberNavProvider>;
+}
+
 export function MemberNavProvider({ children }: { children: ReactNode }) {
   const { pathname } = useLocation();
   const session = useSession();

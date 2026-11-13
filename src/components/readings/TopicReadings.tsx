@@ -51,7 +51,7 @@ export function TopicReadings({ seed, filter = null }: { seed: string; filter?: 
           <div key={t.slug} className="rounded-lg border border-dashed border-border p-4 text-sm text-muted-foreground"><h3 className="font-display text-lg text-foreground">{t.title}</h3>{writing === t.title ? 'Writing now…' : 'Waiting to be written'}</div>
         ); })}
       </div>
-      {!all && !filter && ordered.length > 8 && <button type="button" onClick={() => setAll(true)} className="text-sm text-primary underline underline-offset-2">Show all {ordered.length} topics</button>}
+      {!all && !filter && ordered.length > 8 && <button type="button" onClick={() => setAll(true)} className="inline-flex min-h-11 items-center text-sm text-primary underline underline-offset-2">Show all {ordered.length} topics</button>}
     </section>
   );
 }

@@ -56,7 +56,7 @@ export default function MyReadings() {
       </section>
       <h2 id="quick" className="scroll-mt-24 font-display text-3xl">Quick readings</h2>
       <nav aria-label="Quick readings" className="-mt-4 flex flex-wrap gap-2">
-        {readings.map(r => <a key={r.key} href={`#${r.key}`} className="rounded-sm border border-[hsl(var(--brass)/0.5)] px-3 py-1 text-sm hover:bg-muted focus-visible:outline focus-visible:outline-2">{r.title}</a>)}
+        {readings.map(r => <a key={r.key} href={`#${r.key}`} className="inline-flex min-h-11 items-center rounded-sm border border-[hsl(var(--brass)/0.5)] px-3 py-1 text-sm hover:bg-muted focus-visible:outline focus-visible:outline-2">{r.title}</a>)}
       </nav>
       {readings.map(r => (
         <section key={r.key} id={r.key} aria-labelledby={`${r.key}-h`} className="obs-paper grid gap-5 p-5 md:grid-cols-[180px_1fr]">

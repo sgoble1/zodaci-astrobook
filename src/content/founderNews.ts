@@ -11,6 +11,7 @@ export type FounderNote = { date: string; title: string; text: string; to?: stri
 export const noteKey = (n: FounderNote) => `${n.date}:${n.for.join('+')}:${n.title}`;
 
 export const FOUNDER_NEWS: FounderNote[] = [
+  { date: '2026-11-13', title: 'Smoother on your phone', text: 'Buttons for reading topics are bigger and easier to tap, and the Explore page now opens without trouble.', to: '/explore', cta: 'Open Explore', for: ['april', 'zac'] },
   { date: '2026-11-13', for: ['april', 'zac'], title: 'New things to make and new covers', text: 'In the Cosmic Studio you can now make a tall star scroll, a tarot card from your birthday, and a round badge for today’s sky. Books have three new covers, one with your initials. Your account menu is now sorted into sections, and long chapter lists open faster.' },
   { date: '2026-11-13', for: ['shane'], title: 'Studio presets, cover suite, perf', text: 'creations.ts scroll/tarot/badge + atomic style; coverDesigns celestial-cartographer, deep-orbit, vintage-monogram (monogramFor); accountSections(); lazy ChapterPart + content-visibility; font preload plugin; Chapter not found view in ShaneEdition. Phone pass as Zac clean.' },
   { date: '2026-11-13', for: ['april', 'zac'], title: 'Photos into notes and characters', text: 'You can now turn a diary photo or PDF into a written note, and turn a photo of yourself into a comic character. Photos aren’t kept, and you see everything before it’s saved.' },
