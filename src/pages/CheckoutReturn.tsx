@@ -31,8 +31,9 @@ export default function CheckoutReturn() {
     if (!sessionId || !environment) return 'failed' as const;
     const { data, error } = await supabase.functions.invoke('sync-checkout', { body: { sessionId, environment } });
     if (error || data?.error) { setMessage(data?.error ?? null); return 'failed' as const; }
+    // AstroBook/AstroComic answers carry a kind and confirm on their own pages, never as a membership.
+    if (data?.status === 'not_membership' || data?.kind) return 'other' as const;
     if (data?.status === 'active' || data?.status === 'trialing') { refreshSubscription(); return 'active' as const; }
-    if (data?.status === 'not_membership') return 'other' as const;
     return 'pending' as const;
   }, [sessionId]);
 

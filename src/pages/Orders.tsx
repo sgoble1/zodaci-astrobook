@@ -14,6 +14,7 @@ import { ALL_STATUSES, isPaidStage, nextStage, ordersCsv, downloadText, stageErr
 import { OrderTimeline } from '@/components/books/OrderTimeline';
 import type { Tables } from '@/integrations/supabase/types';
 import { OrderPdfDownload } from '@/components/books/OrderPdfDownload';
+import { isFinalPurchaseSync, purchaseSyncMessage, syncPurchase, type PurchaseSync } from '@/lib/purchaseSync';
 
 export default function Orders() {
   const session = useSession(); const admin = useIsAdmin(session); const [params] = useSearchParams();
@@ -31,10 +32,19 @@ export default function Orders() {
   const moving = orders.some(o => !['delivered','canceled','draft'].includes(o.status) && !(o.format === 'digital' && isPaidStage(o.status)));
   useEffect(() => { setOrders([]); setCheckout(null); void load(); return () => { revision.current++; }; },[load]);
   useEffect(() => { if (!moving && !params.get('session_id')) return; const timer=window.setInterval(() => { if (document.visibilityState === 'visible') void load(); },15000); const onFocus = () => void load(); window.addEventListener('focus', onFocus); return () => { window.clearInterval(timer); window.removeEventListener('focus', onFocus); }; },[load, moving, params]);
+  // Returning from checkout: confirm this exact payment with the provider, so a slow webhook never leaves the order stuck.
+  const sessionId = params.get('session_id');
+  const [sync, setSync] = useState<PurchaseSync>('pending'); const [syncTries, setSyncTries] = useState(0);
+  useEffect(() => {
+    if (!sessionId || !userId || isFinalPurchaseSync(sync) || syncTries > 6) return;
+    const t = window.setTimeout(async () => { const r = await syncPurchase(sessionId); setSync(r); setSyncTries(n => n + 1); if (r !== 'pending' && r !== 'error') void load(); }, [0, 3000, 6000, 10000, 15000, 30000, 60000][syncTries] ?? 60000);
+    return () => window.clearTimeout(t);
+  }, [sessionId, userId, sync, syncTries, load]);
+  const syncNote = purchaseSyncMessage('book', sync);
   const downloadManuscript = async (path: string) => { const tab = window.open('', '_blank'); const result = await supabase.storage.from('library').createSignedUrl(path, 300); if (result.error) { tab?.close(); setError('The manuscript could not be opened.'); } else if (result.data?.signedUrl && tab) { tab.opener = null; tab.location.href = result.data.signedUrl; } };
   const change = async (id:string, patch:Partial<Tables<'book_orders'>>) => { const { error:err } = await supabase.from('book_orders').update({ ...patch,updated_at:new Date().toISOString() }).eq('id',id); if(err) setError(err.message); else void load(); };
   return <article className="space-y-8"><header><p className="text-gold font-smallcaps text-xs">AstroBook orders</p><h1 className="text-4xl mt-2">{all ? 'Book order management':'My orders'}</h1><p className="text-muted-foreground mt-3">Order details, production progress and delivery tracking.</p></header><PaymentTestModeBanner /><div className="flex gap-2"><Button asChild variant="outline"><Link to="/books">Create a book</Link></Button>{admin && <Button variant={all ? 'default':'outline'} onClick={() => setAll(x => !x)}>{all ? 'Show my orders':'Manage all orders'}</Button>}{admin && all && <Button variant="outline" onClick={() => downloadText(`astrobook-orders-${new Date().toISOString().slice(0,10)}.csv`, ordersCsv(orders.filter(o => o.environment === 'live' && isPaidStage(o.status)) as never, (e, f) => editionName(e, f as BookFormat)))}>Export paid orders (CSV)</Button>}</div>{error && <p role="alert" className="text-destructive text-sm">{error}</p>}{!session && <p><Link to="/auth" className="underline">Sign in</Link> to see your orders.</p>}
-    {params.get('session_id') && <p role="status" className="text-gold">Payment submitted. Your order updates after payment verification; do not pay again while confirmation is pending.</p>}
+    {sessionId && <div role="status" aria-live="polite" className={`flex flex-wrap items-center gap-3 text-sm ${syncNote.tone === 'stop' ? 'text-destructive' : 'text-gold'}`}><p>{syncNote.tone === 'wait' && syncTries > 6 ? 'Confirmation is taking longer than expected. Some payment methods take a while to settle — please don’t pay again.' : syncNote.text}</p>{syncNote.tone === 'wait' && syncTries > 6 && <Button size="sm" variant="outline" onClick={() => { setSync('pending'); setSyncTries(0); }}>Check again</Button>}</div>}
     {orders.map(o => {
       const extras=Array.isArray(o.extra_sections) ? o.extra_sections.filter((s):s is string => typeof s==='string') : [];
       const address = (o.shipping_address ?? {}) as Record<string,string>;

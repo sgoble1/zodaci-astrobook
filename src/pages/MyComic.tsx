@@ -18,6 +18,7 @@ import { buildComicIssue, COMIC_PLANS, monthKey, monthLabel, nextIssueMonth, shi
 import { usePageMeta } from '@/hooks/usePageMeta';
 import type { Database } from '@/integrations/supabase/types';
 import { StartLink } from '@/components/common/StartLink';
+import { isFinalPurchaseSync, purchaseSyncMessage, syncPurchase, type PurchaseSync } from '@/lib/purchaseSync';
 import { comicPreviewArt } from '@/content/castArt';
 import { PREVIEW_PAGES } from '@/lib/personalPreview';
 import { PersonalPreviewDrawer } from '@/components/books/PersonalPreviewDrawer';
@@ -59,12 +60,17 @@ function MyComicInner() {
   const current = subs?.find(s => s.environment === env && ['active', 'paused', 'past_due'].includes(s.status)) ?? subs?.find(s => ['active', 'paused', 'past_due'].includes(s.status)) ?? null;
   // Only the purchase from this checkout confirms it; an older subscription must not.
   const confirmed = !!sessionId && !!subs?.some(s => s.checkout_session_id === sessionId);
-  // After checkout, wait for the verified payment to activate the subscription.
+  // After checkout, re-check this exact payment with the provider (same rules as the webhook) and reload.
+  const [sync, setSync] = useState<PurchaseSync>('pending');
   useEffect(() => {
-    if (!returning || confirmed || waited > 20) return;
-    const t = window.setTimeout(() => { setWaited(w => w + 1); void load(); }, 3000);
+    if (!sessionId || confirmed || isFinalPurchaseSync(sync) || waited > 20) return;
+    const t = window.setTimeout(async () => {
+      if (waited % 2 === 0) setSync(await syncPurchase(sessionId));
+      await load(); setWaited(w => w + 1);
+    }, waited === 0 ? 0 : 3000);
     return () => clearTimeout(t);
-  }, [returning, confirmed, waited, load]);
+  }, [sessionId, confirmed, sync, waited, load]);
+  const recheck = () => { setSync('pending'); setWaited(0); };
   useEffect(() => { if (returning && confirmed) { toast.success('Your AstroComic is confirmed.'); const n = new URLSearchParams(params); n.delete('session_id'); setParams(n, { replace: true }); } }, [returning, confirmed]); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (failed) return <LoadError what="your AstroComic" onRetry={() => void load()} />;
@@ -72,7 +78,16 @@ function MyComicInner() {
   return (
     <article className="mx-auto max-w-5xl space-y-12">
       <header><p className="font-label text-xs tracking-[0.16em] text-primary">AstroComic</p><h1 className="mt-2 font-display text-4xl sm:text-5xl">My AstroComic</h1></header>
-      {returning && !confirmed && <p role="status" className="parchment flex items-center gap-3 p-4">{waited > 20 ? 'Confirmation is taking longer than expected. Please don’t pay again — check back in a few minutes.' : <><Loader2 aria-hidden className="h-4 w-4 animate-spin" />Confirming your payment…</>}</p>}
+      {returning && !confirmed && (() => {
+        const m = purchaseSyncMessage('comic', sync);
+        const slow = m.tone === 'wait' && waited > 20;
+        return <div role="status" aria-live="polite" className={`parchment flex flex-wrap items-center gap-3 p-4 ${m.tone === 'stop' ? 'border-destructive' : ''}`}>
+          {m.tone === 'wait' && !slow && <Loader2 aria-hidden className="h-4 w-4 animate-spin motion-reduce:animate-none" />}
+          <p className="flex-1">{slow ? 'Confirmation is taking longer than expected. Some payment methods take a while to settle — please don’t pay again.' : m.tone === 'wait' ? 'Confirming your payment…' : m.text}</p>
+          {slow && <Button size="sm" variant="outline" onClick={recheck}>Check again</Button>}
+          {(sync === 'failed' || sync === 'expired') && <Button size="sm" asChild><Link to="/astrocomic">Choose a plan again</Link></Button>}
+        </div>;
+      })()}
       {current ? <SubscriptionPanel key={current.id} sub={current} issues={issues} onChange={load} /> : !returning && (
         <section className="comic-card p-6 sm:p-8"><p><span className="comic-tag text-xs">Not subscribed</span></p><h2 className="mt-3 font-display text-2xl uppercase">No AstroComic yet</h2><p className="mt-2 text-muted-foreground">A personalized 24-page comic each month, printed and mailed to you.</p><Button asChild className="mt-5"><Link to="/astrocomic">See plans</Link></Button></section>
       )}
