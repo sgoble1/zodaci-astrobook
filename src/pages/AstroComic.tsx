@@ -111,13 +111,16 @@ export default function AstroComic() {
           <div><h2 id="preview-h" className="font-display text-3xl">{personal ? `Your first three pages, ${preview.reader}` : 'A three-page preview'}</h2><p className="mt-2 max-w-2xl text-muted-foreground">{personal ? `Calculated from your saved chart for ${preview.monthLabel}. The story centers on: ${preview.mainEvent}.` : `Shown for our fictional reader ${SAMPLE_READER.name} (Taurus Sun, Cancer Moon). Sign in with your birth details to preview your own issue.`}</p></div>
           {!personal && <Button asChild variant="outline"><Link to={session ? '/start' : `/auth?mode=signup&next=${encodeURIComponent('/astrocomic#preview')}`}>Preview my own issue</Link></Button>}
         </div>
-        <div className="mt-8 grid gap-5 sm:grid-cols-3">{preview.pages.slice(0, 3).map(p => <ComicPageView key={p.n} page={p} art={PREVIEW_ART} />)}</div>
+        <div className="mt-8 grid items-start gap-5 md:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
+          <div className="mx-auto w-full max-w-md"><ComicPageView page={preview.pages[0]} art={PREVIEW_ART} /></div>
+          <div className="grid grid-cols-2 gap-4">{preview.pages.slice(1, 3).map(p => <ComicPageView key={p.n} page={p} compact art={PREVIEW_ART} />)}<p className="col-span-2 text-xs text-muted-foreground">Same 5.5 × 8.5 in page as the printed issue and the issue reader.</p></div>
+        </div>
         <p className="mt-3 text-xs text-muted-foreground">Sample illustrations accompany {personal ? 'your calculated sky positions and personal letter' : `${SAMPLE_READER.name.split(' ')[0]}’s calculated sky positions and letter`}. Each printed issue receives artwork for its own story.</p>
       </section>
 
       <section aria-labelledby="inside-h" className="grid gap-10 lg:grid-cols-2">
         <div><h2 id="inside-h" className="font-display text-3xl">What’s in every issue</h2><ol className="mt-6 divide-y divide-border border-y border-border">{PAGE_MAP.map(([n, t]) => <li key={n} className="grid grid-cols-[4rem_1fr] gap-3 py-2.5 text-sm"><span className="font-label tracking-wider text-primary">p. {n}</span><span>{t}</span></li>)}</ol></div>
-        <figure><img src={SAMPLE_ISSUE.pages[1].art} alt={SAMPLE_ISSUE.pages[1].panels[0].visualPrompt} width={1536} height={1024} loading="lazy" className="comic-frame w-full" /><figcaption className="mt-3 text-sm text-muted-foreground">Page {SAMPLE_ISSUE.pages[1].pageNumber} of the sample issue, {SAMPLE_ISSUE.pages[1].actTitle}: {SAMPLE_ISSUE.pages[1].placement}.</figcaption></figure>
+        <figure className="mx-auto w-full max-w-md"><div className="comic-sheet aspect-[11/17] overflow-hidden"><img src={SAMPLE_ISSUE.pages[1].art} alt={SAMPLE_ISSUE.pages[1].panels[0].visualPrompt} width={1536} height={1024} loading="lazy" className="h-full w-full object-cover" /></div><figcaption className="mt-3 text-sm text-muted-foreground">Page {SAMPLE_ISSUE.pages[1].pageNumber} of the sample issue, {SAMPLE_ISSUE.pages[1].actTitle}: {SAMPLE_ISSUE.pages[1].placement}.</figcaption></figure>
       </section>
 
       <section aria-labelledby="cast-h">

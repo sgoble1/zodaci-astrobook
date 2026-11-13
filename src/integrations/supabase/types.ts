@@ -867,6 +867,48 @@ export type Database = {
         }
         Relationships: []
       }
+      context_flags: {
+        Row: {
+          answer: string | null
+          created_at: string
+          general: boolean
+          id: string
+          status: string
+          topic: string
+          updated_at: string
+          use_in_book: boolean
+          use_in_comic: boolean
+          use_in_readings: boolean
+          user_id: string
+        }
+        Insert: {
+          answer?: string | null
+          created_at?: string
+          general?: boolean
+          id?: string
+          status?: string
+          topic: string
+          updated_at?: string
+          use_in_book?: boolean
+          use_in_comic?: boolean
+          use_in_readings?: boolean
+          user_id?: string
+        }
+        Update: {
+          answer?: string | null
+          created_at?: string
+          general?: boolean
+          id?: string
+          status?: string
+          topic?: string
+          updated_at?: string
+          use_in_book?: boolean
+          use_in_comic?: boolean
+          use_in_readings?: boolean
+          user_id?: string
+        }
+        Relationships: []
+      }
       counselor_private_profiles: {
         Row: {
           content: string
@@ -1059,6 +1101,48 @@ export type Database = {
           sort_order?: number | null
           title?: string | null
           updated_at?: string
+        }
+        Relationships: []
+      }
+      dream_entries: {
+        Row: {
+          body: string
+          created_at: string
+          dream_date: string
+          feelings: string[]
+          id: string
+          recurring: boolean
+          updated_at: string
+          use_in_book: boolean
+          use_in_comic: boolean
+          use_in_readings: boolean
+          user_id: string
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          dream_date?: string
+          feelings?: string[]
+          id?: string
+          recurring?: boolean
+          updated_at?: string
+          use_in_book?: boolean
+          use_in_comic?: boolean
+          use_in_readings?: boolean
+          user_id?: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          dream_date?: string
+          feelings?: string[]
+          id?: string
+          recurring?: boolean
+          updated_at?: string
+          use_in_book?: boolean
+          use_in_comic?: boolean
+          use_in_readings?: boolean
+          user_id?: string
         }
         Relationships: []
       }

@@ -61,7 +61,7 @@ export const MEMBER_DOMAINS: MemberDomain[] = [
     id: 'readings', label: 'Readings', hub: '/my-readings', hubLabel: 'All my readings', icon: BookOpenText,
     description: 'Readings written only from your own placements.',
     tabs: ['/my-readings', '/consult', '/chat', '/counselors', '/workbook', '/observation-log', '/create'],
-    prefixes: ['/my-readings', '/consult', '/workbook', '/counselors', '/chat', '/investigations', '/museum', '/topics', '/readings', '/reading', '/p', '/ask', '/sources', '/observation-log', '/observatory', '/content-center'],
+    prefixes: ['/my-readings', '/consult', '/dreams', '/workbook', '/counselors', '/chat', '/investigations', '/museum', '/topics', '/readings', '/reading', '/p', '/ask', '/sources', '/observation-log', '/observatory', '/content-center'],
     columns: [
       { title: 'My readings', more: { to: '/my-readings#topics', label: `All ${TOPIC_READINGS.length} topics & ${CORE_THEMES.length} core themes` }, items: [
         { to: '/my-readings', label: 'All my readings', description: 'Topics, core themes and quick readings', icon: BookOpenText },
@@ -89,6 +89,7 @@ export const MEMBER_DOMAINS: MemberDomain[] = [
         { to: '/wonderings', label: 'Wonderings', description: 'Questions and topics to come back to', icon: Search },
       ] },
       { title: 'Archive & Journal', items: [
+        { to: '/dreams', label: 'Dream Ledger', description: 'Your dreams with the real sky that night', icon: Moon, badge: 'New' },
         { to: '/observation-log', label: 'Observation Log', description: 'Your own sky notes, with the real sky that day', icon: Telescope },
         { to: '/workbook', label: 'Guided Workbook', description: 'Exercises for your placements', icon: NotebookPen },
         { to: '/workbook/check-in', label: 'Daily Check-in', description: 'Name what is happening today', icon: Activity },
@@ -477,6 +478,6 @@ export const ROUTE_INVENTORY: Record<string, Placement> = {
   '/create': P('readings', 'secondary'), '/workbook': P('readings', 'secondary'), '/workbook/module/:slug': P('readings', 'tertiary', 'from the Workbook'), '/workbook/check-in': P('readings', 'secondary'), '/workbook/reframe': P('readings', 'secondary'),
   '/workbook/journal': P('readings', 'secondary'), '/workbook/companion': P('readings', 'secondary'), '/counselors': P('readings', 'secondary'), '/counselors/:key': P('readings', 'tertiary', 'from Counselors'),
   '/counselors/:key/sessions/:sessionId': P('readings', 'tertiary', 'from each counselor'), '/workbook/companion/:sessionId': P('readings', 'tertiary', 'from the Oracle Within'), '/workbook/social-integration': P('readings', 'secondary'),
-  '/workbook/social-integration/:sessionId': P('readings', 'tertiary', 'from the Social Counselor'), '/consult': P('readings', 'primary', 'Consultation Desk'), '/p/:id': P('readings', 'tertiary', 'created pages: domain menus and My Library'), '/shared/notes': P('explore', 'tertiary', 'shared space menu'),
+  '/workbook/social-integration/:sessionId': P('readings', 'tertiary', 'from the Social Counselor'), '/consult': P('readings', 'primary', 'Consultation Desk'), '/dreams': P('readings', 'secondary', 'Dream Ledger'), '/p/:id': P('readings', 'tertiary', 'created pages: domain menus and My Library'), '/shared/notes': P('explore', 'tertiary', 'shared space menu'),
   '/shared/later': P('explore', 'tertiary', 'shared space menu'), '/shared/accounts': P('explore', 'tertiary', 'shared space menu'), '/shared/april': P('explore', 'tertiary', 'opens the April & Shane space'), '/shared/zac': P('explore', 'tertiary', 'opens the Zac & Shane space'), '/astrocomic/print-issue-1': P('public', 'tertiary', 'from the AstroComic page'), '/credits': P('account', 'utility', 'credit packs'), '/developer': P('admin', 'utility', 'developer only'), '/developer/timeline': P('admin', 'utility', 'developer only'), '/official-astrobook/showcase/:edition': P('book', 'tertiary', 'Founders only, from the Official AstroBook'), '/topics': P('book', 'secondary', 'Shane only'), '/guides/:slug': P('april', 'utility'), '/topics/:slug': P('april', 'utility'), '*': P('account', 'utility', 'not found'),
 };
