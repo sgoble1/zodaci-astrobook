@@ -13,3 +13,4 @@
 - photo-character draws a member's own photo (consent required, never stored) as a 1950s comic stand-in, 3 credits, saved only as a private library_items 'creation' under {uid}/creation/.
 
 - Book/comic payment confirmation lives in _shared/purchase-confirm, used by both payments-webhook and sync-checkout; clients never mark themselves paid.
+- chart-portrait draws a Sky Portrait only from the caller's saved profile chart signs (no people, no text), 3 credits, Pro/Cosmic, saved as a private library creation.

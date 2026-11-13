@@ -20,6 +20,7 @@ const PRODUCTS: [string, string, string][] = [
   ['chart', 'Shop', 'Posters, sticker sheets and notebooks, sold and fulfilled through a live Shopify storefront.'],
 ];
 const LIVE = [
+  'Sky Portraits: a chart-derived poster drawn by AI from each member’s own signs (3 credits, Pro and Cosmic).',
   'Personal Moon Calendar: six months of Moon phases placed in each member’s own houses, calculated from the ephemeris (no AI cost).',
   'Book and comic checkouts re-confirm payment directly with the provider and explain declined or expired payments plainly.',
   'Consultation Desk: every way to ask (Observatory, SmartChat, counselors, private reflection) behind one door, each with its own private history.',

@@ -9,6 +9,7 @@ import { MEMBER_CHARACTERS, STAFF, type StaffId } from '@/lib/observatory';
 import { StaffPortrait } from '@/components/observatory/StaffPortrait';
 import { toast } from 'sonner';
 import { PhotoCharacter } from '@/components/observatory/PhotoCharacter';
+import { SkyPortrait } from '@/components/observatory/SkyPortrait';
 import members from '@/assets/observatory-members.jpg';
 import staff from '@/assets/observatory-staff.jpg';
 
@@ -55,6 +56,7 @@ export default function Characters() {
         </ul>
       </section>
       {session && <PhotoCharacter />}
+      {session && <SkyPortrait />}
       <section aria-labelledby="staff-h" className="obs-panel p-5 sm:p-6">
         <PanelTitle eyebrow="Astral Research Authority"><span id="staff-h">Observatory staff</span></PanelTitle>
         <img src={staff} alt="The nine observatory staff standing before the Grand Observatory" width={1920} height={1088} loading="lazy" className="w-full rounded-md" />

@@ -10,6 +10,7 @@ Order follows resource Part 6.3. Ticked when done and tested.
 - [x] R4 Payment webhook recovery records + Admin reconcile list + referral award retry (tests).
 - [x] R5 Developer board errors/edit/undo/paging; founder glance error+retry, credit packs in balance, stable note IDs; investor page live vs planned; activity logs + founder feeds + investor update.
 - [x] Nov 13: Moon Calendar (personal lunar calendar), "Create a chapter about this" on topics, admin image library polish, book/comic payment recovery.
+- [x] Nov 13: P6 Portraits started as Sky Portraits (chart-derived poster, 3 credits). Masterbook extraction/correction skipped by user.
 - [ ] R6 Track B batches 9–42 (audit each, finish gaps), then the 6.2 signed-in verification sweep.
 - [ ] R7 Tracks C–D (AI-credit work) only after R1–R6; Track E items stay listed with their owner asks.
 
