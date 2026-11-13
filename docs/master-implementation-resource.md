@@ -1,4 +1,6 @@
-# Zodaci Master Implementation Resource — v2 (Nov 13 2026)
+# Zodaci Master Implementation Resource — v3 (Nov 13 2026)
+
+v3 keeps all of v1 and v2 unchanged and adds Parts 7–24 (status, credit method, and every topic from the latest conversations).
 
 v2 keeps every item from v1 and adds Part 6 (about 90 new items from a second pass). Work order is unchanged: do Part 6 Track A items alongside Track A.
 
@@ -378,3 +380,162 @@ Then Track B batches 9–42, then the 6.2 verification sweep in one signed-in br
 
 ## 6.4 Still excluded (no longer applies)
 Resend (all four places it is used get switched, not extended) · Stripe refund/dispute/coupon admin · old prices, fonts, themes, Fallout · invented testimonials/counts · edition passwords (accounts and shares only now) · /app URLs · admins table.
+
+---
+
+# Part 7 — Status check (Nov 13 2026, what is done vs open)
+
+**Done and saved:** R1 Track A fixes, R2 reliable Shopify basket, R3 contact/newsletter on Lovable email (sender domain still needed), R4 payment webhook recovery log, R5 developer board (edit, undo delete, paging), real-title breadcrumbs, podcast phone layout and clean titles, folded founder edition links, full audit log paging/export, Learn "Recommended for you", community sign-in return, Zac "Astrological Library" naming.
+**Built, not yet browser-checked or committed when credits ran out:** welcome tour using registry labels + Back button, Sibling Bureau (twins/half/step, "Add sibling" preset and return), member Compendium guide, MOBILE_TABS in the registry. First step of the next session: verify these three in the browser, then commit.
+**Blocked on owner:** email sender domain; Lulu keys (`LULU_CLIENT_KEY`, `LULU_CLIENT_SECRET`, optional `LULU_ENVIRONMENT`, `LULU_CONTACT_EMAIL`, `LULU_SHIPPING_LEVEL`); legal review of Privacy/Terms; referral reward choice.
+
+# Part 8 — How to use this file with Lovable for the fewest credits
+
+1. Ask for one batch at a time by its ID, e.g. "Implement batch B1 from the master resource." Each batch lists files, rules and checks, so no rediscovery is needed.
+2. Never combine a free batch with an AI batch in one request.
+3. Each batch ends with: run related tests, one browser pass at 393px and 1280px, commit. Update founder notes, developer timeline and investor page every fifth batch (batched, not per change).
+4. Don't re-audit. If a batch says "verify", check only the named files.
+5. Deterministic first: any text that can be built from chart math, registries or tables is code, not AI.
+
+# Part 9 — Preview and performance (Batches P1–P5, free, do first)
+
+- **P1 Grain and animation relief.** `src/index.css`, `src/components/fx/CinematicVideo.tsx`. Replace live `feTurbulence` grain with a static noise image; pause continuous flicker/scanline loops when `prefers-reduced-motion` or the tab is hidden; remove permanent `will-change` from static panels. Keep the look; keep animations extremely slow. Check: scroll in 950×634 without stutter.
+- **P2 `/my-comic` deferral.** `src/pages/MyComic.tsx`, `src/components/comic/*`, `src/lib/comic.ts`. Render the shell first, compute chart + issue in `startTransition`/idle callback, memoize on primitive keys (birth id, month ISO), render the first 4 pages then the rest on demand. Output must be byte-identical (comic tests).
+- **P3 Vite.** `vite.config.ts`: `optimizeDeps.include` for astronomy-engine, pdf-lib, pdfjs-dist, xlsx, qrcode; `manualChunks` for pdf, spreadsheet and astro vendors.
+- **P4 Transit cache.** `src/lib/astro.ts` / `currentChapter.ts`: memoize sky positions per hour key; shape-matched Suspense fallbacks in AppShell.
+- **P5 Verify.** Chart regression tests unchanged (Shane/April 15-point check), developer timeline entry.
+
+# Part 10 — Founder editions: consolidation without loss ("Harvest & Fold")
+
+- **Rule:** nothing personal is deleted. Only repeated textbook introductions and repeated raw degree lists are folded; the first instance stays, later ones link to it.
+- **Never removed:** Shane's lived narrative, April's degrees/orbs/rulers, Zac's reflection prompts, affirmations, feng shui cures, practices.
+- **Master section shape (also the AstroBook and member-generation shape):** Placement facts (computed) → Core meaning (April depth) → Lived voice (Shane tone, no invented biography) → Two reflection questions + practical cues (Zac style).
+- **Duplicate finder (free):** a script compares chapter paragraphs by normalized sentence hash and lists exact/near duplicates per edition for admin review in Founder Audit. Counts only, never shows text to non-owners. Merges happen only after owner approval.
+- **Classic view parity check:** every founder-only section maps to a member-route equivalent (memberRoutes + onlyInFullEdition); list gaps on the developer board.
+- **"Retry" states:** audit every `LoadError`/"Retry" in founder pages; replace with automatic one-time retry + skeleton, and a plain message only if the second try fails. Private-edition 401/403 stay explicit access states.
+
+# Part 11 — Five consolidated hubs (navigation, free)
+
+Pages and routes are kept; the menu groups them. Old URLs keep working and open the hub tab.
+1. **Your Chart** `/my-chart`: Wheel · Placements · Houses · Aspects & stars · What stands out (RetroGOOD + Findings).
+2. **Timing** `/timeline`: Today (Current Chapter, transits, retrogrades) · This year (profection, return) · Lifetime (70-year arc). `/forecast` stays public.
+3. **World Traditions** `/other-systems`: one pavilion with a tradition selector (Vedic, Chinese, numerology, Mayan, Tibetan, Nine Star Ki, Celtic, tarot birth cards, Kua/Bagua/Feng Shui).
+4. **Consultation Desk** `/consult`: one entry with modes — Sources (Ask the Sources/SmartChat), Counselors (incl. Social Integration, still separate history), Reflection (Oracle Within), Dreams (Part 13). Each mode keeps its own storage and privacy rules.
+5. **Archive & Journal** `/archive`: Journal (workbook, observation log), Reading history, Personal context & privacy, Dream ledger.
+- Mobile tabs: Chart, Readings, Book, Explore, Account (already in registry).
+- Bureaus (Investigations, Museum, Keepsakes, Characters) become featured doors in the Research Library and dashboard.
+- All print goods appear under the Shop with tabs: AstroBook · AstroComic · Keepsakes · Catalog.
+
+# Part 12 — The AstroBook as the full product
+
+- **Fullest edition (Linen/Signature) = founder-edition depth:** all six volumes, every topic April's compendium covers, written in plain human language with the same precision.
+- **Reader's Compass** (front matter, deterministic): plain glossary of every technical term used in that book (only terms that appear), "What you're holding" page, how to read a chapter.
+- **Every chapter opens with "In this chapter"** — 3 bullet outcomes in plain words — and renames jargon titles (e.g. "Hermetic Lots" → "Your Hidden Points of Fortune (Hermetic Lots)").
+- **Edition contents** come only from `BOOK_VERSIONS.inside` and `buildVolumes()`; `VersionCompare` must state exactly what each edition contains.
+- **Preview fix:** the "first three pages" preview is replaced by a 5-spread showcase (title/seal, wheel + Big Three, a house chapter, an aspect chapter, a timeline page) from the fictional sample reader. The same leaves feed the 3D preview so preview = product.
+- **Cost:** structure, glossary, chapter outcomes are code. Long prose uses the reviewed placement library + small per-chart stitching, not full per-user writing.
+
+# Part 13 — Dreams and past-life reading tool (new)
+
+- **Where:** Consultation Desk "Dreams" mode and Archive "Dream ledger".
+- **Input:** dream text, date (default last night), clickable feeling chips (calm, afraid, chased, water, flying, familiar person, old place), optional "recurring".
+- **Free deterministic part:** the night's transits to natal 12th house, Neptune, Moon, South Node, Pluto, 8th house; motif → chart-factor table (water → Neptune/Moon/12th; chase → Mars/Pluto; houses/rooms → 4th; teeth/falling → Saturn). Output a "Sky that night" slip with exact aspects and orbs.
+- **Paid AI part (on request, Pro/credit-gated, claim job first):** a reading in Shane's Masterbook tone citing only those computed facts and the member's own words. Never predicts events, never states past lives as fact — framed as symbolic tradition.
+- **Saving:** owner-only table `dream_entries` (RLS owner); opt-in flags `use_in_readings`, `use_in_book`, `use_in_comic`.
+- **Book:** a "Dreams and the inner sky" section in Volume IV built from the chart; dream entries only if `use_in_book`.
+- **Comic:** recurring motifs may appear as one dream-sequence panel only if `use_in_comic`.
+- **Founders:** Shane's existing Dreams/Past Lives chapters stay as written; April and Zac get the chart-derived section in their classic view.
+
+# Part 14 — Context feature: gathering, files, privacy and print
+
+- **Gentle question flow:** one question at a time, clickable answers, "skip" always visible, max 3 per visit, progress saved. Topics: life focus now, work, relationships, home, health energy, goals. Answers are short tags, not essays.
+- **"Ask me later" flags:** any reading can flag a topic to revisit; flags show in Personal Context.
+- **Vague mode:** each item can be stored as "general" (e.g. "a family change") instead of specifics.
+- **File uploads (staged):** photo of a diary page (OCR), audio memo (transcription), PDF/DOCX text. Extraction produces a review tray; nothing is used until the member approves each item. Files go to private storage; deletion removes file + extracted text. Small per-file caps and a daily limit to control cost. Start with text paste + PDF/DOCX (free parsing); add OCR/audio later as a Low-AI batch.
+- **Scopes per item:** Readings · Printed book · Comic. Print scope defaults off.
+- **Print review step:** before a book is frozen for checkout, list every context item that will appear; member can remove or "make general". No AI rewrite unless asked.
+- **Where context is used (sparingly):** topic readings, counselor sessions, Current Chapter/Broadcast and retrograde notes add at most one line tying the computed transit to an approved context tag — template-built, no AI. Never overrides chart facts.
+
+# Part 15 — Public demo and homepage
+
+- **Old demo video:** remove from the home page; keep on Investors/About only if re-recorded. Replacement on home: an animated observatory screen (CSS/SVG, slow) inside the existing slide layout — the three protected slides stay untouched and in order.
+- **Interactive demo:** a "mini screen" that runs the real member components (wheel, a reading section, a book spread, a comic page) on the fictional sample reader, so the demo equals the real experience. Signed-out only reads sample data. Text uses the human voice + precision standard.
+- **AstroComic preview parity:** the hero preview and the issue reader render through the same `comicPrint` page geometry and component; no separate larger-image layout.
+- **Sample Issue #1** redraw for the fictional reader (Low/High AI, when credits allow).
+
+# Part 16 — Photo-to-comic characters
+
+- Member uploads a photo → one stylized generation in the AstroComic house style (atomic-age four-colour, bold ink; no Fallout look) → saved to `member_characters` with art in private storage.
+- Manage: rename, set default, regenerate (counts against a monthly cap), delete (removes photo and art). Photo deleted after generation unless kept.
+- Used in previews and issues via `memberCharacter.ts`; generated once, reused every month (no per-issue portrait spend).
+- Admin-only start at launch, then Pro/Cosmic with credit charge.
+
+# Part 17 — Tier preview for founders and Zac
+
+- A small "View as: Free · Pro · Cosmic" switch in classic view for Shane, April and Zac. Display-only: it changes what the page shows; server checks are untouched (it cannot unlock anything).
+- Dismissible, remembered per device, off by default, with a one-line explanation of what each tier gets (from `plans.ts`).
+- Zac's account: calm April-style updates feed in plain words plus his investor overview; workbook framed as optional.
+
+# Part 18 — Investor page additions
+
+- Live numbers only from registries: plan prices, book/comic prices, costs labeled estimates unless real Lulu costs saved.
+- Add: product ladder (Free → Pro → Cosmic → AstroBook/AstroComic), what's live vs planned (already), milestone timeline from devTimeline, risks and blockers, cost controls (deterministic content, capped AI).
+- No invented users, revenue, testimonials or market claims.
+
+# Part 19 — Automatic updates without credits
+
+- Founder notes, developer timeline and investor "recent updates" read one shared registry (`siteUpdates.ts`/`founderNews.ts`/`devTimeline.ts`). Each batch appends one entry; April's and Zac's versions use the plain `simple` text field.
+- Developer stats come from database counts and test totals; no AI summaries.
+
+# Part 20 — Shop: let Shopify drive the catalog
+
+- Recommendation: Shopify is the source of truth for titles, prices, images, descriptions, variants, availability and collections; the site reads them live (cached ~15 min). Changes in Shopify appear automatically.
+- Site code keeps only ordering/merchandising (featured order, Atomic Zodiac grouping by tags, `personalized` tag → birth-details drawer).
+- AstroBook/AstroComic prices remain in `books.ts`/plans until the owner decides they move to Shopify (open question).
+- Shop enhancements: flagship row (AstroBook, AstroComic, Keepsakes) on top, gift vs for-me toggle, itemized totals, delivery estimate, FAQ.
+
+# Part 21 — Shared space and media library
+
+- **Remove "Reading Together"** tab from the shared space menu (data kept, route redirects to the shared dashboard). Sharing editions/chapters stays via Share.
+- **Mobile video thumbnails:** `<video src="...#t=0.1" playsInline preload="metadata">`.
+- **Caption field:** don't auto-focus/select when the viewer opens; caption shown as readable text with an Edit button; multi-line, wraps, 300-char limit.
+- **Conversations:** verify send, edit, reply, reactions, attachments, realtime in both spaces; fix what fails.
+
+# Part 22 — Design review
+
+- The Blend palette (archive cream, deep indigo, shop yellow, shop red, brass, black) is distinctive and on-brand; keep it. Tune: stronger card borders on dark indigo at phone width, fewer simultaneous accent colors per section, one yellow call-to-action per screen, consistent section backgrounds alternating cream/indigo instead of many tints.
+- Effects: slow, few, purposeful; respect reduced motion; no effect should delay content.
+
+# Part 23 — Other items not previously listed
+
+- Creator Studio vs Cosmic Studio: lock one name (owner choice; default "Creator Studio").
+- Birth-time uncertainty helper (house boundary times); house system explainer.
+- Forecast TV channels (Sky Today, Life Compass, Retrogrades, Eclipses, Log).
+- Community pseudonyms with chosen placements only.
+- PWA offline reading for forecast and owned books.
+- Canonicals to zodaci.com; member discussions noindex.
+- Privacy/Terms legal review (owner).
+
+# Part 24 — Batch list (v3 additions, in order)
+
+| ID | Work | Cost |
+|---|---|---|
+| V0 | Verify + commit unfinished tour/Sibling/Compendium work | Free |
+| P1–P5 | Performance | Free |
+| B1 | Shared space: remove Reading Together, video thumbnails, caption fix, conversation check | Free |
+| B2 | Five hubs menu grouping + redirects | Free |
+| B3 | Founder "Retry" audit + auto-retry | Free |
+| B4 | Tier preview switch | Free |
+| B5 | AstroBook 5-spread preview + Reader's Compass + chapter outcomes | Free |
+| B6 | Comic preview parity | Free |
+| B7 | Dreams tool, deterministic part + table | Free |
+| B8 | Context question flow, scopes, print review | Free |
+| B9 | Shopify-driven catalog + shop enhancements | Free |
+| B10 | Investor additions + update registry (every 5 batches) | Free |
+| B11 | Duplicate finder for founder editions | Free |
+| B12 | Homepage demo screen (replaces video) | Free |
+| C1 | Dreams AI reading | Low AI |
+| C2 | Context file extraction (PDF/DOCX free; OCR/audio low AI) | Low AI |
+| C3 | Photo-to-comic characters | Low AI per member |
+| D1 | Sample Issue #1 redraw | High AI |
+| E1 | Lulu sandbox proof (needs keys) | Owner |
