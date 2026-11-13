@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { getStripeEnvironment } from '@/lib/stripe';
 import { PLAN_NAME, PRICE_TIER } from '@/lib/plans';
 import { COMIC_PLANS } from '@/lib/comic';
+import { PaymentIssues } from './PaymentIssues';
 
 type Overview = {
   environment: 'sandbox' | 'live'; generated_at: string; active_subscriptions: number; mrr_cents: number;
@@ -46,6 +47,7 @@ export function StripeOverview() {
       </div>
       {err && <p role="alert" className="text-sm text-destructive">{err} <Button variant="link" className="h-auto p-0" onClick={() => void load()}>Retry</Button></p>}
       {(!data || data.environment !== env) && !err && <div role="status" aria-label="Loading payments" className="h-40 animate-pulse rounded bg-muted" />}
+      <PaymentIssues environment={env} />
       {data && data.environment === env && <>
         <section aria-label="Totals" className="grid gap-3 sm:grid-cols-4">{[['Monthly recurring revenue', usd(data.mrr_cents)], ['Yearly run rate', usd(data.mrr_cents * 12)], ['Active subscriptions', String(data.active_subscriptions)], ['Open disputes', String(data.disputes.length)]].map(([k, v]) => <div key={k} className="parchment p-4"><p className="text-xs text-muted-foreground">{k}</p><p className="mt-1 font-display text-3xl">{v}</p></div>)}</section>
         <section aria-labelledby="so-prices"><h3 id="so-prices" className="text-lg">By plan</h3>{!rows.length ? <p className="mt-2 text-sm text-muted-foreground">No active subscriptions.</p> : <div className="mt-2 overflow-x-auto"><table className="w-full min-w-[560px] text-sm"><thead><tr className="border-b border-border text-left text-muted-foreground"><th className="py-2">Plan</th><th>Subscribers</th><th>Monthly revenue</th><th>Payment failed</th><th>Canceling</th></tr></thead><tbody>{rows.map(([id, r]) => <tr key={id} className="border-b border-border"><td className="py-2">{priceName(id)}</td><td>{r.count}</td><td>{usd(r.mrr_cents)}</td><td className={r.past_due ? 'text-destructive' : ''}>{r.past_due}</td><td>{r.canceling}</td></tr>)}</tbody></table></div>}</section>

@@ -31,9 +31,9 @@ const LIVE = [
   'Private editions that open only for their owner and the people they share with — enforced on the server, never by passwords on a device.',
 ];
 const PHASES: { name: string; when: string; status: string; items: string[] }[] = [
-  { name: 'Phase 1 · Foundation', when: 'Done', status: 'Live', items: ['Chart engine and accuracy tests', 'Memberships, readings, counselors, podcasts', 'Founder editions, sharing and privacy', 'Shop and AstroBook ordering'] },
-  { name: 'Phase 2 · Launch polish', when: 'Now', status: 'In progress', items: ['Automated print fulfilment with the print partner', 'Sending domain for receipts and newsletters (DNS pending)', 'Remaining 5 drawn story pages of AstroComic Issue #1', 'Owner sign-off on shop pricing'] },
-  { name: 'Phase 3 · Growth', when: 'Next', status: 'Planned', items: ['Chart-matched product recommendations', 'Comic character creator and three illustration styles', 'Gift AstroBooks and referral rewards', 'Monthly comic art pipeline at scale', 'Licensed source texts (Sabian Symbols, asteroid tables)', 'Mobile app wrapper'] },
+  { name: 'Phase 1 · Foundation', when: 'Done', status: 'Live', items: ['Chart engine and accuracy tests', 'Memberships, readings, counselors, podcasts', 'Founder editions, sharing and privacy', 'Shop and AstroBook ordering', 'Chart-matched shop recommendations, member comic characters and friend-referral rewards'] },
+  { name: 'Phase 2 · Launch polish', when: 'Now', status: 'In progress', items: ['Automated print fulfilment with the print partner', 'Sending domain for receipts and newsletters (DNS pending)', 'Remaining 5 drawn story pages of AstroComic Issue #1', 'Owner sign-off on shop pricing', 'Payment recovery list and spam-protected sign-up forms (done Nov 13)'] },
+  { name: 'Phase 3 · Growth', when: 'Next', status: 'Planned', items: ['Gift AstroBooks', 'Monthly comic art pipeline at scale', 'Licensed source texts (Sabian Symbols, asteroid tables)', 'Mobile app wrapper'] },
   { name: 'Phase 4 · Zodaci Social', when: 'Future', status: 'Vision', items: ['Pseudonymous profiles and communities', 'Topic boards with posts, threads and voting', 'Compatibility discovery between members', 'Moderation, safety and privacy controls'] },
 ];
 const SOCIAL = [

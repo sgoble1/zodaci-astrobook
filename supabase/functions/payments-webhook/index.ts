@@ -45,7 +45,8 @@ async function created(subscription: any, env: StripeEnv) {
   // A referred member's first paid plan rewards the friend who invited them (live payments only).
   if (env === 'live' && PLAN_PRICES.has(f.price_id) && ['active', 'trialing'].includes(f.status)) {
     const reward = await db().rpc('reward_referral', { _referred: userId });
-    if (reward.error) console.error('Referral reward failed', reward.error);
+    // Throwing marks the event failed so the provider retries; reward_referral converts a referral only once.
+    if (reward.error) throw new Error(`Referral reward failed: ${reward.error.message}`);
   }
 }
 
@@ -155,6 +156,12 @@ Deno.serve(async (req) => {
   const env: StripeEnv = rawEnv;
   try {
     const event = await verifyWebhook(req, env);
+    // Recovery record: stored before processing so a failed or interrupted event shows in Admin.
+    const obj = event.data?.object ?? {};
+    const prior = await db().from('payment_webhook_events').select('status,attempts').eq('event_id', event.id).maybeSingle();
+    if (prior.data?.status === 'processed') return new Response(JSON.stringify({ received: true, duplicate: true }), { status: 200, headers: { "Content-Type": "application/json" } });
+    await db().from('payment_webhook_events').upsert({ event_id: event.id, event_type: event.type, environment: env, object_id: String(obj.id ?? '').slice(0, 120), status: 'received', attempts: (prior.data?.attempts ?? 0) + 1, last_error: '' }, { onConflict: 'event_id' });
+    try {
     switch (event.type) {
       case 'checkout.session.completed':
       case 'checkout.session.async_payment_succeeded': {
@@ -178,6 +185,11 @@ Deno.serve(async (req) => {
       case "customer.subscription.deleted": await deleted(event.data.object, env); break;
       default: console.log("Unhandled event:", event.type);
     }
+    } catch (inner) {
+      await db().from('payment_webhook_events').update({ status: 'failed', last_error: String((inner as Error)?.message ?? inner).slice(0, 500) }).eq('event_id', event.id);
+      throw inner;
+    }
+    await db().from('payment_webhook_events').update({ status: 'processed', processed_at: new Date().toISOString() }).eq('event_id', event.id);
     return new Response(JSON.stringify({ received: true }), { status: 200, headers: { "Content-Type": "application/json" } });
   } catch (e) {
     console.error("Webhook error:", e);

@@ -1492,6 +1492,42 @@ export type Database = {
         }
         Relationships: []
       }
+      payment_webhook_events: {
+        Row: {
+          attempts: number
+          environment: string
+          event_id: string
+          event_type: string
+          last_error: string
+          object_id: string
+          processed_at: string | null
+          received_at: string
+          status: string
+        }
+        Insert: {
+          attempts?: number
+          environment: string
+          event_id: string
+          event_type: string
+          last_error?: string
+          object_id?: string
+          processed_at?: string | null
+          received_at?: string
+          status?: string
+        }
+        Update: {
+          attempts?: number
+          environment?: string
+          event_id?: string
+          event_type?: string
+          last_error?: string
+          object_id?: string
+          processed_at?: string | null
+          received_at?: string
+          status?: string
+        }
+        Relationships: []
+      }
       personal_context: {
         Row: {
           body: string
@@ -3043,6 +3079,19 @@ export type Database = {
         }[]
       }
       admin_newsletter_audience: { Args: { _segment: string }; Returns: number }
+      admin_payment_issues: {
+        Args: never
+        Returns: {
+          attempts: number
+          environment: string
+          event_id: string
+          event_type: string
+          last_error: string
+          object_id: string
+          received_at: string
+          status: string
+        }[]
+      }
       admin_search: {
         Args: { _q: string }
         Returns: {

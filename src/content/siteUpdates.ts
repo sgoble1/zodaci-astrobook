@@ -5,8 +5,10 @@
 export type SiteUpdate = { date: string; title: string; text: string; to?: string; cta?: string };
 
 export const SITE_UPDATES: SiteUpdate[] = [
+  { date: '2026-11-13', title: 'A steadier shop basket', text: 'If something goes wrong adding to your basket, you now see what happened and a Try again button. Old baskets rebuild themselves with current prices.', to: '/store', cta: 'Visit the shop' },
+  { date: '2026-11-13', title: 'Confirm your Sky Notes signup', text: 'Joining the email list now asks you to confirm from your inbox, so nobody can sign you up by mistake.' },
   { date: '2026-11-13', title: 'Diagrams in Learn', text: 'Learn now opens with four drawn diagrams: the twelve houses, the major aspects, the four elements and the Moon’s phases.', to: '/learn#diagrams', cta: 'See the diagrams' },
-  { date: '2026-11-13', title: 'Shipping emails for printed books', text: 'When the printer ships your AstroBook, you get an email with the tracking link.', to: '/orders', cta: 'My orders' },
+  { date: '2026-11-13', title: 'Shipping emails for printed books', text: 'Shipping emails with the tracking link are ready and start once our sending address is switched on. Until then, tracking shows on your orders page.', to: '/orders', cta: 'My orders' },
   { date: '2026-11-13', title: 'Read the first ten pages', text: 'The live chart on the welcome page now opens the first ten pages of a sample AstroBook.', to: '/welcome', cta: 'Try it' },
   { date: '2026-11-12', title: 'New hardcover AstroBook prices', text: 'Signature Hardcover is now $129 and Collector’s Linen $189, matching what these larger printed books cost to make. Digital, Pocket and Classic prices are unchanged.', to: '/books', cta: 'See the versions' },
   { date: '2026-11-12', title: 'Keepsakes: certificates and Star Scrolls', text: 'Print a Birth-Sky Certificate or a tall Star Scroll with your wheel, planets, houses and closest aspects — for yourself, or as a gift from birth details you saved for someone.', to: '/keepsakes', cta: 'Make a keepsake' },
