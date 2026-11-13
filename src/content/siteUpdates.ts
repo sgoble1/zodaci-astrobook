@@ -5,6 +5,7 @@
 export type SiteUpdate = { date: string; title: string; text: string; to?: string; cta?: string };
 
 export const SITE_UPDATES: SiteUpdate[] = [
+  { date: '2026-11-13', title: 'New Cosmic Studio designs and book covers', text: 'The Cosmic Studio now makes a tall star scroll, a tarot birth card and a transit badge for today, with a new 1950s poster look. AstroBook covers add Celestial Cartographer, Deep Orbit and a Vintage Monogram with your initials. The account menu is sorted into sections.', to: '/creator', cta: 'Open the studio' },
   { date: '2026-11-13', title: 'Draw yourself as a character', text: 'On the characters page, upload a photo and the Cosmic Studio draws you in the observatory’s 1950s comic style. The photo isn’t kept.', to: '/characters', cta: 'Try it' },
   { date: '2026-11-13', title: 'Invite a friend, earn credits', text: 'When a friend you invite starts a paid plan, you now get 20 bonus credits that never expire. Your dashboard also shows your character (The Stargazer until you choose one).', to: '/referrals', cta: 'Invite a friend' },
   { date: '2026-11-13', title: 'Keepsakes as print-ready PDFs', text: 'Download your Birth-Sky Certificate (landscape) or Star Scroll (tall 8.5×14) as a sharp PDF ready for a print shop. The 3D book preview now shows the true spine width for its page count.', to: '/keepsakes', cta: 'Make a keepsake' },

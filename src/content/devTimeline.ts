@@ -46,4 +46,5 @@ export const DEV_TIMELINE: TimelineEvent[] = [
   { date: '2026-11-13', phase: 'Current build', title: 'Sky Portraits', summary: 'Chart-derived 1950s observatory poster (Sun, Moon, Rising emblems; no people or text), 3 credits, Pro/Cosmic, saved privately to the library.' },
   { date: '2026-11-13', phase: 'Current build', title: 'Archive this case, microfilm reader, citation drawer', summary: 'Case files save to the Observation Log; Museum galleries gain a searchable amber microfilm view; Ask the Sources citation numbers open the original passage.' },
   { date: '2026-11-13', phase: 'Current build', title: 'Shop pavilion, staff questions, phone pass', summary: 'One Print & Physical Goods entrance with tabs; observatory staff quick questions on the Consultation Desk; phone-size check with larger tap targets on the AstroBook steps.' },
+  { date: '2026-11-13', phase: 'Current build', title: 'Cosmic Studio presets, cover suite, account sections', summary: 'Star scroll, tarot birth card and transit badge with a 1950s poster style; three new AstroBook covers including a monogram; sectioned account menu; lazy chapter parts and font preload; founder phone pass.' },
 ];

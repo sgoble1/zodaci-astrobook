@@ -11,6 +11,8 @@ export type FounderNote = { date: string; title: string; text: string; to?: stri
 export const noteKey = (n: FounderNote) => `${n.date}:${n.for.join('+')}:${n.title}`;
 
 export const FOUNDER_NEWS: FounderNote[] = [
+  { date: '2026-11-13', for: ['april', 'zac'], title: 'New things to make and new covers', text: 'In the Cosmic Studio you can now make a tall star scroll, a tarot card from your birthday, and a round badge for today’s sky. Books have three new covers, one with your initials. Your account menu is now sorted into sections, and long chapter lists open faster.' },
+  { date: '2026-11-13', for: ['shane'], title: 'Studio presets, cover suite, perf', text: 'creations.ts scroll/tarot/badge + atomic style; coverDesigns celestial-cartographer, deep-orbit, vintage-monogram (monogramFor); accountSections(); lazy ChapterPart + content-visibility; font preload plugin; Chapter not found view in ShaneEdition. Phone pass as Zac clean.' },
   { date: '2026-11-13', for: ['april', 'zac'], title: 'Photos into notes and characters', text: 'You can now turn a diary photo or PDF into a written note, and turn a photo of yourself into a comic character. Photos aren’t kept, and you see everything before it’s saved.' },
   { date: '2026-11-13', for: ['april', 'zac'], title: 'Friend invites now give credits', text: 'If someone you invite to Zodaci starts paying, you get 20 free credits to spend on readings. Your home page also shows which character you picked.' },
   { date: '2026-11-13', for: ['april', 'zac'], title: 'Keepsakes you can take to a printer', text: 'The certificate and star scroll now download as clean PDFs you can print at home or at a print shop, for yourself or as a gift.' },
