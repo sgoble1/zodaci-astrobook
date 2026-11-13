@@ -559,3 +559,7 @@ Audit Oct 29: Chat/counselors already use the member's chart; podcast/custom pag
 - [x] Demo steps jump to the live chart, reading and book sections.
 - [x] Phone home-screen prompt (manifest only, dismiss remembered).
 - [ ] Delete retired demo podcast asset after next publish.
+
+## Nov 13 — Safety check after slimming
+- [x] Fixed About page (and other fallback pages) crash from the slimming pass
+- [ ] Browser sweep of main pages for errors after optimizations
