@@ -1106,6 +1106,8 @@ export type Database = {
       }
       dream_entries: {
         Row: {
+          ai_reading: string | null
+          ai_reading_at: string | null
           body: string
           created_at: string
           dream_date: string
@@ -1119,6 +1121,8 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          ai_reading?: string | null
+          ai_reading_at?: string | null
           body: string
           created_at?: string
           dream_date?: string
@@ -1132,6 +1136,8 @@ export type Database = {
           user_id?: string
         }
         Update: {
+          ai_reading?: string | null
+          ai_reading_at?: string | null
           body?: string
           created_at?: string
           dream_date?: string

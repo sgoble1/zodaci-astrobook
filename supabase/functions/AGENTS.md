@@ -8,3 +8,4 @@
 - protected-content action 'audit' is admin-only (has_role) and returns counts only (chapters, index size, words, stored-file presence) — no titles or text — so admins can check founder preservation without opening editions.
 - Consult the Observatory (observatory-consult) answers only from the member's chart, browser-computed sky lines, Current Chapter, own Observation Log and opted-in context, with inline source tags; Pro/credit gated, nothing saved, so answers stay owner-scoped and verifiable.
 - Shane's Masterbook corrections (edition-correct) scan chapters deterministically and patch only flagged sentences with exact find/replace (backup kept), so correct text is never rewritten and AI spend stays small.
+- dream-reading writes one symbolic reading of the member's own saved dream (chart + browser-computed night sky only, 1 credit, Pro/Cosmic) onto that dream_entries row through the member's session.

@@ -582,6 +582,13 @@
       "when": 1794592555795,
       "tag": "0082_dream_entries",
       "breakpoints": true
+    },
+    {
+      "idx": 83,
+      "version": "7",
+      "when": 1794593360463,
+      "tag": "0083_dream_reading",
+      "breakpoints": true
     }
   ]
 }

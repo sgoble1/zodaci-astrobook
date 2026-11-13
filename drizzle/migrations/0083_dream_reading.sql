@@ -1,0 +1,1 @@
+ALTER TABLE public.dream_entries ADD COLUMN IF NOT EXISTS ai_reading text, ADD COLUMN IF NOT EXISTS ai_reading_at timestamptz;

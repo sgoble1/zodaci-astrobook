@@ -5,6 +5,8 @@
 export type SiteUpdate = { date: string; title: string; text: string; to?: string; cta?: string };
 
 export const SITE_UPDATES: SiteUpdate[] = [
+  { date: '2026-11-13', title: 'Dream readings', text: 'In your Dream Ledger, tap “Read this dream” for a short reading based on your chart and that night’s sky. It uses one credit and stays private.', to: '/dreams', cta: 'Open the ledger' },
+  { date: '2026-11-13', title: 'Meet the Cosmic Studio', text: 'Creator Studio is now called the Cosmic Studio. Everything you made there is still in place.' },
   { date: '2026-11-13', title: 'A walk-through on the demo page', text: 'The demo page now has a four-step walk-through: birth details, your chart, a reading and your book, shown with our fictional sample reader. The sample AstroBook also gains a life-cycles page.', to: '/demo', cta: 'Try the demo' },
   { date: '2026-11-13', title: 'A smoother, lighter site', text: 'Pages scroll more smoothly, and moving effects pause when you switch to another tab.' },
   { date: '2026-11-13', title: 'A Dream Ledger', text: 'Write down a dream and see what the sky was doing that night against your chart. Only you can see it.', to: '/dreams', cta: 'Open the ledger' },

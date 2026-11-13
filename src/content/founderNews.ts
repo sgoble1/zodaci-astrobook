@@ -11,6 +11,8 @@ export type FounderNote = { date: string; title: string; text: string; to?: stri
 export const noteKey = (n: FounderNote) => `${n.date}:${n.for.join('+')}:${n.title}`;
 
 export const FOUNDER_NEWS: FounderNote[] = [
+  { date: '2026-11-13', for: ['april', 'zac'], title: 'Dreams can be read now', text: 'In the Dream Ledger, one tap writes a short reading of a dream from your chart and that night’s sky. The design studio is now called the Cosmic Studio.' },
+  { date: '2026-11-13', for: ['shane'], title: 'C1 dream readings, Cosmic Studio rename, Lulu check', text: 'dream-reading function live (1 credit). Creator Studio renamed Cosmic Studio. Lulu keys are saved, but the Lulu test system rejects them — they may be live-account keys.' },
   { date: '2026-11-13', for: ['april', 'zac'], title: 'The site feels lighter', text: 'Pages should scroll more smoothly, and the demo page now walks a visitor through Zodaci in four simple steps. Your own pages are unchanged.' },
   { date: '2026-11-13', for: ['shane'], title: 'Batches B12, P1, P3, P4 and the book timeline page', text: 'Demo walk-through replaces the promo film on /demo; still grain textures; animations pause in hidden tabs; heavy libraries pre-bundled and split; upcoming sky events cached; sample AstroBook adds a Volume VI life-cycles page. P2 (My Comic) skipped as risky.' },
   { date: '2026-11-13', for: ['april', 'zac'], title: 'New: a place for your dreams', text: 'You can write down dreams and see what the sky was doing that night. It is private to you, and nothing goes into a book unless you tick the box.', to: '/dreams', cta: 'Try the Dream Ledger' },

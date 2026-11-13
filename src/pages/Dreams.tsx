@@ -10,10 +10,10 @@ import { dreamSky, FEELINGS } from '@/lib/dreamSky';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { toast } from 'sonner';
 
-type Entry = { id: string; dream_date: string; body: string; feelings: string[]; recurring: boolean; use_in_readings: boolean; use_in_book: boolean; use_in_comic: boolean };
+type Entry = { id: string; dream_date: string; body: string; feelings: string[]; recurring: boolean; use_in_readings: boolean; use_in_book: boolean; use_in_comic: boolean; ai_reading?: string | null };
 const today = () => new Date().toISOString().slice(0, 10);
 
-/** Dream ledger: private entries with the calculated sky that night. No AI is used here. */
+/** Dream ledger: private entries with the calculated sky that night. Optional dream readings use one AI credit each. */
 export default function Dreams() {
   usePageMeta('Dream Ledger', 'Write down a dream and see the sky that night against your chart.');
   const birth = useMyBirth();
@@ -36,6 +36,17 @@ export default function Dreams() {
   const toggle = async (e: Entry, k: 'use_in_readings' | 'use_in_book' | 'use_in_comic') => {
     const { error } = await supabase.from('dream_entries').update({ [k]: !e[k] } as { use_in_readings?: boolean; use_in_book?: boolean; use_in_comic?: boolean }).eq('id', e.id);
     if (error) toast.error('That change did not save.'); else void load();
+  };
+  const [reading, setReading] = useState<string | null>(null);
+  const readDream = async (e: Entry) => {
+    if (!natal) return;
+    const s = dreamSky(natal, e.dream_date, e.feelings);
+    const sky = [...s.contacts.map(c => `${c.moving} ${c.aspect} natal ${c.target} (${c.orb}° orb)`), ...s.houses.map(h => `${h.planets.join(', ')} moving through the ${h.house}th house`)];
+    setReading(e.id);
+    const { data, error } = await supabase.functions.invoke('dream-reading', { body: { id: e.id, sky } });
+    setReading(null);
+    if (error || data?.error) { toast.error(data?.error ?? 'The reading could not be written. If you are out of credits, they refresh on the 1st.'); return; }
+    void load();
   };
   const remove = async (e: Entry) => { const { error } = await supabase.from('dream_entries').delete().eq('id', e.id); if (error) toast.error('Could not delete.'); else void load(); };
 
@@ -66,6 +77,8 @@ export default function Dreams() {
             <p className="font-label text-xs tracking-wider text-primary">{new Date(e.dream_date + 'T12:00').toLocaleDateString(undefined, { dateStyle: 'long' })}{e.recurring ? ' · recurring' : ''}</p>
             <p className="whitespace-pre-wrap">{e.body}</p>
             {natal && <SkySlip sky={dreamSky(natal, e.dream_date, e.feelings)} />}
+            {e.ai_reading ? <div className="whitespace-pre-wrap rounded-sm border border-border bg-card/60 p-3 text-sm"><p className="font-label text-xs tracking-wider text-primary">Dream reading</p>{e.ai_reading}</div>
+              : <Button size="sm" variant="outline" disabled={reading === e.id} onClick={() => readDream(e)}>{reading === e.id ? 'Writing…' : 'Read this dream (1 credit)'}</Button>}
             <div className="flex flex-wrap items-center gap-3 text-sm">
               <span className="text-muted-foreground">Allowed in:</span>
               {([['use_in_readings', 'Readings'], ['use_in_book', 'Printed book'], ['use_in_comic', 'Comic']] as const).map(([k, l]) => <label key={k} className="flex items-center gap-1.5"><input type="checkbox" checked={e[k]} onChange={() => toggle(e, k)} />{l}</label>)}
