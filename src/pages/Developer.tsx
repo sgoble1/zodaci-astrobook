@@ -15,7 +15,7 @@ import { DEV_KINDS as KINDS, DEV_ORDER as ORDER, DEV_PRIORITY as PRIORITY, DEV_S
 
 type Stats = Record<string, number>;
 type Tally = Pick<Item, 'kind' | 'status' | 'title' | 'cost_cents'>;
-const STAT_LABELS: [string, string][] = [['members', 'Accounts'], ['members_7d', 'New this week'], ['readings', 'Readings written'], ['readings_7d', 'Readings this week'], ['podcasts', 'Podcasts'], ['creations', 'Creator Studio saves'], ['ai_uses_month', 'AI calls this month'], ['ai_credits_month', 'Member credits used'], ['paid_live', 'Paid memberships'], ['book_orders', 'Paid book orders'], ['comic_subs', 'Comic subscriptions'], ['events_24h', 'Activity, last 24 h'], ['contact_open', 'Unanswered messages']];
+const STAT_LABELS: [string, string][] = [['members', 'Accounts'], ['members_7d', 'New this week'], ['readings', 'Readings written'], ['readings_7d', 'Readings this week'], ['podcasts', 'Podcasts'], ['creations', 'Cosmic Studio saves'], ['ai_uses_month', 'AI calls this month'], ['ai_credits_month', 'Member credits used'], ['paid_live', 'Paid memberships'], ['book_orders', 'Paid book orders'], ['comic_subs', 'Comic subscriptions'], ['events_24h', 'Activity, last 24 h'], ['contact_open', 'Unanswered messages']];
 const sel = 'h-10 rounded-md border border-input bg-background px-2 text-sm';
 const storage = () => (typeof window === 'undefined' ? null : (() => { try { return window.localStorage; } catch { return null; } })());
 

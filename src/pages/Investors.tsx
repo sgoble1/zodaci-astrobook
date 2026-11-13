@@ -28,7 +28,7 @@ const LIVE = [
   'Charts calculated in-app (planets, houses, angles, nodes, Chiron, asteroids) and checked against reference ephemerides in automated tests.',
   'Personal readings by tier, chart-aware AI counselors that replay full sessions, workbook tools and private shared spaces for couples and family.',
   'Studio-voiced personal podcasts written from each member’s chart, saved to a private library.',
-  'Creator Studio: chart wallpapers, posters, journal pages and affirmation cards to download or save, plus one-time AI credit packs.',
+  'Cosmic Studio: chart wallpapers, posters, journal pages and affirmation cards to download or save, plus one-time AI credit packs.',
   'Chart-matched shop picks: members see shop items chosen from their own Sun, Moon and Rising signs, and pick one of twelve drawn observatory characters to represent them across the site.',
   'Other Systems: Vedic, Chinese Ba Zi, numerology, Feng Shui and Flying Stars, Nine Star Ki, Tzolk’in and more — all from the same birth data.',
   'Six-volume AstroBook builder with cover designer, previews and print-ready PDFs; three fully illustrated sample pages on the public site.',
@@ -51,7 +51,7 @@ const SOCIAL = [
 const FUTURE = [
   ['Make your own comic hero', 'Today members choose one of twelve drawn characters to represent them. Next, a full designer: face, hair, skin tone, build, clothing and signature colours, saved once and reused in every monthly issue.'],
   ['Three illustration styles', 'Choose how each issue is drawn: Atomic Zodiac (1950s golden-age comic, the house style), Celestial Manga (clean line and screen tones) or Painted Myth (rich painted fantasy). Same chart story, three looks.'],
-  ['Printed creations', 'Order a Creator Studio poster as a framed print, a card set as a deck or journal pages as a bound planner, made by the existing print partner.'],
+  ['Printed creations', 'Order a Cosmic Studio poster as a framed print, a card set as a deck or journal pages as a bound planner, made by the existing print partner.'],
 ];
 const WHY_TRUST = [
   ['Calculated, not guessed', 'Positions come from a published astronomical engine using the exact birth time, place and historical time zone. Automated tests check planets, angles and houses against professional references to within one degree.'],
@@ -74,7 +74,7 @@ const STUDIO = [
   ['Live today', 'Pro and Cosmic members design phone wallpapers, 8 × 12 in chart posters, journal and planner pages and affirmation cards from their exact placements, then download them or keep them in a private library. They can also write new Masterbook chapters and voiced podcasts on any topic.'],
   ['Why it earns', 'Every design is one of a kind, made from one person’s chart, so it is a natural gift. Ordering a design as a framed print, deck or bound planner is planned next; today members download or save them.'],
   ['Credit packs', `AI creations use credits. Members who want more buy one-time packs from $${CREDIT_PACKS[0].price} to $${CREDIT_PACKS[CREDIT_PACKS.length - 1].price} — revenue that grows with engagement, on top of the membership.`],
-  ['With the social network', 'Shared creations spread the brand: a friend sees a chart poster, makes their own, then orders a couple’s print. Social + Creator Studio + shop is a loop where every share can become a sale.'],
+  ['With the social network', 'Shared creations spread the brand: a friend sees a chart poster, makes their own, then orders a couple’s print. Social + Cosmic Studio + shop is a loop where every share can become a sale.'],
 ];
 const STUDIO_ROWS = [
   { members: 10_000, makers: 0.3, printers: 0.03, packs: 0.02 },
@@ -148,7 +148,7 @@ export default function Investors() {
       </section>
 
       <section aria-labelledby="inv-cs" className="space-y-5">
-        <div className="max-w-3xl"><p className="font-label text-xs tracking-[0.16em] text-primary">Major income lever</p><h2 id="inv-cs" className="mt-1 text-3xl sm:text-4xl">Creator Studio</h2><p className="mt-3 text-muted-foreground">Members don’t just read about their chart — they make things from it. That turns a subscription into a personal product shop.</p></div>
+        <div className="max-w-3xl"><p className="font-label text-xs tracking-[0.16em] text-primary">Major income lever</p><h2 id="inv-cs" className="mt-1 text-3xl sm:text-4xl">Cosmic Studio</h2><p className="mt-3 text-muted-foreground">Members don’t just read about their chart — they make things from it. That turns a subscription into a personal product shop.</p></div>
         <div className="grid gap-4 sm:grid-cols-2">{STUDIO.map(([t, d]) => <div key={t} className="vellum p-5"><h3 className="text-xl">{t}</h3><p className="mt-2 text-sm text-muted-foreground">{d}</p></div>)}</div>
         <div className="overflow-x-auto"><table className="w-full text-sm"><thead><tr className="text-left text-muted-foreground"><th className="p-2">Members</th><th className="p-2">Make something</th><th className="p-2">Order a print (2/yr, ${PRINT_AVG})</th><th className="p-2">Buy credit packs (2/yr, ${PACK_AVG})</th><th className="p-2 text-right">Extra yearly revenue</th></tr></thead>
           <tbody>{STUDIO_ROWS.map(r => <tr key={r.members} className="border-t border-border/60"><td className="p-2">{r.members.toLocaleString()}</td><td className="p-2">{r.makers * 100}%</td><td className="p-2">{r.printers * 100}%</td><td className="p-2">{r.packs * 100}%</td><td className="p-2 text-right font-display text-xl text-gold">{usd(studioYear(r))}</td></tr>)}</tbody></table></div>

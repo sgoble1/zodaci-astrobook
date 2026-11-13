@@ -21,7 +21,7 @@ import { TrustStrip, WhyZodaciLine } from '@/components/brand/WhyZodaci';
 type Card = { tier: Tier; slug: 'free' | 'pro' | 'cosmic'; cta: string; blurb: string; items: string[] };
 const CARDS: Card[] = [
   { tier: 'free', slug: 'free', cta: 'Start for free', blurb: 'Everything you need to meet your chart.', items: ['Your calculated birth chart wheel', 'Sun, Moon and Rising with exact degrees', 'Two full readings: Your Big Three and Personality & Strengths', 'A preview section of all 12 core themes', 'RetroGOOD rating and your Blueprint', `${CREDIT_ALLOWANCE.free} AI credits every month`] },
-  { tier: 'full', slug: 'pro', cta: 'Get Pro', blurb: 'Every feature, written from your chart.', items: ['All 38 readings at full, in-depth length', 'Every planet, house explorer, aspect grid, Hermetic lots and profections', 'Timing, Other Systems, counselors and workbook', 'Personal podcasts and the Creator Studio', 'Your own Masterbook with new chapters on any topic', `${CREDIT_ALLOWANCE.full} AI credits every month`] },
+  { tier: 'full', slug: 'pro', cta: 'Get Pro', blurb: 'Every feature, written from your chart.', items: ['All 38 readings at full, in-depth length', 'Every planet, house explorer, aspect grid, Hermetic lots and profections', 'Timing, Other Systems, counselors and workbook', 'Personal podcasts and the Cosmic Studio', 'Your own Masterbook with new chapters on any topic', `${CREDIT_ALLOWANCE.full} AI credits every month`] },
   { tier: 'creator', slug: 'cosmic', cta: 'Become Cosmic', blurb: 'Everything in Pro, with room to make more.', items: ['Everything in Pro — every feature', `${CREDIT_ALLOWANCE.creator} AI credits every month (vs ${CREDIT_ALLOWANCE.full})`, 'More podcasts, chapters and creations each month'] },
 ];
 const rank: Record<Tier, number> = { free: 0, full: 1, creator: 2 };
@@ -146,7 +146,7 @@ export default function Pricing() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-      {(sub.tier === 'full' || sub.tier === 'creator') && <p className="text-center"><Button asChild><Link to="/creator">Open Creator Studio</Link></Button></p>}
+      {(sub.tier === 'full' || sub.tier === 'creator') && <p className="text-center"><Button asChild><Link to="/creator">Open Cosmic Studio</Link></Button></p>}
       {(sub.tier === 'full' || sub.tier === 'creator') && <div className="space-y-2"><CreatorStudio /><p className="text-center text-sm"><Link to="/my-masterbook" className="underline">Open My Masterbook to read and play what you’ve made</Link></p></div>}
       <TrustStrip />
       <WhyZodaciLine />

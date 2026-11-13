@@ -47,7 +47,7 @@ export function toArchiveEntries(raw: ArchiveRaw): ArchiveEntry[] {
   (raw.custom ?? []).filter(c => c.status !== 'failed').forEach(c => out.push({ id: `c-${c.id}`, kind: 'page', title: c.title, when: c.updated_at, to: `/p/${c.id}`, detail: c.status === 'generating' ? 'Still being written' : 'A page you asked for' }));
   (raw.library ?? []).forEach(l => {
     const kind: ArchiveKind = l.kind === 'podcast' ? 'audio' : l.kind === 'creation' ? 'creation' : 'upload';
-    out.push({ id: `l-${l.id}`, kind, title: l.title, when: l.created_at, to: kind === 'audio' ? '/podcasts' : '/my-astrobook', detail: kind === 'audio' ? 'Audio episode in your library' : kind === 'creation' ? 'Creator Studio design' : 'Uploaded file' });
+    out.push({ id: `l-${l.id}`, kind, title: l.title, when: l.created_at, to: kind === 'audio' ? '/podcasts' : '/my-astrobook', detail: kind === 'audio' ? 'Audio episode in your library' : kind === 'creation' ? 'Cosmic Studio design' : 'Uploaded file' });
   });
   (raw.orders ?? []).forEach(o => out.push({ id: `o-${o.id}`, kind: 'book', title: `${words(o.edition)} AstroBook`, when: o.created_at, to: `/orders?order=${o.id}`, detail: `${o.format === 'digital' ? 'Digital PDF' : 'Printed book'} · ${o.status.replace(/_/g, ' ')}` }));
   (raw.issues ?? []).forEach(i => out.push({ id: `i-${i.id}`, kind: 'comic', title: `Issue #${i.issue_number}${i.title ? ` · ${i.title}` : ''}`, when: `${i.issue_month}T12:00:00Z`, to: '/my-comic', detail: `AstroComic · ${i.status.replace(/_/g, ' ')}` }));

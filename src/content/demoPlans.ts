@@ -1,6 +1,6 @@
 import { CREDIT_ALLOWANCE, type Tier } from '@/lib/plans';
 
-const PAID_POINTS = ['Every section of every reading', 'Your Masterbook to read online', 'Custom chapters, podcasts and Creator Studio', 'Chiron, the Nodes and deeper timing'];
+const PAID_POINTS = ['Every section of every reading', 'Your Masterbook to read online', 'Custom chapters, podcasts and Cosmic Studio', 'Chiron, the Nodes and deeper timing'];
 
 /** The demo compares reading access; paid plans differ only in monthly credits. */
 export const DEMO_PLANS: Record<Tier, { sections: number; points: string[] }> = {

@@ -21,7 +21,7 @@ const TOOLS: [string, string, string][] = [
 
 /** Creator members' home: their charts, readings and creation tools in one place. Server checks still gate every Creator action. */
 export default function CreatorDashboard() {
-  usePageMeta('Creator Studio | Zodaci', 'Manage your charts, readings and creations.');
+  usePageMeta('Cosmic Studio | Zodaci', 'Manage your charts, readings and creations.');
   const sub = useSubscription();
   const access = usePlan();
   const [error, setError] = useState(false);
@@ -31,7 +31,7 @@ export default function CreatorDashboard() {
   if (access.loading) return <div role="status" className="h-40 animate-pulse rounded bg-muted" />;
   if (access.plan === 'free') return (
     <article className="mx-auto max-w-xl space-y-4 text-center">
-      <h1 className="font-display text-4xl">Creator Studio</h1>
+      <h1 className="font-display text-4xl">Cosmic Studio</h1>
       <p className="text-muted-foreground">Pro and Cosmic members design wallpapers, posters, journal pages and cards, write new chapters and make podcasts from their own chart.</p>
       <Button asChild><Link to="/pricing">See Pro</Link></Button>
     </article>
