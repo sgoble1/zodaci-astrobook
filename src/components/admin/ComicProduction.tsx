@@ -222,7 +222,7 @@ export function ComicProduction({ issue, onChanged }: { issue: Issue; onChanged:
           <div className="text-sm"><p className="font-medium">Drawing page {progress.key.split('-')[0]}, panel {Number(progress.key.split('-')[1]) + 1}</p><p className="text-muted-foreground">{progress.done} of {progress.total} done · large panels can take a minute or two.</p></div>
         </div>
       )}
-      <p className="text-xs text-muted-foreground">Print file: 5.5 × 8.5 in with 0.125 in bleed, trim and bleed boxes set, font embedded, every panel checked for {MIN_DPI} DPI. Colour is RGB — the printer converts to CMYK in their preflight.</p>
+      <p className="text-xs text-muted-foreground">Lulu comic print file: 6.663 × 10.25 in with 0.125 in bleed, trim and bleed boxes set, font embedded, every panel checked for {MIN_DPI} DPI. Four cover faces become two cover spreads; the other 20 pages form the interior. Colour is RGB — Lulu converts to CMYK in preflight. Older digest files and artwork need rebuilding.</p>
 
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">{script.pages.map(p => <ComicPageView key={p.n} page={p} compact art={urls} />)}</div>
 

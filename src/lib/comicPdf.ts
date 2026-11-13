@@ -25,7 +25,7 @@ export async function fontMeasure(fontBytes: Uint8Array): Promise<Measure> {
 }
 
 /**
- * Compose the 24-page AstroComic: 5.5 × 8.5 in trim with 0.125 in bleed on every side (MediaBox = BleedBox),
+ * Compose the 24-page AstroComic: Lulu comic trim with 0.125 in bleed on every side (MediaBox = BleedBox),
  * TrimBox set on each page, one embedded font, and lettering set as live text inside the safe area.
  * Proof mode draws missing artwork as labelled placeholders and marks every page; print mode requires all artwork.
  */
@@ -46,7 +46,7 @@ export async function composeComicPdf({ issue, fontBytes, art, mode, now = new D
 
   pdf.setTitle(`${issue.title} — AstroComic No. ${issue.issueNumber}`);
   pdf.setAuthor('Zodaci');
-  pdf.setSubject(`AstroComic · ${issue.monthLabel} · 5.5 × 8.5 in digest, 0.125 in bleed${mode === 'proof' ? ' · PROOF' : ''}`);
+  pdf.setSubject(`AstroComic · ${issue.monthLabel} · 6.663 × 10.25 in Lulu comic, 0.125 in bleed${mode === 'proof' ? ' · PROOF' : ''}`);
   pdf.setKeywords(['AstroComic', 'Zodaci', issue.monthLabel, `Issue ${issue.issueNumber}`]);
   pdf.setCreator('Zodaci AstroComic');
   pdf.setProducer('Zodaci');
@@ -236,7 +236,7 @@ export async function composePreflightPdf(input: { title: string; issueNumber: n
   const r = input.report;
   const facts: [string, string][] = [
     ['Checked', new Date(r.checkedAt).toLocaleString('en-US')], ['Pages', String(r.pages)], ['Panels illustrated', `${r.illustrated} of ${r.panels}`],
-    ['Lowest resolution', r.minDpi != null ? `${r.minDpi} DPI` : '-'], ['Trim and bleed', '5.5 x 8.5 in, 0.125 in bleed, font embedded'],
+    ['Lowest resolution', r.minDpi != null ? `${r.minDpi} DPI` : '-'], ['Trim and bleed', '6.663 x 10.25 in, 0.125 in bleed, font embedded'],
     ['Print file', input.printFileBuilt ? `Built ${new Date(input.printFileBuilt).toLocaleString('en-US')}` : 'Not built from this check'],
   ];
   for (const [k, v] of facts) { page.drawText(clean(k), { x: left, y, size: 10, font, color: GOLD }); page.drawText(clean(v), { x: left + 140, y, size: 10, font, color: INK }); y -= 16; }

@@ -1,5 +1,5 @@
 import { createClient } from 'npm:@supabase/supabase-js@2';
-import { applyJobUpdate, luluEnv, verifyLuluSignature } from '../_shared/lulu.ts';
+import { applyJobUpdate, applyComicJobUpdate, luluEnv, verifyLuluSignature } from '../_shared/lulu.ts';
 
 /** Receives Lulu PRINT_JOB_STATUS_CHANGED webhooks. Only signed bodies are trusted; unknown jobs are acknowledged and ignored. */
 Deno.serve(async req => {
@@ -12,10 +12,18 @@ Deno.serve(async req => {
     if (payload?.topic !== 'PRINT_JOB_STATUS_CHANGED') return new Response('ignored', { status: 200 });
     const id = Number(payload?.data?.id);
     if (!Number.isFinite(id)) return new Response('ignored', { status: 200 });
-    const db = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!);
+    const url = Deno.env.get('SUPABASE_URL'), key = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
+    if (!url || !key) throw new Error('Service unavailable');
+    const db = createClient(url, key);
     const { data: row, error } = await db.from('lulu_print_jobs').select('id,order_id,environment,status').eq('environment', luluEnv()).eq('lulu_job_id', id).maybeSingle();
     if (error) throw error;
-    if (!row) return new Response('unknown job', { status: 200 });
+    if (!row) {
+      const comic = await db.from('comic_lulu_print_jobs').select('id,issue_id,environment,status').eq('environment', luluEnv()).eq('lulu_job_id', id).maybeSingle();
+      if (comic.error) throw comic.error;
+      if (!comic.data) return new Response('unknown job', { status: 200 });
+      await applyComicJobUpdate(db, comic.data, payload.data);
+      return new Response('ok', { status: 200 });
+    }
     await applyJobUpdate(db, row, payload.data);
     return new Response('ok', { status: 200 });
   } catch (e) {

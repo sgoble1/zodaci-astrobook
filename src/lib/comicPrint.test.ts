@@ -18,11 +18,11 @@ const overlaps = (a: { x: number; y: number; w: number; h: number }, b: { x: num
 describe('AstroComic print geometry', async () => {
   const measure = await fontMeasure(fontBytes);
 
-  it('is a 5.5 × 8.5 in digest with 0.125 in bleed and a 0.25 in safe area', () => {
-    expect(TRIM).toEqual({ w: 396, h: 612 });
-    expect(MEDIA).toEqual({ w: 414, h: 630 });
+  it('uses Lulu comic trim with 0.125 in bleed and a 0.25 in safe area', () => {
+    expect(TRIM).toEqual({ w: 6.663 * 72, h: 738 });
+    expect(MEDIA).toEqual({ w: 6.663 * 72 + 18, h: 756 });
     expect(BLEED).toBe(9);
-    expect(LIVE).toEqual({ x: 27, y: 27, w: 360, h: 576 });
+    expect(LIVE).toEqual({ x: 27, y: 27, w: 6.663 * 72 - 36, h: 702 });
   });
 
   it('keeps interior panels and text inside the safe area, never overlapping; only bleed rows reach the edge', () => {
@@ -96,9 +96,9 @@ describe('AstroComic PDF', () => {
     expect(pages).toBe(PRINT_PAGES);
     const doc = await PDFDocument.load(bytes);
     expect(doc.getPageCount()).toBe(PRINT_PAGES);
-    expect(boxOf(doc, 0, 'MediaBox')).toEqual([0, 0, 414, 630]);
-    expect(boxOf(doc, 5, 'BleedBox')).toEqual([0, 0, 414, 630]);
-    expect(boxOf(doc, 5, 'TrimBox')).toEqual([9, 9, 405, 621]);
+    expect(boxOf(doc, 0, 'MediaBox')).toEqual([0, 0, MEDIA.w, MEDIA.h]);
+    expect(boxOf(doc, 5, 'BleedBox')).toEqual([0, 0, MEDIA.w, MEDIA.h]);
+    expect(boxOf(doc, 5, 'TrimBox')).toEqual([9, 9, TRIM.w + 9, TRIM.h + 9]);
   });
 
   it('refuses to build the print file while any panel lacks artwork', async () => {

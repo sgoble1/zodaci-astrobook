@@ -9,6 +9,8 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import { ComicProduction } from '@/components/admin/ComicProduction';
+import { useLulu } from '@/components/admin/LuluPrint';
+import { LuluComicActions } from '@/components/admin/LuluComicActions';
 import { confirmAction } from '@/components/common/ConfirmHost';
 import { computeChart, type HouseSystem } from '@/lib/astro';
 import { buildComicIssue, COMIC_PLANS, comicDueFor, manifestCsv, monthKey, monthLabel, shipBy, type ComicIssue, type ComicPlan } from '@/lib/comic';
@@ -36,12 +38,17 @@ export function ComicQueue() {
   const [err, setErr] = useState('');
   const [busy, setBusy] = useState('');
   const [preview, setPreview] = useState<string | null>(null);
+  const lulu = useLulu();
+  const [luluJobs, setLuluJobs] = useState<Tables<'comic_lulu_print_jobs'>[]>([]);
   const key = monthKey(month);
   const load = useCallback(async () => {
     setErr('');
     const [m, i, r] = await Promise.all([supabase.rpc('admin_comic_manifest'), supabase.from('comic_issues').select('*').order('issue_month', { ascending: false }).limit(2000), supabase.from('comic_print_runs').select('*').eq('issue_month', key).maybeSingle()]);
     if (m.error || i.error) { setErr('The AstroComic queue could not be loaded.'); setSubs([]); return; }
     setSubs((m.data ?? []) as Sub[]); setIssues(i.data ?? []); setRun(r.data ?? null);
+    const jobs = await supabase.from('comic_lulu_print_jobs').select('*').order('created_at', { ascending: false }).limit(2000);
+    if (jobs.error) setErr('Lulu comic jobs could not be loaded. Refresh before printing.');
+    else setLuluJobs(jobs.data ?? []);
   }, [key]);
   useEffect(() => { void load(); }, [load]);
 
@@ -141,7 +148,7 @@ export function ComicQueue() {
               <td className="p-3">{!i ? null : i.status === 'draft' ? <div className="flex flex-wrap gap-1"><Button size="sm" disabled={!r.addrOk} onClick={() => void setStatus(i, 'approved')}>Approve</Button><Button size="sm" variant="ghost" onClick={() => void setStatus(i, 'skipped')}>Skip</Button></div>
                 : i.status === 'approved' ? <div className="flex flex-wrap gap-1"><Button size="sm" variant="outline" onClick={() => void setStatus(i, 'printing')}><Printer className="h-3.5 w-3.5" />Mark printing</Button><Button size="sm" variant="ghost" onClick={() => void setStatus(i, 'draft')}>Back to draft</Button></div>
                 : i.status === 'printing' ? <form className="grid gap-1" onSubmit={e => { e.preventDefault(); void ship(i, new FormData(e.currentTarget)); }}><select name="carrier" aria-label="Carrier" className="h-8 rounded border border-border bg-input px-2 text-xs" defaultValue="USPS">{['USPS', 'UPS', 'FedEx'].map(c => <option key={c}>{c}</option>)}</select><Input name="tracking" aria-label="Tracking number" placeholder="Tracking" className="h-8 text-xs" maxLength={120} /><Input name="date" aria-label="Dispatch date" type="date" className="h-8 text-xs" defaultValue={new Date().toISOString().slice(0, 10)} max={new Date().toISOString().slice(0, 10)} /><Button size="sm" type="submit">Mark shipped</Button></form>
-                : i.status === 'skipped' ? <Button size="sm" variant="ghost" onClick={() => void setStatus(i, 'draft')}>Restore draft</Button> : <span className="text-xs text-muted-foreground">Done</span>}</td>
+                : i.status === 'skipped' ? <Button size="sm" variant="ghost" onClick={() => void setStatus(i, 'draft')}>Restore draft</Button> : <span className="text-xs text-muted-foreground">Done</span>}{i && <LuluComicActions issue={i} status={lulu.status} jobs={luluJobs} onChanged={() => void load()} />}</td>
             </tr>
           ); })}</tbody>
         </table></div>
@@ -150,7 +157,7 @@ export function ComicQueue() {
 
       <form key={run?.id ?? key} className="vellum grid gap-3 p-5 sm:grid-cols-4" onSubmit={e => { e.preventDefault(); void saveRun(new FormData(e.currentTarget)); }} aria-labelledby="run-h">
         <div className="sm:col-span-4"><h3 id="run-h" className="text-lg">Print run · {monthLabel(month)}</h3><p className="text-xs text-muted-foreground">{approvedCount} approved issue{approvedCount === 1 ? '' : 's'} this month. Record the printer’s quote and order so costs stay visible.</p></div>
-        <div><Label htmlFor="run-printer">Printer</Label><Input id="run-printer" name="printer" defaultValue={run?.printer ?? ''} maxLength={120} placeholder="Printer name" /></div>
+        <div><Label htmlFor="run-printer">Printer</Label><Input id="run-printer" name="printer" defaultValue={run?.printer ?? 'Lulu'} maxLength={120} placeholder="Printer name" /></div>
         <div><Label htmlFor="run-qty">Quantity</Label><Input id="run-qty" name="quantity" type="number" min={0} defaultValue={run?.quantity ?? approvedCount} /></div>
         <div><Label htmlFor="run-quote">Quote ($)</Label><Input id="run-quote" name="quote" type="number" min={0} step="0.01" defaultValue={dollars(run?.quote_cents)} /></div>
         <div><Label htmlFor="run-actual">Actual cost ($)</Label><Input id="run-actual" name="actual" type="number" min={0} step="0.01" defaultValue={dollars(run?.actual_cents)} /></div>
@@ -163,7 +170,7 @@ export function ComicQueue() {
       </form>
 
       {notDue.length > 0 && <details className="text-sm"><summary className="cursor-pointer text-muted-foreground">Not due this month ({notDue.length})</summary><ul className="mt-2 space-y-1">{notDue.map(r => <li key={r.s.subscription_id}>{r.s.display_name || r.s.email} · {COMIC_PLANS[r.s.plan as ComicPlan]?.name ?? r.s.plan} · <span className="text-muted-foreground">{r.due.reason}</span></li>)}</ul></details>}
-      <p className="text-xs text-muted-foreground">The manifest contains names and delivery addresses for printing and mailing only. Each issue’s print file is built under Production once every panel is illustrated. Until a printer account is connected, send the manifest and print files to the printer by hand.</p>
+      <p className="text-xs text-muted-foreground">The manifest contains names and delivery addresses for printing and mailing only. Build and check each issue under Production, then preview its Lulu files before sending. Lulu prints full-colour saddle-stitched comics; older digest files need rebuilding.</p>
     </div>
   );
 }

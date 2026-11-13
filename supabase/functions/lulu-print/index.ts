@@ -3,7 +3,8 @@ import { createClient, type SupabaseClient } from 'npm:@supabase/supabase-js@2';
 import { z } from 'npm:zod@3';
 import { finalizeBookPdf } from '../_shared/book-delivery.ts';
 import { isPaidBook } from '../_shared/book-delivery-rules.ts';
-import { LuluError, applyJobUpdate, lulu, luluConfigured, luluEnv, luluShippingLevel } from '../_shared/lulu.ts';
+import { LuluError, applyJobUpdate, applyComicJobUpdate, lulu, luluConfigured, luluEnv, luluShippingLevel } from '../_shared/lulu.ts';
+import { handleComic } from '../_shared/lulu-comic.ts';
 import { CANCELLABLE, FAILED_STATUSES, POD_PACKAGES, PRODUCTION_DELAY_MINUTES, TRIM_PT, decimalToCents, foilText, interiorPageCount, isLinen, isPrintEdition, luluAddress, pageLimitError, type PrintEdition } from '../_shared/lulu-rules.ts';
 import { buildCoverWrap, buildInterior } from '../_shared/lulu-files.ts';
 
@@ -11,11 +12,11 @@ const json = (b: unknown, status = 200) => new Response(JSON.stringify(b), { sta
 const Address = z.object({ name: z.string().max(80).optional(), line1: z.string().min(1).max(80), line2: z.string().max(80).optional(), city: z.string().min(1).max(60), state: z.string().min(2).max(3), postal_code: z.string().min(3).max(12), country: z.literal('US').default('US'), phone: z.string().max(25).optional() });
 const Body = z.discriminatedUnion('action', [
   z.object({ action: z.literal('status') }),
-  z.object({ action: z.literal('quote'), orderId: z.string().uuid().optional(), edition: z.enum(['pocket', 'classic', 'signature', 'linen']).optional(), pages: z.number().int().min(1).max(900).optional(), address: Address.optional() }),
-  z.object({ action: z.literal('proof'), orderId: z.string().uuid() }),
-  z.object({ action: z.literal('submit'), orderId: z.string().uuid() }),
-  z.object({ action: z.literal('sync'), jobId: z.string().uuid() }),
-  z.object({ action: z.literal('cancel'), jobId: z.string().uuid() }),
+  z.object({ action: z.literal('quote'), issueId: z.string().uuid().optional(), orderId: z.string().uuid().optional(), edition: z.enum(['pocket', 'classic', 'signature', 'linen']).optional(), pages: z.number().int().min(1).max(900).optional(), address: Address.optional() }),
+  z.object({ action: z.literal('proof'), orderId: z.string().uuid().optional(), issueId: z.string().uuid().optional() }),
+  z.object({ action: z.literal('submit'), orderId: z.string().uuid().optional(), issueId: z.string().uuid().optional() }),
+  z.object({ action: z.literal('sync'), jobId: z.string().uuid(), product: z.literal('comic').optional() }),
+  z.object({ action: z.literal('cancel'), jobId: z.string().uuid(), product: z.literal('comic').optional() }),
   z.object({ action: z.literal('register-webhook') }),
 ]);
 const SETTINGS_KEY = 'lulu_webhook';
@@ -109,6 +110,12 @@ Deno.serve(async req => {
     }
     if (!luluConfigured()) return json({ error: 'Lulu is not connected yet. Add the Lulu client key and secret first.' }, 503);
 
+    if (['quote','proof','submit'].includes(body.action) && 'issueId' in body && body.issueId) {
+      if ('orderId' in body && body.orderId) return json({ error: 'Choose a book order or comic issue, not both.' }, 400);
+      return json(await handleComic(db, body.action, body.issueId, env, user));
+    }
+    if ((body.action === 'proof' || body.action === 'submit') && !body.orderId) return json({ error: 'Choose an order or issue.' }, 400);
+
     if (body.action === 'quote') {
       let edition: PrintEdition, pages: number, ship: Record<string, string> | undefined;
       if (body.orderId) {
@@ -129,11 +136,12 @@ Deno.serve(async req => {
       const limit = pageLimitError(edition, pages);
       if (limit) return json({ error: limit }, 400);
       const level = luluShippingLevel();
-      const q = await lulu('/print-job-cost-calculations/', { method: 'POST', body: { line_items: [{ page_count: pages, pod_package_id: POD_PACKAGES[edition], quantity: 1 }], shipping_address: { ...ship, phone_number: ship!.phone_number || '000-000-0000' }, shipping_option: level } });
+      const q = await lulu('/print-job-cost-calculations/', { method: 'POST', body: { line_items: [{ page_count: pages, pod_package_id: POD_PACKAGES[edition], quantity: 1 }], shipping_address: { ...ship, phone_number: ship?.phone_number || '000-000-0000' }, shipping_option: level } });
       return json({ quote: { edition, pages, shipping_level: level, environment: env, ...quoteSummary(q) } });
     }
 
     if (body.action === 'proof') {
+      if (!body.orderId) return json({ error: 'Order required.' }, 400);
       const order = await loadOrder(db, body.orderId);
       const edition = printable(order); readyToPrint(order, env);
       const files = await prepareFiles(db, order, edition, 'proof');
@@ -142,6 +150,7 @@ Deno.serve(async req => {
     }
 
     if (body.action === 'submit') {
+      if (!body.orderId) return json({ error: 'Order required.' }, 400);
       const order = await loadOrder(db, body.orderId);
       const edition = printable(order); readyToPrint(order, env);
       const ship = luluAddress(order.shipping_address);
@@ -183,7 +192,7 @@ Deno.serve(async req => {
     }
 
     if (body.action === 'sync' || body.action === 'cancel') {
-      const { data: row, error } = await db.from('lulu_print_jobs').select('*').eq('id', body.jobId).maybeSingle();
+      const { data: row, error } = await db.from(body.product === 'comic' ? 'comic_lulu_print_jobs' : 'lulu_print_jobs').select('*').eq('id', body.jobId).maybeSingle();
       if (error) throw error;
       if (!row) return json({ error: 'Print job not found.' }, 404);
       if (!row.lulu_job_id) return json({ error: 'This attempt never reached Lulu.' }, 409);
@@ -193,7 +202,7 @@ Deno.serve(async req => {
         await lulu(`/print-jobs/${row.lulu_job_id}/status/`, { method: 'PUT', body: { name: 'CANCELED' } });
       }
       const job = await lulu(`/print-jobs/${row.lulu_job_id}/`);
-      const result = await applyJobUpdate(db, row, job);
+      const result = body.product === 'comic' ? await applyComicJobUpdate(db, row, job) : await applyJobUpdate(db, row, job);
       return json({ status: result.status, note: result.note, failed: FAILED_STATUSES.includes(result.status) });
     }
 

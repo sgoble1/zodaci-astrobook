@@ -658,6 +658,86 @@ export type Database = {
           },
         ]
       }
+      comic_lulu_print_jobs: {
+        Row: {
+          arrival_max: string | null
+          arrival_min: string | null
+          carrier_name: string
+          cover_path: string | null
+          created_at: string
+          created_by: string | null
+          currency: string | null
+          environment: string
+          id: string
+          interior_path: string | null
+          issue_id: string
+          lulu_job_id: number | null
+          page_count: number
+          pod_package_id: string
+          shipping_level: string
+          status: string
+          status_message: string
+          total_cost_cents: number | null
+          tracking_id: string
+          tracking_url: string
+          updated_at: string
+        }
+        Insert: {
+          arrival_max?: string | null
+          arrival_min?: string | null
+          carrier_name?: string
+          cover_path?: string | null
+          created_at?: string
+          created_by?: string | null
+          currency?: string | null
+          environment: string
+          id?: string
+          interior_path?: string | null
+          issue_id: string
+          lulu_job_id?: number | null
+          page_count: number
+          pod_package_id: string
+          shipping_level: string
+          status?: string
+          status_message?: string
+          total_cost_cents?: number | null
+          tracking_id?: string
+          tracking_url?: string
+          updated_at?: string
+        }
+        Update: {
+          arrival_max?: string | null
+          arrival_min?: string | null
+          carrier_name?: string
+          cover_path?: string | null
+          created_at?: string
+          created_by?: string | null
+          currency?: string | null
+          environment?: string
+          id?: string
+          interior_path?: string | null
+          issue_id?: string
+          lulu_job_id?: number | null
+          page_count?: number
+          pod_package_id?: string
+          shipping_level?: string
+          status?: string
+          status_message?: string
+          total_cost_cents?: number | null
+          tracking_id?: string
+          tracking_url?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "comic_lulu_print_jobs_issue_id_fkey"
+            columns: ["issue_id"]
+            isOneToOne: false
+            referencedRelation: "comic_issues"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       comic_print_runs: {
         Row: {
           actual_cents: number | null

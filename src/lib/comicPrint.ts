@@ -1,5 +1,6 @@
 import { ART_RULES, CAST, type ComicIssue, type ComicPage, type ComicPanel } from '@/lib/comic';
 import { MYSTIC_INK_NEGATIVE, MYSTIC_INK_PREFIX } from '@/content/mysticInk';
+import { COMIC_TRIM } from '../../supabase/functions/_shared/lulu-comic-rules';
 
 /**
  * AstroComic print geometry and artwork planning. One source for the proof/print PDF, the artwork sizes
@@ -7,7 +8,7 @@ import { MYSTIC_INK_NEGATIVE, MYSTIC_INK_PREFIX } from '@/content/mysticInk';
  * Units are PDF points (72 per inch), measured from the top-left of the page including bleed.
  */
 export const PT = 72;
-export const TRIM = { w: 5.5 * PT, h: 8.5 * PT };
+export const TRIM = { w: COMIC_TRIM[0], h: COMIC_TRIM[1] };
 export const BLEED = 0.125 * PT;
 export const SAFE = 0.25 * PT;
 export const MEDIA = { w: TRIM.w + 2 * BLEED, h: TRIM.h + 2 * BLEED };

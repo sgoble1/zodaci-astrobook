@@ -26,7 +26,7 @@ const STATUS_TEXT: Record<string, string> = {
 export const luluStatusText = (s: string) => STATUS_TEXT[s] ?? s.toLowerCase().replace(/_/g, ' ');
 
 /** Calls the admin-only print function and surfaces its own error message. */
-async function callLulu<T>(body: Record<string, unknown>): Promise<T> {
+export async function callLulu<T>(body: Record<string, unknown>): Promise<T> {
   const { data, error } = await supabase.functions.invoke('lulu-print', { body });
   if (error || data?.error) {
     let message: string | undefined = data?.error;

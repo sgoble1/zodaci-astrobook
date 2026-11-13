@@ -1,5 +1,6 @@
 import type { SupabaseClient } from 'npm:@supabase/supabase-js@2';
 import { DEFAULT_SHIPPING_LEVEL, SHIPPING_LEVELS, type LuluEnv, type ShippingLevel, decimalToCents, luluErrorText, orderPatches, trackingFrom } from './lulu-rules.ts';
+import { comicStatusPatch } from './lulu-comic-rules.ts';
 
 /** Lulu credentials live in function secrets; the environment is pinned server-side and defaults to the test sandbox. */
 export const luluEnv = (): LuluEnv => Deno.env.get('LULU_ENVIRONMENT')?.trim().toLowerCase() === 'production' ? 'production' : 'sandbox';
@@ -101,4 +102,20 @@ async function notifyShipped(db: SupabaseClient, orderId: string, userId: string
   const { sendAppEmail } = await import('./app-email.ts');
   const r = await sendAppEmail('book-shipped', to, { idempotencyKey: `book-shipped-${orderId}`, templateData: { trackingUrl: t.tracking_url, trackingId: t.tracking_id, carrier: t.carrier_name, ordersUrl: 'https://zodaci.com/orders' } });
   if (!r.sent) console.log(`shipped email for ${orderId} not sent: ${r.reason}`);
+}
+
+export async function applyComicJobUpdate(db: SupabaseClient, row: { id: string; issue_id: string; environment: LuluEnv; status: string }, job: any) {
+  const status = String(job?.status?.name ?? row.status).slice(0, 40);
+  const tracking = trackingFrom(job);
+  const saved = await db.from('comic_lulu_print_jobs').update({ status, status_message: String(job?.status?.message ?? '').slice(0, 500), ...tracking, total_cost_cents: decimalToCents(job?.costs?.total_cost_incl_tax), currency: job?.costs?.currency ?? null, updated_at: new Date().toISOString() }).eq('id', row.id);
+  if (saved.error) throw saved.error;
+  const { data: issue, error } = await db.from('comic_issues').select('id,status,user_id').eq('id', row.issue_id).single();
+  if (error || !issue) throw error ?? new Error('Comic issue missing');
+  const patch = comicStatusPatch(issue.status, status, row.environment, tracking, new Date().toISOString().slice(0, 10));
+  if (patch) {
+    const updated = await db.from('comic_issues').update({ ...patch, updated_at: new Date().toISOString() }).eq('id', issue.id).eq('status', issue.status).select('id');
+    if (updated.error) throw updated.error;
+  }
+  // Comic history already exposes tracking to its owner; do not send the AstroBook-specific email.
+  return { status, note: ['SHIPPED','DELIVERED'].includes(status) && !tracking.tracking_id ? 'Lulu has shipped this comic; add missing tracking on the comic desk.' : undefined };
 }
