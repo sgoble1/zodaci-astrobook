@@ -1,5 +1,5 @@
 import { useEffect, useState, type FormEvent } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
@@ -35,8 +35,9 @@ function Compiling() {
 export default function CreatePage() {
   const user = useSession()?.user;
   const navigate = useNavigate();
-  const [title, setTitle] = useState('');
-  const [brief, setBrief] = useState('');
+  const [params] = useSearchParams();
+  const [title, setTitle] = useState(() => (params.get('title') ?? '').slice(0, 120));
+  const [brief, setBrief] = useState(() => (params.get('brief') ?? '').slice(0, 1000));
   const [group, setGroup] = useState(MENU_SECTIONS[0]);
   const [busy, setBusy] = useState(false);
 

@@ -28,3 +28,4 @@
 - keepsakePdf draws keepsakes as vector pdf-lib pages from keepsakes rows; spine.ts is the only spine-width source (Book3D uses it).
 
 - purchaseSync wraps sync-checkout for book/comic return pages; only provider-verified statuses are shown as final.
+- lunarCalendar gives Moon quarters from the ephemeris with natal house (timed charts only) and conjunctions; position and timing only, no interpretation.

@@ -135,6 +135,7 @@ export const MEMBER_DOMAINS: MemberDomain[] = [
       { title: 'Timing', items: [
         { to: '/transits', label: 'Today · Transits', description: 'What is moving through your chart now', icon: CalendarClock, badge: 'Popular' },
         { to: '/retrogrades', label: 'Today · Retrogrades', description: 'Inward periods, natal and coming', icon: Repeat },
+        { to: '/moon-calendar', label: 'Moon Calendar', description: 'Coming Moons in your own houses', icon: Repeat },
         { to: '/profection', label: 'This year · Profection', description: 'This year’s focus house', icon: Sun },
         { to: '/timeline', label: 'Lifetime · Timeline Hall', description: 'Your life phases at a glance', icon: CalendarRange },
         { to: topic('timing'), label: topicTitle('timing'), description: 'Turning points written for you', icon: Sparkles },
@@ -462,7 +463,7 @@ export const ROUTE_INVENTORY: Record<string, Placement> = {
   '/my-comic': P('book', 'secondary'), '/referrals': P('explore', 'secondary'), '/checkout/return': P('account', 'utility'), '/my-masterbook': P('book', 'secondary'), '/books': P('book', 'secondary'), '/orders': P('book', 'secondary'),
   '/dispatch': P('admin', 'utility'), '/instructions': P('learn', 'secondary'), '/birth-chart': P('chart', 'duplicate', 'renders My Chart for members'), '/chart-guide': P('chart', 'duplicate', 'renders My Chart for members'),
   '/planets': P('chart', 'secondary'), '/planets/:key': P('chart', 'tertiary', 'from Planets'), '/houses': P('chart', 'secondary'), '/houses/:num': P('chart', 'tertiary', 'from Houses'), '/aspects': P('chart', 'secondary'),
-  '/timeline': P('explore', 'secondary'), '/retrogrades': P('explore', 'secondary'), '/purpose': P('explore', 'secondary'), '/feng-shui': P('april', 'utility'), '/compendium': P('april', 'utility'), '/star-map': P('chart', 'secondary'),
+  '/timeline': P('explore', 'secondary'), '/retrogrades': P('explore', 'secondary'), '/moon-calendar': P('explore', 'secondary'), '/purpose': P('explore', 'secondary'), '/feng-shui': P('april', 'utility'), '/compendium': P('april', 'utility'), '/star-map': P('chart', 'secondary'),
   '/profection': P('explore', 'secondary'), '/numerology': P('explore', 'secondary'), '/transits': P('explore', 'secondary'), '/chinese': P('explore', 'secondary'), '/verify': P('learn', 'secondary'),
   '/other-systems': P('explore', 'secondary'), '/other-systems/:slug': P('explore', 'tertiary', 'from Other Systems'), '/volume-2': P('april', 'utility'), '/data-quality': P('admin', 'duplicate', 'April’s input audit; members see readings'),
   '/masterbook': P('april', 'utility', 'Shane sees his edition'), '/masterbook/index': P('april', 'utility'), '/masterbook/upload': P('april', 'utility'), '/admin': P('admin', 'utility'), '/dashboard': P('account', 'primary'),

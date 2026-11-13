@@ -20,6 +20,8 @@ const PRODUCTS: [string, string, string][] = [
   ['chart', 'Shop', 'Posters, sticker sheets and notebooks, sold and fulfilled through a live Shopify storefront.'],
 ];
 const LIVE = [
+  'Personal Moon Calendar: six months of Moon phases placed in each member’s own houses, calculated from the ephemeris (no AI cost).',
+  'Book and comic checkouts re-confirm payment directly with the provider and explain declined or expired payments plainly.',
   'Consultation Desk: every way to ask (Observatory, SmartChat, counselors, private reflection) behind one door, each with its own private history.',
   'Dream Ledger: members log dreams, see the calculated sky that night against their chart, and can ask for a one-credit symbolic reading.',
   'Photo-to-character drawing and diary photo/PDF reading: members bring their own material in, privately and with review before saving.',

@@ -136,6 +136,12 @@ export default function Topic() {
         </div>
       </section>
 
+      <section className="border border-dashed border-primary/60 rounded-lg p-5">
+        <h2 className="font-display text-2xl mb-1">Create a chapter about this</h2>
+        <p className="text-sm text-muted-foreground mb-3">Write your own page on {topic.label.toLowerCase()}, built from your saved chart and the sources. It's saved to your menu.</p>
+        <Button asChild size="sm"><Link to={`/create?title=${encodeURIComponent(topic.label)}&brief=${encodeURIComponent(`How ${topic.label.toLowerCase()} shows up in my chart, using the sources.`)}`}>Start a chapter</Link></Button>
+      </section>
+
       <section>
         <h2 className="font-display text-2xl mb-3">What the sources say</h2>
         {!passages ? <p className="text-sm text-muted-foreground">Gathering passages from every document…</p> : (

@@ -73,6 +73,7 @@ function helpFor(item: NavItem) {
     '/timeline': 'Browse major life phases across the 70-year timeline.',
     '/transits': 'Review forecast windows from 2026 to 2040, including confidence notes where timing depends on April’s birth time.',
     '/profection': 'Explains the traditional annual house emphasis for April’s current age.',
+    '/moon-calendar': 'Lists the next six months of Moon phases with the sign and house of your chart each falls in.',
     '/retrogrades': 'Explains natal and future retrograde periods and how to interpret them carefully.',
     '/other-systems': 'Compare themes repeated across the alternative systems and open each system’s unique calculated page.',
     '/numerology': 'Shows date-based numerology cycles and pinnacles.',
