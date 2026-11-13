@@ -54,7 +54,7 @@ function Studio({ chart, birth }: { chart: ChartResult; birth: MyBirth }) {
       const { certificatePdf, scrollPdf } = await import('@/lib/keepsakePdf');
       const info = { name: subject.name, bornLine: `born ${longDate(subject.date)}${subject.time ? ` at ${clock(subject.time)}` : ''} · ${subject.place}`, number: keepsakeNumber({ date: subject.date, time: subject.time, lat: subject.chart.input.lat, lon: subject.chart.input.lon }), printed: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) };
       const bytes = kind === 'certificate' ? await certificatePdf(info, certificateRows(subject.chart)) : await scrollPdf(info, scrollSections(subject.chart));
-      const url = URL.createObjectURL(new Blob([bytes], { type: 'application/pdf' }));
+      const url = URL.createObjectURL(new Blob([bytes as BlobPart], { type: 'application/pdf' }));
       const a = document.createElement('a'); a.href = url; a.download = `${kind === 'certificate' ? 'birth-sky-certificate' : 'star-scroll'}-${subject.name.replace(/[^a-z0-9]+/gi, '-').toLowerCase()}.pdf`; a.click();
       window.setTimeout(() => URL.revokeObjectURL(url), 2000);
     } catch { toast.error('The PDF could not be made. Please try again.'); } finally { setSaving(false); }
