@@ -25,6 +25,7 @@ const LIVE = [
   'Photo-to-character drawing and diary photo/PDF reading: members bring their own material in, privately and with review before saving.',
   'Friend referrals reward 20 bonus credits per paying friend (capped at 12 a year), so growth spend stays bounded.',
   'Keepsakes (certificate, star scroll) export as print-ready PDFs — a low-cost gift product with no AI spend.',
+  'Every Ask the Sources answer links each claim to the original passage in one tap — citations members can check.',
   'Interactive demo walk-through: visitors step through birth details, the calculated chart, a reading and the book using a fictional sample reader, instead of a fixed film.',
   'AstroBook Reader’s Compass: plain-language explanations of every term a book uses, and a three-point summary at the start of each chapter.',
   'Owner-controlled personal context: tap-to-answer questions, “keep it general”, and a review of every personal detail before a book is printed.',

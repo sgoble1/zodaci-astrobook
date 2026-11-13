@@ -1,4 +1,5 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
+import { Input } from '@/components/ui/input';
 import { Link, Navigate, useParams } from 'react-router-dom';
 import { ArrowLeft, ArrowRight, CalendarClock, Landmark } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -6,7 +7,7 @@ import { PageHead } from '@/components/observatory/PageHead';
 import { SpotArt } from '@/components/art/SpotArt';
 import { ChartRequired } from '@/components/common/ChartRequired';
 import { usePageMeta } from '@/hooks/usePageMeta';
-import { buildGallery, GALLERIES, galleryById, type Exhibit, type GalleryId } from '@/lib/museum';
+import { buildGallery, GALLERIES, galleryById, type Exhibit, type GalleryId, searchExhibits } from '@/lib/museum';
 import type { ChartResult } from '@/lib/astro';
 
 const day = (d: Date) => d.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
@@ -74,11 +75,24 @@ function GalleryView({ chart, id }: { chart: ChartResult; id: GalleryId }) {
   const i = GALLERIES.findIndex(x => x.id === id);
   const prev = GALLERIES[(i + GALLERIES.length - 1) % GALLERIES.length], next = GALLERIES[(i + 1) % GALLERIES.length];
   const spec = GALLERIES[i];
+  const [q, setQ] = useState(''); const [film, setFilm] = useState(false); const [zoom, setZoom] = useState(1);
+  const shown = searchExhibits(g.exhibits, q);
   return (
     <article className="mx-auto max-w-5xl space-y-8">
       <nav aria-label="Breadcrumb" className="text-sm text-muted-foreground"><Link to="/museum" className="inline-flex items-center gap-1 hover:text-foreground"><ArrowLeft className="h-4 w-4" aria-hidden /> Museum lobby</Link></nav>
       <PageHead eyebrow={`Museum of the Sky · ${g.wing}`} title={`${g.name} Gallery`} script={g.curatorNote} art={spec.art}>{g.note}</PageHead>
-      {g.exhibits.length > 0 && <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">{g.exhibits.map(e => <Plate key={e.id} e={e} />)}</ul>}
+      {g.exhibits.length > 0 && <section aria-label="Microfilm reader" className="space-y-4">
+        <div className="obs-panel flex flex-wrap items-center gap-3 p-4">
+          <Input value={q} onChange={e => setQ(e.target.value)} placeholder="Search the archive index (sign, planet, house…)" aria-label="Search exhibits" className="max-w-xs" />
+          <Button variant={film ? 'default' : 'outline'} aria-pressed={film} onClick={() => setFilm(f => !f)}>Microfilm view</Button>
+          {film && <label className="flex items-center gap-2 text-sm"><span className="font-label tracking-wide">Zoom dial</span><input type="range" min={1} max={1.6} step={0.05} value={zoom} onChange={e => setZoom(Number(e.target.value))} className="w-32 accent-[hsl(var(--brass))]" /></label>}
+          <span className="text-sm text-muted-foreground" role="status">{shown.length} of {g.exhibits.length} exhibits</span>
+        </div>
+        <div className={film ? 'museum-microfilm overflow-auto rounded-sm p-4' : ''}>
+          <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3" style={film ? { transform: `scale(${zoom})`, transformOrigin: 'top left', width: `${100 / zoom}%` } : undefined}>{shown.map(e => <Plate key={e.id} e={e} />)}</ul>
+          {!shown.length && <p className="text-sm text-muted-foreground">Nothing in this gallery matches “{q}”.</p>}
+        </div>
+      </section>}
       {g.coming.length > 0 && (
         <section aria-labelledby="coming" className="obs-panel space-y-4 p-6">
           <h2 id="coming" className="flex items-center gap-2 font-display text-2xl"><CalendarClock className="h-5 w-5 text-primary" aria-hidden /> Coming exhibitions · next 12 months</h2>

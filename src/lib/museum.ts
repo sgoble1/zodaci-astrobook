@@ -80,3 +80,10 @@ export function buildGallery(c: ChartResult, id: GalleryId, now = new Date()): G
     exhibits, milestones, coming,
   };
 }
+
+/** Microfilm archive index: case-insensitive match on an exhibit's title, sign, plaque or facts. */
+export function searchExhibits(list: Exhibit[], q: string): Exhibit[] {
+  const t = q.trim().toLowerCase();
+  if (!t) return list;
+  return list.filter(e => [e.title, e.sign, e.element, e.plaque, ...e.facts].join(' ').toLowerCase().includes(t));
+}

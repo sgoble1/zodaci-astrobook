@@ -6,6 +6,7 @@ import ReactMarkdown from 'react-markdown';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { sourceResponse } from '@/components/common/sourceResponse';
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 
 const SUGGESTIONS = [
   'What does my anaretic Sagittarius Ascendant mean?',
@@ -53,9 +54,11 @@ export default function Ask() {
   };
 
   const cited = new Set([...answer.matchAll(/\[(\d+)\]/g)].map(m => +m[1]));
+  const [pill, setPill] = useState<number | null>(null);
+  const pillHit = pill ? hits[pill - 1] : undefined;
   const renderAnswer = (t: string) => (
     <div className="mb-prose">
-      <ReactMarkdown components={{ a: ({ href, children }) => <a href={href} className="text-gold align-super text-[0.7em] font-semibold px-0.5 no-underline hover:underline">{children}</a> }}>
+      <ReactMarkdown components={{ a: ({ href, children }) => { const n = Number(href?.match(/^#cite-(\d+)$/)?.[1]); return n ? <button type="button" onClick={() => setPill(n)} aria-label={`Show source passage ${n}`} className="mx-0.5 rounded-full border border-gold/60 px-1.5 align-super text-[0.65em] font-semibold text-gold hover:bg-gold/10">{n}</button> : <a href={href} className="text-gold underline">{children}</a>; } }}>
         {t.replace(/\[(\d+)\]/g, '[[$1]](#cite-$1)')}
       </ReactMarkdown>
     </div>
@@ -87,6 +90,13 @@ export default function Ask() {
         </div>
       </form>
 
+      <Sheet open={!!pillHit} onOpenChange={o => { if (!o) setPill(null); }}>
+        <SheetContent side="right" className="w-full overflow-y-auto sm:max-w-lg">
+          {pillHit && <><SheetHeader><SheetTitle>Source [{pill}] · {pillHit.source}</SheetTitle><SheetDescription>{pillHit.loc}</SheetDescription></SheetHeader>
+            <p className="mt-4 whitespace-pre-wrap text-sm leading-relaxed">{pillHit.text}</p>
+            <Link to={pillHit.href} className="mt-4 inline-block text-sm underline">Open in source</Link></>}
+        </SheetContent>
+      </Sheet>
       {asked && (
         <section className="space-y-6">
           <div>

@@ -1,6 +1,8 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
+import { toast } from 'sonner';
+import { supabase } from '@/integrations/supabase/client';
 import { Link, Navigate, useParams } from 'react-router-dom';
-import { ArrowLeft, ArrowRight, BookOpenText, CalendarClock, FileSearch, NotebookPen, Radio } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Archive, BookOpenText, CalendarClock, FileSearch, NotebookPen, Radio } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { PageHead } from '@/components/observatory/PageHead';
 import { SpotArt } from '@/components/art/SpotArt';
@@ -67,6 +69,20 @@ function CaseFileView({ chart, id }: { chart: ChartResult; id: CaseId }) {
   const { spec } = file;
   const i = CASES.findIndex(c => c.id === id);
   const prev = CASES[(i + CASES.length - 1) % CASES.length], next = CASES[(i + 1) % CASES.length];
+  const [archived, setArchived] = useState(false);
+  const [saving, setSaving] = useState(false);
+  // Saves the case as calculated today (evidence titles + coming dates) to the member's own observation log.
+  const archive = async () => {
+    setSaving(true);
+    const { data: s } = await supabase.auth.getSession();
+    const uid = s.session?.user.id;
+    if (!uid) { setSaving(false); toast.error('Sign in to archive a case.'); return; }
+    const notes = [`Archived case file ${spec.number}: ${spec.title}`, spec.question, '', 'Evidence on file:', ...file.evidence.map(e => `- ${e.title}`), ...(file.upcoming.length ? ['', 'Coming up:', ...file.upcoming.map(e => `- ${day(e.date)} · ${e.title}`)] : [])].join('\n').slice(0, 4000);
+    const r = await supabase.from('observation_log').insert({ owner_id: uid, observed_at: new Date().toISOString(), location: 'Investigations Bureau', notes, tags: [spec.tag, 'case-file'] });
+    setSaving(false);
+    if (r.error) { toast.error('The case could not be archived. Please try again.'); return; }
+    setArchived(true); toast.success('Case archived in your Observation Log');
+  };
   const groups = (Object.keys(KIND_LABEL) as EvidenceKind[]).map(k => [k, file.evidence.filter(e => e.kind === k)] as [EvidenceKind, Evidence[]]).filter(([, list]) => list.length);
   return (
     <article className="mx-auto max-w-5xl space-y-8">
@@ -111,6 +127,8 @@ function CaseFileView({ chart, id }: { chart: ChartResult; id: CaseId }) {
           <div className="flex flex-col gap-2">
             <Button asChild><Link to={`/my-readings/topic/${spec.reading}`}><BookOpenText className="mr-2 h-4 w-4" aria-hidden />Read {spec.readingLabel}</Link></Button>
             <Button asChild variant="outline"><Link to={`/observation-log?tag=${encodeURIComponent(spec.tag)}`}><NotebookPen className="mr-2 h-4 w-4" aria-hidden />File an observation</Link></Button>
+            <Button variant="outline" disabled={saving || archived} onClick={() => void archive()}><Archive className="mr-2 h-4 w-4" aria-hidden />{archived ? 'Archived · stamped' : saving ? 'Archiving…' : 'Archive this case'}</Button>
+            {archived && <Link to="/observation-log?tag=case-file" className="text-center text-sm text-primary underline-offset-4 hover:underline">Open archived cases</Link>}
           </div>
         </aside>
       </div>

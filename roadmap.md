@@ -520,4 +520,5 @@ Audit Oct 29: Chat/counselors already use the member's chart; podcast/custom pag
 - [x] Keepsake print PDFs (certificate landscape, Star Scroll 8.5×14)
 - [x] Spine width from page count in the 3D book (Lulu paperback formula; hardcover estimate)
 - [ ] Cover customizer travels with order + Lulu cover-dimensions check — blocked on working Lulu keys
-- [ ] Next bigger items: Museum microfilm reader, Investigations "Archive this case", citation pills drawer, Print & Physical Goods pavilion
+- [x] Museum microfilm reader, Investigations "Archive this case", citation drawer
+- [ ] Next: Print & Physical Goods pavilion (Books + Keepsakes + Store tabs), Observatory consult staff chips, phone tap-target pass
