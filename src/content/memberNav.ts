@@ -36,7 +36,7 @@ export const MEMBER_DOMAINS: MemberDomain[] = [
   {
     id: 'chart', label: 'Mapping Center', hub: '/my-chart', hubLabel: 'Open my chart', icon: Orbit,
     description: 'Everything calculated from your own birth details.',
-    tabs: ['/my-chart', '/planets', '/houses', '/aspects', '/star-map', '/results', '/findings', '/chart-elements', '/chart-calculator'],
+    tabs: ['/my-chart', '/planets', '/houses', '/aspects', '/star-map', '/results', '/findings', '/retrogood', '/chart-elements', '/chart-calculator'],
     prefixes: ['/birth-chart', '/chart-guide', '/compendium', '/volume-2'],
     columns: [
       { title: 'Your chart', items: [
@@ -46,9 +46,10 @@ export const MEMBER_DOMAINS: MemberDomain[] = [
         { to: '/aspects', label: 'Aspects', description: 'How your planets work together', icon: Waypoints },
         { to: '/star-map', label: 'Fixed-Star Sky Map', description: 'Bright stars near your chart points', icon: Star },
       ] },
-      { title: 'Go deeper', items: [
+      { title: 'What stands out', items: [
         { to: '/results', label: 'My Results', description: 'Six-tab analysis of your chart patterns', icon: ListChecks },
         { to: '/findings', label: 'Key Findings', description: 'Patterns the chart engine found for you', icon: Sparkles },
+        { to: '/retrogood', label: 'RetroGOOD', description: 'Your inward strengths: planets that were retrograde at birth', icon: Repeat },
         { to: '/chart-elements', label: 'Elements & Modes', description: 'Your fire, earth, air and water balance', icon: Atom },
         { to: '/chart-calculator', label: 'Chart Calculator', description: 'Calculate any date, time and place', icon: Calculator },
         { to: '/start', label: 'Birth details', description: 'Check or change your date, time and place', icon: Settings2 },
@@ -59,8 +60,8 @@ export const MEMBER_DOMAINS: MemberDomain[] = [
   {
     id: 'readings', label: 'Readings', hub: '/my-readings', hubLabel: 'All my readings', icon: BookOpenText,
     description: 'Readings written only from your own placements.',
-    tabs: ['/my-readings', '/chat', '/wonderings', '/counselors', '/workbook', '/retrogood', '/create'],
-    prefixes: ['/my-readings', '/workbook', '/counselors', '/chat', '/investigations', '/museum', '/topics', '/readings', '/reading', '/p', '/ask', '/sources', '/observation-log', '/observatory', '/content-center'],
+    tabs: ['/my-readings', '/consult', '/chat', '/counselors', '/workbook', '/observation-log', '/create'],
+    prefixes: ['/my-readings', '/consult', '/workbook', '/counselors', '/chat', '/investigations', '/museum', '/topics', '/readings', '/reading', '/p', '/ask', '/sources', '/observation-log', '/observatory', '/content-center'],
     columns: [
       { title: 'My readings', more: { to: '/my-readings#topics', label: `All ${TOPIC_READINGS.length} topics & ${CORE_THEMES.length} core themes` }, items: [
         { to: '/my-readings', label: 'All my readings', description: 'Topics, core themes and quick readings', icon: BookOpenText },
@@ -78,21 +79,21 @@ export const MEMBER_DOMAINS: MemberDomain[] = [
         { to: '/keepsakes', label: 'Keepsakes & gifts', description: 'Certificates and Star Scrolls from your chart', icon: Gift },
         { to: '/siblings', label: 'Sibling Bureau', description: 'Compare family charts side by side', icon: Users },
       ] },
-      { title: 'Ask & talk', items: [
+      { title: 'Consultation Desk', more: { to: '/consult', label: 'Open the Consultation Desk' }, items: [
+        { to: '/consult', label: 'Consultation Desk', description: 'Every way to ask a question, in one place', icon: MessagesSquare, badge: 'New' },
+        { to: '/observatory', label: 'Consult the Observatory', description: 'One question, answered from your chart, sky and log', icon: Telescope },
         { to: '/chat', label: 'SmartChat', description: 'Ask anything about your chart', icon: MessageCircle },
-        { to: '/wonderings', label: 'Wonderings', description: 'Questions and topics to come back to', icon: Search },
         { to: '/counselors', label: 'Counselors', description: 'Profiles and saved sessions', icon: Users },
         { to: '/workbook/social-integration', label: 'Social Counselor', description: 'Prepare words, boundaries and next steps', icon: HeartHandshake },
         { to: '/workbook/companion', label: 'The Oracle Within', description: 'A private, reflective conversation', icon: Moon },
+        { to: '/wonderings', label: 'Wonderings', description: 'Questions and topics to come back to', icon: Search },
       ] },
-      { title: 'Observation Log', items: [
-        { to: '/observatory', label: 'Consult the Observatory', description: 'One question, answered from your chart, sky and log', icon: Telescope, badge: 'New' },
+      { title: 'Archive & Journal', items: [
         { to: '/observation-log', label: 'Observation Log', description: 'Your own sky notes, with the real sky that day', icon: Telescope },
         { to: '/workbook', label: 'Guided Workbook', description: 'Exercises for your placements', icon: NotebookPen },
         { to: '/workbook/check-in', label: 'Daily Check-in', description: 'Name what is happening today', icon: Activity },
         { to: '/workbook/reframe', label: 'Thought Reframe', description: 'Facts, alternatives and a kinder response', icon: RefreshCcw },
         { to: '/workbook/journal', label: 'Journal & Patterns', description: 'Private reflections over time', icon: PenLine },
-        { to: '/retrogood', label: 'RetroGOOD', description: 'What stands out in your chart', icon: Repeat },
         { to: '/create', label: 'Create a Topic & Page', description: 'A new cited page about anything', icon: Wand2 },
       ] },
     ],
@@ -130,11 +131,11 @@ export const MEMBER_DOMAINS: MemberDomain[] = [
     tabs: ['/explore', '/transits', '/timeline', '/retrogrades', '/profection', '/relationships', '/other-systems'],
     prefixes: ['/relationships', '/other-systems', '/shared', '/community', '/feng-shui', '/bagua-reading'],
     columns: [
-      { title: 'Forecast Center', items: [
-        { to: '/transits', label: 'Transits', description: 'What is moving through your chart now', icon: CalendarClock, badge: 'Popular' },
-        { to: '/timeline', label: 'Timeline Hall', description: 'Your life phases at a glance', icon: CalendarRange },
-        { to: '/retrogrades', label: 'Retrogrades', description: 'Inward periods, natal and coming', icon: Repeat },
-        { to: '/profection', label: 'Year Ahead · Profection', description: 'This year’s focus house', icon: Sun },
+      { title: 'Timing', items: [
+        { to: '/transits', label: 'Today · Transits', description: 'What is moving through your chart now', icon: CalendarClock, badge: 'Popular' },
+        { to: '/retrogrades', label: 'Today · Retrogrades', description: 'Inward periods, natal and coming', icon: Repeat },
+        { to: '/profection', label: 'This year · Profection', description: 'This year’s focus house', icon: Sun },
+        { to: '/timeline', label: 'Lifetime · Timeline Hall', description: 'Your life phases at a glance', icon: CalendarRange },
         { to: topic('timing'), label: topicTitle('timing'), description: 'Turning points written for you', icon: Sparkles },
       ] },
       { title: 'Relationship Bureau', items: [
@@ -142,8 +143,8 @@ export const MEMBER_DOMAINS: MemberDomain[] = [
         { to: '/compatibility', label: 'Quick Compatibility Score', description: 'Two birthdays, one score', icon: HeartHandshake },
         { to: '/siblings', label: 'Sibling Bureau', description: 'Brothers and sisters, channel by channel', icon: Users },
       ] },
-      { title: 'Other systems', more: { to: '/other-systems', label: `All ${SYSTEM_READINGS.length} traditions` }, items: [
-        { to: '/other-systems', label: 'Other Systems · Dashboard', description: 'Eight traditions from your birth details', icon: Globe2 },
+      { title: 'World Traditions', more: { to: '/other-systems', label: `All ${SYSTEM_READINGS.length} traditions` }, items: [
+        { to: '/other-systems', label: 'World Traditions Pavilion', description: 'Every tradition from your birth details, side by side', icon: Globe2 },
         { to: '/chinese', label: 'Chinese · Ba Zi', description: 'Four Pillars and your animal', icon: Sparkles },
         { to: '/other-systems/vedic', label: 'Vedic · Jyotish', description: 'Sidereal placements', icon: Sun },
         { to: '/other-systems/mayan-tzolkin', label: 'Maya · Tzolk’in', description: 'Your day sign and tone', icon: Orbit },
@@ -476,6 +477,6 @@ export const ROUTE_INVENTORY: Record<string, Placement> = {
   '/create': P('readings', 'secondary'), '/workbook': P('readings', 'secondary'), '/workbook/module/:slug': P('readings', 'tertiary', 'from the Workbook'), '/workbook/check-in': P('readings', 'secondary'), '/workbook/reframe': P('readings', 'secondary'),
   '/workbook/journal': P('readings', 'secondary'), '/workbook/companion': P('readings', 'secondary'), '/counselors': P('readings', 'secondary'), '/counselors/:key': P('readings', 'tertiary', 'from Counselors'),
   '/counselors/:key/sessions/:sessionId': P('readings', 'tertiary', 'from each counselor'), '/workbook/companion/:sessionId': P('readings', 'tertiary', 'from the Oracle Within'), '/workbook/social-integration': P('readings', 'secondary'),
-  '/workbook/social-integration/:sessionId': P('readings', 'tertiary', 'from the Social Counselor'), '/p/:id': P('readings', 'tertiary', 'created pages: domain menus and My Library'), '/shared/notes': P('explore', 'tertiary', 'shared space menu'),
+  '/workbook/social-integration/:sessionId': P('readings', 'tertiary', 'from the Social Counselor'), '/consult': P('readings', 'primary', 'Consultation Desk'), '/p/:id': P('readings', 'tertiary', 'created pages: domain menus and My Library'), '/shared/notes': P('explore', 'tertiary', 'shared space menu'),
   '/shared/later': P('explore', 'tertiary', 'shared space menu'), '/shared/accounts': P('explore', 'tertiary', 'shared space menu'), '/shared/april': P('explore', 'tertiary', 'opens the April & Shane space'), '/shared/zac': P('explore', 'tertiary', 'opens the Zac & Shane space'), '/astrocomic/print-issue-1': P('public', 'tertiary', 'from the AstroComic page'), '/credits': P('account', 'utility', 'credit packs'), '/developer': P('admin', 'utility', 'developer only'), '/developer/timeline': P('admin', 'utility', 'developer only'), '/official-astrobook/showcase/:edition': P('book', 'tertiary', 'Founders only, from the Official AstroBook'), '/topics': P('book', 'secondary', 'Shane only'), '/guides/:slug': P('april', 'utility'), '/topics/:slug': P('april', 'utility'), '*': P('account', 'utility', 'not found'),
 };

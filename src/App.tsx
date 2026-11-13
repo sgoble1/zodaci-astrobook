@@ -130,6 +130,7 @@ const MuseumGalleryPage = lazy(() => import('./pages/Museum').then(m => ({ defau
 const ArchivePage = lazy(() => import('./pages/Archive'));
 const Keepsakes = lazy(() => import('./pages/Keepsakes'));
 const Observatory = lazy(() => import('./pages/Observatory'));
+const ConsultDesk = lazy(() => import('./pages/ConsultDesk'));
 const ReadingHistory = lazy(() => import('./pages/ReadingHistory'));
 const Workspaces = lazy(() => import('./pages/Workspaces'));
 const Wonderings = lazy(() => import('./pages/Wonderings'));
@@ -317,6 +318,7 @@ export default function App() {
             <Route path="/archive" element={<ArchivePage />} />
             <Route path="/keepsakes" element={<Keepsakes />} />
             <Route path="/observatory" element={<Observatory />} />
+            <Route path="/consult" element={<ConsultDesk />} />
             <Route path="/reading-history" element={<ReadingHistory />} />
             <Route path="/workspaces" element={<Workspaces />} />
             <Route path="/shared-with-me" element={<SharedWithMe />} />
