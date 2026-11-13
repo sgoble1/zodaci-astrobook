@@ -11,7 +11,11 @@ function paymentsEnvironment(): StripeEnv {
 
 let stripePromise: Promise<Stripe | null> | null = null;
 export function getStripe(): Promise<Stripe | null> {
-  if (!stripePromise) { paymentsEnvironment(); stripePromise = loadStripe(clientToken as string); }
+  if (!stripePromise) {
+    // Unconfigured builds resolve to null so checkout shows its own error instead of crashing the page.
+    try { paymentsEnvironment(); } catch { return Promise.resolve(null); }
+    stripePromise = loadStripe(clientToken as string);
+  }
   return stripePromise;
 }
 export function getStripeEnvironment(): StripeEnv { return paymentsEnvironment(); }

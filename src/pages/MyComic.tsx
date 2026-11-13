@@ -39,37 +39,40 @@ export default function MyComic() {
 
 function MyComicInner() {
   const [params, setParams] = useSearchParams();
-  const returning = !!params.get('session_id');
+  const sessionId = params.get('session_id');
+  const returning = !!sessionId;
   const birth = useMyBirth();
   const [subs, setSubs] = useState<Sub[] | null>(null);
   const [issues, setIssues] = useState<Issue[]>([]);
   const [failed, setFailed] = useState(false);
   const [waited, setWaited] = useState(0);
   const load = useCallback(async () => {
-    const env = envOrLive();
     const [s, i] = await Promise.all([
-      supabase.from('comic_subscriptions').select('*').eq('environment', env).neq('status', 'pending').order('created_at', { ascending: false }),
+      supabase.from('comic_subscriptions').select('*').neq('status', 'pending').order('created_at', { ascending: false }),
       supabase.from('comic_issues').select('*').order('issue_month', { ascending: false }),
     ]);
     if (s.error || i.error) { setFailed(true); return; }
     setFailed(false); setSubs(s.data ?? []); setIssues(i.data ?? []);
   }, []);
   useEffect(() => { void load(); }, [load]);
-  const current = subs?.find(s => ['active', 'paused', 'past_due'].includes(s.status)) ?? null;
+  const env = envOrLive();
+  const current = subs?.find(s => s.environment === env && ['active', 'paused', 'past_due'].includes(s.status)) ?? subs?.find(s => ['active', 'paused', 'past_due'].includes(s.status)) ?? null;
+  // Only the purchase from this checkout confirms it; an older subscription must not.
+  const confirmed = !!sessionId && !!subs?.some(s => s.checkout_session_id === sessionId);
   // After checkout, wait for the verified payment to activate the subscription.
   useEffect(() => {
-    if (!returning || current || waited > 20) return;
+    if (!returning || confirmed || waited > 20) return;
     const t = window.setTimeout(() => { setWaited(w => w + 1); void load(); }, 3000);
     return () => clearTimeout(t);
-  }, [returning, current, waited, load]);
-  useEffect(() => { if (returning && current) { toast.success('Your AstroComic is confirmed.'); const n = new URLSearchParams(params); n.delete('session_id'); setParams(n, { replace: true }); } }, [returning, current?.id]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [returning, confirmed, waited, load]);
+  useEffect(() => { if (returning && confirmed) { toast.success('Your AstroComic is confirmed.'); const n = new URLSearchParams(params); n.delete('session_id'); setParams(n, { replace: true }); } }, [returning, confirmed]); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (failed) return <LoadError what="your AstroComic" onRetry={() => void load()} />;
   if (!subs) return <div role="status" className="h-40 animate-pulse rounded-lg bg-muted" aria-label="Loading your AstroComic" />;
   return (
     <article className="mx-auto max-w-5xl space-y-12">
       <header><p className="font-label text-xs tracking-[0.16em] text-primary">AstroComic</p><h1 className="mt-2 font-display text-4xl sm:text-5xl">My AstroComic</h1></header>
-      {returning && !current && <p role="status" className="parchment flex items-center gap-3 p-4">{waited > 20 ? 'Confirmation is taking longer than expected. Please don’t pay again — check back in a few minutes.' : <><Loader2 aria-hidden className="h-4 w-4 animate-spin" />Confirming your payment…</>}</p>}
+      {returning && !confirmed && <p role="status" className="parchment flex items-center gap-3 p-4">{waited > 20 ? 'Confirmation is taking longer than expected. Please don’t pay again — check back in a few minutes.' : <><Loader2 aria-hidden className="h-4 w-4 animate-spin" />Confirming your payment…</>}</p>}
       {current ? <SubscriptionPanel key={current.id} sub={current} issues={issues} onChange={load} /> : !returning && (
         <section className="comic-card p-6 sm:p-8"><p><span className="comic-tag text-xs">Not subscribed</span></p><h2 className="mt-3 font-display text-2xl uppercase">No AstroComic yet</h2><p className="mt-2 text-muted-foreground">A personalized 24-page comic each month, printed and mailed to you.</p><Button asChild className="mt-5"><Link to="/astrocomic">See plans</Link></Button></section>
       )}
