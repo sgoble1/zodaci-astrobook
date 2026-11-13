@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { PromoVideo } from '@/components/brand/PromoVideo';
+import { DemoScreen } from '@/components/brand/DemoScreen';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { OpenAstroBook, OpenComicDigest } from '@/components/books/OpenAstroBook';
 import { SAMPLE_READER } from '@/content/sampleBookLeaves';
@@ -82,7 +82,7 @@ export default function Demo() {
       </PosterHeader>
       <div className="flex flex-wrap gap-2"><Button asChild><Link to="/auth?mode=signup&next=/start">Start free with your chart</Link></Button><Button asChild variant="outline"><Link to="/pricing">Compare plans</Link></Button></div>
 
-      <section aria-label="Zodaci in 24 seconds"><PromoVideo /></section>
+      <section aria-label="Walk through Zodaci"><DemoScreen /></section>
 
       <section aria-label="Interactive sample chart"><SampleChartDemo /></section>
 
