@@ -1,11 +1,11 @@
 import { Link, Navigate, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { useMyBirth } from '@/lib/myBirth';
-import MyChart from '@/pages/MyChart';
-import MyReadings from '@/pages/MyReadings';
+const MyChart = lazy(() => import('@/pages/MyChart'));
+const MyReadings = lazy(() => import('@/pages/MyReadings'));
 import { MemberSystem, MemberSystemsDashboard } from '@/pages/MemberSystem';
 import PersonalTiming from '@/pages/PersonalTiming';
-import MyTopicReading from '@/pages/MyTopicReading';
+const MyTopicReading = lazy(() => import('@/pages/MyTopicReading'));
 import MemberStarMap from '@/pages/MemberStarMap';
 import MemberCompendium from '@/pages/MemberCompendium';
 import MemberWorkbook from '@/pages/MemberWorkbook';
@@ -13,14 +13,14 @@ import MemberChartSection, { type ChartFocus } from '@/pages/MemberChartSection'
 const CHART_FOCUS: Record<string, ChartFocus> = { '/planets': 'planets', '/houses': 'houses', '/aspects': 'aspects', '/chart-elements': 'elements', '/chart-calculator': 'calculator' };
 import { LIBRARY_TOPICS } from '@/content/libraryTopics';
 import { FounderSourcePanel } from '@/components/readings/FounderSourcePanel';
-import { Fragment } from 'react';
+import { Fragment, lazy, Suspense } from 'react';
 import FounderTopics from '@/pages/FounderTopics';
 import { useShaneAccount } from '@/hooks/useShaneAccount';
-import ShaneEdition from '@/pages/ShaneEdition';
+const ShaneEdition = lazy(() => import('@/pages/ShaneEdition'));
 import { MemberHouseDetail, MemberPlanetDetail } from '@/pages/MemberPlacement';
 import MemberFengShui from '@/pages/MemberFengShui';
 import MemberDataQuality from '@/pages/MemberDataQuality';
-import BaguaReading from '@/pages/BaguaReading';
+const BaguaReading = lazy(() => import('@/pages/BaguaReading'));
 import { kuaSex, toChartInput } from '@/lib/myBirth';
 import { useZacAccount } from '@/hooks/useZacAccount';
 import { StartLink } from '@/components/common/StartLink';
@@ -36,6 +36,10 @@ const CHART = ['/birth-chart', '/planets', '/houses', '/aspects', '/star-map', '
 
 /** Public visitors never see the private edition's pages: they get their own chart or readings instead. */
 export function PublicChartFallback() {
+  return <Suspense fallback={null}><FallbackRoutes /></Suspense>;
+}
+
+function FallbackRoutes() {
   const { pathname } = useLocation();
   const birth = useMyBirth();
   const shane = useShaneAccount();
