@@ -545,3 +545,10 @@ Audit Oct 29: Chat/counselors already use the member's chart; podcast/custom pag
 - [ ] Navigation: verify welcome tour, Sibling Bureau return, Compendium guide; Results/RetroGOOD exit links; no-chart banner
 - [ ] Content generation: reviewed placement library + transit templates feeding readings (cuts per-reading AI cost)
 - [ ] Home-screen install prompt (manifest already present; no offline caching)
+
+### Performance plan (Nov 13, approved)
+- [x] Phase 1: Stripe pure import, FirstViewReveal batching, transit cache + deferred 31-day events, pdfjs pre-bundle, will-change removed
+- [x] Phase 2: dashboard skeleton, ParticleField pause/throttle
+- [ ] Phase 3: interactive demo with real components, AstroBook five-spread, comic preview parity
+- [ ] Phase 4: Zac plain-language overview, auto one-time retry on founder pages
+- [ ] Phase 5: home-screen install prompt, final 393/1280 nav + colour audit

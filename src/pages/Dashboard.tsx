@@ -1,4 +1,4 @@
-import { MemberDashboard } from '@/components/common/MemberDashboard';
+import { MemberDashboard, DashboardSkeleton } from '@/components/common/MemberDashboard';
 import { useAprilSpace } from '@/hooks/useAprilSpace';
 import { UpdatesFeed } from '@/components/common/UpdatesFeed';
 import { MyFounderNews } from '@/components/common/FounderNews';
@@ -63,7 +63,7 @@ function Inner() {
 export default function Dashboard() {
   const april = useAprilSpace();
   if (viewingSharedEdition()) return <SharedEditionDashboard />;
-  if (april === undefined) return <p role="status" className="text-muted-foreground">Opening your dashboard…</p>;
+  if (april === undefined) return <DashboardSkeleton />;
   if (april === false) return <MemberDashboard />;
   return (
     <div className="space-y-6">

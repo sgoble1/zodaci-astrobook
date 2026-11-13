@@ -5,6 +5,7 @@
 export type SiteUpdate = { date: string; title: string; text: string; to?: string; cta?: string };
 
 export const SITE_UPDATES: SiteUpdate[] = [
+  { date: '2026-11-13', title: 'A faster dashboard', text: 'Your dashboard opens noticeably quicker: payment tools now load only at checkout, and the 30-day sky forecast fills in just after the page appears.', to: '/dashboard', cta: 'Open my dashboard' },
   { date: '2026-11-13', title: 'Easier tapping on phones', text: 'Topic buttons on My Readings are bigger on phones, and the Explore page opens reliably for every account.', to: '/my-readings', cta: 'Open my readings' },
   { date: '2026-11-13', title: 'New Cosmic Studio designs and book covers', text: 'The Cosmic Studio now makes a tall star scroll, a tarot birth card and a transit badge for today, with a new 1950s poster look. AstroBook covers add Celestial Cartographer, Deep Orbit and a Vintage Monogram with your initials. The account menu is sorted into sections.', to: '/creator', cta: 'Open the studio' },
   { date: '2026-11-13', title: 'Draw yourself as a character', text: 'On the characters page, upload a photo and the Cosmic Studio draws you in the observatory’s 1950s comic style. The photo isn’t kept.', to: '/characters', cta: 'Try it' },

@@ -28,7 +28,19 @@ export type TransitHit = { transit: TransitPos; natalKey: string; natalName: str
 /** `planet` is the moving body's key; `natalKey` is the natal point an exact contact touches (exact events only). */
 export type TransitEvent = { date: Date; kind: 'exact' | 'station' | 'ingress'; title: string; detail: string; retro: boolean; doubleRx: boolean; weight: number; planet?: string; natalKey?: string };
 
+// Positions are pure functions of the instant; cache them so dashboards and forecasts don't recompute the same days.
+const POS_CACHE = new Map<number, TransitPos[]>();
 export function transitPositions(d: Date): TransitPos[] {
+  const t = d.getTime();
+  const hit = POS_CACHE.get(t);
+  if (hit) return hit;
+  const out = computePositions(d);
+  if (POS_CACHE.size > 600) POS_CACHE.delete(POS_CACHE.keys().next().value as number);
+  POS_CACHE.set(t, out);
+  return out;
+}
+
+function computePositions(d: Date): TransitPos[] {
   return T_BODIES.map(([key, name, glyph, body]) => {
     const lon = eclLon(body, d);
     const retro = key !== 'sun' && key !== 'moon' && norm(eclLon(body, new Date(d.getTime() + DAY / 2)) - eclLon(body, new Date(d.getTime() - DAY / 2)) + 180) - 180 < 0;

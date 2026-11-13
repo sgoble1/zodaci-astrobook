@@ -53,7 +53,7 @@ export function MemberDashboard() {
   }, [session?.user.id, retry]);
   const chart = useMemo(() => { if (!birth) return null; try { return computeChart(toChartInput(birth)); } catch { return null; } }, [birth]);
   const placements = chart ? [['Sun', chart.bodies.find(b => b.key === 'sun')?.sign], ['Moon', chart.bodies.find(b => b.key === 'moon')?.sign], ['Rising', birth?.time && chart.asc !== null ? fmtLon(chart.asc).sign : 'Time unknown']] : [];
-  if (birth === undefined || access.loading) return <p role="status" className="text-muted-foreground">Opening your dashboard…</p>;
+  if (birth === undefined || access.loading) return <DashboardSkeleton />;
   const destination = !birth ? '/start' : visit?.path.startsWith('/my-readings/topic/') ? `${visit.path}${visit.section ? `#${visit.section}` : ''}` : '/my-readings/topic/big-three';
   return <article className="space-y-12">
     <p className="-mb-8 flex flex-wrap items-center gap-2 text-sm text-muted-foreground"><span className="font-label tracking-[0.14em] text-primary">Your character</span><span className="text-foreground">{me.name}</span><span aria-hidden>·</span><Link to="/characters" className="underline">{me.chosen ? 'Change' : 'Choose yours'}</Link></p>
@@ -80,4 +80,12 @@ export function MemberDashboard() {
     <section className="flex flex-wrap items-center justify-between gap-4 border-t border-border pt-6"><h2 className="text-2xl">Explore next</h2><div className="flex flex-wrap gap-2"><Button asChild variant="outline"><Link to="/explore"><Compass className="h-4 w-4" />Explore</Link></Button><Button asChild variant="outline"><Link to="/my-astrobook"><BookOpen className="h-4 w-4" />My Library</Link></Button><Button asChild variant="outline"><Link to="/books">AstroBook</Link></Button>{access.plan !== 'free' && <Button asChild variant="outline"><Link to="/creator">Cosmic Studio</Link></Button>}</div></section>
     <SharedChatFeed />
   </article>;
+}
+/** Holds the mosaic's shape while the account loads, so the page doesn't jump when it arrives. */
+export function DashboardSkeleton() {
+  return <div role="status" aria-label="Opening your dashboard" className="space-y-6">
+    <div className="grid gap-4 md:grid-cols-[2fr_1fr]"><div className="obs-panel aspect-[16/10] animate-pulse" /><div className="hidden obs-panel animate-pulse md:block" /></div>
+    <div className="grid grid-cols-2 gap-3 sm:grid-cols-5">{Array.from({ length: 5 }, (_, i) => <div key={i} className="obs-panel h-24 animate-pulse" />)}</div>
+    <span className="sr-only">Opening your dashboard…</span>
+  </div>;
 }

@@ -36,7 +36,8 @@ const ParticleField = () => {
       "hsla(357, 74%, 56%, ",  // shop red
     ];
 
-    const count = Math.min(80, Math.floor((window.innerWidth * window.innerHeight) / 15000));
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const count = reduce ? 0 : Math.min(window.innerWidth < 640 ? 30 : 80, Math.floor((window.innerWidth * window.innerHeight) / 15000));
     particlesRef.current = Array.from({ length: count }, () => ({
       x: Math.random() * canvas.width,
       y: Math.random() * canvas.height,
@@ -53,6 +54,8 @@ const ParticleField = () => {
     window.addEventListener("mousemove", onMouse);
 
     const animate = () => {
+      // Paused while the tab is hidden; resumes on visibilitychange.
+      if (document.hidden || !particlesRef.current.length) { animRef.current = 0; return; }
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       const particles = particlesRef.current;
       const mouse = mouseRef.current;
@@ -110,9 +113,14 @@ const ParticleField = () => {
       animRef.current = requestAnimationFrame(animate);
     };
 
-    animate();
+    const onVis = () => { if (!document.hidden && !animRef.current) animate(); };
+    document.addEventListener("visibilitychange", onVis);
+    // Start after the page has painted so the first view isn't competing with the canvas.
+    const startId = window.setTimeout(() => { if (!animRef.current) animate(); }, 1200);
 
     return () => {
+      window.clearTimeout(startId);
+      document.removeEventListener("visibilitychange", onVis);
       cancelAnimationFrame(animRef.current);
       window.removeEventListener("resize", resize);
       window.removeEventListener("mousemove", onMouse);

@@ -34,7 +34,14 @@ export function CurrentChapterPanel({ chart, name }: { chart: ChartResult; name?
     return () => { window.clearInterval(interval); document.removeEventListener('visibilitychange', refresh); };
   }, []);
   const hits = useMemo(() => { try { return transitsTo(chart, now); } catch { return []; } }, [chart, now]);
-  const events = useMemo(() => { try { return upcomingEvents(chart, now, 31); } catch { return []; } }, [chart, now]);
+  // The 31-day timeline is the heaviest calculation; run it after first paint so the studio appears at once.
+  const [events, setEvents] = useState<ReturnType<typeof upcomingEvents>>([]);
+  useEffect(() => {
+    const run = () => { try { setEvents(upcomingEvents(chart, now, 31)); } catch { setEvents([]); } };
+    const w = window as Window & { requestIdleCallback?: (cb: () => void, o?: { timeout: number }) => number; cancelIdleCallback?: (id: number) => void };
+    if (w.requestIdleCallback) { const id = w.requestIdleCallback(run, { timeout: 1500 }); return () => w.cancelIdleCallback?.(id); }
+    const id = window.setTimeout(run, 300); return () => window.clearTimeout(id);
+  }, [chart, now]);
   const sky = useMemo(() => { try { return transitPositions(now); } catch { return []; } }, [now]);
   const channels = useMemo(() => broadcastChannels(hits, events, now, sky), [hits, events, now, sky]);
   const compass = compassFrom(hits);

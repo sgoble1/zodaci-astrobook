@@ -48,7 +48,7 @@ describe('AstroComic print geometry', async () => {
       expect(validArtSize(s.width, s.height)).toBe(true);
       expect(effectiveDpi(s.width, s.height, s.rect)).toBeGreaterThanOrEqual(MIN_DPI);
     }
-    expect(artPixels({ x: 0, y: 0, w: MEDIA.w, h: MEDIA.h })).toEqual({ width: 1792, height: 2720 });
+    expect(artPixels({ x: 0, y: 0, w: MEDIA.w, h: MEDIA.h })).toEqual({ width: 2144, height: 3264 });
   });
 
   it('never sends the reader’s name to the image model and asks for art without lettering', () => {

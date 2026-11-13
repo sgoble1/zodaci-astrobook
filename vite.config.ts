@@ -62,7 +62,7 @@ export default defineConfig(({ mode }) => ({
   },
   plugins: [react(), preloadFonts(), publicSnapshots(), mode === "development" && componentTagger()].filter(Boolean),
   // Pre-bundle heavy libraries so the preview doesn't re-optimize mid-session; split them into their own cached files.
-  optimizeDeps: { include: ["astronomy-engine", "pdf-lib", "qrcode", "xlsx"] },
+  optimizeDeps: { include: ["astronomy-engine", "pdf-lib", "qrcode", "xlsx", "pdfjs-dist/legacy/build/pdf.mjs"] },
   build: {
     rollupOptions: {
       output: {
