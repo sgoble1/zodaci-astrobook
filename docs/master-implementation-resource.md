@@ -539,3 +539,15 @@ Pages and routes are kept; the menu groups them. Old URLs keep working and open 
 | C3 | Photo-to-comic characters | Low AI per member |
 | D1 | Sample Issue #1 redraw | High AI |
 | E1 | Lulu sandbox proof (needs keys) | Owner |
+
+# Part 25 — Completeness pass (items found missing in the v3 check)
+
+- **Member character in header/dashboard:** show the member's chosen character (memberCharacter.ts) as a small badge on the dashboard opening and account menu. Free.
+- **Account menu tidy:** group Account, Plan & credits, Shared with me, Settings, Sign out; admin/developer links only for admins. Free.
+- **Founder pages at phone size:** 393px pass on April, Shane and Zac edition pages (sidebar, chapter reader, TVs). Free.
+- **Shane Masterbook corrections:** keep edition-correct deterministic find/replace with backup; run the remaining flagged chapters in small batches. Low AI.
+- **Personal preview drawer:** keep the "see it with my chart" drawer on public product pages consistent with the new 5-spread book preview and comic parity. Free.
+- **Custom pages (custom_pages):** admin-published pages appear in the right hub group after the five-hub regrouping; test that they still merge into menus. Free.
+- **Dashboard updates for each founder:** April and Zac see the plain-language "What's new" (features, products, editions, activities); Shane sees the full developer view. Appended every fifth batch (Part 19).
+- **Ask the Sources / SmartChat** inside the Consultation Desk keep the 402/denial handling (sourceResponse) — no denial ever saved as an answer.
+- **Credit check after each AI batch:** record spend on the developer board so cost per feature is visible.
