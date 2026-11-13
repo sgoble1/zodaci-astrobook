@@ -1,13 +1,45 @@
 import type { ChartResult } from '@/lib/astro';
+import type { CurrentChapter } from '@/lib/currentChapter';
 
 /** Printable/downloadable creations drawn from a member's saved chart. Pure text helpers are kept here so they can be tested. */
-export type CreationKind = 'wallpaper' | 'poster' | 'journal' | 'card';
+export type CreationKind = 'wallpaper' | 'poster' | 'journal' | 'card' | 'scroll' | 'tarot' | 'badge';
 export const CREATION_SIZE: Record<CreationKind, { w: number; h: number; label: string; note: string }> = {
   wallpaper: { w: 1170, h: 2532, label: 'Phone wallpaper', note: '1170 × 2532 px, fits modern phones' },
   poster: { w: 2400, h: 3600, label: 'Chart poster', note: '8 × 12 in at 300 dpi, print-ready' },
   journal: { w: 2550, h: 3300, label: 'Journal & planner page', note: 'US Letter at 300 dpi' },
   card: { w: 1500, h: 2100, label: 'Affirmation card', note: '5 × 7 in at 300 dpi' },
+  scroll: { w: 1200, h: 3600, label: 'Star scroll', note: '4 × 12 in at 300 dpi, a tall parchment keepsake' },
+  tarot: { w: 825, h: 1425, label: 'Tarot birth card', note: '2.75 × 4.75 in at 300 dpi, standard tarot size' },
+  badge: { w: 1200, h: 1200, label: 'Transit badge', note: '4 in round at 300 dpi with clear corners; shows today’s Current Chapter' },
 };
+
+/** Studio looks. "atomic" is the 1950s observatory poster palette (archive cream, indigo ink, shop red and yellow). */
+export const CREATION_STYLES = { night: 'Midnight & gold', violet: 'Indigo nebula', dawn: 'Gold dawn', atomic: '1950s observatory poster' } as const;
+export type CreationStyle = keyof typeof CREATION_STYLES;
+
+const ARCANA = ['The Fool', 'The Magician', 'The High Priestess', 'The Empress', 'The Emperor', 'The Hierophant', 'The Lovers', 'The Chariot', 'Strength', 'The Hermit', 'Wheel of Fortune', 'Justice', 'The Hanged Man', 'Death', 'Temperance', 'The Devil', 'The Tower', 'The Star', 'The Moon', 'The Sun', 'Judgement', 'The World'];
+const ROMAN = ['0', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII', 'XIII', 'XIV', 'XV', 'XVI', 'XVII', 'XVIII', 'XIX', 'XX', 'XXI'];
+const digitSum = (n: number) => String(n).split('').reduce((a, x) => a + Number(x), 0);
+
+/**
+ * Tarot birth card by the digit method used on the Other Systems page: add every digit of the birth date, then add the
+ * digits again while the total is above 22. A total of 22 is The Fool (0). Returns null for a malformed date.
+ */
+export function tarotBirthCard(date: string): { number: number; roman: string; name: string; total: number } | null {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) return null;
+  const total = date.replace(/-/g, '').split('').reduce((a, x) => a + Number(x), 0);
+  let n = total; while (n > 22) n = digitSum(n);
+  const card = n === 22 ? 0 : n;
+  return { number: card, roman: ROMAN[card], name: ARCANA[card], total };
+}
+
+/** Text for the transit badge, taken only from the Current Chapter (today's strongest slow-planet contact). */
+export function badgeLines(chapter: CurrentChapter, day: Date) {
+  const date = day.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+  const h = chapter.hit;
+  if (!h) return { glyphs: '☉ ☽', title: 'A quiet sky', detail: 'No slow planet is closely touching this chart today', date };
+  return { glyphs: `${h.transit.glyph} ${h.symbol}`, title: chapter.title.split(' · ')[0], detail: `${h.transit.name} ${h.type.toLowerCase()} ${h.natalName} · ${h.orb.toFixed(1)}° ${h.applying ? 'applying' : 'separating'}`, date };
+}
 
 const GIFT: Record<string, [string, string]> = {
   Aries: ['courage', 'I act first and learn as I go.'], Taurus: ['steadiness', 'I build slowly and it lasts.'],

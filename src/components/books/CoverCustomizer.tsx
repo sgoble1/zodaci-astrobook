@@ -83,7 +83,7 @@ export function CoverCustomizer() {
       <figcaption className="mt-2 space-y-0.5 text-center text-xs text-muted-foreground" aria-live="polite">
         <span className="block">Live cover preview · 6 × 9 in</span>
         {named && <span className="block italic text-gold">{named.title}</span>}
-        {pretty && <span className="block">{pretty}{sun ? ` · Sun in ${sun.sign} ${sun.glyph}` : ''}</span>}
+        {pretty && <span className="block">{pretty}{sun ? ` · Sun in ${sun.sign} ${sun.glyph}\uFE0E` : ''}</span>}
       </figcaption>
     </figure>
   </div>;

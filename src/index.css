@@ -130,6 +130,8 @@
   html { font-size: var(--font-size); scroll-behavior: smooth; scroll-padding-top: 5.5rem; }
   body {
     @apply text-foreground;
+    /* Zodiac and planet symbols draw as type, never as coloured emoji. */
+    font-variant-emoji: text;
     background:
       radial-gradient(ellipse at 15% 0%, hsl(var(--glow-violet) / 0.18), transparent 55%),
       radial-gradient(ellipse at 90% 90%, hsl(var(--glow-teal) / 0.12), transparent 55%),

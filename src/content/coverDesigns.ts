@@ -4,6 +4,12 @@ import coverMidnightStarsSquare from '@/assets/cover-design-midnight-stars-squar
 import coverMidnightEmberSquare from '@/assets/cover-design-midnight-ember-square.jpg';
 import coverMidnightStarsLetter from '@/assets/cover-design-midnight-stars-letter.jpg';
 import coverMidnightEmberLetter from '@/assets/cover-design-midnight-ember-letter.jpg';
+import coverCartographer from '@/assets/cover-design-celestial-cartographer-hd.jpg';
+import coverCartographerLetter from '@/assets/cover-design-celestial-cartographer-letter.jpg';
+import coverCartographerSquare from '@/assets/cover-design-celestial-cartographer-square.jpg';
+import coverDeepOrbit from '@/assets/cover-design-deep-orbit-hd.jpg';
+import coverDeepOrbitLetter from '@/assets/cover-design-deep-orbit-letter.jpg';
+import coverDeepOrbitSquare from '@/assets/cover-design-deep-orbit-square.jpg';
 
 /**
  * Free AstroBook cover designs. Artwork covers use an image; solid and gradient covers are painted from print
@@ -15,10 +21,14 @@ import coverMidnightEmberLetter from '@/assets/cover-design-midnight-ember-lette
  * (Signature) — so the cover fills the trim from the full-resolution file instead of an enlarged crop.
  */
 export type ArtVariant = { src: string; size: [number, number] };
-export type CoverDesign = { key: string; label: string; kind: 'art' | 'solid' | 'gradient'; detail: string; src?: string; variants?: ArtVariant[]; colors?: string[]; accent?: string };
+/** `monogram` painted covers stamp the reader's initials in a gold seal at the centre of the cover. */
+export type CoverDesign = { key: string; label: string; kind: 'art' | 'solid' | 'gradient'; detail: string; src?: string; variants?: ArtVariant[]; colors?: string[]; accent?: string; monogram?: boolean };
 
 export const COVER_DESIGNS: CoverDesign[] = [
   { key: 'midnight-stars', label: 'Midnight Stars', kind: 'art', detail: 'Black night sky with fine gold stars and a faint violet glow.', src: coverMidnightStars, variants: [{ src: coverMidnightStars, size: [1280, 1920] }, { src: coverMidnightStarsLetter, size: [1488, 1920] }, { src: coverMidnightStarsSquare, size: [1920, 1920] }] },
+  { key: 'celestial-cartographer', label: 'Celestial Cartographer', kind: 'art', detail: 'A brass star atlas with engraved constellation lines on deep indigo.', src: coverCartographer, variants: [{ src: coverCartographer, size: [1280, 1920] }, { src: coverCartographerLetter, size: [1488, 1920] }, { src: coverCartographerSquare, size: [1920, 1920] }] },
+  { key: 'deep-orbit', label: 'Deep Orbit', kind: 'art', detail: 'A ringed planet and sweeping gold orbits in deep space.', src: coverDeepOrbit, variants: [{ src: coverDeepOrbit, size: [1280, 1920] }, { src: coverDeepOrbitLetter, size: [1488, 1920] }, { src: coverDeepOrbitSquare, size: [1920, 1920] }] },
+  { key: 'vintage-monogram', label: 'Vintage Monogram', kind: 'solid', detail: 'Oxblood book cloth with your initials in a gold seal.', colors: ['#3B1420'], accent: '#D4A853', monogram: true },
   { key: 'midnight-ember', label: 'Midnight Ember', kind: 'art', detail: 'The Midnight Stars design in wine-plum with rose-gold stars.', src: coverMidnightEmber, variants: [{ src: coverMidnightEmber, size: [1280, 1920] }, { src: coverMidnightEmberLetter, size: [1488, 1920] }, { src: coverMidnightEmberSquare, size: [1920, 1920] }] },
   { key: 'solid-midnight', label: 'Solid Midnight', kind: 'solid', detail: 'Deep-midnight cloth with a fine grain, faint stars and a gold inset line.', colors: ['#0D1028'], accent: '#D4A853' },
   { key: 'gradient-violet-dusk', label: 'Indigo Dusk', kind: 'gradient', detail: 'Deep indigo fading into evening blue, with grain and a scatter of yellow stars.', colors: ['#12123A', '#1E1E5A', '#3A3A8C'], accent: '#FFC61A' },
@@ -52,8 +62,27 @@ function seeded(seed: string) {
   return () => { h ^= h << 13; h ^= h >>> 17; h ^= h << 5; return ((h >>> 0) % 100000) / 100000; };
 }
 
-/** Paint a solid or gradient design at any size: base colour, soft vignette, paper grain, faint stars, gold inset line. */
-export function paintCover(ctx: CanvasRenderingContext2D, d: CoverDesign, w: number, h: number) {
+/** Up to three initials from the name on the cover ("Mary Ann Lee" → "MAL"); a star when no name is typed yet. */
+export function monogramFor(name: string): string {
+  const letters = name.trim().split(/[\s-]+/).map(p => Array.from(p.replace(/[^\p{L}]/gu, ''))[0] ?? '').filter(Boolean).slice(0, 3);
+  return letters.length ? letters.join('').toLocaleUpperCase() : '✦';
+}
+
+/** The monogram seal: double gold ring, a ring of small ticks, and the initials, centred low enough to clear the title. */
+function paintMonogram(ctx: CanvasRenderingContext2D, accent: string, w: number, h: number, initials: string) {
+  const cx = w / 2, cy = h * 0.58, r = Math.min(w, h) * 0.24, line = Math.max(1, w / 360);
+  ctx.save(); ctx.strokeStyle = accent; ctx.fillStyle = accent; ctx.lineWidth = line * 1.6;
+  ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.stroke();
+  ctx.lineWidth = line * 0.8; ctx.beginPath(); ctx.arc(cx, cy, r * 0.9, 0, Math.PI * 2); ctx.stroke();
+  for (let i = 0; i < 48; i++) { const a = (i / 48) * Math.PI * 2, r1 = r * 1.06, r2 = r * (i % 4 ? 1.1 : 1.16); ctx.beginPath(); ctx.moveTo(cx + Math.cos(a) * r1, cy + Math.sin(a) * r1); ctx.lineTo(cx + Math.cos(a) * r2, cy + Math.sin(a) * r2); ctx.stroke(); }
+  const size = r * (initials.length >= 3 ? 0.62 : initials.length === 2 ? 0.8 : 1.05);
+  ctx.font = `${size}px "Alfa Slab One", Georgia, serif`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText(initials, cx, cy + size * 0.04);
+  ctx.restore();
+}
+
+/** Paint a solid or gradient design at any size: base colour, soft vignette, paper grain, faint stars, gold inset line (and the monogram seal on monogram designs). */
+export function paintCover(ctx: CanvasRenderingContext2D, d: CoverDesign, w: number, h: number, initials = '✦') {
   if (d.kind === 'solid') ctx.fillStyle = d.colors![0];
   else { const g = ctx.createLinearGradient(0, 0, 0, h); d.colors!.forEach((col, i) => g.addColorStop(i / (d.colors!.length - 1), col)); ctx.fillStyle = g; }
   ctx.fillRect(0, 0, w, h);
@@ -82,6 +111,7 @@ export function paintCover(ctx: CanvasRenderingContext2D, d: CoverDesign, w: num
   ctx.strokeStyle = d.accent ?? '#D4A853'; ctx.globalAlpha = 0.55; ctx.lineWidth = Math.max(1, w / 520);
   ctx.strokeRect(inset, inset, w - inset * 2, h - inset * 2);
   ctx.globalAlpha = 1;
+  if (d.monogram) paintMonogram(ctx, d.accent ?? '#D4A853', w, h, initials);
 }
 
 const painted = new Map<string, string>();

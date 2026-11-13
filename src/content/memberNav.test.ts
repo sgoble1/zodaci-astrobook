@@ -142,3 +142,13 @@ describe('shared editions in the Book menu', () => {
     expect(domainFor('/april')).toBe('book');
   });
 });
+
+describe('account menu sections', () => {
+  it('groups every account link exactly once, in the fixed order', async () => {
+    const { accountSections, ACCOUNT_MENU: menu } = await import('./memberNav');
+    const secs = accountSections();
+    expect(secs.map(s => s.title)).toEqual(['Your account', 'Plan & orders', 'Make & share', 'Help']);
+    expect(secs.flatMap(s => s.links.map(l => l.to)).sort()).toEqual(menu.map(a => a.to).sort());
+    expect(secs.find(s => s.title === 'Plan & orders')!.links.map(l => l.to)).toEqual(['/pricing', '/orders']);
+  });
+});

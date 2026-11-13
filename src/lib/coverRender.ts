@@ -1,4 +1,4 @@
-import { coverByKey, designSrc, paintCover, type CoverDesign } from '@/content/coverDesigns';
+import { coverByKey, designSrc, monogramFor, paintCover, type CoverDesign } from '@/content/coverDesigns';
 import { COVER_BLEED_IN, PRINT_PPI, coverType, placeArt, type CoverCrop, type CoverTextBox } from '@/lib/coverLayout';
 
 /** Where the cover artwork comes from: one of our designs, or an image URL (your upload or a chart cover). */
@@ -65,7 +65,7 @@ export async function drawCover(ctx: CanvasRenderingContext2D, spec: CoverSpec, 
   if (design && !design.src) {
     // Painted covers are drawn at full size, then zoom/pan simply moves that painting.
     const off = document.createElement('canvas'); off.width = w; off.height = h;
-    paintCover(off.getContext('2d')!, design, w, h);
+    paintCover(off.getContext('2d')!, design, w, h, monogramFor(spec.name));
     const p = placeArt(w, h, w, h, spec.crop); ctx.drawImage(off, p.x, p.y, p.width, p.height);
   } else {
     const im = await loadImage((design && designSrc(design, spec.trimPt)) ?? (spec.source as { url: string }).url);

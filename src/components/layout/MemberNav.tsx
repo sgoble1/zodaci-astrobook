@@ -13,7 +13,7 @@ import { computeChart } from '@/lib/astro';
 import { readingVisitKey, type ReadingVisit } from '@/lib/readingExperience';
 import type { Plan } from '@/content/navigation';
 import {
-  ACCOUNT_MENU, ADMIN_MENU, ADMIN_PATHS, MEMBER_DOMAINS, MOBILE_TABS, domainById, domainFor, domainForMenuGroup, itemLock, memberDestinations, visibleColumns, withSharedEditions,
+  ADMIN_MENU, ADMIN_PATHS, accountSections, MEMBER_DOMAINS, MOBILE_TABS, domainById, domainFor, domainForMenuGroup, itemLock, memberDestinations, visibleColumns, withSharedEditions,
   type DomainId, type MemberDomain, type MemberNavColumn, type MemberNavItem,
 } from '@/content/memberNav';
 import { ZodaciLogo } from '@/components/brand/ZodaciLogo';
@@ -280,7 +280,7 @@ function AccountSheetBody({ onNavigate }: { onNavigate: () => void }) {
     <SheetHeader className="text-left"><SheetTitle className="sr-only">Account</SheetTitle><SheetDescription className="sr-only">Account, help and learning</SheetDescription><AccountSummary menu={menu} /></SheetHeader>
     {!menu.planLoading && <Link to="/pricing" onClick={onNavigate} className="my-4 flex items-center justify-between rounded-xl border border-primary/40 bg-primary/10 p-3 text-sm"><span>{PLAN_LABEL[menu.plan]} plan</span>{menu.plan !== 'creator' && <span className="text-primary">Upgrade →</span>}</Link>}
     <div className="space-y-6">
-      <section aria-label="Account"><h3 className="mb-1 px-2 font-label text-xs tracking-[0.16em] text-primary">Account</h3><ul>{ACCOUNT_MENU.map(a => link(a.to, a.label, a.icon))}</ul></section>
+      {accountSections().map(sec => <section key={sec.title} aria-label={sec.title}><h3 className="mb-1 px-2 font-label text-xs tracking-[0.16em] text-primary">{sec.title}</h3><ul>{sec.links.map(a => link(a.to, a.label, a.icon))}</ul></section>)}
       <section aria-label="Learn"><h3 className="mb-1 px-2 font-label text-xs tracking-[0.16em] text-primary">Learn</h3><SheetList columns={learn.map(c => ({ ...c, title: '' }))} onNavigate={onNavigate} /></section>
       {(menu.admin || menu.editionSwitch.length > 0) && <section aria-label="Admin"><h3 className="mb-1 px-2 font-label text-xs tracking-[0.16em] text-primary">Admin</h3><ul>
         {menu.admin && ADMIN_MENU.map(a => link(a.to, a.label, a.icon))}

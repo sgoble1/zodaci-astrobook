@@ -13,7 +13,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { supabase } from '@/integrations/supabase/client';
 import { useMyCharacter, characterOrDefault } from '@/lib/memberCharacter';
-import { ACCOUNT_MENU, ADMIN_MENU, itemLock } from '@/content/memberNav';
+import { ACCOUNT_MENU, ADMIN_MENU, accountSections, itemLock } from '@/content/memberNav';
 
 /** @deprecated kept for older imports; the account menu now reads ACCOUNT_MENU from the navigation registry. */
 export const ACCOUNT_LINKS: [string, string][] = ACCOUNT_MENU.map(a => [a.to, a.label]);
@@ -69,9 +69,11 @@ export function AccountButton({ compact = false }: { compact?: boolean }) {
         <DropdownMenuLabel className="font-normal"><AccountSummary menu={menu} /></DropdownMenuLabel>
         {!menu.april && !menu.planLoading && <DropdownMenuItem asChild><Link to="/pricing" className="text-xs"><span className="rounded-full border border-primary/40 bg-primary/10 px-2 py-0.5 text-foreground">{PLAN_LABEL[menu.plan]} plan</span>{menu.plan !== 'creator' && <span className="ml-auto text-primary">Upgrade →</span>}</Link></DropdownMenuItem>}
         <DropdownMenuSeparator />
-        <DropdownMenuGroup>
-          {ACCOUNT_MENU.map(({ to, label, icon: Icon }) => <DropdownMenuItem key={to} asChild><Link to={to}><Icon className="mr-2 h-4 w-4 text-muted-foreground" aria-hidden="true" />{label}<LockTag need={menu.lock(to)} /></Link></DropdownMenuItem>)}
-        </DropdownMenuGroup>
+        {accountSections().map((sec, i) => <DropdownMenuGroup key={sec.title} aria-label={sec.title}>
+          {i > 0 && <DropdownMenuSeparator />}
+          <DropdownMenuLabel className="font-label text-[10px] font-normal tracking-[0.16em] text-primary">{sec.title}</DropdownMenuLabel>
+          {sec.links.map(({ to, label, icon: Icon }) => <DropdownMenuItem key={to} asChild><Link to={to}><Icon className="mr-2 h-4 w-4 text-muted-foreground" aria-hidden="true" />{label}<LockTag need={menu.lock(to)} /></Link></DropdownMenuItem>)}
+        </DropdownMenuGroup>)}
         {(menu.admin || menu.editionSwitch.length > 0) && <>
           <DropdownMenuSeparator />
           <DropdownMenuLabel className="text-xs font-normal text-muted-foreground">{menu.admin ? 'Admin & editions' : 'Editions'}</DropdownMenuLabel>

@@ -187,20 +187,26 @@ export const MEMBER_DOMAINS: MemberDomain[] = [
   },
 ];
 
-export type AccountLink = { to: string; label: string; icon: LucideIcon };
+export type AccountSection = 'Your account' | 'Plan & orders' | 'Make & share' | 'Help';
+export type AccountLink = { to: string; label: string; icon: LucideIcon; section?: AccountSection };
 /** Account menu (avatar). Utility destinations live here instead of the main menu. */
 export const ACCOUNT_MENU: AccountLink[] = [
-  { to: '/dashboard', label: 'My Dashboard & Bookmarks', icon: LayoutDashboard },
-  { to: '/start', label: 'Edit birth details', icon: Settings2 },
-  { to: '/personal-context', label: 'Personal context', icon: UserRound },
-  { to: '/workspaces', label: 'Shared workspaces', icon: Users },
-  { to: '/shared-with-me', label: 'Shared with me', icon: Share2 },
-  { to: '/pricing', label: 'Plans & Pricing', icon: Crown },
-  { to: '/orders', label: 'My book orders', icon: Truck },
-  { to: '/creator', label: 'Cosmic Studio', icon: Wand2 },
-  { to: '/instructions', label: 'Instructions & Help', icon: CircleHelp },
-  { to: '/about', label: 'About Zodaci', icon: Info },
+  { to: '/dashboard', label: 'My Dashboard & Bookmarks', icon: LayoutDashboard, section: 'Your account' },
+  { to: '/start', label: 'Edit birth details', icon: Settings2, section: 'Your account' },
+  { to: '/personal-context', label: 'Personal context', icon: UserRound, section: 'Your account' },
+  { to: '/workspaces', label: 'Shared workspaces', icon: Users, section: 'Make & share' },
+  { to: '/shared-with-me', label: 'Shared with me', icon: Share2, section: 'Make & share' },
+  { to: '/pricing', label: 'Plans & Pricing', icon: Crown, section: 'Plan & orders' },
+  { to: '/orders', label: 'My book orders', icon: Truck, section: 'Plan & orders' },
+  { to: '/creator', label: 'Cosmic Studio', icon: Wand2, section: 'Make & share' },
+  { to: '/instructions', label: 'Instructions & Help', icon: CircleHelp, section: 'Help' },
+  { to: '/about', label: 'About Zodaci', icon: Info, section: 'Help' },
 ];
+/** The account menu in its labelled sections, in a fixed order; every ACCOUNT_MENU entry appears exactly once. */
+export const ACCOUNT_SECTION_ORDER: AccountSection[] = ['Your account', 'Plan & orders', 'Make & share', 'Help'];
+export function accountSections(list: AccountLink[] = ACCOUNT_MENU): { title: AccountSection; links: AccountLink[] }[] {
+  return ACCOUNT_SECTION_ORDER.map(title => ({ title, links: list.filter(a => (a.section ?? 'Your account') === title) })).filter(g => g.links.length > 0);
+}
 /** Admin tools: only ever rendered inside the Account menu for admins; pages check the role again. */
 export const ADMIN_MENU: AccountLink[] = [
   { to: '/admin', label: 'Admin', icon: ShieldCheck },

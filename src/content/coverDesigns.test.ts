@@ -22,3 +22,16 @@ describe('artwork covers print sharp at every AstroBook size', () => {
     }
   });
 });
+
+describe('cover suite', () => {
+  it('offers the four named suite covers', () => {
+    const labels = COVER_DESIGNS.map(d => d.label);
+    for (const l of ['Midnight Stars', 'Celestial Cartographer', 'Deep Orbit', 'Vintage Monogram']) expect(labels).toContain(l);
+  });
+  it('monogram uses up to three initials from the name, or a star before a name is typed', async () => {
+    const { monogramFor } = await import('./coverDesigns');
+    expect(monogramFor('mary ann lee')).toBe('MAL');
+    expect(monogramFor('Jean-Luc Picard Smith')).toBe('JLP');
+    expect(monogramFor('  ')).toBe('✦');
+  });
+});

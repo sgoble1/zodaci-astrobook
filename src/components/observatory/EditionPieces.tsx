@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import { ThemeArt, artFor } from '@/components/common/ThemeArt';
 import { BoxArt } from '@/components/common/BoxArt';
@@ -37,7 +37,8 @@ export function ChapterCard({ to, entry, seed }: { to: string; entry: EditionCha
   const topics = catsFor(entry).slice(0, 3);
   const blurb = entry.excerpt || entry.sections.slice(0, 4).join(' · ');
   return (
-    <Link to={to} className="parchment group block overflow-hidden transition-colors hover:border-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+    // content-visibility lets the browser skip drawing cards that are off screen (editions run to hundreds of chapters).
+    <Link to={to} className="parchment group block overflow-hidden transition-colors [contain-intrinsic-size:auto_190px] [content-visibility:auto] hover:border-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
       <BoxArt seed={seed} label={entry.title} className="h-16 w-full" />
       <div className="p-4">
         <div className="font-label text-[10px] tracking-[0.14em] text-primary">{entry.label} · {minutesToRead(entry.words)} min read</div>
@@ -54,10 +55,15 @@ export function ChapterCard({ to, entry, seed }: { to: string; entry: EditionCha
   );
 }
 
-/** A part (or topic) of an edition: drawn icon, title, chapter count, and the chapter cards. Opens on click. */
+/**
+ * A part (or topic) of an edition: drawn icon, title, chapter count, and the chapter cards. Opens on click.
+ * Cards mount the first time a part opens, so a closed part of a long edition costs only its header.
+ */
 export function ChapterPart({ title, count, open, children }: { title: string; count: number; open?: boolean; children: ReactNode }) {
+  const [seen, setSeen] = useState(!!open);
+  useEffect(() => { if (open) setSeen(true); }, [open]);
   return (
-    <details open={open} className="group vellum deckle p-5 sm:p-7">
+    <details open={open} onToggle={e => { if (e.currentTarget.open) setSeen(true); }} className="group vellum deckle p-5 sm:p-7">
       <summary className="flex cursor-pointer list-none items-center gap-4 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
         <ThemeArt label={title} kind={artFor(title)} className="h-14 w-14 shrink-0" />
         <span className="min-w-0 flex-1">
@@ -66,7 +72,7 @@ export function ChapterPart({ title, count, open, children }: { title: string; c
         </span>
         <span aria-hidden="true" className="text-xl text-gold transition-transform group-open:rotate-90">›</span>
       </summary>
-      <div className="mt-5 grid gap-3 md:grid-cols-2">{children}</div>
+      {seen && <div className="mt-5 grid gap-3 md:grid-cols-2">{children}</div>}
     </details>
   );
 }
