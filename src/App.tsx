@@ -272,11 +272,9 @@ export default function App() {
           <Route path="/welcome" element={<BrandLanding />} />
           <Route element={<PublicSiteLayout />}>
             <Route path="/about" element={<About />} />
-            <Route path="/characters" element={<Characters />} />
             <Route path="/lp/:slug" element={<LandingPage />} />
             <Route path="/learn" element={<Learn />} />
             <Route path="/forecast" element={<Forecast />} />
-            <Route path="/moon-calendar" element={<MoonCalendar />} />
             <Route path="/learn/:slug" element={<PublicArticle />} />
             <Route path="/blog" element={<Navigate to={{ pathname: '/learn', hash: '#journal' }} replace />} />
             <Route path="/blog/learn/:slug" element={<LegacyArticleRedirect />} />
@@ -297,6 +295,7 @@ export default function App() {
             <Route path="/astrocomic" element={<FeatureGate flag="astrocomic"><AstroComic /></FeatureGate>} />
             <Route path="/astrocomic/print-issue-1" element={<FeatureGate flag="astrocomic"><ComicIssuePrint /></FeatureGate>} />
             <Route path="/store" element={<Store />} />
+            <Route path="/shop" element={<Navigate to="/store" replace />} />
             <Route path="/product/:handle" element={<ProductDetail />} />
             <Route path="/academy" element={<Navigate to={{ pathname: '/learn', hash: '#lessons' }} replace />} />
             <Route path="/academy/:slug" element={<FeatureGate flag="academy"><AcademyLesson /></FeatureGate>} />
@@ -349,6 +348,8 @@ export default function App() {
             <Route path="/checkout/return" element={<CheckoutReturn />} />
             <Route path="/my-masterbook" element={<MyMasterbook />} />
             <Route path="/books" element={<Books />} />
+            <Route path="/moon-calendar" element={<MoonCalendar />} />
+            <Route path="/characters" element={<Characters />} />
             <Route path="/orders" element={<Orders />} />
             <Route path="/dispatch" element={<Dispatch />} />
             <Route path="/instructions" element={<Instructions />} />

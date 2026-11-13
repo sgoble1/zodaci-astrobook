@@ -60,6 +60,8 @@ function AprilEditionInner() {
   const [ed, setEd] = useState<Edition | null>(null);
   const [error, setError] = useState('');
   const [signedOut, setSignedOut] = useState(false);
+  const [ownsApril, setOwnsApril] = useState(false);
+  useEffect(() => { let live = true; supabase.rpc('owns_official_edition', { _edition: 'april' }).then(({ data }) => { if (live) setOwnsApril(data === true); }); return () => { live = false; }; }, []);
 
   useEffect(() => {
     document.title = "April's Edition · Zodaci";
@@ -98,6 +100,7 @@ function AprilEditionInner() {
   if (!ed) return <p role="status" className="p-8 text-center text-muted-foreground">Opening April's edition…</p>;
 
   const { birth } = ed;
+  const own = ownsApril;
   return (
     <article className="founder-report mx-auto max-w-4xl space-y-14">
       <nav aria-label="Report actions" className="flex flex-wrap items-center justify-between gap-3 text-sm print:hidden">
@@ -105,10 +108,10 @@ function AprilEditionInner() {
         <button type="button" onClick={printReport} className="inline-flex min-h-10 items-center rounded-full border border-border px-4 text-muted-foreground hover:border-gold hover:text-foreground">Print this report</button>
       </nav>
       <header className="space-y-4 text-center">
-        <div className="font-label text-xs tracking-[0.16em] text-primary">A shared chart report</div>
+        <div className="font-label text-xs tracking-[0.16em] text-primary">{own ? 'Your private edition' : 'A shared chart report'}</div>
         <h1 className="text-4xl sm:text-6xl">{`${birth.name || 'April'}’s`} Edition</h1>
         <p className="mx-auto max-w-2xl text-muted-foreground">
-          The original chart readings, prepared from April's verified birth chart. Shared by April with the accounts she chose — please keep this page private.
+          {own ? 'Your original chart readings, prepared from your verified birth chart. Only you and the people you share it with can open this page.' : "The original chart readings, prepared from April's verified birth chart. Shared by April with the accounts she chose — please keep this page private."}
         </p>
         <nav id="contents" aria-label="Report contents" className="mx-auto max-w-2xl pt-2 print:hidden">
           <ul className="flex flex-wrap justify-center gap-2">

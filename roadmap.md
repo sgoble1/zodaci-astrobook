@@ -11,6 +11,7 @@ Order follows resource Part 6.3. Ticked when done and tested.
 - [x] R5 Developer board errors/edit/undo/paging; founder glance error+retry, credit packs in balance, stable note IDs; investor page live vs planned; activity logs + founder feeds + investor update.
 - [x] Nov 13: Moon Calendar (personal lunar calendar), "Create a chapter about this" on topics, admin image library polish, book/comic payment recovery.
 - [x] Nov 13: P6 Portraits started as Sky Portraits (chart-derived poster, 3 credits). Masterbook extraction/correction skipped by user.
+- [x] Nov 13 design/navigation pass: link audit clean, Characters/Moon Calendar in member shell, /shop redirect, April owner wording, card contrast, 393/1280 sweep without overflow.
 - [ ] R6 Track B batches 9–42 (audit each, finish gaps), then the 6.2 signed-in verification sweep.
 - [ ] R7 Tracks C–D (AI-credit work) only after R1–R6; Track E items stay listed with their owner asks.
 
@@ -53,7 +54,7 @@ Blocked — AI credits:
 - [ ] P3b Intelligence Layer (P12 Observatory and Shane's corrections done Nov 10).
 
 Blocked — owner or outside accounts:
-- [ ] Shane Masterbook birth-detail confirmation (23 chapters) · Zac's documents (Phase 11) · April's archive unlock and signed-in April check.
+- [ ] Shane Masterbook birth-detail confirmation (23 chapters) · Zac's documents (Phase 11) · ~~April's archive unlock~~ (verified Nov 13: opens for April's account; Zac private, Shane shared chapter only). Shane birth details confirmed Nov 13.
 - [ ] Lulu keys + printed sample · AstroComic printer · notify.zodaci.com DNS records · Resend and Search Console connections · licensed Sabian text · asteroid reference degrees · real testimonials and member counts · approved test purchase.
 - [ ] Owner decisions: World Systems (Volume V) starting edition; AstroBook page-depth targets.
 

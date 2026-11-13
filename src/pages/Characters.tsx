@@ -49,7 +49,7 @@ export default function Characters() {
             const on = chosen === c.id;
             return <li key={c.id} className={`obs-paper overflow-hidden ${on ? 'ring-4 ring-primary' : ''}`}>
               <Portrait index={i} className={`w-full bg-no-repeat ${'aspect-[4/3]'}`} />
-              <div className="p-4"><div className="flex items-center justify-between gap-2"><h3 className="font-label text-lg">{c.name}</h3>{'featured' in c && <Stamp>Featured</Stamp>}</div><p className="mt-1 text-sm text-muted-foreground">{c.blurb}</p>
+              <div className="p-4"><div className="flex items-center justify-between gap-2"><h3 className="font-label text-lg">{c.name}</h3>{'featured' in c && <Stamp>Featured</Stamp>}</div><p className="mt-1 text-sm text-[hsl(var(--comic-navy)/0.8)]">{c.blurb}</p>
                 <Button size="sm" className="mt-3" variant={on ? 'primary' : 'signal'} disabled={saving} aria-pressed={on} onClick={() => choose(c.id)}>{on ? <><Check />Your character</> : 'Choose'}</Button></div>
             </li>;
           })}
