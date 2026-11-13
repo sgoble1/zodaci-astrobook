@@ -552,3 +552,10 @@ Audit Oct 29: Chat/counselors already use the member's chart; podcast/custom pag
 - [ ] Phase 3: interactive demo with real components, AstroBook five-spread, comic preview parity
 - [ ] Phase 4: Zac plain-language overview, auto one-time retry on founder pages
 - [ ] Phase 5: home-screen install prompt, final 393/1280 nav + colour audit
+
+## Nov 13 — Phases 3–5 + cleanup
+- [x] Removed six unused font packages; kept Stripe (memberships, credits, books, comics) and motion (used by AI shimmer).
+- [x] Founder editions list retries once automatically.
+- [x] Demo steps jump to the live chart, reading and book sections.
+- [x] Phone home-screen prompt (manifest only, dismiss remembered).
+- [ ] Delete retired demo podcast asset after next publish.

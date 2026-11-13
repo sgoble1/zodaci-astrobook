@@ -84,7 +84,7 @@ export default function Demo() {
 
       <section aria-label="Walk through Zodaci"><DemoScreen /></section>
 
-      <section aria-label="Interactive sample chart"><SampleChartDemo /></section>
+      <section id="sample-chart" className="scroll-mt-24" aria-label="Interactive sample chart"><SampleChartDemo /></section>
 
       <section className="space-y-5" aria-labelledby="reading-h">
         <div className="flex flex-wrap items-end justify-between gap-4">

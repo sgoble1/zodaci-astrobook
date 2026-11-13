@@ -1,3 +1,4 @@
+import { InstallPrompt } from '@/components/app/InstallPrompt';
 import { EditionBirthSeed } from '@/components/common/EditionBirthSeed';
 import { BrowserRouter, Navigate, Routes, Route } from 'react-router-dom';
 import { Toaster } from '@/components/ui/sonner';
@@ -448,6 +449,7 @@ export default function App() {
         </Suspense>
       </Providers>
       <Toaster theme="dark" position="bottom-right" />
+      <InstallPrompt />
       <RetroIconDefs />
     </>
     </BrowserRouter>

@@ -11,6 +11,7 @@ export type FounderNote = { date: string; title: string; text: string; to?: stri
 export const noteKey = (n: FounderNote) => `${n.date}:${n.for.join('+')}:${n.title}`;
 
 export const FOUNDER_NEWS: FounderNote[] = [
+  { date: '2026-11-13', for: ['april', 'zac'], title: 'Faster pages and a home-screen shortcut', text: 'Your dashboard opens faster, and your books load again on their own if the connection hiccups. On a phone you can now add Zodaci to your home screen. The demo now points straight to the real chart, reading and book.' },
   { date: '2026-11-13', title: 'Smoother on your phone', text: 'Buttons for reading topics are bigger and easier to tap, and the Explore page now opens without trouble.', to: '/explore', cta: 'Open Explore', for: ['april', 'zac'] },
   { date: '2026-11-13', for: ['april', 'zac'], title: 'New things to make and new covers', text: 'In the Cosmic Studio you can now make a tall star scroll, a tarot card from your birthday, and a round badge for today’s sky. Books have three new covers, one with your initials. Your account menu is now sorted into sections, and long chapter lists open faster.' },
   { date: '2026-11-13', for: ['shane'], title: 'Studio presets, cover suite, perf', text: 'creations.ts scroll/tarot/badge + atomic style; coverDesigns celestial-cartographer, deep-orbit, vintage-monogram (monogramFor); accountSections(); lazy ChapterPart + content-visibility; font preload plugin; Chapter not found view in ShaneEdition. Phone pass as Zac clean.' },

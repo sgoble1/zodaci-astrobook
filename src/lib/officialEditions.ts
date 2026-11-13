@@ -49,7 +49,9 @@ export function useOfficialEditions(): { rows: OfficialEditionRow[] | null; erro
       const { data: s } = await supabase.auth.getSession();
       if (!on) return;
       if (!s.session) { setRows([]); return; }
-      const { data, error: e } = await supabase.rpc('my_official_editions');
+      // One quiet automatic retry so a brief network glitch never shows an error.
+      let { data, error: e } = await supabase.rpc('my_official_editions');
+      if (e && on) { await new Promise(r => setTimeout(r, 700)); ({ data, error: e } = await supabase.rpc('my_official_editions')); }
       if (!on) return;
       if (e) { setError('Your editions couldn’t load.'); return; }
       setRows(((data ?? []) as OfficialEditionRow[]).filter(r => isOfficialEdition(r.edition)));

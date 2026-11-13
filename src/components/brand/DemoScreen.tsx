@@ -8,9 +8,9 @@ const BORN = SAMPLE_READER.printed.born;
 
 export const DEMO_STEPS = [
   { label: 'Birth details', title: 'Start with the birth moment', body: 'Date, time and town. If the time is unknown, Zodaci says so and leaves out the parts that depend on it.', rows: [['Born', BORN]] },
-  { label: 'Your chart', title: 'Every placement, calculated', body: 'Planets, houses and angles are worked out from astronomical data, not picked from a list.', rows: [['Sun', 'Taurus · 12th house'], ['Moon', 'Cancer 13°28′ · 3rd house'], ['Rising', 'Taurus 12°47′']] },
-  { label: 'A reading', title: 'Readings that show their working', body: 'Each paragraph names the placement it comes from, so you can check it against your chart.', rows: [['Chapter', 'Emotional World'], ['Based on', 'Moon in Cancer, 3rd house'], ['Length', 'About 1,000 words']] },
-  { label: 'Your book', title: 'Keep it on the shelf', body: 'Readings can be gathered into an AstroBook or an AstroComic issue, previewed before anything is printed.', rows: [['Format', 'AstroBook or AstroComic'], ['Preview', 'Before you order'], ['Printed', 'Only when you say so']] },
+  { label: 'Your chart', to: '#sample-chart', title: 'Every placement, calculated', body: 'Planets, houses and angles are worked out from astronomical data, not picked from a list.', rows: [['Sun', 'Taurus · 12th house'], ['Moon', 'Cancer 13°28′ · 3rd house'], ['Rising', 'Taurus 12°47′']] },
+  { label: 'A reading', to: '#reading-h', title: 'Readings that show their working', body: 'Each paragraph names the placement it comes from, so you can check it against your chart.', rows: [['Chapter', 'Emotional World'], ['Based on', 'Moon in Cancer, 3rd house'], ['Length', 'About 1,000 words']] },
+  { label: 'Your book', to: '#book-h', title: 'Keep it on the shelf', body: 'Readings can be gathered into an AstroBook or an AstroComic issue, previewed before anything is printed.', rows: [['Format', 'AstroBook or AstroComic'], ['Preview', 'Before you order'], ['Printed', 'Only when you say so']] },
 ] as const;
 
 export function DemoScreen() {
@@ -25,6 +25,7 @@ export function DemoScreen() {
         <div className="space-y-3">
           <h3 className="text-2xl">{s.title}</h3>
           <p className="text-muted-foreground leading-relaxed">{s.body}</p>
+          {'to' in s && <a href={s.to} className="text-sm text-primary underline underline-offset-4">See the real one below</a>}
           <p className="text-xs text-muted-foreground">Sample reader: {SAMPLE_READER.name}, a fictional person.</p>
         </div>
         <dl className="border border-border bg-background/40 p-4 space-y-2 font-mono text-sm">
