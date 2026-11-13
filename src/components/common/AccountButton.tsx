@@ -12,6 +12,7 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { supabase } from '@/integrations/supabase/client';
+import { useMyCharacter, characterOrDefault } from '@/lib/memberCharacter';
 import { ACCOUNT_MENU, ADMIN_MENU, itemLock } from '@/content/memberNav';
 
 /** @deprecated kept for older imports; the account menu now reads ACCOUNT_MENU from the navigation registry. */
@@ -48,11 +49,13 @@ function LockTag({ need }: { need: ReturnType<ReturnType<typeof useAccountMenu>[
 
 /** Name, birth line and plan for the top of the account menu. */
 export function AccountSummary({ menu }: { menu: ReturnType<typeof useAccountMenu> }) {
+  const me = characterOrDefault(useMyCharacter());
   return (
     <div className="min-w-0 space-y-0.5">
       <p className="truncate font-display text-base text-foreground">{menu.birth?.name || 'My account'}</p>
       <p className="truncate text-xs text-muted-foreground">{menu.email}</p>
       {menu.birth && <p className="truncate text-xs text-muted-foreground">{menu.birth.date}{menu.birth.time ? ` · ${menu.birth.time}` : ' · time unknown'} · {menu.birth.placeLabel}</p>}
+      <Link to="/characters" className="mt-1 inline-flex items-center gap-1 rounded-full border border-border px-2 py-0.5 text-[11px] text-muted-foreground hover:text-foreground">{me.chosen ? `Your character: ${me.name}` : `Pick your character (showing ${me.name})`}</Link>
     </div>
   );
 }

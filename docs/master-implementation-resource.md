@@ -542,9 +542,9 @@ Pages and routes are kept; the menu groups them. Old URLs keep working and open 
 
 # Part 25 — Completeness pass (items found missing in the v3 check)
 
-- **Member character in header/dashboard:** show the member's chosen character (memberCharacter.ts) as a small badge on the dashboard opening and account menu. Free.
+- **(Done Nov 13)** **Member character in header/dashboard:** show the member's chosen character (memberCharacter.ts) as a small badge on the dashboard opening and account menu. Free.
 - **Account menu tidy:** group Account, Plan & credits, Shared with me, Settings, Sign out; admin/developer links only for admins. Free.
-- **Founder pages at phone size:** 393px pass on April, Shane and Zac edition pages (sidebar, chapter reader, TVs). Free.
+- **(Done Nov 13, April checked)** **Founder pages at phone size:** 393px pass on April, Shane and Zac edition pages (sidebar, chapter reader, TVs). Free.
 - **Shane Masterbook corrections:** keep edition-correct deterministic find/replace with backup; run the remaining flagged chapters in small batches. Low AI.
 - **Personal preview drawer:** keep the "see it with my chart" drawer on public product pages consistent with the new 5-spread book preview and comic parity. Free.
 - **Custom pages (custom_pages):** admin-published pages appear in the right hub group after the five-hub regrouping; test that they still merge into menus. Free.

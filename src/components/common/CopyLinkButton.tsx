@@ -31,7 +31,7 @@ export function CopyLinkButton({ hash, path, label, className }: Props) {
     <button
       onClick={onClick}
       aria-label="Copy shareable link"
-      className={`inline-flex items-center gap-1.5 text-[10px] font-smallcaps tracking-wider text-muted-foreground hover:text-gold transition-colors ${className ?? ''}`}
+      className={`inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap text-[10px] font-smallcaps tracking-wider text-muted-foreground hover:text-gold transition-colors ${className ?? ''}`}
     >
       {copied ? <Check className="w-3 h-3 text-emerald-500" /> : <Link2 className="w-3 h-3" />}
       {copied ? 'Link copied' : (label ?? 'Copy link')}
