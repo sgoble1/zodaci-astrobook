@@ -551,3 +551,49 @@ Pages and routes are kept; the menu groups them. Old URLs keep working and open 
 - **Dashboard updates for each founder:** April and Zac see the plain-language "What's new" (features, products, editions, activities); Shane sees the full developer view. Appended every fifth batch (Part 19).
 - **Ask the Sources / SmartChat** inside the Consultation Desk keep the 402/denial handling (sourceResponse) — no denial ever saved as an answer.
 - **Credit check after each AI batch:** record spend on the developer board so cost per feature is visible.
+
+# Part 26 — Last-24-hours sweep (Nov 12–13 chat items not yet written down)
+
+Checked against chat messages #1182–#1261. Everything below was said in chat but was missing or only touched on in Parts 1–25.
+
+## 26.1 From the Batch 7–24 chat plans
+- **Observatory consult (Batch 20):** staff avatars with quick-question chips. Pro/Cosmic only, 1 credit per question with double-spend protection, nothing remembered between sessions. It becomes a mode of the Consultation Desk (Part 11).
+- **Keepsake formats (Batch 15):** "Official Star Scroll" (tall parchment) and "Observatory Natal Certificate" (landscape diploma). Made as print-quality PDF with pdf-lib, labelled as keepsakes, never as official records.
+- **Creator Studio export presets (Batch 11):** 1950s poster, star scroll, tarot card and transit badge. Drawn in the browser, PNG/SVG export, saved as library_items kind 'creation'.
+- **Investigations "Archive this case" (Batch 13):** saves to the member's observation log. Manila-folder dossiers with archival stamps, no neon.
+- **Museum microfilm reader (Batch 14):** CSS-only phosphor/amber tint with brass pan/zoom dials, plus a searchable archive index. No video files.
+- **Ask the Sources citation pills (Batch 17):** each pill opens a drawer with the original source text. A denial (402) shows a card and is never saved.
+- **Long chapter list virtualized (Batch 18):** only visible rows mount (382 chapters). Preload the heading/body/label fonts. Private titles never appear in meta tags or sitemaps.
+- **Developer cost ledger (Batch 22):** estimated cost per batch at $0.35/credit (owner's rate) next to the health gauges. No secrets or chat text in logs.
+- **Cover customizer + spine preview (Batch 23):** spine width comes from page count × Lulu's paper caliper (lulu-rules), never typed by hand. Rotating 3D preview; the choice travels with the order.
+- **Phone tab bar and touch (Batch 24):** 44×44px tap targets on chart glyphs, square chart container, no sideways scroll, body text never below 14px, and moving to a new page scrolls to the top and closes drawers.
+- **Other Systems (Batch 21):** rotatable Bagua wheel, Flying Stars palace charts, and East/West group matches. April's Kua 1 vs formula 8 stays visible.
+
+## 26.2 From the AstroBook blueprint (#1245)
+- **Writing-prompt calibration (AI, one batch):** the chapter-writing prompt (topic-readings) enforces three rules:
+  - April's precision: cite the degree and say plainly when something is uncertain.
+  - Shane's kitchen-table voice: no AI clichés.
+  - Zac's two reflective questions after each major placement.
+  Test on the fictional sample reader before any member spend.
+- **Cover suite:** Midnight Stars, Celestial Cartographer, Deep Orbit and Vintage Monogram, personalized with name, birth date and place. They are the cover choices in the customizer.
+- **Instant digital copy:** the digital manuscript opens right after a verified payment while the print copy is made.
+- **Order status steps:** Order placed → Interior frozen → Sent to press → Shipped (tracking link). Driven only by verified webhooks.
+- **Print & Physical Goods Pavilion:** Books, Keepsakes and the Store share one shop entry with tabs. Old addresses keep working.
+- **Lulu sandbox proof:** compile a 320-page Collector's manuscript and pass preflight once keys exist (E-track, waiting on keys).
+
+## 26.3 Founder and account items said in chat
+- Zac's dashboard matches April's plain-language style. His focus is the Private Astrological Library plus the investor overview, with no homework framing.
+- The Stargazer (featured member character) stays the default face in member-character spots until a member picks their own.
+- The five-hub consolidation (Part 11) keeps every founder-only page reachable through classic view; check this once per founder after the regrouping.
+
+## 26.4 Owner decisions still open (unchanged, listed together)
+- Email sender domain
+- Lulu keys + go-ahead for production
+- Legal sign-off on Privacy/Terms
+- Referral reward: 7 days Pro or credits
+- Creator Studio vs Cosmic Studio name
+- Book/comic prices: Shopify or plans/books files
+- Whether to keep the old demo video on Investors/About
+
+## 26.5 Price note to confirm
+- Chat on Nov 13 used Collector's Linen at **$189**; an older saved note says $149. books.ts is the source of truth, so confirm which is right before any copy or investor update.
