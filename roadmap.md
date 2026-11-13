@@ -466,7 +466,7 @@ Audit Oct 29: Chat/counselors already use the member's chart; podcast/custom pag
 - [x] Gap 35: Developer dashboard restyled (paper plates, grouped stats, build-cost card, quick links).
 - [x] Phase 6 rest: "Why Zodaci" line and trust strip on Pricing and AstroBook pages.
 - [x] Phase 9: public sample edition moved off a founder's chart onto the fictional Collector reader (Rosalind Vance) with three new plates; side-by-side examples and AstroComic section updated (tested).
-- [ ] Sample AstroComic Issue #1 ("Elias") is still drawn from a founder's sign placements and hints at a mill town; redraw for a fictional reader — needs AI credits.
+- [x] Sample AstroComic Issue #1 ("Elias") is still drawn from a founder's sign placements and hints at a mill town; redraw for a fictional reader — needs AI credits. (Resolved Nov 13: Issue #1 art already shows the fictional Rosalind Vance — see D1.)
 - [x] Phase 3 rest: AstroBook page and Demo turn the same 3D book with real sample covers; shelf books share one angle and lift.
 - [x] Phase 4: icon set in the book-cover style — heavier ink, halftone tint, gold orbit ring at emblem sizes, hand-cut badge frames (registry names kept). Destination tile headings fit their tiles.
 - [x] Phase 7 rest: desk astrologer art; place/explore/reading-room art refresh.
@@ -506,7 +506,7 @@ Audit Oct 29: Chat/counselors already use the member's chart; podcast/custom pag
 - [ ] Batch 5c: automatic print dispatch after a hold — blocked: needs Lulu production keys and Shane's go-ahead (spends real money)
 - [x] Batch 6: personalised shop items ("personalized" tag) collect recipient birth details as cart-line attributes; cart lines keyed per recipient
 - [x] Batch 8: AstroComic issue switcher (next three issues) and planet cast art on previews
-- [ ] Batches 9–42: run in order
+- [-] Batches 9–42: superseded by the master resource v3 batch plan below (all free batches done)
 
 ## Master resource v3 batches (Nov 13 2026)
 - [x] B1–B12, V0, P1, P3, P4, P5, C1 (dream readings), C2 (diary photo/PDF reading), C3 (photo characters)
