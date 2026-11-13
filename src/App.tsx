@@ -155,6 +155,7 @@ const SharedWithMe = lazy(() => import('./pages/SharedWithMe'));
 const ThemesIndex = lazy(() => import('./pages/PublicThemes').then(m => ({ default: m.ThemesIndex })));
 const ThemeDetail = lazy(() => import('./pages/PublicThemes').then(m => ({ default: m.ThemeDetail })));
 const FaqPage = lazy(() => import('./pages/PublicInfo').then(m => ({ default: m.FaqPage })));
+const NewsletterConfirm = lazy(() => import('./pages/NewsletterConfirm'));
 const PrivacyPage = lazy(() => import('./pages/PublicInfo').then(m => ({ default: m.PrivacyPage })));
 const TermsPage = lazy(() => import('./pages/PublicInfo').then(m => ({ default: m.TermsPage })));
 const AstroComic = lazy(() => import('./pages/AstroComic'));
@@ -287,6 +288,7 @@ export default function App() {
             <Route path="/themes/:slug" element={<ThemeDetail />} />
             <Route path="/faq" element={<FaqPage />} />
             <Route path="/privacy" element={<PrivacyPage />} />
+            <Route path="/newsletter/confirm" element={<NewsletterConfirm />} />
             <Route path="/terms" element={<TermsPage />} />
             <Route path="/astrocomic" element={<FeatureGate flag="astrocomic"><AstroComic /></FeatureGate>} />
             <Route path="/astrocomic/print-issue-1" element={<FeatureGate flag="astrocomic"><ComicIssuePrint /></FeatureGate>} />

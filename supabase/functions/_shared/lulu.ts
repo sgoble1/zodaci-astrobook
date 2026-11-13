@@ -98,7 +98,7 @@ export async function applyJobUpdate(db: SupabaseClient, row: JobRow, job: any) 
 async function notifyShipped(db: SupabaseClient, orderId: string, userId: string, t: { tracking_id: string | null; tracking_url: string | null; carrier_name: string | null }) {
   const { data } = await db.auth.admin.getUserById(userId);
   const to = data?.user?.email; if (!to) return;
-  const { sendEmail, layout, esc } = await import('./resend.ts');
-  const track = t.tracking_url ? `<p><a href="${esc(t.tracking_url)}">Track your package</a>${t.carrier_name ? ` with ${esc(t.carrier_name)}` : ''}${t.tracking_id ? ` (${esc(t.tracking_id)})` : ''}.</p>` : '<p>Tracking details will appear on your Orders page once the carrier posts them.</p>';
-  await sendEmail({ to, subject: 'Your AstroBook has shipped', html: layout('Your book is on its way', `<p>Your printed AstroBook left the printer today.</p>${track}<p><a href="https://zodaci.com/orders">See your order</a></p><p style="font-size:12px;color:#6b6385">Order ${esc(orderId.slice(0, 8))}</p>`) });
+  const { sendAppEmail } = await import('./app-email.ts');
+  const r = await sendAppEmail('book-shipped', to, { idempotencyKey: `book-shipped-${orderId}`, templateData: { trackingUrl: t.tracking_url, trackingId: t.tracking_id, carrier: t.carrier_name, ordersUrl: 'https://zodaci.com/orders' } });
+  if (!r.sent) console.log(`shipped email for ${orderId} not sent: ${r.reason}`);
 }

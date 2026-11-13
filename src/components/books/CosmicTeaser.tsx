@@ -10,6 +10,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { computeChart, type ChartInput } from '@/lib/astro';
 import { lifePath, LP_MEANING } from '@/lib/synastry';
 import { sunFromDate } from '@/components/books/CoverCustomizer';
+import { functionErrorMessage } from '@/lib/functionError';
 
 const SUN_TEASE: Record<string, string> = {
   Aries: 'You were born to begin things. Your chart will show where that spark is meant to land.', Taurus: 'You build slowly and keep what you build. Your chart shows what is worth that patience.',
@@ -33,8 +34,8 @@ export function CosmicTeaser() {
     if (!consent) return setError('Tick the box to receive your teaser and occasional Zodaci updates.');
     setState('busy');
     try {
-      const { data, error: failure } = await supabase.functions.invoke('brand-newsletter', { body: { email: email.trim(), consent: true, website, source: 'astrobook-teaser' } });
-      if (failure || !data?.ok) throw new Error(data?.error || 'We could not save your email. Please try again.');
+      const { data, error: failure } = await supabase.functions.invoke('brand-newsletter', { body: { email: email.trim(), consent: true, website, source: 'astrobook-teaser', path: window.location.pathname.slice(0, 200) } });
+      if (failure || !data?.ok) throw new Error(await functionErrorMessage(failure, data, 'We could not save your email. Please try again.'));
       const c = computeChart({ date, time: '12:00', lat: 0, lon: 0, tz: 'UTC', placeLabel: '', placeSource: 'manual', houseSystem: 'whole' } as ChartInput);
       setTeaser({ sun: sun.sign, cusp: sun.cusp, animal: c.bazi.find(p => p.label === 'Year')?.animal ?? c.bazi[0]?.animal ?? '', lp: lifePath(date).n });
       setState('done');

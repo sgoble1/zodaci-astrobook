@@ -420,28 +420,40 @@ export type Database = {
       }
       brand_email_subscribers: {
         Row: {
+          confirm_token: string
+          confirmed_at: string | null
           consent_at: string
           consent_version: string
           created_at: string
           email: string
+          form_path: string | null
           id: string
           source: string
+          welcome_status: string
         }
         Insert: {
+          confirm_token?: string
+          confirmed_at?: string | null
           consent_at?: string
           consent_version?: string
           created_at?: string
           email: string
+          form_path?: string | null
           id?: string
           source?: string
+          welcome_status?: string
         }
         Update: {
+          confirm_token?: string
+          confirmed_at?: string | null
           consent_at?: string
           consent_version?: string
           created_at?: string
           email?: string
+          form_path?: string | null
           id?: string
           source?: string
+          welcome_status?: string
         }
         Relationships: []
       }
@@ -821,6 +833,8 @@ export type Database = {
           id: string
           message: string
           name: string
+          notify_error: string | null
+          notify_status: string
           sender_id: string | null
           source_path: string
           topic: string
@@ -832,6 +846,8 @@ export type Database = {
           id?: string
           message: string
           name: string
+          notify_error?: string | null
+          notify_status?: string
           sender_id?: string | null
           source_path?: string
           topic?: string
@@ -843,6 +859,8 @@ export type Database = {
           id?: string
           message?: string
           name?: string
+          notify_error?: string | null
+          notify_status?: string
           sender_id?: string | null
           source_path?: string
           topic?: string
@@ -1615,6 +1633,27 @@ export type Database = {
           sex?: string
           tz?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      public_form_hits: {
+        Row: {
+          bucket: string
+          created_at: string
+          id: number
+          key_hash: string
+        }
+        Insert: {
+          bucket: string
+          created_at?: string
+          id?: number
+          key_hash: string
+        }
+        Update: {
+          bucket?: string
+          created_at?: string
+          id?: number
+          key_hash?: string
         }
         Relationships: []
       }
@@ -3103,6 +3142,15 @@ export type Database = {
           p_page_key: string
           p_status: string
           p_token: string
+        }
+        Returns: boolean
+      }
+      form_rate_ok: {
+        Args: {
+          _bucket: string
+          _key: string
+          _limit: number
+          _window_seconds: number
         }
         Returns: boolean
       }

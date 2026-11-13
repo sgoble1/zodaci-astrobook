@@ -561,6 +561,13 @@
       "when": 1794511509183,
       "tag": "0079_admin_read_member_characters",
       "breakpoints": true
+    },
+    {
+      "idx": 80,
+      "version": "7",
+      "when": 1794538982825,
+      "tag": "0080_public_form_limits_and_email_status",
+      "breakpoints": true
     }
   ]
 }

@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { supabase } from '@/integrations/supabase/client';
+import { functionErrorMessage } from '@/lib/functionError';
 
 const TOPICS = [['general', 'General question'], ['support', 'Help with my account'], ['astrobook', 'AstroBook'], ['astrocomic', 'AstroComic'], ['shop', 'Shop order'], ['press', 'Press']] as const;
 
@@ -30,8 +31,9 @@ export function ContactForm() {
       const parsed = contactSchema.safeParse(v);
       if (!parsed.success) { const out: Errors = {}; parsed.error.issues.forEach(i => { out[i.path[0] as 'name'] ??= i.message; }); setErrors(out); return; }
       setErrors({}); setState('busy');
-      const { error } = await supabase.functions.invoke('contact-message', { body: { ...parsed.data, source_path: window.location.pathname.slice(0, 200) } });
-      if (error) { setErrors({ form: 'Your message could not be sent. Check your connection and try again.' }); setState('idle'); return; }
+      const { data, error } = await supabase.functions.invoke('contact-message', { body: { ...parsed.data, source_path: window.location.pathname.slice(0, 200) } }).catch(e => ({ data: null, error: e }));
+      // The server answers saved:true once the message is stored, even if a notice email could not go out.
+      if (error || !data?.saved) { setErrors({ form: await functionErrorMessage(error, data, 'Your message could not be sent. Check your connection and try again.') }); setState('idle'); return; }
       setState('done');
     }}>
       <h3 className="text-2xl">Write to us</h3>
