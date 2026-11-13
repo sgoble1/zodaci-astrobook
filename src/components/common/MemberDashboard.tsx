@@ -8,6 +8,7 @@ import { useSession } from '@/hooks/useLibrary';
 import { usePlan } from '@/hooks/usePlan';
 import { useBookmarks } from '@/hooks/useBookmarks';
 import { useMyBirth, toChartInput } from '@/lib/myBirth';
+import { useMyCharacter, characterOrDefault } from '@/lib/memberCharacter';
 import { computeChart, fmtLon } from '@/lib/astro';
 import { SYSTEM_READINGS, loadMyTopicReadings, type TopicRow } from '@/lib/topicReadings';
 import { readingVisitKey, type ReadingVisit } from '@/lib/readingExperience';
@@ -27,6 +28,7 @@ type OrderSummary = { id: string; status: string; edition: string; format: strin
 
 export function MemberDashboard() {
   const birth = useMyBirth();
+  const me = characterOrDefault(useMyCharacter());
   const session = useSession();
   const access = usePlan();
   const bookmarks = useBookmarks();
@@ -54,6 +56,7 @@ export function MemberDashboard() {
   if (birth === undefined || access.loading) return <p role="status" className="text-muted-foreground">Opening your dashboard…</p>;
   const destination = !birth ? '/start' : visit?.path.startsWith('/my-readings/topic/') ? `${visit.path}${visit.section ? `#${visit.section}` : ''}` : '/my-readings/topic/big-three';
   return <article className="space-y-12">
+    <p className="-mb-8 flex flex-wrap items-center gap-2 text-sm text-muted-foreground"><span className="font-label tracking-[0.14em] text-primary">Your character</span><span className="text-foreground">{me.name}</span><span aria-hidden>·</span><Link to="/characters" className="underline">{me.chosen ? 'Change' : 'Choose yours'}</Link></p>
     <DashboardMosaic chart={chart} name={birth?.name} hasTime={Boolean(birth?.time)} primary={{ to: destination, label: birth ? 'Continue reading' : 'Set up my chart' }} secondary={{ to: '/my-chart', label: 'My chart' }} onAir={{ cta: { to: '#broadcast-studio', label: 'Tune in' } }} press={{ book: { to: '/my-astrobook', label: 'My AstroBook' }, comic: { to: '/astrocomic', label: 'AstroComic' } }} destinations={[
       { to: '/my-chart', title: 'My chart', text: '', cta: 'Open', icon: ChartWheelIcon },
       { to: '#broadcast-studio', title: 'Broadcast Studio', text: '', cta: 'Open', icon: TelevisionIcon },

@@ -514,4 +514,6 @@ Audit Oct 29: Chat/counselors already use the member's chart; podcast/custom pag
 - [x] D1 sample Issue #1: existing art already shows the fictional reader Rosalind Vance consistently; no redraw needed unless the owner asks
 - [-] P2 My Comic deferral — skipped by owner (risky)
 - [ ] E1 Lulu sandbox proof — blocked: sandbox rejects saved keys (need sandbox keys or go-ahead for production)
-- [ ] Owner decisions: email sender domain, legal sign-off Privacy/Terms, referral reward
+- [x] Referral reward: 20 bonus credits per subscribing friend (owner chose credits)
+- [x] Member dashboard character badge (Stargazer default)
+- [ ] Owner decisions: email sender domain, legal sign-off Privacy/Terms

@@ -27,3 +27,10 @@ export function useMyCharacter(): ComicGuide | null {
   }, []);
   return guide;
 }
+
+/** The face shown in member-character spots: the saved choice, else the featured Stargazer (owner rule). */
+export function characterOrDefault(guide: ComicGuide | null): ComicGuide & { chosen: boolean } {
+  if (guide) return { ...guide, chosen: true };
+  const f = MEMBER_CHARACTERS.find(c => 'featured' in c && c.featured) ?? MEMBER_CHARACTERS[0];
+  return { name: f.name, blurb: f.blurb, chosen: false };
+}

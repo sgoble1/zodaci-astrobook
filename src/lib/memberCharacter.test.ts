@@ -22,3 +22,9 @@ describe('chosen character in the comic', () => {
     expect(guideFor(null)).toBeNull();
   });
 });
+
+import { characterOrDefault as cod } from './memberCharacter';
+describe('characterOrDefault', () => {
+  it('falls back to The Stargazer when nothing is chosen', () => { expect(cod(null)).toMatchObject({ name: 'The Stargazer', chosen: false }); });
+  it('keeps the member choice', () => { expect(cod({ name: 'The Builder', blurb: 'x' })).toMatchObject({ name: 'The Builder', chosen: true }); });
+});

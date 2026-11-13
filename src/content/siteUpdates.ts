@@ -6,6 +6,7 @@ export type SiteUpdate = { date: string; title: string; text: string; to?: strin
 
 export const SITE_UPDATES: SiteUpdate[] = [
   { date: '2026-11-13', title: 'Draw yourself as a character', text: 'On the characters page, upload a photo and the Cosmic Studio draws you in the observatory’s 1950s comic style. The photo isn’t kept.', to: '/characters', cta: 'Try it' },
+  { date: '2026-11-13', title: 'Invite a friend, earn credits', text: 'When a friend you invite starts a paid plan, you now get 20 bonus credits that never expire. Your dashboard also shows your character (The Stargazer until you choose one).', to: '/referrals', cta: 'Invite a friend' },
   { date: '2026-11-13', title: 'Add notes from a photo or PDF', text: 'On your personal details page, fill a note from a diary photo, PDF or text file. You check the text before anything is saved.', to: '/personal-context', cta: 'Add a note' },
   { date: '2026-11-13', title: 'Dream readings', text: 'In your Dream Ledger, tap “Read this dream” for a short reading based on your chart and that night’s sky. It uses one credit and stays private.', to: '/dreams', cta: 'Open the ledger' },
   { date: '2026-11-13', title: 'Meet the Cosmic Studio', text: 'Creator Studio is now called the Cosmic Studio. Everything you made there is still in place.' },
