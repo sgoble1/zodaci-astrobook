@@ -479,3 +479,7 @@ Audit Oct 29: Chat/counselors already use the member's chart; podcast/custom pag
 - [x] Reading Room articles expanded (22); shop departments in sidebar (3B); three-column reader (4A: sections · reading · chapter facts on 2xl, tested Nov 10). April plate redraws (Gap 12) moved to Ready below.
 - [x] Activity logs (Developer + dashboards) updated; tests; 393/1280 checks.
 - Note: V2.3 "Mystic Ink" image prompts are read as the atomic-zodiac style (owner decision). OG image (Gap 14) left to hosting per standing rule.
+
+## Execution batches 1–42 (see chat batch specs)
+- [x] Batch 1a: Astral Bureaus group in founder menus; Archive, Keepsakes, Sibling Bureau in member "Bureau & Museum"; Shane "Full Masterbook" button opens contents
+- [ ] Batches 1b–42: pending, run in order as credits allow

@@ -1,6 +1,6 @@
 import type { LucideIcon } from 'lucide-react';
 import {
-  Activity, Atom, BookHeart, BookOpen, BookOpenText, Calculator, CalendarClock, CalendarRange, CircleHelp, Compass, Crown, Gift, Globe2,
+  Activity, Archive, Atom, BookHeart, BookOpen, BookOpenText, Calculator, CalendarClock, CalendarRange, CircleHelp, Compass, Crown, Gift, Globe2,
   GraduationCap, Hash, Landmark, Headphones, Heart, HeartHandshake, Info, LayoutDashboard, Library, ListChecks, MessageCircle, MessagesSquare, Moon,
   NotebookPen, Orbit, Package, PenLine, PlayCircle, Printer, RefreshCcw, Repeat, ScrollText, Search, Settings2, ShieldCheck, Sparkles, Star,
   Share2, Sun, Telescope, Truck, UserRound, Users, Wand2, Waypoints,
@@ -74,6 +74,9 @@ export const MEMBER_DOMAINS: MemberDomain[] = [
       { title: 'Bureau & Museum', items: [
         { to: '/investigations', label: 'Investigations Bureau', description: 'Seven case files read from your chart', icon: Search, badge: 'New' },
         { to: '/museum', label: 'Museum of the Sky', description: 'Your placements framed in five galleries', icon: Landmark, badge: 'New' },
+        { to: '/archive', label: 'Archive Ledger', description: 'Every reading and record, filed by date', icon: Archive },
+        { to: '/keepsakes', label: 'Keepsakes & gifts', description: 'Certificates and Star Scrolls from your chart', icon: Gift },
+        { to: '/siblings', label: 'Sibling Bureau', description: 'Compare family charts side by side', icon: Users },
       ] },
       { title: 'Ask & talk', items: [
         { to: '/chat', label: 'SmartChat', description: 'Ask anything about your chart', icon: MessageCircle },

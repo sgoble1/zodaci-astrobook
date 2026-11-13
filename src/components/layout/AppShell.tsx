@@ -31,7 +31,8 @@ const editionLink = (e: string): NavItem => e === 'april' ? { to: '/april', labe
 /** Sections every founder edition shares, in the same place for April, Shane and Zac. */
 const frameGroups = (area: 'april' | 'shane' | 'zac' = 'april') => ({
   observatory: { title: 'Observatory', items: [{ to: '/dashboard', label: 'Broadcast Studio · Home' }, { to: '/my-chart', label: 'My chart' }, { to: '/forecast', label: 'Forecast Center' }, { to: '/my-readings', label: 'My readings' }, { to: '/counselors', label: 'Counselors' }] } as NavGroup,
-  explore: { title: 'Explore', items: [{ to: '/explore', label: 'Explore everything' }, { to: '/transits', label: 'Transits' }, { to: '/timeline', label: 'Timeline' }, { to: '/profection', label: 'Year of life' }, { to: '/other-systems', label: 'Other systems' }, { to: '/siblings', label: 'Sibling Bureau' }, { to: '/characters', label: 'Observatory characters' }] } as NavGroup,
+  explore: { title: 'Explore', items: [{ to: '/explore', label: 'Explore everything' }, { to: '/transits', label: 'Transits' }, { to: '/timeline', label: 'Timeline' }, { to: '/profection', label: 'Year of life' }, { to: '/other-systems', label: 'Other systems' }, { to: '/characters', label: 'Observatory characters' }] } as NavGroup,
+  bureaus: { title: 'Astral Bureaus', items: [{ to: '/investigations', label: 'Investigations Bureau' }, { to: '/museum', label: 'Museum of the Sky' }, { to: '/archive', label: 'Archive Ledger' }, { to: '/keepsakes', label: 'Keepsakes & gifts' }, { to: '/siblings', label: 'Sibling Bureau' }] } as NavGroup,
   media: { title: 'Together & Media', items: [{ to: '/our-charts', label: 'Our charts' }, { to: '/podcasts', label: 'Podcasts' }, { to: '/astrocomic', label: 'AstroComic' }, { to: '/investors', label: 'Investor overview' }, { to: '/store', label: 'Shop' }] } as NavGroup,
 });
 function useFounderGroups(): NavGroup[] {

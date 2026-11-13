@@ -17,7 +17,7 @@ export function FounderSourcePanel({ theme }: { theme: string }) {
   }, [own, theme]);
   if (!own) return null;
   return <section className="space-y-4 border-t border-border pt-8" data-keep-wording>
-    <div className="flex flex-wrap items-center justify-between gap-3"><h2 className="text-2xl">Shane’s extended source chapters</h2><Button asChild variant="outline" size="sm"><Link to="/shane"><BookOpen />Full Masterbook</Link></Button></div>
+    <div className="flex flex-wrap items-center justify-between gap-3"><h2 className="text-2xl">Shane’s extended source chapters</h2><Button asChild variant="outline" size="sm"><Link to="/shane#shane-contents"><BookOpen />Full Masterbook</Link></Button></div>
     <p className="text-sm text-muted-foreground">Original uploaded interpretations, not verified chart facts. The source contains placement discrepancies; use your calculated chart above. Astrology cannot establish diagnoses, ancestry or past lives.</p>
     {error ? <p role="status" className="text-sm text-muted-foreground">{error}</p> : entries.length ? <ul className="grid gap-3 sm:grid-cols-2">{entries.map(e => <li key={e.id}><Link to={`/shane/${e.id}`} className="flex h-full items-center justify-between gap-3 rounded border border-border bg-card p-4 hover:border-primary"><span><span className="block font-display text-lg">{e.title}</span><span className="text-xs text-muted-foreground">{e.words.toLocaleString()} words · {Math.ceil(e.words / 230)} min read</span></span><ChevronRight className="h-4 w-4 shrink-0" /></Link></li>)}</ul> : <p className="text-sm text-muted-foreground">No dedicated source chapter has been identified for this theme yet; calculated details remain separate.</p>}
   </section>;

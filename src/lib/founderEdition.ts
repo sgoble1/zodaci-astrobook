@@ -46,9 +46,9 @@ export function orderFounderGroups<T extends { title: string }>(groups: T[]): T[
  * a frame group left empty is hidden.
  */
 export type FounderFrame<G extends { title: string; items: { to: string }[]; submenus?: { items: { to: string }[] }[]; footer?: { to: string }[] }> = {
-  observatory: G; edition: G[]; explore?: G; shared: G; relationships: G; sharedWithMe?: G; official: G; media?: G; founders?: G; admin?: G;
+  observatory: G; edition: G[]; explore?: G; bureaus?: G; shared: G; relationships: G; sharedWithMe?: G; official: G; media?: G; founders?: G; admin?: G;
 };
-export const FOUNDER_FRAME_ORDER = ['Observatory', '(edition)', 'Explore', 'Shared Spaces', 'Relationships', 'Shared with me', 'Official AstroBook', 'Together & Media', 'Founder Editions', 'Admin'] as const;
+export const FOUNDER_FRAME_ORDER = ['Observatory', '(edition)', 'Explore', 'Astral Bureaus', 'Shared Spaces', 'Relationships', 'Shared with me', 'Official AstroBook', 'Together & Media', 'Founder Editions', 'Admin'] as const;
 export function universalFounderMenu<G extends { title: string; items: { to: string }[]; submenus?: { items: { to: string }[] }[]; footer?: { to: string }[] }>(f: FounderFrame<G>): G[] {
   const links = (g: G) => [...g.items, ...(g.footer ?? []), ...(g.submenus ?? []).flatMap(s => s.items)].map(i => i.to);
   const fixed = [...f.edition, f.shared, f.relationships, f.sharedWithMe, f.official, f.founders, f.admin].filter(Boolean) as G[];
@@ -60,8 +60,8 @@ export function universalFounderMenu<G extends { title: string; items: { to: str
     return items.length ? { ...g, items } : null;
   };
   // Observatory claims its links first, then Explore, then Together & Media.
-  const observatory = frame(f.observatory), explore = frame(f.explore), media = frame(f.media);
-  return [observatory, ...f.edition, explore, f.shared, f.relationships, f.sharedWithMe ?? null, f.official, media, f.founders ?? null, f.admin ?? null]
+  const observatory = frame(f.observatory), explore = frame(f.explore), bureaus = frame(f.bureaus), media = frame(f.media);
+  return [observatory, ...f.edition, explore, bureaus, f.shared, f.relationships, f.sharedWithMe ?? null, f.official, media, f.founders ?? null, f.admin ?? null]
     .filter((g): g is G => !!g && (g.items.length > 0 || !!g.submenus?.length));
 }
 
