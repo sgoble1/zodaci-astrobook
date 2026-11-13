@@ -384,7 +384,7 @@ body:has(#mobile-menu) [data-generation-notice] { display: none; }
 @keyframes cine-drift { from { transform: scale(1.04); } to { transform: scale(1.1) translateX(-1%); } }
 @keyframes cine-grain { 0%,100% { transform: translate(0,0); } 25% { transform: translate(-2%,1%); } 50% { transform: translate(1%,-2%); } 75% { transform: translate(2%,2%); } }
 .cine-projector { background: radial-gradient(ellipse 70% 60% at 15% 0%, hsl(var(--primary) / .22), transparent 70%); mix-blend-mode: screen; }
-.cine-grain { inset: -10%; opacity: .12; pointer-events: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); animation: cine-grain 1.2s steps(4) infinite; }
+.cine-grain { inset: -10%; opacity: .12; pointer-events: none; background-image: url("/textures/grain-gray.png"); animation: cine-grain 1.2s steps(4) infinite; }
 @media (prefers-reduced-motion: reduce) { .cine-grain { animation: none; } }
 
 /* Member navigation: mega-menu fade, and floating notices lifted above the phone tab bar. */
@@ -812,7 +812,7 @@ body {
 :root {
   --radius: .375rem;
   --hero-night: 216 67% 15%;
-  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .25 0 0 0 0 .18 0 0 0 0 .1 0 0 0 .42 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  --grain: url("/textures/grain-warm.png");
 }
 /* Navy plate: grain, inner mustard rule, dark bevel. */
 .obs-panel {
@@ -1547,3 +1547,6 @@ li:hover > .zodiac-coin { transform: rotate(-10deg); }
 .chart-wheel-host { container-type: inline-size; }
 .chart-wheel-grid { display: grid; gap: 1.5rem; align-items: start; }
 @container (min-width: 760px) { .chart-wheel-grid { grid-template-columns: minmax(0, 460px) 1fr; } }
+
+/* Pause decorative loops while the tab is hidden (set in main.tsx) to save battery and CPU. */
+html[data-tab-hidden] *, html[data-tab-hidden] *::before, html[data-tab-hidden] *::after { animation-play-state: paused !important; }

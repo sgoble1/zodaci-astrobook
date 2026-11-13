@@ -24,6 +24,19 @@ export function skyToday(now = new Date()) {
  */
 export function skyEvents(from = new Date(), days = 30): SkyEvent[] {
   const start = Date.UTC(from.getUTCFullYear(), from.getUTCMonth(), from.getUTCDate());
+  // The result depends only on the UTC start day and length, so repeat calls reuse it (copied, so callers can't mutate the cache).
+  const key = `${start}:${days}`;
+  const hit = EVENTS_CACHE.get(key);
+  if (hit) return hit.map(e => ({ ...e, date: new Date(e.date) }));
+  const out = computeEvents(start, days);
+  if (EVENTS_CACHE.size > 20) EVENTS_CACHE.clear();
+  EVENTS_CACHE.set(key, out);
+  return out.map(e => ({ ...e, date: new Date(e.date) }));
+}
+
+const EVENTS_CACHE = new Map<string, SkyEvent[]>();
+
+function computeEvents(start: number, days: number): SkyEvent[] {
   const out: SkyEvent[] = [];
   let prev = transitPositions(new Date(start));
   for (let i = 1; i <= days; i++) {

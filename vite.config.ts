@@ -24,6 +24,21 @@ export default defineConfig(({ mode }) => ({
     },
   },
   plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),
+  // Pre-bundle heavy libraries so the preview doesn't re-optimize mid-session; split them into their own cached files.
+  optimizeDeps: { include: ["astronomy-engine", "pdf-lib", "qrcode", "xlsx"] },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks(id: string) {
+          if (!id.includes("node_modules")) return undefined;
+          if (id.includes("pdf-lib") || id.includes("pdfjs-dist")) return "vendor-pdf";
+          if (id.includes("/xlsx/")) return "vendor-sheet";
+          if (id.includes("astronomy-engine")) return "vendor-astro";
+          return undefined;
+        },
+      },
+    },
+  },
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),

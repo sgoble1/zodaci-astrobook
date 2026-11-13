@@ -11,6 +11,8 @@ window.addEventListener("vite:preloadError", (e) => {
 });
 window.addEventListener("unhandledrejection", (e) => { recoverChunkLoad(e.reason); });
 window.addEventListener("error", (e) => { recoverChunkLoad(e.error ?? e.message); });
+// Pause decorative CSS loops while the tab is hidden.
+document.addEventListener('visibilitychange', () => { document.documentElement.toggleAttribute('data-tab-hidden', document.hidden); });
 const App = lazy(() => import('./App.tsx'));
 
 // Set defaults in the head for SEO — real title & description.
