@@ -20,6 +20,7 @@ const PRODUCTS: [string, string, string][] = [
   ['chart', 'Shop', 'Posters, sticker sheets and notebooks, sold and fulfilled through a live Shopify storefront.'],
 ];
 const LIVE = [
+  'A lighter, faster site: unused code and add-ons removed, chart and reading pages load only when opened, and every main page checked in a real browser after the change.',
   'Sky Portraits: a chart-derived poster drawn by AI from each member’s own signs (3 credits, Pro and Cosmic).',
   'Personal Moon Calendar: six months of Moon phases placed in each member’s own houses, calculated from the ephemeris (no AI cost).',
   'Book and comic checkouts re-confirm payment directly with the provider and explain declined or expired payments plainly.',
@@ -91,6 +92,12 @@ const STUDIO_ROWS = [
 const PRINT_AVG = 30; const PACK_AVG = 25;
 const studioYear = (r: typeof STUDIO_ROWS[number]) => Math.round(r.members * (r.printers * PRINT_AVG * 2 + r.packs * PACK_AVG * 2));
 
+/** Plain-language summary for readers who are not developers; prices come from plans.ts. */
+const SHORT = [
+  ['What it is', 'A members’ site that calculates each person’s birth chart exactly and turns it into readings, a six-volume book, comics, podcasts and things to print.'],
+  ['How it earns', `Memberships (Pro $${PLAN_AMOUNT.full.month} or Cosmic $${PLAN_AMOUNT.creator.month} a month), extra credit packs, printed AstroBooks and comics, and the gift shop.`],
+  ['Where it stands', 'The site works today for members. Before a wider launch: automatic book printing with the print partner, a sending address for receipts, and the rest of the first comic’s drawings.'],
+] as const;
 const NEEDS = ['Print-partner API credentials and a proofed physical sample of each edition', 'Verified sending domain for receipts', 'Illustration budget for monthly comics', 'Moderation and trust & safety design before any social features'];
 
 /** Invite-only investor overview. Access is decided by the backend (can_view_investors). */
@@ -113,6 +120,10 @@ export default function Investors() {
         </div>
         <figure><img src={PRODUCT_ART.collection.src} alt={PRODUCT_ART.collection.alt} width={1536} height={1024} className="w-full rounded-sm border border-gold/40" /><figcaption className="mt-2 text-center text-xs text-muted-foreground">Illustrative AstroBook &amp; AstroComic shop collection</figcaption></figure>
       </header>
+
+      <section aria-labelledby="inv-short" className="space-y-4"><h2 id="inv-short" className="text-3xl">The short version</h2>
+        <div className="grid gap-4 md:grid-cols-3">{SHORT.map(([t, d]) => <div key={t} className="vellum p-5"><h3 className="text-xl">{t}</h3><p className="mt-2 text-sm text-muted-foreground">{d}</p></div>)}</div>
+      </section>
 
       <img src={launchArt} alt="A 1950s atomic-age zodiac disc above an observatory, with a red research rocket tracing a golden orbit toward Saturn." width={1536} height={768} loading="lazy" className="w-full rounded-lg border border-border" />
       <section aria-labelledby="inv-p" className="space-y-4"><h2 id="inv-p" className="text-3xl">What we sell</h2>

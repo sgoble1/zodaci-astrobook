@@ -5,6 +5,8 @@
 export type SiteUpdate = { date: string; title: string; text: string; to?: string; cta?: string };
 
 export const SITE_UPDATES: SiteUpdate[] = [
+  { date: '2026-11-13', title: 'A next step at the end of chart pages', text: 'Your results, RetroGOOD and sibling pages now end with a few suggestions of where to go next, so you never hit a dead end.', to: '/results', cta: 'Open my results' },
+  { date: '2026-11-13', title: 'Dashboard and About page fixed', text: 'A problem that could make the dashboard freeze after signing in is fixed, and the About page opens again. We checked the main pages one by one afterwards.', to: '/dashboard', cta: 'Open my dashboard' },
   { date: '2026-11-13', title: 'A faster dashboard', text: 'Your dashboard opens noticeably quicker: payment tools now load only at checkout, and the 30-day sky forecast fills in just after the page appears.', to: '/dashboard', cta: 'Open my dashboard' },
   { date: '2026-11-13', title: 'Easier tapping on phones', text: 'Topic buttons on My Readings are bigger on phones, and the Explore page opens reliably for every account.', to: '/my-readings', cta: 'Open my readings' },
   { date: '2026-11-13', title: 'New Cosmic Studio designs and book covers', text: 'The Cosmic Studio now makes a tall star scroll, a tarot birth card and a transit badge for today, with a new 1950s poster look. AstroBook covers add Celestial Cartographer, Deep Orbit and a Vintage Monogram with your initials. The account menu is sorted into sections.', to: '/creator', cta: 'Open the studio' },

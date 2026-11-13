@@ -25,7 +25,7 @@ import { ThemeArt } from '@/components/common/ThemeArt';
 import { DashboardMosaic } from '@/components/observatory/DashboardMosaic';
 import { CurrentChapterPanel } from '@/components/observatory/CurrentChapterPanel';
 import { FounderNews } from '@/components/common/FounderNews';
-import { ChartWheelIcon, TelevisionIcon, LibraryIcon, StorefrontIcon } from '@/components/icons/RetroIcons';
+import { ChartWheelIcon, TelevisionIcon, LibraryIcon, StorefrontIcon, PressIcon } from '@/components/icons/RetroIcons';
 
 type EditionKey = 'shane' | 'zac';
 const caches: Partial<Record<EditionKey, Promise<MbEntry[]>>> = {};
@@ -60,7 +60,8 @@ export const EDITION_COPY: Record<EditionKey, { name: string; base: string; titl
     source: 'Zachary — Volumes I–VI, a gift from Shane, transcribed in full.',
     note: 'Original text from Zac’s six volumes, preserved unchanged. Placements are checked against his calculated chart from the confirmed birth time in Volume I. Medical, family-history and past-life claims are not established by astrology.',
     modules: [
-      { to: '/zac/workbook', title: 'Zac’s Workbook', desc: 'Prompts and exercises tuned to his chart, saved privately as he writes.', full: true },
+      { to: '/investors', title: 'Investor overview', desc: 'What Zodaci is, what is built so far and what comes next, in plain language.', owner: true },
+      { to: '/zac/workbook', title: 'Zac’s Workbook', desc: 'A private notebook beside his chart, for his own thoughts whenever he wants it.', full: true },
       { to: '/official-astrobook', title: 'The Official AstroBook', desc: 'Print editions, covers and the comic built from this chart.', full: true },
       { to: '/my-chart', title: 'The calculated chart', desc: 'Every placement recalculated from the saved birth details.', owner: true },
       { to: '/counselors', title: 'Chart-informed counselors', desc: 'Private sessions that read from this chart, never from anyone else’s.', owner: true },
@@ -204,7 +205,7 @@ function EditionHome({ area, entries, owns, full }: { area: EditionKey; entries:
           { to: `${copy.base}#${area}-contents`, title: 'Edition library', text: '', cta: 'Open', icon: LibraryIcon },
           { to: '#edition-broadcast', title: 'Broadcast Studio', text: '', cta: 'Open', icon: TelevisionIcon },
           { to: '/my-chart', title: 'Calculated chart', text: '', cta: 'Open', icon: ChartWheelIcon },
-          { to: '/store', title: 'Gift shop', text: '', cta: 'Open', icon: StorefrontIcon },
+          area === 'zac' && owns ? { to: '/investors', title: 'Investor overview', text: '', cta: 'Open', icon: PressIcon } : { to: '/store', title: 'Gift shop', text: '', cta: 'Open', icon: StorefrontIcon },
         ]} />
         <div id="edition-broadcast" className="scroll-mt-24"><CurrentChapterPanel chart={chart} name={copy.name} /></div>
         <FounderNews edition={area} owns={owns} count={3} />

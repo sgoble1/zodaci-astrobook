@@ -12,6 +12,7 @@ import type { RelationshipSelf } from '@/hooks/useRelationshipSelf';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { computeChart } from '@/lib/astro';
 import { isSiblingRelation, possessive, siblingLens, type SiblingChannel } from '@/lib/synastry';
+import { ContinueExploring } from '@/components/common/ContinueExploring';
 import { toInput } from './RelationshipDetail';
 
 const TONE_LABEL: Record<SiblingChannel['tone'], string> = { harmony: 'Easy flow', tension: 'Growth edge', fusion: 'Strong blend', none: 'Separate tracks' };
@@ -99,6 +100,11 @@ function SiblingView({ self }: { self: RelationshipSelf }) {
         <Button asChild variant="outline"><Link to={`/relationships/${picked.id}`}>Full comparison with {picked.name}<ArrowRight /></Link></Button>
         <Button asChild variant="ghost"><Link to={`/our-charts?with=${picked.id}`}>Charts side by side</Link></Button>
       </nav>
+      <ContinueExploring links={[
+        { to: '/relationships', title: 'All your relationships', text: 'Partners, friends and family compared with your chart.' },
+        { to: '/results?tab=placements', title: 'Your third house', text: 'The part of your own chart that describes siblings and early learning.' },
+        { to: '/consult', title: 'Ask a counselor', text: 'Talk through a family pattern privately.' },
+      ]} />
     </article>
   );
 }

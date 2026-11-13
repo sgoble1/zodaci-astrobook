@@ -10,6 +10,7 @@ import { BlueprintTab } from '@/components/results/BlueprintTab';
 import { ToneSwitcher } from '@/components/results/ToneSwitcher';
 import { PLAN_NAME } from '@/lib/plans';
 import { StartLink } from '@/components/common/StartLink';
+import { ContinueExploring } from '@/components/common/ContinueExploring';
 
 const PlacementsTab = lazy(() => import('@/components/results/PlacementsTab').then(m => ({ default: m.PlacementsTab })));
 const AspectsTab = lazy(() => import('@/components/results/AspectsTab').then(m => ({ default: m.AspectsTab })));
@@ -65,6 +66,14 @@ export default function Results() {
         </Suspense>
       </section>
       {plan === 'free' && <aside className="rounded-lg border border-gold/40 bg-card p-5 text-center"><p>Pro opens every planet, your house explorer, the aspect grid, all numbers and Feng Shui directions.</p><Button asChild className="mt-3"><Link to="/pricing?plan=pro">See Pro</Link></Button></aside>}
+      <ContinueExploring links={[
+        { to: '/my-readings', title: 'My readings', text: 'Written readings built from this same chart.' },
+        { to: '/timeline', title: 'Your timeline', text: 'Transits, profections and retrogrades for the months ahead.' },
+        { to: '/retrogood', title: 'RetroGOOD', text: 'The planets that were retrograde when you were born.' },
+        { to: '/relationships', title: 'Relationships', text: 'Compare your chart with the people in your life.' },
+        { to: '/explore', title: 'Explore more systems', text: 'Other traditions and points beyond the birth chart.' },
+        { to: '/consult', title: 'Ask a counselor', text: 'Private sessions that read from your chart.' },
+      ]} />
     </article>
   );
 }

@@ -563,3 +563,6 @@ Audit Oct 29: Chat/counselors already use the member's chart; podcast/custom pag
 ## Nov 13 — Safety check after slimming
 - [x] Fixed About page (and other fallback pages) crash from the slimming pass
 - [x] Browser sweep: 22 public + 14 signed-in pages clean; fixed dashboard freeze from the wording helper rewriting text endlessly
+- [x] "Continue exploring" links at the end of Results, RetroGOOD and Siblings
+- [x] Zac's library links his investor overview; overview opens with a plain-language summary; workbook framed as a private notebook
+- [x] Member, founder and developer feeds updated

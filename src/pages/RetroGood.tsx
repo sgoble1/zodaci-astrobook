@@ -18,6 +18,7 @@ import { RetroExplorer, RetroBadge, TIER_STYLE } from '@/components/retrogood/Re
 import { AffirmationsCarousel } from '@/components/retrogood/AffirmationsCarousel';
 import { TransitOverlay } from '@/components/retrogood/TransitOverlay';
 import { StartLink } from '@/components/common/StartLink';
+import { ContinueExploring } from '@/components/common/ContinueExploring';
 
 const TIER_TEXT = { none: 'No planets were retrograde when you were born. Your planets express themselves outwardly and directly.', light: 'A light retrograde signature: one area of life works more inwardly.', notable: 'A notable retrograde signature: several parts of you process inwardly before acting.', strong: 'A strong retrograde signature: reflection, revision and inner work are central to how you live.', dominant: 'A dominant retrograde signature: much of your chart works inwardly, giving unusual depth and self-reliance.' };
 const SECTIONS = [['rg-summary', 'Summary'], ['rg-explorer', 'Explorer'], ['rg-patterns', 'Patterns'], ['rg-insights', 'What stands out'], ['rg-affirm', 'Affirmations'], ['rg-transits', 'Transits']] as const;
@@ -82,6 +83,11 @@ export default function RetroGood() {
           <p className="mt-1 text-sm text-muted-foreground">Today’s sky against your birth chart, and the major events of the next 90 days. Gold marks “double Rx” windows, when a planet retrograde now touches one that was retrograde at your birth.</p>
           <div className="mt-4"><TierGate plan={plan} loading={loading} need="full" title="Transit overlay and 90-day timeline"><TransitOverlay chart={chart} /></TierGate></div>
         </section>
+        <ContinueExploring links={[
+          { to: '/timeline', title: 'Your timeline', text: 'When planets turn retrograde again in the months ahead.' },
+          { to: '/results?tab=placements', title: 'All your placements', text: 'Every planet, sign and house in your chart.' },
+          { to: '/my-readings', title: 'My readings', text: 'Written readings built from this same chart.' },
+        ]} />
       </article>
     </div>
   );
