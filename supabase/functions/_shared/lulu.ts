@@ -79,7 +79,7 @@ export async function applyJobUpdate(db: SupabaseClient, row: JobRow, job: any) 
   };
   const saved = await db.from('lulu_print_jobs').update(update).eq('id', row.id);
   if (saved.error) throw saved.error;
-  const { data: order, error } = await db.from('book_orders').select('id,status,payment_hold').eq('id', row.order_id).single();
+  const { data: order, error } = await db.from('book_orders').select('id,status,payment_hold,user_id').eq('id', row.order_id).single();
   if (error || !order) throw error ?? new Error('Order missing');
   if (order.payment_hold) return { status, note: 'The order is on payment review, so its stage was not changed.' };
   const plan = orderPatches(order, job, row.environment, new Date().toISOString().slice(0, 10));
@@ -90,5 +90,15 @@ export async function applyJobUpdate(db: SupabaseClient, row: JobRow, job: any) 
     current = p.status;
   }
   if (plan.note) await db.from('lulu_print_jobs').update({ status_message: plan.note }).eq('id', row.id);
+  if (status === 'SHIPPED' && row.status !== 'SHIPPED') await notifyShipped(db, order.id, (order as any).user_id, t).catch(e => console.error('ship email', e));
   return { status, note: plan.note, orderStatus: current };
+}
+
+/** Emails the buyer once when Lulu first reports SHIPPED (previous job status differs), with tracking if Lulu gave one. */
+async function notifyShipped(db: SupabaseClient, orderId: string, userId: string, t: { tracking_id: string | null; tracking_url: string | null; carrier_name: string | null }) {
+  const { data } = await db.auth.admin.getUserById(userId);
+  const to = data?.user?.email; if (!to) return;
+  const { sendEmail, layout, esc } = await import('./resend.ts');
+  const track = t.tracking_url ? `<p><a href="${esc(t.tracking_url)}">Track your package</a>${t.carrier_name ? ` with ${esc(t.carrier_name)}` : ''}${t.tracking_id ? ` (${esc(t.tracking_id)})` : ''}.</p>` : '<p>Tracking details will appear on your Orders page once the carrier posts them.</p>';
+  await sendEmail({ to, subject: 'Your AstroBook has shipped', html: layout('Your book is on its way', `<p>Your printed AstroBook left the printer today.</p>${track}<p><a href="https://zodaci.com/orders">See your order</a></p><p style="font-size:12px;color:#6b6385">Order ${esc(orderId.slice(0, 8))}</p>`) });
 }

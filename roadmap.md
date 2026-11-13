@@ -482,4 +482,12 @@ Audit Oct 29: Chat/counselors already use the member's chart; podcast/custom pag
 
 ## Execution batches 1–42 (see chat batch specs)
 - [x] Batch 1a: Astral Bureaus group in founder menus; Archive, Keepsakes, Sibling Bureau in member "Bureau & Museum"; Shane "Full Masterbook" button opens contents
-- [ ] Batches 1b–42: pending, run in order as credits allow
+- [x] Batch 2: supplier shortlist on Investor page (estimates labelled)
+- [x] Batch 3 (part): April chapter document filter + reading times
+- [x] Batch 4 (part): welcome "first ten pages" sample drawer
+- [x] Batch 5 (part): shipped email with tracking from print webhook
+- [x] Batch 7 (part): four SVG teaching diagrams on Learn
+- [ ] Batch 1b: next-step links on dead-end pages
+- [ ] Batch 4b: per-person first-ten-page previews
+- [ ] Batch 5b: automatic print dispatch after 2h hold (needs Lulu keys); monthly credit refresh check
+- [ ] Batches 6, 8–42: pending, run in order as credits allow

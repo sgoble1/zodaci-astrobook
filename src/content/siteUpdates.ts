@@ -5,6 +5,9 @@
 export type SiteUpdate = { date: string; title: string; text: string; to?: string; cta?: string };
 
 export const SITE_UPDATES: SiteUpdate[] = [
+  { date: '2026-11-13', title: 'Diagrams in Learn', text: 'Learn now opens with four drawn diagrams: the twelve houses, the major aspects, the four elements and the Moon’s phases.', to: '/learn#diagrams', cta: 'See the diagrams' },
+  { date: '2026-11-13', title: 'Shipping emails for printed books', text: 'When the printer ships your AstroBook, you get an email with the tracking link.', to: '/orders', cta: 'My orders' },
+  { date: '2026-11-13', title: 'Read the first ten pages', text: 'The live chart on the welcome page now opens the first ten pages of a sample AstroBook.', to: '/welcome', cta: 'Try it' },
   { date: '2026-11-12', title: 'New hardcover AstroBook prices', text: 'Signature Hardcover is now $129 and Collector’s Linen $189, matching what these larger printed books cost to make. Digital, Pocket and Classic prices are unchanged.', to: '/books', cta: 'See the versions' },
   { date: '2026-11-12', title: 'Keepsakes: certificates and Star Scrolls', text: 'Print a Birth-Sky Certificate or a tall Star Scroll with your wheel, planets, houses and closest aspects — for yourself, or as a gift from birth details you saved for someone.', to: '/keepsakes', cta: 'Make a keepsake' },
   { date: '2026-11-12', title: 'Gift collections in the shop', text: 'New ways to shop for someone else: gifts under $20, little gifts, prints for their wall, a pick-their-Sun-sign shelf, and a printed AstroBook shipped with a card.', to: '/store', cta: 'Browse gifts' },

@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { ArrowRight, Clock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { SpotArt, type SpotKind } from '@/components/art/SpotArt';
+import { SkyDiagrams } from '@/components/learn/SkyDiagrams';
 import { CommunityJournal } from '@/components/learn/CommunityJournal';
 import { ACADEMY, ALL_LESSONS } from '@/content/academy';
 import { PUBLIC_ARTICLES } from '@/content/publicArticles';
@@ -84,6 +85,11 @@ export default function Learn() {
             <div className="mt-5 flex flex-wrap gap-2"><Button asChild variant="signal" size="sm"><Link to="/forecast">Open the Forecast Center<ArrowRight /></Link></Button><Button asChild variant="outline" size="sm"><Link to="/reading-room/transits">How transits work</Link></Button></div>
           </div>
         </div>
+      </section>
+
+      <section id="diagrams" aria-labelledby="diagrams-h" className="scroll-mt-36 space-y-6">
+        <SectionHead id="diagrams-h" eyebrow="Chart room" title="The sky, drawn plainly" text="Four diagrams that explain how a chart is built." art="chart" />
+        <SkyDiagrams />
       </section>
 
       <section id="guides" aria-labelledby="guides-h" className="scroll-mt-36 space-y-6">
