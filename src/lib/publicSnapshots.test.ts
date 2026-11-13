@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { PUBLIC_SNAPSHOTS, snapshotHtml } from '../../build/publicSnapshots';
+import { PUBLIC_SNAPSHOTS, snapshotHtml } from '../../scripts/publicSnapshots';
 
 const BASE = `<html><head><title>Zodaci · Your sky, your story</title><meta name="description" content="x" /><meta property="og:title" content="x" /><meta property="og:description" content="x" /><meta name="twitter:title" content="x" /><meta name="twitter:description" content="x" /></head><body><div id="root"></div>\n<script type="module" src="/a.js"></script></body></html>`;
 

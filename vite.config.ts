@@ -3,7 +3,7 @@ import react from "@vitejs/plugin-react-swc";
 import path from "path";
 import fs from "fs";
 import { componentTagger } from "lovable-tagger";
-import { PUBLIC_SNAPSHOTS, snapshotHtml } from "./build/publicSnapshots";
+import { PUBLIC_SNAPSHOTS, snapshotHtml } from "./scripts/publicSnapshots";
 
 /** node_modules may be a symlink to a folder outside the project; the dev server must be allowed to serve
  *  package files (fonts, workers) from its real location, or they 403 and pages fall back to system fonts. */

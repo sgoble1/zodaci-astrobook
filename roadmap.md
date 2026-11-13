@@ -532,3 +532,4 @@ Audit Oct 29: Chat/counselors already use the member's chart; podcast/custom pag
 - [x] Fixed Explore crash for founder accounts (menu data missing outside member layout)
 - [x] Larger tap targets for My Readings topic chips and "Show all topics"
 - [ ] Lulu AstroComic printing — paused by owner, finish later (deploy + quote check)
+- [x] Ready-made public pages (title, description, summary) shown instantly before the app loads; home page code fetched in parallel
