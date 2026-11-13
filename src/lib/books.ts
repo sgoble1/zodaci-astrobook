@@ -45,6 +45,13 @@ export function bookBase(edition: string, format: BookFormat = 'print') {
 }
 export const bookTotal = (edition: string, extras: number, format: BookFormat = 'print') => bookBase(edition, format) + extras * EXTRA_SECTION_PRICE;
 export const money = (cents: number) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(cents / 100);
+/** "$129" for whole dollars, "$24.99" otherwise — for short price lists in page descriptions. */
+export const shortMoney = (cents: number) => cents % 100 === 0 ? `$${cents / 100}` : money(cents);
+/** "Digital PDF $24.99, Pocket $34.99, … or Collector’s Linen $189", always read from BOOK_VERSIONS. */
+export const bookPriceList = (join = 'or') => {
+  const items = BOOK_VERSIONS.map(v => `${v.name} ${shortMoney(v.price)}`);
+  return `${items.slice(0, -1).join(', ')} ${join} ${items.at(-1)}`;
+};
 
 /** Lulu list print cost at each version's mid page target (Pocket 68, Classic 135, Signature 240, Linen 340), US ground shipping and card fees (2.9% + 30¢). Estimated unit costs used until the admin enters real Lulu quotes (admin "Print costs" table overrides these). */
 export const BOOK_COSTING: { edition: AnyEdition; print: number; shipping: number; fees: number; price: number }[] = [

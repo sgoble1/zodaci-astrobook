@@ -245,6 +245,7 @@ export function computeChart(input: ChartInput): ChartResult {
     const f = fmtLon(ch); const later = chironLon(new Date(utc.getTime() + 864e5)), earlier = chironLon(new Date(utc.getTime() - 864e5));
     bodies.push({ key: 'chiron', name: 'Chiron', glyph: '⚷', lon: ch, sign: f.sign, signGlyph: f.signGlyph, deg: f.deg, min: f.min, house: cusps ? houseOf(ch, cusps) : null, retro: later != null && earlier != null && norm(later - earlier + 180) - 180 < 0, confidence: 'derived', note: 'From a NASA JPL Horizons table (1940–2060), interpolated.' });
   }
+  else flags.push({ level: 'approximate', topic: 'Chiron', note: 'Chiron is only calculated for births from 1940 to 2060 (the range of the NASA table we use), so it is left out of this chart.' });
   point('lilith', 'Black Moon Lilith (mean)', '⚸', meanLilith(utc), 'Mean lunar apogee; the “true”/oscillating Lilith can differ by several degrees.');
   if (asc != null && vertex != null) {
     const sunLon = bodies[0].lon, moonLon = bodies[1].lon;

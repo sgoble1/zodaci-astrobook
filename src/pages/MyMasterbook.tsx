@@ -8,6 +8,7 @@ import { getStripeEnvironment } from '@/lib/stripe';
 import { CreatorStudio } from '@/components/payments/CreatorStudio';
 import { STARTER_CHAPTERS, STARTER_EVENT } from '@/lib/starterChapters';
 import { usePlan } from '@/hooks/usePlan';
+import { PLAN_PRICE } from '@/lib/plans';
 
 const STARTER = STARTER_CHAPTERS;
 
@@ -78,7 +79,7 @@ export default function MyMasterbook() {
   if (!sub.userId || effective.plan === 'free') return (
     <article className="mx-auto max-w-xl space-y-4 py-12 text-center">
       <h1 className="font-display text-3xl">Your Masterbook</h1>
-      <p className="text-muted-foreground">A full book written from your own chart. It unlocks with Pro ($9/month); the Cosmic plan ($19/month) also lets you write new chapters and podcasts.</p>
+      <p className="text-muted-foreground">A full book written from your own chart. It unlocks with Pro ({PLAN_PRICE.full.month}) or Cosmic ({PLAN_PRICE.creator.month}). Both plans can write new chapters and podcasts; Cosmic simply includes more AI credits each month.</p>
       <Button asChild><Link to={sub.userId ? '/pricing' : '/auth'}>{sub.userId ? 'See plans' : 'Sign in'}</Link></Button>
     </article>
   );

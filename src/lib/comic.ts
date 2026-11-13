@@ -12,11 +12,13 @@ export const COMIC_PLANS: Record<ComicPlan, { priceId: string; cents: number; la
   yearly: { priceId: 'comic_yearly', cents: 14999, label: '$149.99/year', name: 'Yearly', blurb: 'Twelve issues for the price of ten.' },
   single: { priceId: 'comic_single', cents: 1899, label: '$18.99', name: 'Single issue', blurb: 'One issue for next month — a gift or a first look.' },
 };
+/** "$14.99/month, $149.99/year or $18.99 for one issue", read from COMIC_PLANS. */
+export const comicPriceList = () => `${COMIC_PLANS.monthly.label}, ${COMIC_PLANS.yearly.label} or ${COMIC_PLANS.single.label} for one issue`;
 export const isComicPlan = (p: unknown): p is ComicPlan => p === 'monthly' || p === 'yearly' || p === 'single';
 
 export const COMIC_SPEC = [
   ['Size', '5.5 × 8.5 in digest'], ['Pages', '24 including covers'], ['Binding', 'Saddle-stitched'],
-  ['Color', 'Full-color CMYK'], ['Cover', '100 lb gloss'], ['Interior', '80 lb gloss text'],
+  ['Color', 'Full colour, printed in CMYK'], ['Cover', '100 lb gloss'], ['Interior', '80 lb gloss text'],
   ['Print files', '0.125 in bleed · 0.25 in safe zone · 300 DPI minimum (350 preferred) · PDF/X-1a or X-4'],
 ] as const;
 
@@ -24,7 +26,7 @@ export const COMIC_SPEC = [
 export const COMIC_FAQ: { q: string; a: string }[] = [
   { q: 'Is every issue really personalized to my chart?', a: 'Yes — your Sun, Moon, and Rising signs drive the story arcs, house spotlights, and reflection prompts. No two issues are identical.' },
   { q: 'What size is the comic and how many pages?', a: '5.5 x 8.5 inches (digest size), 24 pages, saddle-stitched, full color.' },
-  { q: 'When does my first issue ship?', a: "Issues ship by the 8th of each month. If you subscribe before the 1st, you're in the current month's run. Subscribe after the 1st and your first issue ships the following month." },
+  { q: 'When does my first issue ship?', a: "Issues ship by the 8th of each month. Your first issue is always the month after you subscribe: join any day in November and your first issue ships by December 8. Each later issue ships by the 8th of its month." },
   { q: 'Can I cancel anytime?', a: 'Yes. Cancel anytime from your account dashboard, no questions asked.' },
   { q: "What if I don't have a Zodaci account yet?", a: "No problem — you'll create your free Zodaci account as part of checkout. Your birth chart is built from your birth date, time, and location." },
 ];

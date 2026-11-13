@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { ExternalLink, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { PrintPartnerMatrix } from '@/components/common/PrintPartnerMatrix';
-import { SHOPIFY_STORE_PERMANENT_DOMAIN, fetchAllProducts, formatMoney, inStock, type ShopifyProduct } from '@/lib/shopify';
+import { SHOPIFY_STORE_PERMANENT_DOMAIN, fetchCatalog, formatMoney, inStock, shopAdminDetail, type ShopifyProduct } from '@/lib/shopify';
 
 const STORE_HANDLE = SHOPIFY_STORE_PERMANENT_DOMAIN.replace('.myshopify.com', '');
 export const SHOPIFY_ADMIN = `https://admin.shopify.com/store/${STORE_HANDLE}`;
@@ -21,11 +21,12 @@ const numericId = (gid: string) => gid.split('/').pop() ?? '';
 /** Admin → Shop & print: shortcuts into Shopify, a live product check and the print partner matrix. */
 export function ShopAdmin() {
   const [products, setProducts] = useState<ShopifyProduct[] | null>(null);
-  const [failed, setFailed] = useState(false);
+  const [failed, setFailed] = useState<string | false>(false);
+  const [truncated, setTruncated] = useState(false);
   const [attempt, setAttempt] = useState(0);
   useEffect(() => {
-    let on = true; setFailed(false); setProducts(null);
-    fetchAllProducts().then(p => { if (on) setProducts(p); }).catch(() => { if (on) setFailed(true); });
+    let on = true; setFailed(false); setProducts(null); setTruncated(false);
+    fetchCatalog().then(c => { if (on) { setProducts(c.products); setTruncated(c.truncated); } }).catch(e => { if (on) setFailed(shopAdminDetail(e)); });
     return () => { on = false; };
   }, [attempt]);
   const soldOut = useMemo(() => (products ?? []).filter(p => !inStock(p)), [products]);
@@ -51,7 +52,8 @@ export function ShopAdmin() {
           <h2 id="shop-live" className="text-2xl">What shoppers see now</h2>
           <Button size="sm" variant="outline" onClick={() => setAttempt(a => a + 1)} disabled={!products && !failed}><RefreshCw className="mr-1 h-3 w-3" aria-hidden />Refresh</Button>
         </div>
-        {failed && <p role="alert" className="text-destructive">The shop could not be reached. Check that the Shopify plan is active, then refresh.</p>}
+        {failed && <p role="alert" className="text-destructive">The shop could not be reached. {failed} Buyers see a short “shop unavailable” note instead of this detail.</p>}
+        {truncated && <p role="status" className="text-sm text-muted-foreground">Only part of the catalog was read (the paging safety limit, or a product with more than 100 variants). Counts below may be low.</p>}
         {!products && !failed && <div role="status" aria-label="Loading products" className="h-32 animate-pulse rounded bg-muted motion-reduce:animate-none" />}
         {products && <>
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">

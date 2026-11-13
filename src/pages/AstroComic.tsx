@@ -15,7 +15,7 @@ import { useSession } from '@/hooks/useLibrary';
 import { useMyBirth, toChartInput } from '@/lib/myBirth';
 import { computeChart } from '@/lib/astro';
 import { SAMPLE_BIRTH } from '@/lib/sampleBook';
-import { ART_RULES, buildComicIssue, CAST, COMIC_FAQ, COMIC_PLANS, COMIC_SPEC, firstIssueMonth, isComicPlan, monthLabel, shipBy, type ComicPlan } from '@/lib/comic';
+import { ART_RULES, buildComicIssue, CAST, COMIC_FAQ, COMIC_PLANS, comicPriceList, COMIC_SPEC, firstIssueMonth, isComicPlan, monthLabel, shipBy, type ComicPlan } from '@/lib/comic';
 import cast from '@/assets/astrocomic-cast.jpg';
 import skyPanel from '@/assets/astrocomic-sky-panel.jpg';
 import letterPanel from '@/assets/astrocomic-letter-panel.jpg';
@@ -36,7 +36,7 @@ const PAGE_MAP: [string, string][] = [
 
 /** Public AstroComic product page: plans, a personal three-page preview, the cast, the art style, print spec and FAQ. */
 export default function AstroComic() {
-  usePageMeta('AstroComic — your month as a personalized comic | Zodaci', 'A printed 24-page comic each month, starring the planets in your birth chart and the transits that touch it. $14.99/month, $149.99/year or $18.99 for one issue.');
+  usePageMeta('AstroComic — your month as a personalized comic | Zodaci', `A printed 24-page comic each month, starring the planets in your birth chart and the transits that touch it. ${comicPriceList()}.`);
   useJsonLd('astrocomic-product', { '@type': 'Product', name: 'AstroComic', brand: { '@type': 'Brand', name: 'Zodaci' }, description: 'A monthly 24-page personalized astrology comic, printed and mailed in the US.', offers: Object.values(COMIC_PLANS).map(p => ({ '@type': 'Offer', priceCurrency: 'USD', price: (p.cents / 100).toFixed(2), name: p.name, availability: 'https://schema.org/InStock' })) });
   const [params] = useSearchParams();
   const navigate = useNavigate();

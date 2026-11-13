@@ -1,5 +1,5 @@
 /**
- * Zodaci illustration style "Mystic Ink" (UPDATES · Illustration Style Guide). One shared master prompt and negative
+ * Zodaci illustration style: Atomic Zodiac (replaced the old "Mystic Ink" style guide; identifiers keep the old name). One shared master prompt and negative
  * prompt for every illustration: AstroBook art, AstroComic panels and site graphics. Only the scene text is editable;
  * the prefix is always prepended unchanged. supabase/functions/_shared/mystic-ink.ts mirrors the two constants.
  */
@@ -42,14 +42,14 @@ export type AssetTemplate = { id: AssetType; label: string; template: string; ne
 
 /** Section 6 templates. Bracketed words are filled from the sign guide or the editable scene text. */
 export const ASSET_TEMPLATES: AssetTemplate[] = [
-  { id: 'chapter-opener', label: 'AstroBook chapter opener', needsSign: true, size: '1024x1024', template: 'Circular framed medallion like an antique astrolabe, [SIGN] [FIGURE] at the center, [MOTIF] drawn as a gold dotted line around it, ornate Victorian filigree border with small stars. Square composition.' },
-  { id: 'full-page', label: 'AstroBook full-page scene', needsSign: true, size: '1024x1536', template: '[SCENE]. A [SIGN] character lit by one glowing [MOTIF]. Dramatic low angle, deep shadows, rim light. Portrait composition.' },
-  { id: 'spot', label: 'AstroBook spot illustration', needsSign: false, size: '1024x1024', template: 'Small vignette of [SCENE] on a plain parchment background, fading edges, soft glow, fine crosshatching, no border.' },
-  { id: 'portrait', label: 'Character portrait', needsSign: true, size: '1024x1536', template: 'Half-length portrait of [SCENE], [ACCENTS] accent colors, soft rim light from a constellation behind, expressive eyes, elongated elegant features.' },
-  { id: 'comic-panel', label: 'AstroComic panel', needsSign: false, size: '1536x1024', template: 'Single comic panel: [SCENE]. Painterly Mystic Ink rendering with fine ink linework, clear readable composition, space left for speech bubbles, no lettering in the art.' },
-  { id: 'cover', label: 'Book or comic cover', needsSign: true, size: '1024x1536', template: '[SIGN] hero at the center under a large glowing constellation, ornate gold frame, title area left empty at top. Portrait composition.' },
+  { id: 'chapter-opener', label: 'AstroBook chapter opener', needsSign: true, size: '1024x1024', template: 'Circular framed medallion like an antique astrolabe, [SIGN] [FIGURE] at the center, [MOTIF] drawn as a gold dotted line around it, brass atomic orbit-ring border with small starbursts and halftone tint. Square composition.' },
+  { id: 'full-page', label: 'AstroBook full-page scene', needsSign: true, size: '1024x1536', template: '[SCENE]. A [SIGN] character lit by one glowing [MOTIF]. Low poster-style angle, flat print inks, bold ink outlines, halftone shadows. Portrait composition.' },
+  { id: 'spot', label: 'AstroBook spot illustration', needsSign: false, size: '1024x1024', template: 'Small vignette of [SCENE] on plain archive-cream paper, bold ink outline, halftone shading, slight print misregistration, no border.' },
+  { id: 'portrait', label: 'Character portrait', needsSign: true, size: '1024x1536', template: 'Half-length portrait of [SCENE], [ACCENTS] accent colors, a constellation drawn behind in brass dotted lines, clear expression, warm mid-century proportions.' },
+  { id: 'comic-panel', label: 'AstroComic panel', needsSign: false, size: '1536x1024', template: 'Single comic panel: [SCENE]. 1950s golden-age Atomic Zodiac comic rendering with heavy ink outlines and halftone shading, clear readable composition, space left for speech bubbles, no lettering in the art.' },
+  { id: 'cover', label: 'Book or comic cover', needsSign: true, size: '1024x1536', template: '[SIGN] hero at the center under a large constellation, gold orbit ring around the sign in the top third, red title band area left empty at top. Portrait composition.' },
   { id: 'banner', label: 'Website hero or section banner', needsSign: true, size: '1536x1024', template: 'Wide panoramic [SIGN] night landscape, constellation lines across the sky, generous empty space for headline text. Wide 16:9 composition.' },
-  { id: 'icon', label: 'Icon or small graphic', needsSign: true, size: '1024x1024', template: 'Single [SIGN] symbol as a gold-leaf ornament with soft glow on a transparent or deep indigo background, delicate linework, centered, no text.' },
+  { id: 'icon', label: 'Icon or small graphic', needsSign: true, size: '1024x1024', template: 'Single [SIGN] symbol as a brass ink emblem with halftone tint inside a hand-cut badge on archive cream or deep indigo, heavy outline, centered, no text.' },
 ];
 
 /** Fill one template from the sign guide and the scene text (the only hand-edited part). */

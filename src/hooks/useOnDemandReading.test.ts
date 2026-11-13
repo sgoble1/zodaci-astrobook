@@ -18,3 +18,17 @@ describe('viewingOtherEdition', () => {
     sessionStorage.setItem(ADMIN_EDITION_KEY, 'shane'); expect(viewingOtherEdition()).toBe(false);
   });
 });
+
+describe('firstLook edition guard', () => {
+  beforeEach(() => { vi.stubGlobal('sessionStorage', session); vi.stubGlobal('window', { sessionStorage: session }); });
+  afterEach(() => { store.clear(); vi.unstubAllGlobals(); vi.restoreAllMocks(); });
+  it("never loads the viewer's own readings while another edition is open", async () => {
+    const lib = await import('@/lib/topicReadings');
+    const spy = vi.spyOn(lib, 'loadMyTopicReadings');
+    const { firstLook } = await import('./useOnDemandReading');
+    sessionStorage.setItem(ADMIN_EDITION_KEY, 'april');
+    const look = await firstLook('love');
+    expect(look.edition).toBe(true);
+    expect(spy).not.toHaveBeenCalled();
+  });
+});

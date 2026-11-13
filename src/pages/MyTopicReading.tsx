@@ -12,6 +12,7 @@ import { useOnDemandReading } from '@/hooks/useOnDemandReading';
 import { FounderSourcePanel } from '@/components/readings/FounderSourcePanel';
 import { RelatedPanel } from '@/components/readings/RelatedPanel';
 import { markdownSections, NavigatedProse } from '@/components/readings/NavigatedProse';
+import { PLAN_PRICE } from '@/lib/plans';
 
 export default function MyTopicReading({ slugOverride }: { slugOverride?: string } = {}) {
   const params = useParams();
@@ -79,7 +80,7 @@ export default function MyTopicReading({ slugOverride }: { slugOverride?: string
               <p className="font-label text-xs tracking-[0.16em] text-primary">Preview · section 1 of 5</p>
               <p className="font-display text-2xl">Unlock the full deep dive</p>
               <p className="text-sm text-muted-foreground">Your chart has four more sections on daily life, strengths, watch-outs, practices and reflection questions.</p>
-              <Button asChild><Link to={`/pricing?next=${encodeURIComponent(`/my-readings/topic/${slug}`)}`}>Upgrade to Pro — $9/mo</Link></Button>
+              <Button asChild><Link to={`/pricing?next=${encodeURIComponent(`/my-readings/topic/${slug}`)}`}>Upgrade to Pro — {PLAN_PRICE.full.month}</Link></Button>
             </div>
           </div>
         </div>}</div>

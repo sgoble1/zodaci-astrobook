@@ -8,7 +8,7 @@ import { formatMoney } from '@/lib/shopify';
 
 export function CartDrawer() {
   const [open, setOpen] = useState(false);
-  const { items, isLoading, isSyncing, updateQuantity, removeItem, getCheckoutUrl, syncCart } = useCartStore();
+  const { items, isLoading, isSyncing, updateQuantity, removeItem, getCheckoutUrl, syncCart, lastError } = useCartStore();
   const count = items.reduce((s, i) => s + i.quantity, 0);
   const total = items.reduce((s, i) => s + parseFloat(i.price.amount) * i.quantity, 0);
   useEffect(() => { if (open) syncCart(); }, [open, syncCart]);
@@ -23,6 +23,7 @@ export function CartDrawer() {
       </SheetTrigger>
       <SheetContent className="flex h-full w-full flex-col sm:max-w-lg">
         <SheetHeader><SheetTitle>Your cart</SheetTitle><SheetDescription>{count === 0 ? 'Your cart is empty' : `${count} item${count === 1 ? '' : 's'}`}</SheetDescription></SheetHeader>
+        {lastError && <div role="alert" className="mt-4 flex items-center justify-between gap-3 rounded-md border border-destructive/40 p-3 text-sm text-destructive"><span>{lastError}</span><Button size="sm" variant="outline" onClick={() => void syncCart()} disabled={isSyncing}>Refresh basket</Button></div>}
         <div className="flex min-h-0 flex-1 flex-col pt-6">
           {items.length === 0 ? <div className="flex flex-1 items-center justify-center text-muted-foreground">Nothing here yet.</div> : <>
             <ul className="min-h-0 flex-1 space-y-4 overflow-y-auto pr-2">

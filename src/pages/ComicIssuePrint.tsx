@@ -78,7 +78,7 @@ export default function ComicIssuePrint() {
         <div>
           <h2 className="font-display text-3xl">Print specification</h2>
           <dl className="mt-6 divide-y divide-border border-y border-border text-sm">{COMIC_SPEC.map(([k, v]) => <div key={k} className="grid grid-cols-[7rem_1fr] gap-3 py-2.5"><dt className="text-muted-foreground">{k}</dt><dd>{v}</dd></div>)}</dl>
-          <p className="mt-4 text-sm text-muted-foreground">Printed and shipped within the US. Colors are proofed in CMYK, so the printed copy is slightly warmer than what you see on screen.</p>
+          <p className="mt-4 text-sm text-muted-foreground">Printed and shipped within the US. Artwork is prepared in RGB and the printer converts it to CMYK, so the printed copy looks slightly warmer and less bright than on screen.</p>
         </div>
       </section>
     </article>

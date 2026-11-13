@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { useJsonLd } from '@/hooks/useJsonLd';
 import { Faq, ASTROBOOK_FAQ, GENERAL_FAQ, ALL_GENERAL_FAQ, useFaqSchema } from '@/components/brand/Faq';
-import { BOOK_VERSIONS, EXTRA_SECTION_PRICE, money } from '@/lib/books';
+import { BOOK_VERSIONS, EXTRA_SECTION_PRICE, bookPriceList, money } from '@/lib/books';
 import { PLAN_NAME, REFUND_WINDOW_DAYS } from '@/lib/plans';
 import { VersionCompare } from '@/components/books/VersionCompare';
 import { CoverCustomizer } from '@/components/books/CoverCustomizer';
@@ -34,7 +34,7 @@ const VOLUME_DETAIL: Record<string, string> = {
 };
 
 export function AstroBookPublic() {
-  usePageMeta('AstroBook — Your Personalized Birth Chart Book in Five Versions | Zodaci', 'A book written entirely from your birth chart. Digital PDF $24.99, Pocket $34.99, Classic $59.99, Signature Hardcover $129 and Collector’s Linen $189. Free US shipping.');
+  usePageMeta('AstroBook — Your Personalized Birth Chart Book in Five Versions | Zodaci', `A book written entirely from your birth chart. ${bookPriceList('and')}. Free US shipping.`);
   useJsonLd('product-schema', { '@type': 'Product', name: 'AstroBook', brand: { '@type': 'Brand', name: 'Zodaci' }, description: 'A personalized book written from your own birth chart, in five versions.', offers: BOOK_VERSIONS.map(v => ({ '@type': 'Offer', name: `AstroBook ${v.name}`, price: (v.price / 100).toFixed(2), priceCurrency: 'USD', availability: 'https://schema.org/InStock', url: 'https://zodaci.com/astrobook' })) });
   const order = (id = 'classic') => `/auth?next=${encodeURIComponent(`/books?version=${id}`)}`;
   return (

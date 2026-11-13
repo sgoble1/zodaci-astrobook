@@ -14,7 +14,7 @@ import { useSubscription } from '@/hooks/useSubscription';
 import { usePlan } from '@/hooks/usePlan';
 import { useMyBirth } from '@/lib/myBirth';
 import { streamImage } from '@/lib/streamImage';
-import { BOOK_SECTIONS, BOOK_VERSIONS, CHAPTER_TABS, COVER_STYLES, EXTRA_SECTION_PRICE, bookTotal, isEdition, money, versionOf, type Edition } from '@/lib/books';
+import { BOOK_SECTIONS, BOOK_VERSIONS, CHAPTER_TABS, COVER_STYLES, EXTRA_SECTION_PRICE, bookPriceList, bookTotal, isEdition, money, versionOf, type Edition } from '@/lib/books';
 import { validateBookOrder } from '@/lib/bookOrder';
 import { ProductArtworkGallery } from '@/components/books/ProductArtworkGallery';
 import { COVER_DESIGNS } from '@/content/coverDesigns';
@@ -34,7 +34,7 @@ function CoverThumb({ spec, alt, blur = false }: { spec: CoverSpec; alt: string;
 }
 
 export default function Books() {
-  usePageMeta('AstroBook · Your personal astrology book in five versions', 'Order AstroBook, written from your own birth chart: Digital PDF $24.99, Pocket $34.99, Classic $59.99, Signature Hardcover $129 or Collector’s Linen $189. Free US shipping.');
+  usePageMeta('AstroBook · Your personal astrology book in five versions', `Order AstroBook, written from your own birth chart: ${bookPriceList()}. Free US shipping.`);
   const sub = useSubscription(); const birth = useMyBirth(); const nav = useNavigate();
   const [params] = useSearchParams();
   const initial = params.get('version');

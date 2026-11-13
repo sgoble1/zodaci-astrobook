@@ -11,7 +11,7 @@ import { ASSET_TEMPLATES, MYSTIC_CHECKLIST, MYSTIC_INK_NEGATIVE, MYSTIC_PALETTE,
 type Pause = { scope: string; message: string; created_at: string };
 const SCOPE: Record<string, string> = { workspace: 'All AI features (readings, art, podcasts, covers)' };
 
-/** Admin → AI & illustrations: see and lift automatic AI pauses, and build Mystic Ink prompts. */
+/** Admin → AI & illustrations: see and lift automatic AI pauses, and build Atomic Zodiac prompts. */
 export function AiStudioAdmin() {
   return <div className="space-y-12"><AiPauses /><MysticInkBuilder /></div>;
 }
@@ -74,7 +74,7 @@ function MysticInkBuilder() {
   const missingSign = t.needsSign && !sign;
   return (
     <section aria-labelledby="mystic" className="space-y-4">
-      <div><h2 id="mystic" className="text-2xl">Mystic Ink prompt builder</h2><p className="max-w-2xl text-sm text-muted-foreground">One house style for every illustration. The master style always comes first and stays unchanged; you only describe the scene.</p></div>
+      <div><h2 id="mystic" className="text-2xl">Atomic Zodiac prompt builder</h2><p className="max-w-2xl text-sm text-muted-foreground">One house style for every illustration. The master style always comes first and stays unchanged; you only describe the scene.</p></div>
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)]">
         <div className="space-y-4">
           <div className="space-y-1.5"><Label htmlFor="mi-asset">What are you making?</Label>

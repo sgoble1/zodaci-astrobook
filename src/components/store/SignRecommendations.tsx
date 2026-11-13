@@ -43,7 +43,7 @@ export function SignRecommendations({ chart, timed }: { chart: ChartResult; time
   const add = async (product: ShopifyProduct) => {
     const v = product.node.variants.edges.find(e => e.node.availableForSale)?.node;
     if (!v) { toast.error('That item is sold out right now.'); return; }
-    await addItem({ product, variantId: v.id, variantTitle: v.title, price: v.price, quantity: 1, selectedOptions: v.selectedOptions });
+    if (!(await addItem({ product, variantId: v.id, variantTitle: v.title, price: v.price, quantity: 1, selectedOptions: v.selectedOptions }))) return;
     toast.success('Added to cart', { description: product.node.title, position: 'top-center' });
   };
   return (

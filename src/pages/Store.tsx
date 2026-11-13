@@ -32,7 +32,8 @@ function useAdd() {
   const add = async (product: ShopifyProduct, variantId?: string, attributes?: CartAttribute[]) => {
     const v = product.node.variants.edges.find(e => e.node.id === variantId)?.node ?? product.node.variants.edges.find(e => e.node.availableForSale)?.node;
     if (!v || !v.availableForSale) { toast.error('That item is sold out right now.'); return false; }
-    await addItem({ product, variantId: v.id, variantTitle: v.title, price: v.price, quantity: 1, selectedOptions: v.selectedOptions, attributes });
+    const ok = await addItem({ product, variantId: v.id, variantTitle: v.title, price: v.price, quantity: 1, selectedOptions: v.selectedOptions, attributes });
+    if (!ok) return false;
     toast.success('Added to cart', { description: product.node.title, position: 'top-center' });
     return true;
   };
