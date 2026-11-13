@@ -1,8 +1,16 @@
 import { supabase } from '@/integrations/supabase/client';
 import { ContentLockedError } from '@/lib/protectedContent';
 
+import { retryOnce } from './retryOnce';
+
 /** A denied download is an access state, never a private payload or an unhandled rejection. */
-export async function downloadPrivateEdition(): Promise<Record<string, Record<string, unknown>>> {
+
+/** Downloads the caller's authorized private edition; a non-access failure is retried once automatically. */
+export function downloadPrivateEdition(): Promise<Record<string, Record<string, unknown>>> {
+  return retryOnce(attemptDownload);
+}
+
+async function attemptDownload(): Promise<Record<string, Record<string, unknown>>> {
   const { data: session } = await supabase.auth.getSession();
   if (!session.session) throw new ContentLockedError(true);
   const { data, error } = await supabase.functions.invoke('private-edition', {

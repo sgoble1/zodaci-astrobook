@@ -74,3 +74,6 @@
 - Current Chapter and Life Compass derive only from today's transits (src/lib/currentChapter.ts), never AI or biography, so the landing stays truthful without credits.
 - DashboardMosaic is the shared dashboard opening; retain CurrentChapterPanel beneath it, with founder TVs receiving their authorized edition chart directly to prevent viewer-chart substitution.
 - /forecast separates public skyToday/skyEvents bulletins from signed-in useMyBirth broadcasts; reuse CurrentChapterPanel and ForecastReel so chart privacy and deterministic timing stay consistent.
+- Private-content loaders (protectedContent, privateEditionLoader) retry non-access failures once via lib/retryOnce; access denials never retry, so glitches self-heal without masking real "no access" answers.
+- The founder "View as" tier switch (lib/tierPreview) only changes the plan usePlan returns for elevated accounts on that device; server checks always use the real account.
+- AstroBook plain-language front matter and "In this chapter" outcomes come from lib/readersCompass, explaining only terms the book actually contains.

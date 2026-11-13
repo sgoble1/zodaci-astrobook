@@ -159,6 +159,21 @@ function FounderNext() {
   );
 }
 
+/** Display-only "View as" switch: shows what each plan sees on this device; server checks are unchanged. */
+function TierPreviewPill() {
+  const [tier, setTier] = useState<Plan | null>(getTierPreview);
+  const pick = (p: Plan | null) => { setTier(p); setTierPreview(p); };
+  const opts: [Plan | null, string][] = [[null, 'Mine'], ['free', 'Free'], ['full', 'Pro'], ['creator', 'Cosmic']];
+  return (
+    <span className="inline-flex items-center gap-1" title={tier ? TIER_NOTES[tier] : 'Preview what each plan sees. This only changes the view, never access.'}>
+      <span className="text-xs text-muted-foreground">View as</span>
+      {opts.map(([p, label]) => (
+        <button key={label} type="button" aria-pressed={tier === p} onClick={() => pick(p)} className={`min-h-8 rounded-sm border px-2 text-xs ${tier === p ? 'border-primary bg-primary text-primary-foreground' : 'border-border'}`}>{label}</button>
+      ))}
+    </span>
+  );
+}
+
 /** Shown in classic view for founders: one click back to the full private edition. */
 function ClassicViewBanner() {
   const { pathname } = useLocation();
@@ -166,7 +181,10 @@ function ClassicViewBanner() {
   return (
     <div role="status" className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-sm border border-[hsl(var(--brass)/0.5)] bg-[hsl(var(--brass)/0.08)] px-4 py-3 text-sm">
       <span>{fullOnly ? "This page is part of your full edition — the classic menu doesn't list it, so it opens as written for you." : "You're seeing the classic view — the same pages and menus every member sees."}</span>
-      <Button size="sm" variant="outline" onClick={() => setClassicView(false)}>Back to your full edition</Button>
+      <span className="flex flex-wrap items-center gap-2">
+        <TierPreviewPill />
+        <Button size="sm" variant="outline" onClick={() => setClassicView(false)}>Back to your full edition</Button>
+      </span>
     </div>
   );
 }
@@ -182,7 +200,8 @@ import { useCustomPages, NEW_PAGE_HIGHLIGHT_KEY } from '@/hooks/useCustomPages';
 import { useSharedBadges } from '@/hooks/useSharedBadges';
 import { Button } from '@/components/ui/button';
 import { ViewingEditionBanner } from '@/components/common/ViewingEditionBanner';
-import { APRIL_NAV_GROUPS, RELATIONSHIPS_GROUP, SHARED_GROUP, planAllows, requiredPlan, type NavGroup, type NavItem } from '@/content/navigation';
+import { APRIL_NAV_GROUPS, RELATIONSHIPS_GROUP, SHARED_GROUP, planAllows, requiredPlan, type NavGroup, type NavItem, type Plan } from '@/content/navigation';
+import { getTierPreview, setTierPreview, TIER_NOTES } from '@/lib/tierPreview';
 import { usePlan } from '@/hooks/usePlan';
 import { PlanLock } from '@/components/common/PlanLock';
 import type { ReactNode } from 'react';

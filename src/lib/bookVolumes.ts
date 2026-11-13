@@ -10,6 +10,7 @@ import { dignityOf } from '@/lib/retrogood';
 import { shadowBreakthroughBlock } from '@/content/shadowBreakthrough';
 import { buildOpeningLetter, letterText } from '@/lib/openingLetter';
 import { lifeCycles } from '@/lib/lifeCycles';
+import { compassFor, withOutcomes } from '@/lib/readersCompass';
 import {
   affirmationsChapter, birthVerse, elementChapter, forecastChapter, moonPhase, mythologyChapter, northNodeChapter, relationshipPrimer,
   retroChapter, rulershipSummary, sensitivePoints, solarReturnChapter, synastryChapter, type BookChapter, type Person,
@@ -281,11 +282,15 @@ export function buildVolumes({ edition, chart: c, name, saved, people = [], toda
   const out: BookChapter[] = [];
   if (r >= 1) out.push({ title: 'Your Birth-Moment Verse', content: birthVerse(c, name) });
   out.push({ title: 'Your Opening Letter', content: letterText(buildOpeningLetter({ name, placeLabel: c.input.placeLabel, chart: c, timeKnown })) });
+  const body: BookChapter[] = [];
   for (const v of VOLUMES) {
-    const chapters = vol[v.n];
+    const chapters = vol[v.n].map(ch => fromReadings.has(ch) || ch.draw ? ch : { ...ch, content: withOutcomes(ch.title, ch.content) });
     if (!chapters.length) continue;
-    out.push({ title: `Volume ${v.n} · ${v.title}`, content: v.line, draw: 'volume' }, ...chapters);
+    body.push({ title: `Volume ${v.n} · ${v.title}`, content: v.line, draw: 'volume' }, ...chapters);
   }
+  const terms = compassFor(body.map(ch => ch.content).join('\n'));
+  if (terms.length) out.push({ title: 'Reader’s Compass', content: ['Words this book uses, in plain language. Every chapter also opens with what you will find in it.', ...terms.map(t => `**${t.term}:** ${t.plain}`)].join('\n\n') });
+  out.push(...body);
   if (r >= 4) out.push({ title: 'Collector’s Certificate', content: '', draw: 'certificate' });
   return out;
 }

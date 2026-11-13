@@ -2,11 +2,14 @@ import { useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useSubscription } from '@/hooks/useSubscription';
 import type { Plan } from '@/content/navigation';
+import { displayedPlan, getTierPreview, TIER_PREVIEW_EVENT } from '@/lib/tierPreview';
 
 /** Effective plan: subscription tier, with admins and the private shared space treated as Creator. */
 export function usePlan(): { plan: Plan; loading: boolean } {
   const sub = useSubscription();
   const [elevated, setElevated] = useState<boolean | null>(null);
+  const [preview, setPreview] = useState(getTierPreview);
+  useEffect(() => { const on = () => setPreview(getTierPreview()); window.addEventListener(TIER_PREVIEW_EVENT, on); return () => window.removeEventListener(TIER_PREVIEW_EVENT, on); }, []);
   useEffect(() => {
     let alive = true; setElevated(null);
     (async () => {
@@ -21,6 +24,7 @@ export function usePlan(): { plan: Plan; loading: boolean } {
     })();
     return () => { alive = false; };
   }, [sub.userId]);
-  const plan: Plan = !sub.loading && elevated ? 'creator' : (sub.tier as Plan) ?? 'free';
+  const real: Plan = !sub.loading && elevated ? 'creator' : (sub.tier as Plan) ?? 'free';
+  const plan = displayedPlan(real, !!elevated, preview);
   return { plan, loading: sub.loading || elevated === null };
 }

@@ -31,7 +31,7 @@ export function loadProtectedText(area: Area, file: string): Promise<string> {
   const key = `${area}/${file}`;
   const hit = cache.get(key);
   if (hit) return hit;
-  const p = fetchProtectedText(area, file);
+  const p = import('./retryOnce').then(m => m.retryOnce(() => fetchProtectedText(area, file)));
   cache.set(key, p);
   p.catch(() => cache.delete(key));
   return p;

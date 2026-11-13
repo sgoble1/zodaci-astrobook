@@ -1,3 +1,4 @@
+import { compassFor } from '@/lib/readersCompass';
 import type { ChartResult } from '@/lib/astro';
 import { SIGN_RULER } from '@/lib/signRulers';
 import type { EditionPage } from '@/content/sampleEdition';
@@ -112,6 +113,9 @@ export function bookInterior(i: BookInteriorInput): BookFace[] {
     faces.push({ kind: 'plate', src: p.image, alt: p.imageAlt, caption: `Plate ${p.n} · ${p.placement}`, page: page++ });
     faces.push({ kind: 'text', eyebrow: p.volume, title: p.title, placement: p.placement, facts: p.facts.map(f => [f.label, f.value]), body: p.body, reflection: p.reflection, page: page++ });
   }
+  const shown = faces.map(f => JSON.stringify(f)).join(' ');
+  const terms = compassFor(shown).slice(0, 6);
+  if (terms.length) faces.push({ kind: 'list', eyebrow: 'Reader’s Compass', heading: 'Words in this book, in plain language', items: terms.map(t => `${t.term}: ${t.plain}`), note: 'The full book explains every term it uses, and each chapter opens with what you will find in it.', page: page++ });
   faces.push({ kind: 'list', eyebrow: 'The book continues', heading: 'Six volumes, one sky', items: VOLUME_LIST, note: i.owner === 'sample' ? 'The sample stops here. A full book runs every volume from the same chart.' : 'Your full book writes every volume from these placements. You read the real manuscript before you pay.', page });
   return faces;
 }
