@@ -22,6 +22,7 @@ const PRODUCTS: [string, string, string][] = [
 const LIVE = [
   'Consultation Desk: every way to ask (Observatory, SmartChat, counselors, private reflection) behind one door, each with its own private history.',
   'Dream Ledger: members log dreams and see the calculated sky that night against their chart, with no AI cost.',
+  'Interactive demo walk-through: visitors step through birth details, the calculated chart, a reading and the book using a fictional sample reader, instead of a fixed film.',
   'AstroBook Reader’s Compass: plain-language explanations of every term a book uses, and a three-point summary at the start of each chapter.',
   'Owner-controlled personal context: tap-to-answer questions, “keep it general”, and a review of every personal detail before a book is printed.',
   'Charts calculated in-app (planets, houses, angles, nodes, Chiron, asteroids) and checked against reference ephemerides in automated tests.',

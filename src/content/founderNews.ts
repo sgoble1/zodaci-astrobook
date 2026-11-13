@@ -11,6 +11,8 @@ export type FounderNote = { date: string; title: string; text: string; to?: stri
 export const noteKey = (n: FounderNote) => `${n.date}:${n.for.join('+')}:${n.title}`;
 
 export const FOUNDER_NEWS: FounderNote[] = [
+  { date: '2026-11-13', for: ['april', 'zac'], title: 'The site feels lighter', text: 'Pages should scroll more smoothly, and the demo page now walks a visitor through Zodaci in four simple steps. Your own pages are unchanged.' },
+  { date: '2026-11-13', for: ['shane'], title: 'Batches B12, P1, P3, P4 and the book timeline page', text: 'Demo walk-through replaces the promo film on /demo; still grain textures; animations pause in hidden tabs; heavy libraries pre-bundled and split; upcoming sky events cached; sample AstroBook adds a Volume VI life-cycles page. P2 (My Comic) skipped as risky.' },
   { date: '2026-11-13', for: ['april', 'zac'], title: 'New: a place for your dreams', text: 'You can write down dreams and see what the sky was doing that night. It is private to you, and nothing goes into a book unless you tick the box.', to: '/dreams', cta: 'Try the Dream Ledger' },
   { date: '2026-11-13', for: ['april', 'zac'], title: 'Easier menus', text: 'All the ways to ask a question are now together on one page, and the timing pages are grouped as Today, This year and Lifetime.', to: '/consult', cta: 'Open the desk' },
   { date: '2026-11-13', for: ['zac'], title: 'Investor page refreshed', text: 'The investor page now lists the newest working features, like the Dream Ledger and the plain-language AstroBook guide.', to: '/investors', cta: 'Open the investor page' },

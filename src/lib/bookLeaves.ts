@@ -96,6 +96,19 @@ export interface BookInteriorInput {
  * planet table, house cusps and closest contacts are calculated from the chart; illustrated pages are bound in only
  * when supplied, each plate on a left page facing its text.
  */
+/** The well-known planetary cycles by calendar year, from the birth year and each planet's average orbit (rounded). */
+export function cycleRows(chart: ChartResult): [string, string][] {
+  const y = Number(chart.input.date.slice(0, 4));
+  const at = (age: number) => `around ${Math.round(y + age)} (age ${Math.round(age)})`;
+  return [
+    ['First Jupiter return', at(11.86)],
+    ['First Saturn return', at(29.46)],
+    ['Uranus opposition', at(42)],
+    ['Chiron return', at(50.7)],
+    ['Second Saturn return', at(58.9)],
+  ];
+}
+
 export function bookInterior(i: BookInteriorInput): BookFace[] {
   let page = 1;
   const faces: BookFace[] = [
@@ -106,6 +119,7 @@ export function bookInterior(i: BookInteriorInput): BookFace[] {
   ];
   if (i.timed && i.chart.cusps?.length) faces.push({ kind: 'facts', eyebrow: 'Volume II · The Twelve Temples', heading: 'House cusps', rows: houseRows(i.chart), note: 'Each house runs from its cusp to the next', page: page++ });
   faces.push({ kind: 'list', eyebrow: 'Volume III · Planetary Geometry', heading: 'Closest contacts', items: tightestAspects(i.chart, 8), note: 'The number is the orb: how far each aspect is from exact', page: page++ });
+  faces.push({ kind: 'facts', eyebrow: 'Volume VI · Cycles of Time', heading: 'Life cycles by year', rows: cycleRows(i.chart), note: 'Approximate years from average orbits; the full book times each one exactly from this chart', page: page++ });
   const pages = i.pages ?? [];
   // A plate must land on a left page (a leaf's back) so it faces its own text.
   if (pages.length && faces.length % 2 === 1) faces.push({ kind: 'blank' });
