@@ -1,6 +1,7 @@
 - Checkout leases serialize orders; provider amount reconciliation and refund/dispute holds protect fulfillment.
 - book-cover streams saved-chart artwork through authenticated requests; never reuse April’s chart.
-- Newsletter requires consent/validated service-only writes/admin-only reads and deletes; signup sends no campaigns.
+- Newsletter requires consent/validated service-only writes/admin-only reads and deletes; double opt-in confirm only, never campaigns (marketing needs a separate service).
+- All app email goes through _shared/app-email.ts (Lovable email; Resend retired); public forms use _shared/public-form.ts size and rate limits.
 - admin-stripe-overview is read-only and has_role-checked; payment-changing actions (refunds, cancellations) stay in the provider dashboard.
 - comic-art: only admins start artwork (one panel per call, daily cap, workspace pause on 402/403); art and print PDFs stay in private comic-art storage and subscribers get short-lived links for their own released issues only.
 - lulu-print (admin, has_role-checked) and lulu-webhook (HMAC-verified) drive Lulu printing: environment pinned by LULU_ENVIRONMENT (sandbox default), production takes live-paid orders only, one active job per order, files cut from the frozen final PDF, and order stages only move forward (rejection returns Sent to printer to Paid). Product codes/limits live in _shared/lulu-rules.ts and are mirrored in src/lib/books.ts LULU_PRINT.

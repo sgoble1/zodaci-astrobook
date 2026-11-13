@@ -16,14 +16,14 @@ const profiles = [
   { platform: 'YouTube', bio: 'Welcome to Zodaci. Explore calculated birth charts, the history behind symbolic traditions and thoughtful ways to reflect on your own patterns. AstroBook is our printed personal book. Astrology is a reflective practice, not a scientifically validated prediction service.' },
 ];
 const firstPost = 'Meet Zodaci. Your birth chart is a starting point for curiosity — not a script for your life. Explore your measured sky, build a personal reading library, and discover AstroBook, your sky in print. Free to begin.';
-type Subscriber = { id: string; email: string; consent_at: string };
+type Subscriber = { id: string; email: string; consent_at: string; confirmed_at: string | null };
 export default function BrandLaunch() {
   usePageMeta('Brand launch kit · Zodaci', 'Manage Zodaci brand drafts, artwork and consented email signups. Admin access required.');
   const session = useSession(); const admin = useIsAdmin(session);
   const [rows, setRows] = useState<Subscriber[]>([]); const [error, setError] = useState(''); const [busy, setBusy] = useState(false);
   const load = async () => {
     setBusy(true); setError('');
-    const { data, error: failure } = await supabase.from('brand_email_subscribers').select('id,email,consent_at').order('consent_at', { ascending: false });
+    const { data, error: failure } = await supabase.from('brand_email_subscribers').select('id,email,consent_at,confirmed_at').order('consent_at', { ascending: false });
     if (failure) setError('Could not load the email list.'); else setRows(data || []);
     setBusy(false);
   };
@@ -38,6 +38,6 @@ export default function BrandLaunch() {
       const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv' })); const a = document.createElement('a'); a.href = url; a.download = 'zodaci-consented-email-list.csv'; a.click(); URL.revokeObjectURL(url);
     }}><Download />Export CSV</Button></div></div><p className="text-sm text-muted-foreground mt-3">Only explicit opt-ins appear here. Email campaigns are not sent by this form; configure a verified sender before sending. Remove anyone who requests to leave.</p>
       {busy && <p role="status" className="mt-4">Loading email list…</p>}{error && <p role="alert" className="text-destructive mt-4">{error}</p>}
-      <ul className="mt-5 divide-y divide-border">{rows.map(r => <li key={r.id} className="py-3 flex items-center justify-between gap-3"><div className="min-w-0"><p className="break-all text-sm">{r.email}</p><p className="text-xs text-muted-foreground mt-1">Consent: {new Date(r.consent_at).toLocaleString()}</p></div><Button size="icon" variant="ghost" aria-label={`Remove ${r.email} from list`} onClick={async () => { if (!await confirmAction('Remove this email from the list?')) return; const { error: failure } = await supabase.from('brand_email_subscribers').delete().eq('id', r.id); if (failure) toast.error('Could not remove email.'); else void load(); }}><Trash2 /></Button></li>)}</ul>{!busy && !rows.length && <p className="mt-4 text-muted-foreground">No email signups yet.</p>}
+      <ul className="mt-5 divide-y divide-border">{rows.map(r => <li key={r.id} className="py-3 flex items-center justify-between gap-3"><div className="min-w-0"><p className="break-all text-sm">{r.email}</p><p className="text-xs text-muted-foreground mt-1">Consent: {new Date(r.consent_at).toLocaleString()} · {r.confirmed_at ? 'Confirmed' : 'Not yet confirmed'}</p></div><Button size="icon" variant="ghost" aria-label={`Remove ${r.email} from list`} onClick={async () => { if (!await confirmAction('Remove this email from the list?')) return; const { error: failure } = await supabase.from('brand_email_subscribers').delete().eq('id', r.id); if (failure) toast.error('Could not remove email.'); else void load(); }}><Trash2 /></Button></li>)}</ul>{!busy && !rows.length && <p className="mt-4 text-muted-foreground">No email signups yet.</p>}
     </section></article>;
 }

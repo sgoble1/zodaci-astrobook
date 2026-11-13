@@ -6,7 +6,7 @@
 Order follows resource Part 6.3. Ticked when done and tested.
 - [x] R1 Track A fixes: edition guard before loading viewer readings (tested); comic first-issue FAQ; RGB→CMYK wording; Atomic Zodiac prompt templates; Masterbook Pro/Cosmic copy; page prices read from plans/books/comic (tested); Chiron 1940–2060 notice (tested). Verified already fine: Lulu busy states, Shopify settings in one file.
 - [x] R2 Shop basket: queued actions, buyer-facing errors with retry, expired-cart rebuild, missing line IDs restored, prices/lines refreshed from Shopify, line paging, timeouts + read-only retries, buyers never see Shopify billing text (Admin gets detail), catalog truncation flagged (tested).
-- [ ] R3 Lovable email switch (Lulu shipped, newsletter, contact) + signup/contact abuse limits, byte limit, no repeat welcome, confirmation, stored consent, delivery status, contact "saved" response (tests).
+- [x] R3 (sending waits on the owner setting up the email domain) Lovable email switch (Lulu shipped, newsletter, contact) + signup/contact abuse limits, byte limit, no repeat welcome, confirmation, stored consent, delivery status, contact "saved" response (tests).
 - [ ] R4 Payment webhook recovery records + Admin reconcile list + referral award retry (tests).
 - [ ] R5 Developer board errors/edit/undo/paging; founder glance error+retry, credit packs in balance, stable note IDs; investor page live vs planned; activity logs + founder feeds + investor update.
 - [ ] R6 Track B batches 9–42 (audit each, finish gaps), then the 6.2 signed-in verification sweep.
