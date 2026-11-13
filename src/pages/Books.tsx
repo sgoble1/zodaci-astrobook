@@ -1,3 +1,4 @@
+import { PavilionTabs } from '@/components/shop/PavilionTabs';
 import { PrintContextReview } from '@/components/context/ContextQuestions';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { Book3D } from '@/components/books/Book3D';
@@ -143,9 +144,10 @@ export default function Books() {
     finally { setBusy(''); }
   };
   return <article className="space-y-12">
+      <PavilionTabs />
     <header className="product-page-opening obs-panel"><div><p className="font-label text-primary text-sm">Made for your birth chart</p><h1 className="hero-headline mt-2">AstroBook</h1><p className="mt-3 font-script text-3xl text-primary">Your stars, your story.</p><p className="mt-4 max-w-lg">Your chart, written into a book. Five versions, from an instant PDF to a linen-bound collector’s edition, all built from your exact birth moment.</p><p className="text-sm text-muted-foreground mt-3">Illustrative shop samples · your own cover is previewed below.</p></div><ProductArtworkGallery /></header>
 
-    <nav aria-label="Book steps" className="flex flex-wrap gap-4 border-b border-border pb-4 text-sm"><a href="#versions" className="text-primary">Version</a><a href="#personal-cover" className="text-primary">Cover</a><a href="#book-review" className="text-primary">Review & payment</a><Button asChild variant="outline" size="sm"><Link to="/book-preview">Read the sample book</Link></Button></nav>
+    <nav aria-label="Book steps" className="flex flex-wrap gap-4 border-b border-border pb-4 text-sm"><a href="#versions" className="inline-flex min-h-11 items-center text-primary">Version</a><a href="#personal-cover" className="inline-flex min-h-11 items-center text-primary">Cover</a><a href="#book-review" className="inline-flex min-h-11 items-center text-primary">Review & payment</a><Button asChild variant="outline" size="sm"><Link to="/book-preview">Read the sample book</Link></Button></nav>
 
     <section id="versions" aria-labelledby="versions-title" className="space-y-5">
       <h2 id="versions-title" className="text-2xl">Choose your version</h2>

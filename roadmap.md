@@ -521,4 +521,4 @@ Audit Oct 29: Chat/counselors already use the member's chart; podcast/custom pag
 - [x] Spine width from page count in the 3D book (Lulu paperback formula; hardcover estimate)
 - [ ] Cover customizer travels with order + Lulu cover-dimensions check — blocked on working Lulu keys
 - [x] Museum microfilm reader, Investigations "Archive this case", citation drawer
-- [ ] Next: Print & Physical Goods pavilion (Books + Keepsakes + Store tabs), Observatory consult staff chips, phone tap-target pass
+- [x] Print & Physical Goods pavilion tabs, staff question chips, 393px tap-target pass (public pages; signed-in pages not rechecked)

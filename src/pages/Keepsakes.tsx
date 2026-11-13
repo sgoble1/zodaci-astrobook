@@ -1,3 +1,4 @@
+import { PavilionTabs } from '@/components/shop/PavilionTabs';
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Printer, ScrollText, Award, ShoppingBag, Download } from 'lucide-react';
@@ -62,6 +63,7 @@ function Studio({ chart, birth }: { chart: ChartResult; birth: MyBirth }) {
 
   return (
     <article className="mx-auto max-w-5xl space-y-8">
+      <PavilionTabs />
       <PageHead eyebrow="Observatory Gift Shop · Keepsakes" title="Keepsakes from the sky" script="Printed from the measured sky, for you or as a gift." art="shop"
         actions={<Button asChild variant="outline"><Link to="/store"><ShoppingBag className="mr-2 h-4 w-4" aria-hidden />Visit the Gift Shop</Link></Button>}>
         Choose whose sky, choose a keepsake, then print it or save it as a PDF from the print window. Gifts use the birth details you saved for that person, and nothing is shared with them unless you hand it over.

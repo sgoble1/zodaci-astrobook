@@ -42,4 +42,5 @@ export const DEV_TIMELINE: TimelineEvent[] = [
   { date: '2026-11-13', phase: 'Current build', title: 'Referral credits and character badge', summary: 'Owner chose credits for referral rewards: 20 bonus credits per friend who subscribes (up to 12 a year). Member dashboard shows the member character, defaulting to The Stargazer.' },
   { date: '2026-11-13', phase: 'Current build', title: 'Keepsake PDFs and true spine width', summary: 'Certificate and Star Scroll download as print-quality vector PDFs; the 3D book spine is sized from page count with Lulu’s paperback formula.' },
   { date: '2026-11-13', phase: 'Current build', title: 'Archive this case, microfilm reader, citation drawer', summary: 'Case files save to the Observation Log; Museum galleries gain a searchable amber microfilm view; Ask the Sources citation numbers open the original passage.' },
+  { date: '2026-11-13', phase: 'Current build', title: 'Shop pavilion, staff questions, phone pass', summary: 'One Print & Physical Goods entrance with tabs; observatory staff quick questions on the Consultation Desk; phone-size check with larger tap targets on the AstroBook steps.' },
 ];

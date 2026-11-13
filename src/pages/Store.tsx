@@ -1,3 +1,4 @@
+import { PavilionTabs } from '@/components/shop/PavilionTabs';
 import { Fragment, useEffect, useMemo, useState } from 'react';
 import { GiftCollections } from '@/components/store/GiftCollections';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
@@ -150,6 +151,7 @@ export default function Store() {
   }, [products, types]);
   return (
     <div className="mx-auto max-w-7xl space-y-8 px-4 py-10">
+      <PavilionTabs />
       <header className="obs-panel hero-night rivets store-hero">
         <div className="absolute right-4 top-4 z-10 sm:right-6 sm:top-6"><CartDrawer /></div>
         <figure className="store-hero-art"><img src={giftTower} alt="A 1950s poster of a radio tower and copper-domed observatory above a small town, radio waves rippling into a starry sky" width={900} height={1125} {...{ fetchpriority: 'high' }} /></figure>

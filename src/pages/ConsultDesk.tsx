@@ -2,6 +2,8 @@ import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import { domainById, visibleColumns } from '@/content/memberNav';
 import { usePageMeta } from '@/hooks/usePageMeta';
+import { STAFF } from '@/lib/observatory';
+import { STAFF_QUESTIONS } from '@/content/staffQuestions';
 
 /** Consultation Desk: one door to every way of asking a question. Each tool keeps its own history and privacy. */
 export default function ConsultDesk() {
@@ -27,6 +29,18 @@ export default function ConsultDesk() {
           </li>
         ))}
       </ul>
+      <section aria-labelledby="staff-q" className="space-y-4">
+        <h2 id="staff-q" className="font-display text-2xl">Ask the observatory staff</h2>
+        <p className="text-sm text-muted-foreground">Tap a question to put it in Ask the Sources. Nothing is sent until you press Ask, and nothing is remembered between visits.</p>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {STAFF_QUESTIONS.map(g => (
+            <div key={g.staff} className="obs-paper space-y-2 p-4">
+              <p className="font-label text-xs tracking-[0.14em] text-primary">{STAFF[g.staff].title} · {STAFF[g.staff].department}</p>
+              <div className="flex flex-wrap gap-2">{g.questions.map(q => <Link key={q} to={`/ask?q=${encodeURIComponent(q)}`} className="inline-flex min-h-11 items-center rounded-full border border-border px-3 text-sm hover:border-primary/60 hover:bg-muted">{q}</Link>)}</div>
+            </div>
+          ))}
+        </div>
+      </section>
     </div>
   );
 }
