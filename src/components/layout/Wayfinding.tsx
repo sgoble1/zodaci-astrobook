@@ -8,6 +8,7 @@ import { MEMBER_DOMAINS, breadcrumbsFor, domainById, domainFor, nextStepsFor, ty
 import { useNavState } from './MemberNav';
 import { recommendFor } from '@/lib/recommend';
 import { StartLink } from '@/components/common/StartLink';
+import { useCurrentPageTitle } from '@/hooks/useCurrentPageTitle';
 
 function tabLabel(to: string) {
   for (const d of MEMBER_DOMAINS) { if (d.hub === to) return d.columns.flatMap(c => c.items).find(i => i.to === to)?.label ?? d.label; }
@@ -52,7 +53,9 @@ function DomainTabs({ path }: { path: string }) {
 
 function PageBreadcrumbs({ path }: { path: string }) {
   const s = useNavState();
+  const title = useCurrentPageTitle();
   const crumbs = breadcrumbsFor(path, {
+    title,
     relationship: id => s.rels.find(r => r.id === id)?.name,
     page: id => s.custom.find(p => p.id === id),
   });

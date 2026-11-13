@@ -1,5 +1,5 @@
 import { Link, useParams } from 'react-router-dom';
-import { ArrowLeft, ArrowRight, Clock } from 'lucide-react';
+import { ArrowRight, Clock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ACADEMY, ALL_LESSONS, lessonBySlug } from '@/content/academy';
 import { PUBLIC_ARTICLES } from '@/content/publicArticles';
@@ -38,7 +38,6 @@ export function AcademyLesson() {
   const prev = ALL_LESSONS[i - 1], next = ALL_LESSONS[i + 1];
   return (
     <article className="mx-auto max-w-3xl">
-      <Link to="/learn#lessons" className="inline-flex items-center gap-1.5 text-sm text-accent underline-offset-4 hover:underline"><ArrowLeft aria-hidden className="h-4 w-4" />Lessons in Learn</Link>
       <p className="mt-8 text-sm text-muted-foreground">{lesson.path.title} · {lesson.minutes} min read</p>
       <h1 className="mt-3 font-display text-4xl sm:text-5xl">{lesson.title}</h1>
       <p className="mt-4 text-lg text-muted-foreground">{lesson.summary}</p>

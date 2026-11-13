@@ -75,7 +75,6 @@ export function ReadingRoomArticle() {
   return (
     <>
       <article className="mx-auto max-w-5xl space-y-8">
-        <Link to="/learn#guides" className="text-sm text-accent underline">← Guides in Learn</Link>
         <img src={a.image} alt="" width={1600} height={900} className="aspect-video w-full rounded-sm object-cover" />
         <header className="space-y-2">
           <div className="font-label text-xs tracking-[0.16em] text-primary">{a.category} · {a.minutes} min read</div>

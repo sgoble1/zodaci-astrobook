@@ -265,7 +265,7 @@ export function domainForMenuGroup(group: string): DomainId {
 }
 
 export type Crumb = { label: string; to?: string };
-export type CrumbNames = { relationship?: (id: string) => string | undefined; page?: (id: string) => { title: string; menu_group: string } | undefined };
+export type CrumbNames = { relationship?: (id: string) => string | undefined; page?: (id: string) => { title: string; menu_group: string } | undefined; /** The page's own title (from usePageMeta), used for the last crumb where the URL alone can't name it. */ title?: string | null };
 const titleCase = (s: string) => s.replace(/[-_]/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
 const COUNSELOR_NAMES: Record<string, string> = { oracle: 'The Oracle Within', social: 'Social Counselor' };
 const hubCrumb = (id: DomainId): Crumb => { const d = domainById(id); return { label: d.label, to: d.hub }; };
@@ -297,13 +297,15 @@ export function breadcrumbsFor(path: string, names: CrumbNames = {}): Crumb[] | 
     const sys = SYSTEM_READINGS.find(s => s.route === path);
     return [hubCrumb('explore'), { label: 'Other systems', to: '/other-systems' }, { label: sys?.title ?? titleCase(m[1]) }];
   }
-  if ((m = path.match(/^\/academy\/([\w-]+)$/))) return [hubCrumb('learn'), { label: 'Lessons', to: '/learn#lessons' }, { label: titleCase(m[1]) }];
-  if ((m = path.match(/^\/themes\/([\w-]+)$/))) return [hubCrumb('learn'), { label: 'Core themes', to: '/themes' }, { label: titleCase(m[1]) }];
+  if ((m = path.match(/^\/academy\/([\w-]+)$/))) return [hubCrumb('learn'), { label: 'Lessons', to: '/learn#lessons' }, { label: names.title ?? titleCase(m[1]) }];
+  if ((m = path.match(/^\/learn\/([\w-]+)$/))) return [hubCrumb('learn'), { label: 'Articles', to: '/learn#articles' }, { label: names.title ?? titleCase(m[1]) }];
+  if ((m = path.match(/^\/reading-room\/([\w-]+)$/))) return [hubCrumb('learn'), { label: 'Guides', to: '/learn#guides' }, { label: names.title ?? titleCase(m[1]) }];
+  if ((m = path.match(/^\/themes\/([\w-]+)$/))) return [hubCrumb('learn'), { label: 'Core themes', to: '/themes' }, { label: names.title ?? titleCase(m[1]) }];
   if ((m = path.match(/^\/workbook\/module\/([\w-]+)$/))) return [hubCrumb('readings'), { label: 'Workbook', to: '/workbook' }, { label: titleCase(m[1]) }];
   if (path.match(/^\/workbook\/companion\/[\w-]+$/)) return [hubCrumb('readings'), { label: 'The Oracle Within', to: '/workbook/companion' }, { label: 'Session' }];
   if (path.match(/^\/workbook\/social-integration\/[\w-]+$/)) return [hubCrumb('readings'), { label: 'Social Counselor', to: '/workbook/social-integration' }, { label: 'Session' }];
   if (path.match(/^\/chat\/[\w-]+$/)) return [hubCrumb('readings'), { label: 'SmartChat', to: '/chat' }, { label: 'Conversation' }];
-  if (path.match(/^\/shane\/[\w-]+$/)) return [hubCrumb('book'), { label: 'Shane’s Masterbook', to: '/shane' }, { label: 'Chapter' }];
+  if (path.match(/^\/shane\/[\w-]+$/)) return [hubCrumb('book'), { label: 'Shane’s Masterbook', to: '/shane' }, { label: names.title ?? 'Chapter' }];
   if ((m = path.match(/^\/p\/([\w-]+)$/))) {
     const page = names.page?.(m[1]);
     return [hubCrumb(page ? domainForMenuGroup(page.menu_group) : 'readings'), { label: 'Your created pages', to: '/my-astrobook' }, { label: page?.title ?? 'Created page' }];

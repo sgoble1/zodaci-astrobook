@@ -118,7 +118,7 @@ export default function ZacWorkbook() {
   return (
     <article className="space-y-10">
       <header className="space-y-3">
-        <div className="font-label text-xs tracking-[0.16em] text-primary">{zac.is_own ? 'Your edition' : 'Zac’s edition · admin view'} · Workbook</div>
+        <div className="font-label text-xs tracking-[0.16em] text-primary">{zac.is_own ? 'Your Astrological Library' : 'Zac’s Astrological Library · admin view'} · Workbook</div>
         <h1 className="text-4xl sm:text-5xl">{book.title}</h1>
         <p className="max-w-2xl text-muted-foreground">{book.intro}</p>
         {!canWrite && <p role="note" className="max-w-2xl rounded-lg border border-gold/40 bg-gold/10 px-3 py-2 text-sm">Read-only preview. Answers save only in Zac’s own account, and nobody else can read them.</p>}

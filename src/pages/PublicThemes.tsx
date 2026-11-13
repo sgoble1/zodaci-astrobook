@@ -24,12 +24,12 @@ const COPY: Record<string, { desc: string; reads: string[] }> = {
 export function ThemesIndex() {
   usePageMeta('12 Core Astrology Themes Written From Your Birth Chart | Zodaci', 'Personality, emotions, creativity, work, leadership, self-worth and more — twelve chart-specific readings. Start free with one section of every theme.');
   return (
-    <main className="mx-auto max-w-5xl space-y-10 px-5 py-12">
+    <div className="mx-auto max-w-5xl space-y-10 px-5 pb-12">
       <header className="space-y-3"><div className="font-label text-xs tracking-[0.16em] text-primary">Core themes</div><h1 className="text-4xl md:text-5xl">Twelve themes, written from your chart</h1><p className="max-w-2xl text-muted-foreground">Every member can open all twelve. Free shows the first section of each; Pro writes every theme in full.</p></header>
       <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {CORE_THEMES.map(t => <li key={t.slug}><Link to={`/themes/${t.slug}`} className="group flex h-full flex-col gap-3 rounded-lg border border-border p-5 transition hover:-translate-y-0.5 hover:border-primary/60"><ThemeArt label={t.title} className="h-12 w-12" /><h2 className="text-xl">{t.title}</h2><p className="text-sm text-muted-foreground">{COPY[t.slug]?.desc}</p><span className="mt-auto text-sm text-primary">Explore theme →</span></Link></li>)}
       </ul>
-    </main>
+    </div>
   );
 }
 
@@ -41,11 +41,10 @@ export function ThemeDetail() {
   useJsonLd('theme-crumbs', theme ? { '@type': 'BreadcrumbList', itemListElement: [{ '@type': 'ListItem', position: 1, name: 'Core themes', item: 'https://zodaci.com/themes' }, { '@type': 'ListItem', position: 2, name: theme.title, item: `https://zodaci.com/themes/${slug}` }] } : null);
   if (!theme || !copy) return <Navigate to="/themes" replace />;
   return (
-    <main className="mx-auto max-w-3xl space-y-8 px-5 py-12">
-      <Link to="/themes" className="text-sm text-primary">← All core themes</Link>
+    <div className="mx-auto max-w-3xl space-y-8 px-5 pb-12">
       <header className="space-y-3"><ThemeArt label={theme.title} className="h-16 w-16" /><h1 className="text-4xl md:text-5xl">{theme.title}</h1><p className="text-lg text-muted-foreground">{copy.desc}</p></header>
       <section className="space-y-2"><h2 className="text-2xl">What your reading covers</h2><ul className="list-disc space-y-1 pl-5 text-muted-foreground">{copy.reads.map(r => <li key={r}>{r}</li>)}</ul></section>
       <div className="flex flex-wrap gap-2"><Button asChild><Link to={`/auth?next=${encodeURIComponent(`/my-readings/topic/${slug}`)}`}>Read mine free</Link></Button><Button asChild variant="outline"><Link to="/demo">See a full sample</Link></Button></div>
-    </main>
+    </div>
   );
 }

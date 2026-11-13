@@ -15,7 +15,8 @@ import { createContext, useContext, useEffect, useMemo, useRef, useState } from 
 import { BookOpen, Menu, Orbit, Tv, X } from 'lucide-react';
 import { GenerationProgress } from '@/components/readings/GenerationProgress';
 import { clarifyFounderGroups, founderPlace, onlyInFullEdition, orderFounderGroups, universalFounderMenu } from '@/lib/founderEdition';
-import { domainFor } from '@/content/memberNav';
+import { breadcrumbsFor, domainFor } from '@/content/memberNav';
+import { useCurrentPageTitle } from '@/hooks/useCurrentPageTitle';
 import { useShaneAccount } from '@/hooks/useShaneAccount';
 import { loadEditionIndex } from '@/pages/ShaneEdition';
 import { useZacAccount } from '@/hooks/useZacAccount';
@@ -111,19 +112,32 @@ const queryMatches = (to: string, search: string, siblings: { to: string }[]) =>
   return fits(to);
 };
 
-/** April's breadcrumb (section › page) from her own menu; hidden on the first page of a section. */
+/**
+ * Founder breadcrumb (section › page) from the edition's own menu, ending in the page's real title. Pages the menu
+ * doesn't list (lessons, guides, chapters reached from a list) fall back to the member trail so no deep page is unmarked.
+ */
 function FounderTrail() {
   const { pathname } = useLocation();
   const groups = useContext(FounderGroupsContext) ?? APRIL_NAV_GROUPS;
+  const title = useCurrentPageTitle();
   const place = founderPlace(groups, pathname);
-  if (!place || (!place.parent && place.home.to === pathname)) return null;
-  const crumb = 'hover:text-foreground underline-offset-2 hover:underline';
+  const crumb = 'inline-flex min-h-8 items-center hover:text-foreground underline-offset-2 hover:underline';
+  if (!place) {
+    const trail = breadcrumbsFor(pathname, { title });
+    if (!trail) return null;
+    return (
+      <nav aria-label="Breadcrumb" className="mb-6 text-xs text-muted-foreground">
+        {trail.map((c, i) => <span key={`${c.label}-${i}`}>{i > 0 && <span aria-hidden="true" className="mx-2">›</span>}{c.to ? <Link to={c.to} className={crumb}>{c.label}</Link> : <span className="text-foreground" aria-current="page">{c.label}</span>}</span>)}
+      </nav>
+    );
+  }
+  if (!place.parent && place.home.to === pathname) return null;
   return (
     <nav aria-label="Breadcrumb" className="mb-6 text-xs text-muted-foreground">
       <Link to={place.home.to} className={crumb}>{place.section}</Link>
       <span aria-hidden="true" className="mx-2">›</span>
       {place.parent
-        ? <><Link to={place.parent.to} className={crumb}>{cleanLabel(place.parent.label)}</Link><span aria-hidden="true" className="mx-2">›</span><span className="text-foreground" aria-current="page">This page</span></>
+        ? <><Link to={place.parent.to} className={crumb}>{cleanLabel(place.parent.label)}</Link><span aria-hidden="true" className="mx-2">›</span><span className="text-foreground" aria-current="page">{title ?? 'This page'}</span></>
         : <span className="text-foreground" aria-current="page">{cleanLabel(place.label)}</span>}
     </nav>
   );
