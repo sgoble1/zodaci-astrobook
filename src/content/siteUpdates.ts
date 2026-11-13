@@ -5,6 +5,10 @@
 export type SiteUpdate = { date: string; title: string; text: string; to?: string; cta?: string };
 
 export const SITE_UPDATES: SiteUpdate[] = [
+  { date: '2026-11-13', title: 'A Dream Ledger', text: 'Write down a dream and see what the sky was doing that night against your chart. Only you can see it.', to: '/dreams', cta: 'Open the ledger' },
+  { date: '2026-11-13', title: 'One desk for every question', text: 'The Consultation Desk gathers the Observatory, SmartChat, counselors and the Oracle Within in one place.', to: '/consult', cta: 'Open the desk' },
+  { date: '2026-11-13', title: 'Plain words in your AstroBook', text: 'Every AstroBook now explains the terms it uses, and each chapter opens with what you will find in it.', to: '/books', cta: 'See the books' },
+  { date: '2026-11-13', title: 'You choose what gets printed', text: 'A few quick tap-to-answer questions help readings fit your life. Before a book is ordered you see every personal detail that would be printed.', to: '/personal-context', cta: 'Personal context' },
   { date: '2026-11-13', title: 'A steadier shop basket', text: 'If something goes wrong adding to your basket, you now see what happened and a Try again button. Old baskets rebuild themselves with current prices.', to: '/store', cta: 'Visit the shop' },
   { date: '2026-11-13', title: 'Confirm your Sky Notes signup', text: 'Joining the email list now asks you to confirm from your inbox, so nobody can sign you up by mistake.' },
   { date: '2026-11-13', title: 'Diagrams in Learn', text: 'Learn now opens with four drawn diagrams: the twelve houses, the major aspects, the four elements and the Moon’s phases.', to: '/learn#diagrams', cta: 'See the diagrams' },

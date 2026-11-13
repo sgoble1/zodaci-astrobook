@@ -61,7 +61,16 @@ export async function fetchCatalog(): Promise<{ products: ShopifyProduct[]; trun
   if (truncated) console.warn('Shop catalog was read only in part (paging safety cap or more than 100 variants on a product).');
   return { products: out, truncated };
 }
-export const fetchAllProducts = async (): Promise<ShopifyProduct[]> => (await fetchCatalog()).products;
+/** Shopify is the catalog's source of truth; the shop reuses one read for 15 minutes so pages stay quick and edits in Shopify appear soon after. */
+export const CATALOG_CACHE_MS = 15 * 60 * 1000;
+let catalogCache: { at: number; p: Promise<ShopifyProduct[]> } | null = null;
+export const fetchAllProducts = (now = Date.now()): Promise<ShopifyProduct[]> => {
+  if (catalogCache && now - catalogCache.at < CATALOG_CACHE_MS) return catalogCache.p;
+  const p = fetchCatalog().then(c => c.products);
+  catalogCache = { at: now, p };
+  p.catch(() => { if (catalogCache?.p === p) catalogCache = null; });
+  return p;
+};
 
 /** True when at least one variant can be bought. */
 export const inStock = (p: ShopifyProduct) => p.node.availableForSale ?? p.node.variants.edges.some(e => e.node.availableForSale);

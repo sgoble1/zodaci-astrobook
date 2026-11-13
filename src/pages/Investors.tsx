@@ -20,8 +20,12 @@ const PRODUCTS: [string, string, string][] = [
   ['chart', 'Shop', 'Posters, sticker sheets and notebooks, sold and fulfilled through a live Shopify storefront.'],
 ];
 const LIVE = [
+  'Consultation Desk: every way to ask (Observatory, SmartChat, counselors, private reflection) behind one door, each with its own private history.',
+  'Dream Ledger: members log dreams and see the calculated sky that night against their chart, with no AI cost.',
+  'AstroBook Reader’s Compass: plain-language explanations of every term a book uses, and a three-point summary at the start of each chapter.',
+  'Owner-controlled personal context: tap-to-answer questions, “keep it general”, and a review of every personal detail before a book is printed.',
   'Charts calculated in-app (planets, houses, angles, nodes, Chiron, asteroids) and checked against reference ephemerides in automated tests.',
-  'Personal readings by tier, chart-aware AI counselors that replay full sessions, workbook tools and a shared “Reading Together” space for couples.',
+  'Personal readings by tier, chart-aware AI counselors that replay full sessions, workbook tools and private shared spaces for couples and family.',
   'Studio-voiced personal podcasts written from each member’s chart, saved to a private library.',
   'Creator Studio: chart wallpapers, posters, journal pages and affirmation cards to download or save, plus one-time AI credit packs.',
   'Chart-matched shop picks: members see shop items chosen from their own Sun, Moon and Rising signs, and pick one of twelve drawn observatory characters to represent them across the site.',

@@ -217,7 +217,25 @@ export default function Store() {
         </div>}
         </div>
       </div>}
+      <ShopFaq />
     </div>
+  );
+}
+
+/** Shop questions answered only from facts the site already states (book versions, comic schedule, personalization). */
+function ShopFaq() {
+  const qa: [string, string][] = [
+    ['Is it made for me?', 'AstroBooks and AstroComics are written and drawn from one birth chart. Shop pieces marked personalized ask for the recipient’s birth details when you add them to your basket.'],
+    ['Can I send it as a gift?', 'Yes. Personalized pieces take the recipient’s details, and printed AstroBooks have a gift option at checkout.'],
+    ['How long does delivery take?', `Shop goods are printed to order and you see delivery options before paying. Printed AstroBooks ship in ${BOOK_VERSIONS.find(v => v.format === 'print')?.ship ?? 'about two weeks'} depending on the version; AstroComics ship by the 8th of each month.`],
+    ['Where do I ship?', 'Printed books and comics ship to US addresses.'],
+    ['What will I pay?', 'Product prices are shown on each item. Shipping and any sales tax are added at checkout, itemized before you pay.'],
+  ];
+  return (
+    <section aria-labelledby="shop-faq" className="mx-auto max-w-3xl space-y-4 px-4 pt-6">
+      <h2 id="shop-faq" className="font-display text-3xl">Shop questions</h2>
+      <dl className="divide-y divide-border border-y border-border">{qa.map(([q, a]) => <div key={q} className="py-3"><dt className="font-medium">{q}</dt><dd className="mt-1 text-sm text-muted-foreground">{a}</dd></div>)}</dl>
+    </section>
   );
 }
 

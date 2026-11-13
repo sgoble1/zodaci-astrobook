@@ -10,6 +10,7 @@ import { Input } from '@/components/ui/input';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { DEV_TIMELINE } from '@/content/devTimeline';
 import { DevItemEditor } from '@/components/developer/DevItemEditor';
+import { RepeatFinder } from '@/components/developer/RepeatFinder';
 import { DEV_KINDS as KINDS, DEV_ORDER as ORDER, DEV_PRIORITY as PRIORITY, DEV_STATUSES as STATUSES, DONE_PAGE, devFailure, devFailureMessage, readLayout, restoreRow, sortColumn, statusPatch, validateDraft, writeLayout, type DevFields, type DevItem as Item } from '@/lib/devBoard';
 
 type Stats = Record<string, number>;
@@ -173,6 +174,7 @@ export default function Developer({ view = 'board' }: { view?: 'board' | 'timeli
       </section>
 
       <BuildCostCard editable={dev} />
+      {dev && <RepeatFinder />}
 
       <section aria-labelledby="dv-c" className="grid gap-4 md:grid-cols-2">
         <div className="obs-paper space-y-2 p-5"><h2 id="dv-c" className="plate-title !text-xl">Other costs</h2>
