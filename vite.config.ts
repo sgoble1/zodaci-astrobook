@@ -3,6 +3,7 @@ import react from "@vitejs/plugin-react-swc";
 import path from "path";
 import fs from "fs";
 import { componentTagger } from "lovable-tagger";
+import { PUBLIC_SNAPSHOTS, snapshotHtml } from "./build/publicSnapshots";
 
 /** node_modules may be a symlink to a folder outside the project; the dev server must be allowed to serve
  *  package files (fonts, workers) from its real location, or they 403 and pages fall back to system fonts. */
@@ -30,6 +31,26 @@ function preloadFonts(): Plugin {
   };
 }
 
+/** After the build, write one ready-to-read HTML file per public page so crawlers and link previews see real content. */
+function publicSnapshots(): Plugin {
+  let outDir = "dist";
+  return {
+    name: "zodaci-public-snapshots",
+    apply: "build",
+    configResolved(c) { outDir = path.resolve(c.root, c.build.outDir); },
+    closeBundle() {
+      const indexFile = path.join(outDir, "index.html");
+      if (!fs.existsSync(indexFile)) return;
+      const base = fs.readFileSync(indexFile, "utf8");
+      for (const p of PUBLIC_SNAPSHOTS) {
+        const dir = path.join(outDir, p.path.replace(/^\//, ""));
+        fs.mkdirSync(dir, { recursive: true });
+        fs.writeFileSync(path.join(dir, "index.html"), snapshotHtml(base, p));
+      }
+    },
+  };
+}
+
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
   server: {
@@ -39,7 +60,7 @@ export default defineConfig(({ mode }) => ({
       allow: [searchForWorkspaceRoot(process.cwd()), ...packageRoots()],
     },
   },
-  plugins: [react(), preloadFonts(), mode === "development" && componentTagger()].filter(Boolean),
+  plugins: [react(), preloadFonts(), publicSnapshots(), mode === "development" && componentTagger()].filter(Boolean),
   // Pre-bundle heavy libraries so the preview doesn't re-optimize mid-session; split them into their own cached files.
   optimizeDeps: { include: ["astronomy-engine", "pdf-lib", "qrcode", "xlsx"] },
   build: {
