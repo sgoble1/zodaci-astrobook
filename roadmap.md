@@ -558,8 +558,8 @@ Audit Oct 29: Chat/counselors already use the member's chart; podcast/custom pag
 - [x] Founder editions list retries once automatically.
 - [x] Demo steps jump to the live chart, reading and book sections.
 - [x] Phone home-screen prompt (manifest only, dismiss remembered).
-- [ ] Delete retired demo podcast asset after next publish.
+- [x] Deleted retired demo podcast asset (unused).
 
 ## Nov 13 — Safety check after slimming
 - [x] Fixed About page (and other fallback pages) crash from the slimming pass
-- [ ] Browser sweep of main pages for errors after optimizations
+- [x] Browser sweep: 22 public + 14 signed-in pages clean; fixed dashboard freeze from the wording helper rewriting text endlessly
