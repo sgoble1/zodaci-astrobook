@@ -1,3 +1,4 @@
+import { spineInches } from '@/lib/spine';
 import { useRef, useState, type PointerEvent } from 'react';
 import { COVER_DESIGNS, coverSrc } from '@/content/coverDesigns';
 import { useCoverImage } from '@/hooks/useCoverImage';
@@ -19,7 +20,7 @@ export function Book3D({ pages = 250, trimPt = [432, 648], label = '6″ × 9″
   const onDown = (e: PointerEvent<HTMLDivElement>) => { drag.current = { x: e.clientX, a: angle }; setDragging(true); e.currentTarget.setPointerCapture?.(e.pointerId); };
   const onMove = (e: PointerEvent<HTMLDivElement>) => { const d = drag.current; if (d) setAngle(Math.max(-60, Math.min(60, Math.round(d.a + (e.clientX - d.x) * 0.45)))); };
   const onUp = () => { drag.current = null; setDragging(false); };
-  const spinePx = Math.round(pages * 0.0045 * 40) + (hardcover ? 8 : 0); // 40px per inch, boards add thickness
+  const spinePx = Math.max(6, Math.round(spineInches(pages, hardcover).inches * 40)); // 40px per inch, same width as print (lib/spine)
   const ratio = trimPt[1] / trimPt[0];
   const h = Math.min(360, Math.round(240 * ratio)), w = Math.round(h / ratio);
   const src = fixedSrc || designed || coverSrc(cover);
@@ -50,7 +51,7 @@ export function Book3D({ pages = 250, trimPt = [432, 648], label = '6″ × 9″
               className={`rounded-full border px-3 py-1 text-sm transition-colors ${c.key === cover.key ? 'border-primary bg-primary/15' : 'border-border hover:border-primary/60'}`}>{c.label}</button>
           ))}
         </div>}
-        <figcaption className="text-center text-sm text-muted-foreground">{label} · ~{pages} pages. Drag the book or the slider to turn it.</figcaption>
+        <figcaption className="text-center text-sm text-muted-foreground">{label} · ~{pages} pages · spine {spineInches(pages, hardcover).estimate ? 'about ' : ''}{spineInches(pages, hardcover).inches.toFixed(2)}″. Drag the book or the slider to turn it.</figcaption>
       </div>
     </figure>
   );

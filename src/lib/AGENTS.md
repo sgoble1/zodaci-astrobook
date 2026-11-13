@@ -25,3 +25,4 @@
 - AstroBook plain-language front matter and "In this chapter" outcomes come from lib/readersCompass, explaining only terms the book actually contains.
 - dreamSky computes the "Sky that night" (night-of transits to Moon/Neptune/Pluto/South Node, 8th/12th house traffic, motif→factor table) from the ephemeris only; dream_entries and context_flags are owner-only with per-item Readings/Book/Comic scopes (print off by default), reviewed in PrintContextReview before a book is ordered.
 - duplicateFinder reports repeated-sentence counts and 6-word fingerprints only and never edits founder text; the shop reads Shopify live through one 15-minute catalog cache (fetchAllProducts).
+- keepsakePdf draws keepsakes as vector pdf-lib pages from keepsakes rows; spine.ts is the only spine-width source (Book3D uses it).

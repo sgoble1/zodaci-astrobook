@@ -40,4 +40,5 @@ export const DEV_TIMELINE: TimelineEvent[] = [
   { date: '2026-11-13', phase: 'Current build', title: 'C1 dream readings and Cosmic Studio name', summary: 'Owner-only AI dream readings saved on each dream (1 credit); Creator Studio renamed Cosmic Studio; Lulu connection checked (sandbox rejected the saved keys).' },
   { date: '2026-11-13', phase: 'Current build', title: 'C2 diary photo/PDF reading and C3 photo characters', summary: 'Personal details can be filled from a diary photo, PDF or text file; members can draw their own photo as a 1950s comic stand-in saved to their private library. Both tested live.' },
   { date: '2026-11-13', phase: 'Current build', title: 'Referral credits and character badge', summary: 'Owner chose credits for referral rewards: 20 bonus credits per friend who subscribes (up to 12 a year). Member dashboard shows the member character, defaulting to The Stargazer.' },
+  { date: '2026-11-13', phase: 'Current build', title: 'Keepsake PDFs and true spine width', summary: 'Certificate and Star Scroll download as print-quality vector PDFs; the 3D book spine is sized from page count with Lulu’s paperback formula.' },
 ];

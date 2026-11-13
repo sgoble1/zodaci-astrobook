@@ -517,3 +517,7 @@ Audit Oct 29: Chat/counselors already use the member's chart; podcast/custom pag
 - [x] Referral reward: 20 bonus credits per subscribing friend (owner chose credits)
 - [x] Member dashboard character badge (Stargazer default)
 - [ ] Owner decisions: email sender domain, legal sign-off Privacy/Terms
+- [x] Keepsake print PDFs (certificate landscape, Star Scroll 8.5×14)
+- [x] Spine width from page count in the 3D book (Lulu paperback formula; hardcover estimate)
+- [ ] Cover customizer travels with order + Lulu cover-dimensions check — blocked on working Lulu keys
+- [ ] Next bigger items: Museum microfilm reader, Investigations "Archive this case", citation pills drawer, Print & Physical Goods pavilion

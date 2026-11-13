@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Printer, ScrollText, Award, ShoppingBag } from 'lucide-react';
+import { Printer, ScrollText, Award, ShoppingBag, Download } from 'lucide-react';
+import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { PageHead } from '@/components/observatory/PageHead';
 import { SpotArt } from '@/components/art/SpotArt';
@@ -46,6 +47,19 @@ function Studio({ chart, birth }: { chart: ChartResult; birth: MyBirth }) {
     window.setTimeout(done, 1500);
   };
 
+  const [saving, setSaving] = useState(false);
+  const download = async () => {
+    setSaving(true);
+    try {
+      const { certificatePdf, scrollPdf } = await import('@/lib/keepsakePdf');
+      const info = { name: subject.name, bornLine: `born ${longDate(subject.date)}${subject.time ? ` at ${clock(subject.time)}` : ''} · ${subject.place}`, number: keepsakeNumber({ date: subject.date, time: subject.time, lat: subject.chart.input.lat, lon: subject.chart.input.lon }), printed: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) };
+      const bytes = kind === 'certificate' ? await certificatePdf(info, certificateRows(subject.chart)) : await scrollPdf(info, scrollSections(subject.chart));
+      const url = URL.createObjectURL(new Blob([bytes], { type: 'application/pdf' }));
+      const a = document.createElement('a'); a.href = url; a.download = `${kind === 'certificate' ? 'birth-sky-certificate' : 'star-scroll'}-${subject.name.replace(/[^a-z0-9]+/gi, '-').toLowerCase()}.pdf`; a.click();
+      window.setTimeout(() => URL.revokeObjectURL(url), 2000);
+    } catch { toast.error('The PDF could not be made. Please try again.'); } finally { setSaving(false); }
+  };
+
   return (
     <article className="mx-auto max-w-5xl space-y-8">
       <PageHead eyebrow="Observatory Gift Shop · Keepsakes" title="Keepsakes from the sky" script="Printed from the measured sky, for you or as a gift." art="shop"
@@ -64,7 +78,8 @@ function Studio({ chart, birth }: { chart: ChartResult; birth: MyBirth }) {
             <Button variant={kind === 'certificate' ? 'default' : 'outline'} aria-pressed={kind === 'certificate'} onClick={() => setKind('certificate')}><Award className="mr-2 h-4 w-4" aria-hidden />Certificate</Button>
             <Button variant={kind === 'scroll' ? 'default' : 'outline'} aria-pressed={kind === 'scroll'} onClick={() => setKind('scroll')}><ScrollText className="mr-2 h-4 w-4" aria-hidden />Star Scroll</Button>
           </div>
-          <Button onClick={print}><Printer className="mr-2 h-4 w-4" aria-hidden />Print or save PDF</Button>
+          <Button onClick={() => void download()} disabled={saving}><Download className="mr-2 h-4 w-4" aria-hidden />{saving ? 'Making PDF…' : 'Download print PDF'}</Button>
+          <Button variant="outline" onClick={print}><Printer className="mr-2 h-4 w-4" aria-hidden />Print</Button>
         </div>
       </div>
 
