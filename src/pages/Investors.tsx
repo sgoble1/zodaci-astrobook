@@ -36,7 +36,7 @@ const LIVE = [
   'Interactive demo walk-through: visitors step through birth details, the calculated chart, a reading and the book using a fictional sample reader, instead of a fixed film.',
   'AstroBook Reader’s Compass: plain-language explanations of every term a book uses, and a three-point summary at the start of each chapter.',
   'Owner-controlled personal context: tap-to-answer questions, “keep it general”, and a review of every personal detail before a book is printed.',
-  'Charts calculated in-app (planets, houses, angles, nodes, Chiron, asteroids) and checked against reference ephemerides in automated tests.',
+  'Charts calculated in-app (planets, houses, angles, nodes, Chiron) and checked against the Swiss Ephemeris within 0.1° in automated tests and on the public Check our numbers page.',
   'Personal readings by tier, chart-aware AI counselors that replay full sessions, workbook tools and private shared spaces for couples and family.',
   'Studio-voiced personal podcasts written from each member’s chart, saved to a private library.',
   'Cosmic Studio: chart wallpapers, posters, journal pages and affirmation cards to download or save, plus one-time AI credit packs.',
@@ -50,7 +50,7 @@ const LIVE = [
 const PHASES: { name: string; when: string; status: string; items: string[] }[] = [
   { name: 'Phase 1 · Foundation', when: 'Done', status: 'Live', items: ['Chart engine and accuracy tests', 'Memberships, readings, counselors, podcasts', 'Founder editions, sharing and privacy', 'Shop and AstroBook ordering', 'Chart-matched shop recommendations, member comic characters and friend-referral rewards'] },
   { name: 'Phase 2 · Launch polish', when: 'Now', status: 'In progress', items: ['Automated print fulfilment with the print partner', 'Sending domain for receipts and newsletters (DNS pending)', 'Remaining 5 drawn story pages of AstroComic Issue #1', 'Owner sign-off on shop pricing', 'Payment recovery list and spam-protected sign-up forms (done Nov 13)'] },
-  { name: 'Phase 3 · Growth', when: 'Next', status: 'Planned', items: ['Gift AstroBooks', 'Monthly comic art pipeline at scale', 'Licensed source texts (Sabian Symbols, asteroid tables)', 'Mobile app wrapper'] },
+  { name: 'Phase 3 · Growth', when: 'Next', status: 'Planned', items: ['Monthly comic art pipeline at scale', 'Licensed source texts (Sabian Symbols, asteroid tables)', 'Mobile app wrapper'] },
   { name: 'Phase 4 · Zodaci Social', when: 'Future', status: 'Vision', items: ['Pseudonymous profiles and communities', 'Topic boards with posts, threads and voting', 'Compatibility discovery between members', 'Moderation, safety and privacy controls'] },
 ];
 const SOCIAL = [

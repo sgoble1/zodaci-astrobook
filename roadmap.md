@@ -610,7 +610,7 @@ Full ordered list: docs/master-implementation-resource.md Part 30.
 - [x] Part 30 step 2: locked Pro sections show a clear line from the member's own chart (signs/counts only)
 - [x] Slice 3 AstroBook three-page teaser (Sun, Moon, Rising from the saved chart, no AI)
 - [~] Slice 4 gift an AstroBook written from the recipient's birth details: built (recipient picker, dedication page, gift notice email, recipient download, locks); browser walk-through of a full gift order still to do
-- [ ] Slice 5 15-point accuracy suite (Sun–Pluto, node, ASC, MC, retro flags, cusps) for Shane and April
+- [x] Slice 5 15-point accuracy suite: 13 public Swiss Ephemeris moments + both founders, Part of Fortune, polar Porphyry notice, southern hemisphere; public /accuracy page reruns it live
 - [ ] Slice 6 admin AI spending: model/tokens/cost per call, projection, budget alert, per-member history/reset/zero
 - [ ] Slice 26 Solar Return · 27 progressions · 28 Academy progress · 29 read-aloud · 30 ephemeris page
 - [ ] Slices 22–25 archive paging, activity export, misc polish, newsletter extras

@@ -54,3 +54,16 @@ describe('cusp warnings for angles', () => {
     expect(c.flags.some(f => f.topic === 'Ascendant')).toBe(false);
   });
 });
+
+// Point 20: Part of Fortune with day/night detection from the Sun's house (houses 7–12 = day).
+// Reference = the stored Swiss Ephemeris Ascendant, Sun and Moon above, put through the same formula.
+describe('Part of Fortune', () => {
+  it.each([['Shane', 0, 159.765], ['April', 1, 112.14]] as const)('%s is a day chart with Fortune at the reference degree', (_n, i, ref) => {
+    const c = computeChart({ ...CASES[i], tz: 'America/New_York', placeLabel: '', placeSource: 'geocoded', houseSystem: 'placidus' });
+    const sun = c.bodies.find(b => b.key === 'sun')!;
+    expect(sun.house).toBeGreaterThanOrEqual(7);
+    const pof = c.bodies.find(b => b.key === 'fortune')!;
+    expect(pof.note).toMatch(/^Day chart/);
+    expect(diff(pof.lon, ref)).toBeLessThan(TOL);
+  });
+});

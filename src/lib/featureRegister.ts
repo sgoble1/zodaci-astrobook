@@ -9,10 +9,10 @@ export interface Feature { id: string; area: string; name: string; status: Featu
 
 export const FEATURES: Feature[] = [
   // Charts & calculation
-  { id: 'chart-engine', area: 'Charts & calculation', name: 'Natal chart engine', status: 'Live', impact: 'High', detail: 'Planets, houses, angles, nodes, Chiron and asteroids from an astronomical ephemeris, with historical time zones and daylight saving.' },
+  { id: 'chart-engine', area: 'Charts & calculation', name: 'Natal chart engine', status: 'Live', impact: 'High', detail: 'Planets, houses, angles, nodes and Chiron from an astronomical ephemeris, with historical time zones and daylight saving. Ceres, Pallas, Juno and Vesta appear only on the fictional demo charts.' },
   { id: 'unknown-time', area: 'Charts & calculation', name: 'Unknown birth time handling', status: 'Live', impact: 'High', detail: 'Houses and Rising are marked uncertain instead of silently assuming midnight.' },
   { id: 'other-systems', area: 'Charts & calculation', name: 'Other Systems', status: 'Live', impact: 'Medium', detail: 'Vedic, Chinese Ba Zi, numerology, Feng Shui, Flying Stars, Nine Star Ki and Tzolk’in from the same birth data.' },
-  { id: 'accuracy-15', area: 'Charts & calculation', name: '15-point accuracy regression', status: 'Partial', impact: 'High', detail: 'Reference-ephemeris tests exist; the expanded 15-chart authoritative set is still to be added.' },
+  { id: 'accuracy-15', area: 'Charts & calculation', name: '15-point accuracy regression', status: 'Live', impact: 'High', detail: '15 charts (13 public moments plus both founders) checked point by point against the Swiss Ephemeris within 0.1°: Sun to Pluto, mean node, Chiron, Ascendant, Midheaven, 12 Placidus cusps, retrograde flags, Part of Fortune, polar and southern-hemisphere houses. Public moments rerun live at /accuracy.' },
   { id: 'profection-wheel', area: 'Charts & calculation', name: 'Interactive 12-spoke profection wheel', status: 'Planned', impact: 'Medium', detail: 'Annual profections on /profection and /timing as a turnable wheel.' },
   { id: 'bazi-loshu', area: 'Charts & calculation', name: 'BaZi Four Pillars and Lo Shu grid views', status: 'Planned', impact: 'Medium', detail: 'Dedicated visual pillars and grid on the Chinese and Feng Shui pages.' },
   { id: 'radar-tone', area: 'Charts & calculation', name: 'Retrograde Radar tone setting', status: 'Planned', impact: 'Later', detail: 'Gentle, Direct or Strategic wording, saved per member.' },
@@ -28,6 +28,8 @@ export const FEATURES: Feature[] = [
   // Books & comics
   { id: 'astrobook', area: 'AstroBook & AstroComic', name: 'Six-volume AstroBook builder', status: 'Live', impact: 'High', detail: 'Five editions, cover designer, previews and print-ready PDFs.' },
   { id: 'book-showcase', area: 'AstroBook & AstroComic', name: 'Five-spread AstroBook showcase', status: 'Live', impact: 'High', detail: 'A page-turning Look inside on the books page: cover and first five spreads, or your own chart when signed in.' },
+  { id: 'book-teaser', area: 'AstroBook & AstroComic', name: 'Your first three pages', status: 'Live', impact: 'High', detail: 'Signed-in members see their Sun, Moon and Rising pages from their saved chart on the AstroBook page, with no AI cost; unknown birth times are handled.' },
+  { id: 'book-gift', area: 'AstroBook & AstroComic', name: 'Gift an AstroBook', status: 'Partial', impact: 'High', detail: 'A book written from the recipient’s own birth details, with a dedication page, gift note, emailed gift notice and recipient download. A full paid gift order still needs a walk-through.' },
   { id: 'astrocomic', area: 'AstroBook & AstroComic', name: 'AstroComic Issue #1 and preview', status: 'Live', impact: 'High', detail: 'Drawn pages, 3D page-turn preview, read-through and pre-order.' },
   { id: 'comic-switcher', area: 'AstroBook & AstroComic', name: 'My Comic issue archive', status: 'Live', impact: 'Medium', detail: 'Members open each released issue from their archive on My AstroComic.' },
   { id: 'lulu', area: 'AstroBook & AstroComic', name: 'Automated print fulfilment (Lulu)', status: 'Blocked', impact: 'High', detail: 'Book jobs run in sandbox today.', blocker: 'Production credentials and a proofed sample' },

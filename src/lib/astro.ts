@@ -213,7 +213,13 @@ export function computeChart(input: ChartInput): ChartResult {
   if (yr < 1970) flags.push({ level: 'approximate', topic: 'Historical time zone', note: 'Pre-1970 daylight-saving rules were irregular in many places; confirm the offset below.' });
 
   let asc: number | null = null, mc: number | null = null, cusps: number[] | null = null, vertex: number | null = null;
-  if (timeKnown) { const a = angles(utc, input.lat, input.lon); ({ asc, mc, vertex } = a); cusps = cuspsFor(input.houseSystem ?? 'placidus', a, input.lat); }
+  if (timeKnown) {
+    const a = angles(utc, input.lat, input.lon); ({ asc, mc, vertex } = a);
+    const system = input.houseSystem ?? 'placidus';
+    cusps = cuspsFor(system, a, input.lat);
+    // Same fallback as the Swiss Ephemeris: near the polar circles Placidus has no solution, so Porphyry is drawn and we say so.
+    if (system === 'placidus' && placidus(a.asc, a.mc, a.ramc, a.eps, input.lat) == null) flags.push({ level: 'approximate', topic: 'Houses', note: 'Placidus houses can’t be calculated this close to the pole at this moment, so Porphyry houses are shown instead — the same fallback the Swiss Ephemeris uses.' });
+  }
   // Angles move ~1° per 4 minutes of clock time; near a sign edge a small recording error changes the sign.
   if (asc != null && mc != null) for (const [topic, lon, mins] of [['Ascendant', asc, 4], ['Midheaven', mc, 4]] as const) {
     const edge = Math.min(norm(lon) % 30, 30 - (norm(lon) % 30));

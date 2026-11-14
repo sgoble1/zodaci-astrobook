@@ -123,6 +123,7 @@ const Books = lazy(() => import('./pages/Books'));
 const Orders = lazy(() => import('./pages/Orders'));
 const Dispatch = lazy(() => import('./pages/Dispatch'));
 const Learn = lazy(() => import('./pages/Learn'));
+const AccuracyCheck = lazy(() => import('./pages/AccuracyCheck'));
 const PersonalContext = lazy(() => import('./pages/PersonalContext'));
 const ContentCenter = lazy(() => import('./pages/ContentCenter'));
 const ObservationLog = lazy(() => import('./pages/ObservationLog'));
@@ -277,6 +278,7 @@ export default function App() {
             <Route path="/lp/:slug" element={<LandingPage />} />
             <Route path="/learn" element={<Learn />} />
             <Route path="/forecast" element={<Forecast />} />
+            <Route path="/accuracy" element={<AccuracyCheck />} />
             <Route path="/learn/:slug" element={<PublicArticle />} />
             <Route path="/blog" element={<Navigate to={{ pathname: '/learn', hash: '#journal' }} replace />} />
             <Route path="/blog/learn/:slug" element={<LegacyArticleRedirect />} />
