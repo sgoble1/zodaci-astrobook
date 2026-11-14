@@ -1,7 +1,8 @@
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { FEATURED_SET, SHOP_DEPARTMENTS, departmentHref, type ShopDepartment } from '@/content/shopShowcase';
+import { FEATURED_SET, departmentHref, orderDepartments, type ShopDepartment } from '@/content/shopShowcase';
+import { useSiteSettings } from '@/hooks/useSiteSettings';
 
 /**
  * Gift-shop window: each department shows a real product, cut out and set on a 1950s atomic backdrop
@@ -9,7 +10,8 @@ import { FEATURED_SET, SHOP_DEPARTMENTS, departmentHref, type ShopDepartment } f
  * `counts` (product type → number in the collection) adds item counts when the catalog is loaded.
  */
 export function ShopDepartmentGrid({ counts, compact = false, className, headingId }: { counts?: Map<string, number>; compact?: boolean; className?: string; headingId?: string }) {
-  const departments = compact ? SHOP_DEPARTMENTS.slice(0, 2) : SHOP_DEPARTMENTS;
+  const ordered = orderDepartments(useSiteSettings().shopOrder);
+  const departments = compact ? ordered.slice(0, 2) : ordered;
   const countFor = (d: ShopDepartment) => counts ? d.types.reduce((n, t) => n + (counts.get(t) ?? 0), 0) : undefined;
   const total = counts ? [...counts.values()].reduce((a, b) => a + b, 0) : undefined;
   return (

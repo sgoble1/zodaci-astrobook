@@ -1,4 +1,5 @@
 import { supabase } from '@/integrations/supabase/client';
+import { CalculationTrust } from '@/components/common/CalculationTrust';
 import { getStripeEnvironment } from '@/lib/stripe';
 import { toast } from 'sonner';
 import { Fragment, useEffect, useState } from 'react';
@@ -150,6 +151,7 @@ export default function Pricing() {
       {(sub.tier === 'full' || sub.tier === 'creator') && <div className="space-y-2"><CreatorStudio /><p className="text-center text-sm"><Link to="/my-masterbook" className="underline">Open My Masterbook to read and play what you’ve made</Link></p></div>}
       <TrustStrip />
       <WhyZodaciLine />
+      <CalculationTrust compact />
       <section className="space-y-4" aria-labelledby="pricing-faq"><h2 id="pricing-faq" className="font-display text-3xl">Questions</h2><Faq items={PRICING_FAQ} id="pricing-faq-schema" /></section>
       <section className="space-y-3" aria-labelledby="compare">
         <h2 id="compare" className="font-display text-3xl">Compare plans</h2>

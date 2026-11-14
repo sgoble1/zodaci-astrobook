@@ -77,3 +77,9 @@ export const SHOP_DEPARTMENTS: ShopDepartment[] = [
 
 /** Shop link for a department inside the Atomic Zodiac Collection. */
 export const departmentHref = (d: Pick<ShopDepartment, 'types'>) => `/store?collection=atomic&type=${encodeURIComponent(d.types[0])}`;
+
+/** Departments in the admin-chosen order (shop.layout); unknown ids are ignored, unlisted ones keep their default place after. */
+export function orderDepartments(order: string[], list: ShopDepartment[] = SHOP_DEPARTMENTS): ShopDepartment[] {
+  const rank = (id: string) => { const i = order.indexOf(id); return i < 0 ? order.length + list.findIndex(d => d.id === id) : i; };
+  return [...list].sort((a, b) => rank(a.id) - rank(b.id));
+}

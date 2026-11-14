@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { CalculationTrust } from '@/components/common/CalculationTrust';
 import { ArrowRight, Check } from 'lucide-react';
 import { SpotArt, type SpotKind } from '@/components/art/SpotArt';
 import { PublicHeader } from '@/components/brand/PublicHeader';
@@ -154,6 +155,7 @@ export default function BrandLanding() {
         <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">{PILLARS.map(({ art, title, text }) => <div key={title} className="atomic-box"><SpotArt kind={art} className="h-20 w-20" /><h3 className="text-lg">{title}</h3><p className="mt-1 text-sm text-muted-foreground">{text}</p></div>)}</div>
       </section>
 
+      <div className="obs-panel p-5 sm:p-8"><CalculationTrust /></div>
       <section id="pricing" aria-labelledby="price-h" className="obs-panel p-5 sm:p-8">
         <div className="flex flex-wrap items-end justify-between gap-4"><PanelTitle eyebrow="Membership"><span id="price-h">Start free. Go deeper when you’re ready.</span></PanelTitle><Button asChild variant="outline"><Link to="/pricing">Compare plans<ArrowRight /></Link></Button></div>
         <div className="grid gap-5 md:grid-cols-3">{plans.map(p => <div key={p.key} className={`rounded-md border p-6 flex flex-col ${p.key === 'full' ? 'border-primary' : 'border-border'}`}><h3 className="font-label text-xl">{PLAN_NAME[p.key]}</h3><p className="mt-3"><span className="font-display text-3xl">{p.price.replace('/month', '')}</span>{p.key !== 'free' && <span className="text-muted-foreground"> /month</span>}</p><p className="text-xs text-muted-foreground">{p.note}</p><ul className="mt-5 flex-1 space-y-2 text-sm">{p.points.map(t => <li key={t} className="flex gap-2"><Check aria-hidden className="mt-0.5 h-4 w-4 shrink-0 text-primary" />{t}</li>)}</ul><Button asChild className="mt-6" variant={p.key === 'full' ? 'primary' : 'outline'}><Link to={p.key === 'free' ? '/start' : `/pricing?plan=${p.key === 'full' ? 'pro' : 'cosmic'}`}>{p.key === 'free' ? 'Start for free' : `Choose ${PLAN_NAME[p.key]}`}</Link></Button></div>)}</div>

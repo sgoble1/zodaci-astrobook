@@ -1,4 +1,6 @@
 import { PavilionTabs } from '@/components/shop/PavilionTabs';
+import { OpenAstroBook } from '@/components/books/OpenAstroBook';
+import { CalculationTrust } from '@/components/common/CalculationTrust';
 import { PrintContextReview } from '@/components/context/ContextQuestions';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { Book3D } from '@/components/books/Book3D';
@@ -149,6 +151,7 @@ export default function Books() {
 
     <nav aria-label="Book steps" className="flex flex-wrap gap-4 border-b border-border pb-4 text-sm"><a href="#versions" className="inline-flex min-h-11 items-center text-primary">Version</a><a href="#personal-cover" className="inline-flex min-h-11 items-center text-primary">Cover</a><a href="#book-review" className="inline-flex min-h-11 items-center text-primary">Review & payment</a><Button asChild variant="outline" size="sm"><Link to="/book-preview">Read the sample book</Link></Button></nav>
 
+    <section aria-labelledby="look-inside" className="space-y-3"><h2 id="look-inside" className="text-3xl">Look inside</h2><p className="max-w-2xl text-muted-foreground">Turn through the cover and first five spreads of a real AstroBook, calculated for our fictional sample reader. Signed in with your birth details saved, you can open one built from your own chart.</p><OpenAstroBook layout="side" next="/books#versions" /></section>
     <section id="versions" aria-labelledby="versions-title" className="space-y-5">
       <h2 id="versions-title" className="text-2xl">Choose your version</h2>
       <div role="radiogroup" aria-label="AstroBook version" className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
@@ -217,6 +220,7 @@ export default function Books() {
       <div className="flex flex-wrap items-center justify-between gap-4"><div><dl className="space-y-2 text-sm"><div className="flex justify-between gap-6"><dt>AstroBook {version.name}{version.trim ? ` · ${version.trim}` : ''}</dt><dd>{money(version.price)}</dd></div>{extras.length > 0 && <div className="flex justify-between gap-6"><dt>Extra sections · {extras.length} × {money(EXTRA_SECTION_PRICE)}</dt><dd>{money(extras.length * EXTRA_SECTION_PRICE)}</dd></div>}{!digital && <div className="flex justify-between gap-6"><dt>US shipping</dt><dd>$0.00</dd></div>}<div className="flex justify-between gap-6 border-t border-border pt-3 font-medium"><dt>Subtotal before tax</dt><dd>{money(bookTotal(edition, extras.length, version.format))}</dd></div></dl><p className="text-sm text-muted-foreground mt-2">Applicable tax calculated at checkout</p></div><Button type="submit" disabled={!!busy || !sub.userId || !coverReady || !manuscriptReady || extras.some(s => !s.trim())}>Continue to payment</Button></div>
     </form>
     {busy && <p role="status" className="text-gold">{busy}</p>}{error && <p role="alert" className="text-destructive break-words">{error}</p>}
+    <CalculationTrust compact />
     <section aria-labelledby="book-faq" className="space-y-4"><h2 id="book-faq" className="text-2xl">AstroBook questions</h2><Faq items={ASTROBOOK_FAQ} id="astrobook-faq-schema" /></section>
   </article>;
 }

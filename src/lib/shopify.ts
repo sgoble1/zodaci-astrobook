@@ -16,10 +16,32 @@ export interface ShopifyProduct {
 const PRODUCT_FIELDS = `id title description handle productType availableForSale createdAt tags
   priceRange { minVariantPrice { amount currencyCode } }
   images(first: 10) { edges { node { url altText } } }
-  variants(first: 100) { pageInfo { hasNextPage } edges { node { id title price { amount currencyCode } availableForSale selectedOptions { name value } } } }
+  variants(first: 100) { pageInfo { hasNextPage endCursor } edges { node { id title price { amount currencyCode } availableForSale selectedOptions { name value } } } }
   options { name values }`;
 
 export const PRODUCTS_QUERY = `query GetProducts($first: Int!, $query: String, $after: String) { products(first: $first, query: $query, after: $after) { pageInfo { hasNextPage endCursor } edges { node { ${PRODUCT_FIELDS} } } } }`;
+
+const VARIANT_NODE = 'id title price { amount currencyCode } availableForSale selectedOptions { name value }';
+export const VARIANTS_PAGE_QUERY = `query MoreVariants($id: ID!, $after: String) { product(id: $id) { variants(first: 250, after: $after) { pageInfo { hasNextPage endCursor } edges { node { ${VARIANT_NODE} } } } } }`;
+/** Safety cap on variant paging per product (250 per page). */
+export const VARIANT_PAGE_LIMIT = 20;
+
+/** Reads the remaining variant pages of a product with more than 100 variants; returns false if the cap stopped it. */
+export async function completeVariants(p: ShopifyProduct, request: typeof storefrontApiRequest = storefrontApiRequest): Promise<boolean> {
+  const v = p.node.variants as ShopifyProduct['node']['variants'] & { pageInfo?: { hasNextPage?: boolean; endCursor?: string | null } };
+  const seen = new Set(v.edges.map(e => e.node.id));
+  let info = v.pageInfo;
+  for (let page = 0; info?.hasNextPage; page++) {
+    if (page >= VARIANT_PAGE_LIMIT) return false;
+    const d = await request(VARIANTS_PAGE_QUERY, { id: p.node.id, after: info.endCursor ?? null });
+    const conn = d?.data?.product?.variants;
+    if (!conn) throw new ShopUnavailableError();
+    for (const e of conn.edges) if (!seen.has(e.node.id)) { seen.add(e.node.id); v.edges.push(e); }
+    info = conn.pageInfo;
+  }
+  v.pageInfo = { hasNextPage: false, endCursor: null };
+  return true;
+}
 
 /** What a buyer sees when the shop can't load. Owner-facing billing/plan detail is only shown in Admin (shopAdminDetail). */
 export const SHOP_UNAVAILABLE_MESSAGE = 'The shop is unavailable right now. Please try again in a few minutes.';
@@ -57,8 +79,8 @@ export async function fetchCatalog(): Promise<{ products: ShopifyProduct[]; trun
     if (!conn.pageInfo?.hasNextPage) break;
     after = conn.pageInfo.endCursor;
   }
-  if (out.some(p => (p.node.variants as { pageInfo?: { hasNextPage?: boolean } }).pageInfo?.hasNextPage)) truncated = true;
-  if (truncated) console.warn('Shop catalog was read only in part (paging safety cap or more than 100 variants on a product).');
+  for (const p of out) if ((p.node.variants as { pageInfo?: { hasNextPage?: boolean } }).pageInfo?.hasNextPage && !(await completeVariants(p))) truncated = true;
+  if (truncated) console.warn('Shop catalog was read only in part (paging safety cap reached).');
   return { products: out, truncated };
 }
 /** Shopify is the catalog's source of truth; the shop reuses one read for 15 minutes so pages stay quick and edits in Shopify appear soon after. */

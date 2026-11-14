@@ -26,12 +26,12 @@ export function ContactForm() {
   const field = (k: 'name' | 'email' | 'message') => ({ value: v[k], onChange: (e: { target: { value: string } }) => setV({ ...v, [k]: e.target.value }), 'aria-invalid': !!errors[k], 'aria-describedby': errors[k] ? `contact-${k}-error` : undefined, id: `contact-${k}` });
   const err = (k: keyof Errors) => errors[k] && <p id={`contact-${k}-error`} className="text-sm text-destructive">{errors[k]}</p>;
   return (
-    <form noValidate className="vellum space-y-4 p-6" onSubmit={async e => {
+    <form noValidate className="relative vellum space-y-4 p-6" onSubmit={async e => {
       e.preventDefault();
       const parsed = contactSchema.safeParse(v);
       if (!parsed.success) { const out: Errors = {}; parsed.error.issues.forEach(i => { out[i.path[0] as 'name'] ??= i.message; }); setErrors(out); return; }
       setErrors({}); setState('busy');
-      const { data, error } = await supabase.functions.invoke('contact-message', { body: { ...parsed.data, source_path: window.location.pathname.slice(0, 200) } }).catch(e => ({ data: null, error: e }));
+      const { data, error } = await supabase.functions.invoke('contact-message', { body: { ...parsed.data, website: (e.currentTarget.elements.namedItem('website') as HTMLInputElement | null)?.value ?? '', source_path: window.location.pathname.slice(0, 200) } }).catch(e => ({ data: null, error: e }));
       // The server answers saved:true once the message is stored, even if a notice email could not go out.
       if (error || !data?.saved) { setErrors({ form: await functionErrorMessage(error, data, 'Your message could not be sent. Check your connection and try again.') }); setState('idle'); return; }
       setState('done');
@@ -42,6 +42,7 @@ export function ContactForm() {
       <div className="space-y-1"><label htmlFor="contact-topic" className="text-sm">About</label>
         <select id="contact-topic" value={v.topic} onChange={e => setV({ ...v, topic: e.target.value })} className="flex h-10 w-full rounded-md border border-input bg-background px-3 text-sm">{TOPICS.map(([k, l]) => <option key={k} value={k}>{l}</option>)}</select></div>
       <div className="space-y-1"><label htmlFor="contact-message" className="text-sm">Message</label><Textarea rows={5} maxLength={4000} {...field('message')} />{err('message')}</div>
+      <div aria-hidden="true" className="absolute -left-[9999px] h-px w-px overflow-hidden"><label htmlFor="contact-website">Leave this empty</label><input id="contact-website" name="website" type="text" tabIndex={-1} autoComplete="off" defaultValue="" /></div>
       {err('form')}
       <Button type="submit" disabled={state === 'busy'}>{state === 'busy' ? 'Sending…' : 'Send message'}</Button>
     </form>

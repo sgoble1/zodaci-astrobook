@@ -17,6 +17,7 @@ export const FEATURES: Feature[] = [
   { id: 'bazi-loshu', area: 'Charts & calculation', name: 'BaZi Four Pillars and Lo Shu grid views', status: 'Planned', impact: 'Medium', detail: 'Dedicated visual pillars and grid on the Chinese and Feng Shui pages.' },
   { id: 'radar-tone', area: 'Charts & calculation', name: 'Retrograde Radar tone setting', status: 'Planned', impact: 'Later', detail: 'Gentle, Direct or Strategic wording, saved per member.' },
   { id: 'asteroid-degrees', area: 'Charts & calculation', name: 'Licensed asteroid tables and Sabian Symbols', status: 'Blocked', impact: 'Later', detail: 'Extra points and degree symbols.', blocker: 'Licensing permissions' },
+  { id: 'calc-trust', area: 'Charts & calculation', name: 'How we calculate, explained', status: 'Live', impact: 'High', detail: 'Plain account of the ephemeris, Swiss Ephemeris checks, historical time zones and the multi-tradition method on home, pricing, books and investors.' },
   // Readings & AI
   { id: 'readings', area: 'Readings & guidance', name: 'Personal readings by plan', status: 'Live', impact: 'High', detail: 'Readings written from each member’s calculated placements, with retry and freshness checks.' },
   { id: 'counselors', area: 'Readings & guidance', name: 'Chart-aware counselors', status: 'Live', impact: 'High', detail: 'Private sessions that replay the full conversation with the verified chart.' },
@@ -26,7 +27,7 @@ export const FEATURES: Feature[] = [
   { id: 'placement-library', area: 'Readings & guidance', name: 'Reviewed placement text library', status: 'Blocked', impact: 'Later', detail: 'About 216 placement entries for free deterministic readings.', blocker: 'Owner review and AI credits' },
   // Books & comics
   { id: 'astrobook', area: 'AstroBook & AstroComic', name: 'Six-volume AstroBook builder', status: 'Live', impact: 'High', detail: 'Five editions, cover designer, previews and print-ready PDFs.' },
-  { id: 'book-showcase', area: 'AstroBook & AstroComic', name: 'Five-spread AstroBook showcase', status: 'Partial', impact: 'High', detail: 'Showcase and sample pages exist; a five-spread walk-through on the books page is next.' },
+  { id: 'book-showcase', area: 'AstroBook & AstroComic', name: 'Five-spread AstroBook showcase', status: 'Live', impact: 'High', detail: 'A page-turning Look inside on the books page: cover and first five spreads, or your own chart when signed in.' },
   { id: 'astrocomic', area: 'AstroBook & AstroComic', name: 'AstroComic Issue #1 and preview', status: 'Live', impact: 'High', detail: 'Drawn pages, 3D page-turn preview, read-through and pre-order.' },
   { id: 'comic-switcher', area: 'AstroBook & AstroComic', name: 'My Comic issue archive', status: 'Live', impact: 'Medium', detail: 'Members open each released issue from their archive on My AstroComic.' },
   { id: 'lulu', area: 'AstroBook & AstroComic', name: 'Automated print fulfilment (Lulu)', status: 'Blocked', impact: 'High', detail: 'Book jobs run in sandbox today.', blocker: 'Production credentials and a proofed sample' },
@@ -36,9 +37,9 @@ export const FEATURES: Feature[] = [
   { id: 'samples', area: 'Demos & previews', name: 'Public book and comic samples', status: 'Live', impact: 'High', detail: 'All samples use the same fictional Collector-cover reader.' },
   // Shop
   { id: 'shop', area: 'Shop & orders', name: 'Shopify storefront and cart', status: 'Live', impact: 'High', detail: 'Products, prices and stock come from Shopify; checkout runs on Shopify.' },
-  { id: 'shop-copy', area: 'Shop & orders', name: 'Rewritten product descriptions', status: 'Partial', impact: 'High', detail: 'Plain, specific descriptions for every listing, pushed to Shopify after owner approval.' },
-  { id: 'shop-layout', area: 'Shop & orders', name: 'Admin shop layout', status: 'Planned', impact: 'Medium', detail: 'Department order and featured products arranged in Zodaci admin; Shopify keeps the product data.' },
-  { id: 'variant-paging', area: 'Shop & orders', name: 'All variants loaded', status: 'Planned', impact: 'Medium', detail: 'Products with more than 100 variants load every option.' },
+  { id: 'shop-copy', area: 'Shop & orders', name: 'Rewritten product descriptions', status: 'Blocked', impact: 'High', detail: 'Plain, specific descriptions for every listing, pushed to Shopify after owner approval.', blocker: 'Shopify sign-in to read the live listings' },
+  { id: 'shop-layout', area: 'Shop & orders', name: 'Admin shop layout', status: 'Live', impact: 'Medium', detail: 'Department order is arranged in Zodaci admin; Shopify keeps the product data.' },
+  { id: 'variant-paging', area: 'Shop & orders', name: 'All variants loaded', status: 'Live', impact: 'Medium', detail: 'Products with more than 100 variants load every option.' },
   { id: 'shopify-orders', area: 'Shop & orders', name: 'Shopify orders on My Orders', status: 'Blocked', impact: 'Medium', detail: 'Book orders show today; Shopify orders need a store-owned admin app.', blocker: 'Shopify admin app credentials' },
   { id: 'emails', area: 'Shop & orders', name: 'Receipts and notification emails', status: 'Blocked', impact: 'Medium', detail: 'Order and newsletter emails.', blocker: 'Verified sending domain' },
   // Membership

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { CalculationTrust } from '@/components/common/CalculationTrust';
 import { Link } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { PLAN_PRICE, PLAN_AMOUNT, CREDIT_PACKS } from '@/lib/plans';
@@ -11,6 +12,7 @@ import { PRODUCT_ART } from '@/content/productArtwork';
 import launchArt from '@/assets/pages/investors-atomic-launch.jpg';
 import { BUILD_CREDIT_SNAPSHOT, creditCost, formatUsd, DOLLARS_PER_BUILD_CREDIT } from '@/lib/devCost';
 import { FeatureRegisterBoard } from '@/components/common/FeatureRegisterBoard';
+import { FEATURES } from '@/lib/featureRegister';
 import { InvestorEconomics } from '@/components/common/InvestorEconomics';
 
 const low = BOOK_VERSIONS[0]; const high = BOOK_VERSIONS[BOOK_VERSIONS.length - 1];
@@ -99,7 +101,7 @@ const SHORT = [
   ['How it earns', `Memberships (Pro $${PLAN_AMOUNT.full.month} or Cosmic $${PLAN_AMOUNT.creator.month} a month), extra credit packs, printed AstroBooks and comics, and the gift shop.`],
   ['Where it stands', 'The site works today for members. Before a wider launch: automatic book printing with the print partner, a sending address for receipts, and the rest of the first comic’s drawings.'],
 ] as const;
-const NEEDS = ['Print-partner API credentials and a proofed physical sample of each edition', 'Verified sending domain for receipts', 'Illustration budget for monthly comics', 'Moderation and trust & safety design before any social features'];
+const NEEDS = [...new Map(FEATURES.filter(f => f.blocker).map(f => [f.blocker!, `${f.blocker} — unlocks ${FEATURES.filter(g => g.blocker === f.blocker).map(g => g.name.toLowerCase()).join(', ')}`])).values(), 'Moderation and trust & safety design before any social features'];
 
 /** Invite-only investor overview. Access is decided by the backend (can_view_investors). */
 export default function Investors() {
@@ -134,6 +136,8 @@ export default function Investors() {
       <section aria-labelledby="inv-l" className="space-y-4"><h2 id="inv-l" className="text-3xl">What works today</h2>
         <ul className="grid gap-3 md:grid-cols-2">{LIVE.map(m => <li key={m} className="flex gap-3 rounded-lg border border-border/60 bg-card/40 p-4 text-sm"><span aria-hidden className="mt-1 h-2 w-2 shrink-0 rounded-full bg-gold" />{m}</li>)}</ul>
       </section>
+
+      <CalculationTrust />
 
       <section aria-labelledby="inv-f" className="space-y-4"><h2 id="inv-f" className="text-3xl">Every feature and where it stands</h2>
         <p className="max-w-3xl text-muted-foreground">Live, partly built, planned, and waiting on an outside step — the same list the build team works from.</p>

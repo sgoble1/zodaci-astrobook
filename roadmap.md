@@ -578,3 +578,15 @@ Audit Oct 29: Chat/counselors already use the member's chart; podcast/custom pag
 - [ ] Step 4: variant paging, admin shop layout, order fields — Shopify order history blocked (admin app), emails blocked (sending domain)
 - [ ] Step 5: product descriptions (needs Shopify approval), "How we calculate" copy, site-wide feature copy
 - [ ] Step 7: overnight items
+
+## Nov 14 — Finish Part 28, investor readiness first (approved)
+- [x] T1.1 Investor page: needs list from register blockers, revenue by product
+- [x] T1.2 Five-spread AstroBook showcase, demo polish, comic sample
+- [x] T1.3 Admin shop layout
+- [ ] T1.3b Product descriptions — blocked: Shopify sign-in needed to read listings, then owner approval
+- [x] T1.4 "How we calculate" copy on home, pricing, books, investors
+- [x] T1.5 Decided: no Ephemeris page exists; Chinese page shows April's pillars, stays member-only
+- [x] T2 Contact trap field, variant paging, shop-order note, 11 unbatched pages checked
+- [ ] T2b Shopify orders on My Orders — blocked: store-owned Shopify admin app
+- [x] T3 Part 28 final, reference v2 + PDF, instructions text
+- [ ] T4 Later items (overnight list, explainer, uncertainty helper, Forecast TV, stamps, windowing, founder-doc check, pen names)

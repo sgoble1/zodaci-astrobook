@@ -14,6 +14,8 @@ import { useSession } from '@/hooks/useLibrary';
 import { PLAN_NAME, PLAN_PRICE } from '@/lib/plans';
 import { COMIC_PLANS } from '@/lib/comic';
 import { BOOK_VERSIONS } from '@/lib/books';
+import { orderDepartments } from '@/content/shopShowcase';
+import { ArrowDown, ArrowUp } from 'lucide-react';
 
 const FLAG_INFO: Record<keyof SiteFlags, [string, string]> = {
   astrocomic: ['AstroComic', 'Product page, checkout and My AstroComic'],
@@ -86,6 +88,16 @@ export function PlatformSettings() {
           <li key={k} className="flex items-center justify-between gap-4 py-3"><div><p className="font-medium">{FLAG_INFO[k][0]}</p><p className="text-xs text-muted-foreground">{FLAG_INFO[k][1]}</p></div>
             <Switch aria-label={`${FLAG_INFO[k][0]} ${s.flags[k] ? 'on' : 'off'}`} checked={s.flags[k]} disabled={saving === 'site.flags'} onCheckedChange={v => { const next = { ...s.flags, [k]: v }; void save('site.flags', next, `${FLAG_INFO[k][0]} switched ${v ? 'on' : 'off'}`).then(ok => ok && setS({ ...s, flags: next })); }} /></li>
         ))}</ul>
+      </section>
+
+      <section className="vellum space-y-4 p-5" aria-labelledby="ps-shop">
+        <div><h2 id="ps-shop" className="font-display text-2xl">Shop layout</h2><p className="text-sm text-muted-foreground">Order of the department tiles in the shop. Product names, prices, photos and stock stay controlled in Shopify.</p></div>
+        <ol className="divide-y divide-border">{orderDepartments(s.shopOrder).map((d, i, list) => {
+          const move = (to: number) => { const ids = list.map(x => x.id); [ids[i], ids[to]] = [ids[to], ids[i]]; void save('shop.layout', { departments: ids }, 'Shop layout saved').then(ok => ok && setS({ ...s, shopOrder: ids })); };
+          return <li key={d.id} className="flex items-center justify-between gap-3 py-2"><span>{i + 1}. {d.label}</span><span className="flex gap-1">
+            <Button size="icon" variant="ghost" aria-label={`Move ${d.label} up`} disabled={i === 0 || saving === 'shop.layout'} onClick={() => move(i - 1)}><ArrowUp className="h-4 w-4" /></Button>
+            <Button size="icon" variant="ghost" aria-label={`Move ${d.label} down`} disabled={i === list.length - 1 || saving === 'shop.layout'} onClick={() => move(i + 1)}><ArrowDown className="h-4 w-4" /></Button></span></li>;
+        })}</ol>
       </section>
 
       <section className="vellum space-y-4 p-5" aria-labelledby="ps-admins">

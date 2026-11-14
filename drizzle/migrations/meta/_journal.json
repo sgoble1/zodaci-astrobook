@@ -603,6 +603,13 @@
       "when": 1794601956858,
       "tag": "0085_lulu_comic_print_jobs",
       "breakpoints": true
+    },
+    {
+      "idx": 86,
+      "version": "7",
+      "when": 1794634820311,
+      "tag": "0086_public_shop_layout_setting",
+      "breakpoints": true
     }
   ]
 }
