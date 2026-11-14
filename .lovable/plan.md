@@ -1,52 +1,60 @@
-# Investor-Ready Polish Plan
+# Part 28 — Extensive Sweep Plan (42 batches + 11 pages), with Shopify and connections
 
-Order matters: memory and instructions first, then the things investors and buyers see first. Later-only polish is listed but parked.
+One plan, continuing the sweep we started. It folds in the Shopify/connections work from the "API Integrations, Production, Suppliers, etc" collection and your latest asks (memory first, investor focus, demos early, product copy, calculation trust). Shopify keeps its product controls; shop arrangement happens in Zodaci admin.
 
-## Step 1 — Memory and instructions refresh (first)
-- Delete leftover template memories that contradict the site: film-agency team "Most Wanted", 5-step film production process, festival laurels, Work/Process nav order, background hero video, old Instrument Serif/Fira design system.
-- Rewrite brand identity, design system (Alfa Slab One / Libre Franklin / Bebas Neue / Yellowtail, Blend palette, hand-cut corners, slow motion) and founder privacy boundaries.
-- Add memories: product naming, commerce split (Stripe = memberships, credits; Shopify = shop products), "Shopify keeps product controls; arrangement of the shop display is done in Zodaci admin", calculation trust wording rules, future module specs (cassette podcasts, 12-spoke profection wheel, Retrograde Radar tones, 5-spread book showcase).
-- Provide a ready-to-paste replacement for the placeholder sections of your project instructions (routes, stack, tables, theme, performance guardrails, AI credit protection).
+## Step 0 — Memory and instructions (first)
+- Remove leftover template memories that contradict the site (film-agency team, film production steps, festival laurels, Work/Process nav, hero video, old fonts).
+- Rewrite brand, design system, founder privacy; add product naming, commerce split (Stripe = memberships/credits; Shopify = shop products, Shopify owns titles/prices/stock, Zodaci admin owns display order), calculation-trust wording rules, specs for planned modules.
+- Ready-to-paste replacement for the placeholder sections of your project instructions.
 
-## Step 2 — Your reference copy of the full resource
-- New file in Files: "Zodaci Implementation Reference" (markdown + PDF), separate from the working doc.
-- Every phase and batch, with: what it does, who sees it, status (Live / Partial / Planned / Blocked), what it depends on, effort, and investor impact (High / Medium / Later), so you can pick what to do when.
-- Includes the overnight items (installation banner, private share stripping, 15-point accuracy check, launch checklist, profection wheel, radar tones, BaZi/Lo Shu, cassette podcasts, one-question context flow, five-spread showcase) and the Shopify phases.
+## Step 1 — Finish the sweep record (Part 28)
+- Go through every requirement in all 42 batches, the uploaded briefs, batch reports, the later chat and the collection; give each a status: Live / Partial / Planned / Blocked, plus investor impact (High / Medium / Later).
+- Write it into the master document as Part 28 with full detail per batch (not one-liners) and the order of work below.
+- Your own reference copy in Files ("Zodaci Implementation Reference", markdown + PDF): all phases, batches, details, status, dependencies, effort, so you can choose what to do when.
+- Roadmap pointer line, developer activity log entry.
 
-## Step 3 — Gaps and bugs affecting main use
-- Sweep sign-in, dashboard, readings, shop, cart, checkout return, orders, demos and private editions on phone and desktop; fix anything broken.
-- Monthly credit top-up on subscription renewal (25 Pro / 75 Cosmic), private chart share stripping birth time/place/notes, contact form spam guard.
+## Step 2 — High-impact gaps and bugs (main functionality)
+From the sweep's half-built list:
+1. Monthly credits top-up on membership renewal (Pro 25 / Cosmic 75).
+2. My Comic issue switcher.
+3. Public chart share that leaves out birth time, birth place detail and private notes.
+4. Contact form spam guard (hidden trap field, 3 per hour).
+5. Shopify orders shown on the member's orders page (matched to signed-in email).
+6. Review of the 11 pages without a batch (phone + desktop, no overflow, working links, loading/empty/error states).
+Plus a fresh bug pass on sign-in, dashboard, readings, shop, cart, checkout return, private editions.
 
-## Step 4 — Demos and book previews finished early
-- Demo screen: complete every section, consistent fictional sample reader, clear next step to sign up.
-- AstroBook and AstroComic previews: five-spread showcase on /books, page-turn previews for every edition, comic issue switcher.
+## Step 3 — Demos and book previews (early)
+- Demo screen complete, every section working, one fictional sample reader, clear sign-up step.
+- Five-spread AstroBook showcase on the books page; page previews for every edition; AstroComic preview.
+
+## Step 4 — Shopify and connections (from the collection)
+- Catalog: fetch all variants (no cut-off at 100), exact edition/cover/format matching, sold-out handled cleanly, mapped to the canonical variant list.
+- Personalization: recipient birth details on each cart line so two recipients never merge; Two-Sky second person; Solar Return year.
+- Admin "Shop layout": order departments and featured products in Zodaci; Shopify stays in control of the products themselves.
+- Order notification and packing slip fields (from the collection's templates), shipping/tracking shown on orders, account email matching.
+- Emails that need a sender domain stay listed as Blocked.
 
 ## Step 5 — Products and marketability
-- Rewrite every product description (books, comics, keepsakes, almanac, synastry, shop items) in the plain human voice: what you get, how it's made from your chart, format, size, edition labels, prices from the price files.
-- Shopify keeps titles/prices/stock control; push the new descriptions to Shopify (one approval) and add an admin "Shop layout" panel in Zodaci to order departments and featured products.
-- Fix variant truncation (paginate variants) and keep recipient details separate per cart line.
+- Rewrite all product descriptions in the plain human voice: what you get, how it's built from your chart, format, size, edition names, prices from the price files. Push to Shopify in one approved batch.
+- Calculation trust: public "How we calculate" section and short blocks on home, pricing and books — ephemeris precision, historical time zones/daylight saving, unknown birth time, and how Western, Chinese, numerology and timing techniques combine in the Zodaci method. Accurate only, no invented accuracy figures.
+- Update feature copy site-wide, including upcoming features marked "Coming".
 
-## Step 6 — Calculation trust and feature copy
-- New "How we calculate" section (public page + short blocks on home, pricing, books): ephemeris precision, historical time zones and daylight saving, unknown birth time handling, and how Western placements, Chinese systems, numerology and timing techniques feed one Zodaci method — described accurately, no invented accuracy claims.
-- Update feature copy site-wide (home, pricing, about, instructions) including upcoming features marked "Coming".
+## Step 6 — Investor page and developer dashboard
+- Investor page: figures from live data and price files (members, readings, orders, credits), honest labels when numbers are small; full feature register with status for every feature, live and future; revenue per product; roadmap timeline. Zac's overview kept in sync.
+- Developer dashboard: "Next implementations" board from the same register, with priority and blocker.
 
-## Step 7 — Investor page enhanced
-- Numbers derived live from the price files and real database counts (members, readings, orders, credits) instead of fixed figures; clear labels where data is still small.
-- Full feature register with status for every feature, live and future, grouped by area; roadmap timeline; revenue model per product.
-- Zac's plain-language overview kept in sync.
+## Step 7 — Overnight items (after the above)
+Installation banner, 15-point accuracy check, launch checklist, profection wheel, Retrograde Radar tones, BaZi/Lo Shu, cassette podcast player, one-question context flow.
 
-## Step 8 — Developer dashboard
-- "Next implementations" board fed from the same feature register, with status, priority and blocker per item.
-
-## Parked for later (low visibility)
-Chapter list virtualization, investigation case stamps, community pen names, Lulu production cutover, comic printing, merged Shopify order history on /orders, email templates (needs sender domain).
+## Parked (low visibility, later)
+Developer founder-document upload/check, Investigations "Confidential"/"Verified" stamps, 382-chapter list loading only visible rows, community pen names completion, Lulu production switch, comic printing.
 
 ## Technical details
-- Single feature register module (src/lib/featureRegister.ts) feeds investor page, developer board and the reference doc to keep statuses identical.
-- Investor counts via an admin/investor-gated RPC; never public.
-- Shop layout stored in platform_settings (admin-only), read via allowlisted public settings.
-- Tests: credit top-up amounts, share stripping, variant pagination, investor figures match plans.ts/books.ts.
-- Verify at 393px and 1280px with browser checks; full test run.
+- One feature register module feeds Part 28 statuses, investor page, developer board and your reference copy.
+- Investor figures via an investor/admin-gated function; never public.
+- Shop layout in admin-only platform settings, read through the allowlisted public settings.
+- Credit top-up handled in the verified payments webhook on renewal invoices; ledger keyed by invoice to avoid double grants.
+- Tests: top-up amounts, share stripping, spam limit, variant pagination, cart-line separation, investor prices match price files. Browser checks at 393px and 1280px; full test run.
 
-## Needs your input later
-Real testimonials (none will be invented), investor figures you want shown beyond live data, any calculation claims you want added.
+## Needs your input
+Real testimonials (none invented), any investor figures beyond live data, sender email domain, Lulu production keys.
