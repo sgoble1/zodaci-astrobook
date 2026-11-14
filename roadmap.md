@@ -598,3 +598,11 @@ Audit Oct 29: Chat/counselors already use the member's chart; podcast/custom pag
 - [x] Results and Chart Calculator error/Retry and inline field messages
 - [ ] Compatibility card design — waiting: owner picks option A, B or C (Part 29.6)
 - [ ] Ephemeris page, Famous Charts — planned later (Famous Charts needs sourced birth data)
+
+## Nov 14 — Part 30: all remaining items from both plan collections (approved)
+Full ordered list: docs/master-implementation-resource.md Part 30.
+- [x] Slice 0 documents (Part 30, reference v4)
+- [x] Slice 1 Compatibility cards, option A
+- [ ] Slices 2–8 Tier 1 (locked previews, teaser, gifting, 15-point tests, AI spend, growth, launch checklist)
+- [ ] Slices 9–17 Tier 2, 18–21 Tier 3, 22–30 Tier 4
+- [ ] Waiting: email domain, Lulu production, comic decision, Shopify admin app, licensing, real testimonials

@@ -37,7 +37,7 @@ export const FEATURES: Feature[] = [
   { id: 'samples', area: 'Demos & previews', name: 'Public book and comic samples', status: 'Live', impact: 'High', detail: 'All samples use the same fictional Collector-cover reader.' },
   // Shop
   { id: 'shop', area: 'Shop & orders', name: 'Shopify storefront and cart', status: 'Live', impact: 'High', detail: 'Products, prices and stock come from Shopify; checkout runs on Shopify.' },
-  { id: 'shop-copy', area: 'Shop & orders', name: 'Rewritten product descriptions', status: 'Blocked', impact: 'High', detail: 'Plain, specific descriptions for every listing, pushed to Shopify after owner approval.', blocker: 'Shopify sign-in to read the live listings' },
+  { id: 'shop-copy', area: 'Shop & orders', name: 'Rewritten product descriptions', status: 'Partial', impact: 'High', detail: 'The owner writes descriptions directly in Shopify; the shop shows them within about 15 minutes.' },
   { id: 'shop-layout', area: 'Shop & orders', name: 'Admin shop layout', status: 'Live', impact: 'Medium', detail: 'Department order is arranged in Zodaci admin; Shopify keeps the product data.' },
   { id: 'variant-paging', area: 'Shop & orders', name: 'All variants loaded', status: 'Live', impact: 'Medium', detail: 'Products with more than 100 variants load every option.' },
   { id: 'shopify-orders', area: 'Shop & orders', name: 'Shopify orders on My Orders', status: 'Blocked', impact: 'Medium', detail: 'Book orders show today; Shopify orders need a store-owned admin app.', blocker: 'Shopify admin app credentials' },

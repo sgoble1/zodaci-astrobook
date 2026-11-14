@@ -100,6 +100,7 @@ export default function Compatibility() {
           {(b.date || b.signs.sun || a.edited) && <Button variant="ghost" size="sm" className="mt-3" onClick={reset}>Start over</Button>}
         </div>
       </section>
+      {shown && ready && result && <PlacementCards nameA={a.name || 'You'} nameB={b.name || 'Them'} result={result} />}
       {shown && ready && <section className="vellum flex flex-wrap items-center justify-between gap-4 p-6"><div><h2 className="font-display text-2xl">Go deeper than signs</h2><p className="mt-1 text-sm text-muted-foreground">Pro members compare the full charts — every planet-to-planet aspect, house overlays and a written reading — and keep partners’ charts private to their account.</p></div><Button asChild><Link to={session ? '/relationships' : `/auth?mode=signup&next=${encodeURIComponent('/relationships')}`}>{session ? 'Open People & charts' : 'Create your free account'}<ArrowRight /></Link></Button></section>}
       <section className="max-w-3xl" aria-labelledby="compat-faq"><h2 id="compat-faq" className="mb-6 font-display text-3xl">How it works</h2><Faq items={COMPAT_FAQ} id="compatibility-faq" /></section>
       <p className="text-xs text-muted-foreground">Astrology is a tool for reflection, not prediction. A score can start a conversation; it can’t decide one. <Link to="/academy/aspects" className="underline">Learn how charts are compared</Link>.</p>
@@ -162,14 +163,25 @@ function ResultCard({ nameA, nameB, result }: { nameA: string; nameB: string; re
         </div>
         <div><h2 id="score-h" className="font-display text-2xl">{nameA} & {nameB}</h2><p className={`mt-1 font-medium ${c.text}`}>{BAND_LABEL[band]}</p><p className="mt-1 text-xs text-muted-foreground">Weighted across {result.rows.length} placement{result.rows.length === 1 ? '' : 's'}</p></div>
       </div>
-      <ul className="space-y-4">{result.rows.map(r => { const rb = BAND_CLASS[scoreBand(r.score)]; return (
-        <li key={r.key}>
-          <div className="flex items-baseline justify-between gap-2 text-sm"><span className="font-medium">{r.label}</span><span className="text-muted-foreground">{glyph(r.a)} {r.a} · {glyph(r.b)} {r.b}</span><span className="tabular-nums">{r.score}</span></div>
-          <div className="mt-1.5 h-1.5 rounded-full bg-muted"><div className={`h-1.5 rounded-full ${rb.bar} transition-[width] duration-1000`} style={{ width: `${r.score}%` }} /></div>
-          <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">{r.elements} · {r.modalities}. {r.note}</p>
+      {result.omitted.length > 0 && <p className="text-xs text-muted-foreground">Not scored: {result.omitted.map(k => KEY_LABEL[k]).join(', ')} — not known for both people.</p>}
+    </section>
+  );
+}
+
+/** Option A, observatory index cards: one card per compared placement, three across on desktop. */
+function PlacementCards({ nameA, nameB, result }: { nameA: string; nameB: string; result: ReturnType<typeof compatibility> }) {
+  return (
+    <section aria-labelledby="placements-h" className="space-y-5">
+      <h2 id="placements-h" className="font-display text-3xl">Placement by placement</h2>
+      <ul className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">{result.rows.map(r => { const rb = BAND_CLASS[scoreBand(r.score)]; return (
+        <li key={r.key} className="obs-paper flex flex-col gap-3 p-6">
+          <p className="font-label text-sm tracking-[0.14em] text-primary">{r.label} · {nameA} &amp; {nameB}</p>
+          <h3 className="font-display text-2xl leading-tight">{glyph(r.a)} {r.a} &amp; {glyph(r.b)} {r.b}</h3>
+          <p className="font-label text-sm tracking-[0.08em]">{r.elements} · {r.modalities} · <span className="tabular-nums">{r.score}</span>/100</p>
+          <div className="h-1.5 rounded-full bg-muted" aria-hidden><div className={`h-1.5 rounded-full ${rb.bar} transition-[width] duration-1000 motion-reduce:transition-none`} style={{ width: `${r.score}%` }} /></div>
+          <p className="text-base leading-7 text-muted-foreground">{r.note}</p>
         </li>
       ); })}</ul>
-      {result.omitted.length > 0 && <p className="text-xs text-muted-foreground">Not scored: {result.omitted.map(k => KEY_LABEL[k]).join(', ')} — not known for both people.</p>}
     </section>
   );
 }
