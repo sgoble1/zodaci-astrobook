@@ -77,6 +77,7 @@ const FlyingStars = lazy(() => import('./pages/FlyingStars'));
 const Bagua = lazy(() => import('./pages/Bagua'));
 const PdfViewer = lazy(() => import('./pages/PdfViewer'));
 const ChartCalculator = lazy(() => import('./pages/ChartCalculator'));
+const SharedSigns = lazy(() => import('./pages/SharedSigns'));
 const ChartElements = lazy(() => import('./pages/ChartElements'));
 const BaguaWheelPage = lazy(() => import('./pages/BaguaWheelPage'));
 const BaguaReading = lazy(() => import('./pages/BaguaReading'));
@@ -386,6 +387,7 @@ export default function App() {
             <Route path="/feng-shui/flying-stars" element={<FlyingStars />} />
             <Route path="/feng-shui/bagua" element={<Bagua />} />
             <Route path="/chart-calculator" element={<ChartCalculator />} />
+            <Route path="/share/signs" element={<SharedSigns />} />
             <Route path="/reading" element={<Reading />} />
             <Route path="/bagua-reading" element={<BaguaReading />} />
             <Route path="/relationships" element={<Relationships />} />

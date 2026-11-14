@@ -1,7 +1,9 @@
 import { ChartSignatures } from '@/components/chart/ChartSignatures';
 import { useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { Printer } from 'lucide-react';
+import { Printer, Share2 } from 'lucide-react';
+import { toast } from 'sonner';
+import { encodeShare } from '@/lib/publicChartShare';
 import { computeChart, fmtLon, HOUSE_SYSTEMS, SIGN_KEYWORDS, type HouseSystem, type BodyPos } from '@/lib/astro';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
@@ -61,6 +63,7 @@ export default function MyChart() {
         <div className="mt-4 flex flex-wrap gap-3">
           {!shared && <Button asChild variant="outline"><StartLink>Edit birth details</StartLink></Button>}
           <Button type="button" variant="outline" onClick={() => window.print()}><Printer className="h-4 w-4" aria-hidden />Print</Button>
+          {!shared && <Button type="button" variant="outline" onClick={() => { const url = `${window.location.origin}/share/signs?${encodeShare(chart.bodies, birth.name)}`; void navigator.clipboard.writeText(url).then(() => toast.success('Share link copied', { description: 'It shows your planet signs and first name only — no birth date, time or place.' }), () => toast.error('Couldn’t copy the link', { description: url })); }}><Share2 className="h-4 w-4" aria-hidden />Share my signs</Button>}
           {birth.time && <label className="flex items-center gap-2 text-sm">House system
             <select aria-label="House system" className="rounded border border-border bg-background px-2 py-1" value={hs ?? birth.houseSystem} onChange={e => setHs(e.target.value as HouseSystem)}>{HOUSE_SYSTEMS.map(h => <option key={h.id} value={h.id}>{h.label}</option>)}</select></label>}
         </div>

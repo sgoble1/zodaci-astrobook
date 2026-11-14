@@ -223,7 +223,7 @@ function PlanGuard({ children }: { children: ReactNode }) {
 }
 
 const KEEP_NAME_PATHS = ['/april', '/shared', '/our-charts', '/podcasts', '/shane', '/zac', '/admin', '/investors', '/official-astrobook', '/developer'];
-const SIGNED_OUT_PATHS = ['/auth', '/pricing', '/books', '/reset-password', '/characters'];
+const SIGNED_OUT_PATHS = ['/auth', '/pricing', '/books', '/reset-password', '/characters', '/share/signs'];
 const GROUP_COLORS = ['--primary', '--oxblood', '--accent', '--candle', '--gold-bright', '--starlight', '--gold', '--glow-violet'];
 
 /** Route change: move keyboard focus from the menu to the page. Scroll position is owned by ScrollManager. */

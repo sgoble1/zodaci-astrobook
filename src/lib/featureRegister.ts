@@ -47,7 +47,7 @@ export const FEATURES: Feature[] = [
   { id: 'credit-packs', area: 'Membership & credits', name: 'Credit packs and referrals', status: 'Live', impact: 'Medium', detail: 'One-time packs; 20 bonus credits per paying friend, up to 12 a year.' },
   // Privacy
   { id: 'private-editions', area: 'Privacy & sharing', name: 'Private founder editions', status: 'Live', impact: 'High', detail: 'Open only for the owner and people they share with, checked on the server.' },
-  { id: 'public-share', area: 'Privacy & sharing', name: 'Public chart share without private details', status: 'Planned', impact: 'Medium', detail: 'A shareable chart that leaves out birth time, exact place, notes and journal.' },
+  { id: 'public-share', area: 'Privacy & sharing', name: 'Public chart share without private details', status: 'Live', impact: 'Medium', detail: 'Share my signs on My Chart sends planet signs and first name only; no birth date, time, place, Rising, houses, notes or journal.' },
   { id: 'contact-spam', area: 'Privacy & sharing', name: 'Contact form spam protection', status: 'Live', impact: 'Later', detail: 'Hidden trap field plus a server rate limit.' },
   // Media
   { id: 'podcasts', area: 'Media', name: 'Personal podcasts', status: 'Live', impact: 'Medium', detail: 'Written from each chart, voiced, saved to a private library.' },
