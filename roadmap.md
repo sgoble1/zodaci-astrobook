@@ -606,3 +606,5 @@ Full ordered list: docs/master-implementation-resource.md Part 30.
 - [ ] Slices 2–8 Tier 1 (locked previews, teaser, gifting, 15-point tests, AI spend, growth, launch checklist)
 - [ ] Slices 9–17 Tier 2, 18–21 Tier 3, 22–30 Tier 4
 - [ ] Waiting: email domain, Lulu production, comic decision, Shopify admin app, licensing, real testimonials
+
+- [x] Part 30 step 2: locked Pro sections show a clear line from the member's own chart (signs/counts only)

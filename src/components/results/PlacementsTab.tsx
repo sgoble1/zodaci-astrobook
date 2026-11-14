@@ -42,6 +42,7 @@ export function PlacementsTab({ chart, timeKnown, plan, loading }: { chart: Char
       <section aria-labelledby="pl-rest">
         <h2 id="pl-rest" className="font-display text-2xl">Every planet</h2>
         <div className="mt-3"><TierGate plan={plan} loading={loading} need="full" title="Mercury to Pluto, Chiron and your North Node"
+          preview={`Your chart: ${rest.slice(0, 3).map(b => `${b.name} in ${b.sign}`).join(', ')} and ${Math.max(rest.length - 3, 0)} more, each explained.`}
           teaser={<ul className="space-y-3">{rest.slice(0, 4).map(b => <li key={b.key} className="text-sm">{b.glyph} {b.name} — interpretation</li>)}</ul>}>
           <ul className="divide-y divide-border rounded-lg border border-border bg-card">{rest.map(b => <Row key={b.key} b={b} />)}</ul>
         </TierGate></div>
