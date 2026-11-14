@@ -63,6 +63,9 @@ export const FEATURES: Feature[] = [
   { id: 'chapter-window', area: 'Platform', name: 'Long chapter list loads visible rows only', status: 'Planned', impact: 'Later', detail: 'Faster 382-chapter index.' },
   // Community
   { id: 'pen-names', area: 'Community', name: 'Community pen names', status: 'Partial', impact: 'Later', detail: 'Posting under a chosen handle and placement badge.' },
+  { id: 'today-ephemeris', area: 'Charts & calculation', name: "Today's ephemeris", status: 'Live', impact: 'Medium', detail: 'Live planet positions on the Moon Calendar, labelled in UTC and the viewer\'s time.' },
+  { id: 'ephemeris-page', area: 'Charts & calculation', name: 'Ephemeris page', status: 'Planned', impact: 'Later', detail: 'A public day-by-day ephemeris table at its own address.' },
+  { id: 'famous-charts', area: 'Charts & calculation', name: 'Famous Charts', status: 'Planned', impact: 'Later', detail: 'Charts of public figures from sourced, rated birth data.' },
   { id: 'social', area: 'Community', name: 'Zodaci Social', status: 'Planned', impact: 'Later', detail: 'Pseudonymous profiles, topic boards and opt-in full-synastry matching.' },
 ];
 

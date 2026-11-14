@@ -1,4 +1,5 @@
-import { Link, useParams, Navigate } from 'react-router-dom';
+import { SlugNotFound } from '@/components/common/SlugNotFound';
+import { Link, useParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { useJsonLd } from '@/hooks/useJsonLd';
@@ -39,7 +40,7 @@ export function ThemeDetail() {
   const copy = COPY[slug];
   usePageMeta(theme ? `${theme.title} — Your Birth Chart Reading | Zodaci` : 'Core themes | Zodaci', copy?.desc ?? '');
   useJsonLd('theme-crumbs', theme ? { '@type': 'BreadcrumbList', itemListElement: [{ '@type': 'ListItem', position: 1, name: 'Core themes', item: 'https://zodaci.com/themes' }, { '@type': 'ListItem', position: 2, name: theme.title, item: `https://zodaci.com/themes/${slug}` }] } : null);
-  if (!theme || !copy) return <Navigate to="/themes" replace />;
+  if (!theme || !copy) return <SlugNotFound kind="theme" back="/themes" backLabel="Browse core themes" />;
   return (
     <div className="mx-auto max-w-3xl space-y-8 px-5 pb-12">
       <header className="space-y-3"><ThemeArt label={theme.title} className="h-16 w-16" /><h1 className="text-4xl md:text-5xl">{theme.title}</h1><p className="text-lg text-muted-foreground">{copy.desc}</p></header>

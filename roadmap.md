@@ -590,3 +590,11 @@ Audit Oct 29: Chat/counselors already use the member's chart; podcast/custom pag
 - [ ] T2b Shopify orders on My Orders — blocked: store-owned Shopify admin app
 - [x] T3 Part 28 final, reference v2 + PDF, instructions text
 - [ ] T4 Later items (overnight list, explainer, uncertainty helper, Forecast TV, stamps, windowing, founder-doc check, pen names)
+
+## Nov 14 — Part 29 navigation audit, live data, UX states (approved)
+- [x] Audit table, overlaps, route map in master resource Part 29 and reference v3
+- [x] Today's ephemeris + UTC/local times + error/Retry on Moon Calendar
+- [x] Not-found pages for lessons, articles, themes; header/footer link test
+- [x] Results and Chart Calculator error/Retry and inline field messages
+- [ ] Compatibility card design — waiting: owner picks option A, B or C (Part 29.6)
+- [ ] Ephemeris page, Famous Charts — planned later (Famous Charts needs sourced birth data)

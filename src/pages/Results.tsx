@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useMemo } from 'react';
+import { lazy, Suspense, useEffect, useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { computeChart } from '@/lib/astro';
 import { kuaSex, toChartInput, useMyBirth } from '@/lib/myBirth';
@@ -32,9 +32,12 @@ export default function Results() {
   const [tone, setTone] = useReadingTone();
   const [params, setParams] = useSearchParams();
   const tab = (RESULT_TABS.find(t => t.id === params.get('tab'))?.id ?? 'blueprint') as TabId;
-  const chart = useMemo(() => birth ? computeChart({ ...toChartInput(birth), sex: kuaSex(birth.sex) }) : null, [birth]);
+  const [attempt, setAttempt] = useState(0);
+  const calc = useMemo(() => { if (!birth) return null; try { return computeChart({ ...toChartInput(birth), sex: kuaSex(birth.sex) }); } catch (e) { return e instanceof Error ? e : new Error('Calculation failed'); } }, [birth, attempt]); // eslint-disable-line react-hooks/exhaustive-deps
+  const chart = calc instanceof Error ? null : calc;
   useEffect(() => { document.getElementById('results-panel')?.focus({ preventScroll: true }); }, [tab]);
   if (birth === undefined) return <div className="mx-auto max-w-4xl space-y-4" role="status" aria-label="Loading your chart"><div className="h-10 w-64 animate-pulse rounded bg-card" /><div className="h-96 animate-pulse rounded-lg bg-card" /></div>;
+  if (calc instanceof Error) return <section role="alert" className="obs-paper mx-auto max-w-lg space-y-4 p-6 text-center"><h1 className="font-display text-3xl">We couldn't calculate your chart</h1><p className="text-muted-foreground">Your saved birth details are safe, but the calculation stopped ({calc.message}). Nothing is shown in its place. Retry, or check the time zone in your birth details.</p><div className="flex flex-wrap justify-center gap-3"><Button onClick={() => setAttempt(a => a + 1)}>Retry</Button><Button asChild variant="outline"><StartLink>Check my birth details</StartLink></Button></div></section>;
   if (!birth || !chart) return <article className="mx-auto max-w-lg space-y-4 py-10 text-center"><h1 className="font-display text-3xl">Add your birth details first</h1><p className="text-muted-foreground">Your results are calculated from your birth date, time and place.</p><Button asChild><StartLink>Create my chart</StartLink></Button></article>;
   const timeKnown = !!birth.time;
   const select = (id: TabId) => { const n = new URLSearchParams(params); n.set('tab', id); setParams(n, { replace: true }); };

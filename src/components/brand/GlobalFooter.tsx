@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { ZodaciLogo } from './ZodaciLogo';
 import heads from '@/assets/home-heads-hero.jpg';
 
-const COLUMNS: { heading: string; links: [string, string][] }[] = [
+export const FOOTER_COLUMNS: { heading: string; links: [string, string][] }[] = [
   { heading: 'Zodaci', links: [['/auth', 'Free chart'], ['/pricing', 'Pricing'], ['/compatibility', 'Compatibility'], ['/astrobook', 'AstroBook'], ['/astrocomic', 'AstroComic'], ['/referrals', 'Invite a friend']] },
   { heading: 'Learn', links: [['/learn', 'Learn'], ['/learn/reading-your-birth-chart', 'Reading your birth chart'], ['/learn/moon-phases-explained', 'Moon phases'], ['/learn/reflection-not-prediction', 'Reflection practice'], ['/learn#journal', 'Community journal']] },
   { heading: 'Company', links: [['/about', 'About'], ['/faq', 'FAQ'], ['/demo', 'Interactive demo'], ['/themes', 'Core themes'], ['/community', 'Community'], ['/privacy', 'Privacy Policy'], ['/terms', 'Terms of Service']] },
@@ -19,7 +19,7 @@ export function GlobalFooter() {
           <p className="text-sm text-muted-foreground">Your sky. Your story.</p>
           <p className="text-xs text-muted-foreground">Zodaci is the platform. AstroBook is our printed book.</p>
         </div>
-        {COLUMNS.map(col => (
+        {FOOTER_COLUMNS.map(col => (
           <nav key={col.heading} aria-label={col.heading}>
             <h2 className="mb-3 text-sm font-semibold">{col.heading}</h2>
             <ul className="space-y-2 text-sm text-muted-foreground">

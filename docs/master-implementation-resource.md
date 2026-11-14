@@ -739,3 +739,68 @@ Checked against chat messages #1182–#1261. Everything below was said in chat b
 19. **Reviewed placement text library** (Blocked, Later) — About 216 placement entries for free deterministic readings. Waiting on: Owner review and AI credits.
 
 The live version of this register is src/lib/featureRegister.ts; the investor page and the developer dashboard read it directly.
+
+## Part 29 — Navigation audit, route map, live data and UX states (Nov 14 2026)
+
+### 29.1 Public navigation map (audited from the router, header, mobile drawer and footer)
+| Label | Where it appears | Route | State |
+|---|---|---|---|
+| Charts | Header + mobile drawer | /start | Complete |
+| AstroBooks | Header + mobile drawer | /astrobook | Complete |
+| AstroComic | Header + mobile drawer; Footer (Zodaci) | /astrocomic | Complete |
+| Relationships / Compatibility | Header (Relationships); Footer (Compatibility) | /compatibility | Complete (two labels, one page) |
+| Learn (+ Lessons, Articles, Journal, Forecasts menu) | Header dropdown + drawer; Footer (Learn) | /learn, /learn#section, /forecast | Complete |
+| Shop | Header + drawer | /store | Partial (product copy waits on Shopify sign-in) |
+| About | Header; Footer (Company) | /about | Complete |
+| Pricing | Header; Footer | /pricing | Complete |
+| Sign in / My Zodaci | Header button | /auth or /dashboard | Complete |
+| Generate your chart | Header button (signed out) | /start | Complete |
+| Free chart | Footer | /auth | Complete |
+| Invite a friend | Footer | /referrals | Complete (members) |
+| Reading your birth chart, Moon phases, Reflection practice | Footer (Learn) | /learn/:slug | Complete |
+| Community journal | Footer (Learn) | /learn#journal | Complete |
+| FAQ, Interactive demo, Core themes, Community | Footer (Company) | /faq, /demo, /themes, /community | Complete |
+| Contact | Footer | mailto:help@zodaci.com | Complete (the form is on the home page) |
+| Privacy Policy, Terms of Service | Footer (Legal) | /privacy, /terms | Complete |
+| Academy (old) | Old links only | /academy → /learn#lessons | Redirect, working |
+| Academy lesson | Learn lessons list, Compatibility, member nav | /academy/:slug | Complete |
+| Blog (old) | Old links only | /blog → /learn#journal; /blog/learn/:slug → /learn/:slug | Redirect, working |
+| Moon Calendar | Member menu | /moon-calendar | Complete (now shows today's ephemeris and UTC times) |
+| Ephemeris | Nowhere | none | Missing (no page) |
+| Famous Charts | Named in project instructions only | none | Missing (no page) |
+
+### 29.2 Overlapping destinations
+- Academy, Learn Astrology and Knowledge Base: all three already lead to **/learn**. "Knowledge Base" and "Learn Astrology" don't appear anywhere on the site, only in the project instructions. "Academy" survives as the address for single lessons (/academy/:slug) and as the old /academy redirect.
+- Articles and Blog: articles live at **/learn/:slug**. /blog and /blog/learn/:slug redirect there, and the member-written journal is /learn#journal.
+- Compatibility and Relationships: Compatibility (/compatibility) is the public calculator. Relationships (/relationships) is a member's private list of saved people. They are kept separate on purpose.
+
+### 29.3 Recommended route map (adopted)
+- Learn hub: /learn. Blog and Knowledge Base are labels only, both pointing here.
+- Lessons: /academy/:slug. They stay where they are because their search listings already point there. Moving them to /learn/lessons/:slug is listed as optional for later.
+- Articles: /learn/:slug
+- Old addresses: /academy, /blog and /blog/learn/:slug keep redirecting.
+- Wrong lesson, article or theme addresses now show a "We couldn't find that…" page with links back (hidden from search engines), instead of a bare line or a silent redirect.
+- Test src/lib/navLinks.test.ts checks that every header and footer link, and every old address, opens a real page.
+- The project instructions' placeholder route list should be replaced with this map.
+
+### 29.4 Live data (done)
+- The Moon Calendar now opens with a Today's ephemeris panel. Every planet's sign and degree comes from the chart engine for this minute, with retrograde marks.
+- Every time is labelled in UTC and in the viewer's time. Each Moon phase also shows its UTC time.
+- It has loading placeholders, an empty message, and an error banner with Retry. No sample positions are ever used.
+- Tests: src/lib/skyNow.test.ts.
+
+### 29.5 Birth chart result and calculator states (done)
+- Results: loading placeholders and an empty state ("Create my chart") were already there. It now adds an error banner with Retry if the calculation fails.
+- Chart Calculator: inline messages for date, time, latitude, longitude and time zone, plus an error banner with Retry.
+- Signed-out "Save chart": signed-out visitors can't calculate a personal chart. The project rule is that people sign in before entering birth details, so these pages send them to sign in and bring them back afterwards. Nothing is entered first, so nothing needs keeping. A saved-intent flow is only needed if a public calculator is opened later.
+
+### 29.6 Compatibility cards: three visual options (waiting for owner choice)
+- **A. Observatory index cards.** Cream archive-paper cards with a slab-serif placement heading ("Venus in Taurus · Mars in Virgo"). A label-font line names the aspect ("Earth trine Earth · strong harmony"), with body text at relaxed line height. Three columns on desktop, one on phones, roomy padding.
+- **B. Projector slides.** Indigo cards with a brass edge and the score as a large slab figure. The aspect summary is in label caps and the reading is set in cream. Three columns on desktop, two on tablets, one on phones, with a slow lift on hover.
+- **C. Field notebook rows.** Hand-cut-corner strips in a single column, with the reading beside the planet pair ("Moon in Cancer and Moon in Scorpio: water meets water"). It switches to three-column cards at desktop width. Lightest visual weight.
+
+### 29.7 Still open
+- Ephemeris as its own page.
+- Famous Charts: needs real, sourced birth data before it can be built.
+- Compatibility design choice (29.6).
+- The optional /learn/lessons address move.

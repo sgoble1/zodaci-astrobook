@@ -1,3 +1,4 @@
+import { SlugNotFound } from '@/components/common/SlugNotFound';
 import { Link, useParams } from 'react-router-dom';
 import { ArrowRight, Clock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -33,7 +34,7 @@ export function AcademyLesson() {
   const lesson = lessonBySlug(slug);
   usePageMeta(lesson ? `${lesson.title} — Zodaci Academy` : 'Lesson not found — Zodaci Academy', lesson?.summary ?? 'Zodaci Academy lessons');
   useJsonLd('lesson-schema', lesson ? { '@type': 'Article', headline: lesson.title, description: lesson.summary, isPartOf: { '@type': 'Course', name: 'Zodaci Academy' }, author: { '@type': 'Organization', name: 'Zodaci' }, mainEntityOfPage: `https://zodaci.com/academy/${lesson.slug}` } : null);
-  if (!lesson) return <div className="space-y-4"><h1 className="text-3xl">Lesson not found</h1><Link to="/learn#lessons" className="underline">Back to Learn</Link></div>;
+  if (!lesson) return <SlugNotFound kind="lesson" back="/learn#lessons" backLabel="Browse lessons" />;
   const i = ALL_LESSONS.findIndex(l => l.slug === lesson.slug);
   const prev = ALL_LESSONS[i - 1], next = ALL_LESSONS[i + 1];
   return (

@@ -35,6 +35,7 @@ export default function ChartCalculator() {
   const [geo, setGeo] = useState<Geo[]>([]);
   const [busy, setBusy] = useState(false);
   const [geoErr, setGeoErr] = useState('');
+  const [errs, setErrs] = useState<Record<string, string>>({});
 
   const result = useMemo(() => { try { return computeChart(input); } catch (e) { return e as Error; } }, [sp.toString()]); // eslint-disable-line react-hooks/exhaustive-deps
   const isApril = input.date === APRIL.date && Math.abs(input.lat - APRIL.lat) < 0.5 && Math.abs(input.lon - APRIL.lon) < 0.5;
@@ -50,6 +51,14 @@ export default function ChartCalculator() {
   const choose = (g: Geo) => { const label = [g.name, g.admin1, g.country].filter(Boolean).join(', '); setForm(f => ({ ...f, lat: g.latitude, lon: g.longitude, tz: g.timezone, placeLabel: label, placeSource: 'geocoded' })); setQ(label); setGeo([]); };
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
+    const v: Record<string, string> = {};
+    const y = +form.date.slice(0, 4);
+    if (!form.date) v.date = 'Enter a birth date.'; else if (y < 1800 || y > 2100) v.date = 'Use a year between 1800 and 2100.';
+    if (!form.unknown && !form.time) v.time = 'Enter a time, or tick "time unknown".';
+    if (!Number.isFinite(+form.lat) || Math.abs(+form.lat) > 90) v.lat = 'Latitude runs from −90 to 90.';
+    if (!Number.isFinite(+form.lon) || Math.abs(+form.lon) > 180) v.lon = 'Longitude runs from −180 to 180.';
+    try { new Intl.DateTimeFormat('en', { timeZone: form.tz }); } catch { v.tz = 'Use a time zone name like “Europe/London”. Searching a place fills this in.'; }
+    setErrs(v); if (Object.keys(v).length) return;
     const next: ChartInput = { date: form.date, time: form.unknown || !form.time ? null : form.time, lat: +form.lat, lon: +form.lon, tz: form.tz, placeLabel: form.placeLabel || q, placeSource: form.placeSource, sex: form.sex };
     setSp(toParams(next));
   };
@@ -63,7 +72,7 @@ export default function ChartCalculator() {
       </header>
 
       <form onSubmit={submit} className="parchment p-5 grid md:grid-cols-2 gap-4">
-        <label className="text-sm">Date<Input type="date" required value={form.date} onChange={e => setForm(f => ({ ...f, date: e.target.value }))} /></label>
+        <label className="text-sm">Date<Input type="date" required value={form.date} aria-invalid={!!errs.date} aria-describedby={errs.date ? 'err-date' : undefined} onChange={e => setForm(f => ({ ...f, date: e.target.value }))} />{errs.date && <span id="err-date" className="mt-1 block text-xs text-destructive">{errs.date}</span>}</label>
         <div className="text-sm">Time (local clock)
           <div className="flex gap-3 items-center"><Input type="time" value={form.time} disabled={form.unknown} onChange={e => setForm(f => ({ ...f, time: e.target.value }))} />
             <label className="text-xs flex items-center gap-1 whitespace-nowrap"><input type="checkbox" checked={form.unknown} onChange={e => setForm(f => ({ ...f, unknown: e.target.checked }))} />Time unknown</label></div>
@@ -75,13 +84,14 @@ export default function ChartCalculator() {
           {geoErr && <p className="text-xs text-oxblood mt-1">{geoErr}</p>}
           {geo.length > 0 && <ul className="border border-border rounded mt-1 divide-y divide-border bg-background">{geo.map((g, i) => <li key={i}><button type="button" onClick={() => choose(g)} className="w-full text-left px-3 py-1.5 hover:bg-muted text-sm">{[g.name, g.admin1, g.country].filter(Boolean).join(', ')} <span className="text-[11px] text-muted-foreground">· {g.latitude.toFixed(2)}, {g.longitude.toFixed(2)} · {g.timezone}</span></button></li>)}</ul>}
         </div>
-        <label className="text-sm">Latitude<Input type="number" step="0.0001" value={form.lat} onChange={e => setForm(f => ({ ...f, lat: +e.target.value, placeSource: 'manual' }))} /></label>
-        <label className="text-sm">Longitude (east +, west −)<Input type="number" step="0.0001" value={form.lon} onChange={e => setForm(f => ({ ...f, lon: +e.target.value, placeSource: 'manual' }))} /></label>
-        <label className="text-sm">Time zone<Input value={form.tz} onChange={e => setForm(f => ({ ...f, tz: e.target.value, placeSource: 'manual' }))} placeholder="America/New_York" /></label>
+        <label className="text-sm">Latitude<Input type="number" step="0.0001" value={form.lat} aria-invalid={!!errs.lat} onChange={e => setForm(f => ({ ...f, lat: +e.target.value, placeSource: 'manual' }))} />{errs.lat && <span className="mt-1 block text-xs text-destructive">{errs.lat}</span>}</label>
+        <label className="text-sm">Longitude (east +, west −)<Input type="number" step="0.0001" value={form.lon} aria-invalid={!!errs.lon} onChange={e => setForm(f => ({ ...f, lon: +e.target.value, placeSource: 'manual' }))} />{errs.lon && <span className="mt-1 block text-xs text-destructive">{errs.lon}</span>}</label>
+        <label className="text-sm">Time zone<Input value={form.tz} onChange={e => setForm(f => ({ ...f, tz: e.target.value, placeSource: 'manual' }))} placeholder="America/New_York" aria-invalid={!!errs.tz} />{errs.tz && <span className="mt-1 block text-xs text-destructive">{errs.tz}</span>}</label>
+        {errs.time && <p className="text-xs text-destructive md:col-span-2">{errs.time}</p>}
         <div className="flex items-end gap-2"><Button type="submit">Calculate</Button><Button type="button" variant="ghost" onClick={() => { setForm({ ...APRIL, time: APRIL.time!, unknown: false }); setQ(APRIL.placeLabel); setSp(toParams(APRIL)); }}>Reset to April</Button></div>
       </form>
 
-      {result instanceof Error ? <p className="text-oxblood">Couldn’t calculate: {result.message}. Check that the time zone is a valid name like “Europe/London”.</p> : (
+      {result instanceof Error ? <div role="alert" className="obs-paper space-y-3 border-l-4 border-destructive p-5"><p>Couldn’t calculate: {result.message}. Check that the time zone is a valid name like “Europe/London”. No positions are shown in its place.</p><Button size="sm" variant="outline" onClick={() => setSp(new URLSearchParams(sp))}>Retry</Button></div> : (
         <>
           <section className="space-y-3">
             <div className="flex flex-wrap items-center justify-between gap-2">
