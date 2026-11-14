@@ -5,6 +5,8 @@
 export type SiteUpdate = { date: string; title: string; text: string; to?: string; cta?: string };
 
 export const SITE_UPDATES: SiteUpdate[] = [
+  { date: '2026-11-14', title: 'Give an AstroBook written from their chart', text: 'Order an AstroBook about someone else: pick them from your saved people and the book is written from their birth details, with your note on its own page. Send them a gift notice from My orders when you are ready.', to: '/books#book-for', cta: 'Give a book' },
+  { date: '2026-11-14', title: 'Read the first three pages of your AstroBook', text: 'Signed in, the AstroBook page now shows your Sun, Moon and Rising pages, worked out from your saved chart.', to: '/astrobook#teaser', cta: 'Read my pages' },
   { date: '2026-11-13', title: 'A next step at the end of chart pages', text: 'Your results, RetroGOOD and sibling pages now end with a few suggestions of where to go next, so you never hit a dead end.', to: '/results', cta: 'Open my results' },
   { date: '2026-11-13', title: 'Dashboard and About page fixed', text: 'A problem that could make the dashboard freeze after signing in is fixed, and the About page opens again. We checked the main pages one by one afterwards.', to: '/dashboard', cta: 'Open my dashboard' },
   { date: '2026-11-13', title: 'A faster dashboard', text: 'Your dashboard opens noticeably quicker: payment tools now load only at checkout, and the 30-day sky forecast fills in just after the page appears.', to: '/dashboard', cta: 'Open my dashboard' },

@@ -1,7 +1,7 @@
 // The one place server code sends app emails (Lovable's built-in email via notify.zodaci.com). Resend is retired.
 import { sendTemplateEmail } from './transactional-email-templates/send-email.ts'
 
-export type AppEmailTemplate = 'contact-received' | 'contact-owner-notice' | 'newsletter-confirm' | 'book-shipped';
+export type AppEmailTemplate = 'contact-received' | 'contact-owner-notice' | 'newsletter-confirm' | 'book-shipped' | 'book-gift';
 export type AppEmailResult = { sent: true } | { sent: false; reason: 'not_configured' | 'recipient_suppressed' | 'failed'; error?: string };
 
 /** Never throws: callers record the status instead of failing their request. */

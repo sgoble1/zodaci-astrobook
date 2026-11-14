@@ -610,6 +610,20 @@
       "when": 1794634820311,
       "tag": "0086_public_shop_layout_setting",
       "breakpoints": true
+    },
+    {
+      "idx": 87,
+      "version": "7",
+      "when": 1794637638927,
+      "tag": "0087_book_order_gift_recipient",
+      "breakpoints": true
+    },
+    {
+      "idx": 88,
+      "version": "7",
+      "when": 1794637841442,
+      "tag": "0088_book_order_gift_lock",
+      "breakpoints": true
     }
   ]
 }

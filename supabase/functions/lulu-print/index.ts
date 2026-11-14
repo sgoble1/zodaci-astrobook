@@ -173,7 +173,7 @@ Deno.serve(async req => {
           shipping_address: ship.address,
           line_items: [{
             external_id: order.id, title: 'AstroBook', quantity: 1,
-            printable_normalization: { pod_package_id: files.pod, interior: { source_url: interiorUrl }, cover: { source_url: coverUrl }, ...(isLinen(files.pod) ? foilText(profile?.display_name) : {}) },
+            printable_normalization: { pod_package_id: files.pod, interior: { source_url: interiorUrl }, cover: { source_url: coverUrl }, ...(isLinen(files.pod) ? foilText(order.recipient_name || profile?.display_name) : {}) },
           }],
         } });
         const id = Number(job?.id);

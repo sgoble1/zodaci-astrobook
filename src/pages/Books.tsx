@@ -6,12 +6,11 @@ import { usePageMeta } from '@/hooks/usePageMeta';
 import { Book3D } from '@/components/books/Book3D';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
-import { BookOpen, Check, Truck, Plus, Trash2, Sparkles, Upload, Lock, Gift } from 'lucide-react';
+import { BookOpen, Check, Truck, Plus, Trash2, Sparkles, Upload, Lock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Checkbox } from '@/components/ui/checkbox';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { supabase } from '@/integrations/supabase/client';
 import { useSubscription } from '@/hooks/useSubscription';
@@ -30,6 +29,9 @@ import { ManuscriptPreview } from '@/components/books/ManuscriptPreview';
 import { VersionCompare } from '@/components/books/VersionCompare';
 import { Faq, ASTROBOOK_FAQ } from '@/components/brand/Faq';
 import { StartLink } from '@/components/common/StartLink';
+import { BookRecipient } from '@/components/books/BookRecipient';
+import { useRelationships } from '@/hooks/useRelationships';
+import { BOOK_FOR_ME, dedicationFor, giftOrderFields, recipientBirth, validateGift, type BookFor } from '@/lib/bookGift';
 
 /** A small finished-cover thumbnail (artwork plus the reader's name), drawn by the same code as the print cover. */
 function CoverThumb({ spec, alt, blur = false }: { spec: CoverSpec; alt: string; blur?: boolean }) {
@@ -47,17 +49,24 @@ export default function Books() {
   const digital = version.format === 'digital';
   const [orderId] = useState(() => crypto.randomUUID());
   const [extras, setExtras] = useState<string[]>([]);
-  const [gift, setGift] = useState(false); const [giftMessage, setGiftMessage] = useState('');
+  const [bookFor, setBookFor] = useState<BookFor>(BOOK_FOR_ME);
+  const people = useRelationships();
+  const forOther = bookFor.mode === 'other';
+  const recipient = forOther ? people.items.find(p => p.id === bookFor.recipientId) : undefined;
+  const houseSystem = birth?.houseSystem ?? 'placidus';
+  // The chart the book is written from: the buyer's, or the gift recipient's own birth details.
+  const bookBirth = forOther ? (recipient ? recipientBirth(recipient, houseSystem) : null) : birth;
+  const dedication = dedicationFor(bookFor, digital, bookBirth?.name ?? '');
   const [covers, setCovers] = useState<Record<string, { url: string; final: boolean }>>({});
   // Cover choice: 'design:<key>' for the free universal designs, 'upload' for the visitor's own image, 'ai:<style>' for chart-based previews.
   const [choice, setChoice] = useState('');
   const [uploaded, setUploaded] = useState<{ url: string; name: string } | null>(null);
   const [crop, setCrop] = useState<CoverCrop>(DEFAULT_CROP);
   const [coverName, setCoverName] = useState<string | null>(null);
-  const nameOnCover = coverName ?? birth?.name ?? '';
+  const nameOnCover = coverName ?? bookBirth?.name ?? '';
   // The reader's birth line prints under their name unless they switch it off in the cover editor.
   const [birthOnCover, setBirthOnCover] = useState(true);
-  const birthLine = coverBirthLine(birth);
+  const birthLine = coverBirthLine(bookBirth);
   const detail = birthOnCover && birthLine ? birthLine : undefined;
   const fileRef = useRef<HTMLInputElement>(null);
   const [busy, setBusy] = useState(''); const [error, setError] = useState('');
@@ -88,7 +97,7 @@ export default function Books() {
   const pick = (next: string) => { if (next !== choice) setCrop(DEFAULT_CROP); setChoice(next); };
   const coverReady = !!spec && composed?.key === specKey;
   const coverPreviewUrl = coverReady ? composed?.url : undefined;
-  const config = JSON.stringify([edition, extras, specKey, birth]);
+  const config = JSON.stringify([edition, extras, specKey, bookBirth, dedication ?? null, forOther]);
   const manuscriptReady = manuscript?.config === config;
   const canUseAiCovers = usePlan().plan !== 'free';
   const certificate = edition === 'linen' ? orderId.slice(0, 8).toUpperCase() : undefined;
@@ -128,7 +137,8 @@ export default function Books() {
     try {
       const invalid = validateBookOrder({ userId: sub.userId, coverReady, manuscriptReady, extras, address, digital });
       if (invalid || !manuscript) throw new Error(invalid ?? 'Choose a finished cover and compose your manuscript first.');
-      if (gift && giftMessage.length > 500) throw new Error('Keep the gift message under 500 characters.');
+      const giftInvalid = validateGift(bookFor, recipient, extras);
+      if (giftInvalid) throw new Error(giftInvalid);
       const id = orderId;
       if (!composed || composed.key !== specKey) throw new Error('Your cover is still being prepared. Try again in a moment.');
       // The saved cover is exactly the designed front cover, as a print-resolution JPEG.
@@ -139,7 +149,7 @@ export default function Books() {
       const manuscriptPath = `${sub.userId}/manuscripts/${id}.pdf`;
       const uploadedPdf = await supabase.storage.from('library').upload(manuscriptPath, manuscript.blob, { contentType: 'application/pdf', upsert: true });
       if (uploadedPdf.error) throw uploadedPdf.error;
-      const { error: err } = await supabase.from('book_orders').insert({ id, user_id: sub.userId, edition, format: version.format, base_price_cents: version.price, extra_sections: extras.map(s => s.trim()).filter(Boolean), cover_path: path, cover_style: coverStyleLabel, shipping_address: digital ? {} : address, manuscript_path: manuscriptPath, manuscript_pages: manuscript.pages, gift: !digital && gift, gift_message: !digital && gift ? giftMessage.trim() : '' });
+      const { error: err } = await supabase.from('book_orders').insert({ id, user_id: sub.userId, edition, format: version.format, base_price_cents: version.price, extra_sections: extras.map(s => s.trim()).filter(Boolean), cover_path: path, cover_style: coverStyleLabel, shipping_address: digital ? {} : address, manuscript_path: manuscriptPath, manuscript_pages: manuscript.pages, ...giftOrderFields(bookFor, recipient, digital, houseSystem) });
       if (err) throw err;
       nav(`/orders?order=${id}`);
     } catch (e) { setError(e instanceof Error ? e.message : 'Could not save your order.'); }
@@ -174,6 +184,8 @@ export default function Books() {
       <details className="rounded border border-border p-4"><summary className="cursor-pointer text-primary">Compare all five versions</summary><div className="mt-4"><VersionCompare /></div></details>
     </section>
 
+    <BookRecipient value={bookFor} digital={digital} people={people.items} loading={people.loading} signedIn={!!sub.userId} onChange={next => { if (next.mode !== bookFor.mode || next.recipientId !== bookFor.recipientId) { setCoverName(null); if (next.mode === 'other') { setExtras([]); if (choice.startsWith('ai:')) setChoice(''); } } setBookFor(next); }} />
+
     <section aria-labelledby="chapters-title" className="space-y-4">
       <h2 id="chapters-title" className="text-2xl">What your chapters cover</h2>
       <Tabs defaultValue={CHAPTER_TABS[0].id}>
@@ -183,7 +195,7 @@ export default function Books() {
       <ol className="divide-y divide-border">{BOOK_SECTIONS.map(s => <li key={s.title} className="py-3"><h3 className="text-lg">{s.title}</h3><p className="text-sm text-muted-foreground mt-1">{s.description}</p></li>)}</ol>
     </section>
 
-    <section><div className="flex flex-wrap items-center justify-between gap-3"><h2 className="text-2xl">Make it more yours</h2><Button variant="outline" disabled={extras.length >= 2} onClick={() => setExtras(e => [...e, ''])}><Plus />Add section · {money(EXTRA_SECTION_PRICE)}</Button></div><p className="text-sm text-muted-foreground mt-2">Up to two extra sections from readings you have already finished, for example creativity, communication or a life theme.</p>{extras.map((s, i) => <div className="flex gap-2 mt-3" key={i}><Input aria-label={`Extra section ${i + 1}`} maxLength={160} value={s} onChange={e => setExtras(x => x.map((v, n) => n === i ? e.target.value : v))} placeholder="Section title, as it appears in My Masterbook" /><Button size="icon" variant="ghost" aria-label={`Remove extra section ${i + 1}`} onClick={() => setExtras(x => x.filter((_, n) => n !== i))}><Trash2 /></Button></div>)}</section>
+    <section><div className="flex flex-wrap items-center justify-between gap-3"><h2 className="text-2xl">Make it more yours</h2><Button variant="outline" disabled={extras.length >= 2 || forOther} onClick={() => setExtras(e => [...e, ''])}><Plus />Add section · {money(EXTRA_SECTION_PRICE)}</Button></div><p className="text-sm text-muted-foreground mt-2">{forOther ? 'Extra sections come from readings you have finished about your own chart, so they are not available for a gift written from someone else\'s chart.' : 'Up to two extra sections from readings you have already finished, for example creativity, communication or a life theme.'}</p>{extras.map((s, i) => <div className="flex gap-2 mt-3" key={i}><Input aria-label={`Extra section ${i + 1}`} maxLength={160} value={s} onChange={e => setExtras(x => x.map((v, n) => n === i ? e.target.value : v))} placeholder="Section title, as it appears in My Masterbook" /><Button size="icon" variant="ghost" aria-label={`Remove extra section ${i + 1}`} onClick={() => setExtras(x => x.filter((_, n) => n !== i))}><Trash2 /></Button></div>)}</section>
 
     <section aria-labelledby="personal-cover" className="space-y-5">
       <div><h2 id="personal-cover" className="text-2xl">Choose your cover</h2><p className="mt-2 text-sm text-muted-foreground">Pick one of our designs, use your own picture, or with Pro create covers drawn from your chart. Your name is the title, with “Your exact placement in print” beneath it and AstroBook at the bottom right.</p></div>
@@ -204,8 +216,9 @@ export default function Books() {
         ? <div className="vellum space-y-4 p-5"><h3 className="text-xl">Design your cover</h3><CoverEditor spec={spec} birthLine={birthLine || undefined} onChange={s => { setCrop(s.crop); setCoverName(s.name); setBirthOnCover(!!s.detail); }} trimLabel={`${version.name} · ${version.trim ?? '6 × 9 in PDF'}`} />{composing && <p role="status" className="text-xs text-muted-foreground">Preparing the print-quality cover…</p>}</div>
         : <p className="text-sm text-muted-foreground">Choose a cover above to design it.</p>}
     </section>
-    <section><div className="flex flex-wrap justify-between gap-3"><h2 className="text-2xl">Personal covers from your chart</h2>{canUseAiCovers ? <Button disabled={!!busy || !sub.userId || !birth} onClick={generate}><Sparkles />Create three cover previews</Button> : <Button asChild variant="outline"><Link to="/pricing"><Lock />Included with Pro</Link></Button>}</div><p className="text-sm text-muted-foreground mt-3">{canUseAiCovers ? 'Artwork draws on your saved planetary signs; it is symbolic, not a calculated chart diagram. Each cover preview uses 3 AI credits from your monthly balance (9 for all three).' : 'Chart-based cover previews use AI and are included with Pro. Our designs and your own picture are free for everyone.'}</p>{canUseAiCovers && <div role="radiogroup" aria-label="Chart covers" className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-5">{COVER_STYLES.map(style => { const c = covers[style]; const on = choice === `ai:${style}`; return <button key={style} type="button" role="radio" aria-checked={on} disabled={!c?.final || !!busy} onClick={() => pick(`ai:${style}`)} className={`flex flex-col overflow-hidden rounded-lg border text-left transition-colors duration-500 disabled:opacity-70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${on ? 'border-gold ring-1 ring-gold/40' : 'border-border hover:border-primary/60'}`}><div className="flex w-full items-center justify-center bg-muted" style={{ aspectRatio: `${version.trimPt[0]} / ${version.trimPt[1]}` }}>{c ? (c.final ? <CoverThumb spec={{ source: { kind: 'image', url: c.url }, crop: on ? crop : DEFAULT_CROP, name: nameOnCover, trimPt: version.trimPt, detail }} alt={`${style} cover with your name`} /> : <img src={c.url} alt="" className="h-full w-full object-cover blur-lg" />) : <BookOpen className="h-12 w-12 text-muted-foreground" aria-hidden />}</div><span className="flex items-center justify-between gap-1 p-4">{style}{on && <Check className="h-4 w-4 text-gold" aria-hidden />}</span></button>; })}</div>}{!sub.userId && <p className="mt-3"><Link to="/auth?next=/books" className="underline text-gold">Sign in</Link> to save your cover and order.</p>}{sub.userId && !birth && <StartLink className="underline text-gold">Add your birth details first</StartLink>}</section>
-    {birth && <ManuscriptPreview key={config} birth={birth} edition={edition} extras={extras} certificate={certificate} coverUrl={coverReady ? coverPreviewUrl : undefined} onReady={file => setManuscript({ ...file, config })} />}
+    <section><div className="flex flex-wrap justify-between gap-3"><h2 className="text-2xl">Personal covers from your chart</h2>{canUseAiCovers ? <Button disabled={!!busy || !sub.userId || !birth || forOther} onClick={generate}><Sparkles />Create three cover previews</Button> : <Button asChild variant="outline"><Link to="/pricing"><Lock />Included with Pro</Link></Button>}</div><p className="text-sm text-muted-foreground mt-3">{forOther ? 'Chart covers draw on your own saved chart, so they are off for a book about someone else. Pick one of our designs or upload a picture.' : canUseAiCovers ? 'Artwork draws on your saved planetary signs; it is symbolic, not a calculated chart diagram. Each cover preview uses 3 AI credits from your monthly balance (9 for all three).' : 'Chart-based cover previews use AI and are included with Pro. Our designs and your own picture are free for everyone.'}</p>{canUseAiCovers && !forOther && <div role="radiogroup" aria-label="Chart covers" className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-5">{COVER_STYLES.map(style => { const c = covers[style]; const on = choice === `ai:${style}`; return <button key={style} type="button" role="radio" aria-checked={on} disabled={!c?.final || !!busy} onClick={() => pick(`ai:${style}`)} className={`flex flex-col overflow-hidden rounded-lg border text-left transition-colors duration-500 disabled:opacity-70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${on ? 'border-gold ring-1 ring-gold/40' : 'border-border hover:border-primary/60'}`}><div className="flex w-full items-center justify-center bg-muted" style={{ aspectRatio: `${version.trimPt[0]} / ${version.trimPt[1]}` }}>{c ? (c.final ? <CoverThumb spec={{ source: { kind: 'image', url: c.url }, crop: on ? crop : DEFAULT_CROP, name: nameOnCover, trimPt: version.trimPt, detail }} alt={`${style} cover with your name`} /> : <img src={c.url} alt="" className="h-full w-full object-cover blur-lg" />) : <BookOpen className="h-12 w-12 text-muted-foreground" aria-hidden />}</div><span className="flex items-center justify-between gap-1 p-4">{style}{on && <Check className="h-4 w-4 text-gold" aria-hidden />}</span></button>; })}</div>}{!sub.userId && <p className="mt-3"><Link to="/auth?next=/books" className="underline text-gold">Sign in</Link> to save your cover and order.</p>}{sub.userId && !birth && <StartLink className="underline text-gold">Add your birth details first</StartLink>}</section>
+    {bookBirth && <ManuscriptPreview key={config} birth={bookBirth} recipient={forOther} dedication={dedication} edition={edition} extras={extras} certificate={certificate} coverUrl={coverReady ? coverPreviewUrl : undefined} onReady={file => setManuscript({ ...file, config })} />}
+    {forOther && !recipient && <p className="text-sm text-muted-foreground">Choose who the book is about in <a href="#book-for" className="underline text-accent">Who is this book about?</a> to compose their manuscript.</p>}
 
     <section aria-labelledby="specs"><h2 id="specs" className="text-2xl">How your {version.name} is made</h2>{digital ? <p className="text-sm text-muted-foreground mt-2">A full-color PDF laid out at 6 × 9 inches, ready to read on screen or print at home. It downloads from My orders as soon as payment is confirmed.</p> : <><p className="text-sm text-muted-foreground mt-2">Printed on demand by <a className="underline" href="https://www.lulu.com/" target="_blank" rel="noreferrer">Lulu</a>, one copy at a time, after we review your manuscript.</p><dl className="grid sm:grid-cols-2 gap-4 mt-4">{[['Trim size', version.trim], ['Binding', version.binding], ['Interior', version.paper], ['Cover', version.cover]].map(([t, v]) => <div key={t} className="rounded border border-border bg-card p-4"><dt className="font-label text-xs tracking-[0.16em] text-primary">{t}</dt><dd className="mt-2 text-sm">{v}</dd></div>)}</dl></>}</section>
     {!digital && <section><h2 className="text-2xl">US delivery</h2><div className="flex gap-3 mt-4"><Truck className="text-gold shrink-0" /><p>Free shipping within the United States. {version.name}: {version.ship} after your manuscript is approved. Estimates are not guaranteed. Tracking appears in My orders when your book ships. No international shipping yet.</p></div></section>}
@@ -214,9 +227,8 @@ export default function Books() {
       <h2 className="text-2xl">{digital ? 'Get your digital AstroBook' : 'Where should we send it?'}</h2>
       <p className="text-sm text-muted-foreground">{digital ? 'Save your book, then pay securely on the next page. Your PDF is ready to download from My orders as soon as payment is confirmed.' : "Save your book, then pay securely on the next page. We review every manuscript before it goes to print; if anything needs fixing we'll contact you first."}</p>
       {!digital && <div className="grid sm:grid-cols-2 gap-4">{Object.entries(address).filter(([k]) => k !== 'country').map(([k, v]) => <div key={k} className={k === 'line1' || k === 'line2' ? 'sm:col-span-2' : ''}><Label htmlFor={`ship-${k}`}>{({ name: 'Full name', line1: 'Street address', line2: 'Apartment / suite (optional)', city: 'City', state: 'State', postal_code: 'ZIP code' } as Record<string, string>)[k]}</Label><Input id={`ship-${k}`} value={v} required={k !== 'line2'} maxLength={k === 'state' ? 2 : 120} pattern={k === 'postal_code' ? '[0-9]{5}(-[0-9]{4})?' : undefined} onChange={e => setAddress(a => ({ ...a, [k]: e.target.value }))} /></div>)}</div>}
-      {!digital && <div className="space-y-3 rounded border border-border p-4"><label className="flex items-center gap-3"><Checkbox checked={gift} onCheckedChange={v => setGift(v === true)} /><Gift className="h-4 w-4 text-gold" aria-hidden />This is a gift — ship it to the address above with a message</label>{gift && <div><Label htmlFor="gift-message">Gift message (printed on a card inside, up to 500 characters)</Label><Textarea id="gift-message" maxLength={500} value={giftMessage} onChange={e => setGiftMessage(e.target.value)} placeholder="Happy birthday — here is your sky." /><p className="mt-1 text-xs text-muted-foreground">The book is written from the birth details on this account. To give someone a book about their own chart, have them create a free account with their details.</p></div>}</div>}
-      {sub.userId && <PrintContextReview />}
-      <section className="border-y border-border py-4"><h3 className="text-xl">Book readiness</h3><ul className="mt-3 space-y-2 text-sm">{[[!!birth, 'Birth details saved'], [coverReady, 'Cover selected'], [manuscriptReady, manuscriptReady ? `Reviewed PDF · ${manuscript?.pages} actual pages` : 'Compose and review your PDF']].map(([ready, label]) => <li key={String(label)} className="flex gap-2"><span className="text-gold">{ready ? '✓' : '○'}</span>{label}</li>)}</ul></section>
+      {sub.userId && !forOther && <PrintContextReview />}
+      <section className="border-y border-border py-4"><h3 className="text-xl">Book readiness</h3><ul className="mt-3 space-y-2 text-sm">{[[!!bookBirth, forOther ? (recipient ? `${recipient.name}'s birth details` : 'Choose who the book is about') : 'Birth details saved'], [coverReady, 'Cover selected'], [manuscriptReady, manuscriptReady ? `Reviewed PDF · ${manuscript?.pages} actual pages` : 'Compose and review your PDF']].map(([ready, label]) => <li key={String(label)} className="flex gap-2"><span className="text-gold">{ready ? '✓' : '○'}</span>{label}</li>)}</ul></section>
       <div className="flex flex-wrap items-center justify-between gap-4"><div><dl className="space-y-2 text-sm"><div className="flex justify-between gap-6"><dt>AstroBook {version.name}{version.trim ? ` · ${version.trim}` : ''}</dt><dd>{money(version.price)}</dd></div>{extras.length > 0 && <div className="flex justify-between gap-6"><dt>Extra sections · {extras.length} × {money(EXTRA_SECTION_PRICE)}</dt><dd>{money(extras.length * EXTRA_SECTION_PRICE)}</dd></div>}{!digital && <div className="flex justify-between gap-6"><dt>US shipping</dt><dd>$0.00</dd></div>}<div className="flex justify-between gap-6 border-t border-border pt-3 font-medium"><dt>Subtotal before tax</dt><dd>{money(bookTotal(edition, extras.length, version.format))}</dd></div></dl><p className="text-sm text-muted-foreground mt-2">Applicable tax calculated at checkout</p></div><Button type="submit" disabled={!!busy || !sub.userId || !coverReady || !manuscriptReady || extras.some(s => !s.trim())}>Continue to payment</Button></div>
     </form>
     {busy && <p role="status" className="text-gold">{busy}</p>}{error && <p role="alert" className="text-destructive break-words">{error}</p>}

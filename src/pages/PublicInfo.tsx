@@ -100,8 +100,8 @@ export function AstroBookPublic() {
       <section id="gift" className="rounded-xl border border-primary/30 bg-primary/10 p-10 text-center space-y-4">
         <Gift className="mx-auto h-8 w-8 text-accent" aria-hidden />
         <h2 className="font-display text-3xl">Give an AstroBook.</h2>
-        <p className="mx-auto max-w-xl text-muted-foreground">Mark your order as a gift, add a message and ship it straight to them. Each book is written from the birth details on the ordering account, so to give someone a book about their own chart, ask them to create a free account first.</p>
-        <Button asChild size="lg"><Link to={order('signature')}>Give an AstroBook</Link></Button>
+        <p className="mx-auto max-w-xl text-muted-foreground">Give someone a book written from their own birth date, time and place, not yours. Add a note, printed on its own page, and ship it straight to them, or send a Digital copy they download by signing in with their email.</p>
+        <Button asChild size="lg"><Link to="/books#book-for">Give an AstroBook</Link></Button>
       </section>
       <section className="space-y-4"><h2 className="font-display text-3xl">AstroBook questions</h2><Faq items={ASTROBOOK_FAQ} id="faq-astrobook" /></section>
     </article>

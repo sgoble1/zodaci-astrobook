@@ -307,6 +307,10 @@ export type Database = {
           payment_tax_cents: number | null
           payment_total_cents: number | null
           pdf_ready_at: string | null
+          recipient_birth: Json | null
+          recipient_email: string
+          recipient_name: string
+          recipient_notified_at: string | null
           shipped_at: string | null
           shipping_address: Json
           shipping_cents: number | null
@@ -344,6 +348,10 @@ export type Database = {
           payment_tax_cents?: number | null
           payment_total_cents?: number | null
           pdf_ready_at?: string | null
+          recipient_birth?: Json | null
+          recipient_email?: string
+          recipient_name?: string
+          recipient_notified_at?: string | null
           shipped_at?: string | null
           shipping_address?: Json
           shipping_cents?: number | null
@@ -381,6 +389,10 @@ export type Database = {
           payment_tax_cents?: number | null
           payment_total_cents?: number | null
           pdf_ready_at?: string | null
+          recipient_birth?: Json | null
+          recipient_email?: string
+          recipient_name?: string
+          recipient_notified_at?: string | null
           shipped_at?: string | null
           shipping_address?: Json
           shipping_cents?: number | null
@@ -3437,6 +3449,20 @@ export type Database = {
           display_name: string
           edition: string
           is_own: boolean
+        }[]
+      }
+      my_received_gifts: {
+        Args: never
+        Returns: {
+          created_at: string
+          edition: string
+          format: string
+          gift_message: string
+          id: string
+          pdf_ready: boolean
+          recipient_name: string
+          sender_name: string
+          status: string
         }[]
       }
       my_referral_code: { Args: never; Returns: string }

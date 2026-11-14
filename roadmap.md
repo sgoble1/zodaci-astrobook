@@ -608,3 +608,10 @@ Full ordered list: docs/master-implementation-resource.md Part 30.
 - [ ] Waiting: email domain, Lulu production, comic decision, Shopify admin app, licensing, real testimonials
 
 - [x] Part 30 step 2: locked Pro sections show a clear line from the member's own chart (signs/counts only)
+- [x] Slice 3 AstroBook three-page teaser (Sun, Moon, Rising from the saved chart, no AI)
+- [ ] Slice 4 gift an AstroBook made from the recipient's birth details (recipient email, note; delivery email waits on domain)
+- [ ] Slice 5 15-point accuracy suite (Sun–Pluto, node, ASC, MC, retro flags, cusps) for Shane and April
+- [ ] Slice 6 admin AI spending: model/tokens/cost per call, projection, budget alert, per-member history/reset/zero
+- [ ] Slice 26 Solar Return · 27 progressions · 28 Academy progress · 29 read-aloud · 30 ephemeris page
+- [ ] Slices 22–25 archive paging, activity export, misc polish, newsletter extras
+- [ ] Documents: Part 30 progress in master resource, reference v5, feature register, developer log

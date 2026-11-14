@@ -19,7 +19,9 @@ Deno.serve(async req=>{
     if(!body.success) return json({error:'Invalid order.'},400);
     const {data:order,error}=await db.from('book_orders').select('*').eq('id',body.data.orderId).single();
     if(error || !order) return json({error:'Order unavailable.'},404);
-    if(order.user_id!==user.id){
+    // Gift recipients may download a gift addressed to their verified sign-in email.
+    const recipient=!!order.gift && !!order.recipient_email && !!user.email && !!user.email_confirmed_at && order.recipient_email.toLowerCase()===user.email.toLowerCase();
+    if(order.user_id!==user.id && !recipient){
       const {data:admin,error:roleError}=await db.rpc('has_role',{_user_id:user.id,_role:'admin'});
       if(roleError || !admin) return json({error:'Order unavailable.'},404);
     }

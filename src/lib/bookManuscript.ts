@@ -21,6 +21,8 @@ export type ManuscriptInput = {
   certificate?: string;
   /** Birth line printed under the name when no designed cover image is supplied. */
   coverDetail?: string;
+  /** Gift note printed on its own dedication page after the title page. */
+  dedication?: { to: string; from?: string; message: string };
 };
 const ink = rgb(.12, .1, .18), muted = rgb(.38, .36, .42), gold = rgb(.62, .48, .2);
 const clean = (s: string) => s.replace(/!\[([^\]]*)\]\([^)]*\)/g, '$1').replace(/\[([^\]]+)\]\(([^)]+)\)/g, '$1 ($2)').replace(/[*`_]/g, '').replace(/\r/g, '');
@@ -63,6 +65,17 @@ export async function composeManuscript(input: ManuscriptInput) {
   lines(input.birthFacts, 9).forEach((line, i) => title.drawText(line, { x: M, y: H * 0.62 - 130 - i * 14, size: 9, font, color: muted }));
   if (version) title.drawText(`${version.name} edition`, { x: M, y: M + 18, size: 10, font, color: gold });
   title.drawText('Zodaci', { x: M, y: M, size: 10, font, color: muted });
+  const note = input.dedication?.message.trim();
+  if (note) {
+    // Dedication page: the giver's note, centred, exactly as typed (plain text only).
+    const ded = pdf.addPage([W, H]);
+    const head = `For ${input.dedication!.to || input.name}`;
+    ded.drawText(head, { x: (W - font.widthOfTextAtSize(head, 18)) / 2, y: H * 0.66, size: 18, font, color: ink });
+    const noteLines = wrap(note.replace(/\r/g, ''), font, 11, W - M * 2.4);
+    noteLines.forEach((l, i) => ded.drawText(l, { x: (W - font.widthOfTextAtSize(l, 11)) / 2, y: H * 0.66 - 40 - i * 17, size: 11, font, color: ink }));
+    const from = input.dedication!.from?.trim();
+    if (from) { const f = `From ${from}`; ded.drawText(f, { x: (W - font.widthOfTextAtSize(f, 10)) / 2, y: H * 0.66 - 60 - noteLines.length * 17, size: 10, font, color: gold }); }
+  }
   let page = pdf.addPage([W, H]), y = H - M;
   const newPage = () => { page = pdf.addPage([W, H]); y = H - M; };
   const write = (text: string, size = body, gap = 7) => { for (const line of lines(text, size)) { if (y < BOTTOM + size) newPage(); page.drawText(line, { x: M, y, size, font, color: ink }); y -= size * 1.55; } y -= gap; };
