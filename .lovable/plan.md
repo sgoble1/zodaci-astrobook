@@ -1,69 +1,81 @@
-# Part 30: Implementation Reference v3, delivered in ordered slices
+# Part 30: Reference v3 plus everything still missing from both plan collections, in slices
 
 ## Your Shopify question
-You don't need to approve anything with me. If you write the product descriptions directly in Shopify, the shop shows them on its own: it reads Shopify live and refreshes about every 15 minutes. I'll mark "Rewritten product descriptions" as done by the owner in Shopify. Shopify sign-in is then only needed if you later want me to read the listings, for example to check them for consistency.
+You don't need to approve anything with me. If you write the descriptions directly in Shopify, the shop shows them on its own: it reads Shopify live and refreshes about every 15 minutes. I'll mark that item as done by you in Shopify.
 
-## How the work is ordered
-Each slice is finished, tested and checked in the browser before the next one starts. After every slice, both documents are updated in the same order: the master resource (new Part 30) and your reference copy (v4, .md and PDF), along with the feature list, which the investor page and developer dashboard read, the developer log and the roadmap.
+## What the review covered
+- 10 documents in "Current Implementation Plan Doc" and 23 in "Old Completed Archived Update Docs", checked against the actual site.
+- Already-built items and anything superseded (old cosmic purple and Mystic Ink styles, old prices) are left out. Prices in the book price list win over older documents.
+- About 80 unfinished items were found and merged with the v3 open list below. Duplicates are combined.
 
-### Slice 0: Documents first
-- Add Part 30 with this slice list and the Shopify decision to the master resource, and make reference v4 (v3 plus Part 30).
-- Change "Rewritten product descriptions" to "Owner writes these in Shopify" and remove its Shopify sign-in blocker.
+## Order (same priorities as before: investor readiness and main functionality first, polish later)
+Each slice is finished, tested and checked in the browser before the next one starts. After every slice, these are updated in the same order:
+- master resource Part 30
+- your reference copy (v4, .md and PDF)
+- the feature list, which the investor page and developer dashboard read
+- the developer log
+- the roadmap
 
-### Slice 1: Compatibility cards, option A (Observatory index cards)
-- Cream archive-paper cards with hand-cut corners.
-- The placement pair as a slab-serif heading, a label-font line for the aspect, and reading text at relaxed line height.
-- Three columns on desktop, one on phones, roomy padding, large tap areas, and a slow lift on hover that respects reduced motion.
-- Only the card presentation changes. Scores, calculations and links stay exactly the same.
+### Tier 1: Investor and revenue-facing
+0. **Documents.** Add Part 30 (this list, with a source document for each item) and reference v4. Every new item goes into the feature list with its status.
+1. **Compatibility cards, option A.** Cream index cards, a slab heading, then the aspect line, then the reading. Three columns on desktop, one on phones, and a slow lift on hover. The scores and links don't change.
+2. **Personal locked previews.** Every locked Pro section shows a short preview of the member's own calculated values instead of grey bars.
+3. **AstroBook teaser, three pages.** Sun, Moon and Rising pages built from the visitor's own chart after they sign in, then the "continue in the book" step. Free visitors never use AI.
+4. **Gift an AstroBook to someone else.** The book is made from the recipient's own birth details. It adds the recipient's email and a gift note. Scheduled surprise delivery and the recipient's claim step wait on the email domain.
+5. **15-point accuracy tests.** Sun to Pluto, nodes, angles, retrograde flags and house cusps for the founder charts. Missing reference values are listed for you to supply, never invented.
+6. **Admin AI spending.** Usage logs record the model, tokens and cost for each operation, with a projected monthly total, the biggest users and an overspend alert. Each member gets a usage history, a monthly reset and a "set to zero" control.
+7. **Growth numbers for investors.** A month-by-month recurring revenue chart and sign-up retention at 1, 3, 6 and 12 months. These feed the investor page, so its numbers come from real records.
+8. **Admin launch checklist (finish).** Live checks for payments, print, privacy and content, with an export.
 
-### Slice 2: 15-point accuracy check (investor trust)
-- Expand the regression tests to the 15 checked points: Sun to Pluto, Node, Ascendant, Midheaven, retrograde flags and house cusps.
-- Use only reference values already stored in the project. Where a value is missing, I'll list it and ask you for Astrodienst or AstroSeek figures rather than invent them.
+### Tier 2: Main functionality and accuracy
+9. **True node option and planet speed.** Choose true or mean node, saved per member. Planets show their daily speed and when they're stationary turning retrograde or direct. RetroGOOD uses the stationary states.
+10. **The remaining chart shapes.** Bowl, Locomotive, Seesaw, Splash and Splay, with tests.
+11. **Saved readings refresh properly.** Saved readings refresh when the node type, tone or text library version changes.
+12. **One way of ranking what matters most in a chart.** The opening letter, Perception screen and book "Story of Your Sky" all use the same ranking.
+13. **Cheaper reading generation (biggest credit saver).**
+    - Readings are assembled from calculated facts plus reusable placement text and transit templates (top 50 first), with only a short AI summary.
+    - Each kind of AI task uses a cheaper or stronger model as suited, with set spending limits.
+    - The sky positions for each day are calculated once and shared.
+    - Admin cache statistics.
+    - The reviewed placement text needs your review; I prepare drafts for it.
+14. **One-question personal context flow (finish).** Answers also refresh affected readings and record where each came from.
+15. **Shane chapter sm-29 Moon correction.** Fix the remaining wrong Capricorn Moon placement in smaller pieces.
+16. **Moving around the site.** "Recommended for you" blocks on all five hubs, "Needs your chart" badges everywhere relevant, breadcrumbs on the remaining deep pages, and a finished first-use tour.
+17. **Profection wheel** (12 spokes) and **Four Pillars / Lo Shu grid** views from the member's own chart. April's pillars stay private, and the Kua difference stays shown.
 
-### Slice 3: Admin launch checklist (finish)
-- Live checks for payments, print, privacy and content, with an export.
-- It reads the same feature list, so the checklist, investor page and developer dashboard always agree.
+### Tier 3: Content depth and founder editions
+18. **Deeper content.**
+    - Finish the 18 long topic chapters.
+    - Deepen AstroBook Volumes IV–VI.
+    - Zac document extraction and six-volume expansion.
+    - Shane workbook to match April's.
+    - Consistent "Zac's Astrological Library" naming.
+19. **Artwork.**
+    - Matching covers and illustrations for Shane's and Zac's editions.
+    - Zac's 24-panel comic and buyer comic artwork.
+    - AI image costs apply; I'll confirm a batch before spending.
+20. **Article bylines.** Real author and reviewer names with published and updated dates, only once you supply the names.
+21. **Retrograde Radar tone setting** (Gentle, Direct or Strategic) and a fuller Professional tone across the whole Perception report.
 
-### Slice 4: One-question personal context flow (finish)
-- One question at a time, saved answers shown as chips, a skip option, and the owner's eyes only.
-- Answers never override chart facts.
+### Tier 4: Polish and later
+22. Archive paging and past versions.
+23. Activity drill-down with export, and April monitor history export (counts only, never private text).
+24. Long chapter list speed, investigation stamps, community pen names, founder document check, and the cassette podcast player.
+25. Newsletter editor extras: duplicate, formatting, test send, a typed SEND check, a 15-minute scheduling minimum, an unsaved-changes warning, and reports with CSV.
+26. **Solar Return.** Choose where you'll be for your birthday, then get a full yearly report with an overlay on your birth chart.
+27. Calculated progressed charts for members.
+28. **Academy progress.** Lessons marked complete and a progress bar. Video lessons need video material.
+29. Read-aloud reports section by section, and a full reader for purchased AstroBooks with notes and a glossary.
+30. Ephemeris page, Famous Charts (needs sourced birth data), and the optional move of lesson addresses.
 
-### Slice 5: Profection wheel
-- A turnable 12-spoke wheel on /profection showing the current year's house and its ruler, calculated from the saved chart.
-- Same 1950s projector look as the zodiac wheels.
-
-### Slice 6: Four Pillars and Lo Shu grid views
-- Visual pillars and a 3x3 grid built from the member's own saved chart.
-- April's personal pillars stay on her private page only.
-- Kua shows the source-reported versus formula difference wherever it applies.
-
-### Slice 7: Retrograde Radar tone setting
-- A Gentle, Direct or Strategic wording choice, saved per member.
-- Only the wording changes, never the dates.
-
-### Slice 8: Long chapter list speed
-- The 382-chapter index draws only the rows on screen. Search and links stay the same.
-
-### Slice 9: Investigation stamps and community pen names
-- "Confidential" and "Verified" stamps on case files, from recorded status only.
-- Community posts under a chosen handle with a placement badge, never a real name.
-
-### Slice 10: Founder document check on /developer
-- Upload a founder document privately and compare word, chapter and file counts with the saved snapshot. Founder text is never shown or stored outside private storage.
-
-### Slice 11: Cassette podcast player
-- A 1950s cassette look on the existing player. Queue, speed and resume behave as now.
-
-### Slice 12: Later or waiting on you (listed, not built)
-- Ephemeris page and Famous Charts. Famous Charts needs sourced birth data.
-- Optional move of lesson addresses under Learn.
-- Zodaci Social.
-- Shopify orders on My Orders: waits on a store-owned Shopify admin app.
-- Receipt emails: wait on a verified email domain.
-- Lulu print automation: waits on production credentials and a proofed sample.
-- Comic printing: paused by you.
-- Licensed asteroids and Sabian Symbols: wait on licensing.
-- Reviewed placement library: waits on your review and AI credits.
+### Waiting on you or outside steps (listed, not built)
+- **Verified email domain:** receipts, shipping emails, newsletter sending, daily digest, welcome and win-back emails, abandoned-checkout and birthday emails, gift delivery.
+- **Lulu production credentials and a proofed sample:** live book printing.
+- **Your decision:** comic printing (paused).
+- **Shopify store-owned admin app:** Shopify orders on My Orders.
+- **Licensing:** asteroids Ceres, Pallas, Juno and Vesta, and Sabian Symbols.
+- **Real testimonials, verified usage numbers and social links** (never invented).
+- **Optional extras:** Google Drive, Calendar, Gmail and Contacts links; birth certificate reading; similar-chart caching; Word export; other languages; other currencies and international shipping; Zodaci Social.
 
 ## Checks for every slice
 - Tests for each rule it touches.
@@ -71,9 +83,9 @@ Each slice is finished, tested and checked in the browser before the next one st
 - A clean build before moving on.
 
 ## Technical notes
-- Card styling uses the existing design tokens and corner utility only.
-- Profection, pillar and Lo Shu math stays in src/lib, with tests.
-- Pages only display results.
-- Tone choice is saved per owner and wording comes from lib.
-- The chapter list uses a lightweight windowing approach, with no heavy library added.
-- The document check uses the existing founderAudit counts.
+- Calculation work lives in src/lib with tests: node choice, speed and station states, shapes, fingerprint fields, the shared ranking, profection, pillars and progressions.
+- The report assembler and model routing live in the edge functions. The shared daily sky runs on a schedule and runs safely more than once.
+- AI usage logs get model, token and cost columns. Admin reads only go through role-checked functions.
+- Growth metrics come from subscription and payment records through admin-only functions.
+- The gift flow stores the recipient's chart on the order and never overwrites the buyer's profile.
+- Card styling uses existing tokens and the corner utility only.
