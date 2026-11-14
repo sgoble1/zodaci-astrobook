@@ -862,8 +862,8 @@ body {
 .hero-night { isolation: isolate; background: radial-gradient(hsl(var(--spot-paper) / .5) .7px, transparent 1px) 0 0 / 46px 46px, radial-gradient(hsl(var(--spot-paper) / .3) .6px, transparent .9px) 23px 19px / 61px 61px, hsl(var(--hero-night)); }
 .hero-cartographer { position: relative; z-index: 1; }
 .hero-night .film-fx { z-index: 2; pointer-events: none; }
-.hero-slides-controls { position: absolute; right: .9rem; bottom: .9rem; z-index: 20; display: flex; align-items: center; gap: .25rem; padding: .2rem .4rem; border-radius: .4rem; background: hsl(var(--midnight) / .8); border: 1px solid hsl(var(--brass) / .5); backdrop-filter: blur(4px); }
-@media (max-width: 767px) { .hero-slides-controls { position: static; align-self: center; margin: .5rem auto .8rem; } }
+.hero-slides-controls { position: static; z-index: 20; display: flex; align-items: center; gap: .25rem; padding: .2rem .4rem; border-radius: .4rem; background: hsl(var(--midnight) / .8); border: 1px solid hsl(var(--brass) / .5); backdrop-filter: blur(4px); }
+.hero-slides-controls { position: static; align-self: center; margin: .5rem auto .8rem; }
 .hero-slides-btn { display: inline-flex; width: 2rem; height: 2rem; align-items: center; justify-content: center; border-radius: .3rem; color: hsl(var(--spot-paper)); transition: background-color .6s ease; }
 .hero-slides-btn:hover { background: hsl(var(--brass) / .2); }
 .hero-slides-btn:focus-visible, .hero-slides-dot:focus-visible { outline: 2px solid hsl(var(--ring)); outline-offset: 1px; }
@@ -1025,25 +1025,25 @@ li:hover > .zodiac-coin { transform: rotate(-10deg); }
 .chartmap-planets { display: grid; gap: .45rem 1rem; grid-template-columns: repeat(auto-fill, minmax(8.5rem, 1fr)); }
 .hero-slides .hero-headline { font-size: 2.1rem; letter-spacing: 0; }
 @container hero (min-width: 30rem) {
-  .chartmap-key { display: block; }
   .chartmap-stage { padding-top: 8.5rem; }
-  .chartmap-figure-wrap { width: 44%; }
+  .chartmap-figure-wrap { width: 50%; }
   .chartmap-dial { width: 76%; }
 }
+/* Wider slides: the Cartographer fills the left column, copy on the right; the Map Key only where there is room. */
 @container hero (min-width: 40rem) {
-  .hero-slides .hero-headline { font-size: 2.55rem; }
-  .chartmap { grid-template-columns: 48% minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr); grid-template-areas: "key copy" "stage copy"; align-content: stretch; }
-  .chartmap-key { grid-area: key; margin: 1.1rem .5rem 0 1.1rem; justify-self: start; max-width: 25rem; }
-  .chartmap-planets { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .3rem .9rem; }
-  .chartmap-stage { grid-area: stage; display: flex; align-items: flex-end; padding: 0 0 0 .5rem; }
-  .chartmap-figure-wrap { width: 27cqw; }
+  .hero-slides .hero-headline { font-size: clamp(2rem, 5.2cqi, 3.05rem); overflow-wrap: normal; word-break: keep-all; hyphens: none; }
+  .chartmap { grid-template-columns: 46% minmax(0, 1fr); grid-template-rows: minmax(0, 1fr) auto; grid-template-areas: "stage copy" "stage key"; align-content: stretch; }
+  .chartmap-stage { grid-area: stage; display: flex; align-items: center; justify-content: flex-start; padding: 7rem 0 1.5rem .75rem; }
+  .chartmap-figure-wrap { width: min(78%, 17rem); }
   .chartmap-figure { -webkit-mask-image: none; mask-image: none; }
-  .chartmap-dial { left: 80%; bottom: 84%; width: 104%; }
-  .chartmap-copy { grid-area: copy; margin-top: 0; justify-content: center; gap: 1.1rem; padding: 2.25rem 1.75rem 4.75rem 2.25rem; }
+  .chartmap-dial { left: 72%; bottom: 82%; width: 64%; }
+  .chartmap-copy { grid-area: copy; margin-top: 0; justify-content: center; gap: 1.1rem; padding: 2.25rem 1.75rem 1.25rem 1rem; }
+  .chartmap-key { grid-area: key; display: none; margin: 0 1.75rem 1.25rem 1rem; }
+  .chartmap-planets { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: .3rem .7rem; }
 }
-@container hero (min-width: 56rem) {
-  .hero-slides .hero-headline { font-size: 3.05rem; }
-  .chartmap-copy { padding: 2.75rem 2.25rem 4.75rem 2.75rem; }
+@container hero (min-width: 64rem) {
+  .chartmap-key { display: block; }
+  .chartmap-copy { padding: 2.75rem 2.25rem 1.25rem 1.5rem; }
 }
 /* Slide 2: the faces poster fills the frame; copy sits in the open sky left of the wheel. */
 .lookup-slide { position: relative; display: flex; min-height: 100%; flex-direction: column; overflow: hidden; }
@@ -1563,3 +1563,4 @@ html[data-tab-hidden] *, html[data-tab-hidden] *::before, html[data-tab-hidden] 
 .museum-microfilm { background: hsl(30 40% 8%); box-shadow: inset 0 0 60px hsl(35 90% 40% / 0.35); position: relative; }
 .museum-microfilm > ul { filter: sepia(1) saturate(2.2) hue-rotate(-12deg) brightness(0.95) contrast(1.1); }
 .museum-microfilm::after { content: ''; pointer-events: none; position: absolute; inset: 0; background: repeating-linear-gradient(0deg, hsl(35 90% 60% / 0.06) 0 1px, transparent 1px 3px); }
+@container hero (min-width: 64rem) { .chartmap-figure-wrap { width: min(80%, 24rem); } .chartmap-stage { align-items: flex-end; padding-bottom: 0; } }

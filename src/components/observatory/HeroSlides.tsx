@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { FilmFx } from '@/components/observatory/FilmFx';
 import cartographer from '@/assets/home/cartographer-guide.jpg';
-import facesHero from '@/assets/home/faces-looking-up-atomic.jpg';
+import facesHero from '@/assets/home/faces-looking-up-blend.jpg';
 import sunFace from '@/assets/spots/self.jpg';
 import { PRODUCT_ART } from '@/content/productArtwork';
 import comicCutout from '@/assets/products/astrocomic-cutout.webp';
