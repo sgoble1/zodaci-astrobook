@@ -1564,3 +1564,13 @@ html[data-tab-hidden] *, html[data-tab-hidden] *::before, html[data-tab-hidden] 
 .museum-microfilm > ul { filter: sepia(1) saturate(2.2) hue-rotate(-12deg) brightness(0.95) contrast(1.1); }
 .museum-microfilm::after { content: ''; pointer-events: none; position: absolute; inset: 0; background: repeating-linear-gradient(0deg, hsl(35 90% 60% / 0.06) 0 1px, transparent 1px 3px); }
 @container hero (min-width: 64rem) { .chartmap-figure-wrap { width: min(80%, 24rem); } .chartmap-stage { align-items: flex-end; padding-bottom: 0; } }
+/* Slide 1: the projected chart fills the sky behind and above the Cartographer; the beam fades out softly at its edges. */
+.chartmap-dial { z-index: -1; }
+.chartmap .hero-projection::before { -webkit-mask-image: radial-gradient(ellipse 70% 70% at 30% 60%, #000 30%, transparent 78%); mask-image: radial-gradient(ellipse 70% 70% at 30% 60%, #000 30%, transparent 78%); filter: blur(14px); }
+.chartmap .hero-projection::after { inset: -12%; background: radial-gradient(circle, hsl(45 95% 70% / .18), hsl(45 95% 70% / .06) 45%, transparent 70%); }
+.chartmap .astro-dial { opacity: .92; }
+.chartmap-dial { left: 28%; bottom: 58%; width: 120%; }
+@container hero (min-width: 40rem) { .chartmap-dial { left: 30%; bottom: 55%; width: 135%; } }
+@container hero (min-width: 64rem) { .chartmap-dial { left: 34%; bottom: 52%; width: 125%; } }
+.chartmap-figure-wrap { isolation: isolate; } .chartmap-figure { position: relative; z-index: 1; }
+.chartmap .chartmap-figure, .hero-slides .chartmap-figure { -webkit-mask-image: radial-gradient(ellipse 95% 85% at 40% 70%, #000 55%, transparent 80%); mask-image: radial-gradient(ellipse 95% 85% at 40% 70%, #000 55%, transparent 80%); }
