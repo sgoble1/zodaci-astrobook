@@ -43,13 +43,29 @@ For each page: phone and desktop, loading/empty/error states, working links, a c
 - Remaining overnight items: install banner styling, 15-point accuracy check, launch checklist export, profection wheel, Retrograde Radar tones, BaZi/Lo Shu views, cassette podcast player, one-question context flow.
 - Owner sign-off items listed, not built: legal pages review, AstroComic Issue #1 sample redraw for the fictional reader, testimonials, Lulu production keys, sending domain.
 
-## Order of work
-1. Corrections and A (half-built items).
-2. B (11 pages).
-3. D: public access, books showcase, demo, product copy, calculation copy, variants, shop layout.
-4. C (Part 28 final, reference v2 + PDF, roadmap, log).
-5. Rest of D (overnight items, house explainer, uncertainty helper, Forecast TV).
-Each step ends with tests, a build check and a browser check at 393px and 1280px. Any step that runs out of room is marked open in the roadmap with its next action.
+## Order of work — investor readiness first
+Reviewed the last four hours of chat (memory, instructions, Shopify collection, sweep, investor focus). Work is ordered by what an investor sees first.
+
+Tier 1 — what investors open (do first)
+1. Investor page: live figures with honest labels, every feature with status (done), revenue by product, clear "what's needed" list matching the blockers; Zac's overview in sync.
+2. Demo screen and book/comic previews finished: five-spread AstroBook showcase, demo polish, the AstroComic sample.
+3. Product descriptions in the human voice (pushed to Shopify after your approval) and the admin shop layout.
+4. "How we calculate" and calculation-trust copy on home, pricing, books and the investor page.
+5. Ephemeris and Chinese page open to signed-out visitors (so investors can try them without signing in).
+
+Tier 2 — main features working cleanly
+6. The half-built items (A), contact form fix, renewal test.
+7. The 11 unbatched pages review (B).
+8. Load every product variant; cart-line details checked.
+
+Tier 3 — records
+9. Part 28 final (C), reference v2 + PDF, roadmap, developer log.
+10. Paste-ready text for your project instructions, including the guardrails we discussed: speed and size safeguards, Stripe vs Shopify split, protecting AI credits on free and demo pages.
+
+Tier 4 — later (rarely noticed yet)
+11. Overnight items, house system explainer, birth-time uncertainty helper, Forecast TV channels, investigation stamps, chapter list windowing, founder-document check, pen names.
+
+Each step ends with tests, a build check and a browser check at 393px and 1280px. Anything that runs out of room is marked open in the roadmap with its next action. The roadmap gets this order as its first edit when building starts.
 
 ## Technical details
 - Feature register statuses update as each item lands.
