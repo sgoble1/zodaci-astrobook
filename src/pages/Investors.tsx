@@ -10,6 +10,7 @@ import { ThemeArt } from '@/components/common/ThemeArt';
 import { PRODUCT_ART } from '@/content/productArtwork';
 import launchArt from '@/assets/pages/investors-atomic-launch.jpg';
 import { BUILD_CREDIT_SNAPSHOT, creditCost, formatUsd, DOLLARS_PER_BUILD_CREDIT } from '@/lib/devCost';
+import { FeatureRegisterBoard } from '@/components/common/FeatureRegisterBoard';
 import { InvestorEconomics } from '@/components/common/InvestorEconomics';
 
 const low = BOOK_VERSIONS[0]; const high = BOOK_VERSIONS[BOOK_VERSIONS.length - 1];
@@ -132,6 +133,11 @@ export default function Investors() {
 
       <section aria-labelledby="inv-l" className="space-y-4"><h2 id="inv-l" className="text-3xl">What works today</h2>
         <ul className="grid gap-3 md:grid-cols-2">{LIVE.map(m => <li key={m} className="flex gap-3 rounded-lg border border-border/60 bg-card/40 p-4 text-sm"><span aria-hidden className="mt-1 h-2 w-2 shrink-0 rounded-full bg-gold" />{m}</li>)}</ul>
+      </section>
+
+      <section aria-labelledby="inv-f" className="space-y-4"><h2 id="inv-f" className="text-3xl">Every feature and where it stands</h2>
+        <p className="max-w-3xl text-muted-foreground">Live, partly built, planned, and waiting on an outside step — the same list the build team works from.</p>
+        <FeatureRegisterBoard mode="all" />
       </section>
 
       <section aria-labelledby="inv-r" className="space-y-4"><h2 id="inv-r" className="text-3xl">Roadmap</h2>

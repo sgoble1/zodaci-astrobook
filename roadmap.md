@@ -566,3 +566,14 @@ Audit Oct 29: Chat/counselors already use the member's chart; podcast/custom pag
 - [x] "Continue exploring" links at the end of Results, RetroGOOD and Siblings
 - [x] Zac's library links his investor overview; overview opens with a plain-language summary; workbook framed as a private notebook
 - [x] Member, founder and developer feeds updated
+
+## Nov 14 — Part 28 sweep (42 batches + 11 pages, Shopify) — see docs/master-implementation-resource.md Part 28
+- [x] Step 0: memory refreshed (obsolete agency memories removed; design, brand, commerce split, calculation trust, planned modules, founder boundaries saved)
+- [x] Step 1: Part 28 written; feature register (src/lib/featureRegister.ts); owner reference copy in Files
+- [x] Step 6: investor page lists every feature with status; developer dashboard "Next implementations"
+- [x] Step 2 checks: credit renewal, contact spam, comic archive confirmed live
+- [ ] Step 2: public chart share without private details; 11-page loading/empty/error review
+- [ ] Step 3: five-spread AstroBook showcase; demo polish
+- [ ] Step 4: variant paging, admin shop layout, order fields — Shopify order history blocked (admin app), emails blocked (sending domain)
+- [ ] Step 5: product descriptions (needs Shopify approval), "How we calculate" copy, site-wide feature copy
+- [ ] Step 7: overnight items

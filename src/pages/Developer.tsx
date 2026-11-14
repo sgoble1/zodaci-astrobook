@@ -1,3 +1,4 @@
+import { FeatureRegisterBoard } from '@/components/common/FeatureRegisterBoard';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { BuildCostCard, useBuildCreditSnapshot } from '@/components/admin/BuildCostCard';
 import { buildCostLine } from '@/lib/devCost';
@@ -171,6 +172,11 @@ export default function Developer({ view = 'board' }: { view?: 'board' | 'timeli
           : stats ? <dl className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-7">{STAT_LABELS.map(([k, l]) => <div key={k} className="rounded-[var(--cut-card)] border border-[hsl(var(--comic-navy)/0.25)] p-3"><dt className="text-xs text-muted-foreground">{l}</dt><dd className="font-display text-2xl">{Number(stats[k] ?? 0).toLocaleString()}</dd></div>)}<div className="rounded-[var(--cut-card)] border border-[hsl(var(--comic-navy)/0.25)] p-3"><dt className="text-xs text-muted-foreground">Credit pack sales</dt><dd className="font-display text-2xl">${((stats.credit_packs_cents ?? 0) / 100).toFixed(0)}</dd></div></dl>
           : <div role="status" aria-label="Loading live numbers" className="grid grid-cols-2 gap-3 sm:grid-cols-4">{Array.from({ length: 8 }, (_, i) => <div key={i} className="h-16 animate-pulse rounded-[var(--cut-card)] bg-muted" />)}</div>}
         {statsErr && stats && <p className="text-xs text-muted-foreground">Couldn't refresh just now — showing the last numbers.</p>}
+      </section>
+
+      <section aria-labelledby="dv-n" className="obs-paper space-y-3 p-5 sm:p-6"><h2 id="dv-n" className="plate-title !text-2xl">Next implementations</h2>
+        <p className="text-sm text-muted-foreground">Ranked by how visible each is to members and investors. Same list the investor page shows.</p>
+        <FeatureRegisterBoard mode="next" />
       </section>
 
       <BuildCostCard editable={dev} />

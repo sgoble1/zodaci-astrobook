@@ -601,3 +601,142 @@ Checked against chat messages #1182–#1261. Everything below was said in chat b
 # Part 27 — UX pass status (Nov 13 2026)
 - Parts 11, 12, 14, 15 verified built. Signed-in 393px pass done on nine member hubs; Explore founder crash fixed; topic chip tap size raised to 44px.
 - Still open: prerendered public HTML, PWA install, Search Console (owner), Part 22 colour tuning per section (review with owner screenshots).
+
+
+# Part 28 — Extensive sweep: 42 batches, 11 pages, Shopify and connections
+
+## Order of work (approved Nov 14 2026)
+| Step | What | Status |
+|---|---|---|
+| 0 | Memory and instructions refresh | Done Nov 14 |
+| 1 | Part 28 record, feature register, your reference copy | Done Nov 14 |
+| 2 | High-impact gaps and bugs (credit renewal, comic archive, share privacy, contact spam, Shopify orders, 11-page review) | Partly done — see register |
+| 3 | Demos and book previews (five-spread showcase) | Open |
+| 4 | Shopify and connections (variants, cart lines, admin shop layout, order fields, emails) | Open; emails blocked on sending domain, Shopify orders blocked on admin app |
+| 5 | Product descriptions, calculation trust copy, feature copy | Open |
+| 6 | Investor page register and developer "Next implementations" | Done Nov 14 |
+| 7 | Overnight items (install banner, 15-point accuracy, launch checklist, profection wheel, radar tones, BaZi/Lo Shu, cassette player, context flow) | Open |
+| Parked | Founder document check, case stamps, chapter list windowing, pen names, Lulu production, comic printing | Later |
+
+## Sweep findings checked against the code (Nov 14)
+- Monthly credits on renewal: already handled — the monthly allowance resets each month from the plan, and renewal invoices refresh the plan from the payment provider. Marked Live.
+- Contact spam: already handled — hidden trap field plus a server rate limit. Marked Live.
+- My Comic: released issues open from the archive; a separate issue switcher isn't needed. Marked Live.
+- Public chart share without private details: not built. Planned.
+- Shopify orders on My Orders: needs a store-owned Shopify admin app; app code can't read orders with the storefront key. Blocked.
+- 11 pages without a batch (/privacy, /terms, /ephemeris, /moon-calendar, /chinese, /feng-shui, /famous-charts, /about, /profection, /timing, /instructions): included in the 22-page public sweep Nov 13 (no crashes, no sideways scroll). A dedicated loading/empty/error review is still open.
+- The overnight chat copies were wiped, so the 42 batches are reconstructed from the master document, roadmap and build reports; anything that can't be traced is listed as Planned instead of being dropped.
+
+## Feature register (45 features: 22 live, 6 partial, 11 planned, 6 blocked)
+
+### Charts & calculation
+| Feature | Status | Impact | Detail |
+|---|---|---|---|
+| Natal chart engine | Live | High | Planets, houses, angles, nodes, Chiron and asteroids from an astronomical ephemeris, with historical time zones and daylight saving. |
+| Unknown birth time handling | Live | High | Houses and Rising are marked uncertain instead of silently assuming midnight. |
+| Other Systems | Live | Medium | Vedic, Chinese Ba Zi, numerology, Feng Shui, Flying Stars, Nine Star Ki and Tzolk’in from the same birth data. |
+| 15-point accuracy regression | Partial | High | Reference-ephemeris tests exist; the expanded 15-chart authoritative set is still to be added. |
+| Interactive 12-spoke profection wheel | Planned | Medium | Annual profections on /profection and /timing as a turnable wheel. |
+| BaZi Four Pillars and Lo Shu grid views | Planned | Medium | Dedicated visual pillars and grid on the Chinese and Feng Shui pages. |
+| Retrograde Radar tone setting | Planned | Later | Gentle, Direct or Strategic wording, saved per member. |
+| Licensed asteroid tables and Sabian Symbols | Blocked | Later | Extra points and degree symbols. **Waiting on:** Licensing permissions. |
+
+### Readings & guidance
+| Feature | Status | Impact | Detail |
+|---|---|---|---|
+| Personal readings by plan | Live | High | Readings written from each member’s calculated placements, with retry and freshness checks. |
+| Chart-aware counselors | Live | High | Private sessions that replay the full conversation with the verified chart. |
+| Ask the Sources with citations | Live | Medium | Every claim links to its source passage. |
+| Dream Ledger | Live | Medium | Dreams logged against that night’s sky; optional one-credit reading. |
+| One-question personal context flow | Partial | Medium | Tap-to-answer questions exist; the one-at-a-time flow with saved chips and skip is still to finish. |
+| Reviewed placement text library | Blocked | Later | About 216 placement entries for free deterministic readings. **Waiting on:** Owner review and AI credits. |
+
+### AstroBook & AstroComic
+| Feature | Status | Impact | Detail |
+|---|---|---|---|
+| Six-volume AstroBook builder | Live | High | Five editions, cover designer, previews and print-ready PDFs. |
+| Five-spread AstroBook showcase | Partial | High | Showcase and sample pages exist; a five-spread walk-through on the books page is next. |
+| AstroComic Issue #1 and preview | Live | High | Drawn pages, 3D page-turn preview, read-through and pre-order. |
+| My Comic issue archive | Live | Medium | Members open each released issue from their archive on My AstroComic. |
+| Automated print fulfilment (Lulu) | Blocked | High | Book jobs run in sandbox today. **Waiting on:** Production credentials and a proofed sample. |
+| Comic printing | Blocked | Medium | Paused by the owner. **Waiting on:** Owner decision. |
+
+### Demos & previews
+| Feature | Status | Impact | Detail |
+|---|---|---|---|
+| Interactive demo walk-through | Live | High | Birth details, chart, reading and book with one fictional sample reader. |
+| Public book and comic samples | Live | High | All samples use the same fictional Collector-cover reader. |
+
+### Shop & orders
+| Feature | Status | Impact | Detail |
+|---|---|---|---|
+| Shopify storefront and cart | Live | High | Products, prices and stock come from Shopify; checkout runs on Shopify. |
+| Rewritten product descriptions | Partial | High | Plain, specific descriptions for every listing, pushed to Shopify after owner approval. |
+| Admin shop layout | Planned | Medium | Department order and featured products arranged in Zodaci admin; Shopify keeps the product data. |
+| All variants loaded | Planned | Medium | Products with more than 100 variants load every option. |
+| Shopify orders on My Orders | Blocked | Medium | Book orders show today; Shopify orders need a store-owned admin app. **Waiting on:** Shopify admin app credentials. |
+| Receipts and notification emails | Blocked | Medium | Order and newsletter emails. **Waiting on:** Verified sending domain. |
+
+### Membership & credits
+| Feature | Status | Impact | Detail |
+|---|---|---|---|
+| Pro and Cosmic memberships | Live | High | Verified payments, plan changes, refunds; Pro and Cosmic share features and differ in credits. |
+| Monthly credit renewal | Live | High | Each paid month gives the plan’s allowance again; renewals refresh the plan from the payment provider. |
+| Credit packs and referrals | Live | Medium | One-time packs; 20 bonus credits per paying friend, up to 12 a year. |
+
+### Privacy & sharing
+| Feature | Status | Impact | Detail |
+|---|---|---|---|
+| Private founder editions | Live | High | Open only for the owner and people they share with, checked on the server. |
+| Public chart share without private details | Planned | Medium | A shareable chart that leaves out birth time, exact place, notes and journal. |
+| Contact form spam protection | Live | Later | Hidden trap field plus a server rate limit. |
+
+### Media
+| Feature | Status | Impact | Detail |
+|---|---|---|---|
+| Personal podcasts | Live | Medium | Written from each chart, voiced, saved to a private library. |
+| Cassette-player podcast interface | Planned | Later | 1950s cassette player for listening. |
+| Cosmic Studio | Live | Medium | Wallpapers, posters, journal pages and cards drawn from the saved chart. |
+
+### Platform
+| Feature | Status | Impact | Detail |
+|---|---|---|---|
+| Lighter, faster site | Live | High | Unused code removed, pages load when opened, public pages pre-rendered for sharing. |
+| Home-screen install | Live | Later | Phone install prompt; a mid-century styled banner is planned. |
+| Admin launch checklist | Partial | Medium | Live payment, print, privacy and content checks with export. |
+| Founder document check on /developer | Planned | Later | Upload and compare founder documents privately. |
+| Investigation archive stamps | Planned | Later | “Confidential” and “Verified” stamps on case files. |
+| Long chapter list loads visible rows only | Planned | Later | Faster 382-chapter index. |
+
+### Community
+| Feature | Status | Impact | Detail |
+|---|---|---|---|
+| Community pen names | Partial | Later | Posting under a chosen handle and placement badge. |
+| Zodaci Social | Planned | Later | Pseudonymous profiles, topic boards and opt-in full-synastry matching. |
+
+## Next implementations, most visible first
+1. **15-point accuracy regression** (Partial, High) — Reference-ephemeris tests exist; the expanded 15-chart authoritative set is still to be added.
+2. **Five-spread AstroBook showcase** (Partial, High) — Showcase and sample pages exist; a five-spread walk-through on the books page is next.
+3. **Rewritten product descriptions** (Partial, High) — Plain, specific descriptions for every listing, pushed to Shopify after owner approval.
+4. **Automated print fulfilment (Lulu)** (Blocked, High) — Book jobs run in sandbox today. Waiting on: Production credentials and a proofed sample.
+5. **One-question personal context flow** (Partial, Medium) — Tap-to-answer questions exist; the one-at-a-time flow with saved chips and skip is still to finish.
+6. **Admin launch checklist** (Partial, Medium) — Live payment, print, privacy and content checks with export.
+7. **Interactive 12-spoke profection wheel** (Planned, Medium) — Annual profections on /profection and /timing as a turnable wheel.
+8. **BaZi Four Pillars and Lo Shu grid views** (Planned, Medium) — Dedicated visual pillars and grid on the Chinese and Feng Shui pages.
+9. **Admin shop layout** (Planned, Medium) — Department order and featured products arranged in Zodaci admin; Shopify keeps the product data.
+10. **All variants loaded** (Planned, Medium) — Products with more than 100 variants load every option.
+11. **Public chart share without private details** (Planned, Medium) — A shareable chart that leaves out birth time, exact place, notes and journal.
+12. **Comic printing** (Blocked, Medium) — Paused by the owner. Waiting on: Owner decision.
+13. **Shopify orders on My Orders** (Blocked, Medium) — Book orders show today; Shopify orders need a store-owned admin app. Waiting on: Shopify admin app credentials.
+14. **Receipts and notification emails** (Blocked, Medium) — Order and newsletter emails. Waiting on: Verified sending domain.
+15. **Community pen names** (Partial, Later) — Posting under a chosen handle and placement badge.
+16. **Retrograde Radar tone setting** (Planned, Later) — Gentle, Direct or Strategic wording, saved per member.
+17. **Cassette-player podcast interface** (Planned, Later) — 1950s cassette player for listening.
+18. **Founder document check on /developer** (Planned, Later) — Upload and compare founder documents privately.
+19. **Investigation archive stamps** (Planned, Later) — “Confidential” and “Verified” stamps on case files.
+20. **Long chapter list loads visible rows only** (Planned, Later) — Faster 382-chapter index.
+21. **Zodaci Social** (Planned, Later) — Pseudonymous profiles, topic boards and opt-in full-synastry matching.
+22. **Licensed asteroid tables and Sabian Symbols** (Blocked, Later) — Extra points and degree symbols. Waiting on: Licensing permissions.
+23. **Reviewed placement text library** (Blocked, Later) — About 216 placement entries for free deterministic readings. Waiting on: Owner review and AI credits.
+
+The live version of this register is src/lib/featureRegister.ts; the investor page and the developer dashboard read it directly.
