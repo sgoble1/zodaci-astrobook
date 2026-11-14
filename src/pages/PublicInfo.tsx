@@ -9,6 +9,7 @@ import { PLAN_NAME, REFUND_WINDOW_DAYS } from '@/lib/plans';
 import { VersionCompare } from '@/components/books/VersionCompare';
 import { CoverCustomizer } from '@/components/books/CoverCustomizer';
 import { CosmicTeaser } from '@/components/books/CosmicTeaser';
+import { MemberBookTeaser } from '@/components/books/MemberBookTeaser';
 import { ProductArtworkGallery } from '@/components/books/ProductArtworkGallery';
 import { PersonalizationStory } from '@/components/books/PersonalizationStory';
 import { WhyZodaciLine } from '@/components/brand/WhyZodaci';
@@ -93,9 +94,8 @@ export function AstroBookPublic() {
         <p className="text-muted-foreground">A short fictional sample for {SAMPLE_BIRTH.name}, {birthLineOf(SAMPLE_BIRTH.date, SAMPLE_BIRTH.time, SAMPLE_BIRTH.placeLabel).replace(/^Born/, 'born')}, with calculated chart facts and the same chapter layout as a real book. Your own book is written from your chart, adds your finished readings, and shows its real page count before payment. Turn the first pages below, or <Link to="/book-preview" className="underline text-accent">read the full sample book</Link>.</p>
         <SampleBook maxPages={6} cta={<Button asChild variant="outline"><Link to="/book-preview">Read the full sample<ArrowRight /></Link></Button>} />
       </section>
-      <section id="teaser" className="grid gap-8 rounded-xl border border-gold/30 bg-card p-8 md:grid-cols-2">
-        <div className="space-y-3"><h2 className="font-display text-3xl">A free teaser.</h2><p className="text-muted-foreground">Not ready for a book? Enter your email and birth date for a short, calculated teaser: your Sun sign, Chinese zodiac year and Life Path number. Free, instant, no account.</p></div>
-        <CosmicTeaser />
+      <section id="teaser" className="rounded-xl border border-gold/30 bg-card p-8">
+        <MemberBookTeaser fallback={<div className="grid gap-8 md:grid-cols-2"><div className="space-y-3"><h2 className="font-display text-3xl">A free teaser.</h2><p className="text-muted-foreground">Not ready for a book? Enter your email and birth date for a short, calculated teaser: your Sun sign, Chinese zodiac year and Life Path number. Free, instant, no account. <Link to="/auth?mode=signup&next=/astrobook%23teaser" className="underline text-accent">Sign in</Link> to read the first three pages of your own book.</p></div><CosmicTeaser /></div>} />
       </section>
       <section id="gift" className="rounded-xl border border-primary/30 bg-primary/10 p-10 text-center space-y-4">
         <Gift className="mx-auto h-8 w-8 text-accent" aria-hidden />
