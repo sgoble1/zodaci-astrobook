@@ -1574,3 +1574,13 @@ html[data-tab-hidden] *, html[data-tab-hidden] *::before, html[data-tab-hidden] 
 @container hero (min-width: 64rem) { .chartmap-dial { left: 34%; bottom: 52%; width: 125%; } }
 .chartmap-figure-wrap { isolation: isolate; } .chartmap-figure { position: relative; z-index: 1; }
 .chartmap .chartmap-figure, .hero-slides .chartmap-figure { -webkit-mask-image: radial-gradient(ellipse 95% 85% at 40% 70%, #000 55%, transparent 80%); mask-image: radial-gradient(ellipse 95% 85% at 40% 70%, #000 55%, transparent 80%); }
+.chartmap .chartmap-figure, .hero-slides .chartmap-figure { -webkit-mask-image: radial-gradient(ellipse 120% 105% at 55% 62%, #000 64%, transparent 84%); mask-image: radial-gradient(ellipse 120% 105% at 55% 62%, #000 64%, transparent 84%); }
+/* The slide is as tall as the tallest slide: the Cartographer stands on the bottom edge and grows to fill it. */
+@container hero (min-width: 40rem) {
+  .chartmap { grid-template-rows: minmax(0, 1fr) auto; }
+  .chartmap-stage { align-items: flex-end; padding: 6rem 0 0 .75rem; }
+  .chartmap-figure-wrap { width: min(92%, 26rem); }
+}
+.chartmap .chartmap-figure, .hero-slides .chartmap-figure { -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 12%), linear-gradient(to left, transparent 0, #000 6%), linear-gradient(to right, transparent 0, #000 8%); -webkit-mask-composite: source-in; mask-image: linear-gradient(to bottom, transparent 0, #000 12%), linear-gradient(to left, transparent 0, #000 6%), linear-gradient(to right, transparent 0, #000 8%); mask-composite: intersect; }
+@container hero (min-width: 40rem) { .chartmap-dial { left: 18%; bottom: 60%; width: 112%; } }
+@container hero (min-width: 64rem) { .chartmap-dial { left: 26%; bottom: 55%; width: 118%; } }
