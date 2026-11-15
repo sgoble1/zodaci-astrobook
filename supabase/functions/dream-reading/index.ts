@@ -3,11 +3,12 @@ import { creditShortfall } from "../_shared/credits.ts";
 import { counselorContext } from "../_shared/member-profile.ts";
 import { hasFullAccess } from "../_shared/chat-guard.ts";
 
-// Dream reading: one short symbolic reading of a member's own saved dream, using their calculated chart and the
-// night's sky lines computed in the browser (lib/dreamSky). Saved on the member's own row through their session.
+// One optional symbolic reading of a member's own dream. The browser supplies the
+// ephemeris-calculated sky at the member's recorded local dream time.
 const cors = { "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type" };
 const json = (b: unknown, status = 200) => new Response(JSON.stringify(b), { status, headers: { ...cors, "Content-Type": "application/json" } });
 const clip = (v: unknown, n: number) => String(v ?? "").replace(/\s+/g, " ").trim().slice(0, n);
+const timeOnly = (v: unknown) => /^\d{2}:\d{2}/.test(String(v ?? "")) ? String(v).slice(0, 5) : "03:00";
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: cors });
@@ -23,7 +24,7 @@ Deno.serve(async (req) => {
 
     const body = await req.json().catch(() => ({})) as { id?: string; sky?: unknown[] };
     if (!body.id) return json({ error: "Choose a dream first." }, 400);
-    const { data: entry } = await sb.from("dream_entries").select("id,body,dream_date,feelings,recurring").eq("id", body.id).maybeSingle();
+    const { data: entry } = await sb.from("dream_entries").select("id,body,dream_date,dream_time,feelings,recurring").eq("id", body.id).maybeSingle();
     if (!entry) return json({ error: "That dream was not found." }, 404);
 
     const profile = await counselorContext(sb, admin, u.user.id, u.user.email ?? "");
@@ -40,9 +41,9 @@ Plain, warm, specific language. Three short paragraphs, then one reflection ques
 CHART:
 ${profile.context}
 
-SKY THAT NIGHT (calculated):
+SKY THAT NIGHT (calculated for the recorded local dream time):
 ${sky.length ? sky.map(s => `- ${s}`).join("\n") : "- no close contacts"}`;
-    const input = `Dream on ${entry.dream_date}${entry.recurring ? " (recurring)" : ""}${entry.feelings?.length ? `, feelings: ${entry.feelings.join(", ")}` : ""}:\n${clip(entry.body, 4000)}`;
+    const input = `Dream on ${entry.dream_date} at ${timeOnly(entry.dream_time)} local time${entry.recurring ? " (recurring)" : ""}${entry.feelings?.length ? `, motifs: ${entry.feelings.join(", ")}` : ""}:\n${clip(entry.body, 4000)}`;
 
     const r = await fetch("https://ai.gateway.lovable.dev/v1/responses", {
       method: "POST",

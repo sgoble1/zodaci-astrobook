@@ -23,6 +23,13 @@ describe('dream deduction engine', () => {
     expect(first.deductionSteps[0]?.text).toContain('The night mind was activated');
     expect(first.deductionSteps[1]?.text).toContain('Water dreams tend to reach toward Neptune');
   });
+  it('uses the logged dream time to calculate the sky and phase', () => {
+    const midnight = dreamDeduction(natal, '2026-11-12', ['water'], 'calm', '00:00');
+    const evening = dreamDeduction(natal, '2026-11-12', ['water'], 'calm', '18:00');
+    expect(midnight.natalResonance.moonPhase).toBeTruthy();
+    expect(evening.natalResonance.moonPhase).toBeTruthy();
+    expect(midnight.nightSkyContacts).not.toEqual(evening.nightSkyContacts);
+  });
   it('does not invent house-dependent natal details when the birth time is unknown', () => {
     const untimed = { ...natal, input: { ...natal.input, time: null }, cusps: null } as typeof natal;
     const result = dreamDeduction(untimed, '2026-11-12', ['water'], 'confused');
