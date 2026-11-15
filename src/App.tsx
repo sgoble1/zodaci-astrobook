@@ -19,6 +19,7 @@ import { AutomaticChapters } from './components/payments/AutomaticChapters';
 import { PublicSiteLayout } from './components/brand/PublicSiteLayout';
 import { ReferralCapture } from './components/common/ReferralCapture';
 import { SiteNotice } from './components/common/SiteNotice';
+import { PrelaunchGate } from './components/prelaunch/PrelaunchGate';
 import { FeatureGate } from './components/common/FeatureGate';
 import { useCartSync } from './hooks/useCartSync';
 const Dashboard = lazy(() => import('./pages/Dashboard'));
@@ -145,6 +146,7 @@ const CounselorSession = lazy(() => import('./pages/Counselors').then(m => ({ de
 const ChartGuide = lazy(() => import('./pages/ChartGuide'));
 const Instructions = lazy(() => import('./pages/Instructions'));
 const BrandLanding = lazy(() => import('./pages/BrandLanding'));
+const PrelaunchLanding = lazy(() => import('./pages/PrelaunchLanding'));
 const BrandLaunch = lazy(() => import('./pages/BrandLaunch'));
 const PublicArticle = lazy(() => import('./pages/PublicArticle'));
 const LegacyArticleRedirect = lazy(() => import('./pages/PublicArticle').then(m => ({ default: m.LegacyArticleRedirect })));
@@ -270,9 +272,11 @@ export default function App() {
         <SiteNotice />
         <AutomaticChapters />
         <Suspense fallback={<div role="status" aria-label="Loading page" className="mx-auto mt-10 h-40 max-w-3xl animate-pulse rounded-lg bg-muted" />}>
+        <PrelaunchGate>
         <Routes>
           <Route path="/index" element={<Navigate to="/welcome" replace />} />
           <Route path="/welcome" element={<BrandLanding />} />
+          <Route path="/coming-soon" element={<PrelaunchLanding onUnlock={() => window.location.assign('/')} />} />
           <Route element={<PublicSiteLayout />}>
             <Route path="/about" element={<About />} />
             <Route path="/lp/:slug" element={<LandingPage />} />
@@ -450,6 +454,7 @@ export default function App() {
 
           </Route>
         </Routes>
+        </PrelaunchGate>
         </Suspense>
       </Providers>
       <Toaster theme="dark" position="bottom-right" />

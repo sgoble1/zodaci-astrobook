@@ -5,7 +5,8 @@ import { sendAppEmail } from '../_shared/app-email.ts';
 import { readJsonLimited, underLimit } from '../_shared/public-form.ts';
 import { NEWSLETTER_CONSENT_VERSION } from '../_shared/public-form-rules.ts';
 
-const signup = z.object({ email: z.string().trim().email().max(254), consent: z.literal(true), website: z.string().max(200).optional(), source: z.enum(['welcome', 'astrobook-teaser', 'pricing', 'sky-notes', 'astrocomic']).optional(), path: z.string().max(200).optional() });
+const signup = z.object({ email: z.string().trim().email().max(254), consent: z.literal(true), website: z.string().max(200).optional(), source: z.enum(['welcome', 'astrobook-teaser', 'pricing', 'sky-notes', 'astrocomic', 'prelaunch']).optional(), path: z.string().max(200).optional() });
+const gate = z.object({ action: z.enum(['prelaunch-status', 'prelaunch-access']), code: z.string().max(100).optional() });
 const confirm = z.object({ action: z.literal('confirm'), token: z.string().uuid() });
 
 Deno.serve(async req => {
@@ -17,6 +18,17 @@ Deno.serve(async req => {
   const url = Deno.env.get('SUPABASE_URL'); const key = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
   if (!url || !key) return reply({ error: 'Signup is temporarily unavailable. Please try again later.' }, 503);
   const db = createClient(url, key);
+
+  // Pre-launch gate: status is public; the passcode is compared here and never leaves the server.
+  const g = gate.safeParse(body.data);
+  if (g.success) {
+    const { data: row } = await db.from('platform_settings').select('value').eq('key', 'site.prelaunch').maybeSingle();
+    const v = (row?.value ?? {}) as { enabled?: boolean; passcode?: string };
+    if (g.data.action === 'prelaunch-status') return reply({ enabled: v.enabled === true });
+    if (!(await underLimit(db, 'newsletter', 'prelaunch-access', req))) return reply({ error: 'Too many tries. Please wait an hour.' }, 429);
+    const ok = typeof v.passcode === 'string' && v.passcode.length > 0 && (g.data.code ?? '').trim() === v.passcode;
+    return ok ? reply({ ok: true }) : reply({ error: 'That code is not right.' }, 403);
+  }
 
   // Double opt-in: the link in the confirmation email marks the address confirmed. Campaigns go only to confirmed rows.
   const c = confirm.safeParse(body.data);

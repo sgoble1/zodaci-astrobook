@@ -36,10 +36,13 @@ export function PlatformSettings() {
   const [saving, setSaving] = useState('');
   const [admins, setAdmins] = useState<Admin[] | null>(null);
   const [email, setEmail] = useState('');
+  const [pre, setPre] = useState<{ enabled: boolean; passcode: string }>({ enabled: false, passcode: '' });
   const load = async () => {
     setErr('');
     const [cfg, ad] = await Promise.all([supabase.from('platform_settings').select('key,value'), supabase.rpc('admin_list_admins')]);
     if (cfg.error) { setErr('Settings could not be loaded.'); return; }
+    const pr = (cfg.data ?? []).find(r => r.key === 'site.prelaunch')?.value as { enabled?: boolean; passcode?: string } | undefined;
+    setPre({ enabled: pr?.enabled === true, passcode: typeof pr?.passcode === 'string' ? pr.passcode : '' });
     setS(parseSiteSettings(cfg.data ?? [])); setAdmins((ad.data ?? []) as Admin[]);
   };
   useEffect(() => { void load(); }, []);
@@ -71,6 +74,16 @@ export function PlatformSettings() {
           <div><Label htmlFor="ps-mail">Support email</Label><Input id="ps-mail" name="support_email" type="email" defaultValue={g.support_email} maxLength={254} placeholder="help@zodaci.com" /></div>
           <Button type="submit" disabled={saving === 'site.general'} className="sm:col-span-3 sm:w-fit">{saving === 'site.general' ? 'Saving…' : 'Save general settings'}</Button>
         </form>
+      </section>
+
+      <section className="vellum space-y-4 p-5" aria-labelledby="ps-pre">
+        <div className="flex flex-wrap items-center justify-between gap-3"><div><h2 id="ps-pre" className="font-display text-2xl">Coming-soon page</h2><p className="text-sm text-muted-foreground">Visitors see only the email sign-up page. Admins who are signed in, and anyone with the access code, see the full site.</p></div>
+          <div className="flex items-center gap-2"><Switch id="ps-pre-on" checked={pre.enabled} disabled={saving === 'site.prelaunch'} onCheckedChange={v => { if (v && !pre.passcode) { toast.error('Save an access code first.'); return; } const next = { ...pre, enabled: v }; void save('site.prelaunch', next, v ? 'Coming-soon page is on' : 'Coming-soon page is off').then(ok => ok && setPre(next)); }} /><Label htmlFor="ps-pre-on">{pre.enabled ? 'On' : 'Off'}</Label></div></div>
+        <form className="flex flex-wrap items-end gap-2" onSubmit={e => { e.preventDefault(); const code = String(new FormData(e.currentTarget).get('passcode') ?? '').trim().slice(0, 100); if (code.length < 4) { toast.error('Use at least 4 characters.'); return; } const next = { ...pre, passcode: code }; void save('site.prelaunch', next, 'Access code saved').then(ok => ok && setPre(next)); }}>
+          <div><Label htmlFor="ps-code">Access code</Label><Input id="ps-code" name="passcode" defaultValue={pre.passcode} maxLength={100} key={pre.passcode} /></div>
+          <Button type="submit" variant="outline" size="sm" disabled={saving === 'site.prelaunch'}>Save code</Button>
+        </form>
+        <p className="text-xs text-muted-foreground">Open the code box from the small key in the page footer, by pressing Shift+P, or at /access. Sign-ups appear in Newsletter with the source "prelaunch".</p>
       </section>
 
       <section className="vellum space-y-4 p-5" aria-labelledby="ps-maint">
