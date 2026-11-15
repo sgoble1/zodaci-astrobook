@@ -3,6 +3,10 @@ export const ACCESS_KEY = 'zodaci_access_granted';
 /** Paths that stay open while the gate is on, so admins can sign in and visitors can read the legal pages. */
 export const GATE_OPEN_PATHS = ['/auth', '/access', '/welcome', '/coming-soon', '/privacy', '/terms', '/newsletter/confirm', '/reset-password', '/index'];
 
+export function isWaitlistPath(path: string): boolean {
+  return path === '/' || path === '/coming-soon' || path === '/access';
+}
+
 export function pathBypassesGate(path: string): boolean {
   return GATE_OPEN_PATHS.some(p => path === p || path.startsWith(p + '/'));
 }
