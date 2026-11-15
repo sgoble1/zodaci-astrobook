@@ -17,22 +17,28 @@ export function PrelaunchGate({ children }: { children: ReactNode }) {
     (async () => {
       const { data } = await supabase.functions.invoke('brand-newsletter', { body: { action: 'prelaunch-status' } });
       if (!live) return;
-      if (!data?.enabled) { setState('open'); return; }
+      if (!data?.enabled) {
+        setState('open');
+        return;
+      }
       const { data: s } = await supabase.auth.getSession();
       const uid = s.session?.user.id;
       if (uid) {
         const { data: admin } = await supabase.rpc('has_role', { _user_id: uid, _role: 'admin' });
         if (!live) return;
-        if (admin) { setState('open'); return; }
+        if (admin) {
+          setState('open');
+          return;
+        }
       }
       setState('gated');
     })().catch(() => live && setState('open'));
     return () => { live = false; };
   }, [state]);
 
-  // The waitlist is now the public homepage, independent of the optional site-wide prelaunch gate.
-  // Keep the old URL working, and send team members to the public site after successful code entry.
-  if (pathname === '/' || pathname === '/coming-soon' || pathname === '/access') {
+  const isWaitlistRoute = pathname === '/' || pathname === '/coming-soon' || pathname === '/access';
+
+  if (isWaitlistRoute) {
     return (
       <Suspense fallback={<div role="status" aria-label="Loading" className="min-h-screen bg-background" />}>
         <PrelaunchLanding
@@ -48,5 +54,10 @@ export function PrelaunchGate({ children }: { children: ReactNode }) {
 
   if (state === 'open' || pathBypassesGate(pathname)) return <>{children}</>;
   if (state === 'checking') return <div role="status" aria-label="Loading" className="min-h-screen bg-background" />;
-  return <Suspense fallback={<div className="min-h-screen bg-background" />}><PrelaunchLanding onUnlock={() => setState('open')} openAccess={pathname === '/access'} /></Suspense>;
+
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-background" />}>
+      <PrelaunchLanding onUnlock={() => setState('open')} openAccess={pathname === '/access'} />
+    </Suspense>
+  );
 }

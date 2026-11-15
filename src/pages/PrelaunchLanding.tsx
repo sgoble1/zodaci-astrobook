@@ -17,6 +17,8 @@ const FEATURES = [
   { icon: Moon, title: 'Dream journal', body: 'Log a dream and see what the sky was doing that night.' },
 ];
 
+const EMAIL_RE = /^\S+@\S+\.\S+$/;
+
 /** Pre-launch landing: collects launch emails (double opt-in) and holds the hidden passcode entry. */
 export default function PrelaunchLanding({ onUnlock, openAccess = false }: { onUnlock: () => void; openAccess?: boolean }) {
   const [email, setEmail] = useState('');
@@ -32,7 +34,9 @@ export default function PrelaunchLanding({ onUnlock, openAccess = false }: { onU
   useEffect(() => {
     document.title = 'Zodaci — Opening soon';
     const onKey = (e: KeyboardEvent) => {
-      if (e.shiftKey && e.key.toLowerCase() === 'p' && !(e.target instanceof HTMLInputElement)) setAccess(true);
+      if (e.shiftKey && e.key.toLowerCase() === 'p' && !(e.target instanceof HTMLInputElement)) {
+        setAccess(true);
+      }
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
@@ -42,13 +46,14 @@ export default function PrelaunchLanding({ onUnlock, openAccess = false }: { onU
     e.preventDefault();
     setMsg('');
 
-    if (website) {
+    if (website.trim()) {
       setState('done');
       setMsg('Thanks — we are almost ready to open.');
       return;
     }
 
-    if (!/^\S+@\S+\.\S+$/.test(email.trim())) {
+    const trimmedEmail = email.trim();
+    if (!EMAIL_RE.test(trimmedEmail)) {
       setState('error');
       setMsg('Enter a full email address, like name@example.com.');
       return;
@@ -64,7 +69,7 @@ export default function PrelaunchLanding({ onUnlock, openAccess = false }: { onU
     try {
       const { data, error } = await supabase.functions.invoke('brand-newsletter', {
         body: {
-          email: email.trim(),
+          email: trimmedEmail,
           consent: true,
           website: '',
           source: 'astrobook-teaser',
@@ -88,12 +93,17 @@ export default function PrelaunchLanding({ onUnlock, openAccess = false }: { onU
 
   const unlock = async (e: React.FormEvent) => {
     e.preventDefault();
+    const trimmedCode = code.trim();
     setCodeErr('');
-    setChecking(true);
+    if (!trimmedCode) {
+      setCodeErr('Enter the team access code.');
+      return;
+    }
 
+    setChecking(true);
     try {
       const { data, error } = await supabase.functions.invoke('brand-newsletter', {
-        body: { action: 'prelaunch-access', code },
+        body: { action: 'prelaunch-access', code: trimmedCode },
       });
 
       if (error || !data?.ok) {
