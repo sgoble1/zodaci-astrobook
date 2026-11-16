@@ -4,7 +4,7 @@ import { ArrowRight, ChevronLeft, ChevronRight, Pause, Play } from 'lucide-react
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { FilmFx } from '@/components/observatory/FilmFx';
-import cartographer from '@/assets/home/cartographer-guide.jpg';
+import cartographer from '@/assets/home/cartographer-cutout.webp';
 import facesHero from '@/assets/home/faces-looking-up-blend.jpg';
 import sunFace from '@/assets/spots/self.jpg';
 import { PRODUCT_ART } from '@/content/productArtwork';
@@ -166,7 +166,7 @@ export function ChartMapSlide({ heading = 'h1', title, script, lines, cta, secon
       <Starbursts />
       <div className="chartmap-stage">
         <div className="chartmap-figure-wrap">
-          <img src={cartographer} alt="The Cartographer, the observatory's chart specialist, points up at a zodiac wheel" width={820} height={1025} loading={eager ? 'eager' : 'lazy'} {...(eager ? { fetchpriority: 'high' } : {})} className="chartmap-figure" />
+          <img src={cartographer} alt="The Cartographer, the observatory's chart specialist, points up at a zodiac wheel" width={820} height={1025} style={{ objectFit: 'contain', objectPosition: 'bottom' }} loading={eager ? 'eager' : 'lazy'} {...(eager ? { fetchpriority: 'high' } : {})} className="chartmap-figure" />
           <div className="hero-projection chartmap-dial">
             <AstroDial highlight={highlight} className="w-full" />
             <FilmFx motes={14} specks={5} tone="glow" />

@@ -12,6 +12,7 @@ import { spineInches } from '@/lib/spine';
 import { OpenAstroBook } from '@/components/books/OpenAstroBook';
 import { Book3D } from '@/components/books/Book3D';
 import { BOOK_VERSIONS } from '@/lib/books';
+import { signCover } from '@/content/signCovers';
 
 const PRINTED = BOOK_VERSIONS.filter(v => v.format === 'print');
 
@@ -30,6 +31,8 @@ export function MemberBookTeaser({ fallback }: { fallback: React.ReactNode }) {
   if (signedIn === null || (signedIn && birth === undefined)) return <Skeleton className="h-64 w-full" />;
   if (!signedIn) return <>{fallback}</>;
   if (!birth || !ok) return <div className="space-y-3"><p className="text-muted-foreground">Add your birth details and the first pages of your own AstroBook open here.</p><Button asChild><Link to="/start?next=/astrobook%23teaser">Add my birth details<ArrowRight /></Link></Button></div>;
+  const sun = (() => { try { return computeChart(toChartInput(birth)).bodies.find(b => b.key === 'sun')?.sign; } catch { return undefined; } })();
+  const cover = signCover(sun);
   const v = PRINTED.find(x => x.id === ed) ?? PRINTED[0];
   const pages = Math.round((v.pages[0] + v.pages[1]) / 2);
   const hard = /hardcover/i.test(v.binding);
@@ -39,7 +42,7 @@ export function MemberBookTeaser({ fallback }: { fallback: React.ReactNode }) {
       <OpenAstroBook next="/astrobook#teaser" startMine />
       <div className="space-y-3 text-center">
         <div role="radiogroup" aria-label="Book size" className="flex flex-wrap justify-center gap-1.5">{PRINTED.map(x => <button key={x.id} type="button" role="radio" aria-checked={x.id === ed} onClick={() => setEd(x.id)} className={`rounded-full border px-2.5 py-1 text-xs transition-colors duration-500 ${x.id === ed ? 'border-primary bg-primary/15' : 'border-border hover:border-primary/60'}`}>{x.name}</button>)}</div>
-        <Book3D key={v.id} pages={pages} trimPt={v.trimPt} hardcover={hard} label={`${v.trim} · ${v.binding.toLowerCase()}`} name={birth.name || 'Your AstroBook'} />
+        <Book3D key={v.id} pages={pages} trimPt={v.trimPt} hardcover={hard} label={`${v.trim} · ${v.binding.toLowerCase()}`} name={birth.name || 'Your AstroBook'} {...(cover ? { coverSrc: cover } : {})} />
         <p className="text-sm text-muted-foreground">{v.name} · {v.trim} · about {pages} pages · spine {spine.estimate ? 'about ' : ''}{spine.inches.toFixed(2)} in</p>
       </div>
     </div>
