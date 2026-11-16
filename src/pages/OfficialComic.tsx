@@ -8,6 +8,7 @@ import { usePageMeta } from '@/hooks/usePageMeta';
 import { computeChart } from '@/lib/astro';
 import { buildComicIssue, monthLabel } from '@/lib/comic';
 import { isOfficialEdition, officialChartInput, ownerLabel, useOfficialEditions } from '@/lib/officialEditions';
+import { comicPreviewArt } from '@/content/castArt';
 import cover from '@/assets/astrocomic-cover.jpg';
 import skyPanel from '@/assets/astrocomic-sky-panel.jpg';
 import letterPanel from '@/assets/astrocomic-letter-panel.jpg';
@@ -40,6 +41,8 @@ export default function OfficialComic() {
       return buildComicIssue(chart, { reader: row.display_name, month, issueNumber: officialIssueNumber(month) });
     } catch { return undefined; }
   }, [row, month]);
+  // Character panels show the planet the script names; the cover, sky and letter keep the shared scenes.
+  const art = useMemo(() => (issue ? { ...comicPreviewArt(issue, 24), ...ART } : ART), [issue]);
   const total = issue?.pages.length ?? 0;
   const go = useCallback((n: number) => setPage(Math.min(Math.max(1, n), total || 1)), [total]);
   useEffect(() => { setPage(1); }, [month, edition]);
@@ -110,7 +113,7 @@ export default function OfficialComic() {
       {view === 'page' ? (
         <div className="grid gap-6 lg:grid-cols-[1fr_14rem]">
           <div className="mx-auto w-full max-w-xl space-y-3">
-            <ComicPageView page={current} art={ART} />
+            <ComicPageView page={current} art={art} />
             <nav className="flex items-center justify-between gap-2" aria-label="Pages">
               <Button variant="outline" onClick={() => go(page - 1)} disabled={page <= 1}><ChevronLeft className="mr-1 h-4 w-4" aria-hidden="true" />Previous</Button>
               <span className="text-sm text-muted-foreground" aria-live="polite">Page {page} of {total} · {current.section}</span>
@@ -122,13 +125,13 @@ export default function OfficialComic() {
             {issue.pages.map(p => (
               <li key={p.n}><button type="button" onClick={() => go(p.n)} aria-current={p.n === page ? 'page' : undefined} aria-label={`Page ${p.n}: ${p.title}`}
                 className={`block w-full rounded-sm text-left transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${p.n === page ? 'ring-2 ring-gold' : 'opacity-80 hover:opacity-100'}`}>
-                <ComicPageView page={p} compact art={ART} />
+                <ComicPageView page={p} compact art={art} />
               </button></li>
             ))}
           </ol>
         </div>
       ) : (
-        <div className="grid gap-4 sm:grid-cols-3 lg:grid-cols-4">{issue.pages.map(p => <button key={p.n} type="button" onClick={() => { setPage(p.n); setView('page'); }} className="text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" aria-label={`Open page ${p.n}: ${p.title}`}><ComicPageView page={p} compact art={ART} /></button>)}</div>
+        <div className="grid gap-4 sm:grid-cols-3 lg:grid-cols-4">{issue.pages.map(p => <button key={p.n} type="button" onClick={() => { setPage(p.n); setView('page'); }} className="text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" aria-label={`Open page ${p.n}: ${p.title}`}><ComicPageView page={p} compact art={art} /></button>)}</div>
       )}
 
       <p className="text-xs text-muted-foreground">Scenes marked in italics are the artist’s directions for panels not yet drawn. Positions, dates and the letter are calculated from the chart; nothing about the reader is invented. <Link to="/official-astrobook" className="underline underline-offset-2">Back to the Official AstroBook</Link></p>
