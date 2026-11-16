@@ -1203,6 +1203,7 @@ export type Database = {
           body: string
           created_at: string
           dream_date: string
+          dream_time: string
           feelings: string[]
           id: string
           recurring: boolean
@@ -1218,6 +1219,7 @@ export type Database = {
           body: string
           created_at?: string
           dream_date?: string
+          dream_time?: string
           feelings?: string[]
           id?: string
           recurring?: boolean
@@ -1233,6 +1235,7 @@ export type Database = {
           body?: string
           created_at?: string
           dream_date?: string
+          dream_time?: string
           feelings?: string[]
           id?: string
           recurring?: boolean
