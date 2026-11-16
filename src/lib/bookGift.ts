@@ -48,3 +48,12 @@ export function dedicationFor(f: BookFor, digital: boolean, bookName: string) {
   if (!isGift(f, digital) || !f.message.trim()) return undefined;
   return { to: bookName, from: f.from.trim() || undefined, message: f.message.trim() };
 }
+
+/** Gift note typed in the AstroBook page preview, carried to the order form on this device only (sessionStorage). */
+export const DEDICATION_DRAFT_KEY = 'zodaci_dedication_draft';
+export function readDedicationDraft(): string {
+  try { return (sessionStorage.getItem(DEDICATION_DRAFT_KEY) ?? '').slice(0, GIFT_MESSAGE_MAX); } catch { return ''; }
+}
+export function saveDedicationDraft(note: string) {
+  try { if (note.trim()) sessionStorage.setItem(DEDICATION_DRAFT_KEY, note.slice(0, GIFT_MESSAGE_MAX)); else sessionStorage.removeItem(DEDICATION_DRAFT_KEY); } catch { /* storage unavailable */ }
+}

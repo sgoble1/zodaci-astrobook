@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
-import { GIFT_MESSAGE_MAX } from '@/lib/bookGift';
+import { GIFT_MESSAGE_MAX, readDedicationDraft, saveDedicationDraft } from '@/lib/bookGift';
 import { Textarea } from '@/components/ui/textarea';
 import { supabase } from '@/integrations/supabase/client';
 import { computeChart } from '@/lib/astro';
@@ -20,7 +20,7 @@ export function MemberBookTeaser({ fallback }: { fallback: React.ReactNode }) {
   const [signedIn, setSignedIn] = useState<boolean | null>(null);
   useEffect(() => { supabase.auth.getSession().then(({ data }) => setSignedIn(!!data.session)); }, []);
   const birth = useMyBirth();
-  const [note, setNote] = useState('');
+  const [note, setNote] = useState(readDedicationDraft);
   const ok = useMemo(() => {
     if (!birth) return false;
     try { computeChart(toChartInput(birth)); return true; } catch { return false; }
@@ -39,8 +39,8 @@ export function MemberBookTeaser({ fallback }: { fallback: React.ReactNode }) {
     </div>
     <section aria-labelledby="dedication-h" className="grid items-center gap-6 md:grid-cols-2">
       <div className="space-y-3"><h3 id="dedication-h" className="font-display text-2xl">Giving it as a gift?</h3><p className="text-sm text-muted-foreground">A printed gift adds a dedication page after the title page. Try yours here; nothing is saved until you order.</p>
-        <Textarea aria-label="Dedication note" maxLength={GIFT_MESSAGE_MAX} rows={3} value={note} onChange={e => setNote(e.target.value)} placeholder="For you, under the same sky." />
-        <p className="text-xs text-muted-foreground">{note.length}/{GIFT_MESSAGE_MAX} characters</p></div>
+        <Textarea aria-label="Dedication note" maxLength={GIFT_MESSAGE_MAX} rows={3} value={note} onChange={e => { setNote(e.target.value); saveDedicationDraft(e.target.value); }} placeholder="For you, under the same sky." />
+        <p className="text-xs text-muted-foreground">{note.length}/{GIFT_MESSAGE_MAX} characters{note.trim() ? ' · carried to the order form when you continue' : ''}</p>{note.trim() && <Button asChild variant="outline" size="sm"><Link to="/books#book-for">Order it as a gift<ArrowRight /></Link></Button>}</div>
       <figure className="obs-paper mx-auto flex aspect-[2/3] w-full max-w-[16rem] flex-col items-center justify-center p-6 text-center" aria-label="Dedication page preview">
         <p className="font-label text-xs tracking-[0.16em] text-muted-foreground">Dedication</p>
         <p className="mt-4 font-script text-2xl leading-snug text-primary break-words">{note.trim() || 'For you, under the same sky.'}</p>

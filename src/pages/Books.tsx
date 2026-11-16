@@ -31,7 +31,7 @@ import { Faq, ASTROBOOK_FAQ } from '@/components/brand/Faq';
 import { StartLink } from '@/components/common/StartLink';
 import { BookRecipient } from '@/components/books/BookRecipient';
 import { useRelationships } from '@/hooks/useRelationships';
-import { BOOK_FOR_ME, dedicationFor, giftOrderFields, recipientBirth, validateGift, type BookFor } from '@/lib/bookGift';
+import { BOOK_FOR_ME, readDedicationDraft, dedicationFor, giftOrderFields, recipientBirth, validateGift, type BookFor } from '@/lib/bookGift';
 
 /** A small finished-cover thumbnail (artwork plus the reader's name), drawn by the same code as the print cover. */
 function CoverThumb({ spec, alt, blur = false }: { spec: CoverSpec; alt: string; blur?: boolean }) {
@@ -49,7 +49,7 @@ export default function Books() {
   const digital = version.format === 'digital';
   const [orderId] = useState(() => crypto.randomUUID());
   const [extras, setExtras] = useState<string[]>([]);
-  const [bookFor, setBookFor] = useState<BookFor>(BOOK_FOR_ME);
+  const [bookFor, setBookFor] = useState<BookFor>(() => { const m = readDedicationDraft(); return m ? { ...BOOK_FOR_ME, giftForMe: true, message: m } : BOOK_FOR_ME; });
   const people = useRelationships();
   const forOther = bookFor.mode === 'other';
   const recipient = forOther ? people.items.find(p => p.id === bookFor.recipientId) : undefined;

@@ -112,7 +112,7 @@ export default function AstroComic() {
           {!personal && <Button asChild variant="outline"><Link to={session ? '/start' : `/auth?mode=signup&next=${encodeURIComponent('/astrocomic#preview')}`}>Preview my own issue</Link></Button>}
         </div>
         <ol className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-3" aria-label="First three pages">
-          {preview.pages.slice(0, 3).map(p => <li key={p.n} className="mx-auto w-full max-w-xs sm:max-w-none"><ComicPageView page={p} compact art={PREVIEW_ART} /><p className="mt-2 text-center font-label text-xs tracking-wider text-muted-foreground">Page {p.n}</p></li>)}
+          {preview.pages.slice(0, 3).map(p => <li key={p.n} className="comic-frame mx-auto w-full max-w-[17rem] p-2 sm:max-w-none"><ComicPageView page={p} compact art={PREVIEW_ART} /><p className="mt-2 text-center font-label text-xs tracking-wider text-muted-foreground">Page {p.n}</p></li>)}
         </ol>
         <p className="mt-4 text-xs text-muted-foreground">Each page is shown at the printed 5.5 × 8.5 in digest shape, the same as the issue reader and the printed copy.</p>
         <p className="mt-3 text-xs text-muted-foreground">Sample illustrations accompany {personal ? 'your calculated sky positions and personal letter' : `${SAMPLE_READER.name.split(' ')[0]}’s calculated sky positions and letter`}. Each printed issue receives artwork for its own story.</p>

@@ -8,7 +8,7 @@ import { toChartInput, type MyBirth } from '@/lib/myBirth';
 import fontUrl from '@/assets/fonts/manuscript.ttf?url';
 import { manuscriptManifest } from '@/lib/manuscriptManifest';
 import type { Person } from '@/lib/bookExtras';
-import { buildVolumes, VOLUMES, WORLD_SYSTEMS_FROM } from '@/lib/bookVolumes';
+import { buildVolumes, VOLUMES, WORLD_SYSTEMS_FROM, type BookDream } from '@/lib/bookVolumes';
 import { BOOK_VERSIONS, versionOf } from '@/lib/books';
 
 /** Composes the reviewable six-volume manuscript for one version from the member's calculated chart and finished readings. */
@@ -42,7 +42,14 @@ export function ManuscriptPreview({ birth, edition, extras, coverUrl, certificat
       const coverBuffer: ArrayBuffer | undefined = coverUrl ? await (await fetch(coverUrl)).arrayBuffer() : undefined;
       const sign = (n: string) => c.bodies.find(b => b.name === n)?.sign;
       const bigThree = [sign('Sun') && `Sun in ${sign('Sun')}`, sign('Moon') && `Moon in ${sign('Moon')}`, c.asc != null && `${SIGNS[Math.floor(c.asc / 30)]} Rising`].filter(Boolean).join(' · ');
-      const volumes = buildVolumes({ edition, chart: c, name: birth.name, saved: chapters, people, facts: chartFacts });
+      // Only the buyer's own book takes their dreams, and only ones they marked "use in book".
+      let dreams: BookDream[] = [];
+      if (!recipient) {
+        const { data: dr, error: drError } = await supabase.from('dream_entries').select('dream_date,dream_time,body,recurring').eq('user_id', user.user.id).eq('use_in_book', true).order('dream_date').limit(40);
+        if (drError) throw new Error('Your dream journal could not be loaded. Please retry.');
+        dreams = (dr ?? []).map(d => ({ date: d.dream_date, time: d.dream_time, body: d.body, recurring: d.recurring }));
+      }
+      const volumes = buildVolumes({ edition, chart: c, name: birth.name, saved: chapters, people, facts: chartFacts, dreams });
       const result = await composeManuscript({ bigThree, name: birth.name, birthFacts: `${birth.date} · ${birth.time ?? 'Time unknown'} · ${birth.placeLabel} · ${birth.tz} · ${birth.houseSystem}`, chartFacts, chapters, edition, extras, fontBytes: new Uint8Array(fontBuffer), cover: coverBuffer ? new Uint8Array(coverBuffer) : undefined, volumes, chart: c, certificate, dedication });
       const blob = new Blob([result.bytes as BlobPart], { type: 'application/pdf' }); if (preview) URL.revokeObjectURL(preview.url); setPreview({ url: URL.createObjectURL(blob), pages: result.pages, readings: chapters.length, people: people.length }); onReady({ blob, pages: result.pages });
     } catch (e) { setError(e instanceof Error ? e.message : 'Manuscript could not be composed.'); } finally { setBusy(false); }

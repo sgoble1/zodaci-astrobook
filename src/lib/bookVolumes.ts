@@ -229,10 +229,30 @@ function cyclesChapter(c: ChartResult, today = new Date()) {
   ].join('\n\n');
 }
 
-export type VolumeInput = { edition: string; chart: ChartResult; name: string; saved: { title: string; content: string }[]; people?: Person[]; today?: Date; /** Birth facts and the full planet table. */ facts?: string };
+/** A dream the owner explicitly marked for their book (use_in_book). Their own words only; nothing is inferred. */
+export type BookDream = { date: string; time?: string; body: string; recurring?: boolean };
+
+/** Chaldean decan rulers: Aries 1st decan = Mars, then the Chaldean order repeats through the zodiac. */
+const CHALDEAN = ['Mars', 'Sun', 'Venus', 'Mercury', 'Moon', 'Saturn', 'Jupiter'];
+export function decanOf(lon: number) {
+  const x = norm(lon); const sign = Math.floor(x / 30); const d = Math.floor((x % 30) / 10);
+  return { sign: SIGNS[sign], decan: d + 1, ruler: CHALDEAN[(sign * 3 + d) % 7] };
+}
+function decansChapter(c: ChartResult, timeKnown: boolean) {
+  const rows = c.bodies.filter(b => PLANETS.includes(b.key)).map(b => { const d = decanOf(b.lon); return `## ${b.name} · ${d.sign}, ${ordinal(d.decan)} decan\n\nEach sign is split into three 10° decans. ${b.name} sits at ${fmtLon(b.lon).text}, in the ${ordinal(d.decan)} decan of ${d.sign}, which the Chaldean tradition gives to ${d.ruler}. ${d.ruler === b.name ? `${b.name} rules its own decan here, so its expression is concentrated.` : `${d.ruler} adds its colour to how ${b.name} works in ${d.sign}.`}`; });
+  if (timeKnown && c.asc != null) { const d = decanOf(c.asc); rows.push(`## Ascendant · ${d.sign}, ${ordinal(d.decan)} decan\n\nYour rising degree falls in the ${ordinal(d.decan)} decan of ${d.sign}, ruled by ${d.ruler} in the Chaldean scheme.`); }
+  return rows.join('\n\n');
+}
+function dreamsChapter(dreams: BookDream[]) {
+  const sorted = [...dreams].sort((a, b) => a.date.localeCompare(b.date));
+  return ['These are dreams you chose to include, in your own words, with the date you recorded. They are kept as you wrote them; the book does not interpret them or draw conclusions about your life from them.',
+    ...sorted.map(d => `## ${d.date}${d.time ? ` · ${d.time.slice(0, 5)}` : ''}${d.recurring ? ' · recurring' : ''}\n\n${d.body.trim()}`)].join('\n\n');
+}
+
+export type VolumeInput = { edition: string; chart: ChartResult; name: string; saved: { title: string; content: string }[]; people?: Person[]; today?: Date; /** Birth facts and the full planet table. */ facts?: string; /** Owner-opted dreams (use_in_book), placed in Volume IV. */ dreams?: BookDream[] };
 
 /** All chapters of a personal AstroBook, in reading order, with a divider page before each volume. */
-export function buildVolumes({ edition, chart: c, name, saved, people = [], today, facts }: VolumeInput): BookChapter[] {
+export function buildVolumes({ edition, chart: c, name, saved, people = [], today, facts, dreams = [] }: VolumeInput): BookChapter[] {
   const rank = RANK.indexOf(versionOf(edition)?.id ?? '');
   const r = rank < 0 ? 2 : rank;
   const timeKnown = !!c.input.time;
@@ -247,6 +267,7 @@ export function buildVolumes({ edition, chart: c, name, saved, people = [], toda
   vol.I.push({ title: 'Your Birth Moon Phase', content: `${ph.name} · ${Math.round(ph.angle)}° from the Sun · ${ph.illumination}% lit\n\n${ph.text}` });
   vol.I.push({ title: 'Dignities and Chart Emphasis', content: dignitiesChapter(c, timeKnown) });
   if (r >= 3) vol.I.push({ title: 'Element and Modality Balance', content: elementChapter(c) }, { title: 'The Story of Your Sky', content: narrative(perceive(c, timeKnown), 'oracle', 6) + '\n\n' + perceive(c, timeKnown).slice(0, 6).map(i => `## ${i.title}\n\n${i.text}`).join('\n\n') });
+  if (r >= 2) vol.I.push({ title: 'Your Decans', content: decansChapter(c, timeKnown) });
   vol.I.push(...bySaved('I'));
 
   vol.II.push({ title: 'The Twelve Houses', content: housesChapter(c) }, { title: 'Rulership Summary', content: rulershipSummary(c) });
@@ -264,6 +285,8 @@ export function buildVolumes({ edition, chart: c, name, saved, people = [], toda
   vol.IV.push({ title: 'Your North Node', content: northNodeChapter(c) }, { title: 'Shadow and Breakthrough', content: shadowChapter(c, timeKnown) });
   if (r >= 2) vol.IV.push({ title: 'Chiron, the Nodes and Sensitive Points', content: sensitivePoints(c, timeKnown) });
   if (r >= 4) vol.IV.push({ title: 'Lots and Fixed Stars', content: lotsAndStars(c) }, { title: 'Planet Mythology', content: mythologyChapter(c) });
+  const ownDreams = dreams.filter(d => d.body.trim());
+  if (ownDreams.length) vol.IV.push({ title: 'Dreams You Chose to Include', content: dreamsChapter(ownDreams) });
   vol.IV.push(...bySaved('IV'));
 
   if (r >= RANK.indexOf(WORLD_SYSTEMS_FROM)) vol.V.push({ title: 'Your Birth Moment Across Traditions', content: worldSystems(c) });

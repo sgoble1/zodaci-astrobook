@@ -3,6 +3,7 @@ import { ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { SampleBook } from '@/components/books/SampleBookReader';
+import { OpenAstroBook } from '@/components/books/OpenAstroBook';
 import { BOOK_VERSIONS, EXTRA_SECTION_PRICE, money } from '@/lib/books';
 
 /** Public preview page: read a full sample AstroBook as a PDF before ordering. */
@@ -15,7 +16,14 @@ export default function BookPreview() {
         <h1 className="font-display text-4xl sm:text-5xl">See inside an AstroBook.</h1>
         <p className="mx-auto max-w-2xl text-muted-foreground">Explore a short fictional sample with calculated birth-chart facts and illustrative passages. Your own book uses your saved chart and finished readings; review its actual contents and page count before payment.</p>
       </header>
-      <SampleBook />
+      <section aria-labelledby="turn-h" className="space-y-4">
+        <h2 id="turn-h" className="font-display text-2xl text-center">Turn the pages</h2>
+        <div className="obs-paper p-4 sm:p-6"><OpenAstroBook next="/book-preview" /></div>
+      </section>
+      <section aria-labelledby="pdf-h" className="space-y-4">
+        <h2 id="pdf-h" className="font-display text-2xl text-center">Read the sample PDF</h2>
+        <SampleBook />
+      </section>
       <section className="rounded-xl border border-primary/30 bg-primary/10 p-8 text-center space-y-4">
         <h2 className="font-display text-2xl">Ready for your own?</h2>
         <ul aria-label="AstroBook versions and prices" className="mx-auto flex max-w-2xl flex-wrap justify-center gap-x-4 gap-y-1 text-sm">{BOOK_VERSIONS.map(v => <li key={v.id}><span className="text-foreground">{v.name}</span> <span className="text-muted-foreground">{money(v.price)}</span></li>)}</ul>

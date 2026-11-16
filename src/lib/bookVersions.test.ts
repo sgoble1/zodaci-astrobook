@@ -131,3 +131,25 @@ describe('life cycles come from the ephemeris', () => {
     }
   });
 });
+
+describe('decans and opted-in dreams', () => {
+  it('Chaldean decans: Aries 1st = Mars, Aries 3rd = Venus, Pisces 3rd = Mars', async () => {
+    const { decanOf } = await import('./bookVolumes');
+    expect(decanOf(5).ruler).toBe('Mars'); expect(decanOf(25).ruler).toBe('Venus'); expect(decanOf(355).ruler).toBe('Mars');
+    expect(decanOf(45)).toMatchObject({ sign: 'Taurus', decan: 2, ruler: 'Moon' });
+  });
+  it('Classic and up include Your Decans; Pocket does not', async () => {
+    const { buildVolumes } = await import('./bookVolumes');
+    const t = (e: string) => buildVolumes({ edition: e, chart: olivia, name: 'Olivia', saved: [] }).map(c => c.title);
+    expect(t('classic')).toContain('Your Decans'); expect(t('pocket')).not.toContain('Your Decans');
+  });
+  it('dreams appear only when passed, verbatim, in Volume IV', async () => {
+    const { buildVolumes } = await import('./bookVolumes');
+    expect(buildVolumes({ edition: 'digital', chart: olivia, name: 'Olivia', saved: [] }).map(c => c.title)).not.toContain('Dreams You Chose to Include');
+    const out = buildVolumes({ edition: 'digital', chart: olivia, name: 'Olivia', saved: [], dreams: [{ date: '2026-02-01', body: 'A lighthouse on a hill.' }] });
+    const i = out.findIndex(c => c.title === 'Dreams You Chose to Include');
+    expect(out[i].content).toContain('A lighthouse on a hill.');
+    const vol = out.slice(0, i).reverse().find(c => c.draw === 'volume')!;
+    expect(vol.title.startsWith('Volume IV')).toBe(true);
+  });
+});
