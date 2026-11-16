@@ -19,7 +19,7 @@ Order follows resource Part 6.3. Ticked when done and tested.
 Full plan: .lovable/plan/zodaci-final-master-plan-everything-still-unfinished-2026-11-12.md
 - [x] Stage 1.1–1.2: April's report uses the same planet spheres as Shane/Zac, with sign/house/dignity badges and chapter links.
 - [x] Stage 1.6 view-as choice carries into new tabs, cleared on sign-out (tested).
-- [ ] Founder edition experience (user, Nov 12): calmer, less overwhelming editions (content, boxes, flow); each account's own accurate, illustrated AstroBook and AstroComic covers plus a first-10-page preview of each.
+- [ ] Founder edition experience (user, Nov 12): calmer, less overwhelming editions (content, boxes, flow); each account's own accurate, illustrated AstroBook and AstroComic covers plus a first-10-page preview of each. (Nov 16: first-ten-page book and comic previews from each founder's own chart are live on Official AstroBook; founder-specific illustrated cover art still open — needs owner art direction + image credits.)
 - [ ] Stage 1.3–1.5, 1.7 founder frame, shared card look, naming.
 - [ ] Stage 1b navigation audit, AstroComic golden-age restyle, site-wide image/theme consistency (user asked Nov 12).
 - [ ] Stage 2 leftover free items · Stage 3 verification sweep.
