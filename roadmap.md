@@ -228,7 +228,7 @@ Audit Oct 29: payment already waits for a real manuscript (server-checked); rema
 
 ### 7. Public site & member flow (agent)
 - [x] Reading Room: Leo Heroine in Big Three, Gemini Observatory in Transits; Blog ↔ Reading Room links; contact form on /welcome (validation checked at 393px; no test message sent).
-- [ ] Signup-first CTA; Community sign-in returns; theme CTAs; Demo interactive chart.
+- [ ] Signup-first CTA; Community sign-in returns; theme CTAs. [x] Demo interactive chart: pick a planet for its calculated position and closest aspects; console sound toggle (off by default), Nov 16.
 - [ ] Workbook eyebrow, Wonderings link, "Create a chapter about this" topic, Instructions/search leaks, onboarding return to edition, podcast player vs progress overlap, chat safe-area (already padded). Dead Home code removed.
 - [x] Page titles: pages without their own title take one from the navigation registry (tested); dedicated descriptions still welcome per page.
 

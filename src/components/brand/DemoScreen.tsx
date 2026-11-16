@@ -16,14 +16,27 @@ export const DEMO_STEPS = [
   { label: 'Your book', station: 'Print dispatch', to: '#book-h', title: 'Keep it on the shelf', body: 'Readings can be gathered into an AstroBook or an AstroComic issue, previewed before anything is printed.', rows: [['Format', 'AstroBook or AstroComic'], ['Preview', 'Before you order'], ['Printed', 'Only when you say so']] },
 ] as const;
 
+/** A short relay click drawn with Web Audio; no sound files, silent until the visitor turns sound on. */
+function relayClick() {
+  if (typeof window === 'undefined' || window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return;
+  const Ctx = window.AudioContext ?? (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+  if (!Ctx) return;
+  const ctx = new Ctx(); const o = ctx.createOscillator(); const g = ctx.createGain();
+  o.type = 'square'; o.frequency.value = 180; g.gain.setValueAtTime(0.05, ctx.currentTime); g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.06);
+  o.connect(g).connect(ctx.destination); o.start(); o.stop(ctx.currentTime + 0.07); o.onended = () => void ctx.close();
+}
+
 export function DemoScreen() {
-  const [i, setI] = useState(0);
+  const [idx, setIdx] = useState(0);
+  const [sound, setSound] = useState(false);
+  const i = idx;
+  const setI = (n: number) => { if (sound) relayClick(); setIdx(n); };
   const s = DEMO_STEPS[i];
   return (
     <div className="obs-console p-4 sm:p-6">
       <div className="flex flex-wrap items-center justify-between gap-2 border-b border-gold/40 pb-3">
         <p className="font-label text-sm tracking-[0.18em] text-gold">Observatory console</p>
-        <p className="font-label text-xs tracking-[0.14em] text-muted-foreground">Fictional subject · {SAMPLE_READER.name}</p>
+        <div className="flex items-center gap-3"><p className="font-label text-xs tracking-[0.14em] text-muted-foreground">Fictional subject · {SAMPLE_READER.name}</p><button type="button" aria-pressed={sound} onClick={() => setSound(v => !v)} className="font-label text-xs tracking-[0.12em] text-gold underline underline-offset-4">Sound {sound ? 'on' : 'off'}</button></div>
       </div>
       <div className="mt-4 grid gap-5 md:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)]">
         <div className="space-y-4">
