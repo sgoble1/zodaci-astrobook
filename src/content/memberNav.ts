@@ -455,7 +455,7 @@ const P = (domain: Placement['domain'], level: Placement['level'], note?: string
  * so new pages must be placed before they ship.
  */
 export const ROUTE_INVENTORY: Record<string, Placement> = {
-  '/index': P('public', 'utility', 'redirects to /welcome'), '/welcome': P('public', 'primary'), '/april': P('public', 'utility', 'April’s shared report; opens for her account and people she shared her edition with'), '/shared-with-me': P('account', 'utility'),
+  '/index': P('public', 'utility', 'redirects to /welcome'), '/welcome': P('public', 'primary'), '/coming-soon': P('public', 'utility', 'coming-soon waitlist preview'), '/april': P('public', 'utility', 'April’s shared report; opens for her account and people she shared her edition with'), '/shared-with-me': P('account', 'utility'),
   '/about': P('learn', 'secondary'), '/characters': P('learn', 'secondary', 'character selection'), '/lp/:slug': P('public', 'utility', 'campaign pages'), '/share/signs': P('public', 'utility', 'shared planet signs'), '/forecast': P('learn', 'secondary'), '/accuracy': P('learn', 'tertiary', 'public accuracy check, from How we calculate and Verify the Sources'), '/shop': P('public', 'utility', 'redirects to /store'), '/learn': P('learn', 'primary'), '/learn/:slug': P('learn', 'tertiary', 'Learn article'), '/blog': P('learn', 'utility', 'redirects to /learn#journal'), '/blog/learn/:slug': P('learn', 'tertiary', 'from the Journal'),
   '/community': P('explore', 'secondary'), '/community/guidelines': P('explore', 'tertiary', 'from Community'), '/community/:id': P('explore', 'tertiary', 'from Community'),
   '/astrobook': P('public', 'utility', 'public product page; members use /books'), '/book-preview': P('book', 'secondary'), '/demo': P('learn', 'secondary'),

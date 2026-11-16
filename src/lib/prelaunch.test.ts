@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { pathBypassesGate } from './prelaunch';
+import { gateView, pathBypassesGate } from './prelaunch';
 
 describe('pre-launch gate paths', () => {
   it('keeps sign-in open so admins can get in', () => expect(pathBypassesGate('/auth')).toBe(true));
@@ -12,4 +12,20 @@ describe('pre-launch gate paths', () => {
   it('gates the homepage', () => expect(pathBypassesGate('/')).toBe(false));
   it('gates member pages', () => expect(pathBypassesGate('/dashboard')).toBe(false));
   it('does not open look-alike paths', () => expect(pathBypassesGate('/authors')).toBe(false));
+});
+
+describe('gateView', () => {
+  it('shows the real home page once someone is let in', () => {
+    expect(gateView('/', 'open')).toBe('site');
+    expect(gateView('/dashboard', 'open')).toBe('site');
+  });
+  it('sends /access home once in, and keeps /coming-soon as the waitlist preview', () => {
+    expect(gateView('/access', 'open')).toBe('home');
+    expect(gateView('/coming-soon', 'open')).toBe('waitlist');
+  });
+  it('keeps the home page and member pages on the waitlist while locked', () => {
+    expect(gateView('/', 'gated')).toBe('waitlist');
+    expect(gateView('/dashboard', 'gated')).toBe('waitlist');
+    expect(gateView('/privacy', 'gated')).toBe('site');
+  });
 });

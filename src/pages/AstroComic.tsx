@@ -111,10 +111,10 @@ export default function AstroComic() {
           <div><h2 id="preview-h" className="font-display text-3xl">{personal ? `Your first three pages, ${preview.reader}` : 'A three-page preview'}</h2><p className="mt-2 max-w-2xl text-muted-foreground">{personal ? `Calculated from your saved chart for ${preview.monthLabel}. The story centers on: ${preview.mainEvent}.` : `Shown for our fictional reader ${SAMPLE_READER.name} (Taurus Sun, Cancer Moon). Sign in with your birth details to preview your own issue.`}</p></div>
           {!personal && <Button asChild variant="outline"><Link to={session ? '/start' : `/auth?mode=signup&next=${encodeURIComponent('/astrocomic#preview')}`}>Preview my own issue</Link></Button>}
         </div>
-        <div className="mt-8 grid items-start gap-5 md:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
-          <div className="mx-auto w-full max-w-md"><ComicPageView page={preview.pages[0]} art={PREVIEW_ART} /></div>
-          <div className="grid grid-cols-2 gap-4">{preview.pages.slice(1, 3).map(p => <ComicPageView key={p.n} page={p} compact art={PREVIEW_ART} />)}<p className="col-span-2 text-xs text-muted-foreground">Same 5.5 × 8.5 in page as the printed issue and the issue reader.</p></div>
-        </div>
+        <ol className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-3" aria-label="First three pages">
+          {preview.pages.slice(0, 3).map(p => <li key={p.n} className="mx-auto w-full max-w-xs sm:max-w-none"><ComicPageView page={p} compact art={PREVIEW_ART} /><p className="mt-2 text-center font-label text-xs tracking-wider text-muted-foreground">Page {p.n}</p></li>)}
+        </ol>
+        <p className="mt-4 text-xs text-muted-foreground">Each page is shown at the printed 5.5 × 8.5 in digest shape, the same as the issue reader and the printed copy.</p>
         <p className="mt-3 text-xs text-muted-foreground">Sample illustrations accompany {personal ? 'your calculated sky positions and personal letter' : `${SAMPLE_READER.name.split(' ')[0]}’s calculated sky positions and letter`}. Each printed issue receives artwork for its own story.</p>
       </section>
 

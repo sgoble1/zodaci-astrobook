@@ -18,3 +18,12 @@ export function hasDeviceAccess(): boolean {
 export function grantDeviceAccess() {
   try { localStorage.setItem(ACCESS_KEY, '1'); } catch { /* private mode */ }
 }
+
+export type GateState = 'checking' | 'open' | 'gated';
+/** What the gate shows for a path: the real site, the waitlist, a redirect home, or a blank check. */
+export function gateView(path: string, state: GateState): 'site' | 'waitlist' | 'home' | 'checking' {
+  if (path === '/coming-soon') return 'waitlist';
+  if (state === 'open') return path === '/access' ? 'home' : 'site';
+  if (pathBypassesGate(path) && !isWaitlistPath(path)) return 'site';
+  return state === 'checking' ? 'checking' : 'waitlist';
+}

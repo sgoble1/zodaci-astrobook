@@ -116,7 +116,7 @@ export function dreamDeduction(
   const primaryMotif = motifList[0];
   const placements = unique(resonanceMotifs.flatMap(m => m.natalPlacements)).slice(0, 3);
   const natalHook = placements.length
-    ? `The lasting chart reference is ${placements.join('; ')}. These are symbolic points for reflection, not a biography.`
+    ? `The lasting chart reference is ${placements.join('; ')}. These are symbolic points for reflection, not a biography.${!natalChart.input.time ? ' House-dependent natal details are omitted because a reliable birth time is unavailable.' : ''}`
     : 'House-dependent natal details are omitted because a reliable birth time is unavailable; the symbol can still be explored through your own associations.';
   return {
     nightSkyContacts: sky.contacts,

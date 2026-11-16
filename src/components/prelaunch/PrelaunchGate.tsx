@@ -1,7 +1,7 @@
 import { lazy, Suspense, useEffect, useState, type ReactNode } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
-import { hasDeviceAccess, isWaitlistPath, pathBypassesGate } from '@/lib/prelaunch';
+import { gateView, hasDeviceAccess } from '@/lib/prelaunch';
 
 const PrelaunchLanding = lazy(() => import('@/pages/PrelaunchLanding'));
 
@@ -36,26 +36,16 @@ export function PrelaunchGate({ children }: { children: ReactNode }) {
     return () => { live = false; };
   }, [state]);
 
-  if (isWaitlistPath(pathname)) {
-    return (
-      <Suspense fallback={<div role="status" aria-label="Loading waitlist" className="min-h-screen bg-background" />}>
-        <PrelaunchLanding
-          onUnlock={() => {
-            setState('open');
-            navigate('/welcome', { replace: true });
-          }}
-          openAccess={pathname === '/access'}
-        />
-      </Suspense>
-    );
-  }
-
-  if (state === 'open' || pathBypassesGate(pathname)) return <>{children}</>;
-  if (state === 'checking') return <div role="status" aria-label="Checking site availability" className="min-h-screen bg-background" />;
-
-  return (
+  const unlock = () => { setState('open'); navigate('/', { replace: true }); };
+  const landing = (openAccess = false) => (
     <Suspense fallback={<div role="status" aria-label="Loading waitlist" className="min-h-screen bg-background" />}>
-      <PrelaunchLanding onUnlock={() => { setState('open'); navigate('/welcome', { replace: true }); }} />
+      <PrelaunchLanding onUnlock={unlock} openAccess={openAccess} />
     </Suspense>
   );
+
+  const view = gateView(pathname, state);
+  if (view === 'site') return <>{children}</>;
+  if (view === 'home') return <Navigate to="/" replace />;
+  if (view === 'checking') return <div role="status" aria-label="Checking site availability" className="min-h-screen bg-background" />;
+  return landing(pathname === '/access');
 }

@@ -3,37 +3,54 @@ import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { SAMPLE_READER } from '@/content/sampleBookLeaves';
 
-/** Clickable walk-through of a member's first visit, using the fictional sample reader only. Replaces the promo film on /demo. */
+/**
+ * The Observatory Console on /demo: a 1950s instrument panel walking through a member's first visit with the
+ * fictional sample reader only. Every readout is fixed text from her calculated chart; nothing calls AI.
+ */
 const BORN = SAMPLE_READER.printed.born;
 
 export const DEMO_STEPS = [
-  { label: 'Birth details', title: 'Start with the birth moment', body: 'Date, time and town. If the time is unknown, Zodaci says so and leaves out the parts that depend on it.', rows: [['Born', BORN]] },
-  { label: 'Your chart', to: '#sample-chart', title: 'Every placement, calculated', body: 'Planets, houses and angles are worked out from astronomical data, not picked from a list.', rows: [['Sun', 'Taurus · 12th house'], ['Moon', 'Cancer 13°28′ · 3rd house'], ['Rising', 'Taurus 12°47′']] },
-  { label: 'A reading', to: '#reading-h', title: 'Readings that show their working', body: 'Each paragraph names the placement it comes from, so you can check it against your chart.', rows: [['Chapter', 'Emotional World'], ['Based on', 'Moon in Cancer, 3rd house'], ['Length', 'About 1,000 words']] },
-  { label: 'Your book', to: '#book-h', title: 'Keep it on the shelf', body: 'Readings can be gathered into an AstroBook or an AstroComic issue, previewed before anything is printed.', rows: [['Format', 'AstroBook or AstroComic'], ['Preview', 'Before you order'], ['Printed', 'Only when you say so']] },
+  { label: 'Birth details', station: 'Intake', title: 'Start with the birth moment', body: 'Date, time and town. If the time is unknown, Zodaci says so and leaves out the parts that depend on it.', rows: [['Born', BORN]] },
+  { label: 'Your chart', station: 'Cartography', to: '#sample-chart', title: 'Every placement, calculated', body: 'Planets, houses and angles are worked out from astronomical data, not picked from a list.', rows: [['Sun', 'Taurus · 12th house'], ['Moon', 'Cancer 13°28′ · 3rd house'], ['Rising', 'Taurus 12°47′']] },
+  { label: 'A reading', station: 'Reading room', to: '#reading-h', title: 'Readings that show their working', body: 'Each paragraph names the placement it comes from, so you can check it against your chart.', rows: [['Chapter', 'Emotional World'], ['Based on', 'Moon in Cancer, 3rd house'], ['Length', 'About 1,000 words']] },
+  { label: 'Your book', station: 'Print dispatch', to: '#book-h', title: 'Keep it on the shelf', body: 'Readings can be gathered into an AstroBook or an AstroComic issue, previewed before anything is printed.', rows: [['Format', 'AstroBook or AstroComic'], ['Preview', 'Before you order'], ['Printed', 'Only when you say so']] },
 ] as const;
 
 export function DemoScreen() {
   const [i, setI] = useState(0);
   const s = DEMO_STEPS[i];
   return (
-    <div className="obs-panel p-5 sm:p-8 space-y-5">
-      <div role="tablist" aria-label="Demo steps" className="flex flex-wrap gap-1">
-        {DEMO_STEPS.map((d, n) => <Button key={d.label} role="tab" aria-selected={n === i} size="sm" variant={n === i ? 'default' : 'ghost'} onClick={() => setI(n)}>{n + 1}. {d.label}</Button>)}
+    <div className="obs-console p-4 sm:p-6">
+      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-gold/40 pb-3">
+        <p className="font-label text-sm tracking-[0.18em] text-gold">Observatory console</p>
+        <p className="font-label text-xs tracking-[0.14em] text-muted-foreground">Fictional subject · {SAMPLE_READER.name}</p>
       </div>
-      <div role="tabpanel" className="grid gap-6 md:grid-cols-2">
-        <div className="space-y-3">
-          <h3 className="text-2xl">{s.title}</h3>
-          <p className="text-muted-foreground leading-relaxed">{s.body}</p>
-          {'to' in s && <a href={s.to} className="text-sm text-primary underline underline-offset-4">See the real one below</a>}
-          <p className="text-xs text-muted-foreground">Sample reader: {SAMPLE_READER.name}, a fictional person.</p>
+      <div className="mt-4 grid gap-5 md:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)]">
+        <div className="space-y-4">
+          <div role="tablist" aria-label="Console stations" className="grid grid-cols-2 gap-2">
+            {DEMO_STEPS.map((d, n) => (
+              <button key={d.label} type="button" role="tab" aria-selected={n === i} onClick={() => setI(n)} className="obs-console-key" data-on={n === i}>
+                <span className="obs-console-lamp" aria-hidden />
+                <span className="block font-label text-xs tracking-[0.12em]">Station {n + 1}</span>
+                <span className="block text-sm">{d.station}</span>
+              </button>
+            ))}
+          </div>
+          <div className="space-y-2">
+            <h3 className="text-2xl">{s.title}</h3>
+            <p className="leading-relaxed text-muted-foreground">{s.body}</p>
+            {'to' in s && <a href={s.to} className="text-sm text-primary underline underline-offset-4">See the real one below</a>}
+          </div>
         </div>
-        <dl className="border border-border bg-background/40 p-4 space-y-2 font-mono text-sm">
-          {s.rows.map(([k, v]) => <div key={k} className="flex justify-between gap-4 border-b border-border/50 pb-2 last:border-0"><dt className="text-muted-foreground">{k}</dt><dd>{v}</dd></div>)}
-        </dl>
+        <div role="tabpanel" aria-label={s.station} className="obs-console-screen p-4 sm:p-5">
+          <p className="font-label text-xs tracking-[0.16em] opacity-75">Readout · {s.label}</p>
+          <dl className="mt-3 space-y-2 font-mono text-sm">
+            {s.rows.map(([k, v]) => <div key={k} className="flex justify-between gap-4 border-b border-current/20 pb-2 last:border-0"><dt className="opacity-75">{k}</dt><dd className="text-right">{v}</dd></div>)}
+          </dl>
+        </div>
       </div>
-      <div className="flex flex-wrap gap-2">
-        {i < DEMO_STEPS.length - 1 ? <Button onClick={() => setI(i + 1)}>Next step</Button> : <Button asChild><Link to="/auth?mode=signup&next=/start">Start with your own chart</Link></Button>}
+      <div className="mt-5 flex flex-wrap gap-2">
+        {i < DEMO_STEPS.length - 1 ? <Button onClick={() => setI(i + 1)}>Next station</Button> : <Button asChild><Link to="/auth?mode=signup&next=/start">Start with your own chart</Link></Button>}
         {i > 0 && <Button variant="outline" onClick={() => setI(i - 1)}>Back</Button>}
       </div>
     </div>
