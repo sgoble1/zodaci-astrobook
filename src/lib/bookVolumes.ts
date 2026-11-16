@@ -238,8 +238,31 @@ export function decanOf(lon: number) {
   const x = norm(lon); const sign = Math.floor(x / 30); const d = Math.floor((x % 30) / 10);
   return { sign: SIGNS[sign], decan: d + 1, ruler: CHALDEAN[(sign * 3 + d) % 7] };
 }
+/** Egyptian terms (bounds): per sign, [ruler, width°] in order; each sign sums to 30°. */
+const TERMS: [string, number][][] = [
+  [['Jupiter', 6], ['Venus', 6], ['Mercury', 8], ['Mars', 5], ['Saturn', 5]], [['Venus', 8], ['Mercury', 6], ['Jupiter', 8], ['Saturn', 5], ['Mars', 3]],
+  [['Mercury', 6], ['Jupiter', 6], ['Venus', 5], ['Mars', 7], ['Saturn', 6]], [['Mars', 7], ['Venus', 6], ['Mercury', 6], ['Jupiter', 7], ['Saturn', 4]],
+  [['Jupiter', 6], ['Venus', 5], ['Saturn', 7], ['Mercury', 6], ['Mars', 6]], [['Mercury', 7], ['Venus', 10], ['Jupiter', 4], ['Mars', 7], ['Saturn', 2]],
+  [['Saturn', 6], ['Mercury', 8], ['Jupiter', 7], ['Venus', 7], ['Mars', 2]], [['Mars', 7], ['Venus', 4], ['Mercury', 8], ['Jupiter', 5], ['Saturn', 6]],
+  [['Jupiter', 12], ['Venus', 5], ['Mercury', 4], ['Saturn', 5], ['Mars', 4]], [['Mercury', 7], ['Jupiter', 7], ['Venus', 8], ['Saturn', 4], ['Mars', 4]],
+  [['Mercury', 7], ['Venus', 6], ['Jupiter', 7], ['Mars', 5], ['Saturn', 5]], [['Venus', 12], ['Jupiter', 4], ['Mercury', 3], ['Mars', 9], ['Saturn', 2]],
+];
+export function termOf(lon: number) {
+  const x = norm(lon); let d = x % 30;
+  for (const [ruler, w] of TERMS[Math.floor(x / 30)]) { if (d < w) return ruler; d -= w; }
+  return TERMS[Math.floor(x / 30)][4][0];
+}
+/** Each house ruler and the aspects it makes, so linked life areas are shown from the calculated chart. */
+function houseRulerAspects(c: ChartResult) {
+  return houseAnalysis(c).map(h => {
+    const hits = c.aspects.filter(a => a.a === h.ruler || a.b === h.ruler).slice(0, 4);
+    const lines = hits.map(a => { const other = a.a === h.ruler ? a.b : a.a; const ob = c.bodies.find(b => b.name === other); return `${h.ruler} ${a.type} ${other} (orb ${a.orb.toFixed(1)}°)${ob?.house ? `, linking it to your ${ordinal(ob.house)} house` : ''}`; });
+    return `## The ${ordinal(h.n)} house ruler: ${h.ruler}\n\n${lines.length ? lines.join('. ') + '.' : `${h.ruler} makes no major aspects within the orbs used here, so this house works more on its own.`}`;
+  }).join('\n\n');
+}
+
 function decansChapter(c: ChartResult, timeKnown: boolean) {
-  const rows = c.bodies.filter(b => PLANETS.includes(b.key)).map(b => { const d = decanOf(b.lon); return `## ${b.name} · ${d.sign}, ${ordinal(d.decan)} decan\n\nEach sign is split into three 10° decans. ${b.name} sits at ${fmtLon(b.lon).text}, in the ${ordinal(d.decan)} decan of ${d.sign}, which the Chaldean tradition gives to ${d.ruler}. ${d.ruler === b.name ? `${b.name} rules its own decan here, so its expression is concentrated.` : `${d.ruler} adds its colour to how ${b.name} works in ${d.sign}.`}`; });
+  const rows = c.bodies.filter(b => PLANETS.includes(b.key)).map(b => { const d = decanOf(b.lon); return `## ${b.name} · ${d.sign}, ${ordinal(d.decan)} decan\n\nEach sign is split into three 10° decans. ${b.name} sits at ${fmtLon(b.lon).text}, in the ${ordinal(d.decan)} decan of ${d.sign}, which the Chaldean tradition gives to ${d.ruler}. ${d.ruler === b.name ? `${b.name} rules its own decan here, so its expression is concentrated.` : `${d.ruler} adds its colour to how ${b.name} works in ${d.sign}.`} In the Egyptian terms, this degree belongs to ${termOf(b.lon)}${termOf(b.lon) === b.name ? ', its own term' : ''}.`; });
   if (timeKnown && c.asc != null) { const d = decanOf(c.asc); rows.push(`## Ascendant · ${d.sign}, ${ordinal(d.decan)} decan\n\nYour rising degree falls in the ${ordinal(d.decan)} decan of ${d.sign}, ruled by ${d.ruler} in the Chaldean scheme.`); }
   return rows.join('\n\n');
 }
@@ -271,6 +294,7 @@ export function buildVolumes({ edition, chart: c, name, saved, people = [], toda
   vol.I.push(...bySaved('I'));
 
   vol.II.push({ title: 'The Twelve Houses', content: housesChapter(c) }, { title: 'Rulership Summary', content: rulershipSummary(c) });
+  if (r >= 2 && timeKnown && c.cusps) vol.II.push({ title: 'House Rulers and Their Aspects', content: houseRulerAspects(c) });
   vol.II.push(...bySaved('II'));
 
   vol.III.push({ title: 'Your Planets, One by One', content: planetsChapter(c, timeKnown) });

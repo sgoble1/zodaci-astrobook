@@ -153,3 +153,15 @@ describe('decans and opted-in dreams', () => {
     expect(vol.title.startsWith('Volume IV')).toBe(true);
   });
 });
+
+describe('terms and house-ruler aspects', () => {
+  it('Egyptian terms: Aries 0° Jupiter, Aries 29° Saturn, Pisces 13° Jupiter', async () => {
+    const { termOf } = await import('./bookVolumes');
+    expect(termOf(0.5)).toBe('Jupiter'); expect(termOf(29.5)).toBe('Saturn'); expect(termOf(343)).toBe('Jupiter');
+  });
+  it('Classic with a birth time adds House Rulers and Their Aspects; Pocket does not', async () => {
+    const { buildVolumes } = await import('./bookVolumes');
+    const t = (e: string) => buildVolumes({ edition: e, chart: olivia, name: 'Olivia', saved: [] }).map(c => c.title);
+    expect(t('classic')).toContain('House Rulers and Their Aspects'); expect(t('pocket')).not.toContain('House Rulers and Their Aspects');
+  });
+});
