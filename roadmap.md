@@ -48,7 +48,7 @@ All buildable V2.3, Implementation Brief and AstroBook/AstroComic/Demo items are
 Ready (optional polish):
 - [x] April's private artwork refreshed Nov 10: sixteen Compendium illustrations, fifteen Birth Chart Book plates and six Explore pictures. Two additional six-picture sheets supplied missing subjects; existing new artwork reused only for matching themes. All replacements read back exactly, original editions backed up, readings/chart modules unchanged. Authorized gallery, book chapter and Explore verified; nine privacy tests pass. Fixed chapter Markdown stripping authorized JPEG images.
 - [ ] Phone 393px pass on My Chart wheel looks after future chart changes (last checked Nov 10).
-- [ ] After the next publish, delete the retired demo podcast asset (zodaci-demo-episode.mp3) so the live site never points at a removed file.
+- [x] (Nov 16: file no longer in the project) After the next publish, delete the retired demo podcast asset (zodaci-demo-episode.mp3) so the live site never points at a removed file.
 
 Blocked — AI credits:
 - [ ] P3b Intelligence Layer (P12 Observatory and Shane's corrections done Nov 10).
