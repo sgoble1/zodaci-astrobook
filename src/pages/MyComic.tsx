@@ -199,7 +199,10 @@ function NextPreview({ birthName, chartInput, month, issueNumber }: { birthName:
   const [all, setAll] = useState(false);
   const target = month ?? (() => { const n = new Date(); return new Date(Date.UTC(n.getUTCFullYear(), n.getUTCMonth() + 1, 1)); })();
   const guide = useMyCharacter();
-  const issue = useMemo(() => buildComicIssue(computeChart(chartInput), { reader: birthName || 'Reader', month: target, issueNumber: issueNumber, guide }), [chartInput.date, chartInput.time, chartInput.lat, chartInput.lon, target.getTime(), guide?.name, issueNumber]); // eslint-disable-line react-hooks/exhaustive-deps
+  const [dreamDates, setDreamDates] = useState<string[]>([]);
+  // Only dates of dreams the member marked "use in comic"; RLS keeps this to their own rows.
+  useEffect(() => { let on = true; supabase.from('dream_entries').select('dream_date').eq('use_in_comic', true).order('dream_date', { ascending: false }).limit(5).then(({ data }) => { if (on) setDreamDates((data ?? []).map(d => d.dream_date)); }); return () => { on = false; }; }, []);
+  const issue = useMemo(() => buildComicIssue(computeChart(chartInput), { reader: birthName || 'Reader', month: target, issueNumber: issueNumber, guide, dreamDates }), [chartInput.date, chartInput.time, chartInput.lat, chartInput.lon, target.getTime(), guide?.name, issueNumber, dreamDates.join()]); // eslint-disable-line react-hooks/exhaustive-deps
   // Shared sky/letter scenes and the planet characters each panel names; every position beside them is calculated.
   const art = useMemo(() => comicPreviewArt(issue, 24), [issue]);
   return (

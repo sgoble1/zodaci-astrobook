@@ -93,3 +93,15 @@ describe('AstroComic print queue', () => {
     expect(csv.split('\r\n')[1].startsWith(`"'=cmd()"`)).toBe(true);
   });
 });
+
+describe('opted-in dreams in the comic', () => {
+  it('adds one question naming only the latest dream date', async () => {
+    const { buildComicIssue } = await import('./comic');
+    const { computeChart } = await import('./astro');
+    const chart = computeChart({ date: '1990-05-01', time: '12:00', lat: 40.7, lon: -74, tz: 'America/New_York', placeLabel: 'NY', placeSource: 'geocoded', houseSystem: 'placidus' } as never);
+    const base = { reader: 'Ann', month: new Date(Date.UTC(2026, 11, 1)), issueNumber: 1 };
+    const text = (o = {}) => JSON.stringify(buildComicIssue(chart, { ...base, ...o }).pages);
+    expect(text()).not.toContain('You saved a dream');
+    expect(text({ dreamDates: ['2026-10-02', '2026-11-03'] })).toContain('You saved a dream from 2026-11-03');
+  });
+});

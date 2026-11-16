@@ -11,9 +11,10 @@ import { useMyBirth, toChartInput } from '@/lib/myBirth';
 import { spineInches } from '@/lib/spine';
 import { OpenAstroBook } from '@/components/books/OpenAstroBook';
 import { Book3D } from '@/components/books/Book3D';
+import { BOOK_VERSIONS } from '@/lib/books';
 
-/** Page count shown on the preview spine (Classic 6 × 9 softcover). */
-const BOOK_PAGES = 250;
+const PRINTED = BOOK_VERSIONS.filter(v => v.format === 'print');
+
 
 /** Three calculated AstroBook pages (Sun, Moon, Rising) from the signed-in member's saved chart. No AI. */
 export function MemberBookTeaser({ fallback }: { fallback: React.ReactNode }) {
@@ -21,6 +22,7 @@ export function MemberBookTeaser({ fallback }: { fallback: React.ReactNode }) {
   useEffect(() => { supabase.auth.getSession().then(({ data }) => setSignedIn(!!data.session)); }, []);
   const birth = useMyBirth();
   const [note, setNote] = useState(readDedicationDraft);
+  const [ed, setEd] = useState('classic');
   const ok = useMemo(() => {
     if (!birth) return false;
     try { computeChart(toChartInput(birth)); return true; } catch { return false; }
@@ -28,13 +30,17 @@ export function MemberBookTeaser({ fallback }: { fallback: React.ReactNode }) {
   if (signedIn === null || (signedIn && birth === undefined)) return <Skeleton className="h-64 w-full" />;
   if (!signedIn) return <>{fallback}</>;
   if (!birth || !ok) return <div className="space-y-3"><p className="text-muted-foreground">Add your birth details and the first pages of your own AstroBook open here.</p><Button asChild><Link to="/start?next=/astrobook%23teaser">Add my birth details<ArrowRight /></Link></Button></div>;
-  const spine = spineInches(BOOK_PAGES);
+  const v = PRINTED.find(x => x.id === ed) ?? PRINTED[0];
+  const pages = Math.round((v.pages[0] + v.pages[1]) / 2);
+  const hard = /hardcover/i.test(v.binding);
+  const spine = spineInches(pages, hard);
   return <div className="space-y-8"><h2 className="font-display text-3xl">Open your book.</h2>
     <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,1fr)_16rem]">
       <OpenAstroBook next="/astrobook#teaser" startMine />
       <div className="space-y-3 text-center">
-        <Book3D pages={BOOK_PAGES} name={birth.name || 'Your AstroBook'} />
-        <p className="text-sm text-muted-foreground">6 × 9 in · about {BOOK_PAGES} pages · spine {spine.estimate ? 'about ' : ''}{spine.inches.toFixed(2)} in</p>
+        <div role="radiogroup" aria-label="Book size" className="flex flex-wrap justify-center gap-1.5">{PRINTED.map(x => <button key={x.id} type="button" role="radio" aria-checked={x.id === ed} onClick={() => setEd(x.id)} className={`rounded-full border px-2.5 py-1 text-xs transition-colors duration-500 ${x.id === ed ? 'border-primary bg-primary/15' : 'border-border hover:border-primary/60'}`}>{x.name}</button>)}</div>
+        <Book3D key={v.id} pages={pages} trimPt={v.trimPt} hardcover={hard} label={`${v.trim} · ${v.binding.toLowerCase()}`} name={birth.name || 'Your AstroBook'} />
+        <p className="text-sm text-muted-foreground">{v.name} · {v.trim} · about {pages} pages · spine {spine.estimate ? 'about ' : ''}{spine.inches.toFixed(2)} in</p>
       </div>
     </div>
     <section aria-labelledby="dedication-h" className="grid items-center gap-6 md:grid-cols-2">

@@ -164,7 +164,7 @@ const ASPECT_STORY: Record<string, [string, string]> = {
 /** The member's chosen observatory character (member_characters), drawn as their stand-in. Never a likeness of the real person. */
 export type ComicGuide = { name: string; blurb: string };
 
-export function buildComicIssue(natal: ChartResult, opts: { reader: string; month: Date; issueNumber: number; guide?: ComicGuide | null }): ComicIssue {
+export function buildComicIssue(natal: ChartResult, opts: { reader: string; month: Date; issueNumber: number; guide?: ComicGuide | null; /** Dates of dreams the owner marked use_in_comic. Only the date is used; the dream text is never printed or interpreted. */ dreamDates?: string[] }): ComicIssue {
   const { reader, month, issueNumber, guide } = opts;
   const standIn = guide ? ` In the lower corner, ${guide.name} — the reader’s chosen observatory character (${guide.blurb.toLowerCase()}) — looks up at the constellation.` : '';
   const first = reader.trim().split(/\s+/)[0] || 'Reader';
@@ -233,8 +233,10 @@ export function buildComicIssue(natal: ChartResult, opts: { reader: string; mont
     rising ? `How do you want to show up when people meet your ${rising} Rising this month?` : 'How do you want people to experience you this month?',
     'What would make this month feel well spent when you look back?',
   ];
+  const lastDream = [...(opts.dreamDates ?? [])].sort().pop();
+  if (lastDream) prompts.splice(4, 0, `You saved a dream from ${lastDream} for your comic. What from it is still with you?`);
   add({ section: 'Reflection Prompts', title: 'Questions for you', panels: [{ shape: 'oval', scene: 'Dreamer holding a lantern over an open journal.' }], body: prompts.slice(0, 4) });
-  add({ section: 'Reflection Prompts', title: 'More questions', panels: [{ shape: 'oval', scene: 'The journal, pages turning on their own.' }], body: prompts.slice(4) });
+  add({ section: 'Reflection Prompts', title: 'More questions', panels: [{ shape: 'oval', scene: 'The journal, pages turning on their own.' }], body: prompts.slice(4, 9) });
   add({ section: 'Your Constellation', title: sun, panels: [{ shape: 'bleed', scene: `The ${sun} constellation in golden thread across a navy sky, brightest star ${star} marked.` }], body: [myth] });
   add({ section: 'Your Constellation', title: `Find ${star}`, panels: [{ shape: 'wide', scene: 'A small figure on a hill pointing up.' }], body: [`${star} is the brightest star in ${sun}. Look for it when the constellation is up at night — or simply know it’s there, behind the daylight, on your birthday.`] });
   const nx = nextEvents[0];
