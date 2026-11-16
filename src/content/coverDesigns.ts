@@ -28,11 +28,11 @@ export const COVER_DESIGNS: CoverDesign[] = [
   { key: 'midnight-stars', label: 'Midnight Stars', kind: 'art', detail: 'Black night sky with fine gold stars and a faint violet glow.', src: coverMidnightStars, variants: [{ src: coverMidnightStars, size: [1280, 1920] }, { src: coverMidnightStarsLetter, size: [1488, 1920] }, { src: coverMidnightStarsSquare, size: [1920, 1920] }] },
   { key: 'celestial-cartographer', label: 'Celestial Cartographer', kind: 'art', detail: 'A brass star atlas with engraved constellation lines on deep indigo.', src: coverCartographer, variants: [{ src: coverCartographer, size: [1280, 1920] }, { src: coverCartographerLetter, size: [1488, 1920] }, { src: coverCartographerSquare, size: [1920, 1920] }] },
   { key: 'deep-orbit', label: 'Deep Orbit', kind: 'art', detail: 'A ringed planet and sweeping gold orbits in deep space.', src: coverDeepOrbit, variants: [{ src: coverDeepOrbit, size: [1280, 1920] }, { src: coverDeepOrbitLetter, size: [1488, 1920] }, { src: coverDeepOrbitSquare, size: [1920, 1920] }] },
-  { key: 'vintage-monogram', label: 'Vintage Monogram', kind: 'solid', detail: 'Oxblood book cloth with your initials in a gold seal.', colors: ['#3B1420'], accent: '#D4A853', monogram: true },
+  { key: 'vintage-monogram', label: 'Vintage Monogram', kind: 'solid', detail: 'Oxblood book cloth with your initials in a brass seal.', colors: ['#3B1420'], accent: '#C29B38', monogram: true },
   { key: 'midnight-ember', label: 'Midnight Ember', kind: 'art', detail: 'The Midnight Stars design in wine-plum with rose-gold stars.', src: coverMidnightEmber, variants: [{ src: coverMidnightEmber, size: [1280, 1920] }, { src: coverMidnightEmberLetter, size: [1488, 1920] }, { src: coverMidnightEmberSquare, size: [1920, 1920] }] },
-  { key: 'solid-midnight', label: 'Solid Midnight', kind: 'solid', detail: 'Deep-midnight cloth with a fine grain, faint stars and a gold inset line.', colors: ['#0D1028'], accent: '#D4A853' },
+  { key: 'solid-midnight', label: 'Solid Midnight', kind: 'solid', detail: 'Deep-indigo cloth with a fine grain, faint stars and a brass inset line.', colors: ['#12123A'], accent: '#C29B38' },
   { key: 'gradient-violet-dusk', label: 'Indigo Dusk', kind: 'gradient', detail: 'Deep indigo fading into evening blue, with grain and a scatter of yellow stars.', colors: ['#12123A', '#1E1E5A', '#3A3A8C'], accent: '#FFC61A' },
-  { key: 'gradient-gold-dawn', label: 'Gold Dawn', kind: 'gradient', detail: 'Midnight rising into soft gold, with grain and a scatter of stars.', colors: ['#07080F', '#3A2A12', '#D4A853'], accent: '#F4E3B5' },
+  { key: 'gradient-gold-dawn', label: 'Gold Dawn', kind: 'gradient', detail: 'Night rising into warm brass, with grain and a scatter of cream stars.', colors: ['#07080F', '#3A2A12', '#C29B38'], accent: '#EFE3C8' },
 ];
 
 /** Designs no longer offered. Old orders keep their saved cover file; these keys simply can't be chosen again. */
