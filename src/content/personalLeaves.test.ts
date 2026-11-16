@@ -22,3 +22,14 @@ describe('personal first-ten-page previews', () => {
     for (const k of keys) expect(art[k]).toBeTruthy();
   });
 });
+
+import { memberComicLeaves as _mcl } from '@/content/sampleBookLeaves';
+describe('member comic preview', () => {
+  it('builds a cover, an endpaper naming the reader, and comic pages from the saved chart', () => {
+    const leaves = _mcl({ name: 'Test Reader', date: '1990-09-06', time: '12:00', lat: 40.7, lon: -74, tz: 'America/New_York', placeLabel: 'New York' } as never);
+    expect(leaves[0].front.kind).toBe('cover');
+    const faces = leaves.flatMap(l => [l.front, l.back]);
+    expect(faces.some(f => f.kind === 'endpaper' && f.heading === 'Test Reader')).toBe(true);
+    expect(faces.filter(f => f.kind === 'comic').length).toBeGreaterThan(3);
+  });
+});

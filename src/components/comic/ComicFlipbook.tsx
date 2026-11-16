@@ -26,7 +26,7 @@ export function ComicFlipbook({ issue }: { issue: AstroComicShowcase }) {
       >
         <div tabIndex={0} role="region" aria-roledescription="comic preview" aria-label={`Issue ${issue.issueNumber}, ${at === 0 ? 'cover' : `page ${at} of ${issue.pages.length}`}. Use arrow keys to turn pages.`}
           onKeyDown={e => { if (e.key === 'ArrowRight') go(1); if (e.key === 'ArrowLeft') go(-1); }}
-          className="relative aspect-[2/3] rounded-sm outline-none transition-transform duration-700 ease-out [transform-style:preserve-3d] focus-visible:ring-2 focus-visible:ring-ring motion-reduce:transition-none"
+          className="relative aspect-[11/17] rounded-sm outline-none transition-transform duration-700 ease-out [transform-style:preserve-3d] focus-visible:ring-2 focus-visible:ring-ring motion-reduce:transition-none"
           style={{ transform: `rotateX(${tilt.x}deg) rotateY(${tilt.y - 6}deg)` }}>
           {/* page edges for depth */}
           <div aria-hidden className="absolute inset-y-1 -right-2 w-2 rounded-r-sm bg-gradient-to-r from-muted to-muted-foreground/30 [transform:translateZ(-6px)]" />

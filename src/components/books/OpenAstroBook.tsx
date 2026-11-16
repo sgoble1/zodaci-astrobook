@@ -7,7 +7,7 @@ import { useCoverImage } from '@/hooks/useCoverImage';
 import { COVER_DESIGNS, coverSrc } from '@/content/coverDesigns';
 import { DEFAULT_CROP } from '@/lib/coverLayout';
 import { birthLineOf } from '@/lib/bookLeaves';
-import { memberBookLeaves, sampleBookLeaves, sampleComicLeaves, SAMPLE_READER } from '@/content/sampleBookLeaves';
+import { memberBookLeaves, memberComicLeaves, sampleBookLeaves, sampleComicLeaves, SAMPLE_READER } from '@/content/sampleBookLeaves';
 
 /**
  * The openable AstroBook. Everyone can open the fictional sample reader's Collector edition; a signed-in member with
@@ -41,7 +41,27 @@ export function OpenAstroBook({ layout = 'side', next = '/astrobook#full-edition
 }
 
 /** The sample AstroComic digest for the same fictional reader, opened and turned like a printed comic. */
-export function OpenComicDigest({ layout = 'stacked' }: { layout?: 'side' | 'stacked' }) {
-  const leaves = useMemo(() => sampleComicLeaves(), []);
-  return <OpenBook kind="comic" leaves={leaves} label={`Sample AstroComic digest starring ${SAMPLE_READER.name}`} layout={layout} spine={{ title: 'AstroComic · Issue 1', name: SAMPLE_READER.name }} footer={<p className="mt-2 text-center text-xs text-muted-foreground">5.5 × 8.5 in digest · a fictional reader, a real calculation</p>} />;
+export function OpenComicDigest({ layout = 'stacked', next = '/astrocomic#preview' }: { layout?: 'side' | 'stacked'; next?: string }) {
+  const session = useSession();
+  const birth = useMyBirth();
+  const [mine, setMine] = useState(false);
+  const own = mine && birth ? birth : null;
+  const sample = useMemo(() => sampleComicLeaves(), []);
+  const memberLeaves = useMemo(() => { try { return own ? memberComicLeaves(own) : null; } catch { return null; } }, [own]);
+  const leaves = memberLeaves ?? sample;
+  const switcher = session && birth ? (
+    <div role="radiogroup" aria-label="Which comic to open" className="mt-4 flex flex-wrap justify-center gap-2">
+      {[{ on: !mine, label: `${SAMPLE_READER.name.split(' ')[0]}’s sample`, set: false }, { on: mine, label: `Built from ${birth.name ? `${birth.name.split(' ')[0]}’s` : 'my'} chart`, set: true }].map(o => (
+        <button key={o.label} type="button" role="radio" aria-checked={o.on} onClick={() => setMine(o.set)} className={`rounded-full border px-3 py-1 text-sm transition-colors duration-500 ${o.on ? 'border-primary bg-primary/15' : 'border-border hover:border-primary/60'}`}>{o.label}</button>
+      ))}
+    </div>
+  ) : (
+    <p className="mt-4 text-center text-sm text-muted-foreground">
+      {session ? <><Link to="/start" className="text-primary underline underline-offset-4">Add your birth details</Link> to open an issue built from your own chart.</> : <><Link to={`/auth?mode=signup&next=${encodeURIComponent(next)}`} className="text-primary underline underline-offset-4">Sign in</Link> to open an issue built from your own chart.</>}
+    </p>
+  );
+  const note = own
+    ? 'Your Issue #1 opening pages, scripted in your browser from your chart and this month’s sky. Nothing is saved.'
+    : 'A fictional reader, a real calculation';
+  return <OpenBook key={own ? 'mine' : 'sample'} kind="comic" leaves={leaves} label={own ? 'Your AstroComic, built from your chart' : `Sample AstroComic digest starring ${SAMPLE_READER.name}`} layout={layout} spine={{ title: 'AstroComic · Issue 1', name: own ? own.name || undefined : SAMPLE_READER.name }} footer={<>{switcher}<p className="mt-2 text-center text-xs text-muted-foreground">5.5 × 8.5 in digest · {note}</p></>} />;
 }

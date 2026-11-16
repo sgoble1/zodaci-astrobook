@@ -5,7 +5,8 @@ import { SAMPLE_EDITION } from '@/content/sampleEdition';
 import { SAMPLE_ISSUE } from '@/content/sampleComic';
 import { birthLineOf, bookInterior, comicInterior, toLeaves, type BookFace } from '@/lib/bookLeaves';
 import { bookPreview } from '@/lib/personalPreview';
-import { castFull } from '@/content/castArt';
+import { castFull, comicPreviewArt } from '@/content/castArt';
+import { buildComicIssue } from '@/lib/comic';
 
 export type BookLeaf = { front: BookFace; back: BookFace };
 
@@ -51,4 +52,25 @@ export function sampleComicLeaves(): BookLeaf[] {
     comicInterior(SAMPLE_ISSUE, LEAD_COVER.printed.born, LEAD_COVER.printed.placements),
     { kind: 'back', lines: ['Zodaci AstroComic', 'A 24-page digest every month', 'Your chart casts the story · that month’s transits drive it', 'Printed and mailed in the US · zodaci.com'] },
   );
+}
+
+/**
+ * The cover and first pages of a member's own Issue #1, scripted in the browser from their saved chart with this
+ * month's transits (buildComicIssue, no AI). The cover shows the month's lead planet character; panels show the planet
+ * characters the script names. Nothing is saved.
+ */
+export function memberComicLeaves(birth: MyBirth, upTo = 10): BookLeaf[] {
+  const natal = computeChart(toChartInput(birth));
+  const reader = birth.name?.trim() || 'You';
+  const issue = buildComicIssue(natal, { reader, month: new Date(), issueNumber: 1 });
+  const art = comicPreviewArt(issue, upTo);
+  const faces: BookFace[] = [
+    { kind: 'endpaper', eyebrow: 'This issue stars', heading: reader, lines: [birthLineOf(birth.date, birth.time, birth.placeLabel), [issue.signs.sun && `${issue.signs.sun} Sun`, issue.signs.moon && `${issue.signs.moon} Moon`, issue.signs.rising && `${issue.signs.rising} Rising`].filter(Boolean).join(' · '), `${issue.monthLabel} · calculated from your chart`] },
+    ...issue.pages.filter(p => p.n <= upTo && p.section !== 'Cover').map((p): BookFace => {
+      const first = p.panels[0];
+      const talk = p.panels.flatMap(x => x.balloons ?? [])[0];
+      return { kind: 'comic', src: art[`${p.n}-0`] ?? castFull(issue.cast?.lead ?? 'sun'), alt: first?.scene ?? p.title, title: p.title, placement: p.section, caption: first?.caption ?? p.body?.[0] ?? first?.scene ?? '', dialogue: talk ? `${talk.who}: ${talk.text}` : undefined, page: p.n };
+    }),
+  ];
+  return toLeaves({ kind: 'cover', src: castFull(issue.cast?.lead ?? 'sun'), alt: `AstroComic Issue 1 cover for ${reader}, ${issue.signs.sun} Sun` }, faces, { kind: 'back', lines: ['Zodaci AstroComic', 'The full issue runs 24 pages', 'Printed and mailed in the US · zodaci.com'] });
 }
