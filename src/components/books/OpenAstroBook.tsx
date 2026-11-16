@@ -13,10 +13,10 @@ import { memberBookLeaves, sampleBookLeaves, sampleComicLeaves, SAMPLE_READER } 
  * The openable AstroBook. Everyone can open the fictional sample reader's Collector edition; a signed-in member with
  * saved birth details can switch to a chart-only book built in the browser from their own chart (nothing is saved).
  */
-export function OpenAstroBook({ layout = 'side', next = '/astrobook#full-edition' }: { layout?: 'side' | 'stacked'; next?: string }) {
+export function OpenAstroBook({ layout = 'side', next = '/astrobook#full-edition', startMine = false }: { layout?: 'side' | 'stacked'; next?: string; /** Open the member's own book first when their birth details are saved. */ startMine?: boolean }) {
   const session = useSession();
   const birth = useMyBirth();
-  const [mine, setMine] = useState(false);
+  const [mine, setMine] = useState(startMine);
   const design = COVER_DESIGNS[0];
   const own = mine && birth ? birth : null;
   const designed = useCoverImage(own ? { source: { kind: 'design', key: design.key }, crop: DEFAULT_CROP, name: own.name || 'Your AstroBook', trimPt: [432, 648], detail: birthLineOf(own.date, own.time, own.placeLabel).replace(/^Born /, '') } : null, 40);
