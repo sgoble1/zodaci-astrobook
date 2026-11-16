@@ -6,6 +6,8 @@ import { usePageMeta } from '@/hooks/usePageMeta';
 import { OFFICIAL_BOOKS, officialChartInput, ownerLabel, useOfficialEditions, type OfficialEditionRow } from '@/lib/officialEditions';
 import { PersonalPreviewDrawer } from '@/components/books/PersonalPreviewDrawer';
 import { PRODUCT_ART } from '@/content/productArtwork';
+import { signCover } from '@/content/signCovers';
+import { computeChart } from '@/lib/astro';
 
 /**
  * The Official AstroBook section. Each founder sees only their own Masterbook and AstroComic; the admin sees every
@@ -46,6 +48,9 @@ export default function OfficialAstroBook() {
 function EditionShelf({ row }: { row: OfficialEditionRow }) {
   const book = OFFICIAL_BOOKS[row.edition];
   const comicTo = `/official-astrobook/comic/${row.edition}`;
+  // Cover art follows the authorized edition's own calculated Sun sign.
+  const sun = (() => { try { return row.birth ? computeChart(officialChartInput(row.birth)).bodies.find(b => b.key === 'sun')?.sign : undefined; } catch { return undefined; } })();
+  const cover = signCover(sun);
   return (
     <section aria-labelledby={`ed-${row.edition}`} className="space-y-5">
       <div className="flex flex-wrap items-baseline justify-between gap-2 border-b border-border pb-2">
@@ -54,7 +59,7 @@ function EditionShelf({ row }: { row: OfficialEditionRow }) {
       </div>
       <div className="grid gap-6 lg:grid-cols-2">
         <div className="parchment flex flex-col gap-4 p-5 sm:flex-row">
-          <div className="mx-auto shrink-0"><Book3D pages={book.pages} label="Official edition · 6″ × 9″" hardcover design="midnight-stars" name={row.display_name} /></div>
+          <div className="mx-auto shrink-0"><Book3D pages={book.pages} label="Official edition · 6″ × 9″" hardcover {...(cover ? { coverSrc: cover } : { design: 'midnight-stars' })} name={row.display_name} /></div>
           <div className="flex flex-1 flex-col gap-3">
             <div className="font-label text-xs tracking-[0.16em] text-primary">Official Masterbook</div>
             <h3 className="text-2xl leading-tight">{book.masterbookTitle}</h3>

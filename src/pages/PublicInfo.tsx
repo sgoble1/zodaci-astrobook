@@ -30,7 +30,7 @@ const VOLUME_DETAIL: Record<string, string> = {
   II: 'All twelve houses, one by one: the sign on each cusp, its ruler and the planets inside, then how each house ruler connects by aspect (Classic and up)',
   III: 'Every planet by sign and house, your aspects with exact orbs, and the aspect patterns they form',
   IV: 'Your North Node, shadow and breakthrough, then Chiron, sensitive points, lots and fixed stars in larger versions, and any dreams you choose to include, in your own words',
-  V: 'A Vedic sidereal snapshot, your Chinese year pillar and your Life Path number (Classic and up)',
+  V: 'A Vedic sidereal snapshot, your Chinese year pillar and your Life Path number (Digital, and Classic and up)',
   VI: 'This year’s profection and your life cycles (Jupiter and Saturn returns), then retrogrades, solar return and a 12-month forecast',
 };
 
@@ -65,7 +65,7 @@ export function AstroBookPublic() {
       <section className="grid items-center gap-8 md:grid-cols-2" aria-labelledby="cover-preview-title"><div><h2 id="cover-preview-title" className="plate-title">Make the cover yours</h2><p className="mt-3 text-muted-foreground">The sample covers above are printed for fictional readers. Type your own name and birth details here to see yours; nothing you type is saved.</p><p className="mt-3 text-sm text-muted-foreground">Each cover prints your name, your birth line and your Sun, Moon and Rising, the same way as the samples.</p></div><div className="obs-paper p-5"><CoverCustomizer /></div></section>
       <section id="inside" className="space-y-6">
         <h2 className="font-display text-3xl">Six volumes, one sky.</h2>
-        <p className="text-muted-foreground">Every AstroBook follows the same six-volume structure as our founders’ Masterbooks, written from your chart. Every version includes Volumes I–IV and VI; World Systems begins at Classic, and larger versions add chapters inside each volume. Compare them below.</p>
+        <p className="text-muted-foreground">Every AstroBook follows the same six-volume structure as our founders’ Masterbooks, written from your chart. Every version includes Volumes I–IV and VI; World Systems is in Digital and Classic upward (not Pocket), and larger versions add chapters inside each volume. Compare them below.</p>
         <ol className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{VOLUMES.map(v => <li key={v.n} className="vellum p-5"><ThemeArt kind={VOLUME_ART[v.n]} /><p className="mt-4 font-label text-xs tracking-[0.16em] text-primary">Volume {v.n}</p><h3 className="mt-1 text-xl">{v.title}</h3><p className="mt-2 text-sm text-muted-foreground">{VOLUME_DETAIL[v.n]}</p></li>)}</ol>
       </section>
       <section className="space-y-6">

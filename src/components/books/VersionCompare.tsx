@@ -18,7 +18,7 @@ const ROWS: [string, ...(boolean | string)[]][] = [
   ['Life cycles: Jupiter and Saturn returns, turning points', Y, Y, Y, Y, Y],
   ['Birth Moon phase, North Node and profection year', Y, Y, Y, Y, Y],
   ['Birth-moment verse', N, Y, Y, Y, Y],
-  ['World Systems: Vedic, Chinese year, Life Path', N, N, Y, Y, Y],
+  ['World Systems: Vedic, Chinese year, Life Path', Y, N, Y, Y, Y],
   ['Your topic readings (extra chapters)', N, N, Y, Y, Y],
   ['Birth-sky wheel and aspect grid', N, N, Y, Y, Y],
   ['Chiron, Nodes and sensitive points', N, N, Y, Y, Y],

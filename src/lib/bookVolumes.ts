@@ -32,8 +32,9 @@ export const VOLUMES = [
 export type VolumeNo = typeof VOLUMES[number]['n'];
 
 const RANK = ['digital', 'pocket', 'classic', 'signature', 'linen'];
-/** World Systems (Volume V) starts at Classic, alongside the other deeper chart chapters. */
-export const WORLD_SYSTEMS_FROM = 'classic';
+/** World Systems (Volume V) is in Digital and Classic upward; Pocket stays five volumes (owner, Nov 16 2026). */
+export const WORLD_SYSTEMS_EDITIONS = ['digital', 'classic', 'signature', 'linen'];
+export const hasWorldSystems = (edition: string) => WORLD_SYSTEMS_EDITIONS.includes(versionOf(edition)?.id ?? edition);
 const norm = (x: number) => ((x % 360) + 360) % 360;
 const body = (c: ChartResult, key: string) => c.bodies.find(b => b.key === key);
 const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
@@ -313,7 +314,7 @@ export function buildVolumes({ edition, chart: c, name, saved, people = [], toda
   if (ownDreams.length) vol.IV.push({ title: 'Dreams You Chose to Include', content: dreamsChapter(ownDreams) });
   vol.IV.push(...bySaved('IV'));
 
-  if (r >= RANK.indexOf(WORLD_SYSTEMS_FROM)) vol.V.push({ title: 'Your Birth Moment Across Traditions', content: worldSystems(c) });
+  if (hasWorldSystems(edition)) vol.V.push({ title: 'Your Birth Moment Across Traditions', content: worldSystems(c) });
   vol.V.push(...bySaved('V'));
 
   vol.VI.push({ title: 'Your Profection Year', content: profectionChapter(c, today) }, { title: 'Life Cycles: Returns and Turning Points', content: cyclesChapter(c, today) });

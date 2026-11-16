@@ -8,7 +8,7 @@ import { toChartInput, type MyBirth } from '@/lib/myBirth';
 import fontUrl from '@/assets/fonts/manuscript.ttf?url';
 import { manuscriptManifest } from '@/lib/manuscriptManifest';
 import type { Person } from '@/lib/bookExtras';
-import { buildVolumes, VOLUMES, WORLD_SYSTEMS_FROM, type BookDream } from '@/lib/bookVolumes';
+import { buildVolumes, VOLUMES, hasWorldSystems, type BookDream } from '@/lib/bookVolumes';
 import { BOOK_VERSIONS, versionOf } from '@/lib/books';
 
 /** Composes the reviewable six-volume manuscript for one version from the member's calculated chart and finished readings. */
@@ -16,7 +16,7 @@ export function ManuscriptPreview({ birth, edition, extras, coverUrl, certificat
   const [busy, setBusy] = useState(false); const [error, setError] = useState(''); const [preview, setPreview] = useState<{ url: string; pages: number; readings: number; people: number } | null>(null);
   const version = versionOf(edition);
   const rank = BOOK_VERSIONS.findIndex(v => v.id === version?.id);
-  const shownVolumes = VOLUMES.filter(v => v.n !== 'V' || rank >= BOOK_VERSIONS.findIndex(b => b.id === WORLD_SYSTEMS_FROM));
+  const shownVolumes = VOLUMES.filter(v => v.n !== 'V' || hasWorldSystems(edition));
   const volumeCount = shownVolumes.length === 6 ? 'six' : 'five';
   const compose = async () => {
     setBusy(true); setError('');

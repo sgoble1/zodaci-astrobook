@@ -43,10 +43,10 @@ describe('edition chapters come from the calculated chart', () => {
     expect(titles('digital')).not.toContain('Your Birth-Moment Verse');
     expect(titles('pocket')).toContain('Your Birth-Moment Verse');
   });
-  it('Digital and Pocket have five volumes; World Systems (V) starts at Classic', () => {
+  it('Pocket has five volumes; Digital and Classic up have World Systems (V)', () => {
     const vols = (e: string) => titles(e).filter(t => t.startsWith('Volume '));
-    expect(vols('digital')).toHaveLength(5); expect(vols('pocket')).toHaveLength(5);
-    expect(vols('digital').some(t => t.startsWith('Volume V ·'))).toBe(false);
+    expect(vols('digital')).toHaveLength(6); expect(vols('pocket')).toHaveLength(5);
+    expect(vols('pocket').some(t => t.startsWith('Volume V ·'))).toBe(false);
     expect(vols('classic')).toHaveLength(6); expect(vols('linen')).toHaveLength(6);
   });
   it('every version is composable with no finished readings', () => {
