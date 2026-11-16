@@ -611,7 +611,7 @@ Full ordered list: docs/master-implementation-resource.md Part 30.
 - [x] Slice 3 AstroBook three-page teaser (Sun, Moon, Rising from the saved chart, no AI)
 - [~] Slice 4 gift an AstroBook written from the recipient's birth details: built (recipient picker, dedication page, gift notice email, recipient download, locks); browser walk-through of a full gift order still to do
 - [x] Slice 5 15-point accuracy suite: 13 public Swiss Ephemeris moments + both founders, Part of Fortune, polar Porphyry notice, southern hemisphere; public /accuracy page reruns it live
-- [ ] Slice 6 admin AI spending: model/tokens/cost per call, projection, budget alert, per-member history/reset/zero
+- [~] Slice 6 admin AI spending: Admin → AI spending shows uses by feature/day, month-end projection, last month (Nov 16). Tokens/dollar cost not recorded per call; budget alert open
 - [ ] Slice 26 Solar Return · 27 progressions · 28 Academy progress · 29 read-aloud · 30 ephemeris page
 - [ ] Slices 22–25 archive paging, activity export, misc polish, newsletter extras
 - [ ] Documents: Part 30 progress in master resource, reference v5, feature register, developer log

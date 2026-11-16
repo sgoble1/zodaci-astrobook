@@ -1,3 +1,4 @@
+import { AiSpending } from '@/components/admin/AiSpending';
 import { LaunchChecklist } from '@/components/admin/LaunchChecklist';
 import { CreditLedger } from '@/components/admin/CreditLedger';
 import { confirmAction } from '@/components/common/ConfirmHost';
@@ -115,6 +116,7 @@ export default function Admin() {
             {tab === 'access' && <AccessManager />}
             {tab === 'shared' && <SharedSpacesPanel />}
             {tab === 'images' && <ImageLibrary />}
+            {tab === 'ai' && <AiSpending />}
             {tab === 'costs' && <BuildCostCard editable />}
             {tab === 'founders' && <FounderAudit />}
           </>}
