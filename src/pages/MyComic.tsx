@@ -162,7 +162,10 @@ type IssueArt = { panels: Record<string, string>; pdf: string | null };
 const RELEASED = ['approved', 'printing', 'shipped'];
 
 function Archive({ issues }: { issues: Issue[] }) {
-  const [open, setOpen] = useState<string | null>(null);
+  // The open issue lives in the link (?issue=<id>) so it can be bookmarked, shared with yourself and restored on back.
+  const [params, setParams] = useSearchParams();
+  const open = params.get('issue');
+  const setOpen = (id: string | null) => setParams(prev => { const n = new URLSearchParams(prev); if (id) n.set('issue', id); else n.delete('issue'); return n; }, { replace: true });
   const [art, setArt] = useState<Record<string, IssueArt | 'loading' | 'failed'>>({});
   // Illustrated pages and the PDF come as short-lived private links, only for this member's released issues.
   const fetchArt = async (i: Issue) => {
@@ -175,10 +178,15 @@ function Archive({ issues }: { issues: Issue[] }) {
     setOpen(i.id);
     if (RELEASED.includes(i.status) && (!art[i.id] || art[i.id] === 'failed')) void fetchArt(i);
   };
+  useEffect(() => {
+    const i = open ? issues.find(x => x.id === open) : undefined;
+    if (i && RELEASED.includes(i.status) && !art[i.id]) void fetchArt(i);
+  }, [open, issues]); // eslint-disable-line react-hooks/exhaustive-deps
   if (!issues.length) return <section aria-labelledby="arch-h"><h2 id="arch-h" className="font-display text-2xl">Issue archive</h2><p className="mt-2 text-sm text-muted-foreground">Approved issues and shipment tracking appear here.</p></section>;
   return (
     <section aria-labelledby="arch-h" className="space-y-4">
       <h2 id="arch-h" className="font-display text-2xl">Issue archive</h2>
+      {issues.length > 1 && <div role="group" aria-label="Jump to an issue" className="flex flex-wrap gap-2">{issues.map(i => <Button key={i.id} size="sm" variant={open === i.id ? 'default' : 'outline'} aria-pressed={open === i.id} onClick={() => openIssue(i)}>No. {i.issue_number}</Button>)}</div>}
       <ul className="divide-y divide-border border-y border-border">{issues.map(i => { const url = i.tracking_number ? trackingUrl(i.carrier, i.tracking_number) : null; const script = i.script as unknown as ComicIssue; const a = art[i.id]; const ready = a && typeof a === 'object' ? a : null; const illustrated = ready ? Object.keys(ready.panels).length > 0 : false; return (
         <li key={i.id} className="py-4">
           <div className="flex flex-wrap items-center justify-between gap-3"><div><p className="font-semibold">Issue {i.issue_number} · {monthLabel(new Date(i.issue_month + 'T00:00:00Z'))}</p><p className="text-sm text-muted-foreground">{i.title || script?.title}</p></div><div className="flex flex-wrap items-center gap-2"><span className="text-xs capitalize text-gold">{i.status}</span>{script?.pages?.length ? <Button size="sm" variant="outline" aria-expanded={open === i.id} onClick={() => openIssue(i)}><BookOpen className="h-4 w-4" />{open === i.id ? 'Close' : 'Read issue'}</Button> : null}{open === i.id && ready?.pdf && <Button size="sm" variant="ghost" asChild><a href={ready.pdf} target="_blank" rel="noopener noreferrer" download><Download className="h-4 w-4" />Digital copy (PDF)</a></Button>}</div></div>

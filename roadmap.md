@@ -574,7 +574,7 @@ Audit Oct 29: Chat/counselors already use the member's chart; podcast/custom pag
 - [x] Step 2 checks: credit renewal, contact spam, comic archive confirmed live
 - [x] Step 2: "Share my signs" public link (signs + first name only); 11 pages opened signed out at 393/1280 — no crashes, no sideways scroll
 - [ ] Step 2 follow-up: signed-out visitors to /ephemeris and /chinese are sometimes sent to sign-in (needs a decision: public or member-only)
-- [ ] Step 3: five-spread AstroBook showcase; demo polish
+- [x] Step 3: five-spread AstroBook showcase; demo polish (done as T1.2; My AstroComic issue picker remembers the open issue in the link, Nov 16)
 - [ ] Step 4: variant paging, admin shop layout, order fields — Shopify order history blocked (admin app), emails blocked (sending domain)
 - [ ] Step 5: product descriptions (needs Shopify approval), "How we calculate" copy, site-wide feature copy
 - [ ] Step 7: overnight items
