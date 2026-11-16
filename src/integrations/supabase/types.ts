@@ -3180,6 +3180,13 @@ export type Database = {
         }[]
       }
       admin_clear_ai_pause: { Args: { _scope: string }; Returns: boolean }
+      admin_comic_dream_dates: {
+        Args: { _user_ids: string[] }
+        Returns: {
+          dream_date: string
+          user_id: string
+        }[]
+      }
       admin_comic_manifest: {
         Args: never
         Returns: {

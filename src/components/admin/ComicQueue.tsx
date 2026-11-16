@@ -71,9 +71,13 @@ export function ComicQueue() {
     // Each subscriber's chosen observatory character becomes their stand-in on the cover (admin read policy).
     const chosen = await supabase.from('member_characters').select('user_id,character_id').in('user_id', toDraft.map(r => r.s.user_id));
     const characterOf = new Map((chosen.data ?? []).map(c => [c.user_id, c.character_id]));
+    // Dates only of dreams members marked "use in comic" (admin RPC; dream text never leaves the member's account).
+    const dreamRows = await supabase.rpc('admin_comic_dream_dates', { _user_ids: toDraft.map(r => r.s.user_id) });
+    const datesOf = new Map<string, string[]>();
+    for (const d of dreamRows.data ?? []) datesOf.set(d.user_id, [...(datesOf.get(d.user_id) ?? []), d.dream_date]);
     const made = toDraft.map(r => {
       const chart = computeChart({ date: r.s.birth_date!, time: r.s.birth_time || null, lat: r.s.lat!, lon: r.s.lon!, tz: r.s.tz!, placeLabel: r.s.place_label ?? '', placeSource: 'geocoded', houseSystem: (r.s.house_system as HouseSystem) || 'placidus' });
-      const script = buildComicIssue(chart, { reader: r.s.display_name || r.s.shipping_address?.name || 'Reader', month, issueNumber: r.number, guide: guideFor(characterOf.get(r.s.user_id)) });
+      const script = buildComicIssue(chart, { reader: r.s.display_name || r.s.shipping_address?.name || 'Reader', month, issueNumber: r.number, guide: guideFor(characterOf.get(r.s.user_id)), dreamDates: datesOf.get(r.s.user_id) ?? [] });
       return { user_id: r.s.user_id, subscription_id: r.s.subscription_id, issue_month: key, issue_number: r.number, status: 'draft', title: script.title.slice(0, 200), script: script as never };
     });
     const { error } = await supabase.from('comic_issues').upsert(made, { onConflict: 'subscription_id,issue_month', ignoreDuplicates: true });

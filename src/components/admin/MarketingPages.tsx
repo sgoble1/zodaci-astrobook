@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { BRAND_COPY } from '@/content/brandCopy';
-import { PromoVideo } from '@/components/brand/PromoVideo';
+import { DemoScreen } from '@/components/brand/DemoScreen';
 import { PROMO_VIDEO, FILM_MARKER } from '@/content/promoVideo';
 import promo1080 from '@/assets/videos/zodaci-promo-1080.mp4.asset.json';
 import promo720 from '@/assets/videos/zodaci-promo-720.mp4.asset.json';
@@ -60,9 +60,9 @@ export function MarketingPages() {
     <div className="space-y-8">
       <section aria-labelledby="film-admin-h" className="space-y-4">
         <h2 id="film-admin-h" className="font-display text-2xl">Brand film</h2>
-        <p className="max-w-2xl text-sm text-muted-foreground">The {PROMO_VIDEO.lengthLabel} promo film plays on the welcome page, the public home page and the demo. Add it to any landing page by putting <code className="rounded bg-muted px-1">{FILM_MARKER}</code> on its own line in the body.</p>
+        <p className="max-w-2xl text-sm text-muted-foreground">The Observatory Console (the same one on the demo) replaces the old promo film on landing pages. Add it to any landing page by putting <code className="rounded bg-muted px-1">{FILM_MARKER}</code> on its own line in the body.</p>
         <div className="grid gap-5 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
-          <PromoVideo />
+          <DemoScreen />
           <div className="space-y-3 text-sm">
             <p className="text-muted-foreground">For social posts and ads:</p>
             <div className="flex flex-wrap gap-2">

@@ -5,7 +5,7 @@ import ReactMarkdown from 'react-markdown';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { usePageMeta } from '@/hooks/usePageMeta';
-import { PromoVideo } from '@/components/brand/PromoVideo';
+import { DemoScreen } from '@/components/brand/DemoScreen';
 import { splitOnFilm } from '@/content/promoVideo';
 
 type Page = { title: string; headline: string; subheadline: string; body: string; cta_label: string; cta_link: string };
@@ -37,7 +37,7 @@ export default function LandingPage() {
         {cta}
       </motion.header>
       {p.body && splitOnFilm(p.body).map((part, i) => <div key={i} className="space-y-14">
-        {i > 0 && <div className="mx-auto max-w-4xl"><PromoVideo /></div>}
+        {i > 0 && <div className="mx-auto max-w-4xl"><DemoScreen /></div>}
         {part && <motion.section initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 1 }} className="prose prose-invert mx-auto max-w-3xl"><ReactMarkdown>{part}</ReactMarkdown></motion.section>}
       </div>)}
       <div className="text-center">{cta}</div>
