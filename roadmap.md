@@ -19,7 +19,7 @@ Order follows resource Part 6.3. Ticked when done and tested.
 Full plan: .lovable/plan/zodaci-final-master-plan-everything-still-unfinished-2026-11-12.md
 - [x] Stage 1.1–1.2: April's report uses the same planet spheres as Shane/Zac, with sign/house/dignity badges and chapter links.
 - [x] Stage 1.6 view-as choice carries into new tabs, cleared on sign-out (tested).
-- [ ] Founder edition experience (user, Nov 12): calmer, less overwhelming editions (content, boxes, flow); each account's own accurate, illustrated AstroBook and AstroComic covers plus a first-10-page preview of each. (Nov 16: first-ten-page book and comic previews from each founder's own chart are live on Official AstroBook; founder-specific illustrated cover art still open — needs owner art direction + image credits.)
+- [ ] Founder edition experience (user, Nov 12): calmer, less overwhelming editions (content, boxes, flow); each account's own accurate, illustrated AstroBook and AstroComic covers plus a first-10-page preview of each. (Nov 16: first-ten-page book and comic previews from each founder's own chart are live on Official AstroBook; founder Sun-sign covers drawn for all twelve signs Nov 16; AstroComic personal preview, 5.5×8.5 shape, stand-in and founder character panels done Nov 16.)
 - [ ] Stage 1.3–1.5, 1.7 founder frame, shared card look, naming.
 - [ ] Stage 1b navigation audit, AstroComic golden-age restyle, site-wide image/theme consistency (user asked Nov 12).
 - [ ] Stage 2 leftover free items · Stage 3 verification sweep.
@@ -56,7 +56,7 @@ Blocked — AI credits:
 Blocked — owner or outside accounts:
 - [ ] Shane Masterbook birth-detail confirmation (23 chapters) · Zac's documents (Phase 11) · ~~April's archive unlock~~ (verified Nov 13: opens for April's account; Zac private, Shane shared chapter only). Shane birth details confirmed Nov 13.
 - [ ] Lulu keys + printed sample · AstroComic printer · notify.zodaci.com DNS records · Resend and Search Console connections · licensed Sabian text · asteroid reference degrees · real testimonials and member counts · approved test purchase.
-- [ ] Owner decisions: World Systems (Volume V) starting edition; AstroBook page-depth targets.
+- [x] Owner decisions: World Systems (Volume V) starting edition; AstroBook page-depth targets (Nov 16: Digital+, measured ranges).
 
 ## Nov 10 evening request
 - [x] Shane's Masterbook corrections: all 63 chapters scanned without AI; flagged chapters patched sentence by sentence and saved (original backup kept). 41 chapters corrected and saved; the rest had no wrong facts about Shane. One chapter (sm-29, one Capricorn Moon mention) fails on the server's memory limit and is still open.
