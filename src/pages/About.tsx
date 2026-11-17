@@ -12,16 +12,16 @@ import { HOUSE_SYSTEMS } from '@/lib/astro';
 const fade = { initial: { opacity: 0, y: 24 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true }, transition: { duration: 1.4, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] } };
 
 const PILLARS: [SpotKind, string, string][] = [
-  ['chart', 'Calculated, not guessed', 'Every planet, house and aspect is computed from your exact birth moment with an astronomy-grade engine — then explained in words anyone can follow.'],
-  ['written', 'Written for one person', 'Your readings combine sign, house, aspects and rulers so they could only belong to your chart. No copy-paste horoscopes.'],
-  ['honest', 'Honest about limits', 'We show our sources, flag uncertain birth times, and never claim astrology can predict your life or replace professional help.'],
-  ['private', 'Private by design', 'Your birth details, notes and conversations belong to you. Shared spaces are invitation-only.'],
-  ['compass', 'Your context, your call', 'Add an experience or a question privately and decide whether it may inform future chapters. Your chart facts never change because of it, and astrology never invents your story.'],
+  ['chart', 'Calculated, not guessed', 'Every planet, house and aspect is worked out from your birth minute and place. Each one is then explained in everyday words.'],
+  ['written', 'Written for one person', 'Each reading uses the sign, house, aspects and ruler of a placement together. Two people rarely get the same paragraph.'],
+  ['honest', 'Honest about limits', 'We show sources and flag an uncertain birth time. Astrology here is for reflection. It does not predict events or replace professional help.'],
+  ['private', 'Private by design', 'Only you can see your birth details, notes and conversations. Shared spaces open by invitation only.'],
+  ['compass', 'Your context, your call', 'You can add an experience or a question in private and choose whether later chapters may use it. Your chart facts stay the same, and we never guess at your life story from the chart.'],
 ];
 
 /** What the engine actually does (see src/lib/astro.ts); described, not exposed as formulas. */
 const CALCULATE: [string, string][] = [
-  ['Planet positions', 'The Sun, Moon and planets come from a published astronomical model accurate to arc-seconds for births between 1900 and 2100.'],
+  ['Planet positions', 'The Sun, Moon and planets come from a published astronomical model for births between 1900 and 2100. We check it against the Swiss Ephemeris on our accuracy page.'],
   ['Your clock, in universal time', 'Your local birth time is converted with the historical time-zone record for your birthplace, including past daylight-saving rules.'],
   ['Angles and houses', `The Ascendant and Midheaven come from sidereal time at your longitude. Houses default to Placidus; ${HOUSE_SYSTEMS.filter(h => h.id !== 'placidus').map(h => h.label).join(', ')} are one click away.`],
   ['Chiron and the Nodes', 'Chiron is read from a NASA JPL Horizons table (1940–2060). The North Node is the mean node; the true node can differ by up to about 1.5°, and we say so.'],
@@ -69,9 +69,9 @@ export default function About() {
         <p className="text-center font-label text-sm tracking-[0.2em] text-accent">Why Zodaci exists</p>
         <h2 id="why-h" className="mt-2 text-center font-display text-3xl uppercase leading-tight sm:text-4xl">Same skies. Brighter answers.</h2>
         <div className="about-why-body">
-          <p>We spent years with thick astrology books, hand-drawn charts and late-night conversations about what a Moon in one sign or a Saturn in one house meant for a real life. The insight was there, but it was locked inside jargon, scattered across sources, and rarely about <em>you</em>.</p>
-          <p>So we built the companion we wished existed: a place that calculates your chart precisely, translates every symbol into plain language, and then goes deep, with chapters on love, purpose, healing and timing written from your own placements.</p>
-          <p>We love the craft, the history, and the moment a reading makes someone say, “that’s exactly me.” Every page here is made with that moment in mind.</p>
+          <p>We spent years with thick astrology books, hand-drawn charts and long talks about what a Moon in one sign or a Saturn in one house meant for a real person. The books were full of useful ideas. They were also full of jargon, spread across many sources, and rarely about <em>you</em>.</p>
+          <p>So we built the tool we wanted. Zodaci calculates your chart, explains each symbol in plain language, and writes longer chapters on love, work, healing and timing from your own placements.</p>
+          <p>We love the craft and its history. Most of all, we like the moment someone reads a page and says, “that’s me.”</p>
         </div>
         <figure className="mt-8 overflow-hidden rounded-[var(--cut-card)] shadow-[0_0_0_1.5px_hsl(var(--comic-navy)/0.6)]">
           <img src={chartMakers} alt="Two 1950s chart makers: a woman drafting a zodiac wheel with a compass, and a man checking planet tables with a magnifying glass under a brass lamp" width={1400} height={700} loading="lazy" className="w-full" />
@@ -87,7 +87,7 @@ export default function About() {
         <ul className="grid gap-x-8 gap-y-6 md:grid-cols-2">
           {CALCULATE.map(([t, d], i) => <li key={t} className="flex gap-4"><span aria-hidden className="calc-step">{i + 1}</span><div><h3 className="font-label text-lg tracking-[0.08em]">{t}</h3><p className="mt-1 text-sm leading-relaxed text-muted-foreground">{d}</p></div></li>)}
         </ul>
-        <p className="mt-6 text-sm text-muted-foreground">Members can check any chart themselves: <Link to="/chart-calculator" className="text-accent underline underline-offset-4">Open the chart calculator</Link> and compare house systems side by side.</p>
+        <p className="mt-6 text-sm text-muted-foreground">Members can check any chart themselves: <Link to="/chart-calculator" className="text-accent underline underline-offset-4">Open the chart calculator</Link> and compare house systems side by side, or <Link to="/accuracy" className="text-accent underline underline-offset-4">see our accuracy checks</Link>.</p>
       </motion.section>
 
       <motion.section {...fade} aria-labelledby="diff-h" className="obs-panel p-5 sm:p-8">
@@ -108,12 +108,12 @@ export default function About() {
 
       <motion.section {...fade} className="mx-auto max-w-3xl space-y-4">
         <h2 className="plate-title">Our inspirations</h2>
-        <p className="text-lg text-muted-foreground">Hellenistic and modern psychological astrology, Vedic Jyotish, Chinese Ba Zi, the Maya Tzolk’in and other traditions — read with curiosity and respect for where each comes from. Astronomy keeps us exact; psychology keeps us humane; good writing keeps it all readable. We compare what several traditions say about the same placement and combine them in your readings. You can add private context, and it shapes what a reading focuses on. It never changes your chart facts.</p>
+        <p className="text-lg text-muted-foreground">We draw on Hellenistic and modern psychological astrology, Vedic Jyotish, Chinese Ba Zi, the Maya Tzolk’in and other traditions, and we credit where each idea comes from. The astronomy is calculated. The writing aims to be clear and kind. We compare what several traditions say about the same placement and combine them in your readings. You can add private context, and it shapes what a reading focuses on. It never changes your chart facts.</p>
       </motion.section>
 
       <motion.section {...fade} className="obs-paper space-y-4 p-8 text-center sm:p-10">
         <h2 className="plate-title">Meet your chart</h2>
-        <p className="text-muted-foreground">Free to start. Your first chart and readings take about two minutes.</p>
+        <p className="text-muted-foreground">Your first chart is free. You need your birth date, place and, if you know it, your birth time.</p>
         <div className="flex flex-wrap justify-center gap-3"><Button asChild size="lg" variant="signal"><Link to="/auth?mode=signup&next=%2Fstart">Create my chart</Link></Button><Button asChild size="lg" variant="outline"><Link to="/pricing">See plans</Link></Button></div>
       </motion.section>
     </article>
