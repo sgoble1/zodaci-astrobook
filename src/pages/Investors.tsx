@@ -36,20 +36,22 @@ const LIVE = [
   'Interactive demo walk-through: visitors step through birth details, the calculated chart, a reading and the book using a fictional sample reader, instead of a fixed film.',
   'AstroBook Reader’s Compass: plain-language explanations of every term a book uses, and a three-point summary at the start of each chapter.',
   'Owner-controlled personal context: tap-to-answer questions, “keep it general”, and a review of every personal detail before a book is printed.',
-  'Charts calculated in-app (planets, houses, angles, nodes, Chiron) and checked against the Swiss Ephemeris within 0.1° in automated tests and on the public Check our numbers page.',
+  'Charts calculated in-app (planets, houses, angles, nodes, Chiron) and checked against the Swiss Ephemeris in automated tests. The public accuracy page shows 13 test births and every point compared.',
   'Personal readings by tier, chart-aware AI counselors that replay full sessions, workbook tools and private shared spaces for couples and family.',
   'Studio-voiced personal podcasts written from each member’s chart, saved to a private library.',
   'Cosmic Studio: chart wallpapers, posters, journal pages and affirmation cards to download or save, plus one-time AI credit packs.',
   'Chart-matched shop picks: members see shop items chosen from their own Sun, Moon and Rising signs, and pick one of twelve drawn observatory characters to represent them across the site.',
   'Other Systems: Vedic, Chinese Ba Zi, numerology, Feng Shui and Flying Stars, Nine Star Ki, Tzolk’in and more — all from the same birth data.',
-  'Six-volume AstroBook builder with cover designer, previews and print-ready PDFs; three fully illustrated sample pages on the public site.',
+  'Six-volume AstroBook builder with cover choice, print-ready PDFs and a page-turning preview. Signed-in members can turn the first pages of a book built from their own chart.',
+  'Gift an AstroBook: written from the recipient’s own birth details, with a dedication page and gift notice (a full paid gift order is still being tested).',
+  'Coming-soon page with a waitlist and a private access code, so the site can collect sign-ups while the build continues.',
   'AstroComic Issue #1: seven drawn pages, a 3D page-turning preview, a full read-through and a print pre-order with specs and a delivery timeline.',
   'Subscriptions with verified webhooks, plan changes and refunds; Shopify checkout; order tracking and a print-dispatch console.',
   'Private editions that open only for their owner and the people they share with — enforced on the server, never by passwords on a device.',
 ];
 const PHASES: { name: string; when: string; status: string; items: string[] }[] = [
   { name: 'Phase 1 · Foundation', when: 'Done', status: 'Live', items: ['Chart engine and accuracy tests', 'Memberships, readings, counselors, podcasts', 'Founder editions, sharing and privacy', 'Shop and AstroBook ordering', 'Chart-matched shop recommendations, member comic characters and friend-referral rewards'] },
-  { name: 'Phase 2 · Launch polish', when: 'Now', status: 'In progress', items: ['Automated print fulfilment with the print partner', 'Sending domain for receipts and newsletters (DNS pending)', 'Remaining 5 drawn story pages of AstroComic Issue #1', 'Owner sign-off on shop pricing', 'Payment recovery list and spam-protected sign-up forms (done Nov 13)'] },
+  { name: 'Phase 2 · Launch polish', when: 'Now', status: 'In progress', items: ['Automated print fulfilment with the print partner', 'Sending domain for receipts and newsletters (DNS pending)', 'Remaining artwork for AstroComic Issue #1 (seven pages drawn so far)', 'Owner sign-off on shop pricing', 'Payment recovery list and spam-protected sign-up forms (done Nov 13)'] },
   { name: 'Phase 3 · Growth', when: 'Next', status: 'Planned', items: ['Monthly comic art pipeline at scale', 'Licensed source texts (Sabian Symbols, asteroid tables)', 'Mobile app wrapper'] },
   { name: 'Phase 4 · Zodaci Social', when: 'Future', status: 'Vision', items: ['Pseudonymous profiles and communities', 'Topic boards with posts, threads and voting', 'Compatibility discovery between members', 'Moderation, safety and privacy controls'] },
 ];
@@ -65,7 +67,7 @@ const FUTURE = [
   ['Printed creations', 'Order a Cosmic Studio poster as a framed print, a card set as a deck or journal pages as a bound planner, made by the existing print partner.'],
 ];
 const WHY_TRUST = [
-  ['Calculated, not guessed', 'Positions come from a published astronomical engine using the exact birth time, place and historical time zone. Automated tests check planets, angles and houses against professional references to within one degree.'],
+  ['Calculated, not guessed', 'Positions come from a published astronomical engine using the exact birth time, place and historical time zone. Automated tests compare planets, angles and houses with the Swiss Ephemeris and fail if any point is off by more than a tenth of a degree.'],
   ['Facts shown beside the reading', 'Long readings show the placements their text names (sign, house, aspect) in a facts column, and source answers carry inline source tags, so members can check what a passage is built on.'],
   ['Honest about uncertainty', 'No birth time means no houses or Rising sign claims. Near a sign boundary, the reading says so. Nothing about family or childhood is invented from symbols.'],
   ['Delivered to one person', 'Each reading, book, podcast and comic is written for one saved chart and kept private to that account.'],
@@ -84,8 +86,8 @@ type Metrics = { members: number; charts: number; paid: number; readings: number
 const STUDIO = [
   ['Live today', 'Pro and Cosmic members design phone wallpapers, 8 × 12 in chart posters, journal and planner pages and affirmation cards from their exact placements, then download them or keep them in a private library. They can also write new Masterbook chapters and voiced podcasts on any topic.'],
   ['Why it earns', 'Every design is one of a kind, made from one person’s chart, so it is a natural gift. Ordering a design as a framed print, deck or bound planner is planned next; today members download or save them.'],
-  ['Credit packs', `AI creations use credits. Members who want more buy one-time packs from $${CREDIT_PACKS[0].price} to $${CREDIT_PACKS[CREDIT_PACKS.length - 1].price} — revenue that grows with engagement, on top of the membership.`],
-  ['With the social network', 'Shared creations spread the brand: a friend sees a chart poster, makes their own, then orders a couple’s print. Social + Cosmic Studio + shop is a loop where every share can become a sale.'],
+  ['Credit packs', `AI creations use credits. Members who want more buy one-time packs from $${CREDIT_PACKS[0].price} to $${CREDIT_PACKS[CREDIT_PACKS.length - 1].price} . This is paid on top of the membership.`],
+  ['With the social network', 'Shared creations spread the brand: a friend sees a chart poster, makes their own, then orders a couple’s print. That loop is a hope, not something we have measured.'],
 ];
 const STUDIO_ROWS = [
   { members: 10_000, makers: 0.3, printers: 0.03, packs: 0.02 },
@@ -118,7 +120,7 @@ export default function Investors() {
         <div>
           <div className="font-label text-xs tracking-[0.16em] text-primary">Private · Investor overview</div>
           <h1 className="text-5xl sm:text-7xl">An encyclopedia of each person’s sky</h1>
-          <p className="mt-4 max-w-2xl text-lg text-muted-foreground">Zodaci calculates the planets, stars and sensitive points at a member’s exact time of birth and builds an expansive, cross-referenced body of writing from them — readings, a six-volume book, comics and podcasts. The depth is the product: our founders’ own editions gave them words for things they had always felt. Later, the same calculations let members find each other.</p>
+          <p className="mt-4 max-w-2xl text-lg text-muted-foreground">Zodaci calculates the planets, fixed stars and sensitive points for a member’s exact time and place of birth. From those positions it writes readings, a six-volume book, a monthly comic and podcasts for that one person. The founders’ own editions were the first test of that depth. Later, the same calculations could help members find each other.</p>
           <div className="mt-6 flex flex-wrap gap-3"><Button asChild><Link to="/astrobook">See the AstroBook pages</Link></Button><Button asChild variant="outline"><Link to="/astrocomic">Read the comic</Link></Button><Button asChild variant="outline"><Link to="/demo">Try the demo</Link></Button></div>
         </div>
         <figure><img src={PRODUCT_ART.collection.src} alt={PRODUCT_ART.collection.alt} width={1536} height={1024} className="w-full rounded-sm border border-gold/40" /><figcaption className="mt-2 text-center text-xs text-muted-foreground">Illustrative AstroBook &amp; AstroComic shop collection</figcaption></figure>
@@ -163,20 +165,20 @@ export default function Investors() {
         <div className="grid gap-4 sm:grid-cols-2">{WHY_TRUST.map(([t, d]) => <div key={t} className="rounded-lg border border-border/60 bg-card/40 p-5"><h3 className="text-lg">{t}</h3><p className="mt-2 text-sm text-muted-foreground">{d}</p></div>)}</div>
       </section>
 
-      <section aria-labelledby="inv-f" className="space-y-4"><h2 id="inv-f" className="text-3xl">Coming next for members</h2>
+      <section aria-labelledby="inv-next" className="space-y-4"><h2 id="inv-next" className="text-3xl">Coming next for members</h2>
         <div className="grid gap-4 sm:grid-cols-2">{FUTURE.map(([t, d]) => <div key={t} className="vellum p-5"><p className="font-label text-xs tracking-[0.16em] text-primary">Planned</p><h3 className="mt-1 text-xl">{t}</h3><p className="mt-2 text-sm text-muted-foreground">{d}</p></div>)}</div>
       </section>
 
       <section aria-labelledby="inv-i" className="vellum space-y-5 p-6 sm:p-10">
         <div className="max-w-3xl"><p className="font-label text-xs tracking-[0.16em] text-primary">Projection · not a forecast</p><h2 id="inv-i" className="mt-1 text-3xl sm:text-4xl">Income potential</h2>
-          <p className="mt-3 text-muted-foreground">Yearly revenue if Zodaci reaches each audience size, using today’s real prices (Pro {PLAN_PRICE.full.month}, Cosmic {PLAN_PRICE.creator.month}, books {money(low.price)}–{money(high.price)}). Conversion rates are assumptions in line with typical subscription apps, shown so you can judge them.</p></div>
+          <p className="mt-3 text-muted-foreground">Yearly revenue if Zodaci reaches each audience size, using today’s real prices (Pro {PLAN_PRICE.full.month}, Cosmic {PLAN_PRICE.creator.month}, books {money(low.price)}–{money(high.price)}). Conversion rates are our assumptions, not measured results. They are shown so you can judge them.</p></div>
         <div className="overflow-x-auto"><table className="w-full text-sm"><thead><tr className="text-left text-muted-foreground"><th className="p-2">Free members</th><th className="p-2">Pro</th><th className="p-2">Cosmic</th><th className="p-2">Buy a book</th><th className="p-2">Shop, 2 orders/yr</th><th className="p-2 text-right">Yearly revenue</th></tr></thead>
           <tbody>{SCENARIOS.map(x => <tr key={x.members} className="border-t border-border/60"><td className="p-2">{x.members.toLocaleString()}</td><td className="p-2">{x.pro * 100}%</td><td className="p-2">{x.cosmic * 100}%</td><td className="p-2">{x.book * 100}%</td><td className="p-2">{x.shop * 100}%</td><td className="p-2 text-right font-display text-xl text-gold">{usd(yearly(x))}</td></tr>)}</tbody></table></div>
-        <p className="text-sm text-muted-foreground">Assumes an average book of ${BOOK_AVG} and shop order of ${SHOP_AVG}; excludes comics, gifts and costs. This is a simple gross-revenue view; the “Prices, costs and contribution” section below uses its own conversion assumptions and subtracts estimated costs, so its totals differ on purpose. Development cost so far this billing period: {formatUsd(creditCost(BUILD_CREDIT_SNAPSHOT.usedThisPeriod))} ({BUILD_CREDIT_SNAPSHOT.usedThisPeriod} build credits at {formatUsd(DOLLARS_PER_BUILD_CREDIT)} each). The bigger upside is the combination: a social network gives every member reasons to return daily, and every visit shows products matched to their chart — compatibility gifts, couple’s books, friends’ posters — so community activity turns directly into shop and book sales.</p>
+        <p className="text-sm text-muted-foreground">Assumes an average book of ${BOOK_AVG} and shop order of ${SHOP_AVG}; excludes comics, gifts and costs. This is a simple gross-revenue view; the “Prices, costs and contribution” section below uses its own conversion assumptions and subtracts estimated costs, so its totals differ on purpose. Development cost so far this billing period: {formatUsd(creditCost(BUILD_CREDIT_SNAPSHOT.usedThisPeriod))} ({BUILD_CREDIT_SNAPSHOT.usedThisPeriod} build credits at {formatUsd(DOLLARS_PER_BUILD_CREDIT)} each). If the planned social features launch, they could bring members back more often. Each visit already shows shop items matched to the member’s chart. We have no data yet on how much that adds.</p>
       </section>
 
       <section aria-labelledby="inv-cs" className="space-y-5">
-        <div className="max-w-3xl"><p className="font-label text-xs tracking-[0.16em] text-primary">Major income lever</p><h2 id="inv-cs" className="mt-1 text-3xl sm:text-4xl">Cosmic Studio</h2><p className="mt-3 text-muted-foreground">Members don’t just read about their chart — they make things from it. That turns a subscription into a personal product shop.</p></div>
+        <div className="max-w-3xl"><p className="font-label text-xs tracking-[0.16em] text-primary">Major income lever</p><h2 id="inv-cs" className="mt-1 text-3xl sm:text-4xl">Cosmic Studio</h2><p className="mt-3 text-muted-foreground">Members can also make things from their chart: wallpapers, posters, journal pages and cards. Each design is unique to one chart.</p></div>
         <div className="grid gap-4 sm:grid-cols-2">{STUDIO.map(([t, d]) => <div key={t} className="vellum p-5"><h3 className="text-xl">{t}</h3><p className="mt-2 text-sm text-muted-foreground">{d}</p></div>)}</div>
         <div className="overflow-x-auto"><table className="w-full text-sm"><thead><tr className="text-left text-muted-foreground"><th className="p-2">Members</th><th className="p-2">Make something</th><th className="p-2">Order a print (2/yr, ${PRINT_AVG})</th><th className="p-2">Buy credit packs (2/yr, ${PACK_AVG})</th><th className="p-2 text-right">Extra yearly revenue</th></tr></thead>
           <tbody>{STUDIO_ROWS.map(r => <tr key={r.members} className="border-t border-border/60"><td className="p-2">{r.members.toLocaleString()}</td><td className="p-2">{r.makers * 100}%</td><td className="p-2">{r.printers * 100}%</td><td className="p-2">{r.packs * 100}%</td><td className="p-2 text-right font-display text-xl text-gold">{usd(studioYear(r))}</td></tr>)}</tbody></table></div>
