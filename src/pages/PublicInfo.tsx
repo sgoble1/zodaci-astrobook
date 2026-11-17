@@ -7,7 +7,6 @@ import { Faq, ASTROBOOK_FAQ, GENERAL_FAQ, ALL_GENERAL_FAQ, useFaqSchema } from '
 import { BOOK_VERSIONS, EXTRA_SECTION_PRICE, bookPriceList, money } from '@/lib/books';
 import { PLAN_NAME, REFUND_WINDOW_DAYS } from '@/lib/plans';
 import { VersionCompare } from '@/components/books/VersionCompare';
-import { CoverCustomizer } from '@/components/books/CoverCustomizer';
 import { CosmicTeaser } from '@/components/books/CosmicTeaser';
 import { MemberBookTeaser } from '@/components/books/MemberBookTeaser';
 import { ProductArtworkGallery } from '@/components/books/ProductArtworkGallery';
@@ -62,7 +61,6 @@ export function AstroBookPublic() {
         <div className="space-y-4"><h2 className="font-display text-3xl">Astronomy first, then the writing.</h2><p className="text-muted-foreground">Every AstroBook starts with the positions of the Sun, Moon and planets for the minute and place you were born. The interpretation comes after, and the book marks which is which.</p><p className="text-muted-foreground">Two people born on the same day still get different books: the Rising sign and houses shift every few minutes, and the Moon moves about a degree every two hours.</p></div>
         <div className="grid grid-cols-3 gap-4">{BOOK_PRODUCT_SAMPLES.map(s => <figure key={s.label}><SampleCover sample={s.sample} /><figcaption className="mt-3 text-center text-xs leading-snug text-muted-foreground"><span className="block font-label text-sm tracking-[0.1em] text-primary">{s.label}</span>For {s.sample.name}</figcaption></figure>)}</div>
       </section>
-      <section id="cover-preview" className="space-y-6" aria-labelledby="cover-preview-title"><div className="max-w-2xl"><h2 id="cover-preview-title" className="plate-title">Make the cover yours</h2><p className="mt-3 text-muted-foreground">Twelve Sun-sign illustrations, drawn in the same atomic-age style as our shop covers. Start with the labelled Taurus sample, or add your birth date to see your sign.</p></div><CoverCustomizer /></section>
       <section id="inside" className="space-y-6">
         <h2 className="font-display text-3xl">Six volumes, one sky.</h2>
         <p className="text-muted-foreground">Every AstroBook follows the same six-volume structure as our founders’ Masterbooks, written from your chart. Every version includes Volumes I–IV and VI; World Systems is in Digital and Classic upward (not Pocket), and larger versions add chapters inside each volume. Compare them below.</p>

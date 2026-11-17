@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowRight, Check, Minus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import mural from '@/assets/pages/about-zodiac-print.jpg';
 import rooftop from '@/assets/home/rooftop-astronomers.jpg';
 import chartMakers from '@/assets/pages/chart-makers.jpg';
 import { SpotArt, type SpotKind } from '@/components/art/SpotArt';
@@ -79,10 +78,6 @@ export default function About() {
         </figure>
       </motion.section>
 
-      <motion.figure {...fade} className="obs-paper overflow-hidden p-2">
-        <img src={mural} alt="Atomic-age zodiac print: a navy wheel of the twelve signs around a golden Sun, with a crescent Moon, ringed planet, atom and a domed observatory in cream, navy, mustard and brick red" width={1536} height={768} loading="lazy" className="w-full rounded-[var(--cut-card)]" />
-      </motion.figure>
-
       <motion.section {...fade} aria-label="What we stand for" className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {PILLARS.map(([art, t, d]) => <div key={t} className="atomic-box p-6"><SpotArt kind={art} className="atomic-box-art" /><h3 className="font-label text-xl tracking-[0.06em]">{t}</h3><p className="mt-2 text-muted-foreground">{d}</p></div>)}
       </motion.section>
@@ -107,13 +102,13 @@ export default function About() {
       </motion.section>
 
       <motion.section {...fade} aria-labelledby="founders-h" className="space-y-6">
-        <div className="mx-auto max-w-3xl text-center"><h2 id="founders-h" className="plate-title">Built from three founder editions</h2><p className="mt-3 text-muted-foreground">Before anyone else could order one, Zodaci wrote complete editions for its founders. Those books set the depth every member’s AstroBook follows. They stay private to their owners; nothing from them appears on this site. All three build models have been optimized and combined into one beautiful, functional, working model that brings optimal, life changing insights to each user.&nbsp;</p></div>
+        <div className="mx-auto max-w-3xl text-center"><h2 id="founders-h" className="plate-title">Built from three founder editions</h2><p className="mt-3 text-muted-foreground">Before anyone else could order one, Zodaci wrote complete editions for its founders. Those books set the depth every member’s AstroBook follows. They stay private to their owners; nothing from them appears on this site. What we learned writing all three now shapes every member’s book.</p></div>
         <ul className="grid gap-5 md:grid-cols-3">{FOUNDER_EDITIONS.map(([t, d]) => <li key={t} className="atomic-box p-6 text-center"><SpotArt kind="astrobook" className="mx-auto h-20 w-20" /><h3 className="mt-3 font-label text-xl tracking-[0.06em]">{t}</h3><p className="mt-1 text-sm text-muted-foreground">{d}</p></li>)}</ul>
       </motion.section>
 
       <motion.section {...fade} className="mx-auto max-w-3xl space-y-4">
         <h2 className="plate-title">Our inspirations</h2>
-        <p className="text-lg text-muted-foreground">Hellenistic and modern psychological astrology, Vedic Jyotish, Chinese Ba Zi, the Maya Tzolk’in and other traditions — read with curiosity and respect for where each comes from. Astronomy keeps us exact; psychology keeps us humane; good writing keeps it all readable. We take multiple cultural interperatations, rip them arpart, and combine them into your insights. we use aspects from different interpatitive styles and combine them into one and allow the user to input personal cotnetxt, and get extremely accurate, relative results tht are personalized down to a tee.&nbsp; Everything that can possibly be deducted acruately is extracted and given to you.&nbsp;</p>
+        <p className="text-lg text-muted-foreground">Hellenistic and modern psychological astrology, Vedic Jyotish, Chinese Ba Zi, the Maya Tzolk’in and other traditions — read with curiosity and respect for where each comes from. Astronomy keeps us exact; psychology keeps us humane; good writing keeps it all readable. We compare what several traditions say about the same placement and combine them in your readings. You can add private context, and it shapes what a reading focuses on. It never changes your chart facts.</p>
       </motion.section>
 
       <motion.section {...fade} className="obs-paper space-y-4 p-8 text-center sm:p-10">
