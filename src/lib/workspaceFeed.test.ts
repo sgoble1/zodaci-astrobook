@@ -31,7 +31,7 @@ describe('workspace feed privacy', () => {
   });
   it('rejects redirects, uses a timeout and sends only sanitized data', async () => {
     vi.stubGlobal('Deno', { env: { get: () => 'test-only-credential' } });
-    const fetch = vi.fn().mockResolvedValue(new Response('{}', { headers: { 'Content-Type': 'application/json' } }));
+    const fetch = vi.fn().mockResolvedValue(new Response('{"ok":true}', { headers: { 'Content-Type': 'application/json' } }));
     vi.stubGlobal('fetch', fetch);
     expect(await deliverWorkspaceFailure({ message: 'private', route: '/books?token=private' })).toBe('delivered');
     const [url, options] = fetch.mock.calls[0];
@@ -39,7 +39,16 @@ describe('workspace feed privacy', () => {
     expect(options.redirect).toBe('error');
     expect(options.signal).toBeInstanceOf(AbortSignal);
     expect(options.body).not.toContain('private');
-    expect(JSON.parse(options.body).workspace_project_id).toBe(WORKSPACE_PROJECT_ID);
+    const body = JSON.parse(options.body);
+    expect(body.workspace_project_id).toBe(WORKSPACE_PROJECT_ID);
+    expect(body.external_id).toBeTruthy();
+    expect(body.summary).toBeTruthy();
+    expect(options.headers['X-Webhook-Secret']).toBe('test-only-credential');
+  });
+  it('treats a receipt without ok:true as failed', async () => {
+    vi.stubGlobal('Deno', { env: { get: () => 'test-only-credential' } });
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response('{"ok":false}', { headers: { 'Content-Type': 'application/json' } })));
+    expect(await deliverWorkspaceFailure({})).toBe('failed');
   });
   it('contains delivery failures and rejects misleading HTML success', async () => {
     vi.stubGlobal('Deno', { env: { get: () => 'test-only-credential' } });
