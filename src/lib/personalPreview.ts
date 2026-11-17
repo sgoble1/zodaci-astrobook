@@ -5,11 +5,13 @@ import { balance } from '@/lib/resultsEngine';
 import { buildVolumes } from '@/lib/bookVolumes';
 import { birthFactRows, houseRows, planetRows, tightestAspects, type BookFace, type CoverFacts } from '@/lib/bookLeaves';
 import type { ComicIssue } from '@/lib/comic';
+import { planetPreview, risingPreview } from '@/lib/previewNarrative';
 
 export type { CoverFacts };
 
 /** How many numbered pages each personal preview shows. */
 export const PREVIEW_PAGES = 10;
+export const BOOK_PREVIEW_PAGES = 25;
 
 const SIGNS = ['Aries', 'Taurus', 'Gemini', 'Cancer', 'Leo', 'Virgo', 'Libra', 'Scorpio', 'Sagittarius', 'Capricorn', 'Aquarius', 'Pisces'];
 const GLYPHS = ['♈', '♉', '♊', '♋', '♌', '♍', '♎', '♏', '♐', '♑', '♒', '♓'];
@@ -21,7 +23,7 @@ const sunSign = (c: ChartResult) => c.bodies.find(b => b.key === 'sun')?.sign ??
 
 /** The chart ruler: the traditional ruler of the rising sign, or of the Sun sign when the birth time is unknown. */
 export function chartRuler(c: ChartResult): string {
-  const sign = timedChart(c) ? fmtLon(c.asc!).sign : sunSign(c);
+  const sign = timedChart(c) && c.asc != null ? fmtLon(c.asc).sign : sunSign(c);
   return SIGN_RULER[sign]?.traditional ?? 'sun';
 }
 
@@ -30,7 +32,7 @@ export function coverFacts(c: ChartResult, name: string, birthLine: string): Cov
   const timed = timedChart(c);
   const sun = sunSign(c);
   const moon = timed ? c.bodies.find(b => b.key === 'moon')?.sign : undefined;
-  const rising = timed ? fmtLon(c.asc!).sign : undefined;
+  const rising = timed && c.asc != null ? fmtLon(c.asc).sign : undefined;
   const t = chartTitle({ sun, moon, rising, dominant: dominantElement(balance(c).el) });
   const ruler = chartRuler(c);
   const signs = [`☉ ${sun}`, moon && `☽ ${moon}`, rising && `↑ ${rising}`].filter(Boolean).join(' · ');
@@ -72,7 +74,7 @@ const chapterOf = (chapters: { title: string; content: string }[], title: string
 export interface BookPreviewInput { name: string; birthLine: string; chart: ChartResult; edition?: string; editionLabel?: string; artFor: (planetKey: string) => string }
 
 /**
- * The cover and first ten pages of a personal AstroBook, built from the same chapters the printed book uses
+ * A 25-page personal AstroBook preview, built from the same chapters the printed book uses
  * (buildVolumes). A plate always lands on a left page so it faces the chapter it illustrates.
  */
 export function bookPreview({ name, birthLine, chart, edition = 'classic', editionLabel = 'Classic Edition', artFor }: BookPreviewInput): { cover: CoverFacts; faces: BookFace[]; jacket: BookFace } {
@@ -81,34 +83,46 @@ export function bookPreview({ name, birthLine, chart, edition = 'classic', editi
   const first = cover.name.split(/\s+/)[0];
   const chapters = buildVolumes({ edition, chart, name: first, saved: [] });
   const volumes = chapters.filter(ch => ch.draw === 'volume').map(ch => ch.title);
-  const letter = paginate(plainParagraphs(chapterOf(chapters, 'Your Opening Letter')));
-  const bigThree = paginate(plainParagraphs(chapterOf(chapters, 'Your Big Three')));
-  const moonPhase = paginate(plainParagraphs(chapterOf(chapters, 'Your Birth Moon Phase')));
-  const sun = chart.bodies.find(b => b.key === 'sun');
   const placement = cover.signs;
   const text = (eyebrow: string, title: string, body: string[], place = placement): Numbered => ({ kind: 'text', eyebrow, title, placement: place, facts: [], body });
-
+  const extract = (chapter: string, volume: string, title = chapter): Numbered => {
+    const source = chapterOf(chapters, chapter).replace(/^In this chapter[^\n]*\n*/i, '');
+    const body = paginate(plainParagraphs(source), 110)[0];
+    return text(volume, title, body?.length ? body : ['This section needs a verified birth time or additional chart information. We leave the missing information open instead of inventing it.']);
+  };
   const pages: Numbered[] = [
-    { kind: 'list', eyebrow: 'Contents', heading: 'Six volumes, one sky', items: ['Your Opening Letter', ...volumes], note: `Written from ${first}’s calculated chart` },
-    ...letter.slice(0, 2).map((body, i) => text('A letter to begin', i ? 'Your Opening Letter, continued' : 'Your Opening Letter', body)),
-    { kind: 'facts', eyebrow: 'Volume I · The Celestial Matrix', heading: 'Birth facts', rows: birthFactRows(chart, timed), note: timed ? 'Tropical zodiac · houses from the saved birth time' : 'Birth time unknown: houses and angles are left out rather than guessed' },
+    { kind: 'list', eyebrow: 'Contents', heading: 'Inside this preview', items: ['A letter to begin · 2–4', 'Birth sky and its lights · 5–10', 'Houses and planetary voices · 11–15', 'Contacts and deeper questions · 16–19', 'Traditions and timing · 20–23', 'Reader’s notes and method · 24–25'], note: `25 pages from ${first}’s calculated chart` },
+    text('A letter to begin', `Dear ${first},`, ['You deserve a book that can be personal without pretending to know things you have never told it. We begin with the birth moment you supplied. From there, we measure the sky and follow the connections between its parts.', 'Some passages may feel familiar. Others may leave you uncertain. There is room for both. The purpose of this reading is to give you something specific to think with, while leaving your own experience in your hands.']),
+    text('A letter to begin', 'The facts stay visible', [`Your chart is calculated for ${birthLine.replace(/^Born /, '')}. ${timed ? 'The recorded time allows us to calculate the horizon and house cusps.' : 'With no recorded time, houses and angles remain unassigned; the Moon’s daily position is provisional.'}`, 'A degree is a measured position. A sign meaning is an interpretation passed down within an astrological tradition. A reflection is a question for you. Those are different kinds of information, and this book keeps the distinction clear.']),
+    text('A letter to begin', 'You have the last word', ['A chart cannot establish your childhood, your ancestry, your relationships or a hidden reason for something painful. It does not diagnose you. It cannot decide whether a particular person belongs in your life.', 'Read slowly enough to hear your own response. If a sentence fits, give it a real example. If it does not, let it go. You do not owe the book agreement. The strongest reading is one you can examine, question and return to with a little more understanding.']),
+    { kind: 'facts', eyebrow: 'Volume I · The Celestial Matrix', heading: 'Birth facts', rows: birthFactRows(chart, timed), note: timed ? `${chart.input.houseSystem ?? 'placidus'} houses · tropical zodiac` : 'Daily reference only · no houses or angles' },
+    { kind: 'facts', eyebrow: 'Volume I · The Celestial Matrix', heading: 'The planets', rows: planetRows(chart, timed), note: '℞ marks apparent retrograde motion; it is not a prediction of difficulty.' },
+    { kind: 'plate', src: artFor(cover.ruler), alt: `${cover.rulerName} illustrated in the atomic print style; symbolic artwork, not a sky diagram`, caption: `Plate I · ${cover.rulerName} · illustrative artwork` },
+    planetPreview(chart, 'sun') as Numbered,
+    planetPreview(chart, 'moon') as Numbered,
+    risingPreview(chart) as Numbered,
+    timed && chart.cusps?.length ? { kind: 'facts', eyebrow: 'Volume II · The Twelve Temples', heading: 'House cusps', rows: houseRows(chart), note: 'Calculated in the selected house system; other systems can assign planets differently.' } : text('Volume II · The Twelve Temples', 'Houses need a time', ['No house cusps are assigned without a recorded birth time. House themes are interpretive categories, not evidence of events in your life.']),
+    extract('The Twelve Houses', 'Volume II · The Twelve Temples', 'Where the reading takes place'),
+    planetPreview(chart, 'mercury') as Numbered,
+    planetPreview(chart, 'venus') as Numbered,
+    planetPreview(chart, 'mars') as Numbered,
+    { kind: 'list', eyebrow: 'Volume III · Planetary Geometry', heading: 'Closest contacts', items: tightestAspects(chart, 8), note: 'Orb measures distance from the exact angle. A tighter aspect is not proof of a life event.' },
+    planetPreview(chart, 'saturn') as Numbered,
+    planetPreview(chart, 'pluto') as Numbered,
+    extract('Chiron, the Nodes and Sensitive Points', 'Volume IV · Esoteric Points', 'Points, not a past-life record'),
+    extract('Your Birth Moment Across Traditions', 'Volume V · World Systems', 'Different systems, stated separately'),
+    extract('Your Decans', 'Volume I · The Celestial Matrix', 'A closer division of each sign'),
+    extract('Your Profection Year', 'Volume VI · Cycles of Time', 'The year’s reference point'),
+    extract('RetroGOOD: Your Retrograde Planets', 'Volume VI · Cycles of Time', 'Reading retrograde motion'),
+    text('Reader’s Compass', 'Keep your own record', ['Placement: the measured position of a planet or angle. House: a division of the sky that requires a birth time. Aspect: an angular relationship. Orb: the distance from an exact aspect. Retrograde: apparent backward motion as seen from Earth.', 'Choose one passage. Write down what it says, the chart fact it rests on, and an example from your own experience. Include what does not fit. Your observations are not evidence that the calculation is right or wrong; they help you decide whether the interpretation is useful.']),
+    text('Method and colophon', 'How these pages were made', ['Planetary positions are calculated with Astronomy Engine. Reference tests compare the supported positions with Swiss Ephemeris within 0.1 degree. Historical time-zone conversion supplies the UTC moment. House calculations use the selected system.', 'The sidereal snapshot uses an approximate Lahiri ayanamsa; the Chinese section is a year pillar, not a complete Four Pillars analysis. These previews use calculated passages and editorial reflections, without an AI call. Illustration is symbolic. Paper, binding and final page count depend on the edition selected at order time.', 'Astrological insights provided for entertainment and self-reflection purposes only.']),
   ];
-  // The plate sits on a left page (odd page number here) facing the chapter about the chart ruler's sign.
-  if (pages.length % 2 === 1) pages.push({ kind: 'facts', eyebrow: 'Volume I · The Celestial Matrix', heading: 'The planets', rows: planetRows(chart, timed), note: 'Tropical zodiac · ℞ marks a planet in retrograde motion' });
-  pages.push({ kind: 'plate', src: artFor(cover.ruler), alt: `${cover.rulerName}, the chart ruler, drawn as an Atomic Zodiac character`, caption: `Plate I · ${cover.rulerName} · chart ruler${sun ? ` · Sun in ${sun.sign}` : ''}` });
-  pages.push(...bigThree.slice(0, 2).map((body, i) => text('Volume I · The Celestial Matrix', i ? 'Your Big Three, continued' : 'Your Big Three', body)));
-  if (!pages.some(p => p.kind === 'facts' && p.heading === 'The planets')) pages.push({ kind: 'facts', eyebrow: 'Volume I · The Celestial Matrix', heading: 'The planets', rows: planetRows(chart, timed), note: 'Tropical zodiac · ℞ marks a planet in retrograde motion' });
-  if (moonPhase[0]) pages.push(text('Volume I · The Celestial Matrix', 'Your Birth Moon Phase', moonPhase[0]));
-  if (timed && chart.cusps?.length) pages.push({ kind: 'facts', eyebrow: 'Volume II · The Twelve Temples', heading: 'House cusps', rows: houseRows(chart), note: 'Each house runs from its cusp to the next' });
-  pages.push({ kind: 'list', eyebrow: 'Volume III · Planetary Geometry', heading: 'Closest contacts', items: tightestAspects(chart, 8), note: 'The number is the orb: how far each aspect is from exact' });
-  // Fill to ten with the rest of the letter, then the Big Three, before anything is cut.
-  for (const body of [...letter.slice(2), ...bigThree.slice(2)]) if (pages.length < PREVIEW_PAGES) pages.push(text('Volume I · The Celestial Matrix', 'Continued', body));
-  const ten = pages.slice(0, PREVIEW_PAGES).map((p, i) => ({ ...p, page: i + 1 })) as BookFace[];
+  const numbered = pages.slice(0, BOOK_PREVIEW_PAGES).map((p, i) => ({ ...p, page: i + 1 })) as BookFace[];
 
   const faces: BookFace[] = [
     { kind: 'endpaper', eyebrow: 'Ex libris', heading: cover.name, lines: [birthLine, 'Calculated from saved birth details'] },
     { kind: 'title', name: cover.name, subtitle: cover.title, edition: `AstroBook · ${editionLabel}`, note: 'Six volumes written from one birth chart' },
-    ...ten,
+    ...numbered,
     { kind: 'list', eyebrow: 'The preview ends here', heading: 'The book continues', items: volumes, note: `The full ${editionLabel} runs every volume from these same placements.` },
   ];
   return { cover, faces, jacket: { kind: 'jacket', cover, art: artFor(cover.ruler), edition: editionLabel } };

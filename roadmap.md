@@ -1,5 +1,12 @@
 # Zodaci roadmap
 
+## Nov 17 — Expanded AstroBook preview
+- [x] Expand personal and fictional previews to 25 numbered pages, with chart-grounded narrative and method notes.
+- [x] Recreate Shane’s described character in the atomic print style; compose authorized cover name and birth facts dynamically.
+- [x] Keep the confirmed 13:55 birth time and existing privacy boundaries; verified chart facts rather than earlier incorrect degree claims.
+- [x] Book navigation through page 25, mobile layout, both sample and Shane PDF exports verified; all 1,188 tests pass, preview build OK.
+- [ ] Authorized founder route walk-through: requesting account owns no official edition and has no saved birth chart. No ownership or profile data changed; Shane cover/PDF checked in an isolated renderer only.
+
 ## Nov 17 — LecompteBase workspace feed
 - [x] Capture boundary/uncaught runtime and route-load failures; redact private data and bound browser reporting.
 - [x] Server-only fixed-destination delivery using HUB_WEBHOOK_SECRET with size/origin/rate safeguards.

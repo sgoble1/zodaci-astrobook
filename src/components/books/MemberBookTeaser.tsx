@@ -17,7 +17,7 @@ import { signCover } from '@/content/signCovers';
 const PRINTED = BOOK_VERSIONS.filter(v => v.format === 'print');
 
 
-/** Three calculated AstroBook pages (Sun, Moon, Rising) from the signed-in member's saved chart. No AI. */
+/** A 25-page calculated preview from the signed-in member's saved chart. No AI. */
 export function MemberBookTeaser({ fallback }: { fallback: React.ReactNode }) {
   const [signedIn, setSignedIn] = useState<boolean | null>(null);
   useEffect(() => { supabase.auth.getSession().then(({ data }) => setSignedIn(!!data.session)); }, []);

@@ -14,7 +14,7 @@ export default function BookPreview() {
       <header className="space-y-4 text-center">
         <p className="text-xs font-medium tracking-[0.12em] text-accent">READ BEFORE YOU ORDER</p>
         <h1 className="font-display text-4xl sm:text-5xl">See inside an AstroBook.</h1>
-        <p className="mx-auto max-w-2xl text-muted-foreground">Explore a short fictional sample with calculated birth-chart facts and illustrative passages. Your own book uses your saved chart and finished readings; review its actual contents and page count before payment.</p>
+        <p className="mx-auto max-w-2xl text-muted-foreground">Read 25 pages of chart facts, personal reflections and clearly stated methods. The public sample is fictional; sign in to open the same preview from your saved birth details. Your final manuscript and page count are reviewed before payment.</p>
       </header>
       <section aria-labelledby="turn-h" className="space-y-4">
         <h2 id="turn-h" className="font-display text-2xl text-center">Turn the pages</h2>

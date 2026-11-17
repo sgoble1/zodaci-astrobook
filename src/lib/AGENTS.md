@@ -29,3 +29,4 @@
 
 - purchaseSync wraps sync-checkout for book/comic return pages; only provider-verified statuses are shown as final.
 - lunarCalendar gives Moon quarters from the ephemeris with natal house (timed charts only) and conjunctions; position and timing only, no interpretation.
+- AstroBook previews compose 25 numbered BookFace pages in personalPreview, separately from ten-page comics; previewPdf exports those same faces to prevent PDF/reader drift. Personal jackets place authorized name and facts over symbolic artwork; public samples stay fictional.

@@ -1,5 +1,5 @@
 import { useCallback, useRef, useState, type KeyboardEvent, type PointerEvent, type ReactNode } from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Download } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { faceText, type BookFace } from '@/lib/bookLeaves';
 import type { BookLeaf } from '@/content/sampleBookLeaves';
@@ -12,13 +12,16 @@ import type { BookLeaf } from '@/content/sampleBookLeaves';
 export function OpenBook({ leaves, kind = 'book', label, layout = 'side', footer, spine }: { leaves: BookLeaf[]; kind?: 'book' | 'comic'; label: string; layout?: 'side' | 'stacked'; footer?: ReactNode; /** Text printed down the spine (shown while the book is closed). */ spine?: { title: string; name?: string } }) {
   const n = leaves.length;
   const [at, setAt] = useState(0);
+  const [exporting, setExporting] = useState(false);
+  const [exportError, setExportError] = useState('');
   const go = useCallback((d: number) => setAt(a => Math.max(0, Math.min(n, a + d))), [n]);
   const swipe = useRef<number | null>(null);
   const swiped = useRef(false);
   const state = at === 0 ? 'closed' : at === n ? 'back' : 'open';
   // Leaf spacing sets the block's thickness, so the spine is as deep as the stacked pages.
   const gap = kind === 'comic' ? 0.7 : 1;
-  const cover = leaves[0]?.front.kind === 'cover' ? leaves[0].front.src : null;
+  const front = leaves[0]?.front;
+  const cover = front?.kind === 'cover' ? front.src : front?.kind === 'jacket' ? front.art : null;
   const visible: BookFace[] = state === 'closed' ? [leaves[0].front] : state === 'back' ? [leaves[n - 1].back] : [leaves[at - 1].back, leaves[at].front];
   const pageNos = visible.map(f => ('page' in f ? f.page : undefined)).filter((p): p is number => p != null);
   const where = state === 'closed' ? 'Front cover' : state === 'back' ? 'Back cover' : pageNos.length ? `Pages ${pageNos.join('–')}` : at === 1 ? 'Inside the cover' : 'Endpapers';
@@ -37,6 +40,17 @@ export function OpenBook({ leaves, kind = 'book', label, layout = 'side', footer
       {text.map(t => <div key={t.heading} className="mt-3"><p className="font-semibold leading-snug">{t.heading}</p>{t.lines.map((l, k) => <p key={k} className="mt-1.5 text-sm leading-relaxed text-muted-foreground">{l}</p>)}</div>)}
     </div>
   );
+  const download = async () => {
+    setExporting(true); setExportError('');
+    try {
+      const { previewPdf } = await import('@/lib/previewPdf');
+      const blob = await previewPdf(leaves.flatMap(l => [l.front, l.back]));
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href = url; a.download = 'astrobook-preview.pdf'; a.click();
+      setTimeout(() => URL.revokeObjectURL(url), 10000);
+    } catch { setExportError('The preview could not be downloaded. Please try again.'); }
+    finally { setExporting(false); }
+  };
   return (
     <div className={layout === 'side' ? 'grid items-start gap-8 lg:grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)]' : 'space-y-4'}>
       <div className="min-w-0">
@@ -55,6 +69,7 @@ export function OpenBook({ leaves, kind = 'book', label, layout = 'side', footer
             })}
           </div>
         </div>
+        {kind === 'book' && <div className="mt-3 flex flex-wrap items-center justify-center gap-3"><Button variant="ghost" size="sm" disabled={exporting} onClick={() => void download()}><Download />{exporting ? 'Preparing PDF…' : 'Download preview'}</Button>{exportError && <p role="alert" className="text-sm text-destructive">{exportError}</p>}</div>}
         <div className="flex flex-wrap items-center justify-center gap-3">
           <Button variant="outline" size="sm" onClick={() => go(-1)} disabled={at === 0} aria-label="Previous pages"><ChevronLeft />{at === 1 ? 'Close' : 'Back'}</Button>
           <span className="min-w-[8rem] text-center font-label text-sm tracking-[0.12em] text-muted-foreground" aria-hidden>{where}</span>
@@ -87,6 +102,7 @@ const Orbit = () => <svg className="ob-orbit" viewBox="0 0 100 60" aria-hidden><
 function Face({ f, kind }: { f: BookFace; kind: 'book' | 'comic' }) {
   switch (f.kind) {
     case 'cover': return <img src={f.src} alt="" draggable={false} loading="lazy" decoding="async" className="absolute inset-0 h-full w-full object-cover" />;
+    case 'jacket': return <div className="ob-jacket"><img src={f.art} alt="" loading="lazy" decoding="async" draggable={false} /><div className="ob-jacket-title"><p className="font-label ob-eyebrow">Zodaci · Astral Research Authority</p><p className="font-display ob-h">AstroBook</p><p className="font-script ob-script">{f.cover.name}</p><p className="ob-small">{f.cover.birthLine}</p></div><div className="ob-jacket-foot"><p className="font-label ob-placement">{f.cover.signs}</p><p className="ob-small">{f.edition} · illustrated preview</p></div></div>;
     case 'endpaper': return (
       <div className="ob-endpaper">
         <div className="ob-bookplate"><p className="font-script ob-script">{f.eyebrow}</p><p className="font-display ob-h">{f.heading}</p>{f.lines.map(l => <p key={l} className="ob-small">{l}</p>)}</div>

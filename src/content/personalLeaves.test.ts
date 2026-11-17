@@ -6,9 +6,9 @@ import { buildComicIssue } from '@/lib/comic';
 describe('personal first-ten-page previews', () => {
   const leaves = personalBookLeaves({ name: 'Rosalind Vance', birthLine: 'Born test', chart: sampleReaderChart(), coverSrc: 'cover.jpg' });
   const faces = leaves.flatMap(l => [l.front, l.back]);
-  it('numbers exactly ten preview pages', () => {
+  it('numbers exactly 25 book preview pages', () => {
     const nums = faces.map(f => ('page' in f ? f.page : undefined)).filter(Boolean);
-    expect(nums).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+    expect(nums).toEqual(Array.from({ length: 25 }, (_, i) => i + 1));
   });
   it('opens on the cover and closes on the back cover', () => {
     expect(faces[0].kind).toBe('cover');
