@@ -3,14 +3,16 @@ import { lazy, Suspense } from 'react';
 import { PageErrorBoundary } from '@/components/common/PageErrorBoundary';
 import { ConfirmHost } from '@/components/common/ConfirmHost';
 import { recoverChunkLoad } from '@/lib/chunkRecovery';
+import { reportApplicationFailure } from '@/lib/workspaceFeed';
 import "./index.css";
 
 // Recover from stale module chunks (after redeploys or dep re-optimization) with one reload.
 window.addEventListener("vite:preloadError", (e) => {
+  reportApplicationFailure((e as Event & { payload?: unknown }).payload, 'route_failure');
   if (recoverChunkLoad((e as Event & { payload?: unknown }).payload)) e.preventDefault();
 });
-window.addEventListener("unhandledrejection", (e) => { recoverChunkLoad(e.reason); });
-window.addEventListener("error", (e) => { recoverChunkLoad(e.error ?? e.message); });
+window.addEventListener("unhandledrejection", (e) => { reportApplicationFailure(e.reason, 'unhandled_rejection'); recoverChunkLoad(e.reason); });
+window.addEventListener("error", (e) => { reportApplicationFailure(e.error ?? e.message); recoverChunkLoad(e.error ?? e.message); });
 // Pause decorative CSS loops while the tab is hidden.
 document.addEventListener('visibilitychange', () => { document.documentElement.toggleAttribute('data-tab-hidden', document.hidden); });
 // Start loading the app right away, and the home page in parallel when that is where the visitor landed,

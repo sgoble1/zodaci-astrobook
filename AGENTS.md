@@ -57,6 +57,7 @@
 - Samples cannot be ordered; landing text is public. Root boundary catches lazy failures; bounded reloads precede App.
 
 ## Commerce and operations
+- Workspace-feed errors are sanitized server-side; secrets stay in Cloud to protect private content.
 - book_orders has owner reads/admin fulfillment/verified webhooks; clients cannot confirm payment.
 - book_costing (admin-only) stores real print costs; margins fall back to BOOK_COSTING.
 - /shared bypasses PublicChartFallback; SharedSpace checks membership server-side.

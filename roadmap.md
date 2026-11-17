@@ -1,5 +1,11 @@
 # Zodaci roadmap
 
+## Nov 17 — LecompteBase workspace feed
+- [x] Capture boundary/uncaught runtime and route-load failures; redact private data and bound browser reporting.
+- [x] Server-only fixed-destination delivery using HUB_WEBHOOK_SECRET with size/origin/rate safeguards.
+- [x] Browser-triggered uncaught error reaches the reporting function; privacy/delivery/recovery tests pass (10 tests), preview build OK.
+- [ ] Live workspace receipt blocked: LecompteBase returns HTTP 401 using the saved shared secret; confirm receiver authentication contract/matching secret before completing delivery verification.
+
 > Master resource: docs/master-implementation-resource.md (all docs + chat merged, Nov 13 2026; v2 adds Part 6). Follow its tracks A→F.
 
 ## Nov 13 — Implement master resource v2 (Goal run, user: "implement all implementations from this resource")

@@ -1,11 +1,15 @@
 import { Component, type ReactNode } from 'react';
 import { Button } from '@/components/ui/button';
 import { recoverChunkLoad } from '@/lib/chunkRecovery';
+import { reportApplicationFailure } from '@/lib/workspaceFeed';
 
 export class PageErrorBoundary extends Component<{ children: ReactNode }, { failed: boolean }> {
   state = { failed: false };
   static getDerivedStateFromError() { return { failed: true }; }
-  componentDidCatch(error: Error) { recoverChunkLoad(error); }
+  componentDidCatch(error: Error) {
+    reportApplicationFailure(error, 'route_failure');
+    recoverChunkLoad(error);
+  }
   render() {
     if (!this.state.failed) return this.props.children;
     return (
