@@ -1,5 +1,12 @@
 # Zodaci roadmap
 
+## Nov 17 — Complete AstroComic previews
+- [ ] Keep the Shane-chart story private; rename its illustrated protagonist Julian Mercer without changing birth facts or account ownership.
+- [ ] Match the personal AstroBook jacket to the shop cover style, with dynamically printed name and chart details.
+- [ ] Expand the comic to a complete 24-page digest with a continuous cast-led narrative; chart factors drive actions, with a separate calculation ledger.
+- [ ] Consolidate competing product previews into one comic reader; keep the public fictional chart separate.
+- [ ] Verify story-factor regressions, reader navigation, phone layout and matching PDF pages; authorized founder checks remain access-dependent.
+
 ## Nov 17 — Expanded AstroBook preview
 - [x] Expand personal and fictional previews to 25 numbered pages, with chart-grounded narrative and method notes.
 - [x] Recreate Shane’s described character in the atomic print style; compose authorized cover name and birth facts dynamically.
