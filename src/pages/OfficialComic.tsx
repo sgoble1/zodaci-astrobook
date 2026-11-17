@@ -6,7 +6,8 @@ import { Button } from '@/components/ui/button';
 import { ComicPageView } from '@/components/comic/ComicPageView';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { computeChart } from '@/lib/astro';
-import { buildComicIssue, monthLabel } from '@/lib/comic';
+import { monthLabel } from '@/lib/comic';
+import { buildComicPreview } from '@/lib/comicNarrative';
 import { isOfficialEdition, officialChartInput, ownerLabel, useOfficialEditions } from '@/lib/officialEditions';
 import { comicPreviewArt } from '@/content/castArt';
 import cover from '@/assets/astrocomic-cover.jpg';
@@ -38,11 +39,11 @@ export default function OfficialComic() {
     if (!row?.birth) return null;
     try {
       const chart = computeChart(officialChartInput(row.birth));
-      return buildComicIssue(chart, { reader: row.display_name, month, issueNumber: officialIssueNumber(month) });
+      return buildComicPreview(chart, { reader: row.display_name, month, issueNumber: officialIssueNumber(month) });
     } catch { return undefined; }
   }, [row, month]);
   // Character panels show the planet the script names; the cover, sky and letter keep the shared scenes.
-  const art = useMemo(() => (issue ? { ...comicPreviewArt(issue, 24), ...ART } : ART), [issue]);
+  const art = useMemo(() => (issue ? comicPreviewArt(issue, 24) : ART), [issue]);
   const total = issue?.pages.length ?? 0;
   const go = useCallback((n: number) => setPage(Math.min(Math.max(1, n), total || 1)), [total]);
   useEffect(() => { setPage(1); }, [month, edition]);
@@ -62,13 +63,14 @@ export default function OfficialComic() {
     setBusy(true);
     try {
       const [{ composeComicPdf }, font] = await Promise.all([import('@/lib/comicPdf'), fetch(fontUrl).then(r => { if (!r.ok) throw new Error('font'); return r.arrayBuffer(); })]);
-      const art = new Map<string, { bytes: Uint8Array; width: number; height: number }>();
-      await Promise.all(Object.entries(ART).map(async ([key, src]) => {
+      const proofArt = new Map<string, { bytes: Uint8Array; width: number; height: number }>();
+      await Promise.all(Object.entries(art).map(async ([key, src]) => {
         const blob = await (await fetch(src)).blob();
         const bmp = await createImageBitmap(blob);
-        art.set(key, { bytes: new Uint8Array(await blob.arrayBuffer()), width: bmp.width, height: bmp.height });
+        proofArt.set(key, { bytes: new Uint8Array(await blob.arrayBuffer()), width: bmp.width, height: bmp.height });
+        bmp.close();
       }));
-      const { bytes } = await composeComicPdf({ issue, fontBytes: new Uint8Array(font), art, mode: 'proof' });
+      const { bytes } = await composeComicPdf({ issue, fontBytes: new Uint8Array(font), art: proofArt, mode: 'proof' });
       const url = URL.createObjectURL(new Blob([bytes as BlobPart], { type: "application/pdf" }));
       const a = document.createElement('a'); a.href = url; a.download = `astrocomic-${edition}-${issue.month}.pdf`; a.click();
       setTimeout(() => URL.revokeObjectURL(url), 10_000);
@@ -134,7 +136,7 @@ export default function OfficialComic() {
         <div className="grid gap-4 sm:grid-cols-3 lg:grid-cols-4">{issue.pages.map(p => <button key={p.n} type="button" onClick={() => { setPage(p.n); setView('page'); }} className="text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" aria-label={`Open page ${p.n}: ${p.title}`}><ComicPageView page={p} compact art={art} /></button>)}</div>
       )}
 
-      <p className="text-xs text-muted-foreground">Scenes marked in italics are the artist’s directions for panels not yet drawn. Positions, dates and the letter are calculated from the chart; nothing about the reader is invented. <Link to="/official-astrobook" className="underline underline-offset-2">Back to the Official AstroBook</Link></p>
+      <p className="text-xs text-muted-foreground">A fictional story informed by the authorized edition’s chart, not biography. The calculation ledger follows the story; illustrations are preview artwork, not a print-ready buyer issue. <Link to="/official-astrobook" className="underline underline-offset-2">Back to the Official AstroBook</Link></p>
     </article>
   );
 }

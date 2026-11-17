@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { SAMPLE_ISSUE, SAMPLE_ISSUE_SCRIPTED } from '@/content/sampleComic';
 import { COMIC_PLANS, COMIC_SPEC, firstIssueMonth, monthLabel, shipBy } from '@/lib/comic';
+import { sampleComicLeaves } from '@/content/sampleBookLeaves';
 
 /** Print formats for Issue 1. Trim/bleed match comicPrint.ts (5.5 × 8.5 in digest, 0.125 in bleed, 0.25 in safe zone). */
 const FORMATS = [
@@ -12,14 +13,7 @@ const FORMATS = [
 ];
 
 /** How the sample Issue #1 fills 24 pages: cover and six story pages drawn, five scripted, the rest from the standard issue map. */
-const PLAN: [string, string, 'Drawn' | 'Scripted' | 'Planned'][] = [
-  ['1', `Cover — ${SAMPLE_ISSUE.title}`, 'Drawn'],
-  ...SAMPLE_ISSUE.pages.map(p => [String(p.pageNumber + 1), `${p.actTitle} (${p.placement})`, 'Drawn'] as [string, string, 'Drawn']),
-  ...SAMPLE_ISSUE_SCRIPTED.map(p => [String(p.pageNumber + 1), `${p.title} (${p.placement})`, 'Scripted'] as [string, string, 'Scripted']),
-  [`${SAMPLE_ISSUE.pages.length + SAMPLE_ISSUE_SCRIPTED.length + 2}–21`, 'Retrograde Watch, Lunar Calendar, House Focus, Reflection Prompts, Constellation', 'Planned'],
-  ['22', 'Next month preview', 'Planned'],
-  ['23–24', 'About Zodaci · Back cover', 'Planned'],
-];
+const PLAN = sampleComicLeaves().flatMap(l => [l.front, l.back]).flatMap(f => f.kind === 'comic-page' ? [[String(f.page), f.sheet.title, 'Preview'] as [string, string, string]] : []);
 
 /** What happens after ordering your own Issue #1. The ship-by date comes from the same rule as checkout. */
 function deliverySteps(today = new Date()): [string, string, string][] {
@@ -72,7 +66,7 @@ export default function ComicIssuePrint() {
       <section aria-labelledby="plan-h" className="grid gap-10 lg:grid-cols-2">
         <div>
           <h2 id="plan-h" className="font-display text-3xl">Page count: 24</h2>
-          <p className="mt-2 text-muted-foreground">Saddle-stitched books are printed in multiples of four. Here is how the sample Issue #1 fills its 24 pages; yours follows the same map.</p>
+          <p className="mt-2 text-muted-foreground">Saddle-stitched books are printed in multiples of four. These are the 24 pages in the sample reader, including its calculation ledger. Preview illustrations are not final buyer print files.</p>
           <ol className="mt-6 divide-y divide-border border-y border-border">{PLAN.map(([n, t, done]) => <li key={n} className="grid grid-cols-[4.5rem_1fr_auto] gap-3 py-2.5 text-sm"><span className="text-gold">p. {n}</span><span>{t}</span><span className={done === 'Drawn' ? 'text-gold' : 'text-muted-foreground'}>{done}</span></li>)}</ol>
         </div>
         <div>

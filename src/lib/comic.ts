@@ -81,7 +81,7 @@ export function nextIssueMonth(sub: { plan: ComicPlan; status: string; created_a
   return null;
 }
 
-export type ComicPanel = { shape: 'wide' | 'square' | 'oval' | 'bleed' | 'tall'; scene: string; caption?: string; balloons?: { who: string; text: string }[] };
+export type ComicPanel = { shape: 'wide' | 'square' | 'oval' | 'bleed' | 'tall'; scene: string; caption?: string; balloons?: { who: string; text: string }[]; artSlot?: string };
 export type ComicPage = { n: number; section: string; title: string; panels: ComicPanel[]; body?: string[] };
 export type ComicIssue = { guide?: ComicGuide; title: string; month: string; monthLabel: string; issueNumber: number; reader: string; signs: { sun: string; moon: string | null; rising: string | null }; mainEvent: string; pages: ComicPage[]; /** Which planet characters carry the story (CAST keys), so artwork can show the right ones. */ cast?: { lead: string; natal: string | null; retro: string | null } };
 

@@ -3,6 +3,7 @@ import { ChevronLeft, ChevronRight, Download } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { faceText, type BookFace } from '@/lib/bookLeaves';
 import type { BookLeaf } from '@/content/sampleBookLeaves';
+import { ComicPageView } from '@/components/comic/ComicPageView';
 
 /**
  * An openable 3D book or comic digest. Leaves hinge on the spine and turn one at a time (buttons, arrow keys, a tap on
@@ -21,7 +22,7 @@ export function OpenBook({ leaves, kind = 'book', label, layout = 'side', footer
   // Leaf spacing sets the block's thickness, so the spine is as deep as the stacked pages.
   const gap = kind === 'comic' ? 0.7 : 1;
   const front = leaves[0]?.front;
-  const cover = front?.kind === 'cover' ? front.src : front?.kind === 'jacket' ? front.art : null;
+  const cover = front?.kind === 'cover' ? front.src : front?.kind === 'jacket' ? front.art : front?.kind === 'comic-page' ? front.art['1-0'] : null;
   const visible: BookFace[] = state === 'closed' ? [leaves[0].front] : state === 'back' ? [leaves[n - 1].back] : [leaves[at - 1].back, leaves[at].front];
   const pageNos = visible.map(f => ('page' in f ? f.page : undefined)).filter((p): p is number => p != null);
   const where = state === 'closed' ? 'Front cover' : state === 'back' ? 'Back cover' : pageNos.length ? `Pages ${pageNos.join('–')}` : at === 1 ? 'Inside the cover' : 'Endpapers';
@@ -46,7 +47,7 @@ export function OpenBook({ leaves, kind = 'book', label, layout = 'side', footer
       const { previewPdf } = await import('@/lib/previewPdf');
       const blob = await previewPdf(leaves.flatMap(l => [l.front, l.back]));
       const url = URL.createObjectURL(blob);
-      const a = document.createElement('a'); a.href = url; a.download = 'astrobook-preview.pdf'; a.click();
+      const a = document.createElement('a'); a.href = url; a.download = kind === 'comic' ? 'astrocomic-preview.pdf' : 'astrobook-preview.pdf'; a.click();
       setTimeout(() => URL.revokeObjectURL(url), 10000);
     } catch { setExportError('The preview could not be downloaded. Please try again.'); }
     finally { setExporting(false); }
@@ -69,7 +70,7 @@ export function OpenBook({ leaves, kind = 'book', label, layout = 'side', footer
             })}
           </div>
         </div>
-        {kind === 'book' && <div className="mt-3 flex flex-wrap items-center justify-center gap-3"><Button variant="ghost" size="sm" disabled={exporting} onClick={() => void download()}><Download />{exporting ? 'Preparing PDF…' : 'Download preview'}</Button>{exportError && <p role="alert" className="text-sm text-destructive">{exportError}</p>}</div>}
+        <div className="mt-3 flex flex-wrap items-center justify-center gap-3"><Button variant="ghost" size="sm" disabled={exporting} onClick={() => void download()}><Download />{exporting ? 'Preparing PDF…' : 'Download preview'}</Button>{exportError && <p role="alert" className="text-sm text-destructive">{exportError}</p>}</div>
         <div className="flex flex-wrap items-center justify-center gap-3">
           <Button variant="outline" size="sm" onClick={() => go(-1)} disabled={at === 0} aria-label="Previous pages"><ChevronLeft />{at === 1 ? 'Close' : 'Back'}</Button>
           <span className="min-w-[8rem] text-center font-label text-sm tracking-[0.12em] text-muted-foreground" aria-hidden>{where}</span>
@@ -101,6 +102,7 @@ const Orbit = () => <svg className="ob-orbit" viewBox="0 0 100 60" aria-hidden><
 
 function Face({ f, kind }: { f: BookFace; kind: 'book' | 'comic' }) {
   switch (f.kind) {
+    case 'comic-page': return <div className="ob-comic-sheet"><ComicPageView page={f.sheet} art={f.art} compact /></div>;
     case 'cover': return <img src={f.src} alt="" draggable={false} loading="lazy" decoding="async" className="absolute inset-0 h-full w-full object-cover" />;
     case 'jacket': return <div className="ob-jacket"><img src={f.art} alt="" loading="lazy" decoding="async" draggable={false} /><div className="ob-jacket-title"><p className="font-label ob-eyebrow">Zodaci · Astral Research Authority</p><p className="font-display ob-h">AstroBook</p><p className="font-script ob-script">{f.cover.name}</p><p className="ob-small">{f.cover.birthLine}</p></div><div className="ob-jacket-foot"><p className="font-label ob-placement">{f.cover.signs}</p><p className="ob-small">{f.edition} · illustrated preview</p></div></div>;
     case 'endpaper': return (

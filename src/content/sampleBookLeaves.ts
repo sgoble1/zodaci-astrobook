@@ -7,6 +7,8 @@ import { bookPreview } from '@/lib/personalPreview';
 import { castFull, comicPreviewArt } from '@/content/castArt';
 import { buildComicIssue } from '@/lib/comic';
 import { personalCoverArtwork } from '@/content/personalCoverArtwork';
+import { buildComicPreview, previewName } from '@/lib/comicNarrative';
+import type { ComicIssue } from '@/lib/comic';
 
 export type BookLeaf = { front: BookFace; back: BookFace };
 
@@ -42,18 +44,28 @@ export function memberBookLeaves(birth: MyBirth, coverSrc?: string): BookLeaf[] 
 
 /** Same first ten pages for any authorized chart (a founder's edition, or the member's own). */
 export function personalBookLeaves({ name, birthLine, chart, coverSrc, editionLabel = 'Classic Edition' }: { name: string; birthLine: string; chart: ChartResult; coverSrc?: string; editionLabel?: string }): BookLeaf[] {
-  const { cover, faces } = bookPreview({ name, birthLine, chart, editionLabel, artFor: castFull });
+  const { cover, faces } = bookPreview({ name: previewName(name), birthLine, chart, editionLabel, artFor: castFull });
   const front: BookFace = coverSrc ? { kind: 'cover', src: coverSrc, alt: `AstroBook cover printed with ${cover.name}` } : { kind: 'jacket', cover, art: personalCoverArtwork(name, chart), edition: editionLabel };
   return toLeaves(front, faces, BOOK_BACK);
 }
 
 /** The sample AstroComic digest for the same reader. */
 export function sampleComicLeaves(): BookLeaf[] {
-  return toLeaves(
-    { kind: 'cover', src: SAMPLE_ISSUE.cover, alt: SAMPLE_ISSUE.coverAlt },
-    comicInterior(SAMPLE_ISSUE, LEAD_COVER.printed.born, LEAD_COVER.printed.placements),
-    { kind: 'back', lines: ['Zodaci AstroComic', 'A 24-page digest every month', 'Your chart casts the story · that month’s transits drive it', 'Printed and mailed in the US · zodaci.com'] },
-  );
+  const issue = buildComicPreview(sampleReaderChart(), { reader: LEAD_COVER.name, month: new Date(Date.UTC(2026, 11, 1)), issueNumber: 1 });
+  const art = comicPreviewArt(issue);
+  // Public example keeps its own fictional reader and garden artwork, never a private chart or private birth line.
+  art['1-0'] = SAMPLE_ISSUE.cover;
+  issue.pages.slice(1).forEach((p, at) => p.panels.forEach((_, i) => { art[`${p.n}-${i}`] = SAMPLE_ISSUE.pages[at % SAMPLE_ISSUE.pages.length].art; }));
+  issue.pages[0] = { ...issue.pages[0], title: SAMPLE_ISSUE.title, panels: [{ ...issue.pages[0].panels[0], caption: 'Rosalind Vance · Fictional sample' }] };
+  return comicIssueLeaves(issue, art);
+}
+
+/** Exactly 24 faces including covers; complete panels and dialogue survive page turns and exports. */
+export function comicIssueLeaves(issue: ComicIssue, art = comicPreviewArt(issue)): BookLeaf[] {
+  const faces: BookFace[] = issue.pages.map(sheet => ({ kind: 'comic-page', sheet, art, page: sheet.n }));
+  const leaves: BookLeaf[] = [];
+  for (let i = 0; i < faces.length; i += 2) leaves.push({ front: faces[i], back: faces[i + 1] });
+  return leaves;
 }
 
 /**
@@ -61,18 +73,9 @@ export function sampleComicLeaves(): BookLeaf[] {
  * month's transits (buildComicIssue, no AI). The cover shows the month's lead planet character; panels show the planet
  * characters the script names. Nothing is saved.
  */
-export function memberComicLeaves(birth: MyBirth, upTo = 10): BookLeaf[] {
+export function memberComicLeaves(birth: MyBirth, upTo = 24): BookLeaf[] {
   const natal = computeChart(toChartInput(birth));
   const reader = birth.name?.trim() || 'You';
-  const issue = buildComicIssue(natal, { reader, month: new Date(), issueNumber: 1 });
-  const art = comicPreviewArt(issue, upTo);
-  const faces: BookFace[] = [
-    { kind: 'endpaper', eyebrow: 'This issue stars', heading: reader, lines: [birthLineOf(birth.date, birth.time, birth.placeLabel), [issue.signs.sun && `${issue.signs.sun} Sun`, issue.signs.moon && `${issue.signs.moon} Moon`, issue.signs.rising && `${issue.signs.rising} Rising`].filter(Boolean).join(' · '), `${issue.monthLabel} · calculated from your chart`] },
-    ...issue.pages.filter(p => p.n <= upTo && p.section !== 'Cover').map((p): BookFace => {
-      const first = p.panels[0];
-      const talk = p.panels.flatMap(x => x.balloons ?? [])[0];
-      return { kind: 'comic', src: art[`${p.n}-0`] ?? castFull(issue.cast?.lead ?? 'sun'), alt: first?.scene ?? p.title, title: p.title, placement: p.section, caption: first?.caption ?? p.body?.[0] ?? first?.scene ?? '', dialogue: talk ? `${talk.who}: ${talk.text}` : undefined, page: p.n };
-    }),
-  ];
-  return toLeaves({ kind: 'cover', src: castFull(issue.cast?.lead ?? 'sun'), alt: `AstroComic Issue 1 cover for ${reader}, ${issue.signs.sun} Sun` }, faces, { kind: 'back', lines: ['Zodaci AstroComic', 'The full issue runs 24 pages', 'Printed and mailed in the US · zodaci.com'] });
+  const issue = buildComicPreview(natal, { reader, month: new Date(), issueNumber: 1 });
+  return comicIssueLeaves(issue, comicPreviewArt(issue, upTo));
 }

@@ -1466,7 +1466,7 @@ li:hover > .zodiac-coin { transform: rotate(-10deg); }
 .ob-list li::before { content: '✦ '; color: hsl(var(--comic-mustard)); }
 .ob-body { flex: 1; min-height: 0; overflow: auto; font-size: 3.6cqw; line-height: 1.42; display: grid; align-content: start; gap: 1.8cqw; }
 .ob-jacket { position: absolute; inset: 0; color: hsl(var(--comic-navy)); background: hsl(var(--spot-paper)); }
-.ob-jacket > img { position: absolute; top: 24%; width: 100%; height: 76%; object-fit: contain; }
+.ob-jacket > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .ob-jacket-title { position: absolute; inset: 0 0 auto; padding: 5cqw 7cqw; display: grid; gap: 1.5cqw; text-align: center; background: hsl(var(--spot-paper) / .97); }
 .ob-jacket-title .ob-h { color: hsl(var(--spot-paper)); background: hsl(var(--comic-brick)); padding: 2cqw; }
 .ob-jacket-foot { position: absolute; inset: auto 0 0; padding: 4cqw 6cqw; display: grid; gap: 1.5cqw; text-align: center; background: hsl(var(--spot-paper) / .97); }
@@ -1475,6 +1475,16 @@ li:hover > .zodiac-coin { transform: rotate(-10deg); }
 .ob-comic { gap: 2cqw; padding-top: 7cqw; }
 .ob-comic-head { border-bottom: .5cqw solid hsl(var(--comic-navy)); padding-bottom: 1.2cqw; font-size: 3.6cqw; letter-spacing: .08em; color: hsl(var(--comic-brick)); line-height: 1.15; }
 .ob-comic-art { position: relative; flex: 1; min-height: 0; border: 1cqw solid hsl(var(--comic-navy)); }
+.ob-comic-sheet { position: absolute; inset: 0; }
+.ob-comic-sheet .comic-sheet { width: 100%; height: 100%; aspect-ratio: auto; border-width: .6cqw; box-shadow: none; }
+.ob-comic-sheet .comic-sheet > .flex { gap: 1.4cqw; padding: 3cqw; }
+.ob-comic-sheet .comic-tag, .ob-comic-sheet .comic-pagenum { font-size: 2.8cqw; letter-spacing: 0; }
+.ob-comic-sheet .comic-sheet .font-display { font-size: 5cqw; }
+.ob-comic-sheet .comic-cell { min-height: 0; padding: 1.8cqw; border-width: .6cqw; }
+.ob-comic-sheet .comic-caption, .ob-comic-sheet .comic-balloon { font-size: 3.1cqw; padding: 1cqw 1.5cqw; border-width: .4cqw; }
+.ob-comic-sheet .comic-sheet ul { font-size: 2.7cqw; line-height: 1.25; }
+.ob-comic-sheet .comic-title-band { padding: 3cqw; }
+.ob-comic-sheet .comic-issue-line { font-size: 3cqw; letter-spacing: 0; }
 .ob-caption-box { position: absolute; left: 2cqw; top: 2cqw; max-width: 82%; background: hsl(var(--spot-paper) / .95); border: .5cqw solid hsl(var(--comic-navy)); padding: 1.2cqw 1.8cqw; font-size: 3.3cqw; line-height: 1.3; }
 .ob-bubble { align-self: flex-start; background: hsl(var(--comic-navy)); color: hsl(var(--spot-paper)); border-radius: 6cqw; padding: 1.2cqw 3cqw; font-size: 3.6cqw; line-height: 1.25; }
 .ob-endpaper { position: absolute; inset: 0; display: grid; place-items: center; padding: 10cqw; background: radial-gradient(hsl(var(--comic-mustard) / .45) .8px, transparent 1.4px) 0 0 / 14px 14px, hsl(var(--comic-navy)); }

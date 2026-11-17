@@ -5,6 +5,27 @@ import { faceText, type BookFace } from '@/lib/bookLeaves';
 
 /** One PDF sheet per preview face; shared page data prevents the download becoming a different book. */
 export async function previewPdf(faces: BookFace[]): Promise<Blob> {
+  const comicFaces = faces.filter((f): f is Extract<BookFace, { kind: 'comic-page' }> => f.kind === 'comic-page');
+  if (comicFaces.length) {
+    const { composeComicPdf } = await import('@/lib/comicPdf');
+    const art = new Map<string, { bytes: Uint8Array; width: number; height: number }>();
+    const entries = Object.entries(comicFaces[0].art);
+    const cached = new Map<string, { bytes: Uint8Array; width: number; height: number }>();
+    for (const [key, src] of entries) {
+      let value = cached.get(src);
+      if (!value) {
+        const response = await fetch(src);
+        if (!response.ok) throw new Error('A comic illustration could not be loaded.');
+        const blob = await response.blob();
+        const bitmap = await createImageBitmap(blob);
+        value = { bytes: new Uint8Array(await blob.arrayBuffer()), width: bitmap.width, height: bitmap.height };
+        bitmap.close(); cached.set(src, value);
+      }
+      art.set(key, value);
+    }
+    const { bytes } = await composeComicPdf({ issue: { title: comicFaces[0].sheet.title, month: '', monthLabel: 'Illustrative preview', issueNumber: 1, reader: '', signs: { sun: '', moon: null, rising: null }, mainEvent: '', pages: comicFaces.map(f => f.sheet) }, fontBytes: new Uint8Array(await (await fetch(fontUrl)).arrayBuffer()), art, mode: 'proof' });
+    return new Blob([bytes as BlobPart], { type: 'application/pdf' });
+  }
   const pdf = await PDFDocument.create();
   pdf.registerFontkit(fontkit);
   const font = await pdf.embedFont(await (await fetch(fontUrl)).arrayBuffer(), { subset: true });

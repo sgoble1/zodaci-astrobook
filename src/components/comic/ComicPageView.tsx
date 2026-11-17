@@ -41,7 +41,7 @@ export function ComicPageView({ page, compact = false, art }: { page: ComicPage;
             <span className="comic-pagenum text-[10px]">{page.n}</span>
           </div>
           <p className={`font-display uppercase leading-tight ${compact ? 'text-[11px]' : 'text-base sm:text-lg'}`}>{page.title}</p>
-          <div className="grid flex-1 auto-rows-min grid-cols-2 gap-1.5">
+          <div className={`grid min-h-0 flex-1 grid-cols-2 gap-1.5 ${page.panels.length === 3 ? 'grid-rows-[1.15fr_1fr]' : 'auto-rows-fr'}`}>
             {page.panels.map((panel, i) => {
               const src = art?.[`${page.n}-${i}`];
               return (
@@ -56,7 +56,7 @@ export function ComicPageView({ page, compact = false, art }: { page: ComicPage;
               );
             })}
           </div>
-          {page.body && page.body.length > 0 && <ul className={`space-y-1 leading-snug ${compact ? 'line-clamp-6' : ''}`}>{page.body.map((t, i) => <li key={i}>{t}</li>)}</ul>}
+          {page.body && page.body.length > 0 && <ul className="space-y-1 leading-snug">{page.body.map((t, i) => <li key={i}>{t}</li>)}</ul>}
         </div>
       )}
     </figure>

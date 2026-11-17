@@ -40,7 +40,7 @@ describe('openable AstroBook pages', () => {
     expect(leaves.some(l => l.front.kind === 'plate')).toBe(false);
   });
   it('the cover opens the book and the back cover closes it, for the book and the comic', () => {
-    for (const leaves of [sampleBookLeaves(), sampleComicLeaves()]) {
+    for (const leaves of [sampleBookLeaves()]) {
       expect(leaves[0].front.kind).toBe('cover');
       expect(leaves[leaves.length - 1].back.kind).toBe('back');
       expect(kinds(leaves.flatMap(l => [l.front, l.back])).filter(k => k === 'cover' || k === 'back')).toEqual(['cover', 'back']);
@@ -48,8 +48,10 @@ describe('openable AstroBook pages', () => {
     const odd = toLeaves({ kind: 'blank' }, [{ kind: 'blank' }], { kind: 'back', lines: [] });
     expect(odd).toHaveLength(2); expect(odd[1].back.kind).toBe('back');
   });
-  it('the comic digest binds every drawn page in order', () => {
-    const pages = sampleComicLeaves().flatMap(l => [l.front, l.back]).filter(f => f.kind === 'comic');
-    expect(pages.map(p => (p.kind === 'comic' ? p.page : 0))).toEqual([1, 2, 3, 4, 5, 6]);
+  it('the comic digest binds all 24 complete pages, with covers at each end', () => {
+    const pages = sampleComicLeaves().flatMap(l => [l.front, l.back]).filter(f => f.kind === 'comic-page');
+    expect(pages.map(p => p.page)).toEqual(Array.from({ length: 24 }, (_, i) => i + 1));
+    expect(pages[0].sheet.section).toBe('Cover');
+    expect(pages[23].sheet.section).toBe('Back Cover');
   });
 });

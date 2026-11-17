@@ -7,12 +7,13 @@ import { OpenBook } from '@/components/books/OpenBook';
 import { ComicPageView } from '@/components/comic/ComicPageView';
 import { computeChart, type ChartInput } from '@/lib/astro';
 import { birthLineOf } from '@/lib/bookLeaves';
-import { buildComicIssue, monthLabel } from '@/lib/comic';
+import { monthLabel } from '@/lib/comic';
+import { buildComicPreview, previewName } from '@/lib/comicNarrative';
 import { PREVIEW_PAGES } from '@/lib/personalPreview';
-import { personalBookLeaves } from '@/content/sampleBookLeaves';
+import { personalBookLeaves, comicIssueLeaves } from '@/content/sampleBookLeaves';
 import { comicPreviewArt } from '@/content/castArt';
 
-const ISSUES_AHEAD = 3;
+const ISSUES_AHEAD = 1;
 const firstOfMonth = (offset: number) => { const n = new Date(); return new Date(Date.UTC(n.getUTCFullYear(), n.getUTCMonth() + offset, 1)); };
 
 /**
@@ -43,14 +44,14 @@ function PreviewBody({ name, input, firstIssue, defaultTab }: { name: string; in
   const leaves = useMemo(() => personalBookLeaves({ name: name || 'Reader', birthLine, chart }), [chart, name, birthLine]);
   const [issueAt, setIssueAt] = useState(0);
   const month = firstOfMonth(1 + issueAt);
-  const issue = useMemo(() => buildComicIssue(chart, { reader: name || 'Reader', month, issueNumber: firstIssue + issueAt }), [chart, name, month.getTime(), firstIssue, issueAt]); // eslint-disable-line react-hooks/exhaustive-deps
+  const issue = useMemo(() => buildComicPreview(chart, { reader: name || 'Reader', month, issueNumber: firstIssue + issueAt }), [chart, name, month.getTime(), firstIssue, issueAt]); // eslint-disable-line react-hooks/exhaustive-deps
   const art = useMemo(() => comicPreviewArt(issue), [issue]);
   const pages = issue.pages.filter(p => p.n <= PREVIEW_PAGES);
   return (
     <Tabs defaultValue={defaultTab} className="mt-6">
       <TabsList className="grid w-full grid-cols-2"><TabsTrigger value="book">AstroBook</TabsTrigger><TabsTrigger value="comic">AstroComic</TabsTrigger></TabsList>
       <TabsContent value="book" className="mt-6">
-        <OpenBook key={name} leaves={leaves} layout="stacked" label={`${name || 'Your'} AstroBook, 25-page preview`} spine={{ title: 'Zodaci AstroBook', name: name || undefined }}
+        <OpenBook key={name} leaves={leaves} layout="stacked" label={`${previewName(name) || 'Your'} AstroBook, 25-page preview`} spine={{ title: 'Zodaci AstroBook', name: previewName(name) || undefined }}
           footer={<p className="mt-2 text-center text-xs text-muted-foreground">The full book continues through all six volumes from the same placements.</p>} />
       </TabsContent>
       <TabsContent value="comic" className="mt-6 space-y-4">
@@ -61,9 +62,8 @@ function PreviewBody({ name, input, firstIssue, defaultTab }: { name: string; in
             </Button>
           ))}
         </div>
-        <p className="text-sm text-muted-foreground">This month’s story: {issue.mainEvent}. Characters shown are the planets the script names.</p>
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">{pages.map(p => <ComicPageView key={`${issue.month}-${p.n}`} page={p} compact art={art} />)}</div>
-        <p className="text-xs text-muted-foreground">Pages 1–{PREVIEW_PAGES} of 24. Printed issues are drawn panel by panel before they ship.</p>
+        <OpenBook kind="comic" leaves={comicIssueLeaves(issue, art)} layout="stacked" label={`${issue.reader} · 24-page AstroComic`} spine={{ title: 'AstroComic', name: issue.reader }} />
+        <p className="text-xs text-muted-foreground">24 pages including covers. Fictional scenes from your calculated chart, not a biography. The calculation ledger follows the story; preview art is not a print-ready buyer issue.</p>
       </TabsContent>
     </Tabs>
   );

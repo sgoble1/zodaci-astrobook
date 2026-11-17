@@ -3,6 +3,7 @@ import type { ChartResult } from '@/lib/astro';
 import { SIGN_RULER } from '@/lib/signRulers';
 import type { EditionPage } from '@/content/sampleEdition';
 import type { AstroComicShowcase } from '@/content/sampleComic';
+import type { ComicPage } from '@/lib/comic';
 
 /**
  * One printed face of a page in the openable 3D book. Faces are plain data so the same pages can be drawn in the
@@ -20,6 +21,7 @@ export type BookFace =
   | { kind: 'plate'; src: string; alt: string; caption: string; page?: number }
   | { kind: 'text'; eyebrow: string; title: string; placement: string; facts: [string, string][]; body: string[]; reflection?: string; page?: number }
   | { kind: 'comic'; src: string; alt: string; title: string; placement: string; caption: string; dialogue?: string; page: number }
+  | { kind: 'comic-page'; sheet: ComicPage; art: Record<string, string>; page: number }
   | { kind: 'list'; eyebrow: string; heading: string; items: string[]; note?: string; page?: number }
   | { kind: 'back'; lines: string[] }
   | { kind: 'blank' };
@@ -167,6 +169,7 @@ export function faceText(f: BookFace): { heading: string; lines: string[] } | nu
     case 'plate': return { heading: f.caption, lines: [f.alt] };
     case 'text': return { heading: `${f.title} · ${f.placement}`, lines: [...f.facts.map(([k, v]) => `${k}: ${v}`), ...f.body, ...(f.reflection ? [`Reflection: ${f.reflection}`] : [])] };
     case 'comic': return { heading: `p. ${f.page} · ${f.title} · ${f.placement}`, lines: [f.caption, ...(f.dialogue ? [f.dialogue] : [])] };
+    case 'comic-page': return { heading: `p. ${f.page} · ${f.sheet.title}`, lines: [...f.sheet.panels.flatMap(p => [...(p.caption ? [p.caption] : []), ...(p.balloons ?? []).map(b => `${b.who}: ${b.text}`)]), ...(f.sheet.body ?? [])] };
     case 'list': return { heading: f.heading, lines: [...f.items, ...(f.note ? [f.note] : [])] };
     case 'back': return { heading: 'Back cover', lines: f.lines };
     default: return null;

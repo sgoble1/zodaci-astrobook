@@ -22,6 +22,7 @@ import skyPanel from '@/assets/astrocomic-sky-panel.jpg';
 import letterPanel from '@/assets/astrocomic-letter-panel.jpg';
 import { comicArtSlots, PREVIEW_PAGES } from '@/lib/personalPreview';
 import type { ComicIssue } from '@/lib/comic';
+import { COMIC_SCENES } from '@/content/comicSceneArt';
 
 /** The ten AstroComic planet characters, cut from the shared cast sheet: head crops and full figures. */
 export const CAST_HEAD: Record<string, string> = { sun: sunHead, moon: moonHead, mercury: mercuryHead, venus: venusHead, mars: marsHead, jupiter: jupiterHead, saturn: saturnHead, uranus: uranusHead, neptune: neptuneHead, pluto: plutoHead };
@@ -29,8 +30,11 @@ export const CAST_FULL: Record<string, string> = { sun: sunFull, moon: moonFull,
 export const castFull = (key: string) => CAST_FULL[key] ?? CAST_FULL.sun;
 
 /** Panel key → picture for an issue's first pages: shared sky/letter scenes, otherwise the planet character the script names. */
-export function comicPreviewArt(issue: ComicIssue, upTo = PREVIEW_PAGES): Record<string, string> {
+export function comicPreviewArt(issue: ComicIssue, upTo = 24): Record<string, string> {
   const out: Record<string, string> = {};
   for (const [key, slot] of Object.entries(comicArtSlots(issue, upTo))) out[key] = slot === 'sky' ? skyPanel : slot === 'letter' ? letterPanel : castFull(slot);
+  for (const page of issue.pages.filter(p => p.n <= upTo)) page.panels.forEach((panel, i) => {
+    if (panel.artSlot && COMIC_SCENES[panel.artSlot]) out[`${page.n}-${i}`] = COMIC_SCENES[panel.artSlot];
+  });
   return out;
 }

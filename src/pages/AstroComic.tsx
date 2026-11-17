@@ -5,9 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Faq } from '@/components/brand/Faq';
 import { StripeEmbeddedCheckout } from '@/components/payments/StripeEmbeddedCheckout';
 import { PaymentTestModeBanner } from '@/components/payments/PaymentTestModeBanner';
-import { ComicFlipbook } from '@/components/comic/ComicFlipbook';
-import { SAMPLE_ISSUE, SAMPLE_ISSUE_SCRIPTED } from '@/content/sampleComic';
-import { ComicReader } from '@/components/comic/ComicReader';
+import { SAMPLE_ISSUE } from '@/content/sampleComic';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { useJsonLd } from '@/hooks/useJsonLd';
 import { useSession } from '@/hooks/useLibrary';
@@ -86,9 +84,8 @@ export default function AstroComic() {
 
       <section aria-labelledby="issue1-h">
         <h2 id="issue1-h" className="font-display text-3xl">Read the sample issue: {SAMPLE_ISSUE.title}</h2>
-        <p className="mt-2 mb-8 max-w-2xl text-muted-foreground">Six drawn pages for {SAMPLE_READER.name}, the same fictional reader as our sample AstroBook. Every placement named in the story is calculated for her birth minute. Your own Issue #1 is a new story drawn from your chart and that month’s sky.</p>
-        <ComicFlipbook issue={SAMPLE_ISSUE} />
-        <div className="mt-8 flex flex-wrap gap-3"><ComicReader issue={SAMPLE_ISSUE} scripted={SAMPLE_ISSUE_SCRIPTED} /><Button asChild size="lg" variant="outline"><Link to="/astrocomic/print-issue-1">Print the sample — sizes &amp; pages<ArrowRight /></Link></Button></div>
+        <p className="mt-2 mb-8 max-w-2xl text-muted-foreground">The digest above contains all 24 pages for {SAMPLE_READER.name}, our fictional sample reader. Its scenes are a creative interpretation, not biography. Your private preview follows your saved chart; its calculation ledger keeps the underlying facts separate from the story.</p>
+        <div className="mt-8 flex flex-wrap gap-3"><Button asChild size="lg" variant="outline"><Link to="/astrocomic/print-issue-1">Sizes &amp; page contents<ArrowRight /></Link></Button></div>
       </section>
 
       <section aria-labelledby="inside-h" className="grid gap-10 lg:grid-cols-2">
