@@ -9,6 +9,13 @@ import { buildComicIssue } from '@/lib/comic';
 import { personalCoverArtwork } from '@/content/personalCoverArtwork';
 import { buildComicPreview, previewName } from '@/lib/comicNarrative';
 import type { ComicIssue } from '@/lib/comic';
+import { versionOf, type Edition } from '@/lib/books';
+import type { Tone } from '@/lib/perception';
+
+export interface BookPreviewOptions {
+  edition?: Edition; editionLabel?: string; coverSrc?: string; coverChoice?: string;
+  coverName?: string; dedication?: string; tone?: Tone;
+}
 
 export type BookLeaf = { front: BookFace; back: BookFace };
 
@@ -24,7 +31,8 @@ export const sampleReaderChart = () => (cached ??= computeChart(SAMPLE_READER_IN
 const BOOK_BACK: BookFace = { kind: 'back', lines: ['Zodaci AstroBook', 'Written from one birth chart, in six volumes', 'Printed to order · free US shipping', 'zodaci.com'] };
 
 /** The fictional Collector cover stays public; its 25-page interior uses the same composer as personal previews. */
-export function sampleBookLeaves(): BookLeaf[] {
+export function sampleBookLeaves(options?: BookPreviewOptions): BookLeaf[] {
+  if (options) return personalBookLeaves({ name: LEAD_COVER.name, birthLine: LEAD_COVER.printed.born, chart: sampleReaderChart(), ...options });
   const { faces } = bookPreview({ name: LEAD_COVER.name, birthLine: LEAD_COVER.printed.born, chart: sampleReaderChart(), editionLabel: 'Collector Preview', artFor: castFull });
   return toLeaves(
     { kind: 'cover', src: LEAD_COVER.src, alt: LEAD_COVER.alt },
@@ -37,15 +45,17 @@ export function sampleBookLeaves(): BookLeaf[] {
  * The cover and first ten pages of a member's own AstroBook, built in the browser from their saved birth details with
  * the same chapters the printed book opens with (buildVolumes). Houses and angles are left out when the time is unknown.
  */
-export function memberBookLeaves(birth: MyBirth, coverSrc?: string): BookLeaf[] {
+export function memberBookLeaves(birth: MyBirth, options?: string | BookPreviewOptions): BookLeaf[] {
   const name = birth.name?.trim() || 'Your AstroBook';
-  return personalBookLeaves({ name, birthLine: birthLineOf(birth.date, birth.time, birth.placeLabel), chart: computeChart(toChartInput(birth)), coverSrc });
+  return personalBookLeaves({ name, birthLine: birthLineOf(birth.date, birth.time, birth.placeLabel), chart: computeChart(toChartInput(birth)), ...(typeof options === 'string' ? { coverSrc: options } : options) });
 }
 
 /** Same first ten pages for any authorized chart (a founder's edition, or the member's own). */
-export function personalBookLeaves({ name, birthLine, chart, coverSrc, editionLabel = 'Classic Edition' }: { name: string; birthLine: string; chart: ChartResult; coverSrc?: string; editionLabel?: string }): BookLeaf[] {
-  const { cover, faces } = bookPreview({ name: previewName(name), birthLine, chart, editionLabel, artFor: castFull });
-  const front: BookFace = coverSrc ? { kind: 'cover', src: coverSrc, alt: `AstroBook cover printed with ${cover.name}` } : { kind: 'jacket', cover, art: personalCoverArtwork(name, chart), edition: editionLabel };
+export function personalBookLeaves({ name, birthLine, chart, coverSrc, coverChoice, coverName, dedication, tone, edition = 'classic', editionLabel }: { name: string; birthLine: string; chart: ChartResult } & BookPreviewOptions): BookLeaf[] {
+  const label = editionLabel ?? versionOf(edition)?.name ?? 'Classic Edition';
+  const { cover, faces } = bookPreview({ name: coverName === undefined ? previewName(name) : coverName.trim() || 'Your Name', birthLine, chart, edition, editionLabel: label, dedication, tone, artFor: castFull });
+  const customized = coverChoice !== undefined || coverName !== undefined || edition !== 'classic';
+  const front: BookFace = coverSrc && !customized ? { kind: 'cover', src: coverSrc, alt: `AstroBook cover printed with ${cover.name}` } : { kind: 'jacket', cover, art: coverSrc || personalCoverArtwork(name, chart), edition: label, choice: coverChoice, composed: !!coverSrc, finish: edition === 'linen' ? 'cloth' : edition === 'signature' ? 'leatherette' : 'paper' };
   return toLeaves(front, faces, BOOK_BACK);
 }
 

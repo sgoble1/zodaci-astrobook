@@ -11,6 +11,8 @@ import { monthLabel } from '@/lib/comic';
 import { buildComicPreview, previewName } from '@/lib/comicNarrative';
 import { PREVIEW_PAGES } from '@/lib/personalPreview';
 import { personalBookLeaves, comicIssueLeaves } from '@/content/sampleBookLeaves';
+import type { BookPreviewOptions } from '@/content/sampleBookLeaves';
+import { versionOf } from '@/lib/books';
 import { comicPreviewArt } from '@/content/castArt';
 
 const ISSUES_AHEAD = 1;
@@ -20,8 +22,9 @@ const firstOfMonth = (offset: number) => { const n = new Date(); return new Date
  * "Read the first ten pages" for one authorized chart: the opening of their AstroBook and the first ten pages of their
  * next AstroComic issues, all calculated in the browser from the birth details passed in. Nothing is saved or sent.
  */
-export function PersonalPreviewDrawer({ name, input, possessive = 'your', firstIssue = 1, trigger, defaultTab = 'book' }: {
+export function PersonalPreviewDrawer({ name, input, possessive = 'your', firstIssue = 1, trigger, defaultTab = 'book', bookOptions }: {
   name: string; input: ChartInput; possessive?: string; firstIssue?: number; trigger?: React.ReactNode; defaultTab?: 'book' | 'comic';
+  bookOptions?: BookPreviewOptions;
 }) {
   const [open, setOpen] = useState(false);
   return (
@@ -32,16 +35,16 @@ export function PersonalPreviewDrawer({ name, input, possessive = 'your', firstI
           <SheetTitle>Your book and comic previews</SheetTitle>
           <SheetDescription>The opening of {possessive} AstroBook and AstroComic, calculated from {possessive} saved birth details{input.time ? '' : ' (no birth time, so houses and angles are left out)'}. Nothing here is saved.</SheetDescription>
         </SheetHeader>
-        {open && <PreviewBody name={name} input={input} firstIssue={firstIssue} defaultTab={defaultTab} />}
+        {open && <PreviewBody name={name} input={input} firstIssue={firstIssue} defaultTab={defaultTab} bookOptions={bookOptions} />}
       </SheetContent>
     </Sheet>
   );
 }
 
-function PreviewBody({ name, input, firstIssue, defaultTab }: { name: string; input: ChartInput; firstIssue: number; defaultTab: 'book' | 'comic' }) {
+function PreviewBody({ name, input, firstIssue, defaultTab, bookOptions }: { name: string; input: ChartInput; firstIssue: number; defaultTab: 'book' | 'comic'; bookOptions?: BookPreviewOptions }) {
   const chart = useMemo(() => computeChart(input), [input.date, input.time, input.lat, input.lon, input.tz, input.houseSystem]); // eslint-disable-line react-hooks/exhaustive-deps
   const birthLine = birthLineOf(input.date, input.time, input.placeLabel);
-  const leaves = useMemo(() => personalBookLeaves({ name: name || 'Reader', birthLine, chart }), [chart, name, birthLine]);
+  const leaves = useMemo(() => personalBookLeaves({ name: name || 'Reader', birthLine, chart, ...bookOptions }), [chart, name, birthLine, bookOptions]);
   const [issueAt, setIssueAt] = useState(0);
   const month = firstOfMonth(1 + issueAt);
   const issue = useMemo(() => buildComicPreview(chart, { reader: name || 'Reader', month, issueNumber: firstIssue + issueAt }), [chart, name, month.getTime(), firstIssue, issueAt]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -51,7 +54,7 @@ function PreviewBody({ name, input, firstIssue, defaultTab }: { name: string; in
     <Tabs defaultValue={defaultTab} className="mt-6">
       <TabsList className="grid w-full grid-cols-2"><TabsTrigger value="book">AstroBook</TabsTrigger><TabsTrigger value="comic">AstroComic</TabsTrigger></TabsList>
       <TabsContent value="book" className="mt-6">
-        <OpenBook key={name} leaves={leaves} layout="stacked" label={`${previewName(name) || 'Your'} AstroBook, 25-page preview`} spine={{ title: 'Zodaci AstroBook', name: previewName(name) || undefined }}
+        <OpenBook key={name} leaves={leaves} layout="stacked" trimPt={versionOf(bookOptions?.edition ?? 'classic')?.trimPt} label={`${previewName(name) || 'Your'} AstroBook, 25-page preview`} spine={{ title: 'Zodaci AstroBook', name: bookOptions?.coverName ?? (previewName(name) || undefined) }}
           footer={<p className="mt-2 text-center text-xs text-muted-foreground">The full book continues through all six volumes from the same placements.</p>} />
       </TabsContent>
       <TabsContent value="comic" className="mt-6 space-y-4">

@@ -58,6 +58,13 @@ export async function previewPdf(faces: BookFace[]): Promise<Blob> {
       if (!response.ok) throw new Error('The preview illustration could not be loaded.');
       const bytes = await response.arrayBuffer();
       const image = new Uint8Array(bytes)[0] === 137 ? await pdf.embedPng(bytes) : await pdf.embedJpg(bytes);
+      if (face.kind === 'jacket' && face.composed) {
+        // The customizer has already lettered and cropped this cover: never stamp it twice.
+        const height = 432 * image.height / image.width;
+        page.setSize(432, height);
+        page.drawImage(image, { x: 0, y: 0, width: 432, height });
+        continue;
+      }
       const scale = Math.min(360 / image.width, 470 / image.height);
       page.drawImage(image, { x: (432 - image.width * scale) / 2, y: 85, width: image.width * scale, height: image.height * scale });
     }

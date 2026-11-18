@@ -109,13 +109,13 @@ export function prosePage(paragraphs: string[]): string[] {
   return out;
 }
 
-export interface BookPreviewInput { name: string; birthLine: string; chart: ChartResult; tone?: Tone; edition?: string; editionLabel?: string; artFor: (planetKey: string) => string }
+export interface BookPreviewInput { name: string; birthLine: string; chart: ChartResult; tone?: Tone; dedication?: string; edition?: string; editionLabel?: string; artFor: (planetKey: string) => string }
 
 /**
  * A 25-page personal AstroBook preview, built from the same chapters the printed book uses
  * (buildVolumes). A plate always lands on a left page so it faces the chapter it illustrates.
  */
-export function bookPreview({ name, birthLine, chart: suppliedChart, tone = 'oracle', edition = 'classic', editionLabel = 'Classic Edition', artFor }: BookPreviewInput): { cover: CoverFacts; faces: BookFace[]; jacket: BookFace } {
+export function bookPreview({ name, birthLine, chart: suppliedChart, tone = 'oracle', dedication, edition = 'classic', editionLabel = 'Classic Edition', artFor }: BookPreviewInput): { cover: CoverFacts; faces: BookFace[]; jacket: BookFace } {
   const chart = timedChart(suppliedChart) ? suppliedChart : { ...suppliedChart, asc: null, mc: null, cusps: null, bodies: suppliedChart.bodies.map(b => ({ ...b, house: null })), aspects: suppliedChart.aspects.filter(a => !['Ascendant', 'Midheaven'].includes(a.a) && !['Ascendant', 'Midheaven'].includes(a.b)) };
   const timed = timedChart(chart);
   const cover = coverFacts(chart, name, birthLine);
@@ -197,7 +197,7 @@ export function bookPreview({ name, birthLine, chart: suppliedChart, tone = 'ora
   });
 
   const faces: BookFace[] = [
-    { kind: 'endpaper', eyebrow: 'Ex libris', heading: cover.name, lines: [birthLine, 'Calculated from saved birth details'] },
+    { kind: 'endpaper', eyebrow: dedication?.trim() ? 'Dedication · Ex libris' : 'Ex libris', heading: cover.name, lines: [birthLine, ...(dedication?.trim() ? dedication.trim().split(/\n+/).filter(Boolean) : []), 'Calculated from saved birth details'] },
     { kind: 'title', name: cover.name, subtitle: cover.title, edition: `AstroBook · ${editionLabel}`, note: 'Six volumes written from one birth chart' },
     ...numbered,
     { kind: 'list', eyebrow: 'The preview ends here', heading: 'The book continues', items: volumes, note: `The full ${editionLabel} runs every volume from these same placements.` },

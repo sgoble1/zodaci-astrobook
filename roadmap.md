@@ -1,5 +1,11 @@
 # Zodaci roadmap
 
+## Nov 18 — Phase 3 live AstroBook cover
+- [x] Share edition, cover, dedication and tone options through book leaves, drawer and turnable preview; existing sample page remains compatible.
+- [x] Wire /books crop-composed artwork and recipient state directly to one live preview; retain exact uploaded pixels and avoid duplicate lettering in PDF exports.
+- [x] Add material/foil/deboss preview finishes without changing print specifications, prices or fulfillment.
+- [x] Signed-in custom name, Signature version, monogram, crop, uploaded artwork, hidden birth line, dedication readback and PDF download verified; 393px has no overflow. All 149 Vitest suites / 1,230 tests pass; preview build OK.
+
 ## Nov 18 — Phase 2 AstroBook authorial tone
 - [x] Calibrate rising, untimed and seven planetary voices across Oracle, Educational and Professional with measured compound reasoning and verified angular dignity.
 - [x] Match letters, chapter context, Reader’s Compass and colophon to the selected register without changing facts; no second-person prose in Professional mode.

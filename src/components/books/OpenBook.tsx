@@ -10,7 +10,7 @@ import { ComicPageView } from '@/components/comic/ComicPageView';
  * either page or a swipe); the closed book sits centred on its cover and closes again on its back cover. Every printed
  * face is also listed as plain text beside the book, so the pages read at any size and with a screen reader.
  */
-export function OpenBook({ leaves, kind = 'book', label, layout = 'side', footer, spine }: { leaves: BookLeaf[]; kind?: 'book' | 'comic'; label: string; layout?: 'side' | 'stacked'; footer?: ReactNode; /** Text printed down the spine (shown while the book is closed). */ spine?: { title: string; name?: string } }) {
+export function OpenBook({ leaves, kind = 'book', label, layout = 'side', footer, spine, trimPt }: { leaves: BookLeaf[]; kind?: 'book' | 'comic'; label: string; layout?: 'side' | 'stacked'; footer?: ReactNode; trimPt?: [number, number]; /** Text printed down the spine (shown while the book is closed). */ spine?: { title: string; name?: string } }) {
   const n = leaves.length;
   const [at, setAt] = useState(0);
   const [exporting, setExporting] = useState(false);
@@ -55,7 +55,7 @@ export function OpenBook({ leaves, kind = 'book', label, layout = 'side', footer
   return (
     <div className={layout === 'side' ? 'grid items-start gap-8 lg:grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)]' : 'space-y-4'}>
       <div className="min-w-0">
-        <div className="ob-stage" data-kind={kind} onPointerDown={down} onPointerUp={up} onPointerCancel={() => { swipe.current = null; }}>
+        <div className="ob-stage" data-kind={kind} data-finish={front?.kind === 'jacket' ? front.finish : undefined} style={trimPt ? { ['--ob-ratio' as string]: trimPt[1] / trimPt[0] } : undefined} onPointerDown={down} onPointerUp={up} onPointerCancel={() => { swipe.current = null; }}>
           <div className="ob-book" data-state={state} role="region" aria-roledescription={kind === 'comic' ? 'comic digest' : 'book'} aria-label={`${label}. ${where}. Use the arrow keys to turn pages.`} tabIndex={0} onKeyDown={onKey}>
             {spine && <BookSpine title={spine.title} name={spine.name} src={cover} stack={n * gap} />}
             {leaves.map((leaf, i) => {
@@ -104,10 +104,10 @@ function Face({ f, kind }: { f: BookFace; kind: 'book' | 'comic' }) {
   switch (f.kind) {
     case 'comic-page': return <div className="ob-comic-sheet"><ComicPageView page={f.sheet} art={f.art} compact /></div>;
     case 'cover': return <img src={f.src} alt="" draggable={false} loading="lazy" decoding="async" className="absolute inset-0 h-full w-full object-cover" />;
-    case 'jacket': return <div className="ob-jacket"><img src={f.art} alt="" loading="lazy" decoding="async" draggable={false} /><div className="ob-jacket-title"><p className="font-label ob-eyebrow">Zodaci · Astral Research Authority</p><p className="font-display ob-h">AstroBook</p><p className="font-script ob-script">{f.cover.name}</p><p className="ob-small">{f.cover.birthLine}</p></div><div className="ob-jacket-foot"><p className="font-label ob-placement">{f.cover.signs}</p><p className="ob-small">{f.edition} · illustrated preview</p></div></div>;
+    case 'jacket': return <div className="ob-jacket" data-finish={f.finish ?? 'paper'} data-composed={f.composed || undefined}><img src={f.art} alt="" loading="lazy" decoding="async" draggable={false} /><span className="ob-cover-texture" aria-hidden /><span className="ob-deboss-frame" aria-hidden />{!f.composed && <><div className="ob-jacket-title"><p className="font-label ob-eyebrow">Zodaci · Astral Research Authority</p><p className="font-display ob-h">AstroBook</p><p className="font-script ob-script">{f.cover.name}</p><p className="ob-small">{f.cover.birthLine}</p></div><div className="ob-jacket-foot"><p className="ob-celestial-title">{f.cover.title}</p><p className="font-label ob-placement">{f.cover.signs}</p><p className="ob-edition-seal font-label">{f.edition}</p></div></>}</div>;
     case 'endpaper': return (
       <div className="ob-endpaper">
-        <div className="ob-bookplate"><p className="font-script ob-script">{f.eyebrow}</p><p className="font-display ob-h">{f.heading}</p>{f.lines.map(l => <p key={l} className="ob-small">{l}</p>)}</div>
+        <div className="ob-bookplate"><p className="font-script ob-script">{f.eyebrow}</p><p className="font-display ob-h">{f.heading}</p>{f.lines.map((l, i) => <p key={`${i}:${l}`} className="ob-small">{l}</p>)}</div>
       </div>
     );
     case 'title': return (

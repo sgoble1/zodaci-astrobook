@@ -21,7 +21,7 @@ export type TextFace = TextFacePayload & { kind: 'text' };
 
 export type BookFace =
   | { kind: 'cover'; src: string; alt: string }
-  | { kind: 'jacket'; cover: CoverFacts; art: string; edition: string }
+  | { kind: 'jacket'; cover: CoverFacts; art: string; edition: string; finish?: 'cloth' | 'leatherette' | 'paper'; composed?: boolean; choice?: string }
   | { kind: 'endpaper'; eyebrow: string; heading: string; lines: string[] }
   | { kind: 'title'; name: string; subtitle: string; edition: string; note: string }
   | { kind: 'facts'; eyebrow: string; heading: string; rows: [string, string][]; note?: string; page?: number }
