@@ -15,6 +15,11 @@ describe('pre-launch gate paths', () => {
 });
 
 describe('gateView', () => {
+  it('opens the self-contained demo without a passcode or session', () => {
+    expect(gateView('/demo', 'gated')).toBe('site');
+    expect(gateView('/demo', 'checking')).toBe('site');
+    expect(pathBypassesGate('/demographic')).toBe(false);
+  });
   it('shows the real home page once someone is let in', () => {
     expect(gateView('/', 'open')).toBe('site');
     expect(gateView('/dashboard', 'open')).toBe('site');

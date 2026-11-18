@@ -1,7 +1,7 @@
 /** Pre-launch gate rules. The passcode is checked by the server; this device only remembers that it passed. */
 export const ACCESS_KEY = 'zodaci_access_granted';
 /** Paths that stay open while the gate is on, so admins can sign in and visitors can read the legal pages. */
-export const GATE_OPEN_PATHS = ['/auth', '/access', '/welcome', '/coming-soon', '/privacy', '/terms', '/newsletter/confirm', '/reset-password', '/index'];
+export const GATE_OPEN_PATHS = ['/auth', '/access', '/welcome', '/coming-soon', '/privacy', '/terms', '/newsletter/confirm', '/reset-password', '/index', '/demo'];
 
 export function isWaitlistPath(path: string): boolean {
   return path === '/' || path === '/coming-soon' || path === '/access';

@@ -1,5 +1,11 @@
 # Zodaci roadmap
 
+## Nov 18 — Interactive Classic member demo
+- [x] Replace /demo with an isolated shared Classic frame: clickable natal wheel, real member placements/houses, dated transits, sample edition and calculated synastry.
+- [x] Reuse verified Rosalind chart and public compound chapters; tones and comparison work without AI or profile writes. Shane’s tab demonstrates his narrative approach without opening his private edition.
+- [x] Free locks deeper tools; Pro and Cosmic share features including audio, with their actual 60/150 monthly credit allowances (user confirmed).
+- [x] Signed-out direct access, every tab, three tones, comparison, tier locks, changing synastry partner and actual audio playback verified; 393px has no horizontal overflow. All 1,201 tests pass; preview build OK.
+
 ## Nov 17 — Complete AstroComic previews
 - [ ] Keep the Shane-chart story private; rename its illustrated protagonist Julian Mercer without changing birth facts or account ownership.
 - [ ] Match the personal AstroBook jacket to the shop cover style, with dynamically printed name and chart details.

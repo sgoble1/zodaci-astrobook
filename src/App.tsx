@@ -277,6 +277,7 @@ export default function App() {
           <Route path="/index" element={<Navigate to="/welcome" replace />} />
           <Route path="/welcome" element={<BrandLanding />} />
           <Route path="/coming-soon" element={<PrelaunchLanding onUnlock={() => window.location.assign('/')} />} />
+          <Route path="/demo" element={<Demo />} />
           <Route element={<PublicSiteLayout />}>
             <Route path="/about" element={<About />} />
             <Route path="/lp/:slug" element={<LandingPage />} />
@@ -293,7 +294,6 @@ export default function App() {
             <Route path="/community/:id" element={<FeatureGate flag="community"><Community /></FeatureGate>} />
             <Route path="/astrobook" element={<AstroBookPublic />} />
             <Route path="/book-preview" element={<BookPreview />} />
-            <Route path="/demo" element={<Demo />} />
             <Route path="/themes" element={<ThemesIndex />} />
             <Route path="/themes/:slug" element={<ThemeDetail />} />
             <Route path="/faq" element={<FaqPage />} />

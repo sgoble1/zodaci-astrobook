@@ -212,6 +212,7 @@ import { PublicHeader } from '@/components/brand/PublicHeader';
 import { GlobalFooter } from '@/components/brand/GlobalFooter';
 import { PlaceBanner } from '@/components/observatory/StaffPortrait';
 import { NextStepPanel, WayfindingTop } from './Wayfinding';
+import { ClassicFrame } from './ClassicFrame';
 
 function PlanGuard({ children }: { children: ReactNode }) {
   const { pathname } = useLocation();
@@ -294,7 +295,7 @@ function MemberShell({ children }: { children: ReactNode }) {
   return (
     <PlayerProvider>
     <MemberNavProvider>
-    <div className="member-experience relative flex min-h-screen flex-col text-foreground">
+    <ClassicFrame>
       <a href="#main-content" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded focus:bg-primary focus:px-4 focus:py-2 focus:text-primary-foreground">Skip to content</a>
       <ScrollProgress /><FirstViewReveal />
       <ParticleField />
@@ -320,7 +321,7 @@ function MemberShell({ children }: { children: ReactNode }) {
         </footer>
       </main>
       {tabs && <MobileTabBar />}
-    </div>
+    </ClassicFrame>
     </MemberNavProvider>
     </PlayerProvider>
   );
