@@ -1,5 +1,10 @@
 # Zodaci roadmap
 
+## Nov 18 — Phase 4 Reader’s Compass and PDF parity
+- [x] Inline focus/tap definitions on prose and Compass pages and in the side reader; reflections rendered as separate study notes; hidden leaf controls are inert.
+- [x] Export every face, including blank/endpapers/back matter, from shared face prose; separate reflection layout, bounded wrapping/scaling, composed artwork and semantic RGB fallback without canvas.
+- [x] Timed/untimed PDFs pass all three tones with pages 1–25 and Plate I on 7, complete face order and bounded text/reflections. Public reader download (30 sheets including cover/end matter), Page 24 keyboard definition and 393px tap verified; hidden-sheet pointer interception corrected. All 150 suites / 1,242 tests pass; preview build OK.
+
 ## Nov 18 — Phase 3 live AstroBook cover
 - [x] Share edition, cover, dedication and tone options through book leaves, drawer and turnable preview; existing sample page remains compatible.
 - [x] Wire /books crop-composed artwork and recipient state directly to one live preview; retain exact uploaded pixels and avoid duplicate lettering in PDF exports.

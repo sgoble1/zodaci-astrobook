@@ -34,6 +34,22 @@ export function compassFor(text: string) {
   return GLOSSARY.filter(g => g.match.test(text)).map(({ term, plain }) => ({ term, plain }));
 }
 
+/** Non-overlapping inline matches, longest at a shared start; retains the exact printed wording. */
+export function compassSegments(text: string): { text: string; term?: string; plain?: string }[] {
+  const matches = GLOSSARY.flatMap(g => Array.from(text.matchAll(new RegExp(g.match.source, 'gi')), m => ({ start: m.index, text: m[0], term: g.term, plain: g.plain })))
+    .sort((a, b) => a.start - b.start || b.text.length - a.text.length);
+  const parts: { text: string; term?: string; plain?: string }[] = [];
+  let end = 0;
+  for (const m of matches) {
+    if (m.start < end) continue;
+    if (m.start > end) parts.push({ text: text.slice(end, m.start) });
+    parts.push({ text: m.text, term: m.term, plain: m.plain });
+    end = m.start + m.text.length;
+  }
+  if (end < text.length) parts.push({ text: text.slice(end) });
+  return parts;
+}
+
 /** Plain outcomes for calculated chapters, keyed by chapter title. Readings and drawn pages are left as written. */
 export const CHAPTER_OUTCOMES: Record<string, [string, string, string]> = {
   'Your Big Three': ['How your Sun, Moon and Rising sign work together', 'What you show first, what you need, and what drives you', 'Where they agree and where they pull apart'],

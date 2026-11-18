@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { faceText, type BookFace } from '@/lib/bookLeaves';
 import type { BookLeaf } from '@/content/sampleBookLeaves';
 import { ComicPageView } from '@/components/comic/ComicPageView';
+import { CompassText } from '@/components/books/CompassText';
 
 /**
  * An openable 3D book or comic digest. Leaves hinge on the spine and turn one at a time (buttons, arrow keys, a tap on
@@ -27,6 +28,7 @@ export function OpenBook({ leaves, kind = 'book', label, layout = 'side', footer
   const pageNos = visible.map(f => ('page' in f ? f.page : undefined)).filter((p): p is number => p != null);
   const where = state === 'closed' ? 'Front cover' : state === 'back' ? 'Back cover' : pageNos.length ? `Pages ${pageNos.join('–')}` : at === 1 ? 'Inside the cover' : 'Endpapers';
   const onKey = (e: KeyboardEvent) => {
+    if (e.target !== e.currentTarget) return;
     if (e.key === 'ArrowRight') { e.preventDefault(); go(1); } else if (e.key === 'ArrowLeft') { e.preventDefault(); go(-1); }
     else if (e.key === 'Home') setAt(0); else if (e.key === 'End') setAt(n);
   };
@@ -38,7 +40,7 @@ export function OpenBook({ leaves, kind = 'book', label, layout = 'side', footer
   const reader = (
     <div className="ob-reader" aria-live="polite">
       <p className="font-label text-xs tracking-[0.16em] text-primary">{where}</p>
-      {text.map(t => <div key={t.heading} className="mt-3"><p className="font-semibold leading-snug">{t.heading}</p>{t.lines.map((l, k) => <p key={k} className="mt-1.5 text-sm leading-relaxed text-muted-foreground">{l}</p>)}</div>)}
+      {text.map(t => <div key={t.heading} className="mt-3"><p className="font-semibold leading-snug"><CompassText text={t.heading} /></p>{t.lines.map((l, k) => <p key={k} className={l.startsWith('Reflection: ') ? 'ob-reader-reflection' : 'mt-1.5 text-sm leading-relaxed text-muted-foreground'}><CompassText text={l} /></p>)}</div>)}
     </div>
   );
   const download = async () => {
@@ -62,9 +64,9 @@ export function OpenBook({ leaves, kind = 'book', label, layout = 'side', footer
               const turned = i < at;
               const z = turned ? -(i + 1) * gap : (n - i) * gap;
               return (
-                <div key={i} className="ob-leaf" data-turned={turned} aria-hidden onClick={() => tap(turned)} style={{ transform: `rotateY(${turned ? -180 : 0}deg) translateZ(${z}px)` }}>
-                  <div className="ob-face ob-face-front"><Face f={leaf.front} kind={kind} /></div>
-                  <div className="ob-face ob-face-back"><Face f={leaf.back} kind={kind} /></div>
+                <div key={i} className="ob-leaf" data-visible={visible.includes(leaf.front) || visible.includes(leaf.back)} data-turned={turned} onClick={() => tap(turned)} style={{ transform: `rotateY(${turned ? -180 : 0}deg) translateZ(${z}px)` }}>
+                  <div className="ob-face ob-face-front" aria-hidden={!visible.includes(leaf.front)} {...(!visible.includes(leaf.front) ? { inert: '' } : {})}><Face f={leaf.front} kind={kind} /></div>
+                  <div className="ob-face ob-face-back" aria-hidden={!visible.includes(leaf.back)} {...(!visible.includes(leaf.back) ? { inert: '' } : {})}><Face f={leaf.back} kind={kind} /></div>
                 </div>
               );
             })}
@@ -117,15 +119,15 @@ function Face({ f, kind }: { f: BookFace; kind: 'book' | 'comic' }) {
     );
     case 'facts': return (
       <div className="ob-pad">
-        <p className="font-label ob-eyebrow">{f.eyebrow}</p><p className="font-display ob-h">{f.heading}</p>
-        <dl className="ob-table">{f.rows.map(([k, v]) => <div key={k}><dt>{k}</dt><dd>{v}</dd></div>)}</dl>
-        {f.note && <p className="ob-small mt-auto italic">{f.note}</p>}<Folio n={f.page} />
+        <p className="font-label ob-eyebrow">{f.eyebrow}</p><p className="font-display ob-h"><CompassText text={f.heading} /></p>
+        <dl className="ob-table">{f.rows.map(([k, v]) => <div key={k}><dt><CompassText text={k} /></dt><dd><CompassText text={v} /></dd></div>)}</dl>
+        {f.note && <p className="ob-small mt-auto italic"><CompassText text={f.note} /></p>}<Folio n={f.page} />
       </div>
     );
     case 'list': return (
       <div className="ob-pad">
         <p className="font-label ob-eyebrow">{f.eyebrow}</p><p className="font-display ob-h">{f.heading}</p>
-        <ul className="ob-list">{f.items.map(x => <li key={x}>{x}</li>)}</ul>
+        <ul className="ob-list">{f.items.map(x => <li key={x}><CompassText text={x} /></li>)}</ul>
         {f.note && <p className="ob-small mt-auto italic">{f.note}</p>}<Folio n={f.page} />
       </div>
     );
@@ -137,9 +139,9 @@ function Face({ f, kind }: { f: BookFace; kind: 'book' | 'comic' }) {
     );
     case 'text': return (
       <div className="ob-pad">
-        <p className="font-label ob-eyebrow">{f.eyebrow}</p><p className="font-display ob-h">{f.title}</p><p className="font-label ob-placement">{f.placement}</p>
-        <dl className="ob-table ob-table-tight">{f.facts.slice(0, 2).map(([k, v]) => <div key={k}><dt>{k}</dt><dd>{v}</dd></div>)}</dl>
-        <div className="ob-body">{f.body.map(p => <p key={p.slice(0, 24)}>{p}</p>)}</div><Folio n={f.page} />
+        <p className="font-label ob-eyebrow">{f.eyebrow}</p><p className="font-display ob-h"><CompassText text={f.title} /></p><p className="font-label ob-placement"><CompassText text={f.placement} /></p>
+        <dl className="ob-table ob-table-tight">{f.facts.map(([k, v]) => <div key={k}><dt><CompassText text={k} /></dt><dd><CompassText text={v} /></dd></div>)}</dl>
+        <div className="ob-body">{f.body.map((p, i) => <p key={i}><CompassText text={p} /></p>)}{f.reflection && <aside className="ob-margin-note"><span className="font-label">Reflection</span><p><CompassText text={f.reflection} /></p></aside>}</div><Folio n={f.page} />
       </div>
     );
     case 'comic': return (

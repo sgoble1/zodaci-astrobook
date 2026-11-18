@@ -1514,6 +1514,11 @@ li:hover > .zodiac-coin { transform: rotate(-10deg); }
 .ob-orbit circle { fill: hsl(var(--comic-mustard)); stroke: none; }
 .ob-blank { position: absolute; inset: 0; display: grid; place-items: center; font-size: 8cqw; color: hsl(var(--comic-mustard)); }
 .ob-reader { min-width: 0; }
+.ob-leaf[data-visible="false"], .ob-face[aria-hidden="true"] { pointer-events: none; }
+.ob-compass-term { display: inline; height: auto; min-height: 0; padding: 0; font: inherit; line-height: inherit; vertical-align: baseline; white-space: normal; color: inherit; text-decoration: underline dotted; text-underline-offset: .18em; }
+.ob-margin-note { margin-top: 2cqw; padding: 2cqw 3cqw; border-left: .6cqw solid hsl(var(--book-foil)); background: hsl(var(--comic-mustard) / .08); font-style: italic; }
+.ob-margin-note > span { display: block; font-style: normal; color: hsl(var(--comic-brick)); margin-bottom: 1cqw; }
+.ob-reader-reflection { margin-top: .75rem; border-left: 2px solid hsl(var(--book-foil)); padding: .5rem .75rem; font-size: .875rem; line-height: 1.6; font-style: italic; color: hsl(var(--muted-foreground)); }
 .ob-details { border-top: 1px solid hsl(var(--border)); padding-top: .75rem; }
 .ob-details .ob-reader { margin-top: .5rem; max-height: 22rem; overflow-y: auto; }
 @media (prefers-reduced-motion: reduce) { .ob-book, .ob-leaf, .ob-book::before, .ob-book::after { transition: none; } }

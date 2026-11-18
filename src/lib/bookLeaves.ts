@@ -166,6 +166,13 @@ export function toLeaves(cover: BookFace, interior: BookFace[], back: BookFace):
 }
 
 /** Plain-text version of a face for the reading panel and screen readers. */
+export function faceProse(f: BookFace): { heading: string; lines: string[]; reflection?: string } | null {
+  const text = faceText(f);
+  if (!text) return null;
+  if (f.kind === 'text') return { heading: text.heading, lines: text.lines.slice(0, f.facts.length + f.body.length), reflection: f.reflection };
+  return text;
+}
+
 export function faceText(f: BookFace): { heading: string; lines: string[] } | null {
   switch (f.kind) {
     case 'cover': return { heading: 'Front cover', lines: [f.alt] };
