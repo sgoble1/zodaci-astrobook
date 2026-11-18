@@ -1,5 +1,10 @@
 # Zodaci roadmap
 
+## Nov 18 — Phase 5 preview touchpoint synchronization
+- [x] Align AstroBook public/drawer/member/update/register copy with 25 numbered interior pages; preserve separate ten-page comic excerpt references and complete digest wording. Historical developer timeline remains a dated record.
+- [x] Sample PDF page limits count numbered interiors before composition, retaining cover/end matter; drawer tests verify custom cover/name/edition/dedication/tone delivery and untimed boundaries. PDF reader labels its 30 sheets separately from 25 numbered pages.
+- [x] npm test: all 152 suites / 1,256 tests pass; automatic preview build OK. Welcome sample sheet navigates through sheet 30, 393px has no page overflow, public teaser copy verified, and authorized member drawer opens by keyboard and reaches its back cover without changing account data.
+
 ## Nov 18 — Phase 4 Reader’s Compass and PDF parity
 - [x] Inline focus/tap definitions on prose and Compass pages and in the side reader; reflections rendered as separate study notes; hidden leaf controls are inert.
 - [x] Export every face, including blank/endpapers/back matter, from shared face prose; separate reflection layout, bounded wrapping/scaling, composed artwork and semantic RGB fallback without canvas.

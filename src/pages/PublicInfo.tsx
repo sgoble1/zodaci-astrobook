@@ -51,7 +51,7 @@ export function AstroBookPublic() {
         <ProductArtworkGallery />
       </section>
       <section id="full-edition" aria-labelledby="fe-h" className="scroll-mt-6 space-y-6">
-        <div className="max-w-3xl"><p className="font-label text-xs tracking-[0.16em] text-primary">Open the Collector’s edition</p><h2 id="fe-h" className="mt-1 font-display text-3xl sm:text-4xl">Open {SAMPLE_EDITION.owner}’s AstroBook</h2><p className="mt-3 text-muted-foreground">Turn the pages: her bookplate, title page, birth facts, planet table, house cusps and closest aspects, then three illustrated chapters, each plate facing its text. {SAMPLE_EDITION.note} Signed in with your birth details, you can open one built from your own chart.</p></div>
+        <div className="max-w-3xl"><p className="font-label text-xs tracking-[0.16em] text-primary">Open the Collector’s edition</p><h2 id="fe-h" className="mt-1 font-display text-3xl sm:text-4xl">Open {SAMPLE_EDITION.owner}’s AstroBook</h2><p className="mt-3 text-muted-foreground">Turn through 25 numbered pages of birth facts, planetary readings, houses, aspects, traditions and timing, with Plate I on page 7. The cover, bookplate and end matter are included separately. {SAMPLE_EDITION.note} Signed in with your birth details, you can open the same preview from your own chart.</p></div>
         <div className="obs-paper p-4 sm:p-6"><OpenAstroBook /></div>
         <div className="flex flex-wrap gap-4"><Button asChild size="lg"><Link to={order()}>Start my AstroBook</Link></Button><Link to="/astrocomic" className="self-center text-accent">Read {SAMPLE_EDITION.owner.split(' ')[0]}’s comic issue →</Link></div>
       </section>
@@ -89,11 +89,11 @@ export function AstroBookPublic() {
       </section>
       <section id="look-inside" className="space-y-6">
         <h2 className="font-display text-3xl">Look inside before you order.</h2>
-        <p className="text-muted-foreground">A short fictional sample for {SAMPLE_BIRTH.name}, {birthLineOf(SAMPLE_BIRTH.date, SAMPLE_BIRTH.time, SAMPLE_BIRTH.placeLabel).replace(/^Born/, 'born')}, with calculated chart facts and the same chapter layout as a real book. Your own book is written from your chart, adds your finished readings, and shows its real page count before payment. Turn the first pages below, or <Link to="/book-preview" className="underline text-accent">read the full sample book</Link>.</p>
-        <SampleBook maxPages={6} cta={<Button asChild variant="outline"><Link to="/book-preview">Read the full sample<ArrowRight /></Link></Button>} />
+        <p className="text-muted-foreground">A 25-page fictional sample preview for {SAMPLE_BIRTH.name}, {birthLineOf(SAMPLE_BIRTH.date, SAMPLE_BIRTH.time, SAMPLE_BIRTH.placeLabel).replace(/^Born/, 'born')}, with calculated chart facts and the same chapter layout as a real book. Your own book is written from your chart, adds your finished readings, and shows its real page count before payment. Read all 25 numbered pages below, or <Link to="/book-preview" className="underline text-accent">open the turnable sample book</Link>.</p>
+        <SampleBook maxPages={25} cta={<Button asChild variant="outline"><Link to="/book-preview">Open the turnable sample<ArrowRight /></Link></Button>} />
       </section>
       <section id="teaser" className="rounded-xl border border-gold/30 bg-card p-8">
-        <MemberBookTeaser fallback={<div className="grid gap-8 md:grid-cols-2"><div className="space-y-3"><h2 className="font-display text-3xl">A free teaser.</h2><p className="text-muted-foreground">Not ready for a book? Enter your email and birth date for a short, calculated teaser: your Sun sign, Chinese zodiac year and Life Path number. Free, instant, no account. <Link to="/auth?mode=signup&next=/astrobook%23teaser" className="underline text-accent">Sign in</Link> to read the first three pages of your own book.</p></div><CosmicTeaser /></div>} />
+        <MemberBookTeaser fallback={<div className="grid gap-8 md:grid-cols-2"><div className="space-y-3"><h2 className="font-display text-3xl">A free teaser.</h2><p className="text-muted-foreground">Not ready for a book? Enter your email and birth date for a short, calculated teaser: your Sun sign, Chinese zodiac year and Life Path number. Free, instant, no account. <Link to="/auth?mode=signup&next=/astrobook%23teaser" className="underline text-accent">Sign in</Link> to open the 25-page preview of your own book.</p></div><CosmicTeaser /></div>} />
       </section>
       <section id="gift" className="rounded-xl border border-primary/30 bg-primary/10 p-10 text-center space-y-4">
         <Gift className="mx-auto h-8 w-8 text-accent" aria-hidden />

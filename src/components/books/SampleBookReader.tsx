@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { composeSampleBook, SAMPLE_BIRTH } from '@/lib/sampleBook';
 
 /** Inline reader for the public sample AstroBook PDF, rendered page by page with pdf.js. */
-function Reader({ blob, maxPages }: { blob: Blob; maxPages?: number }) {
+function Reader({ blob }: { blob: Blob }) {
   const [doc, setDoc] = useState<PDFDocumentProxy | null>(null);
   const [page, setPage] = useState(1);
   const [scale, setScale] = useState(1.05);
@@ -51,13 +51,13 @@ function Reader({ blob, maxPages }: { blob: Blob; maxPages?: number }) {
     return () => { active = false; task?.cancel(); };
   }, [doc, page, scale]);
 
-  const total = Math.min(doc?.numPages ?? 1, maxPages ?? Number.MAX_SAFE_INTEGER);
+  const total = doc?.numPages ?? 1;
   if (err) return <div role="alert" className="space-y-2"><p className="text-destructive text-sm">{err}</p><Button variant="outline" onClick={() => { setErr(''); setAttempt(n => n + 1); }}>Retry sample</Button></div>;
   return (
     <div className="space-y-3">
       <div className="flex flex-wrap items-center gap-2 rounded border border-border bg-card p-2">
         <Button size="icon" variant="ghost" onClick={() => setPage(p => Math.max(1, p - 1))} disabled={!doc || page <= 1} aria-label="Previous page"><ChevronLeft className="w-4 h-4" /></Button>
-        <span className="text-sm">Page <b>{page}</b> of {maxPages ? `${total} shown` : total ?? '…'}</span>
+        <span className="text-sm">Sheet <b>{page}</b> of {doc ? total : '…'}</span>
         <Button size="icon" variant="ghost" onClick={() => setPage(p => Math.min(total, p + 1))} disabled={!doc || page >= total} aria-label="Next page"><ChevronRight className="w-4 h-4" /></Button>
         <span className="mx-2 h-5 w-px bg-border" />
         <Button size="icon" variant="ghost" onClick={() => setScale(s => Math.max(0.6, s - 0.2))} disabled={!doc} aria-label="Zoom out"><ZoomOut className="w-4 h-4" /></Button>
@@ -79,7 +79,7 @@ export function SampleBook({ maxPages, cta }: { maxPages?: number; cta?: React.R
   const [blob, setBlob] = useState<Blob | null>(null);
   const open = async () => {
     setState('busy');
-    try { const { blob } = await composeSampleBook(); setBlob(blob); setState('ready'); }
+    try { const { blob } = await composeSampleBook(maxPages); setBlob(blob); setState('ready'); }
     catch { setState('error'); }
   };
   if (state === 'idle' || state === 'busy' || state === 'error') {
@@ -87,14 +87,14 @@ export function SampleBook({ maxPages, cta }: { maxPages?: number; cta?: React.R
       <div className="space-y-3">
         <Button size="lg" disabled={state === 'busy'} onClick={() => void open()}><BookOpen />{state === 'busy' ? 'Composing the sample book…' : 'Open the sample book'}</Button>
         {state === 'error' && <div role="alert" className="space-y-2"><p className="text-destructive text-sm">The sample book could not be composed.</p><Button variant="outline" onClick={() => void open()}>Retry sample</Button><p className="text-sm text-muted-foreground">{SAMPLE_BIRTH.name}’s fictional sample includes chart facts, personal themes, work, relationships and reflection passages. No real member’s readings are used.</p></div>}
-        <p className="text-xs text-muted-foreground">A short fictional sample with calculated chart facts and illustrative editorial passages. Your purchased book’s content and actual length are reviewed separately.</p>
+        <p className="text-xs text-muted-foreground">A 25-page fictional sample preview with calculated chart facts and illustrative editorial passages. Cover and end matter are additional sheets. Your purchased book’s content and actual length are reviewed separately.</p>
       </div>
     );
   }
   if (!blob) return null;
   return (
     <div className="space-y-4">
-      <Reader blob={blob} maxPages={maxPages} />
+      <Reader blob={blob} />
       <p className="text-xs text-muted-foreground">Sample book · fictional reader "{SAMPLE_BIRTH.name}" · Classic version · your AstroBook is written from your own chart.</p>
       {cta}
     </div>
