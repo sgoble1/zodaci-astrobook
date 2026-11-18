@@ -1,5 +1,11 @@
 # Zodaci roadmap
 
+## Nov 18 — Phase 1 AstroBook extraction contract
+- [x] Share typed text faces and optional reading tone, default Oracle.
+- [x] Extract chapters semantically and paginate coherent 60–135-word prose, preserving decimal degrees.
+- [x] Replace untimed placeholders with measured planetary, elemental and aspect readings; explain the provisional Moon and remove stale angle/house geometry.
+- [x] Verify 25 numbered pages, Plate I on page 7, timed/untimed regressions across all tones; all 149 Vitest suites / 1,216 tests pass. Live public reader reaches page 25 without errors; preview build OK.
+
 ## Nov 18 — Interactive Classic member demo
 - [x] Replace /demo with an isolated shared Classic frame: clickable natal wheel, real member placements/houses, dated transits, sample edition and calculated synastry.
 - [x] Reuse verified Rosalind chart and public compound chapters; tones and comparison work without AI or profile writes. Shane’s tab demonstrates his narrative approach without opening his private edition.

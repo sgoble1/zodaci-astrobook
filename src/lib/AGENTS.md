@@ -29,6 +29,6 @@
 
 - purchaseSync wraps sync-checkout for book/comic return pages; only provider-verified statuses are shown as final.
 - lunarCalendar gives Moon quarters from the ephemeris with natal house (timed charts only) and conjunctions; position and timing only, no interpretation.
-- AstroBook previews compose 25 numbered BookFace pages in personalPreview; previewPdf exports those same faces to prevent PDF/reader drift. Personal jackets place authorized display name and facts over symbolic artwork; public samples stay fictional.
+- AstroBook previews use shared TextFacePayload, semantic chapter topics and optional Oracle-default Tone; 25 numbered faces keep Plate I on page 7 and prose at 60–135 words. Untimed previews remove angle/house geometry and substitute planetary analysis with a provisional Moon note. previewPdf exports the same faces to prevent reader drift; personal jackets use authorized facts and public samples stay fictional.
 - Comic previews use comicNarrative for a deterministic 24-page story and chart-factor ledger; comic-page faces retain every panel for the reader and proof PDF. Saved-order scripts remain in comic.ts so preview polish cannot silently rewrite paid orders.
 - The public Classic demo uses only fictional cover-reader charts and local tone/tier state; no profile persistence, AI generation or private edition loaders, so signed-in visitors cannot alter or reveal account data through the simulator.

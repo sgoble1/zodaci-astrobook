@@ -12,6 +12,13 @@ import type { ComicPage } from '@/lib/comic';
 /** Calculated facts printed on a personal cover: every word comes from the saved birth details and the chart. */
 export type CoverFacts = { name: string; title: string; subtitle: string; signs: string; birthLine: string; ruler: string; rulerName: string; sunSign: string; glyph: string };
 
+/** Shared prose payload for generated previews and the reader/PDF face model. */
+export interface TextFacePayload {
+  eyebrow: string; title: string; placement: string; facts: [string, string][];
+  body: string[]; reflection?: string; page?: number;
+}
+export type TextFace = TextFacePayload & { kind: 'text' };
+
 export type BookFace =
   | { kind: 'cover'; src: string; alt: string }
   | { kind: 'jacket'; cover: CoverFacts; art: string; edition: string }
@@ -19,7 +26,7 @@ export type BookFace =
   | { kind: 'title'; name: string; subtitle: string; edition: string; note: string }
   | { kind: 'facts'; eyebrow: string; heading: string; rows: [string, string][]; note?: string; page?: number }
   | { kind: 'plate'; src: string; alt: string; caption: string; page?: number }
-  | { kind: 'text'; eyebrow: string; title: string; placement: string; facts: [string, string][]; body: string[]; reflection?: string; page?: number }
+  | TextFace
   | { kind: 'comic'; src: string; alt: string; title: string; placement: string; caption: string; dialogue?: string; page: number }
   | { kind: 'comic-page'; sheet: ComicPage; art: Record<string, string>; page: number }
   | { kind: 'list'; eyebrow: string; heading: string; items: string[]; note?: string; page?: number }
