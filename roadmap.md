@@ -1,5 +1,10 @@
 # Zodaci roadmap
 
+## Nov 18 — Phase 2 AstroBook authorial tone
+- [x] Calibrate rising, untimed and seven planetary voices across Oracle, Educational and Professional with measured compound reasoning and verified angular dignity.
+- [x] Match letters, chapter context, Reader’s Compass and colophon to the selected register without changing facts; no second-person prose in Professional mode.
+- [x] Verify all tones for timed/untimed charts, 60–135-word prose, 25 pages and Plate I on page 7; all 149 Vitest suites / 1,223 tests pass. Live public reader reaches page 25 without errors; preview build OK.
+
 ## Nov 18 — Phase 1 AstroBook extraction contract
 - [x] Share typed text faces and optional reading tone, default Oracle.
 - [x] Extract chapters semantically and paginate coherent 60–135-word prose, preserving decimal degrees.

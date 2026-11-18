@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { computeChart } from '@/lib/astro';
 import { bookPreview, chapterForTopic, plainParagraphs, prosePage, PREVIEW_PAGES, type BookPreviewInput } from '@/lib/personalPreview';
 import { sampleBookLeaves } from '@/content/sampleBookLeaves';
+import { risingPreview, untimedPreview, planetPreview } from '@/lib/previewNarrative';
 
 const input = { date: '1993-03-25', time: '13:55', lat: 42.96395, lon: -78.73781, tz: 'America/New_York', placeLabel: 'Williamsville, New York', placeSource: 'geocoded', houseSystem: 'placidus' } as const;
 const chart = computeChart(input);
@@ -53,6 +54,61 @@ describe('expanded AstroBook preview', () => {
         expect(count, `${face.page}: ${face.title}`).toBeLessThanOrEqual(135);
       }
     }
+  });
+  it.each(['oracle', 'educational', 'professional'] as const)('keeps pages 1–25 and Plate I on page 7 in %s for both chart modes', tone => {
+    for (const c of [chart, untimed]) {
+      const faces = make(c, tone).faces;
+      expect(faces.flatMap(f => 'page' in f && f.page ? [f.page] : [])).toEqual(Array.from({ length: 25 }, (_, i) => i + 1));
+      expect(faces.find(f => f.kind === 'plate')?.page).toBe(7);
+    }
+  });
+  it('calibrates every numbered prose page, not just planetary introductions', () => {
+    for (const c of [chart, untimed]) {
+      const variants = ['oracle', 'educational', 'professional'].map(t => make(c, t as BookPreviewInput['tone']).faces.filter(f => f.kind === 'text'));
+      for (const [index, oracle] of variants[0].entries()) {
+        const educational = variants[1][index];
+        const professional = variants[2][index];
+        expect(oracle.body.join(' '), `Oracle page ${oracle.page}`).toMatch(/\byou\b|\byour\b/i);
+        expect(educational.body.join(' '), `Educational page ${oracle.page}`).toMatch(/method|explains?|function|calculation|interpretive|longitude|mechanics/i);
+        expect(professional.body.join(' '), `Professional page ${oracle.page}`).toMatch(/native|chart indicates|technical|delineation|reference/i);
+        expect(professional.body.join(' '), `Professional page ${oracle.page}`).not.toMatch(/\byou\b|\byour\b|\byourself\b/i);
+        expect(educational.body).not.toEqual(oracle.body);
+        expect(professional.body).not.toEqual(oracle.body);
+      }
+    }
+  });
+  it('explains the horizon and distinguishes essential from angular dignity without inventing angularity', () => {
+    expect(risingPreview(chart, 'educational').body.join(' ')).toMatch(/ecliptic degree.*eastern horizon/);
+    expect(risingPreview(chart, 'educational').body.join(' ')).toContain('rulership chain');
+    expect(risingPreview(chart, 'professional').body.join(' ')).toContain('essential dignity');
+    const ruler = chart.bodies.find(b => b.key === 'sun');
+    expect(ruler?.house).toBe(9);
+    expect(risingPreview(chart, 'professional').body.join(' ')).toContain('angular dignity is not assigned');
+    const angular = { ...chart, bodies: chart.bodies.map(b => b.key === 'sun' ? { ...b, house: 10 } : b) };
+    expect(risingPreview(angular, 'professional').body.join(' ')).toContain('accidental angular dignity');
+  });
+  it('uses the selected register in all untimed generators without introducing geometry', () => {
+    for (const topic of ['elements', 'geometry', 'planets', 'cycles'] as const) {
+      expect(untimedPreview(untimed, topic)).toEqual(untimedPreview(untimed, topic, 'oracle'));
+      const professional = untimedPreview(untimed, topic, 'professional').body.join(' ');
+      expect(professional).toContain('native');
+      expect(professional).not.toMatch(/\byou\b|\byour\b|Ascendant|house \d/i);
+      expect(untimedPreview(untimed, topic, 'educational').body).not.toEqual(untimedPreview(untimed, topic).body);
+    }
+    expect(risingPreview(untimed, 'professional')).toEqual(untimedPreview(untimed, 'elements', 'professional'));
+  });
+  it('gives each planet a distinct question and carries actual aspects and retrograde status into compound reasoning', () => {
+    const keys = ['sun', 'moon', 'mercury', 'venus', 'mars', 'saturn', 'pluto'];
+    const faces = keys.map(key => planetPreview(chart, key));
+    expect(new Set(faces.map(f => f.body[0])).size).toBe(7);
+    for (const [index, key] of keys.entries()) {
+      const b = chart.bodies.find(p => p.key === key);
+      const hits = chart.aspects.filter(a => (a.a === b?.name || a.b === b?.name) && chart.bodies.some(p => p.name === a.a && keys.concat(['jupiter', 'uranus', 'neptune']).includes(p.key)) && chart.bodies.some(p => p.name === a.b && keys.concat(['jupiter', 'uranus', 'neptune']).includes(p.key))).sort((a, z) => a.orb - z.orb);
+      if (hits[0]) expect(faces[index].body.join(' ')).toContain(`orb ${hits[0].orb.toFixed(2)}°`);
+      if (b?.retro) expect(faces[index].body.join(' ')).toContain('Apparent retrograde motion');
+    }
+    const noRetro = { ...chart, bodies: chart.bodies.map(b => ({ ...b, retro: false })) };
+    expect(planetPreview(noRetro, 'venus').body.join(' ')).not.toContain('Apparent retrograde motion');
   });
   it('supplies substantive untimed analysis and a provisional daily-range Moon note without artificial angles', () => {
     // Even stale timed geometry must not enter an untimed preview.
