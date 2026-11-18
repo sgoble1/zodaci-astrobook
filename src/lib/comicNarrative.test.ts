@@ -3,11 +3,29 @@ import { computeChart } from '@/lib/astro';
 import { buildComicPreview, previewName } from '@/lib/comicNarrative';
 import { comicIssueLeaves, sampleComicLeaves } from '@/content/sampleBookLeaves';
 import { faceText } from '@/lib/bookLeaves';
+import { comicPreviewArt } from '@/content/castArt';
+import { COMIC_SCENES } from '@/content/comicSceneArt';
 
 const chart = computeChart({ date: '1993-03-25', time: '13:55', lat: 42.96395, lon: -78.73781, tz: 'America/New_York', placeLabel: 'Williamsville, New York', placeSource: 'geocoded', houseSystem: 'placidus' });
 const options = { reader: 'Shane', month: new Date(Date.UTC(2026, 11, 1)), issueNumber: 1 };
 const issue = buildComicPreview(chart, options);
 describe('complete chart-driven comic preview', () => {
+  it('retains the full story and lettering through splash, portrait and four-panel beats', () => {
+    expect(issue.pages[1].panels).toHaveLength(1);
+    expect(issue.pages[1].panels[0].shape).toBe('bleed');
+    expect(issue.pages[20].panels[0].shape).toBe('bleed');
+    expect(issue.pages.slice(12, 16).every(p => p.panels.length === 4)).toBe(true);
+    expect(issue.pages.some(p => p.panels.some(panel => panel.shape === 'tall'))).toBe(true);
+    const art = comicPreviewArt(issue);
+    for (const page of issue.pages) for (const [i, panel] of page.panels.entries()) {
+      expect(art[`${page.n}-${i}`]).toBeTruthy();
+      expect(panel.artSlot).not.toMatch(/^(signal|repair|resolution)-\d$/);
+    }
+    const characters = issue.pages.flatMap(p => p.panels).filter(p => p.artSlot?.startsWith('cast:'));
+    expect(new Set(characters.map(p => p.artSlot)).size).toBe(10);
+    expect(art['2-0']).toBe(COMIC_SCENES.terrace);
+    expect(art['13-3']).toBe(COMIC_SCENES.detail);
+  });
   it('uses Julian Mercer only as the private story name, without changing the 1:55 birth facts', () => {
     expect(issue.reader).toBe('Julian Mercer');
     expect(previewName('April')).toBe('April');

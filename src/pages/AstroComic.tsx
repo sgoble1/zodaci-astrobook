@@ -88,9 +88,9 @@ export default function AstroComic() {
         <div className="mt-8 flex flex-wrap gap-3"><Button asChild size="lg" variant="outline"><Link to="/astrocomic/print-issue-1">Sizes &amp; page contents<ArrowRight /></Link></Button></div>
       </section>
 
-      <section aria-labelledby="inside-h" className="grid gap-10 lg:grid-cols-2">
-        <div><h2 id="inside-h" className="font-display text-3xl">What’s in every issue</h2><ol className="mt-6 divide-y divide-border border-y border-border">{PAGE_MAP.map(([n, t]) => <li key={n} className="grid grid-cols-[4rem_1fr] gap-3 py-2.5 text-sm"><span className="font-label tracking-wider text-primary">p. {n}</span><span>{t}</span></li>)}</ol></div>
-        <figure className="mx-auto w-full max-w-md"><div className="comic-sheet aspect-[11/17] overflow-hidden"><img src={SAMPLE_ISSUE.pages[1].art} alt={SAMPLE_ISSUE.pages[1].panels[0].visualPrompt} width={1536} height={1024} loading="lazy" className="h-full w-full object-cover" /></div><figcaption className="mt-3 text-sm text-muted-foreground">Page {SAMPLE_ISSUE.pages[1].pageNumber} of the sample issue, {SAMPLE_ISSUE.pages[1].actTitle}: {SAMPLE_ISSUE.pages[1].placement}.</figcaption></figure>
+      <section aria-labelledby="inside-h">
+        <h2 id="inside-h" className="font-display text-3xl">What’s in every issue</h2>
+        <ol className="mt-6 grid gap-x-10 border-y border-border md:grid-cols-2">{PAGE_MAP.map(([n, t]) => <li key={n} className="grid grid-cols-[4rem_1fr] gap-3 border-b border-border py-3 text-sm"><span className="font-label text-primary">p. {n}</span><span>{t}</span></li>)}</ol>
       </section>
 
       <section aria-labelledby="cast-h">

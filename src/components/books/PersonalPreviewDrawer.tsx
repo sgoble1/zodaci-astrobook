@@ -4,16 +4,14 @@ import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { OpenBook } from '@/components/books/OpenBook';
-import { ComicPageView } from '@/components/comic/ComicPageView';
+import { ComicDigest } from '@/components/comic/ComicDigest';
 import { computeChart, type ChartInput } from '@/lib/astro';
 import { birthLineOf } from '@/lib/bookLeaves';
 import { monthLabel } from '@/lib/comic';
 import { buildComicPreview, previewName } from '@/lib/comicNarrative';
-import { PREVIEW_PAGES } from '@/lib/personalPreview';
-import { personalBookLeaves, comicIssueLeaves } from '@/content/sampleBookLeaves';
+import { personalBookLeaves } from '@/content/sampleBookLeaves';
 import type { BookPreviewOptions } from '@/content/sampleBookLeaves';
 import { versionOf } from '@/lib/books';
-import { comicPreviewArt } from '@/content/castArt';
 
 const ISSUES_AHEAD = 1;
 const firstOfMonth = (offset: number) => { const n = new Date(); return new Date(Date.UTC(n.getUTCFullYear(), n.getUTCMonth() + offset, 1)); };
@@ -48,8 +46,6 @@ function PreviewBody({ name, input, firstIssue, defaultTab, bookOptions }: { nam
   const [issueAt, setIssueAt] = useState(0);
   const month = firstOfMonth(1 + issueAt);
   const issue = useMemo(() => buildComicPreview(chart, { reader: name || 'Reader', month, issueNumber: firstIssue + issueAt }), [chart, name, month.getTime(), firstIssue, issueAt]); // eslint-disable-line react-hooks/exhaustive-deps
-  const art = useMemo(() => comicPreviewArt(issue), [issue]);
-  const pages = issue.pages.filter(p => p.n <= PREVIEW_PAGES);
   return (
     <Tabs defaultValue={defaultTab} className="mt-6">
       <TabsList className="grid w-full grid-cols-2"><TabsTrigger value="book">AstroBook</TabsTrigger><TabsTrigger value="comic">AstroComic</TabsTrigger></TabsList>
@@ -65,7 +61,7 @@ function PreviewBody({ name, input, firstIssue, defaultTab, bookOptions }: { nam
             </Button>
           ))}
         </div>
-        <OpenBook kind="comic" leaves={comicIssueLeaves(issue, art)} layout="stacked" label={`${issue.reader} · 24-page AstroComic`} spine={{ title: 'AstroComic', name: issue.reader }} />
+        <ComicDigest issue={issue} />
         <p className="text-xs text-muted-foreground">24 pages including covers. Fictional scenes from your calculated chart, not a biography. The calculation ledger follows the story; preview art is not a print-ready buyer issue.</p>
       </TabsContent>
     </Tabs>

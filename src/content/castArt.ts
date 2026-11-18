@@ -35,6 +35,10 @@ export function comicPreviewArt(issue: ComicIssue, upTo = 24): Record<string, st
   for (const [key, slot] of Object.entries(comicArtSlots(issue, upTo))) out[key] = slot === 'sky' ? skyPanel : slot === 'letter' ? letterPanel : castFull(slot);
   for (const page of issue.pages.filter(p => p.n <= upTo)) page.panels.forEach((panel, i) => {
     if (panel.artSlot && COMIC_SCENES[panel.artSlot]) out[`${page.n}-${i}`] = COMIC_SCENES[panel.artSlot];
+    else if (panel.artSlot?.startsWith('cast:')) {
+      const character = panel.artSlot.slice(5);
+      if (CAST_FULL[character]) out[`${page.n}-${i}`] = CAST_FULL[character];
+    }
   });
   return out;
 }

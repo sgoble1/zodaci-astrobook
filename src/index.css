@@ -1500,6 +1500,15 @@ li:hover > .zodiac-coin { transform: rotate(-10deg); }
 .ob-comic-sheet .comic-tag, .ob-comic-sheet .comic-pagenum { font-size: 2.8cqw; letter-spacing: 0; }
 .ob-comic-sheet .comic-sheet .font-display { font-size: 5cqw; }
 .ob-comic-sheet .comic-cell { min-height: 0; padding: 1.8cqw; border-width: .6cqw; }
+.comic-panel-grid { grid-auto-flow: row dense; grid-auto-rows: minmax(0, 1fr); }
+.comic-panel-grid[data-beat="splash"] { grid-template-rows: minmax(0, 1fr); }
+.comic-panel-grid[data-beat="sequence"] { grid-template-rows: 1fr 1.15fr .65fr; }
+.comic-cell { min-width: 0; min-height: 0; }
+.comic-character-panel > img { object-position: center 25%; }
+.comic-speaker { display: block; color: hsl(var(--comic-brick)); font-family: 'Bebas Neue', sans-serif; line-height: 1.1; }
+.comic-balloon-review { border-style: double; border-radius: 16% 24% 18% 22%; }
+.comic-panel-grid[data-beat="splash"] .comic-caption { max-width: 85%; }
+.comic-panel-grid[data-beat="splash"] .comic-balloon { max-width: 70%; margin-left: auto; }
 .ob-comic-sheet .comic-caption, .ob-comic-sheet .comic-balloon { font-size: 3.1cqw; padding: 1cqw 1.5cqw; border-width: .4cqw; }
 .ob-comic-sheet .comic-sheet ul { font-size: 2.7cqw; line-height: 1.25; }
 .ob-comic-sheet .comic-title-band { padding: 3cqw; }

@@ -5,7 +5,7 @@ import { QR_URL, isQrPanel } from '@/lib/comicPrint';
 import cover from '@/assets/astrocomic-cover.jpg';
 
 const SHAPE: Record<ComicPanel['shape'], string> = {
-  bleed: 'col-span-2 min-h-[9rem]', wide: 'col-span-2 min-h-[6rem]', square: 'min-h-[7rem]', tall: 'row-span-2 min-h-[10rem]', oval: 'col-span-2 min-h-[6rem] rounded-[50%]',
+  bleed: 'col-span-2', wide: 'col-span-2', square: '', tall: 'row-span-2', oval: 'col-span-2 rounded-[50%]',
 };
 
 /**
@@ -41,16 +41,16 @@ export function ComicPageView({ page, compact = false, art }: { page: ComicPage;
             <span className="comic-pagenum text-[10px]">{page.n}</span>
           </div>
           <p className={`font-display uppercase leading-tight ${compact ? 'text-[11px]' : 'text-base sm:text-lg'}`}>{page.title}</p>
-          <div className={`grid min-h-0 flex-1 grid-cols-2 gap-1.5 ${page.panels.length === 3 ? 'grid-rows-[1.15fr_1fr]' : 'auto-rows-fr'}`}>
+          <div className={`comic-panel-grid grid min-h-0 flex-1 grid-cols-2 gap-1.5 ${page.panels.length === 3 ? 'grid-rows-[1.15fr_1fr]' : 'auto-rows-fr'}`} data-beat={page.panels.length === 1 ? 'splash' : page.panels.some(p => p.shape === 'tall') ? 'portrait' : page.panels.length === 4 ? 'sequence' : 'triptych'}>
             {page.panels.map((panel, i) => {
               const src = art?.[`${page.n}-${i}`];
               return (
-                <div key={i} className={`comic-panel comic-cell flex flex-col justify-between p-2 ${SHAPE[panel.shape]}`}>
-                  {src && <img src={src} alt={panel.scene} loading="lazy" className="absolute inset-0 h-full w-full object-cover" />}
+                <div key={i} className={`comic-panel comic-cell flex flex-col justify-between p-2 ${SHAPE[panel.shape]} ${panel.artSlot?.startsWith('cast:') ? 'comic-character-panel' : ''}`}>
+                  {src && <img src={src} alt={panel.scene} loading="lazy" width={1024} height={1024} className="absolute inset-0 h-full w-full object-cover" />}
                   {!src && (isQrPanel(panel) ? <QrMark /> : <p className="comic-direction leading-snug">{panel.scene}</p>)}
-                  <div className="relative space-y-2">
-                    {panel.caption && <p className="comic-caption">{panel.caption}</p>}
-                    {panel.balloons?.map((b, j) => <p key={j} className={`comic-balloon ${j % 2 ? 'ml-auto' : ''}`}><span className="font-bold uppercase">{b.who}:</span> {b.text}</p>)}
+                  {panel.caption && <p className="comic-caption relative">{panel.caption}</p>}
+                  <div className="relative mt-auto space-y-2 pt-2 pb-2">
+                    {panel.balloons?.map((b, j) => <p key={j} className={`comic-balloon ${j % 2 ? 'ml-auto' : ''} ${/Wait\.|check the choice|ask again/.test(b.text) ? 'comic-balloon-review' : ''}`}><span className="comic-speaker">{b.who}</span>{b.text}</p>)}
                   </div>
                 </div>
               );

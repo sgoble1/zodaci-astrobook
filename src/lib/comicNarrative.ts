@@ -44,25 +44,36 @@ export function buildComicPreview(chart: ChartResult, opts: Parameters<typeof bu
   const pages: ComicPage[] = [];
   const add = (title: string, scene: string, caption: string, who: string, words: string, artSlot: string, section = 'The Midnight Signal') => {
     const n = pages.length + 1;
+    const character = CAST.find(c => c.name === who);
+    const splash = n === 2 || n === 21;
+    const shape = n % 3 === 0 ? 'tall' : n % 3 === 1 ? 'square' : 'wide';
     const panels: ComicPanel[] = [
-      { shape: 'wide', scene, caption, artSlot },
-      { shape: 'square', scene, balloons: [{ who, text: words }], artSlot },
-      { shape: 'square', scene: `${hero} listens, studies the work, and chooses one small next step.`, caption: 'The work continues, one considered choice at a time.', artSlot },
+      { shape, scene, caption, artSlot },
+      { shape: 'square', scene: character ? `${who} considers the next choice at the station.` : scene, balloons: [{ who, text: words }], artSlot: character ? `cast:${character.key}` : 'detail' },
+      { shape: shape === 'square' ? 'wide' : 'square', scene: `${hero} studies the instrument beside the revised drawing.`, caption: character ? `${hero} sets the suggestion beside the drawing before acting.` : 'The revised drawing stays beside the tools.', artSlot: character?.key === 'moon' ? 'lamp' : 'drawing' },
     ];
+    if (splash) {
+      panels.splice(0, panels.length, { shape: 'bleed', scene, caption, balloons: [{ who, text: words }], artSlot: 'terrace' });
+    } else if (n >= 13 && n <= 16) {
+      panels[0].shape = 'wide';
+      panels[2].shape = 'square';
+      panels.push({ shape: 'wide', scene: 'Two revised routes meet at the signal console.', caption: 'They test the connection together, rather than calling agreement a finished repair.', artSlot: 'detail' });
+    }
     pages.push({ n, section, title, panels });
     return n;
   };
   pages.push({ ...base.pages[0], title: 'The Midnight Signal', panels: [{ shape: 'bleed', scene: 'Researcher at a brass signal console beneath an atomic compass orbit.', caption: `${hero} · Issue ${opts.issueNumber}`, artSlot: 'cover' }] });
-  add('An Unfinished Message', 'An observatory signal falters above a quiet hill terrace.', `${hero} comes to the station with a drawing, not a prophecy. Tonight’s task is simple to name and harder to do: make a signal clear enough for somebody else to receive.`, hero, 'I don’t need it to sound impressive. I need it to mean what we send.', 'signal-1');
+  add('An Unfinished Message', 'An observatory signal falters above a quiet hill terrace.', `${hero} comes to the station with a drawing, not a prophecy. Tonight’s task is simple to name and harder to do: make a signal clear enough for somebody else to receive.`, hero, 'I don’t need it to sound impressive. I need it to mean what we send.', 'terrace');
   for (const c of CAST) {
     const b = chart.bodies.find(x => x.key === c.key);
     if (!b || (c.key === 'moon' && !timed)) {
-      add('A Pause Without a Label', 'A lamp stands beside an unassigned workbench.', 'Some information is missing. Nobody fills the empty space with a confident guess.', hero, 'Leave that part open. We can still work with what we know.', 'signal-2');
+      add('A Pause Without a Label', 'A lamp stands beside an unassigned workbench.', 'Some information is missing. Nobody fills the empty space with a confident guess.', hero, 'Leave that part open. We can still work with what we know.', 'lamp');
       continue;
     }
     const task = TASK[c.key];
     const room = timed && b.house ? ROOMS[b.house - 1] : 'observatory workshop';
-    const slot = ['signal-1', 'signal-2', 'signal-3', 'signal-4', 'repair-1', 'repair-2', 'repair-3', 'repair-4', 'repair-4', 'repair-3'][CAST.indexOf(c)];
+    const settings: Record<string, string> = { sun: 'console', moon: 'lamp', mercury: 'drawing', venus: 'archive', mars: 'conduit', jupiter: 'bridge', saturn: 'detail', uranus: 'circuit', neptune: 'agreement', pluto: 'foundation' };
+    const slot = settings[c.key] ?? 'workshop';
     const review = b.retro ? ` ${c.name} returns to the earlier draft before proceeding.` : ` ${c.name} tests the next step in the work.`;
     const n = add(task[0], `${c.name} works in the ${room}.`, `${task[1]}${review}`, c.name, `${SIGN_ACTION[b.sign] ?? task[2]} ${b.retro ? 'Wait. I want to check the choice we made before this one.' : task[2]}`, slot);
     factors.push({ page: n, kind: 'placement', key: b.key, sign: b.sign, ...(timed && b.house ? { house: b.house } : {}), retro: Boolean(b.retro), measured: `${b.name} · ${b.sign} ${b.deg}°${String(b.min).padStart(2, '0')}′${b.retro ? ' · apparent retrograde motion' : ''}${timed && b.house ? ` · house ${b.house}` : ''}` });
@@ -73,12 +84,12 @@ export function buildComicPreview(chart: ChartResult, opts: Parameters<typeof bu
     const a = aspects[i];
     const [title, turn] = a ? RELATION[a.type] : ['The Open Bench', 'They test another connection rather than assuming a result.'];
     const ca = CAST.find(c => c.planet === a?.a), cb = CAST.find(c => c.planet === a?.b);
-    const n = add(title, `${ca?.name ?? 'The researcher'} and ${cb?.name ?? 'Elder'} test the signal connection.`, turn, ca?.name ?? hero, a?.type === 'Square' ? 'Your plan matters. So does the part that won’t fit mine. Let’s work on that joint.' : a?.type === 'Opposition' ? 'I can’t see your bank from here. Tell me what the water is doing on your side.' : 'I can help with that. Put the work between us.', a?.type === 'Opposition' || a?.type === 'Square' ? 'resolution-1' : 'resolution-2');
+    const n = add(title, `${ca?.name ?? 'The researcher'} and ${cb?.name ?? 'Elder'} test the signal connection.`, turn, ca?.name ?? hero, a?.type === 'Square' ? 'Your plan matters. So does the part that won’t fit mine. Let’s work on that joint.' : a?.type === 'Opposition' ? 'I can’t see your bank from here. Tell me what the water is doing on your side.' : 'I can help with that. Put the work between us.', a?.type === 'Opposition' || a?.type === 'Square' ? 'bridge' : 'agreement');
     if (a) factors.push({ page: n, kind: 'aspect', key: `${a.a}/${a.b}/${a.type}`, orb: a.orb, measured: `${a.a} ${a.type.toLowerCase()} ${a.b} · orb ${a.orb.toFixed(2)}°` });
   }
   const point = (key: string, title: string, text: string, dialogue: string) => {
     const b = timed ? chart.bodies.find(x => x.key === key) : undefined;
-    const n = add(title, 'The researcher works at an experimental drawing bench.', text, hero, dialogue, 'resolution-2');
+    const n = add(title, 'The researcher works at an experimental drawing bench.', text, hero, dialogue, 'drawing');
     if (b) factors.push({ page: n, kind: 'point', key, sign: b.sign, house: b.house ?? undefined, retro: Boolean(b.retro), measured: `${b.name} · ${b.sign} ${b.deg}°${String(b.min).padStart(2, '0')}′${b.house ? ` · house ${b.house}` : ''}` });
   };
   const chiron = timed ? chart.bodies.find(b => b.key === 'chiron') : undefined;
@@ -86,19 +97,19 @@ export function buildComicPreview(chart: ChartResult, opts: Parameters<typeof bu
   const node = timed ? chart.bodies.find(b => b.key === 'northNode') : undefined;
   point('northNode', 'A Route Worth Trying', node ? `A fresh route opens through the ${node.house ? ROOMS[node.house - 1] : 'workshop'}. ${SIGN_ACTION[node.sign] ?? 'The researcher chooses an experiment.'}` : 'They leave a fresh route unlabelled until the missing information is supplied.', 'Let’s make something we can actually try, instead of another answer we only admire.');
   const monthPage = base.pages.find(p => p.section === 'Main Story');
-  add('Tonight’s Visitor', monthPage?.panels[0]?.scene ?? 'A visitor arrives at the station.', 'The birth-sky drawing is not tonight’s sky. A visitor brings the month’s separate problem, and the team makes room for it without changing the original plan.', base.cast?.lead ? CAST.find(c => c.key === base.cast?.lead)?.name ?? 'Visitor' : 'Visitor', 'Keep your original drawing. My visit is one part of this month, not the whole of you.', 'resolution-1');
+  add('Tonight’s Visitor', monthPage?.panels[0]?.scene ?? 'A visitor arrives at the station.', 'The birth-sky drawing is not tonight’s sky. A visitor brings the month’s separate problem, and the team makes room for it without changing the original plan.', base.cast?.lead ? CAST.find(c => c.key === base.cast?.lead)?.name ?? 'Visitor' : 'Visitor', 'Keep your original drawing. My visit is one part of this month, not the whole of you.', 'bridge');
   factors.push({ page: 19, kind: 'transit', key: base.mainEvent, measured: `${base.monthLabel} · ${base.mainEvent}` });
-  add('A Signal Somebody Can Hear', 'The full cast gathers around the repaired signal console.', 'The lamp holds. Nobody calls it destiny. It is a small finished thing, made by people who took each other seriously.', hero, 'There. That’s what I meant. Thank you for staying with it.', 'resolution-3');
-  add('Morning at the Station', 'Researcher and owl look toward the observatory at dawn.', 'There will be another message. For now, the drawing can rest beside the tools. A story can offer a question without answering your life for you.', hero, 'What did I keep? What did I reconsider? That’s enough to take home tonight.', 'resolution-4');
-  pages.push({ n: 22, section: 'Calculation Ledger', title: 'The Drawing Beneath the Story', panels: [{ shape: 'wide', scene: 'Brass instrument and source drawing.', artSlot: 'signal-3' }], body: [
+  add('A Signal Somebody Can Hear', 'The full cast gathers around the repaired signal console.', 'The lamp holds. Nobody calls it destiny. It is a small finished thing, made by people who took each other seriously.', hero, 'There. That’s what I meant. Thank you for staying with it.', 'ensemble');
+  add('Morning at the Station', 'Researcher looks toward the observatory at dawn.', 'There will be another message. For now, the drawing can rest beside the tools. A story can offer a question without answering your life for you.', hero, 'What did I keep? What did I reconsider? That’s enough to take home tonight.', 'terrace');
+  pages.push({ n: 22, section: 'Calculation Ledger', title: 'The Drawing Beneath the Story', panels: [{ shape: 'wide', scene: 'Brass instrument and source drawing.', artSlot: 'drawing' }], body: [
     'Fictional scenes, not a record of the reader’s life. Signs influence manner; timed houses choose workrooms; close aspects shape cooperation or friction; apparent backward motion leads a character to reconsider.',
     ...factors.filter(f => f.kind === 'placement').map(f => `p.${f.page} · ${f.measured}`),
   ] });
-  pages.push({ n: 23, section: 'Calculation Ledger', title: 'Connections and Open Questions', panels: [{ shape: 'wide', scene: 'The revised drawing on the signal desk.', artSlot: 'resolution-2' }], body: [
+  pages.push({ n: 23, section: 'Calculation Ledger', title: 'Connections and Open Questions', panels: [{ shape: 'wide', scene: 'The revised drawing on the signal desk.', artSlot: 'detail' }], body: [
     ...(timed && chart.asc != null ? [`Recorded birth time ${chart.input.time} · ${chart.input.placeLabel} · Rising ${fmtLon(chart.asc).sign}${chart.mc != null ? ` · Midheaven ${fmtLon(chart.mc).sign}` : ''}. Houses: ${chart.input.houseSystem ?? 'placidus'}.`] : ['Birth time unknown: no Moon-sign, house, Ascendant or Midheaven claims.']),
     ...factors.filter(f => f.kind !== 'placement').map(f => `p.${f.page} · ${f.measured}`),
     'Astronomy Engine positions; historical time-zone conversion. Measured positions do not prove symbolic interpretations. Astrological insights provided for entertainment and self-reflection purposes only.',
   ] });
-  pages.push({ n: 24, section: 'Back Cover', title: `${hero} · ${base.monthLabel}`, panels: [{ shape: 'bleed', scene: 'Dawn at the observatory.', artSlot: 'resolution-4' }], body: ['Zodaci AstroComic · The Midnight Signal', 'An illustrative preview, not a print-ready buyer issue.'] });
+  pages.push({ n: 24, section: 'Back Cover', title: `${hero} · ${base.monthLabel}`, panels: [{ shape: 'bleed', scene: 'Dawn at the observatory.', artSlot: 'terrace' }], body: ['Zodaci AstroComic · The Midnight Signal', 'An illustrative preview, not a print-ready buyer issue.'] });
   return { ...base, reader: hero, title: 'The Midnight Signal', pages, factors };
 }

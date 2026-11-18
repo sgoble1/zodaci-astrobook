@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { OpenBook } from '@/components/books/OpenBook';
+import { ComicDigest } from '@/components/comic/ComicDigest';
 import { useSession } from '@/hooks/useLibrary';
 import { useMyBirth } from '@/lib/myBirth';
 import { Button } from '@/components/ui/button';
@@ -80,5 +81,5 @@ export function OpenComicDigest({ layout = 'stacked', next = '/astrocomic#previe
   const note = own
     ? 'Your complete 24-page story preview, with a separate calculation ledger. Illustrative artwork, not a print-ready buyer issue. Nothing is saved.'
     : 'A fictional reader, a real calculation';
-  return <OpenBook key={own ? 'mine' : 'sample'} kind="comic" leaves={leaves} label={own ? 'Your AstroComic, built from your chart' : `Sample AstroComic digest starring ${SAMPLE_READER.name}`} layout={layout} spine={{ title: 'AstroComic · Issue 1', name: own ? previewName(own.name) || undefined : SAMPLE_READER.name }} footer={<>{switcher}<p className="mt-2 text-center text-xs text-muted-foreground">5.5 × 8.5 in digest · {note}</p></>} />;
+  return <ComicDigest key={own ? 'mine' : 'sample'} leaves={leaves} reader={own ? previewName(own.name) : SAMPLE_READER.name} label={own ? 'Your AstroComic, built from your chart' : `Sample AstroComic digest starring ${SAMPLE_READER.name}`} layout={layout} footer={<>{switcher}<p className="mt-2 text-center text-xs text-muted-foreground">5.5 × 8.5 in digest · {note}</p></>} />;
 }

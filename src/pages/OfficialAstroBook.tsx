@@ -79,7 +79,7 @@ function EditionShelf({ row }: { row: OfficialEditionRow }) {
             <div className="font-label text-xs tracking-[0.16em] text-primary">Official AstroComic</div>
             <h3 className="text-2xl leading-tight">{row.is_own ? 'Your AstroComic' : `${row.display_name}’s AstroComic`}</h3>
             <p className="flex-1 text-sm text-muted-foreground">A 24-page issue drawn from {row.is_own ? 'your' : `${row.display_name}’s`} own chart and this month’s sky, in the Atomic Zodiac comic style.{row.birth ? '' : ' Birth details are needed before it can be drawn.'}</p>
-            <div className="flex flex-wrap gap-2"><Button asChild variant={row.birth ? 'default' : 'outline'}><Link to={comicTo}><Sparkles className="mr-1.5 h-4 w-4" aria-hidden="true" />Read the AstroComic</Link></Button>{row.birth && <PersonalPreviewDrawer name={row.display_name} input={officialChartInput(row.birth)} possessive={row.is_own ? 'your' : `${row.display_name}’s`} defaultTab="comic" trigger={<Button variant="outline">Next issues, first ten pages</Button>} />}</div>
+            <div className="flex flex-wrap gap-2"><Button asChild variant={row.birth ? 'default' : 'outline'}><Link to={comicTo}><Sparkles className="mr-1.5 h-4 w-4" aria-hidden="true" />Read the AstroComic</Link></Button>{row.birth && <PersonalPreviewDrawer name={row.display_name} input={officialChartInput(row.birth)} possessive={row.is_own ? 'your' : `${row.display_name}’s`} defaultTab="comic" trigger={<Button variant="outline">Preview the next 24-page issue</Button>} />}</div>
           </div>
         </div>
       </div>

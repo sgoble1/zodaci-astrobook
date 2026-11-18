@@ -1,5 +1,10 @@
 # Zodaci roadmap
 
+## Nov 18 — Comic presentation follow-up
+- [x] Audit current planned product-page content: book six-volume overview, 28-page reader, live cover customizer, version comparison, ordering and FAQ; comic complete digest, cast, page map, print spec, plans and FAQ are present. Physical buyer artwork/printing and supplier acceptance remain external work, not preview completion.
+- [x] Remove the disconnected woman-image section; present issue contents as a full-width two-column list around the unified digest.
+- [x] Verify full-panel spacing and lettering at desktop/393px: zero clipped panels, missing images, horizontal overflow or runtime errors. Side text remains available at small sizes.
+
 ## Nov 18 — AstroBook expansion Phase 1
 - [x] Expand to 28 numbered interiors, six complete narrative volumes, Plate I on verso 6 facing its ruler narrative on recto 7; preserve unnumbered front/back matter.
 - [x] Verify all three tones, 60–135-word prose, 5–15-word plate captions, substantive untimed replacements and PDF/leaf regressions.
@@ -9,7 +14,7 @@
 - [x] Phase 3: eight-design front/back wrap composition, barcode reserve, Orbit seal and imprint; preserve live customizer/reader selection and verified Lulu geometry.
 - [x] Phase 4: verify the existing public thirteen-moment live accuracy page and fifteen-chart 0.1° regression benchmark; fill only demonstrated gaps.
 - [x] Phase 5: synchronize 28-page book touchpoints/PDF while keeping comic counts separate; run all tests and check the automatic production build.
-- [ ] After AstroBook phases: vary comic splash/multi-panel beats and speech bubbles beyond repeated scene slots; consolidate /astrocomic, /official/comic and the personal drawer into one turnable digest. Queued next; not implemented in this turn.
+- [x] Comic consolidation: vary comic splash/multi-panel beats and speech bubbles beyond repeated scene slots; consolidate /astrocomic, /official/comic and the personal drawer into one turnable digest. Shared digest, named scene/cast art and varied beats verified in public sample, signed-in member, authorized Shane edition and personal drawer; both member/official PDF downloads verified. 155 suites / 1,278 tests pass; automatic build OK.
 
 - [x] Verified 154 suites / 1,275 tests with bounded workers; automatic build OK. Live /demo reaches Plate I on 6 facing 7, back cover and PDF download; /accuracy shows 13 charts and 338/338; 393px no overflow or runtime errors. Lulu wrap helper deployed; supplier production acceptance/physical proof remains unverified.
 
@@ -47,11 +52,11 @@
 - [x] Signed-out direct access, every tab, three tones, comparison, tier locks, changing synastry partner and actual audio playback verified; 393px has no horizontal overflow. All 1,201 tests pass; preview build OK.
 
 ## Nov 17 — Complete AstroComic previews
-- [ ] Keep the Shane-chart story private; rename its illustrated protagonist Julian Mercer without changing birth facts or account ownership.
-- [ ] Match the personal AstroBook jacket to the shop cover style, with dynamically printed name and chart details.
-- [ ] Expand the comic to a complete 24-page digest with a continuous cast-led narrative; chart factors drive actions, with a separate calculation ledger.
-- [ ] Consolidate competing product previews into one comic reader; keep the public fictional chart separate.
-- [ ] Verify story-factor regressions, reader navigation, phone layout and matching PDF pages; authorized founder checks remain access-dependent.
+- [x] Keep the Shane-chart story private; rename its illustrated protagonist Julian Mercer without changing birth facts or account ownership.
+- [x] Match the personal AstroBook jacket to the shop cover style, with dynamically printed name and chart details.
+- [x] Expand the comic to a complete 24-page digest with a continuous cast-led narrative; chart factors drive actions, with a separate calculation ledger.
+- [x] Consolidate competing product previews into one comic reader; keep the public fictional chart separate.
+- [x] Verify story-factor regressions, reader navigation, phone layout and matching PDF pages; authorized Shane reader and drawer checked signed-in Nov 18.
 
 ## Nov 17 — Expanded AstroBook preview
 - [x] Expand personal and fictional previews to 25 numbered pages, with chart-grounded narrative and method notes.
