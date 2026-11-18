@@ -22,7 +22,7 @@ import skyPanel from '@/assets/astrocomic-sky-panel.jpg';
 import letterPanel from '@/assets/astrocomic-letter-panel.jpg';
 import { comicArtSlots, PREVIEW_PAGES } from '@/lib/personalPreview';
 import type { ComicIssue } from '@/lib/comic';
-import { COMIC_SCENES } from '@/content/comicSceneArt';
+import { COMIC_SCENES, comicCoverArtwork } from '@/content/comicSceneArt';
 
 /** The ten AstroComic planet characters, cut from the shared cast sheet: head crops and full figures. */
 export const CAST_HEAD: Record<string, string> = { sun: sunHead, moon: moonHead, mercury: mercuryHead, venus: venusHead, mars: marsHead, jupiter: jupiterHead, saturn: saturnHead, uranus: uranusHead, neptune: neptuneHead, pluto: plutoHead };
@@ -40,5 +40,7 @@ export function comicPreviewArt(issue: ComicIssue, upTo = 24): Record<string, st
       if (CAST_FULL[character]) out[`${page.n}-${i}`] = CAST_FULL[character];
     }
   });
+  const cover = comicCoverArtwork(issue);
+  if (cover) out['1-0'] = cover;
   return out;
 }

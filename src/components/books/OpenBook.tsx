@@ -55,7 +55,7 @@ export function OpenBook({ leaves, kind = 'book', label, layout = 'side', footer
     finally { setExporting(false); }
   };
   return (
-    <div className={layout === 'side' ? 'grid items-start gap-8 lg:grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)]' : 'space-y-4'}>
+    <div className={layout === 'side' ? 'ob-layout grid items-start gap-8 2xl:grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)]' : 'space-y-4'}>
       <div className="min-w-0">
         <div className="ob-stage" data-kind={kind} data-finish={front?.kind === 'jacket' ? front.finish : undefined} style={trimPt ? { ['--ob-ratio' as string]: trimPt[1] / trimPt[0] } : undefined} onPointerDown={down} onPointerUp={up} onPointerCancel={() => { swipe.current = null; }}>
           <div className="ob-book" data-state={state} role="region" aria-roledescription={kind === 'comic' ? 'comic digest' : 'book'} aria-label={`${label}. ${where}. Use the arrow keys to turn pages.`} tabIndex={0} onKeyDown={onKey}>

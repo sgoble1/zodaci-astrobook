@@ -41,21 +41,23 @@ export default function Learn() {
   const guides = READING_ROOM.filter(a => !cat || a.category === cat);
 
   return (
-    <article className="space-y-10 overflow-x-clip">
-      <header className="learn-hero relative overflow-hidden rounded-2xl border border-[hsl(var(--brass)/0.5)]">
-        <img src={READING_ROOM_HERO} alt="A lamp-lit 1950s home library with a telescope at the window and a zodiac wheel on the wall" width={1280} height={717} {...{ fetchpriority: 'high' }} className="h-80 w-full object-cover sm:h-[26rem]" />
+    <article className="space-y-12 sm:space-y-16 overflow-x-clip">
+      <header className="learn-hero relative overflow-hidden rounded-sm border border-[hsl(var(--brass)/0.5)]">
+        <img src={READING_ROOM_HERO} alt="A lamp-lit 1950s home library with a telescope at the window and a zodiac wheel on the wall" width={1280} height={717} {...{ fetchpriority: 'high' }} className="h-[30rem] w-full object-cover sm:h-[28rem]" />
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/55 to-transparent" />
         <div className="absolute bottom-0 max-w-2xl p-6 sm:p-10">
           <p className="font-label text-sm tracking-[0.2em] text-primary">Zodaci · Research Library</p>
-          <h1 className="mt-2 font-display text-4xl uppercase leading-[0.95] sm:text-6xl">Learn to read the sky.</h1>
+          <h1 className="mt-2 font-display text-3xl uppercase leading-tight sm:text-5xl">Learn to read the sky.</h1>
           <p className="mt-3 font-script text-2xl text-primary sm:text-3xl">One idea at a time.</p>
           <p className="mt-3 text-muted-foreground">{showLessons ? `${ALL_LESSONS.length} lessons, ` : ''}{READING_ROOM.length} illustrated guides, {PUBLIC_ARTICLES.length} articles, today’s measured sky and essays from members.</p>
         </div>
       </header>
 
       <nav aria-label="Learn sections" className="learn-subnav sticky top-16 z-30 mx-0 flex gap-2 overflow-x-auto rounded-full border border-[hsl(var(--brass)/0.5)] bg-background p-1.5 shadow-lg lg:top-20">
-        {sections.map(s => <a key={s.id} href={`#${s.id}`} aria-current={hash === `#${s.id}` ? 'true' : undefined} className={cn('flex shrink-0 items-center gap-2 rounded-full px-3 py-1.5 font-label text-sm transition-colors duration-700 hover:bg-secondary', hash === `#${s.id}` && 'bg-primary text-primary-foreground')}><SpotArt kind={s.art} className="h-6 w-6" orbit={false} />{s.label}</a>)}
+        {sections.map(s => <a key={s.id} href={`#${s.id}`} aria-current={hash === `#${s.id}` ? 'true' : undefined} className={cn('flex shrink-0 items-center gap-2 rounded-sm px-3 py-2.5 min-h-11 font-label text-sm transition-colors duration-700 hover:bg-secondary', hash === `#${s.id}` && 'bg-primary text-primary-foreground')}><SpotArt kind={s.art} className="h-6 w-6" orbit={false} />{s.label}</a>)}
       </nav>
+
+      <section aria-labelledby="learn-start-h" className="space-y-5"><h2 id="learn-start-h" className="font-display text-2xl sm:text-3xl">Choose where to begin.</h2><div className="grid gap-6 md:grid-cols-3">{[['A first chart', 'See how signs, houses and aspects fit together, then read a guide with your chart beside you.', '#diagrams'], ['A deeper question', 'Explore the guides by topic. Each introduces the terms and gives you something to try.', '#guides'], ['The sky today', 'Compare current planetary positions with the next 30 days of calculated sky events.', '#forecasts']].map(([title, text, to]) => <a key={title} href={to} className="block space-y-3 border-t border-border pt-5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-ring"><h3 className="font-label text-2xl text-primary">{title}</h3><p className="text-muted-foreground leading-relaxed">{text}</p><span className="inline-flex min-h-11 items-center gap-2 text-accent">Open this section<ArrowRight className="h-4 w-4" /></span></a>)}</div></section>
 
       {showLessons && <section id="lessons" aria-labelledby="lessons-h" className="scroll-mt-36 space-y-10">
         <SectionHead id="lessons-h" eyebrow="Zodaci Academy" title="Lessons" text={`${ALL_LESSONS.length} short lessons in ${ACADEMY.length} paths. Each separates what is measured from what is interpreted, and ends with a way to try it on your own chart.`} art="book" />
@@ -95,7 +97,7 @@ export default function Learn() {
       <section id="guides" aria-labelledby="guides-h" className="scroll-mt-36 space-y-6">
         <SectionHead id="guides-h" eyebrow="The Reading Room" title="Illustrated guides" text="Short guides with words to know and something to try on your own chart." art="explore" />
         <div role="group" aria-label="Filter guides by category" className="flex flex-wrap gap-2">
-          {[null, ...ROOM_CATEGORIES].map(c => <button key={c ?? 'all'} type="button" aria-pressed={cat === c} onClick={() => setCat(c)} className={cn('rounded-full border border-[hsl(var(--brass)/0.5)] px-4 py-1.5 font-label text-sm tracking-[0.12em] transition-colors duration-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring', cat === c ? 'bg-primary text-primary-foreground' : 'hover:bg-secondary')}>{c ?? 'All'}</button>)}
+          {[null, ...ROOM_CATEGORIES].map(c => <Button variant="outline" key={c ?? 'all'} type="button" aria-pressed={cat === c} onClick={() => setCat(c)} className={cn('rounded-full border border-[hsl(var(--brass)/0.5)] px-4 py-1.5 font-label text-sm tracking-[0.12em] transition-colors duration-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring', cat === c ? 'bg-primary text-primary-foreground' : 'hover:bg-secondary')}>{c ?? 'All'}</Button>)}
         </div>
         <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">{guides.map(a => <li key={a.slug}><Link to={`/reading-room/${a.slug}`} className="obs-paper learn-card flex h-full flex-col overflow-hidden"><img src={a.image} alt="" loading="lazy" decoding="async" width={1280} height={717} className="aspect-[3/2] w-full object-cover" /><div className="flex flex-1 flex-col gap-2 p-5"><p className="font-label text-xs tracking-[0.14em] text-primary">{a.category} · {a.minutes} min</p><h3 className="font-display text-xl leading-snug">{a.title}</h3><p className="flex-1 text-sm text-muted-foreground">{a.glance}</p><p className="font-label text-xs tracking-[0.14em] text-accent">Read guide →</p></div></Link></li>)}</ul>
       </section>

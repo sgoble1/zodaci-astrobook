@@ -15,12 +15,12 @@ import { WhyZodaciLine } from '@/components/brand/WhyZodaci';
 import { BOOK_PRODUCT_SAMPLES } from '@/content/productArtwork';
 import { SampleCover } from '@/components/books/SampleCover';
 import { ThemeArt } from '@/components/common/ThemeArt';
-import { SampleBook } from '@/components/books/SampleBookReader';
+import { OpenComicDigest } from '@/components/books/OpenAstroBook';
+import { SAMPLE_ISSUE } from '@/content/sampleComic';
+import { CalculationTrust } from '@/components/common/CalculationTrust';
 import { VOLUMES } from '@/lib/bookVolumes';
 import { OpenAstroBook } from '@/components/books/OpenAstroBook';
 import { SAMPLE_EDITION } from '@/content/sampleEdition';
-import { SAMPLE_BIRTH } from '@/lib/sampleBook';
-import { birthLineOf } from '@/lib/bookLeaves';
 
 /** The six volumes of every AstroBook, described from what buildVolumes() actually writes. */
 const VOLUME_ART = { I: 'chart', II: 'house', III: 'aspect', IV: 'healing', V: 'sign', VI: 'year' } as const;
@@ -44,16 +44,18 @@ export function AstroBookPublic() {
           <p className="text-xs font-medium tracking-[0.12em] text-accent">YOUR CHART, IN PRINT</p>
           <h1 className="hero-headline">AstroBook</h1>
           <p className="font-script text-3xl text-primary">Your stars, your story.</p>
-          <p className="text-lg text-muted-foreground">An AstroBook is your birth chart written out in six volumes: who you are, your houses, planets and aspects, the finer points, other traditions, and timing for the year ahead. Every chapter is worked out from the minute and place you were born.</p>
+          <p className="text-lg text-muted-foreground">An AstroBook gives your calculated chart room to become a thoughtful, personal reading. Planets are read together through their signs, degrees, rulers and measured connections. The chapters explain the reasoning, then leave space for your own reflections. Unknown birth times are handled without invented houses or angles.</p>
           <p className="text-sm text-muted-foreground">{BOOK_VERSIONS.filter(v => v.id === 'digital' || v.id === 'pocket' || v.id === 'linen').map(v => `${v.name} ${money(v.price)}`).join(' · ')} · free US shipping on printed versions</p>
           <div className="flex flex-wrap items-center gap-4"><Button asChild size="lg" variant="primary"><Link to={order()}>Order your AstroBook</Link></Button><Link to="/book-preview" className="text-accent">Read a sample book →</Link><Link to="/demo" className="text-accent">Try the interactive demo →</Link></div>
         </div>
         <ProductArtworkGallery />
       </section>
-      <section id="full-edition" aria-labelledby="fe-h" className="scroll-mt-6 space-y-6">
-        <div className="max-w-3xl"><p className="font-label text-xs tracking-[0.16em] text-primary">Open the Collector’s edition</p><h2 id="fe-h" className="mt-1 font-display text-3xl sm:text-4xl">Open {SAMPLE_EDITION.owner}’s AstroBook</h2><p className="mt-3 text-muted-foreground">Turn through 28 numbered pages of birth facts, planetary readings, houses, aspects, traditions and timing, with Plate I on page 6. The cover, bookplate and end matter are included separately. {SAMPLE_EDITION.note} Signed in with your birth details, you can open the same preview from your own chart.</p></div>
-        <div className="obs-paper p-4 sm:p-6"><OpenAstroBook /></div>
-        <div className="flex flex-wrap gap-4"><Button asChild size="lg"><Link to={order()}>Start my AstroBook</Link></Button><Link to="/astrocomic" className="self-center text-accent">Read {SAMPLE_EDITION.owner.split(' ')[0]}’s comic issue →</Link></div>
+      <section id="full-edition" aria-labelledby="fe-h" className="scroll-mt-24 space-y-8">
+        <div className="max-w-3xl space-y-4"><h2 id="fe-h" className="font-display text-3xl sm:text-4xl">One book. Open it here.</h2><p className="text-muted-foreground leading-relaxed">The 28-page opening follows the same chart-specific writing approach as our private founder editions. It spans six volumes, with a calculation record, engraved plate, reflections and a Reader’s Compass. Cover, title and dedication are separate from the numbered pages. Your complete manuscript is reviewed before payment.</p><p className="text-sm text-muted-foreground">The public book belongs to {SAMPLE_EDITION.owner}, a fictional reader with a calculated chart. Founder books and their birth details stay account-only.</p></div>
+        <div id="teaser" className="scroll-mt-24 min-w-0">
+          <MemberBookTeaser fallback={<OpenAstroBook layout="side" />} />
+        </div>
+        <div className="flex flex-wrap gap-4"><Button asChild size="lg"><Link to={order()}>Choose my AstroBook</Link></Button><Link to="#inside" className="self-center text-accent underline underline-offset-4">Explore the six volumes</Link></div>
       </section>
       <PersonalizationStory />
       <WhyZodaciLine />
@@ -87,15 +89,15 @@ export function AstroBookPublic() {
         <VersionCompare orderLink />
         <p className="text-xs text-muted-foreground">Page ranges are targets; finished readings add pages. Your real page count is shown in the PDF preview before you pay. Extra sections are {money(EXTRA_SECTION_PRICE)} each.</p>
       </section>
-      <section id="look-inside" className="space-y-6">
-        <h2 className="font-display text-3xl">Look inside before you order.</h2>
-        <p className="text-muted-foreground">A 28-page fictional sample preview for {SAMPLE_BIRTH.name}, {birthLineOf(SAMPLE_BIRTH.date, SAMPLE_BIRTH.time, SAMPLE_BIRTH.placeLabel).replace(/^Born/, 'born')}, with calculated chart facts and the same chapter layout as a real book. Your own book is written from your chart, adds your finished readings, and shows its real page count before payment. Read all 28 numbered pages below, or <Link to="/book-preview" className="underline text-accent">open the turnable sample book</Link>.</p>
-        <SampleBook maxPages={28} cta={<Button asChild variant="outline"><Link to="/book-preview">Open the turnable sample<ArrowRight /></Link></Button>} />
+      <CalculationTrust />
+      <section id="look-inside" aria-labelledby="comic-sample-h" className="grid items-start gap-10 xl:grid-cols-[minmax(0,.8fr)_minmax(0,1.2fr)]">
+        <div className="space-y-5"><h2 id="comic-sample-h" className="font-display text-3xl">Read {SAMPLE_ISSUE.title}.</h2><p className="text-muted-foreground leading-relaxed">The same fictional reader’s chart becomes an AstroComic. Her placements shape the cast and the choices in the story. Turn the complete 24-page digest here; the book above remains the one place to explore your AstroBook.</p><p className="text-sm text-muted-foreground">Comic scenes are imaginative interpretations, never evidence of anyone’s life. AstroComic is a separate purchase.</p><Button asChild variant="outline"><Link to="/astrocomic">Explore AstroComic<ArrowRight /></Link></Button></div>
+        <div className="min-w-0"><OpenComicDigest layout="stacked" /></div>
       </section>
-      <section id="teaser" className="rounded-xl border border-gold/30 bg-card p-8">
-        <MemberBookTeaser fallback={<div className="grid gap-8 md:grid-cols-2"><div className="space-y-3"><h2 className="font-display text-3xl">A free teaser.</h2><p className="text-muted-foreground">Not ready for a book? Enter your email and birth date for a short, calculated teaser: your Sun sign, Chinese zodiac year and Life Path number. Free, instant, no account. <Link to="/auth?mode=signup&next=/astrobook%23teaser" className="underline text-accent">Sign in</Link> to open the 28-page preview of your own book.</p></div><CosmicTeaser /></div>} />
+      <section aria-labelledby="quick-teaser-h" className="grid items-start gap-8 border-y border-border py-8 md:grid-cols-2">
+        <div className="space-y-3"><h2 id="quick-teaser-h" className="font-display text-2xl">Start with a few calculated facts.</h2><p className="text-muted-foreground">Your Sun sign, Chinese zodiac year and Life Path number, without opening an account. To read the 28-page preview of your own book, sign in and save your birth details.</p></div><CosmicTeaser />
       </section>
-      <section id="gift" className="rounded-xl border border-primary/30 bg-primary/10 p-10 text-center space-y-4">
+      <section id="gift" className="border-y border-border py-10 text-center space-y-4">
         <Gift className="mx-auto h-8 w-8 text-accent" aria-hidden />
         <h2 className="font-display text-3xl">Give an AstroBook.</h2>
         <p className="mx-auto max-w-xl text-muted-foreground">Give someone a book written from their own birth date, time and place, not yours. Add a note, printed on its own page, and ship it straight to them, or send a Digital copy they download by signing in with their email.</p>

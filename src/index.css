@@ -1415,7 +1415,7 @@ li:hover > .zodiac-coin { transform: rotate(-10deg); }
 @media (max-width: 1279px) { .chart-hero-beam { right: 0; } }
 
 /* Openable 3D AstroBook / AstroComic digest (OpenBook.tsx). Print colours come from the comic ink tokens. */
-.ob-stage { --ob-w: min(47cqw, 17rem); --ob-ratio: 1.5; container-type: inline-size; perspective: 2400px; display: flex; justify-content: center; padding: 1.75rem 0 2.25rem; overflow-x: clip; touch-action: pan-y; user-select: none; }
+.ob-stage { --ob-w: min(42cqw, 20rem); --ob-ratio: 1.5; container-type: inline-size; perspective: 2400px; display: flex; justify-content: center; padding: 2.75rem 0 3rem; overflow-x: clip; touch-action: pan-y; user-select: none; }
 .ob-stage[data-kind="comic"] { --ob-ratio: 1.545; }
 .ob-book { position: relative; flex: none; width: calc(var(--ob-w) * 2); height: calc(var(--ob-w) * var(--ob-ratio)); transform-style: preserve-3d; transition: transform 1.6s cubic-bezier(.45,.05,.2,1); outline: none; }
 .ob-book:focus-visible { box-shadow: 0 0 0 2px hsl(var(--ring)); }
@@ -1490,7 +1490,8 @@ li:hover > .zodiac-coin { transform: rotate(-10deg); }
 .ob-edition-seal { border-top: 1px solid hsl(var(--book-foil) / .6); padding-top: 2cqw; font-size: 3.6cqw; color: hsl(var(--book-foil)); }
 .ob-stage[data-finish="cloth"] .ob-spine, .ob-stage[data-finish="leatherette"] .ob-spine { box-shadow: var(--book-deboss-shadow); }
 .ob-plate { flex: 1; min-height: 0; border: .8cqw solid hsl(var(--comic-navy)); box-shadow: 0 0 0 1.2cqw hsl(var(--spot-paper)), 0 0 0 1.6cqw hsl(var(--comic-mustard)); margin: 1.6cqw; }
-.ob-plate img, .ob-comic-art img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.ob-plate img { width: 100%; height: 100%; object-fit: contain; display: block; }
+.ob-comic-art img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .ob-comic { gap: 2cqw; padding-top: 7cqw; }
 .ob-comic-head { border-bottom: .5cqw solid hsl(var(--comic-navy)); padding-bottom: 1.2cqw; font-size: 3.6cqw; letter-spacing: .08em; color: hsl(var(--comic-brick)); line-height: 1.15; }
 .ob-comic-art { position: relative; flex: 1; min-height: 0; border: 1cqw solid hsl(var(--comic-navy)); }
@@ -1665,3 +1666,15 @@ html[data-tab-hidden] *, html[data-tab-hidden] *::before, html[data-tab-hidden] 
 
 /* Slide 1 uses a transparent cut-out of the Cartographer: no edge masks, the chart shows all around her. */
 .chartmap .chartmap-figure, .hero-slides .chartmap-figure { -webkit-mask-image: none; mask-image: none; filter: drop-shadow(0 6px 18px hsl(var(--midnight) / .55)); }
+
+/* Product readers need a full spread before adding a second reading column. */
+.ob-layout, .ob-reader { min-width: 0; }
+.ob-reader { overflow-wrap: anywhere; max-width: 65ch; }
+.ob-details { border-top: 1px solid hsl(var(--border)); padding-top: 1rem; }
+.ob-details summary { min-height: 2.75rem; display: flex; align-items: center; }
+.about-editorial-opening { position: relative; isolation: isolate; min-height: 34rem; display: flex; align-items: flex-end; padding: 3rem 2rem; color: hsl(var(--paper)); background: hsl(var(--midnight)); }
+.about-editorial-sky { position: absolute; inset: 0; z-index: -2; width: 100%; height: 100%; object-fit: cover; object-position: center; }
+.about-editorial-opening::after { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(90deg, hsl(var(--midnight) / .94), hsl(var(--midnight) / .65) 55%, hsl(var(--midnight) / .12)); }
+.about-editorial-intro { max-width: 38rem; }
+.about-editorial-opening .hero-headline { font-size: 3.5rem; }
+@media (max-width: 639px) { .about-editorial-opening { min-height: 36rem; padding: 2rem 1.25rem; } .about-editorial-opening .hero-headline { font-size: 2.75rem; } .about-editorial-sky { object-position: 65% center; } }

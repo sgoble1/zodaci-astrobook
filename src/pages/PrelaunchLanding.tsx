@@ -11,10 +11,10 @@ import { functionErrorMessage } from '@/lib/functionError';
 import art from '@/assets/prelaunch/couple-observatory.jpg';
 
 const FEATURES = [
-  { icon: Telescope, title: 'Your birth chart', body: 'Worked out from the real sky at your birth, with the time zone rules of that day.' },
-  { icon: BookOpen, title: 'The AstroBook', body: 'Your chart as a printed book, from a digital edition to a linen hardcover.' },
-  { icon: Orbit, title: 'The AstroComic', body: 'A monthly 1950s-style comic built from the planets moving through your chart.' },
-  { icon: Moon, title: 'Dream journal', body: 'Log a dream and see what the sky was doing that night.' },
+  { icon: Telescope, title: 'Your birth chart', body: 'Calculated degrees, rulers and aspects, with historical time zones and public Swiss Ephemeris benchmark checks.' },
+  { icon: BookOpen, title: 'The AstroBook', body: 'Six volumes of chart-specific writing, engraved plates and reflections. Explore a 28-page opening before choosing your edition.' },
+  { icon: Orbit, title: 'The AstroComic', body: 'A 24-page Atomic Zodiac story: your planets become the cast, and real transits shape their choices.' },
+  { icon: Moon, title: 'Dream journal', body: 'Keep private observations beside the calculated sky that night. You choose whether readings may use them.' },
 ];
 
 const EMAIL_RE = /^\S+@\S+\.\S+$/;
@@ -144,8 +144,9 @@ export default function PrelaunchLanding({ onUnlock, openAccess = false }: { onU
               <span className="text-primary">A brighter home.</span>
             </h1>
             <p className="mt-5 max-w-xl text-lg leading-relaxed">
-              We are finishing the new Zodaci. Your chart is worked out from the real sky, and it can become a printed book, a monthly comic and a private reading space you keep with you.
+              We are finishing Zodaci: a personal observatory built around your whole birth chart. Explore how planets, rulers and precise aspects fit together, read thoughtful chapters in your preferred tone, and keep your questions and observations private.
             </p>
+            <ul className="mt-4 space-y-2 text-sm text-muted-foreground" aria-label="What you can verify"><li>13 public Swiss Ephemeris benchmark moments, with coordinate differences you can inspect.</li><li>28-page book opening and a complete 24-page comic sample, available in the interactive demo.</li></ul>
             <p className="mt-4 font-script text-2xl text-primary">Be the first to know when we open.</p>
 
             {state === 'done' ? (
@@ -168,8 +169,8 @@ export default function PrelaunchLanding({ onUnlock, openAccess = false }: { onU
                     aria-describedby="pl-msg"
                     className="h-14 rounded-none border-0 bg-background text-base text-foreground placeholder:text-muted-foreground/70 focus-visible:ring-0"
                   />
-                  <Button type="submit" disabled={state === 'sending'} className="h-14 rounded-none bg-accent px-8 font-label text-2xl tracking-wide text-accent-foreground hover:bg-accent/90">
-                    {state === 'sending' ? 'Sending…' : 'Join'}
+                  <Button type="submit" disabled={state === 'sending'} className="h-14 shrink-0 rounded-none bg-accent px-5 font-label text-2xl tracking-wide text-accent-foreground hover:bg-accent/90">
+                    {state === 'sending' ? 'Sending…' : 'Keep me posted'}
                   </Button>
                 </div>
                 <div className="hidden" aria-hidden="true">
@@ -190,7 +191,7 @@ export default function PrelaunchLanding({ onUnlock, openAccess = false }: { onU
                   {state === 'error' ? msg : ''}
                 </p>
                 <p className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <Lock className="h-4 w-4 text-primary" aria-hidden /> Launch news only. We never share or sell your address.
+                  <Lock className="h-4 w-4 text-primary" aria-hidden /> Launch news only. No birth details needed here. We never share or sell your email.
                 </p>
               </form>
             )}
@@ -206,6 +207,11 @@ export default function PrelaunchLanding({ onUnlock, openAccess = false }: { onU
             />
           </div>
         </main>
+
+        <section aria-labelledby="pl-depth-h" className="grid gap-6 border-t border-primary/50 py-8 md:grid-cols-2">
+          <div className="space-y-3"><h2 id="pl-depth-h" className="font-display text-2xl">The detail is in the connections.</h2><p className="text-muted-foreground leading-relaxed">A single sign cannot describe a whole chart. Zodaci reads signs, degrees and planetary relationships together. A known birth time adds houses and angles; without it, the reading stays with substantive planetary analysis and a provisional Moon.</p></div>
+          <div className="space-y-3"><h2 className="font-display text-2xl">Study it. Ask about it. Keep it.</h2><p className="text-muted-foreground leading-relaxed">Your chart can become a reading library, a voiced podcast, a workbook, an AstroBook or an AstroComic. Different traditions are clearly identified, and calculated facts stay separate from interpretation and anything you choose to share about your life.</p><a href="/demo" className="inline-flex min-h-11 items-center text-primary underline underline-offset-4">Explore the interactive sample</a></div>
+        </section>
 
         <section aria-label="What's coming" className="grid grid-cols-1 gap-6 border-t border-primary/50 py-8 sm:grid-cols-2 lg:grid-cols-4 lg:gap-0">
           {FEATURES.map((f, i) => (

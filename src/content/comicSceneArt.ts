@@ -1,3 +1,5 @@
+import shaneCover from '@/assets/products/shane-atomic-comic-cover.jpg';
+import type { ComicIssue } from '@/lib/comic';
 import cover from '@/assets/products/researcher-orbit-cover.jpg';
 import s1 from '@/assets/comic-story/signal-1.jpg';
 import s2 from '@/assets/comic-story/signal-2.jpg';
@@ -22,3 +24,7 @@ export const COMIC_SCENES: Record<string, string> = {
   // Legacy saved scripts retain their original pictures; new previews use named story beats.
   'signal-1': s1, 'signal-2': s2, 'signal-3': s3, 'signal-4': s4, 'repair-1': r1, 'repair-2': r2, 'repair-3': r3, 'repair-4': r4, 'resolution-1': f1, 'resolution-2': f2, 'resolution-3': f3, 'resolution-4': f4,
 };
+/** Select founder-specific artwork only after an authorized issue has been composed. Public samples never use it. */
+export function comicCoverArtwork(issue: ComicIssue): string | undefined {
+  return /^(shane|julian mercer)\b/i.test(issue.reader.trim()) && issue.signs.sun === 'Aries' && issue.signs.moon === 'Taurus' && issue.signs.rising === 'Leo' ? shaneCover : undefined;
+}

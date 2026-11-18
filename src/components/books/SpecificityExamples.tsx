@@ -1,7 +1,7 @@
 import { SAMPLE_EDITION } from '@/content/sampleEdition';
 
 /**
- * "A horoscope says / Your chapter says": concrete depth taken from the public sample edition
+ * "A sign-only summary says / Your chapter says": concrete depth taken from the public sample edition
  * (a fictional reader's birth moment, calculated like a real order). No private founder
  * text is used; the context example is labelled as an illustration of the feature.
  */
@@ -29,7 +29,7 @@ export function SpecificityExamples({ className }: { className?: string }) {
       <ul className="mt-4 space-y-4">
         {SPECIFICITY_ROWS.map(r => (
           <li key={r.generic} className="specific-row">
-            <div className="specific-generic"><p className="font-label text-xs tracking-[0.16em] text-muted-foreground">A sun-sign horoscope says</p><p className="mt-1 text-sm italic">“{r.generic}”</p></div>
+            <div className="specific-generic"><p className="font-label text-xs tracking-[0.16em] text-muted-foreground">A sign-only summary says</p><p className="mt-1 text-sm italic">“{r.generic}”</p></div>
             <div className="specific-zodaci"><p className="font-label text-xs tracking-[0.16em] text-primary">Your chapter says</p><p className="mt-1 text-sm leading-relaxed">{r.specific}</p><p className="mt-2 font-label text-[0.68rem] tracking-[0.12em] text-muted-foreground">Calculated: {r.facts}</p></div>
           </li>
         ))}

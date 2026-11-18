@@ -78,7 +78,7 @@ export const GENERAL_FAQ: { category: string; items: QA[] }[] = [
   ] },
   { category: 'About astrology', items: [
     { q: 'Is astrology scientifically accurate?', a: 'Astrology is not a scientifically validated way to predict personality or events, and we say so. The calculations are astronomically precise; the interpretation is a centuries-old symbolic language — useful for reflection, not as a forecast.' },
-    { q: "What's the difference between a sun sign and a full birth chart?", a: 'Your sun sign is where the Sun was when you were born — the newspaper horoscope. A full chart includes ten planets, twelve houses and many aspects. Zodaci works with the full picture.' },
+    { q: "What's the difference between a sun sign and a full birth chart?", a: 'Your sun sign is where the Sun was when you were born — one factor in a much larger chart. A full chart includes ten planets, twelve houses and many aspects. Zodaci works with the full picture.' },
   ] },
   { category: 'Pricing & account', items: PRICING_FAQ.filter(i => !['How does AstroBook shipping work?', "What if I don't know my birth time?"].includes(i.q)) },
   { category: 'AstroBook', items: ASTROBOOK_FAQ },

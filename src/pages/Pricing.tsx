@@ -28,10 +28,10 @@ const CARDS: Card[] = [
 const rank: Record<Tier, number> = { free: 0, full: 1, creator: 2 };
 const Y = true, N = false;
 const COMPARE: { group: string; rows: [string, boolean | string, boolean | string, boolean | string][] }[] = [
-  { group: 'Your chart', rows: [['Full birth chart wheel, calculated from your exact birth moment', Y, Y, Y], ['Sun, Moon and Rising with degrees', Y, Y, Y], ['Every planet, Chiron and the North Node explained', N, Y, Y], ['House Explorer and aspect grid', N, Y, Y], ['Fixed stars and sensitive points', N, Y, Y], ['Hermetic lots and annual profections', N, N, Y]] },
+  { group: 'Your chart', rows: [['Full birth chart wheel, calculated from your exact birth moment', Y, Y, Y], ['Sun, Moon and Rising with degrees', Y, Y, Y], ['Every planet, Chiron and the North Node explained', N, Y, Y], ['House Explorer and aspect grid', N, Y, Y], ['Fixed stars and sensitive points', N, Y, Y], ['Hermetic lots and annual profections', N, Y, Y]] },
   { group: 'Readings', rows: [['Full written readings', '2', 'All 38', 'All 38'], ['Core themes', 'First section', 'Full', 'Full'], ['Other systems (Vedic, Ba Zi, Maya and more)', 'Key values', Y, Y], ['Numerology name numbers, pinnacles and challenges', N, Y, Y], ['Feng Shui eight directions', 'Kua number', Y, Y]] },
   { group: 'Timing', rows: [['RetroGOOD rating and top planet', Y, Y, Y], ['Transit overlay and 90-day timeline', N, Y, Y], ['Personal timeline and retrograde calendar', N, Y, Y]] },
-  { group: 'Create & keep', rows: [['AI credits each month', String(CREDIT_ALLOWANCE.free), String(CREDIT_ALLOWANCE.full), String(CREDIT_ALLOWANCE.creator)], ['Counselor and SmartChat conversations', 'Uses credits', 'Uses credits', 'Uses credits'], ['Saved relationship charts and compatibility', Y, Y, Y], ['Personal podcasts (audio narration)', N, N, Y], ['New Masterbook chapters', N, N, Y], ['Print or save any chart page', Y, Y, Y]] },
+  { group: 'Create & keep', rows: [['AI credits each month', String(CREDIT_ALLOWANCE.free), String(CREDIT_ALLOWANCE.full), String(CREDIT_ALLOWANCE.creator)], ['Counselor and SmartChat conversations', 'Uses credits', 'Uses credits', 'Uses credits'], ['Saved relationship charts and compatibility', Y, Y, Y], ['Personal podcasts (audio narration)', N, Y, Y], ['New Masterbook chapters', N, Y, Y], ['Print or save any chart page', Y, Y, Y]] },
   { group: 'Community & AstroBook', rows: [['Read and reply to community posts', Y, Y, Y], ['Reading Room articles and Academy', Y, Y, Y], ['Order an AstroBook (sold separately)', Y, Y, Y]] },
 ];
 const cell = (v: boolean | string) => typeof v === 'string' ? v : v ? <Check className="mx-auto h-4 w-4 text-primary" aria-label="Included" /> : <Minus className="mx-auto h-4 w-4 text-muted-foreground" aria-label="Not included" />;
@@ -174,9 +174,9 @@ export default function Pricing() {
 }
 
 const SAME_SKY = [
-  ['Sun sign horoscope', 'Written for 1 in 12 people', 'Everyone born in the same month or so gets the same text.'],
-  ['Big Three reading', 'Written for roughly 1 in 1,728', 'Sun, Moon and Rising together: 12 × 12 × 12 combinations.'],
-  ['Your Zodaci reading', 'Written for your birth minute', 'Every degree, house and aspect from your date, time and place. Only someone born the same minute in the same town shares it.'],
+  ['Sun-sign summary', 'Written for 1 in 12 people', 'Everyone born in the same month or so gets the same text.'],
+  ['Big Three reading', 'Three signs considered together', 'Sun, Moon and Rising add context, but still leave out degrees, rulers and aspect geometry.'],
+  ['Your Zodaci reading', 'Written for your birth minute', 'Every degree, house and aspect from your date, time and place. Interpretations read those factors together; an unknown time leaves houses and angles out.'],
 ] as const;
 
 /** Differentiation plate above the tiers: the arithmetic is exact, the third card says only what the calculation does. */

@@ -7,7 +7,7 @@ import type { Tier } from '@/lib/plans';
 export const DEMO_TABS = [
   { id: 'wheel', label: 'Natal Wheel' },
   { id: 'placements', label: 'Placements & Houses' },
-  { id: 'transits', label: 'Transits & Horoscope' },
+  { id: 'transits', label: 'Transits & Timing' },
   { id: 'edition', label: 'Shane’s Edition' },
   { id: 'synastry', label: 'Synastry' },
 ] as const;

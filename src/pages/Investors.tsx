@@ -18,7 +18,7 @@ import { InvestorEconomics } from '@/components/common/InvestorEconomics';
 const low = BOOK_VERSIONS[0]; const high = BOOK_VERSIONS[BOOK_VERSIONS.length - 1];
 const PRODUCTS: [string, string, string][] = [
   ['self', 'Memberships', `Free, Pro ${PLAN_PRICE.full.month} and Cosmic ${PLAN_PRICE.creator.month}. Readings, counselors, workbook, podcasts and a Masterbook written from each member’s own calculated chart.`],
-  ['sign', 'AstroBook', `A six-volume personal book in five editions, ${money(low.price)} to ${money(high.price)}, printed on demand. Same structure and depth as our founders’ Masterbooks.`],
+  ['sign', 'AstroBook', `A six-volume personal book in five editions, ${money(low.price)} to ${money(high.price)}, printed on demand. A shared chapter framework with a 28-page preview; content depth depends on the edition and completed readings.`],
   ['year', 'AstroComic', 'A monthly illustrated comic in the original Atomic Zodiac style (1950s golden-age comic), starring the member’s chart. Issue #1 is open for print pre-order.'],
   ['chart', 'Shop', 'Posters, sticker sheets and notebooks, sold and fulfilled through a live Shopify storefront.'],
 ];
@@ -42,16 +42,16 @@ const LIVE = [
   'Cosmic Studio: chart wallpapers, posters, journal pages and affirmation cards to download or save, plus one-time AI credit packs.',
   'Chart-matched shop picks: members see shop items chosen from their own Sun, Moon and Rising signs, and pick one of twelve drawn observatory characters to represent them across the site.',
   'Other Systems: Vedic, Chinese Ba Zi, numerology, Feng Shui and Flying Stars, Nine Star Ki, Tzolk’in and more — all from the same birth data.',
-  'Six-volume AstroBook builder with cover choice, print-ready PDFs and a page-turning preview. Signed-in members can turn the first pages of a book built from their own chart.',
+  'Six-volume AstroBook builder with cover choice, print-ready PDFs and a page-turning preview. One live 28-page preview carries cover, dedication and format choices; signed-in members read their own calculated chart.',
   'Gift an AstroBook: written from the recipient’s own birth details, with a dedication page and gift notice (a full paid gift order is still being tested).',
   'Coming-soon page with a waitlist and a private access code, so the site can collect sign-ups while the build continues.',
-  'AstroComic Issue #1: seven drawn pages, a 3D page-turning preview, a full read-through and a print pre-order with specs and a delivery timeline.',
+  'AstroComic: a unified 24-page turnable story preview with varied panel layouts, chart-driven cast, side-reading and PDF export. Illustrative preview art is separate from final buyer print proofs.',
   'Subscriptions with verified webhooks, plan changes and refunds; Shopify checkout; order tracking and a print-dispatch console.',
   'Private editions that open only for their owner and the people they share with — enforced on the server, never by passwords on a device.',
 ];
 const PHASES: { name: string; when: string; status: string; items: string[] }[] = [
   { name: 'Phase 1 · Foundation', when: 'Done', status: 'Live', items: ['Chart engine and accuracy tests', 'Memberships, readings, counselors, podcasts', 'Founder editions, sharing and privacy', 'Shop and AstroBook ordering', 'Chart-matched shop recommendations, member comic characters and friend-referral rewards'] },
-  { name: 'Phase 2 · Launch polish', when: 'Now', status: 'In progress', items: ['Automated print fulfilment with the print partner', 'Sending domain for receipts and newsletters (DNS pending)', 'Remaining artwork for AstroComic Issue #1 (seven pages drawn so far)', 'Owner sign-off on shop pricing', 'Payment recovery list and spam-protected sign-up forms (done Nov 13)'] },
+  { name: 'Phase 2 · Launch polish', when: 'Now', status: 'In progress', items: ['Automated print fulfilment with the print partner', 'Sending domain for receipts and newsletters (DNS pending)', 'Buyer-specific comic print proofs and printer setup', 'Owner sign-off on shop pricing', 'Payment recovery list and spam-protected sign-up forms (done Nov 13)'] },
   { name: 'Phase 3 · Growth', when: 'Next', status: 'Planned', items: ['Monthly comic art pipeline at scale', 'Licensed source texts (Sabian Symbols, asteroid tables)', 'Mobile app wrapper'] },
   { name: 'Phase 4 · Zodaci Social', when: 'Future', status: 'Vision', items: ['Pseudonymous profiles and communities', 'Topic boards with posts, threads and voting', 'Compatibility discovery between members', 'Moderation, safety and privacy controls'] },
 ];
@@ -99,9 +99,9 @@ const studioYear = (r: typeof STUDIO_ROWS[number]) => Math.round(r.members * (r.
 
 /** Plain-language summary for readers who are not developers; prices come from plans.ts. */
 const SHORT = [
-  ['What it is', 'A members’ site that calculates each person’s birth chart exactly and turns it into readings, a six-volume book, comics, podcasts and things to print.'],
+  ['What it is', 'A members’ site that calculates each person’s birth chart from birth details and turns it into readings, a six-volume book, comics, podcasts and things to print.'],
   ['How it earns', `Memberships (Pro $${PLAN_AMOUNT.full.month} or Cosmic $${PLAN_AMOUNT.creator.month} a month), extra credit packs, printed AstroBooks and comics, and the gift shop.`],
-  ['Where it stands', 'The site works today for members. Before a wider launch: automatic book printing with the print partner, a sending address for receipts, and the rest of the first comic’s drawings.'],
+  ['Where it stands', 'The site works today for members. Before a wider launch: automatic book printing with the print partner, a sending address for receipts, and buyer-specific comic print proofs and printer setup.'],
 ] as const;
 const NEEDS = [...new Map(FEATURES.filter(f => f.blocker).map(f => [f.blocker!, `${f.blocker} — unlocks ${FEATURES.filter(g => g.blocker === f.blocker).map(g => g.name.toLowerCase()).join(', ')}`])).values(), 'Moderation and trust & safety design before any social features'];
 
@@ -116,10 +116,10 @@ export default function Investors() {
   if (!ok) return <article className="mx-auto max-w-xl py-12 text-center"><h1 className="font-display text-3xl">Investor overview</h1><p className="mt-3 text-muted-foreground">This page is invite-only. Ask Shane for access.</p></article>;
   return (
     <article className="space-y-16">
-      <header className="grid items-center gap-8 lg:grid-cols-[1fr_22rem]">
+      <header className="grid items-start gap-8 xl:grid-cols-[minmax(0,1fr)_22rem]">
         <div>
           <div className="font-label text-xs tracking-[0.16em] text-primary">Private · Investor overview</div>
-          <h1 className="text-5xl sm:text-7xl">An encyclopedia of each person’s sky</h1>
+          <h1 className="text-3xl sm:text-5xl">An encyclopedia of each person’s sky</h1>
           <p className="mt-4 max-w-2xl text-lg text-muted-foreground">Zodaci calculates the planets, fixed stars and sensitive points for a member’s exact time and place of birth. From those positions it writes readings, a six-volume book, a monthly comic and podcasts for that one person. The founders’ own editions were the first test of that depth. Later, the same calculations could help members find each other.</p>
           <div className="mt-6 flex flex-wrap gap-3"><Button asChild><Link to="/astrobook">See the AstroBook pages</Link></Button><Button asChild variant="outline"><Link to="/astrocomic">Read the comic</Link></Button><Button asChild variant="outline"><Link to="/demo">Try the demo</Link></Button></div>
         </div>
@@ -157,7 +157,7 @@ export default function Investors() {
       </section>
 
       <section aria-labelledby="inv-d" className="space-y-4"><h2 id="inv-d" className="text-3xl">Real numbers today</h2>
-        <p className="text-muted-foreground">Counted live from the database. We are pre-launch: these are founders and early testers, not paying customers yet.</p>
+        <p className="text-muted-foreground">Counted live from account and order records. These are operational counts, not an audited revenue statement; pre-launch testing activity should be considered when interpreting them.</p>
         {m ? <dl className="grid grid-cols-2 gap-3 sm:grid-cols-4">{([['Accounts', m.members], ['Saved charts', m.charts], ['Readings written', m.readings], ['Podcasts made', m.podcasts], ['Paid memberships', m.paid], ['Books ordered', m.book_orders], ['Comic subscriptions', m.comic_subs]] as [string, number][]).map(([l, v]) => <div key={l} className="vellum p-4"><dt className="text-xs text-muted-foreground">{l}</dt><dd className="font-display text-3xl text-gold">{Number(v).toLocaleString()}</dd></div>)}</dl> : <p role="status" className="text-sm text-muted-foreground">Loading live numbers…</p>}
       </section>
 

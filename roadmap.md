@@ -686,3 +686,17 @@ Full ordered list: docs/master-implementation-resource.md Part 30.
 - [ ] Slice 26 Solar Return · 27 progressions · 28 Academy progress · 29 read-aloud · 30 ephemeris page
 - [ ] Slices 22–25 archive paging, activity export, misc polish, newsletter extras
 - [ ] Documents: Part 30 progress in master resource, reference v5, feature register, developer log
+
+## Nov 18 — Book/comic presentation and About completion
+- [x] Consolidate AstroBook into one live sample/member reader; remove cramped duplicate previews and place the sample beside its introduction.
+- [x] Preserve AstroBook’s established Atomic Zodiac cover; redesign Shane’s comic cover only, retaining private chart boundaries.
+- [x] Complete related book/comic explanatory sections and readable responsive spacing.
+- [x] Rewrite About around chart specificity, supported methods, private context and calculation transparency; replace generic horoscope positioning in public copy.
+- [x] Run regression tests and desktop/mobile reader checks.
+- [x] Shane’s comic cover: finish a redesigned Shopify-style retro Atomic Zodiac comic cover, distinct from the unchanged AstroBook artwork.
+- [x] Final review: enhance relevant product, About, investor and pricing copy/spacing where needed, without changing unrelated functionality.
+- [x] Strengthen waitlist copy and depth while preserving existing signup delivery and the approved visual direction.
+- [x] Add concise calculation proof and privacy reassurance beside waitlist signup and clarify value on pricing/investors.
+- [x] Enhance Relationships and Learn landing hierarchy/spacing; include relevant unfinished Learn hub items except article expansion.
+
+Verification: 156 suites / 1,281 tests pass; preview build OK. Desktop/393px checks cover public product pages, About, authenticated book/customizer and Shane comic, Learn, Relationships, pricing, investors and waitlist. Waitlist delivery was preserved but a new confirmation email delivery was not tested. Existing Academy progress remains in Part 30, outside this presentation pass.
