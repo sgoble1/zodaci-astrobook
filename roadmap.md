@@ -1,5 +1,18 @@
 # Zodaci roadmap
 
+## Nov 18 — AstroBook expansion Phase 1
+- [x] Expand to 28 numbered interiors, six complete narrative volumes, Plate I on verso 6 facing its ruler narrative on recto 7; preserve unnumbered front/back matter.
+- [x] Verify all three tones, 60–135-word prose, 5–15-word plate captions, substantive untimed replacements and PDF/leaf regressions.
+- [x] Phase 2: chart-aware atomic artwork for twelve signs, ten planets and four elements; wire the fictional demo book and verify assets.
+- [x] Book-only engraving resolves calculated ruler, Sun/Moon pairing, element and six closest planetary contacts; no comic figures. Latest listing palette below supersedes the temporary dark-ground direction.
+- [x] Latest visual direction supersedes dark plate ground: Collector Taurus/Atomic Zodiac cream, red title band, navy/brass engraving and golden ellipses across book plates/covers and all /demo chart surfaces; preserve verified Rosalind geometry.
+- [x] Phase 3: eight-design front/back wrap composition, barcode reserve, Orbit seal and imprint; preserve live customizer/reader selection and verified Lulu geometry.
+- [x] Phase 4: verify the existing public thirteen-moment live accuracy page and fifteen-chart 0.1° regression benchmark; fill only demonstrated gaps.
+- [x] Phase 5: synchronize 28-page book touchpoints/PDF while keeping comic counts separate; run all tests and check the automatic production build.
+- [ ] After AstroBook phases: vary comic splash/multi-panel beats and speech bubbles beyond repeated scene slots; consolidate /astrocomic, /official/comic and the personal drawer into one turnable digest. Queued next; not implemented in this turn.
+
+- [x] Verified 154 suites / 1,275 tests with bounded workers; automatic build OK. Live /demo reaches Plate I on 6 facing 7, back cover and PDF download; /accuracy shows 13 charts and 338/338; 393px no overflow or runtime errors. Lulu wrap helper deployed; supplier production acceptance/physical proof remains unverified.
+
 ## Nov 18 — Phase 5 preview touchpoint synchronization
 - [x] Align AstroBook public/drawer/member/update/register copy with 25 numbered interior pages; preserve separate ten-page comic excerpt references and complete digest wording. Historical developer timeline remains a dated record.
 - [x] Sample PDF page limits count numbered interiors before composition, retaining cover/end matter; drawer tests verify custom cover/name/edition/dedication/tone delivery and untimed boundaries. PDF reader labels its 30 sheets separately from 25 numbered pages.

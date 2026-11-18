@@ -163,7 +163,7 @@ export default function Books() {
 
     <nav aria-label="Book steps" className="flex flex-wrap gap-4 border-b border-border pb-4 text-sm"><a href="#versions" className="inline-flex min-h-11 items-center text-primary">Version</a><a href="#personal-cover" className="inline-flex min-h-11 items-center text-primary">Cover</a><a href="#book-review" className="inline-flex min-h-11 items-center text-primary">Review & payment</a><Button asChild variant="outline" size="sm"><Link to="/book-preview">Read the sample book</Link></Button></nav>
 
-    {!spec && <section aria-labelledby="look-inside" className="space-y-3"><h2 id="look-inside" className="text-3xl">Look inside</h2><p className="max-w-2xl text-muted-foreground">25 pages from {bookBirth ? 'the selected reader’s chart' : 'our fictional sample reader'}, with your selected version.</p><OpenAstroBook layout="side" next="/books#versions" previewBirth={bookBirth} edition={edition} dedication={previewDedication} /></section>}
+    {!spec && <section aria-labelledby="look-inside" className="space-y-3"><h2 id="look-inside" className="text-3xl">Look inside</h2><p className="max-w-2xl text-muted-foreground">28 pages from {bookBirth ? 'the selected reader’s chart' : 'our fictional sample reader'}, with your selected version.</p><OpenAstroBook layout="side" next="/books#versions" previewBirth={bookBirth} edition={edition} dedication={previewDedication} /></section>}
     <section id="versions" aria-labelledby="versions-title" className="space-y-5">
       <h2 id="versions-title" className="text-2xl">Choose your version</h2>
       <div role="radiogroup" aria-label="AstroBook version" className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">

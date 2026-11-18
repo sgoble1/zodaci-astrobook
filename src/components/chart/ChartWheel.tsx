@@ -1,6 +1,6 @@
 import { useId, useMemo, useState, type KeyboardEvent } from 'react';
 import { Link } from 'react-router-dom';
-import { ChartProjection, type ChartDevice } from './ChartProjection';
+import { ChartProjection, type ChartDevice, type ChartLook } from './ChartProjection';
 import { Button } from '@/components/ui/button';
 import { SIGNS, SIGN_GLYPH, SIGN_KEYWORDS, BODY_KEYWORDS, fmtLon, type ChartResult } from '@/lib/astro';
 import { FIXED_STARS, type SourceRef } from '@/content/compendium';
@@ -33,7 +33,7 @@ const ASPECT_TONE: Record<string, string> = { Conjunction: 'hsl(var(--chart-ink)
  * Computed natal wheel: zodiac ring, houses, planets, aspect lines and an outer Ba Zi ring.
  * Every element is clickable and opens a detail panel with its confidence badge and source citation.
  */
-export function ChartWheel({ r, sourcesFor, device = 'projector' }: { r: ChartResult; sourcesFor?: (key: string) => { label: string; href: string }[]; device?: ChartDevice }) {
+export function ChartWheel({ r, sourcesFor, device = 'projector', presentation }: { r: ChartResult; sourcesFor?: (key: string) => { label: string; href: string }[]; device?: ChartDevice; presentation?: ChartLook }) {
   const [sel, setSel] = useState<Sel>(null);
   const asc = r.asc ?? 0;
   const S = 440, C = S / 2;
@@ -72,7 +72,7 @@ export function ChartWheel({ r, sourcesFor, device = 'projector' }: { r: ChartRe
   const uid = useId().replace(/:/g, '');
   return (
     <div className="chart-wheel-host"><div className="chart-wheel-grid">
-      <ChartProjection device={device}>
+      <ChartProjection device={device} variant={presentation}>
       <svg viewBox={`0 0 ${S} ${S}`} className="w-full max-w-[460px] mx-auto" role="group" aria-label="Natal chart wheel — choose any planet, sign, aspect or pillar for details">
         <defs>
           <radialGradient id={`vellum-${uid}`} cx="50%" cy="50%" r="60%">

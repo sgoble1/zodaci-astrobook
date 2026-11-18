@@ -8,7 +8,7 @@ import { previewPdf, printToken, type PreviewPdfOptions } from '@/lib/previewPdf
 
 const fontBytes = new Uint8Array(readFileSync('src/assets/fonts/manuscript.ttf'));
 const png = new Uint8Array(Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIHWP4z8DwHwAFgAI/ScLbtAAAAABJRU5ErkJggg==', 'base64'));
-const input = { date: '1993-03-25', time: '13:55', lat: 42.96395, lon: -78.73781, tz: 'America/New_York', placeLabel: 'Williamsville, New York', placeSource: 'geocoded', houseSystem: 'placidus' } as const;
+const input = { date: '1993-03-28', time: '13:55', lat: 42.96395, lon: -78.73781, tz: 'America/New_York', placeLabel: 'Williamsville, New York', placeSource: 'geocoded', houseSystem: 'placidus' } as const;
 const charts = { timed: computeChart(input), untimed: computeChart({ ...input, time: null }) };
 const modes = (['timed', 'untimed'] as const).flatMap(mode => (['oracle', 'educational', 'professional'] as const).map(tone => ({ mode, tone })));
 const normalize = (s: string) => s.replace(/\s+/g, ' ').trim();
@@ -24,8 +24,8 @@ describe('AstroBook PDF face parity', () => {
     const pdf = await PDFDocument.load(await blob.arrayBuffer());
     expect(pdf.getPageCount()).toBe(faces.length);
     expect(reports.map(r => r.face)).toEqual(faces);
-    expect(reports.flatMap(r => 'page' in r.face && r.face.page ? [r.face.page] : [])).toEqual(Array.from({ length: 25 }, (_, i) => i + 1));
-    expect(reports.find(r => r.face.kind === 'plate')?.face).toMatchObject({ page: 7, caption: expect.stringContaining('Plate I') });
+    expect(reports.flatMap(r => 'page' in r.face && r.face.page ? [r.face.page] : [])).toEqual(Array.from({ length: 28 }, (_, i) => i + 1));
+    expect(reports.find(r => r.face.kind === 'plate')?.face).toMatchObject({ page: 6, caption: expect.stringContaining('Plate I') });
     for (const r of reports) {
       expect(r.minY, `face ${r.index}`).toBeGreaterThanOrEqual(30);
       const face = r.face;

@@ -7,9 +7,9 @@ import { buildComicIssue } from '@/lib/comic';
 describe('personal first-ten-page previews', () => {
   const leaves = personalBookLeaves({ name: 'Rosalind Vance', birthLine: 'Born test', chart: sampleReaderChart(), coverSrc: 'cover.jpg' });
   const faces = leaves.flatMap(l => [l.front, l.back]);
-  it('numbers exactly 25 book preview pages', () => {
+  it('numbers exactly 28 book preview pages', () => {
     const nums = faces.map(f => ('page' in f ? f.page : undefined)).filter(Boolean);
-    expect(nums).toEqual(Array.from({ length: 25 }, (_, i) => i + 1));
+    expect(nums).toEqual(Array.from({ length: 28 }, (_, i) => i + 1));
   });
   it('opens on the cover and closes on the back cover', () => {
     expect(faces[0].kind).toBe('cover');
@@ -40,8 +40,8 @@ describe('personal first-ten-page previews', () => {
     expect(end?.kind === 'endpaper' ? end.lines : []).toContain('For the quieter questions.');
     expect(end?.kind === 'endpaper' ? end.lines : []).toContain('From Sam');
     expect(all.find(f => f.kind === 'title')).toMatchObject({ name: 'Alex Morgan', edition: `AstroBook · ${version.name}` });
-    expect(all.flatMap(f => 'page' in f && f.page ? [f.page] : [])).toHaveLength(25);
-    expect(all.find(f => f.kind === 'plate')?.page).toBe(7);
+    expect(all.flatMap(f => 'page' in f && f.page ? [f.page] : [])).toHaveLength(28);
+    expect(all.find(f => f.kind === 'plate')?.page).toBe(6);
   });
   it('keeps standalone legacy cover arguments and propagates member options', () => {
     const birth = { name: 'Test Reader', date: '1990-09-06', time: '12:00', lat: 40.7, lon: -74, tz: 'America/New_York', placeLabel: 'New York', houseSystem: 'placidus' as const, sex: null };

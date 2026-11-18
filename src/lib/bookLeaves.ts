@@ -30,7 +30,7 @@ export type BookFace =
   | { kind: 'comic'; src: string; alt: string; title: string; placement: string; caption: string; dialogue?: string; page: number }
   | { kind: 'comic-page'; sheet: ComicPage; art: Record<string, string>; page: number }
   | { kind: 'list'; eyebrow: string; heading: string; items: string[]; note?: string; page?: number }
-  | { kind: 'back'; lines: string[] }
+  | { kind: 'back'; lines: string[]; art?: string; choice?: string; imprint?: string; seal?: string; barcode?: boolean }
   | { kind: 'blank' };
 
 const SIGNS = ['Aries', 'Taurus', 'Gemini', 'Cancer', 'Leo', 'Virgo', 'Libra', 'Scorpio', 'Sagittarius', 'Capricorn', 'Aquarius', 'Pisces'];
@@ -185,7 +185,7 @@ export function faceText(f: BookFace): { heading: string; lines: string[] } | nu
     case 'comic': return { heading: `p. ${f.page} · ${f.title} · ${f.placement}`, lines: [f.caption, ...(f.dialogue ? [f.dialogue] : [])] };
     case 'comic-page': return { heading: `p. ${f.page} · ${f.sheet.title}`, lines: [...f.sheet.panels.flatMap(p => [...(p.caption ? [p.caption] : []), ...(p.balloons ?? []).map(b => `${b.who}: ${b.text}`)]), ...(f.sheet.body ?? [])] };
     case 'list': return { heading: f.heading, lines: [...f.items, ...(f.note ? [f.note] : [])] };
-    case 'back': return { heading: 'Back cover', lines: f.lines };
+    case 'back': return { heading: 'Back cover', lines: [...f.lines, ...(f.seal ? [f.seal] : []), ...(f.imprint ? [f.imprint] : []), ...(f.barcode ? ['Barcode reserved'] : [])] };
     default: return null;
   }
 }

@@ -88,6 +88,13 @@ export async function drawCover(ctx: CanvasRenderingContext2D, spec: CoverSpec, 
   ctx.fillStyle = GOLD; ctx.globalAlpha = 0.9; ctx.fillRect(t.rule.x, t.rule.y, t.rule.width, Math.max(1, w / 600)); ctx.globalAlpha = 1;
   drawBox(ctx, t.subtitle, SANS, GOLD, '500 ', true);
   drawBox(ctx, t.wordmark, SERIF, GOLD);
+  // Small publisher Orbit seal, wholly inside the existing half-inch safe zone.
+  const radius = Math.min(w, h) * .043, sx = t.safe + radius, sy = h - t.safe - radius;
+  ctx.save(); ctx.strokeStyle = GOLD; ctx.lineWidth = Math.max(1, w / 650);
+  ctx.beginPath(); ctx.ellipse(sx, sy, radius, radius * .55, -.4, 0, Math.PI * 2); ctx.stroke();
+  ctx.beginPath(); ctx.ellipse(sx, sy, radius, radius * .55, .4, 0, Math.PI * 2); ctx.stroke();
+  ctx.fillStyle = GOLD; ctx.textAlign = 'center'; ctx.font = `500 ${radius * .38}px ${SANS}`; ctx.fillText('ORBIT', sx, sy + radius * .12);
+  ctx.restore();
   return t;
 }
 

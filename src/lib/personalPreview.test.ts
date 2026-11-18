@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { computeChart } from '@/lib/astro';
-import { bookPreview, chapterForTopic, plainParagraphs, prosePage, PREVIEW_PAGES, type BookPreviewInput } from '@/lib/personalPreview';
+import { bookPreview, chapterForTopic, plainParagraphs, prosePage, PREVIEW_PAGES, BOOK_PREVIEW_PAGES, type BookPreviewInput } from '@/lib/personalPreview';
 import { sampleBookLeaves } from '@/content/sampleBookLeaves';
 import { risingPreview, untimedPreview, planetPreview } from '@/lib/previewNarrative';
 
@@ -10,8 +10,8 @@ const untimed = computeChart({ ...input, time: null });
 const make = (c = chart, tone?: BookPreviewInput['tone']) => bookPreview({ name: 'Shane', birthLine: `Born 25 March 1993 · ${c.input.time ? '1:55 p.m.' : 'time unknown'} · Williamsville, New York`, chart: c, tone, artFor: () => 'art.jpg' });
 
 describe('expanded AstroBook preview', () => {
-  it('has exactly 25 numbered pages without changing the ten-page comic preview', () => {
-    expect(make().faces.flatMap(f => 'page' in f && f.page ? [f.page] : [])).toEqual(Array.from({ length: 25 }, (_, i) => i + 1));
+  it('has exactly 28 numbered pages without changing the ten-page comic preview', () => {
+    expect(make().faces.flatMap(f => 'page' in f && f.page ? [f.page] : [])).toEqual(Array.from({ length: 28 }, (_, i) => i + 1));
     expect(PREVIEW_PAGES).toBe(10);
   });
   it('retains the confirmed 1:55 PM EST moment and measured chart facts', () => {
@@ -30,7 +30,7 @@ describe('expanded AstroBook preview', () => {
   it('keeps public sample pages fictional and separate from Shane', () => {
     const faces = sampleBookLeaves().flatMap(l => [l.front, l.back]);
     expect(JSON.stringify(faces)).not.toContain('Shane');
-    expect(faces.flatMap(f => 'page' in f && f.page ? [f.page] : [])).toHaveLength(25);
+    expect(faces.flatMap(f => 'page' in f && f.page ? [f.page] : [])).toHaveLength(28);
   });
   it('does not invent houses or angles without a birth time', () => {
     const unknown = make(untimed);
@@ -38,11 +38,46 @@ describe('expanded AstroBook preview', () => {
     expect(unknown.faces.some(f => f.kind === 'facts' && f.heading === 'House cusps')).toBe(false);
     expect(unknown.faces.flatMap(f => f.kind === 'facts' ? f.rows.map(r => r[0]) : [])).not.toContain('Ascendant');
   });
-  it.each(['timed', 'untimed'] as const)('maintains exactly pages 1–25 for %s charts', mode => {
-    expect(make(mode === 'timed' ? chart : untimed).faces.flatMap(f => 'page' in f && f.page ? [f.page] : [])).toEqual(Array.from({ length: 25 }, (_, i) => i + 1));
+  it.each(['timed', 'untimed'] as const)('maintains exactly pages 1–28 for %s charts', mode => {
+    expect(make(mode === 'timed' ? chart : untimed).faces.flatMap(f => 'page' in f && f.page ? [f.page] : [])).toEqual(Array.from({ length: 28 }, (_, i) => i + 1));
   });
-  it('places Plate I on page 7', () => {
-    for (const c of [chart, untimed]) expect(make(c).faces.find(f => f.kind === 'plate')?.page).toBe(7);
+  it('places Plate I on page 6', () => {
+    for (const c of [chart, untimed]) expect(make(c).faces.find(f => f.kind === 'plate')?.page).toBe(6);
+  });
+  it('anchors the contract between Table of Contents and Colophon with unnumbered front and back matter', () => {
+    const faces = make().faces;
+    expect(BOOK_PREVIEW_PAGES).toBe(28);
+    expect(faces.find(f => 'page' in f && f.page === 1)).toMatchObject({ kind: 'list', eyebrow: 'Table of Contents' });
+    expect(faces.find(f => 'page' in f && f.page === 28)).toMatchObject({ kind: 'text', eyebrow: 'Colophon' });
+    expect(faces.filter(f => f.kind === 'endpaper' || f.kind === 'title' || f.kind === 'back').every(f => !('page' in f))).toBe(true);
+  });
+  it.each(['oracle', 'educational', 'professional'] as const)('places Plate I on a physical verso facing its ruler narrative in %s', tone => {
+    for (const c of [chart, untimed]) {
+      const preview = bookPreview({ name: 'Reader', birthLine: 'Recorded facts', chart: c, tone, artFor: key => `${key}.jpg` });
+      const plate = preview.faces.find(f => f.kind === 'plate');
+      if (plate?.kind !== 'plate') throw new Error('Missing plate');
+      expect(plate.page).toBe(6);
+      const count = plate.caption.split(/\s+/).filter(Boolean).length;
+      expect(count).toBeGreaterThanOrEqual(5);
+      expect(count).toBeLessThanOrEqual(15);
+      expect(preview.faces.find(f => f.kind === 'text' && f.page === 7)).toMatchObject({ placement: expect.stringContaining(preview.cover.rulerName) });
+      // Cover is face zero. Leaf backs are odd indices in the flattened reader.
+      expect((preview.faces.indexOf(plate) + 1) % 2).toBe(1);
+    }
+  });
+  it('includes measured Jupiter, outer planets, Chiron, both Nodes, Fortune and distinct system and clock chapters', () => {
+    const faces = bookPreview({ name: 'Reader', birthLine: 'Recorded facts', chart, asOf: new Date('2026-11-18T07:40:00Z'), artFor: () => 'art.jpg' }).faces;
+    const at = (page: number) => faces.find(f => 'page' in f && f.page === page);
+    expect(at(14)).toMatchObject({ placement: expect.stringContaining('Jupiter') });
+    expect(at(16)).toMatchObject({ placement: expect.stringMatching(/Uranus.*Neptune/) });
+    expect(at(18)).toMatchObject({ body: expect.arrayContaining([expect.stringContaining('Chiron')]) });
+    expect(at(19)).toMatchObject({ body: expect.arrayContaining([expect.stringContaining('South Node')]) });
+    expect(at(20)).toMatchObject({ title: expect.stringContaining('Part of Fortune') });
+    expect(at(22)).toMatchObject({ body: expect.arrayContaining([expect.stringContaining('Yin Water Rooster')]) });
+    expect(at(23)).toMatchObject({ body: expect.arrayContaining([expect.stringContaining('Lahiri')]) });
+    expect(at(24)).toMatchObject({ body: expect.arrayContaining([expect.stringContaining('age 33: whole-sign house 10')]) });
+    expect(at(25)).toMatchObject({ body: expect.arrayContaining([expect.stringContaining('computed forward-pass returns')]) });
+    expect(at(26)).toMatchObject({ body: expect.arrayContaining([expect.stringMatching(/stations.*2026-/)]) });
   });
   it.each(['oracle', 'educational', 'professional'] as const)('bounds every timed and untimed prose face to 60–135 words in %s', tone => {
     for (const c of [chart, untimed]) {
@@ -55,11 +90,11 @@ describe('expanded AstroBook preview', () => {
       }
     }
   });
-  it.each(['oracle', 'educational', 'professional'] as const)('keeps pages 1–25 and Plate I on page 7 in %s for both chart modes', tone => {
+  it.each(['oracle', 'educational', 'professional'] as const)('keeps pages 1–28 and Plate I on page 6 in %s for both chart modes', tone => {
     for (const c of [chart, untimed]) {
       const faces = make(c, tone).faces;
-      expect(faces.flatMap(f => 'page' in f && f.page ? [f.page] : [])).toEqual(Array.from({ length: 25 }, (_, i) => i + 1));
-      expect(faces.find(f => f.kind === 'plate')?.page).toBe(7);
+      expect(faces.flatMap(f => 'page' in f && f.page ? [f.page] : [])).toEqual(Array.from({ length: 28 }, (_, i) => i + 1));
+      expect(faces.find(f => f.kind === 'plate')?.page).toBe(6);
     }
   });
   it('calibrates every numbered prose page, not just planetary introductions', () => {

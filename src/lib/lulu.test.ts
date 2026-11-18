@@ -3,6 +3,7 @@ import { PDFDocument } from 'pdf-lib';
 import { BOOK_VERSIONS, LULU_PRINT, luluListCents } from '@/lib/books';
 import { LIST_PRICE, PAGE_LIMITS, POD_PACKAGES, TRIM_PT, carrierFrom, coverLayout, foilText, interiorPageCount, listPriceCents, luluAddress, luluErrorText, orderPatches, pageLimitError, spineWidthPt } from '../../supabase/functions/_shared/lulu-rules';
 import { buildCoverWrap, buildInterior } from '../../supabase/functions/_shared/lulu-files';
+import { COVER_DESIGNS } from '@/content/coverDesigns';
 
 const today = '2026-10-20';
 const address = { name: 'Ada Lovelace', line1: '12 Orbit Way', line2: '', city: 'Austin', state: 'tx', postal_code: '78701', country: 'US', phone: '+1 512 555 0100' };
@@ -113,6 +114,19 @@ describe('Lulu print files', () => {
     expect(doc.getPage(0).getSize()).toEqual({ width, height });
     expect(layout.flap).toBe(0);
     expect(layout.frontX).toBeCloseTo(width - 9 - 432);
+  });
+  it.each(COVER_DESIGNS)('pairs the reviewed $key front with a back at exact wrap bounds and reserves an unencoded barcode block', async design => {
+    const source = await PDFDocument.create();
+    source.setTitle(design.label); source.addPage(TRIM_PT.classic).drawText(design.label); source.addPage(TRIM_PT.classic);
+    const pages = 120, width = 864 + spineWidthPt(POD_PACKAGES.classic, pages) + 18;
+    const result = await buildCoverWrap(await source.save(), { pod: POD_PACKAGES.classic, interiorPages: pages, width, height: 666, trim: TRIM_PT.classic });
+    const doc = await PDFDocument.load(result.bytes);
+    expect(doc.getPageCount()).toBe(1);
+    expect(doc.getPage(0).getSize()).toEqual({ width, height: 666 });
+    expect(result.barcode.width).toBe(144);
+    expect(result.barcode.height).toBe(86.4);
+    expect(result.barcode.x).toBeGreaterThanOrEqual(result.layout.backX + 36);
+    expect(result.barcode.x + result.barcode.width).toBeLessThanOrEqual(result.layout.backX + result.layout.trimW - 36);
   });
   it('recognises dust-jacket flaps on the linen edition', () => {
     const pages = 200, spine = spineWidthPt(POD_PACKAGES.linen, pages), flap = 3.5 * 72;

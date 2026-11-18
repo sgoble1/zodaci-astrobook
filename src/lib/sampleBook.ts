@@ -18,7 +18,7 @@ export const SAMPLE_BIRTH: MyBirth = {
   houseSystem: 'placidus',
 };
 
-/** The downloadable sample is the same 25-page fictional preview as the page-turning reader. */
+/** The downloadable sample is the same 28-page fictional preview as the page-turning reader. */
 export function samplePreviewFaces(maxPages?: number): BookFace[] {
   const limit = maxPages === undefined ? Infinity : Math.max(0, Math.floor(maxPages));
   return sampleBookLeaves().flatMap(l => [l.front, l.back]).filter(f => !('page' in f) || f.page === undefined || f.page <= limit);

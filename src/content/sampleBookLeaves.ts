@@ -11,6 +11,7 @@ import { buildComicPreview, previewName } from '@/lib/comicNarrative';
 import type { ComicIssue } from '@/lib/comic';
 import { versionOf, type Edition } from '@/lib/books';
 import type { Tone } from '@/lib/perception';
+import { resolveBookArtwork } from '@/content/bookArtwork';
 
 export interface BookPreviewOptions {
   edition?: Edition; editionLabel?: string; coverSrc?: string; coverChoice?: string;
@@ -28,21 +29,22 @@ export const SAMPLE_READER = LEAD_COVER;
 export const SAMPLE_READER_INPUT: ChartInput = { ...LEAD_COVER.birth, placeSource: 'geocoded', houseSystem: 'placidus' } as ChartInput;
 export const sampleReaderChart = () => (cached ??= computeChart(SAMPLE_READER_INPUT));
 
-const BOOK_BACK: BookFace = { kind: 'back', lines: ['Zodaci AstroBook', 'Written from one birth chart, in six volumes', 'Printed to order · free US shipping', 'zodaci.com'] };
+const BOOK_BACK: Extract<BookFace, { kind: 'back' }> = { kind: 'back', lines: ['Zodaci AstroBook', 'Written from one birth chart, in six volumes', 'Astrological insights provided for entertainment and self-reflection purposes only', 'zodaci.com'], imprint: 'Zodaci · Astral Research Authority', seal: 'ORBIT', barcode: true };
 
-/** The fictional Collector cover stays public; its 25-page interior uses the same composer as personal previews. */
+/** The fictional Collector cover stays public; its 28-page interior uses the same composer as personal previews. */
 export function sampleBookLeaves(options?: BookPreviewOptions): BookLeaf[] {
   if (options) return personalBookLeaves({ name: LEAD_COVER.name, birthLine: LEAD_COVER.printed.born, chart: sampleReaderChart(), ...options });
-  const { faces } = bookPreview({ name: LEAD_COVER.name, birthLine: LEAD_COVER.printed.born, chart: sampleReaderChart(), editionLabel: 'Collector Preview', artFor: castFull });
+  const art = resolveBookArtwork(sampleReaderChart());
+  const { faces } = bookPreview({ name: LEAD_COVER.name, birthLine: LEAD_COVER.printed.born, chart: sampleReaderChart(), editionLabel: 'Collector Preview', artFor: key => key === art.ruler ? art.plate : castFull(key) });
   return toLeaves(
     { kind: 'cover', src: LEAD_COVER.src, alt: LEAD_COVER.alt },
     faces,
-    BOOK_BACK,
+    { ...BOOK_BACK, art: art.back },
   );
 }
 
 /**
- * The cover and 25 numbered interior pages of a member's own AstroBook, built from their saved birth details with
+ * The cover and 28 numbered interior pages of a member's own AstroBook, built from their saved birth details with
  * the same chapters the printed book opens with (buildVolumes). Houses and angles are left out when the time is unknown.
  */
 export function memberBookLeaves(birth: MyBirth, options?: string | BookPreviewOptions): BookLeaf[] {
@@ -50,13 +52,14 @@ export function memberBookLeaves(birth: MyBirth, options?: string | BookPreviewO
   return personalBookLeaves({ name, birthLine: birthLineOf(birth.date, birth.time, birth.placeLabel), chart: computeChart(toChartInput(birth)), ...(typeof options === 'string' ? { coverSrc: options } : options) });
 }
 
-/** The same 25-page interior for any authorized chart (a founder's edition, or the member's own). */
+/** The same 28-page interior for any authorized chart (a founder's edition, or the member's own). */
 export function personalBookLeaves({ name, birthLine, chart, coverSrc, coverChoice, coverName, dedication, tone, edition = 'classic', editionLabel }: { name: string; birthLine: string; chart: ChartResult } & BookPreviewOptions): BookLeaf[] {
   const label = editionLabel ?? versionOf(edition)?.name ?? 'Classic Edition';
-  const { cover, faces } = bookPreview({ name: coverName === undefined ? previewName(name) : coverName.trim() || 'Your Name', birthLine, chart, edition, editionLabel: label, dedication, tone, artFor: castFull });
+  const art = resolveBookArtwork(chart);
+  const { cover, faces } = bookPreview({ name: coverName === undefined ? previewName(name) : coverName.trim() || 'Your Name', birthLine, chart, edition, editionLabel: label, dedication, tone, artFor: () => art.plate });
   const customized = coverChoice !== undefined || coverName !== undefined || edition !== 'classic';
   const front: BookFace = coverSrc && !customized ? { kind: 'cover', src: coverSrc, alt: `AstroBook cover printed with ${cover.name}` } : { kind: 'jacket', cover, art: coverSrc || personalCoverArtwork(name, chart), edition: label, choice: coverChoice, composed: !!coverSrc, finish: edition === 'linen' ? 'cloth' : edition === 'signature' ? 'leatherette' : 'paper' };
-  return toLeaves(front, faces, BOOK_BACK);
+  return toLeaves(front, faces, { ...BOOK_BACK, art: coverSrc || art.back, choice: coverChoice });
 }
 
 /** The sample AstroComic digest for the same reader. */

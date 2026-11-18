@@ -2,6 +2,7 @@ import { PDFDocument, rgb, degrees, type PDFFont, type RGB } from 'pdf-lib';
 import fontkit from '@pdf-lib/fontkit';
 import fontUrl from '@/assets/fonts/manuscript.ttf?url';
 import { faceProse, type BookFace } from '@/lib/bookLeaves';
+import { loadImage } from '@/lib/coverRender';
 
 // Semantic print defaults mirror the global tokens; no canvas or browser globals required.
 const PRINT_COLORS: Record<string, [number, number, number]> = {
@@ -88,11 +89,11 @@ export async function previewPdf(faces: BookFace[], options: PreviewPdfOptions =
     else if (bytes[0] === 255) image = await pdf.embedJpg(bytes);
     else {
       // Uploaded WebP artwork is rasterized only when needed, not for color resolution.
-      const bitmap = await createImageBitmap(new Blob([bytes as BlobPart]));
+      const bitmap = src.startsWith('data:image/svg+xml') ? await loadImage(src) : await createImageBitmap(new Blob([bytes as BlobPart]));
       const canvas = document.createElement('canvas'); canvas.width = bitmap.width; canvas.height = bitmap.height;
       const context = canvas.getContext('2d');
-      if (!context) { bitmap.close(); throw new Error('The uploaded cover could not be prepared.'); }
-      context.drawImage(bitmap, 0, 0); bitmap.close();
+      if (!context) { if ('close' in bitmap) bitmap.close(); throw new Error('The uploaded cover could not be prepared.'); }
+      context.drawImage(bitmap, 0, 0); if ('close' in bitmap) bitmap.close();
       image = await pdf.embedPng(canvas.toDataURL('image/png'));
     }
     images.set(src, image); return image;
@@ -100,7 +101,7 @@ export async function previewPdf(faces: BookFace[], options: PreviewPdfOptions =
   for (const [index, face] of faces.entries()) {
     const page = pdf.addPage([432, 648]);
     page.drawRectangle({ x: 0, y: 0, width: 432, height: 648, color: paper });
-    const src = face.kind === 'cover' || face.kind === 'plate' || face.kind === 'comic' ? face.src : face.kind === 'jacket' ? face.art : null;
+    const src = face.kind === 'cover' || face.kind === 'plate' || face.kind === 'comic' ? face.src : face.kind === 'jacket' || face.kind === 'back' ? face.art : null;
     if (src) {
       const image = await imageFor(src);
       if (face.kind === 'cover' || (face.kind === 'jacket' && face.composed)) {
@@ -115,6 +116,9 @@ export async function previewPdf(faces: BookFace[], options: PreviewPdfOptions =
         // Full-bleed image with the same separate top/bottom lettering bands as the browser jacket.
         const scale = Math.max(432 / image.width, 648 / image.height);
         page.drawImage(image, { x: (432 - image.width * scale) / 2, y: (648 - image.height * scale) / 2, width: image.width * scale, height: image.height * scale });
+      } else if (face.kind === 'back') {
+        const scale = Math.max(432 / image.width, 648 / image.height);
+        page.drawImage(image, { x: (432 - image.width * scale) / 2, y: (648 - image.height * scale) / 2, width: image.width * scale, height: image.height * scale, opacity: .28 });
       } else {
         const scale = Math.min(350 / image.width, 480 / image.height);
         page.drawImage(image, { x: (432 - image.width * scale) / 2, y: 116, width: image.width * scale, height: image.height * scale });
@@ -165,12 +169,16 @@ export async function previewPdf(faces: BookFace[], options: PreviewPdfOptions =
       } else if (face.kind === 'plate' || face.kind === 'comic') {
         drawBlock(text.heading, face.kind === 'plate' ? [] : text.lines, 98, 36);
       } else {
-        if (face.kind === 'endpaper' || face.kind === 'back') {
+        if (face.kind === 'endpaper') {
           page.drawRectangle({ x: 0, y: 0, width: 432, height: 648, color: ink });
           page.drawRectangle({ x: 28, y: 40, width: 376, height: 568, color: paper, borderColor: foil, borderWidth: 1 });
         }
+        if (face.kind === 'back') {
+          page.drawRectangle({ x: 28, y: 40, width: 376, height: 568, color: paper, opacity: .95, borderColor: foil, borderWidth: 1 });
+          if (face.barcode) page.drawRectangle({ x: 282, y: 56, width: 108, height: 72, color: paper, borderColor: ink, borderWidth: .4 });
+        }
         const eyebrow = 'eyebrow' in face ? face.eyebrow : '';
-        drawBlock(text.heading, [...(eyebrow ? [eyebrow] : []), ...text.lines], 594, 42, text.reflection);
+        drawBlock(text.heading, [...(eyebrow ? [eyebrow] : []), ...text.lines], 594, face.kind === 'back' ? 145 : 42, text.reflection);
       }
     }
     if ('page' in face && face.page != null) page.drawText(String(face.page), { x: 210, y: 18, font, size: 10, color: ink });

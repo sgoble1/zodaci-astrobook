@@ -16,19 +16,19 @@ describe('AstroBook preview touchpoint contract', () => {
     const source = readFileSync(path, 'utf8');
     expect(source).not.toMatch(/first (?:ten|10|three|3) pages|five[- ]spreads?/i);
   });
-  it('keeps all numbered interiors when the public sheet requests 25 pages', () => {
-    const faces = samplePreviewFaces(25);
-    expect(faces.flatMap(f => 'page' in f && f.page ? [f.page] : [])).toEqual(Array.from({ length: 25 }, (_, i) => i + 1));
-    expect(faces.find(f => f.kind === 'plate')).toMatchObject({ page: 7 });
+  it('keeps all numbered interiors when the public sheet requests 28 pages', () => {
+    const faces = samplePreviewFaces(28);
+    expect(faces.flatMap(f => 'page' in f && f.page ? [f.page] : [])).toEqual(Array.from({ length: 28 }, (_, i) => i + 1));
+    expect(faces.find(f => f.kind === 'plate')).toMatchObject({ page: 6 });
     expect(faces[0].kind).toBe('cover');
     expect(faces.at(-1)?.kind).toBe('back');
-    expect(faces.length).toBeGreaterThan(25);
+    expect(faces.length).toBeGreaterThan(28);
     expect(samplePreviewFaces(6).flatMap(f => 'page' in f && f.page ? [f.page] : [])).toEqual([1, 2, 3, 4, 5, 6]);
   });
-  it('publishes 25-page register data while retaining separate ten-page comic excerpt notes', () => {
-    expect(FEATURES.find(f => f.id === 'book-showcase')).toMatchObject({ name: '25-page AstroBook showcase', detail: expect.stringContaining('cover and 25-page preview') });
+  it('publishes 28-page register data while retaining separate ten-page comic excerpt notes', () => {
+    expect(FEATURES.find(f => f.id === 'book-showcase')).toMatchObject({ name: '28-page AstroBook showcase', detail: expect.stringContaining('cover and 28-page preview') });
     const note = FOUNDER_NEWS.find(n => n.title === 'Peek inside your own book and comic');
-    expect(note?.text).toContain('“Read the 25-page book preview”');
+    expect(note?.text).toContain('“Read the 28-page book preview”');
     expect(note?.text).toContain('AstroComic button shows the first ten pages');
     expect(PREVIEW_PAGES).toBe(10);
     const comic = readFileSync('src/pages/MyComic.tsx', 'utf8');

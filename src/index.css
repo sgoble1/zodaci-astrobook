@@ -1510,6 +1510,19 @@ li:hover > .zodiac-coin { transform: rotate(-10deg); }
 .ob-bookplate { width: 100%; max-height: 100%; overflow: auto; overflow-wrap: anywhere; display: grid; gap: 2cqw; text-align: center; padding: 8cqw 6cqw; background: hsl(var(--spot-paper)); color: hsl(var(--comic-navy)); box-shadow: inset 0 0 0 1cqw hsl(var(--spot-paper)), inset 0 0 0 1.6cqw hsl(var(--comic-mustard)), inset 0 0 0 2.2cqw hsl(var(--spot-paper)), inset 0 0 0 2.6cqw hsl(var(--comic-navy)); border-radius: 2px 6px 3px 5px; }
 .ob-back { position: absolute; inset: 0; display: grid; align-content: center; justify-items: center; gap: 2.4cqw; padding: 12cqw; text-align: center; color: hsl(var(--spot-paper)); background: radial-gradient(ellipse at 50% 35%, hsl(var(--comic-mustard) / .18), transparent 60%), hsl(var(--comic-navy)); }
 .ob-back-comic { border-top: 9cqw solid hsl(var(--comic-brick)); }
+.ob-back-book { color: hsl(var(--comic-navy)); background: hsl(var(--spot-paper)); padding: 6cqw; }
+.ob-back-art { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: .28; }
+.ob-back-copy { position: relative; width: 100%; display: grid; justify-items: center; gap: 2cqw; padding: 6cqw; background: hsl(var(--spot-paper) / .95); border: .6cqw solid hsl(var(--comic-navy)); }
+.ob-back-copy > .ob-h { width: 100%; color: hsl(var(--spot-paper)); background: hsl(var(--comic-brick)); padding: 2cqw; }
+.ob-orbit-seal { color: hsl(var(--book-foil)); border: .4cqw solid hsl(var(--book-foil)); border-radius: 50%; padding: 2cqw; font-size: 3.5cqw; }
+.ob-barcode-reserve { justify-self: end; display: grid; place-items: center; width: 28cqw; height: 18cqw; background: hsl(var(--paper)); color: hsl(var(--comic-navy)); border: 1px solid hsl(var(--comic-navy) / .3); font-size: 2.8cqw; }
+.demo-atomic { background: hsl(var(--spot-paper)); color: hsl(var(--comic-navy)); --card: var(--spot-paper); --foreground: var(--comic-navy); --muted-foreground: var(--comic-navy); --primary: var(--comic-brick); --primary-foreground: var(--spot-paper); --accent: var(--comic-mustard); --border: var(--comic-navy); }
+.demo-atomic .chart-paper-plate { background: hsl(var(--comic-brick)); color: hsl(var(--spot-paper)); }
+.demo-atomic .chart-paper { border-color: hsl(var(--comic-navy)); }
+.demo-atomic [role="tablist"] { background: hsl(var(--spot-paper)); border: 1px solid hsl(var(--comic-navy)); }
+.demo-atomic [role="tab"] { color: hsl(var(--comic-navy)); }
+.demo-atomic [role="tab"][data-state="active"] { color: hsl(var(--spot-paper)); background: hsl(var(--comic-brick)); }
+.demo-atomic .chart-paper-sheet { --chart-screen: var(--spot-paper); --chart-soft: var(--paper); --chart-ink: var(--comic-navy); --chart-line: var(--comic-navy); --chart-harmony: var(--comic-mustard); --chart-signal: var(--comic-brick); --chart-select: var(--comic-mustard); }
 .ob-orbit { width: 40cqw; height: 24cqw; fill: none; stroke: hsl(var(--comic-mustard)); stroke-width: 1.6; }
 .ob-orbit circle { fill: hsl(var(--comic-mustard)); stroke: none; }
 .ob-blank { position: absolute; inset: 0; display: grid; place-items: center; font-size: 8cqw; color: hsl(var(--comic-mustard)); }

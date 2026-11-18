@@ -17,7 +17,7 @@ import { signCover } from '@/content/signCovers';
 const PRINTED = BOOK_VERSIONS.filter(v => v.format === 'print');
 
 
-/** A 25-page calculated preview from the signed-in member's saved chart. No AI. */
+/** A 28-page calculated preview from the signed-in member's saved chart. No AI. */
 export function MemberBookTeaser({ fallback }: { fallback: React.ReactNode }) {
   const [signedIn, setSignedIn] = useState<boolean | null>(null);
   useEffect(() => { supabase.auth.getSession().then(({ data }) => setSignedIn(!!data.session)); }, []);
@@ -30,14 +30,14 @@ export function MemberBookTeaser({ fallback }: { fallback: React.ReactNode }) {
   }, [birth]);
   if (signedIn === null || (signedIn && birth === undefined)) return <Skeleton className="h-64 w-full" />;
   if (!signedIn) return <>{fallback}</>;
-  if (!birth || !ok) return <div className="space-y-3"><p className="text-muted-foreground">Add your birth details to open the 25-page preview of your own AstroBook here.</p><Button asChild><Link to="/start?next=/astrobook%23teaser">Add my birth details<ArrowRight /></Link></Button></div>;
+  if (!birth || !ok) return <div className="space-y-3"><p className="text-muted-foreground">Add your birth details to open the 28-page preview of your own AstroBook here.</p><Button asChild><Link to="/start?next=/astrobook%23teaser">Add my birth details<ArrowRight /></Link></Button></div>;
   const sun = (() => { try { return computeChart(toChartInput(birth)).bodies.find(b => b.key === 'sun')?.sign; } catch { return undefined; } })();
   const cover = signCover(sun);
   const v = PRINTED.find(x => x.id === ed) ?? PRINTED[0];
   const pages = Math.round((v.pages[0] + v.pages[1]) / 2);
   const hard = /hardcover/i.test(v.binding);
   const spine = spineInches(pages, hard);
-  return <div className="space-y-8"><h2 className="font-display text-3xl">Open your 25-page book preview.</h2>
+  return <div className="space-y-8"><h2 className="font-display text-3xl">Open your 28-page book preview.</h2>
     <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,1fr)_16rem]">
       <OpenAstroBook next="/astrobook#teaser" startMine />
       <div className="space-y-3 text-center">

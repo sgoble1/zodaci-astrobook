@@ -153,7 +153,7 @@ function Face({ f, kind }: { f: BookFace; kind: 'book' | 'comic' }) {
       </div>
     );
     case 'back': return (
-      <div className={`ob-back ${kind === 'comic' ? 'ob-back-comic' : ''}`}><Orbit />{f.lines.map((l, k) => <p key={l} className={k === 0 ? 'font-display ob-h' : 'ob-small'}>{l}</p>)}</div>
+      <div className={`ob-back ${kind === 'comic' ? 'ob-back-comic' : 'ob-back-book'}`} data-choice={f.choice}>{f.art && <img src={f.art} alt="" loading="lazy" decoding="async" className="ob-back-art" />}<div className="ob-back-copy"><Orbit />{f.seal && <p className="font-label ob-orbit-seal">{f.seal}</p>}{f.lines.map((l, k) => <p key={l} className={k === 0 ? 'font-display ob-h' : 'ob-small'}>{l}</p>)}{f.imprint && <p className="font-label ob-small">{f.imprint}</p>}{f.barcode && <div className="ob-barcode-reserve"><span>Barcode reserved</span></div>}</div></div>
     );
     default: return <div className="ob-blank" aria-hidden>✦</div>;
   }

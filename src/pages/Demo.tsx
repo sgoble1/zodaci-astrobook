@@ -12,15 +12,19 @@ import { useReadingTone } from '@/hooks/useReadingTone';
 import { TONES } from '@/lib/perception';
 import { fmtLon } from '@/lib/astro';
 import { CREDIT_ALLOWANCE, PLAN_NAME, type Tier } from '@/lib/plans';
-import { SAMPLE_READER, sampleReaderChart } from '@/content/sampleBookLeaves';
+import { SAMPLE_READER, sampleReaderChart, type BookLeaf } from '@/content/sampleBookLeaves';
 import { SAMPLE_EDITION } from '@/content/sampleEdition';
 import { DEMO_TABS, demoAllows, demoChapter, type DemoTab } from '@/content/demoSession';
 import { SpecificityExamples } from '@/components/books/SpecificityExamples';
 import episode from '@/assets/rosalind-emotional-world.mp3.asset.json';
+import { resolveBookArtwork } from '@/content/bookArtwork';
+import { bookPlateSpec, renderBookPlate } from '@/lib/bookPlate';
 
 const PlacementsTab = lazy(() => import('@/components/results/PlacementsTab').then(m => ({ default: m.PlacementsTab })));
 const DemoTiming = lazy(() => import('@/components/demo/DemoTiming'));
 const DemoSynastry = lazy(() => import('@/components/demo/DemoSynastry'));
+const DemoBook = lazy(() => import('@/components/books/OpenBook').then(m => ({ default: m.OpenBook })));
+const demoLeaves = () => import('@/content/sampleBookLeaves');
 
 function Locked({ title, onPreview }: { title: string; onPreview: () => void }) {
   return <aside className="space-y-3 border-y border-border py-6" aria-label={`${title} locked`}>
@@ -41,8 +45,12 @@ export default function Demo() {
   const [audioError, setAudioError] = useState(false);
   const [audioAttempt, setAudioAttempt] = useState(0);
   const chart = useMemo(sampleReaderChart, []);
+  const art = useMemo(() => resolveBookArtwork(chart), [chart]);
+  const chapterArt = useMemo(() => renderBookPlate(bookPlateSpec(chart, ['sun', 'moon', 'venus', 'mercury'][chapter] ?? art.ruler, art.element)), [chart, chapter, art]);
+  const [bookLeaves, setBookLeaves] = useState<BookLeaf[] | null>(null);
   const page = SAMPLE_EDITION.pages[chapter] ?? SAMPLE_EDITION.pages[0];
   const effectiveTone = tier === 'free' ? 'oracle' : tone;
+  useEffect(() => { let active = true; if (tab === 'edition') demoLeaves().then(m => { if (active) setBookLeaves(m.sampleBookLeaves({ tone: effectiveTone })); }); return () => { active = false; }; }, [tab, effectiveTone]);
   const paragraphs = demoChapter(page, effectiveTone);
   const pro = () => setTier('full');
   const select = (id: string) => { const next = new URLSearchParams(params); next.set('tab', id); setParams(next, { replace: true }); };
@@ -58,7 +66,7 @@ export default function Demo() {
         <Button asChild size="sm" variant="outline"><Link to="/auth?mode=signup&next=/start">Create my chart</Link></Button>
       </div>
     </header>
-    <main id="main-content" className="relative z-10 flex-1 pb-44 sm:pb-32">
+    <main id="main-content" className="demo-atomic relative z-10 flex-1 pb-44 sm:pb-32">
       <div className="mx-auto max-w-5xl space-y-7 px-4 py-6 sm:px-8 sm:py-10 lg:py-12">
         <div className="flex flex-wrap items-end justify-between gap-3">
           <div><p className="font-label text-sm text-primary">Your chart · Classic view</p><h1 id="demo-heading" tabIndex={-1} className="text-3xl outline-none sm:text-4xl">Rosalind’s observatory</h1><p className="mt-2 text-sm text-muted-foreground">{SAMPLE_READER.printed.born} · Placidus houses</p></div>
@@ -75,7 +83,7 @@ export default function Demo() {
           {comparison && <SpecificityExamples />}
           <TabsContent value="wheel" className="space-y-7">
             <ul className="grid gap-3 sm:grid-cols-3">{big3.map(b => <li key={b.label} className="border border-border bg-card p-4"><p className="font-label text-sm text-primary">{b.label}</p><p className="text-xl">{b.value}</p></li>)}</ul>
-            <ChartWheel r={chart} device="monitor" />
+            <ChartWheel r={chart} presentation="paper" />
             <section className="space-y-3 border-t border-border pt-6"><h2 className="text-2xl">The Garden Gate</h2><p className="leading-relaxed">{demoChapter(SAMPLE_EDITION.pages[0], effectiveTone)[tier === 'free' ? 0 : 1]}</p><Button variant="outline" onClick={() => select('edition')}><BookOpen className="h-4 w-4" />Continue reading</Button></section>
           </TabsContent>
           <TabsContent value="placements"><Suspense fallback={<p role="status">Opening placements…</p>}><PlacementsTab chart={chart} timeKnown plan={tier} loading={false} /></Suspense></TabsContent>
@@ -84,13 +92,14 @@ export default function Demo() {
             <header><h2 className="text-2xl">The Masterbook · {SAMPLE_EDITION.owner}</h2><p className="mt-2 text-sm text-muted-foreground">Shane’s narrative approach, demonstrated with Rosalind’s public sample—not Shane’s private edition.</p></header>
             <div role="group" aria-label="Sample chapters" className="flex flex-wrap gap-2">{SAMPLE_EDITION.pages.map((p, i) => <Button key={p.n} variant={chapter === i ? 'default' : 'outline'} aria-pressed={chapter === i} onClick={() => setChapter(i)}>{p.title}{tier === 'free' && i > 0 && <Lock className="h-3 w-3" />}</Button>)}</div>
             {tier === 'free' && chapter > 0 ? <Locked title={page.title} onPreview={pro} /> : <article className="grid items-start gap-6 md:grid-cols-[220px_minmax(0,1fr)]">
-              <img src={page.image} alt={page.imageAlt} width={1024} height={1024} className="mx-auto aspect-square w-full max-w-64 object-cover" />
+              <img src={chapterArt} alt={`Calculated ${art.sign} Sun and ${art.element} planetary engraving for this chapter; symbolic illustration`} width={900} height={1100} loading="lazy" className="mx-auto w-full max-w-64 object-contain" />
               <div className="min-w-0 space-y-4"><p className="font-label text-sm text-primary">{page.volume}</p><h3 className="text-2xl">{page.title}</h3><p className="text-sm text-accent">{page.placement}</p>
                 <dl className="space-y-2 border-y border-border py-4 text-sm">{page.facts.map(f => <div key={f.label}><dt className="font-medium">{f.label}</dt><dd className="text-muted-foreground">{f.value}</dd></div>)}</dl>
                 <div aria-live="polite" className="space-y-4">{(tier === 'free' ? paragraphs.slice(0, 1) : paragraphs).map((p, i) => <p key={`${effectiveTone}-${i}`} className="leading-relaxed">{p}</p>)}</div>
                 {tier === 'free' ? <Locked title="The rest of this chapter" onPreview={pro} /> : <p className="border-l-2 border-primary pl-4 italic">{page.reflection}</p>}
               </div>
             </article>}
+            <section className="space-y-4 border-t border-border pt-6"><h3 className="text-2xl">Rosalind’s 28-page AstroBook</h3>{gated('transits', 'The complete AstroBook preview', bookLeaves ? <Suspense fallback={<p role="status">Opening the book…</p>}><DemoBook leaves={bookLeaves} label="Rosalind Vance · 28-page AstroBook" layout="side" /></Suspense> : <p role="status">Preparing the book…</p>)}</section>
             <section className="space-y-4 border-t border-border pt-6"><h3 className="flex items-center gap-2 text-2xl"><Headphones className="h-6 w-6" />Your emotional world, Rosalind</h3>
               {gated('audio', 'Sample podcast', <div className="space-y-4"><p className="text-sm text-muted-foreground">Pre-recorded sample · Cancer Moon in house 3, sextile Sun and Rising, square Venus and Jupiter.</p>
                 <audio key={audioAttempt} aria-label="Rosalind sample episode" controls preload="none" src={episode.url} onError={() => setAudioError(true)} className="w-full">Audio playback is not supported by this browser.</audio>
