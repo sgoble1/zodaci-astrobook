@@ -65,6 +65,7 @@ describe('member navigation architecture', () => {
   });
 
   it('shows plan locks instead of hiding gated items', () => {
+    expect(itemLock('free', '/retrogrades')).toBeNull(); // natal overview remains available; calendar gates inside the guide
     expect(itemLock('free', '/timeline')).toBe('full');
     expect(itemLock('free', '/podcasts')).toBe('creator');
     expect(itemLock('full', '/podcasts')).toBeNull(); // Pro and Cosmic share every feature

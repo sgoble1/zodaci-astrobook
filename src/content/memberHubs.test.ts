@@ -10,9 +10,10 @@ describe('five hubs', () => {
   it('Timing covers today, this year and lifetime', () => {
     expect(col('explore', 'Timing')).toEqual(expect.arrayContaining(['/transits', '/retrogrades', '/profection', '/timeline']));
   });
-  it('RetroGOOD sits with the chart under What stands out', () => {
-    expect(col('chart', 'What stands out')).toContain('/retrogood');
-    expect(domainFor('/retrogood')).toBe('chart');
+  it('the unified guide is in Timing, without a separate natal destination', () => {
+    expect(col('explore', 'Timing')).toContain('/retrogrades');
+    expect(col('chart', 'What stands out')).not.toContain('/retrogood');
+    expect(domainFor('/retrogrades')).toBe('explore');
   });
   it('World Traditions and Archive & Journal exist', () => {
     expect(col('explore', 'World Traditions')).toContain('/other-systems');

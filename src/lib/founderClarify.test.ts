@@ -16,17 +16,17 @@ describe('clarifyFounderGroups', () => {
   it('never drops a page from the menu', () => {
     const before = routes(april);
     const after = routes(out);
-    before.forEach(r => expect(after.has(r)).toBe(true));
+    before.forEach(r => expect(after.has(r === '/retrogood' ? '/retrogrades' : r)).toBe(true));
   });
   it('renames the Bagua Wheel entry to "Interactive Bagua Map" and explains it', () => {
     const fs = out[1].items.find(i => i.to === '/masterbook/bagua-wheel');
     expect(fs?.label).toBe('Interactive Bagua Map');
     expect(fs?.hint).toBe('Interactive feng shui map of your eight directions');
   });
-  it('explains RetroGOOD as "What stands out in your chart" without renaming it', () => {
-    const r = out[0].items.find(i => i.to === '/retrogood');
-    expect(r?.label).toBe('RetroGOOD');
-    expect(r?.hint).toBe('What stands out in your chart');
+  it('maps the legacy founder link to the unified guide without dropping its destination', () => {
+    const r = out[0].items.find(i => i.to === '/retrogrades');
+    expect(r?.label).toBe('Retrograde Guide');
+    expect(r?.hint).toBe('Recent, active and upcoming cycles; natal inward patterns');
   });
   it('gathers every Flying Stars link into one submenu in its own section', () => {
     expect(out[1].items.some(i => i.to.startsWith('/feng-shui/flying-stars'))).toBe(false);

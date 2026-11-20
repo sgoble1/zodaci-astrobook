@@ -36,7 +36,7 @@ export const MEMBER_DOMAINS: MemberDomain[] = [
   {
     id: 'chart', label: 'Mapping Center', hub: '/my-chart', hubLabel: 'Open my chart', icon: Orbit,
     description: 'Everything calculated from your own birth details.',
-    tabs: ['/my-chart', '/planets', '/houses', '/aspects', '/star-map', '/results', '/findings', '/retrogood', '/chart-elements', '/chart-calculator'],
+    tabs: ['/my-chart', '/planets', '/houses', '/aspects', '/star-map', '/results', '/findings', '/chart-elements', '/chart-calculator'],
     prefixes: ['/birth-chart', '/chart-guide', '/compendium', '/volume-2'],
     columns: [
       { title: 'Your chart', items: [
@@ -49,7 +49,6 @@ export const MEMBER_DOMAINS: MemberDomain[] = [
       { title: 'What stands out', items: [
         { to: '/results', label: 'My Results', description: 'Six-tab analysis of your chart patterns', icon: ListChecks },
         { to: '/findings', label: 'Key Findings', description: 'Patterns the chart engine found for you', icon: Sparkles },
-        { to: '/retrogood', label: 'RetroGOOD', description: 'Your inward strengths: planets that were retrograde at birth', icon: Repeat },
         { to: '/chart-elements', label: 'Elements & Modes', description: 'Your fire, earth, air and water balance', icon: Atom },
         { to: '/chart-calculator', label: 'Chart Calculator', description: 'Calculate any date, time and place', icon: Calculator },
         { to: '/start', label: 'Birth details', description: 'Check or change your date, time and place', icon: Settings2 },
@@ -134,7 +133,7 @@ export const MEMBER_DOMAINS: MemberDomain[] = [
     columns: [
       { title: 'Timing', items: [
         { to: '/transits', label: 'Today · Transits', description: 'What is moving through your chart now', icon: CalendarClock, badge: 'Popular' },
-        { to: '/retrogrades', label: 'Today · Retrogrades', description: 'Inward periods, natal and coming', icon: Repeat },
+        { to: '/retrogrades', label: 'Retrograde Guide', description: 'Recent review, active sky, upcoming cycles and natal patterns', icon: Repeat },
         { to: '/moon-calendar', label: 'Moon Calendar', description: 'Coming Moons in your own houses', icon: Repeat },
         { to: '/profection', label: 'This year · Profection', description: 'This year’s focus house', icon: Sun },
         { to: '/timeline', label: 'Lifetime · Timeline Hall', description: 'Your life phases at a glance', icon: CalendarRange },
@@ -463,7 +462,7 @@ export const ROUTE_INVENTORY: Record<string, Placement> = {
   '/astrocomic': P('public', 'utility', 'public product page; members use /my-comic'), '/store': P('public', 'utility', 'public shop'), '/product/:handle': P('public', 'tertiary', 'from the shop'), '/academy': P('learn', 'duplicate', 'redirects to /learn#lessons'), '/academy/:slug': P('learn', 'tertiary', 'from Learn lessons'), '/compatibility': P('explore', 'secondary'),
   '/brand-launch': P('public', 'utility', 'launch kit'), '/contents': P('april', 'utility'), '/contents/:id': P('april', 'utility'), '/read': P('april', 'utility'), '/read/document/:slug': P('april', 'utility'), '/read/:id': P('april', 'utility'),
   '/': P('account', 'duplicate', 'members are sent to /dashboard'), '/explore': P('explore', 'primary'), '/personal-context': P('account', 'utility'), '/workspaces': P('explore', 'secondary'), '/observation-log': P('readings', 'secondary'), '/observatory': P('readings', 'secondary'), '/content-center': P('readings', 'secondary'), '/reading-history': P('book', 'secondary'),
-  '/wonderings': P('readings', 'secondary'), '/start': P('chart', 'secondary'), '/my-chart': P('chart', 'primary'), '/retrogood': P('readings', 'secondary'), '/our-charts': P('chart', 'secondary', 'shared-space accounts'), '/siblings': P('explore', 'secondary'),
+  '/wonderings': P('readings', 'secondary'), '/start': P('chart', 'secondary'), '/my-chart': P('chart', 'primary'), '/retrogood': P('explore', 'duplicate', 'redirects to /retrogrades'), '/our-charts': P('chart', 'secondary', 'shared-space accounts'), '/siblings': P('explore', 'secondary'),
   '/investigations': P('readings', 'secondary'), '/investigations/:caseId': P('readings', 'tertiary', 'from the Investigations Bureau'), '/museum': P('readings', 'secondary'), '/museum/:gallery': P('readings', 'tertiary', 'from the Museum lobby'), '/archive': P('book', 'secondary'), '/keepsakes': P('book', 'secondary'), '/findings': P('chart', 'secondary'), '/results': P('chart', 'secondary'), '/my-readings': P('readings', 'primary'), '/my-readings/topic/:slug': P('readings', 'tertiary', 'every topic and core theme is listed on the Readings hub'),
   '/my-astrobook': P('book', 'primary'), '/auth': P('account', 'utility'), '/reset-password': P('account', 'utility'), '/pricing': P('account', 'utility'), '/creator': P('account', 'utility', 'Cosmic Studio'),
   '/my-comic': P('book', 'secondary'), '/referrals': P('explore', 'secondary'), '/checkout/return': P('account', 'utility'), '/my-masterbook': P('book', 'secondary'), '/books': P('book', 'secondary'), '/orders': P('book', 'secondary'),

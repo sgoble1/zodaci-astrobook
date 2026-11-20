@@ -116,7 +116,7 @@ export function onlyInFullEdition(groups: FounderGroup[], path: string, memberLi
 /** Short notes under menu entries whose names alone don't say what they open (V2.3 Gap 6). */
 const LINK_NOTES: Record<string, { label?: RegExp; rename?: string; hint: string }> = {
   '/masterbook/bagua-wheel': { label: /bagua wheel/i, rename: 'Interactive Bagua Map', hint: 'Interactive feng shui map of your eight directions' },
-  '/retrogood': { hint: 'What stands out in your chart' },
+  '/retrogrades': { hint: 'Recent, active and upcoming cycles; natal inward patterns' },
   '/feng-shui/flying-stars': { hint: 'Nine stars moving through the home each year' },
   '/profection': { hint: 'The house your current year of life lights up' },
   '/findings': { hint: 'The strongest patterns, ranked' },
@@ -139,6 +139,7 @@ const isFlyingStars = (to: string) => /^\/feng-shui\/flying-stars(?:[?#/]|$)/.te
  */
 export function clarifyFounderGroups<G extends FounderGroup & { items: (FounderLink & { hint?: string })[] }>(groups: G[]): G[] {
   const note = <L extends FounderLink & { hint?: string }>(l: L): L => {
+    if (l.to.split(/[?#]/)[0] === '/retrogood' || l.to.split(/[?#]/)[0] === '/retrogrades') return { ...l, to: l.to.replace(/^\/retrogood(?=[?#]|$)/, '/retrogrades'), label: 'Retrograde Guide', hint: 'Recent, active and upcoming cycles; natal inward patterns' };
     const n = LINK_NOTES[l.to.split(/[?#]/)[0]];
     if (!n || l.to.includes('?')) return l;
     return { ...l, label: n.rename && (!n.label || n.label.test(l.label)) ? n.rename : l.label, hint: l.hint ?? n.hint };

@@ -22,7 +22,7 @@ const ROWS: [string, ...(boolean | string)[]][] = [
   ['Your topic readings (extra chapters)', N, N, Y, Y, Y],
   ['Birth-sky wheel and aspect grid', N, N, Y, Y, Y],
   ['Chiron, Nodes and sensitive points', N, N, Y, Y, Y],
-  ['RetroGOOD retrograde chapter', N, N, Y, Y, Y],
+  ['Retrograde Guide retrograde chapter', N, N, Y, Y, Y],
   ['Solar return preview', N, N, Y, Y, Y],
   ['The Story of Your Sky', N, N, N, Y, Y],
   ['Midpoints', N, N, N, Y, Y],

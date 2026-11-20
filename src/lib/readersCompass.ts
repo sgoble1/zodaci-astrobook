@@ -64,7 +64,7 @@ export const CHAPTER_OUTCOMES: Record<string, [string, string, string]> = {
   'Shadow and Breakthrough': ['The pattern that tends to trip you up', 'What it is protecting', 'The turn that gets you past it'],
   'Your Profection Year': ['Which life area this year focuses on', 'Which planet is "in charge" this year', 'What to pay attention to'],
   'Life Cycles: Returns and Turning Points': ['The dates planets return to or challenge their birth places', 'Your age at each one', 'Which ones have passed and which are coming'],
-  'RetroGOOD: Your Retrograde Planets': ['Which planets were retrograde when you were born', 'The inward strength each one gives', 'How to use it on purpose'],
+  'Retrograde Guide: Your Retrograde Planets': ['Which planets were retrograde when you were born', 'The inward strength each one gives', 'How to use it on purpose'],
   'House Rulers and Their Aspects': ['The planet that runs each house', 'The aspects that planet makes', 'Which life areas are wired together'],
   'Your Decans': ['Which 10° third of its sign each planet sits in', 'The planet that rules each decan', 'Where a planet rules its own decan'],
   'Your Birth Moment Across Traditions': ['Your Vedic sidereal snapshot', 'Your Chinese year pillar', 'Your Life Path number'],

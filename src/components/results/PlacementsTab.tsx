@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { ChevronDown } from 'lucide-react';
 import { fmtLon, SIGN_KEYWORDS, type ChartResult } from '@/lib/astro';
 import { placementText, CORE_KEYS } from '@/lib/resultsEngine';
-import { dignityOf, tierOf, TIER_GLYPH } from '@/lib/retrogood';
+import { dignityOf } from '@/lib/retrogood';
 import { TierGate } from '@/components/common/TierGate';
 import { HouseExplorer } from '@/components/results/HouseExplorer';
 import type { Plan } from '@/content/navigation';
@@ -23,7 +23,7 @@ export function PlacementsTab({ chart, timeKnown, plan, loading }: { chart: Char
         <PlanetOrb planet={b.key} size={32} />
         <span className="flex-1"><span className="font-medium">{b.name} in {b.sign}</span>
           <span className="block text-xs text-muted-foreground">{b.deg}°{String(b.min).padStart(2, '0')}′{b.house && timeKnown ? ` · house ${b.house}` : ''}{b.retro && b.key !== 'northNode' ? ' · retrograde' : ''}</span></span>
-        {b.retro && CORE_KEYS.includes(b.key) && <span className="rounded-full border border-gold/50 px-2 py-0.5 text-xs text-gold">{TIER_GLYPH[tierOf(dignityOf(b.key, b.sign))]} {tierOf(dignityOf(b.key, b.sign))}</span>}
+        {b.retro && CORE_KEYS.includes(b.key) && <span className="text-xs text-muted-foreground">{dignityOf(b.key, b.sign).replace(/\+/g, ' + ')}</span>}
         <ChevronDown className={`h-4 w-4 transition-transform duration-500 ${open === b.key ? 'rotate-180' : ''}`} aria-hidden />
       </button>
       {open === b.key && <p className="px-4 pb-4 pl-15 text-sm leading-relaxed sm:pl-[3.75rem]">{placementText(b, timeKnown)}</p>}

@@ -68,7 +68,7 @@ export function retroChapter(c: ChartResult) {
   const pats = retroPatterns(c, rx, top.key);
   return [
     `${rx.length} planet${rx.length > 1 ? 's were' : ' was'} retrograde at your birth. Retrograde planets are not broken; they work inward first, then outward.`,
-    ...rx.map(r => `## ${r.name} retrograde in ${r.sign} · ${r.tier} · ${r.score}/100\n\n${r.narrative.opening}\n\nGift: ${r.narrative.gift}\n\nShadow: ${r.narrative.shadow}\n\nIntegration: ${r.narrative.integration}\n\n“${r.narrative.affirmation}”`),
+    ...rx.map(r => `## ${r.name} retrograde in ${r.sign} · ${r.dignity}\n\n${r.narrative.opening}\n\nGift: ${r.narrative.gift}\n\nShadow: ${r.narrative.shadow}\n\nIntegration: ${r.narrative.integration}\n\n“${r.narrative.affirmation}”`),
     ...pats.map(p => `## Pattern: ${p.name} — ${p.label}\n\n${p.text}`),
   ].join('\n\n');
 }

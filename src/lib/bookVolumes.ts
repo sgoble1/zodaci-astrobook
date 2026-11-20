@@ -318,7 +318,7 @@ export function buildVolumes({ edition, chart: c, name, saved, people = [], toda
   vol.V.push(...bySaved('V'));
 
   vol.VI.push({ title: 'Your Profection Year', content: profectionChapter(c, today) }, { title: 'Life Cycles: Returns and Turning Points', content: cyclesChapter(c, today) });
-  if (r >= 2) vol.VI.push({ title: 'RetroGOOD: Your Retrograde Planets', content: retroChapter(c) }, { title: 'Solar Return Preview', content: solarReturnChapter(c, timeKnown, today) });
+  if (r >= 2) vol.VI.push({ title: 'Retrograde Guide: Your Retrograde Planets', content: retroChapter(c) }, { title: 'Solar Return Preview', content: solarReturnChapter(c, timeKnown, today) });
   if (r >= 4) vol.VI.push({ title: 'Your 12-Month Sky Forecast', content: forecastChapter(c, today) }, { title: 'Twelve Affirmations', content: affirmationsChapter(c) });
   vol.VI.push(...bySaved('VI'));
 

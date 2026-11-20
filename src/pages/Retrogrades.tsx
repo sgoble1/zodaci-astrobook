@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { SourceChapters } from '@/components/common/SourceChapters';
 import { StartLink } from '@/components/common/StartLink';
@@ -9,7 +9,11 @@ import { useAprilSpace } from '@/hooks/useAprilSpace';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { computeChart, type ChartResult } from '@/lib/astro';
 import { toChartInput, useMyBirth } from '@/lib/myBirth';
-import { natalRetrogrades, periodDays, periodsForChart, RETRO_MEANING, type RetroPeriod } from '@/lib/retrogrades';
+import { isDoubleRx, retrogradeDebrief, retrogradeWindow, periodDays, periodsForChart, RETRO_MEANING, type RetroPeriod } from '@/lib/retrogrades';
+import { NatalRetrogradeGuide } from '@/components/retrogood/NatalRetrogradeGuide';
+import { ContinueExploring } from '@/components/common/ContinueExploring';
+import { usePlan } from '@/hooks/usePlan';
+import { TierGate } from '@/components/common/TierGate';
 import journalImg from '@/assets/journaling-desk.jpg';
 
 const fmt = (d: Date) => d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
@@ -22,96 +26,83 @@ const ordinal = (n: number) => `${n}${n % 10 === 1 && n !== 11 ? 'st' : n % 10 =
  * retrograde periods from the ephemeris, placed in its own houses. April's original edition keeps her written chapter.
  */
 export default function Retrogrades() {
-  usePageMeta('Retrogrades · Zodaci', 'Which planets were retrograde when you were born, and every retrograde period in the coming year, placed in your own chart.');
+  usePageMeta('Retrograde Guide · Zodaci', 'Recent retrograde reviews, today’s sky, the next twelve months and your natal retrograde placements, calculated from the ephemeris.');
   const april = useAprilSpace();
   const birth = useMyBirth();
-  const chart = useMemo<ChartResult | null>(() => { if (!birth) return null; try { return computeChart(toChartInput(birth)); } catch { return null; } }, [birth]);
-  if (april === undefined || birth === undefined) return <p role="status" className="text-muted-foreground">Opening the retrograde desk…</p>;
-  if (april && RETROGRADES_AT_BIRTH.length > 0) return <AprilRetrogrades />;
+  const [retry, setRetry] = useState(0);
+  const calculation = useMemo(() => {
+    if (!birth) return { chart: null, error: false };
+    try {
+      const raw = computeChart(toChartInput(birth));
+      const chart = birth.time ? raw : { ...raw, asc: null, mc: null, cusps: null, bodies: raw.bodies.map(b => ({ ...b, house: null })) };
+      return { chart, error: false };
+    } catch { return { chart: null, error: true }; }
+  }, [birth, retry]);
+  if (april === undefined || birth === undefined) return <p role="status" className="text-muted-foreground">Opening the Retrograde Guide…</p>;
+  const { chart } = calculation;
   return (
-    <div className="space-y-8">
-      <PageHead eyebrow="Retrograde desk · calculated from the ephemeris" title="Retrogrades" script="When a planet seems to turn back." art="planet">
-        <p>From Earth, every planet except the Sun and Moon sometimes appears to slow, stop and move backwards for a while. Astrologers read these stretches as times to review rather than start. Below: the planets that were retrograde when you were born, and every retrograde period in the next twelve months.</p>
+    <article className="mx-auto max-w-6xl space-y-10">
+      <PageHead eyebrow="Timing & cycles" title="Retrograde Guide" script="A second look, with your chart in view." art="planet">
+        <p>See what recently turned direct, what is moving backwards now and what comes next. Then explore the planets that were retrograde at your birth. Dates and degrees are calculated; the reflections are astrological interpretations, not evidence of events in your life.</p>
       </PageHead>
-      {chart ? <BornRetrograde chart={chart} /> : (
-        <section className="obs-paper space-y-3 p-5 sm:p-6">
-          <p className="font-label text-xs tracking-[0.16em] text-primary">Born retrograde</p>
-          <h2 className="font-display text-2xl">Add your birth details to see yours</h2>
-          <p className="max-w-2xl text-foreground/80">Which planets were retrograde at your birth, and which of your houses each coming retrograde passes through, both come from your own chart. The dates below are the same for everyone.</p>
-          <Button asChild variant="signal"><StartLink>Open birth details</StartLink></Button>
-        </section>
-      )}
+      <nav aria-label="Retrograde Guide sections" className="flex flex-wrap gap-x-5 gap-y-3 border-y border-border py-4 text-sm">
+        {[['recent-review', 'Recent review'], ['sky-now', 'Active sky'], ['coming-rx', 'Next twelve months'], ['natal-inward', 'Natal retrogrades']].map(([id, label]) => <a key={id} href={`#${id}`} className="ink-link">{label}</a>)}
+      </nav>
+      {calculation.error && <section role="alert" className="space-y-3"><p>Your saved chart could not be calculated. Sky dates remain available; personal houses and natal insights are left out.</p><Button variant="outline" onClick={() => setRetry(n => n + 1)}>Retry chart</Button><Button asChild variant="outline"><StartLink>Check birth details</StartLink></Button></section>}
+      {!birth && <section className="space-y-3 border-y border-border py-6"><h2 className="text-2xl">Add your chart for personal context</h2><p>The sky dates below are shared by everyone. Your saved birth details add natal retrogrades and, with a birth time, the houses crossed by each cycle.</p><Button asChild variant="signal"><StartLink>Open birth details</StartLink></Button></section>}
       <ComingRetrogrades chart={chart} />
+      {chart && <NatalRetrogradeGuide chart={chart} date={birth?.date ?? chart.input.date} />}
+      {april && RETROGRADES_AT_BIRTH.length > 0 && <details className="border-y border-border py-5"><summary className="cursor-pointer font-display text-xl">April’s original retrograde chapter</summary><div className="pt-6"><AprilRetrogrades /></div></details>}
       <HowCalculated />
-    </div>
-  );
-}
-
-function BornRetrograde({ chart }: { chart: ChartResult }) {
-  const rx = natalRetrogrades(chart);
-  const timed = !!chart.input.time;
-  return (
-    <section className="space-y-4" aria-labelledby="born-rx">
-      <div>
-        <p className="font-label text-xs tracking-[0.16em] text-primary">Born retrograde</p>
-        <h2 id="born-rx" className="font-display text-2xl sm:text-3xl">{rx.length === 0 ? 'No planets were retrograde when you were born' : `${rx.length} ${rx.length === 1 ? 'planet was' : 'planets were'} retrograde when you were born`}</h2>
-        <div className="mt-3 h-px max-w-xs bg-[hsl(var(--brass)/0.5)]" />
-        <p className="mt-3 max-w-3xl text-foreground/80">{rx.length === 0
-          ? 'Every planet from Mercury to Pluto was moving forward on your birth day. That is less common than it sounds: most people are born with at least one of the slow outer planets retrograde.'
-          : 'A planet that was retrograde at birth is traditionally read as working inward first. It is not a fault or a weakness. The outer planets are retrograde for months every year, so those are shared by everyone born around the same time.'}</p>
-      </div>
-      {rx.length > 0 && <ul className="grid gap-3 md:grid-cols-2">
-        {rx.map(b => {
-          const m = RETRO_MEANING[b.key];
-          return (
-            <li key={b.key} className="obs-paper p-5">
-              <div className="flex items-baseline gap-4">
-                <span aria-hidden className="text-4xl text-primary">{b.glyph}</span>
-                <div className="min-w-0">
-                  <h3 className="font-display text-xl leading-tight">{b.name} retrograde in {b.sign}</h3>
-                  <p className="mt-1 text-sm text-muted-foreground">{b.deg}°{String(b.min).padStart(2, '0')}′{timed && b.house ? ` · ${ordinal(b.house)} house` : ''}{m ? ` · ${m.theme}` : ''}</p>
-                </div>
-              </div>
-              {m && <p className="mt-3 leading-relaxed text-foreground/85"><span className="font-label text-[11px] tracking-[0.14em] text-accent">Traditional reading · </span>{m.natal}</p>}
-              <Link to={`/planets/${b.key}`} className="ink-link mt-3 inline-block font-label text-xs tracking-[0.14em]">Your {b.name} page →</Link>
-            </li>
-          );
-        })}
-      </ul>}
-    </section>
+      <ContinueExploring links={[
+        { to: '/timeline', title: 'Your timeline', text: 'See retrogrades alongside other planetary cycles.' },
+        { to: '/results?tab=placements', title: 'Your placements', text: 'Read the same planets in the wider chart.' },
+        { to: '/observation-log', title: 'Observation Log', text: 'Compare these themes with your own notes.' },
+      ]} />
+    </article>
   );
 }
 
 function ComingRetrogrades({ chart }: { chart: ChartResult | null }) {
   const today = useMemo(() => new Date(), []);
-  const periods = useMemo(() => periodsForChart(chart, today, 365), [chart, today]);
-  const natalRx = useMemo(() => new Set(chart ? natalRetrogrades(chart).map(b => b.key) : []), [chart]);
-  const now = periods.filter(p => p.start <= today && p.end >= today);
-  const next = periods.filter(p => p.start > today);
+  const { plan, loading } = usePlan();
+  const [retry, setRetry] = useState(0);
+  const sky = useMemo(() => {
+    try {
+      const lookback = new Date(today.getTime() - 365 * 864e5);
+      return { window: retrogradeWindow(periodsForChart(chart, lookback, 730), today), error: false };
+    } catch { return { window: null, error: true }; }
+  }, [chart, today, retry]);
+  if (sky.error || !sky.window) return <section role="alert" className="space-y-3"><h2 className="text-2xl">The sky calendar could not be calculated</h2><p>No substitute dates have been shown.</p><Button variant="outline" onClick={() => setRetry(n => n + 1)}>Retry calendar</Button></section>;
+  const { recent, active, upcoming, stations } = sky.window;
   const timed = !!chart?.input.time;
-  return (
-    <section className="space-y-5" aria-labelledby="coming-rx">
-      <div>
-        <p className="font-label text-xs tracking-[0.16em] text-primary">The coming year</p>
-        <h2 id="coming-rx" className="font-display text-2xl sm:text-3xl">Retrograde periods, {fmtShort(today)} to {fmt(new Date(today.getTime() + 365 * 864e5))}</h2>
-        <div className="mt-3 h-px max-w-xs bg-[hsl(var(--brass)/0.5)]" />
-      </div>
-      <div className="obs-panel p-5 sm:p-6">
-        <p className="font-label text-xs tracking-[0.16em] text-primary">In the sky today</p>
-        {now.length === 0 ? <p className="mt-2 text-foreground/85">No planet is retrograde today.</p> : (
-          <ul className="mt-3 flex flex-wrap gap-2">
-            {now.map(p => <li key={p.key + p.start.toISOString()} className="rounded-sm border border-[hsl(var(--brass)/0.5)] px-3 py-1.5 text-sm"><span aria-hidden className="mr-1 text-primary">{p.glyph}</span>{p.name} until {fmtShort(p.end)}</li>)}
-          </ul>
-        )}
-      </div>
-      {next.length === 0 ? <p className="text-muted-foreground">No new retrograde periods begin in the next twelve months.</p> : (
-        <ol className="space-y-3">
-          {next.map(p => <PeriodRow key={p.key + p.start.toISOString()} p={p} timed={timed} doubled={natalRx.has(p.key)} />)}
-        </ol>
-      )}
-      {chart && !timed && <p className="text-sm text-muted-foreground">Your chart has no birth time, so houses are left out. Add a birth time to see which part of your life each period passes through.</p>}
+  const debrief = recent ? retrogradeDebrief(recent) : null;
+  const row = (p: RetroPeriod) => <PeriodRow key={p.key + p.start.toISOString()} p={p} timed={timed} doubled={isDoubleRx(chart, p.key)} />;
+  return <div className="space-y-10">
+    <section id="recent-review" aria-labelledby="recent-heading" className="scroll-mt-28 space-y-4">
+      <h2 id="recent-heading" className="text-2xl sm:text-3xl">The most recent review</h2>
+      {recent && debrief ? <>
+        <p className="text-lg">{recent.name} turned direct on {fmt(recent.end)}.</p>
+        <ol>{row(recent)}</ol>
+        <div className="max-w-3xl space-y-3 leading-relaxed"><p>{debrief.themes}</p><p className="border-l-2 border-primary pl-4 text-muted-foreground">{debrief.reflection}</p></div>
+        {recent.postShadow && <p className="text-sm text-muted-foreground">{recent.postShadow > today ? `The post-shadow continues until ${fmt(recent.postShadow)}.` : `The post-shadow ended on ${fmt(recent.postShadow)}.`} This marks the return to the retrograde station degree, not a deadline for personal resolution.</p>}
+      </> : <p>No completed cycle was found in the preceding twelve months.</p>}
     </section>
-  );
+    <section id="sky-now" aria-labelledby="active-heading" className="scroll-mt-28 space-y-4">
+      <h2 id="active-heading" className="text-2xl sm:text-3xl">Active sky · {fmt(today)}</h2>
+      <p className="text-sm text-muted-foreground">UTC daily sampling. Station dates may differ from your local calendar by a day.</p>
+      {stations.length ? <ul className="border-y border-border py-3 space-y-2">{stations.map(s => <li key={s.period.key + s.direction}>{s.period.name} stations {s.direction} today at {deg(s.direction === 'direct' ? s.period.to : s.period.from)}.</li>)}</ul> : <p>No sampled station falls on today’s UTC date.</p>}
+      {active.length ? <ol className="space-y-4">{active.map(row)}</ol> : <p>No planet from Mercury to Pluto is in a retrograde cycle today.</p>}
+    </section>
+    <section id="coming-rx" aria-labelledby="calendar-heading" className="scroll-mt-28 space-y-4">
+      <h2 id="calendar-heading" className="text-2xl sm:text-3xl">Your next twelve months</h2>
+      <p className="max-w-3xl text-muted-foreground">Through {fmt(new Date(today.getTime() + 365 * 864e5))}. Pre-shadow begins at the future direct-station degree; post-shadow ends at the retrograde-station degree. Outer-planet shadows are degree recrossings too, though their interpretation varies by tradition.</p>
+      <TierGate plan={plan} loading={loading} need="full" title="Twelve-month retrograde calendar" preview={`${upcoming.length} calculated cycles ahead, with station degrees, shadows and your chart’s house crossings.`}>
+        {upcoming.length ? <ol className="space-y-4">{upcoming.map(row)}</ol> : <p>No new cycle starts in this window.</p>}
+      </TierGate>
+      {chart && !timed && <p className="text-sm text-muted-foreground">With a date-only chart, the calendar uses signs, degrees and natal retrograde matches. Houses and angles are omitted.</p>}
+    </section>
+  </div>;
 }
 
 function PeriodRow({ p, timed, doubled }: { p: RetroPeriod; timed: boolean; doubled: boolean }) {
@@ -127,7 +118,7 @@ function PeriodRow({ p, timed, doubled }: { p: RetroPeriod; timed: boolean; doub
         <p className="text-sm text-foreground/85">Turns back at {deg(p.from)} and turns forward again at {deg(p.to)}.</p>
         {p.preShadow && p.postShadow && <p className="text-sm text-muted-foreground">Shadow: {fmtShort(p.preShadow)} to {fmtShort(p.postShadow)} — the days it covers the same stretch of sky three times.</p>}
         {timed && p.houses && p.houses.length > 0 && <p className="text-sm"><span className="font-label text-[11px] tracking-[0.14em] text-primary">In your chart · </span>{p.houses.length === 1 ? `your ${ordinal(p.houses[0])} house` : `your ${p.houses.map(ordinal).join(' and ')} houses`}</p>}
-        {doubled && <p className="text-sm"><span className="font-label text-[11px] tracking-[0.14em] text-accent">Born retrograde · </span>you were born with {p.name} retrograde, so these periods are traditionally said to feel familiar.</p>}
+        {doubled && <p className="text-sm"><span className="font-label text-[11px] tracking-[0.14em] text-accent">Double Rx · </span>you were born with {p.name} retrograde, so the same planet is retrograde in the sky and at birth. This is a placement match, not a prediction of stronger effects.</p>}
         {m && <p className="leading-relaxed text-foreground/80">{m.passing}</p>}
       </div>
     </li>
@@ -176,7 +167,7 @@ function AprilRetrogrades() {
           );
         })}
       </div>
-      <ComingRetrogrades chart={null} />
+      
       <SourceChapters match={/retrograde|\brx\b|stationing|shadow period/i} />
     </div>
   );

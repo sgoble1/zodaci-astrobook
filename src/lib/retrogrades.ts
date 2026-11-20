@@ -1,5 +1,6 @@
 import * as Astronomy from 'astronomy-engine';
 import { eclLon, fmtLon, houseOf, type BodyPos, type ChartResult } from '@/lib/astro';
+import { HOUSE_AREA } from '@/lib/resultsEngine';
 
 /**
  * Retrograde periods from the ephemeris (no AI, no biography). A planet is retrograde on a UTC day when its
@@ -14,7 +15,6 @@ const BODIES: [string, string, string, Astronomy.Body][] = [
   ['saturn', 'Saturn', '♄', Astronomy.Body.Saturn], ['uranus', 'Uranus', '♅', Astronomy.Body.Uranus],
   ['neptune', 'Neptune', '♆', Astronomy.Body.Neptune], ['pluto', 'Pluto', '♇', Astronomy.Body.Pluto],
 ];
-const SHADOW = new Set(['mercury', 'venus', 'mars']);
 const norm = (x: number) => ((x % 360) + 360) % 360;
 const step = (a: number, b: number) => norm(b - a + 180) - 180;
 const utcDay = (d: Date) => Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate());
@@ -25,7 +25,7 @@ export type RetroPeriod = {
   /** UTC day the planet stations retrograde, and the UTC day it stations direct. */
   start: Date; end: Date;
   from: Position; to: Position;
-  /** Mercury, Venus and Mars only, when the scan window reaches them. */
+  /** Degree-recrossing dates, when the scan window reaches them. */
   preShadow?: Date; postShadow?: Date;
   /** Houses in the member's chart the planet moves through while retrograde (timed charts only). */
   houses?: number[];
@@ -43,7 +43,7 @@ function sample(startMs: number, days: number) {
  * real start date; periods that start inside the window but end after it carry their true end date.
  */
 export function retrogradePeriods(from = new Date(), days = 365): RetroPeriod[] {
-  const BACK = 160, AHEAD = 200; // reach back to the start of a running period and forward to its end and shadow
+  const BACK = 400, AHEAD = 420; // include long outer-planet cycles and both degree-recrossing shadows
   const origin = utcDay(from) - BACK * DAY, total = BACK + days + AHEAD;
   const lons = sample(origin, total);
   const windowStart = utcDay(from), windowEnd = windowStart + days * DAY;
@@ -62,10 +62,8 @@ export function retrogradePeriods(from = new Date(), days = 365): RetroPeriod[] 
         if (s === 0) { i = e; continue; } // started before the scan reached back: no true start date
         if (stop.getTime() >= windowStart && start.getTime() <= windowEnd) {
           const p: RetroPeriod = { key, name, glyph, start, end: stop, from: pos(L[s]), to: pos(L[end]) };
-          if (SHADOW.has(key)) {
-            for (let k = s; k > 0; k--) { if (step(L[k], L[end]) >= 0) { p.preShadow = new Date(origin + k * DAY); break; } }
-            for (let k = end; k < L.length; k++) { if (step(L[s], L[k]) >= 0) { p.postShadow = new Date(origin + (k - 1) * DAY); break; } }
-          }
+          for (let k = s; k > 0; k--) { if (step(L[k], L[end]) >= 0) { p.preShadow = new Date(origin + k * DAY); break; } }
+          for (let k = end; k < L.length; k++) { if (step(L[s], L[k]) >= 0) { p.postShadow = new Date(origin + (k - 1) * DAY); break; } }
           out.push(p);
         }
         i = e;
@@ -91,6 +89,8 @@ export function housesCrossed(period: Pick<RetroPeriod, 'from' | 'to'>, cusps: n
     const h = houseOf(norm(period.from.lon - Math.min(d, arc)), cusps);
     if (seen[seen.length - 1] !== h) seen.push(h);
   }
+  const last = houseOf(period.to.lon, cusps);
+  if (seen[seen.length - 1] !== last) seen.push(last);
   return seen;
 }
 
@@ -112,6 +112,36 @@ export const periodDays = (p: Pick<RetroPeriod, 'start' | 'end'>) => Math.round(
 
 /** Retrograde periods annotated with the houses they cross in a member's own chart (empty without a birth time). */
 export function periodsForChart(chart: ChartResult | null, from = new Date(), days = 365): RetroPeriod[] {
-  const timed = !!chart?.input.time;
-  return retrogradePeriods(from, days).map(p => ({ ...p, houses: timed ? housesCrossed(p, chart!.cusps) : [] }));
+  return retrogradePeriods(from, days).map(p => ({ ...p, houses: chart?.input.time ? housesCrossed(p, chart.cusps) : [] }));
+}
+
+export type RetrogradeWindow = { recent: RetroPeriod | null; active: RetroPeriod[]; upcoming: RetroPeriod[]; stations: { period: RetroPeriod; direction: 'retrograde' | 'direct' }[] };
+
+/** UTC station days and non-overlapping cycle groups; a station-direct day is no longer an active cycle. */
+export function retrogradeWindow(periods: RetroPeriod[], today: Date): RetrogradeWindow {
+  const now = utcDay(today), until = now + 365 * DAY;
+  const recent = periods.filter(p => p.end.getTime() <= now).sort((a, b) => b.end.getTime() - a.end.getTime())[0] ?? null;
+  return {
+    recent,
+    active: periods.filter(p => p.start.getTime() <= now && p.end.getTime() > now),
+    upcoming: periods.filter(p => p.start.getTime() > now && p.start.getTime() <= until),
+    stations: periods.flatMap(p => [
+      ...(p.start.getTime() === now ? [{ period: p, direction: 'retrograde' as const }] : []),
+      ...(p.end.getTime() === now ? [{ period: p, direction: 'direct' as const }] : []),
+    ]),
+  };
+}
+
+/** Same-planet natal/transit match, not an unrelated natal contact or a stronger prediction. */
+export function isDoubleRx(chart: ChartResult | null, key: string): boolean {
+  return !!chart && natalRetrogrades(chart).some(b => b.key === key);
+}
+
+export function retrogradeDebrief(p: RetroPeriod): { themes: string; reflection: string } {
+  const theme = RETRO_MEANING[p.key]?.theme ?? 'reflection and revision';
+  const areas = (p.houses ?? []).map(h => HOUSE_AREA[h]).filter(Boolean);
+  return {
+    themes: `During this ${p.name} cycle, astrology associates ${theme} with review${areas.length ? `. Its path through your chart connects that review with ${areas.join('; ')}` : '. The sign and degree span describe the cycle without assigning a personal life area'}. You may have revised decisions, waited for clarity or processed something privately. These are possible themes, not a record of what happened to you.`,
+    reflection: `What changed in your understanding of ${theme}? Which revision is worth keeping now? Stationing direct describes apparent motion; it does not promise that delays or feelings resolve on that day.`,
+  };
 }

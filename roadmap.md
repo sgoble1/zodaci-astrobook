@@ -700,3 +700,9 @@ Full ordered list: docs/master-implementation-resource.md Part 30.
 - [x] Enhance Relationships and Learn landing hierarchy/spacing; include relevant unfinished Learn hub items except article expansion.
 
 Verification: 156 suites / 1,281 tests pass; preview build OK. Desktop/393px checks cover public product pages, About, authenticated book/customizer and Shane comic, Learn, Relationships, pricing, investors and waitlist. Waitlist delivery was preserved but a new confirmation email delivery was not tested. Existing Academy progress remains in Part 30, outside this presentation pass.
+
+## Nov 20 — Unified Retrograde Guide
+- [ ] Consolidate navigation and member rendering at /retrogrades; preserve /retrogood as a redirect.
+- [ ] Add ephemeris-derived recent debrief, active stations and 12-month calendar with shadows, houses and double-Rx.
+- [ ] Retain natal dignity, patterns, tone, affirmations and transit tools without gamified labels.
+- [ ] Verify calculations, access, navigation and desktop/mobile member flow; run all tests.

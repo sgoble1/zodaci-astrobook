@@ -72,7 +72,7 @@ export default function Results() {
       <ContinueExploring links={[
         { to: '/my-readings', title: 'My readings', text: 'Written readings built from this same chart.' },
         { to: '/timeline', title: 'Your timeline', text: 'Transits, profections and retrogrades for the months ahead.' },
-        { to: '/retrogood', title: 'RetroGOOD', text: 'The planets that were retrograde when you were born.' },
+        { to: '/retrogrades', title: 'Retrograde Guide', text: 'The planets that were retrograde when you were born.' },
         { to: '/relationships', title: 'Relationships', text: 'Compare your chart with the people in your life.' },
         { to: '/explore', title: 'Explore more systems', text: 'Other traditions and points beyond the birth chart.' },
         { to: '/consult', title: 'Ask a counselor', text: 'Private sessions that read from your chart.' },

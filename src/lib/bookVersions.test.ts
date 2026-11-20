@@ -52,8 +52,8 @@ describe('edition chapters come from the calculated chart', () => {
   it('every version is composable with no finished readings', () => {
     for (const e of ['digital', 'pocket', 'classic', 'signature', 'linen']) expect(titles(e)).toEqual(expect.arrayContaining(['Your Big Three', 'The Twelve Houses', 'Your Planets, One by One', 'Your Aspects', 'Your North Node', 'Your Profection Year']));
   });
-  it('Classic adds the wheel, aspect grid, RetroGOOD and solar return', () => {
-    expect(titles('classic')).toEqual(expect.arrayContaining(['Your Birth Sky', 'Aspect Grid', 'RetroGOOD: Your Retrograde Planets', 'Solar Return Preview']));
+  it('Classic adds the wheel, aspect grid, Retrograde Guide and solar return', () => {
+    expect(titles('classic')).toEqual(expect.arrayContaining(['Your Birth Sky', 'Aspect Grid', 'Retrograde Guide: Your Retrograde Planets', 'Solar Return Preview']));
     expect(titles('pocket')).not.toContain('Aspect Grid');
   });
   it("only Collector's Linen has the certificate, forecast and lots", () => {

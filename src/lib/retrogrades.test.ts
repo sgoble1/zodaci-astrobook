@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { housesCrossed, natalRetrogrades, periodDays, retrogradePeriods } from './retrogrades';
+import { housesCrossed, isDoubleRx, natalRetrogrades, periodDays, periodsForChart, retrogradeDebrief, retrogradePeriods, retrogradeWindow } from './retrogrades';
 import { computeChart } from './astro';
 
 const near = (d: Date | undefined, iso: string, days = 1) => {
@@ -38,7 +38,8 @@ describe('retrograde periods from the ephemeris', () => {
     near(sat.start, '2024-06-29'); near(sat.end, '2024-11-15');
     expect(sat.from.sign).toBe('Pisces');
     expect(periodDays(sat)).toBeGreaterThan(130);
-    expect(sat.preShadow).toBeUndefined();
+    near(sat.preShadow, '2024-03-24');
+    expect(sat.postShadow?.getTime()).toBeGreaterThan(sat.end.getTime());
   });
 
   it('lists the houses a period crosses, in retrograde order', () => {
@@ -56,5 +57,48 @@ describe('retrograde periods from the ephemeris', () => {
     expect(keys).toContain('saturn');
     expect(keys).not.toContain('northNode');
     expect(keys.some(k => /node/i.test(k))).toBe(false);
+  });
+
+  it('selects the most recently completed cycle, including a direct station today', () => {
+    const reference = y2024.find(p => p.key === 'mercury' && p.start.getUTCMonth() === 3);
+    if (!reference) throw new Error('Missing Mercury reference');
+    const window = retrogradeWindow(y2024, new Date(reference.end.getTime() + 18 * 36e5));
+    expect(window.recent?.key).toBe('mercury');
+    near(window.recent?.end, '2024-04-25');
+    expect(window.active.some(p => p.key === 'mercury')).toBe(false);
+    expect(window.stations.some(s => s.period.key === 'mercury' && s.direction === 'direct')).toBe(true);
+  });
+
+  it('separates active and upcoming cycles within twelve months', () => {
+    const today = new Date('2024-08-10T12:00:00Z');
+    const window = retrogradeWindow(y2024, today);
+    expect(window.active.some(p => p.key === 'mercury')).toBe(true);
+    expect(window.upcoming.every(p => p.start > today && p.start.getTime() <= today.getTime() + 365 * 864e5)).toBe(true);
+    expect(window.active.some(p => window.upcoming.includes(p))).toBe(false);
+  });
+
+  it('double Rx requires the same planet retrograde at birth', () => {
+    const chart = computeChart({ date: '2024-08-10', time: '12:00', lat: 51.5, lon: 0, tz: 'UTC', houseSystem: 'placidus', placeLabel: 'London', placeSource: 'geocoded' });
+    expect(isDoubleRx(chart, 'mercury')).toBe(true);
+    expect(isDoubleRx(chart, 'venus')).toBe(false);
+    expect(isDoubleRx(null, 'mercury')).toBe(false);
+  });
+
+  it('date-only charts never assign retrograde house crossings', () => {
+    const chart = computeChart({ date: '2024-08-10', time: null, lat: 51.5, lon: 0, tz: 'UTC', houseSystem: 'placidus', placeLabel: 'London', placeSource: 'geocoded' });
+    const periods = periodsForChart(chart, new Date('2024-08-10'), 60);
+    expect(periods.length).toBeGreaterThan(0);
+    expect(periods.every(p => p.houses?.length === 0)).toBe(true);
+  });
+
+  it('includes the final fractional degree when it crosses a house cusp', () => {
+    expect(housesCrossed({ from: { lon: 30.5, sign: 'Taurus', deg: 0, min: 30 }, to: { lon: 29.9, sign: 'Aries', deg: 29, min: 54 } }, Array.from({ length: 12 }, (_, i) => i * 30))).toEqual([2, 1]);
+  });
+
+  it('debrief uses only the supplied house crossings', () => {
+    const mercury = y2024.find(p => p.key === 'mercury' && p.start.getUTCMonth() === 3);
+    if (!mercury) throw new Error('Missing April Mercury reference');
+    expect(retrogradeDebrief({ ...mercury, houses: [3] }).themes).toContain('thinking, siblings and your neighbourhood');
+    expect(retrogradeDebrief({ ...mercury, houses: [] }).themes).not.toContain('siblings');
   });
 });

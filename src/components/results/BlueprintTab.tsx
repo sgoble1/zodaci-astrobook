@@ -52,7 +52,7 @@ export function BlueprintTab({ chart, date, timeKnown, tone, name = '', placeLab
         <li className="rounded-lg border border-border bg-card p-4"><p className="font-label text-xs tracking-[0.16em] text-primary">Chart shape</p><p className="font-display text-xl">{shape.shape}</p><p className="text-sm text-muted-foreground">{SHAPE_TEXT[shape.shape]}</p></li>
         <li className="rounded-lg border border-border bg-card p-4"><p className="font-label text-xs tracking-[0.16em] text-primary">Chinese year</p><p className="font-display text-xl">{year ? `${year.stemElement} ${year.animal}` : '—'}</p><p className="text-sm text-muted-foreground">From the solar-term year, not 1 January.</p></li>
         <li className="rounded-lg border border-border bg-card p-4"><p className="font-label text-xs tracking-[0.16em] text-primary">Life Path</p><p className="font-display text-xl">{lp}</p><p className="text-sm text-muted-foreground">{LP_MEANING[lp] ?? ''}</p></li>
-        <li className="rounded-lg border border-border bg-card p-4"><p className="font-label text-xs tracking-[0.16em] text-primary">RetroGOOD</p><p className="font-display text-xl capitalize">{rg.tier}</p><p className="text-sm text-muted-foreground">{rg.planets.length} retrograde planet{rg.planets.length === 1 ? '' : 's'}</p></li>
+        <li className="rounded-lg border border-border bg-card p-4"><p className="font-label text-xs tracking-[0.16em] text-primary">Natal retrogrades</p><p className="font-display text-xl capitalize">{rg.planets.length}</p><p className="text-sm text-muted-foreground">{rg.planets.length} retrograde planet{rg.planets.length === 1 ? '' : 's'}</p></li>
       </ul>
     </div>
   );

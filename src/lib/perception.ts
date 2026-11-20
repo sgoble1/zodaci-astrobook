@@ -31,7 +31,7 @@ export function perceive(chart: Pick<ChartResult, 'bodies' | 'asc' | 'cusps'> & 
     out.push({ id: `p-${p.code}-${p.bodies.join('')}`, title: p.title, text: p.detail, weight: p.weight, source: 'pattern' });
   });
   const rg = retroGood(chart);
-  if (rg.tier !== 'none') out.push({ id: 'retro', title: `RetroGOOD: ${rg.tier}`, text: `${rg.planets.join(', ')} ${rg.planets.length === 1 ? 'was' : 'were'} retrograde at birth. ${rg.personal ? 'Personal-planet retrogrades make this especially noticeable in daily life.' : 'These are slower planets, so the effect is generational and subtle.'}`, weight: 2 + rg.score, source: 'retro' });
+  if (rg.tier !== 'none') out.push({ id: 'retro', title: `Natal retrogrades: ${rg.planets.length}`, text: `${rg.planets.join(', ')} ${rg.planets.length === 1 ? 'was' : 'were'} retrograde at birth. ${rg.personal ? 'Personal-planet retrogrades make this especially noticeable in daily life.' : 'These are slower planets, so the effect is generational and subtle.'}`, weight: 2 + rg.score, source: 'retro' });
   const counts: Record<string, number> = { Fire: 0, Earth: 0, Air: 0, Water: 0 };
   chart.bodies.filter(b => !['northNode', 'southNode', 'chiron'].includes(b.key)).forEach(b => { const e = elementOf(b.sign); if (e) counts[e]++; });
   const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]);

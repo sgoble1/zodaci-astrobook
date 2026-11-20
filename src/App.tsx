@@ -104,7 +104,6 @@ const Onboarding = lazy(() => import('./pages/Onboarding'));
 const ResetPassword = lazy(() => import('./pages/ResetPassword'));
 const MyTopicReading = lazy(() => import('./pages/MyTopicReading'));
 const MyChart = lazy(() => import('./pages/MyChart'));
-const RetroGood = lazy(() => import('./pages/RetroGood'));
 const OurCharts = lazy(() => import('./pages/OurCharts'));
 const Siblings = lazy(() => import('./pages/Siblings'));
 const Deductions = lazy(() => import('./pages/Deductions'));
@@ -336,7 +335,7 @@ export default function App() {
             <Route path="/wonderings" element={<Wonderings />} />
             <Route path="/start" element={<Onboarding />} />
             <Route path="/my-chart" element={<MyChart />} />
-            <Route path="/retrogood" element={<RetroGood />} />
+            <Route path="/retrogood" element={<Navigate to="/retrogrades" replace />} />
             <Route path="/our-charts" element={<OurCharts />} />
             <Route path="/siblings" element={<Siblings />} />
             <Route path="/findings" element={<Deductions />} />
