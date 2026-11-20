@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { redactGiftRoute } from '@/lib/privateRoute';
 import { useLocation } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -26,7 +27,7 @@ async function flush() {
 }
 export function logActivity(e: Ev) {
   if (!uid) return;
-  queue.push({ ...e, label: (e.label ?? '').slice(0, 160), visit_id: visitId, device, created_at: new Date().toISOString() });
+  queue.push({ ...e, path: redactGiftRoute(e.path), detail: e.detail?.href ? { ...e.detail, href: redactGiftRoute(String(e.detail.href)) } : e.detail, label: redactGiftRoute(e.label ?? '').slice(0, 160), visit_id: visitId, device, created_at: new Date().toISOString() });
   if (queue.length >= 15) void flush();
 }
 

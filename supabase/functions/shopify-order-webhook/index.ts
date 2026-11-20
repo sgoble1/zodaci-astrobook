@@ -1,0 +1,23 @@
+import { createClient } from 'npm:@supabase/supabase-js@2';
+import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors';
+import { digitalEligible,orderIdFromWebhook,SHOP,SHOPIFY_TOPICS,verifiedOwner,verifyShopifyHmac } from '../_shared/shopify-sync-rules.ts';
+import { ORDER_QUERY,shopifyAdmin,shopifyConfigured } from '../_shared/shopify-admin.ts';
+const json=(body:unknown,status=200)=>new Response(JSON.stringify(body),{status,headers:{...corsHeaders,'Content-Type':'application/json'}});
+Deno.serve(async req=>{
+ if(req.method==='OPTIONS')return new Response('ok',{headers:corsHeaders});if(req.method!=='POST')return json({error:'Method not allowed'},405);
+ let delivery='';let db:ReturnType<typeof createClient>|null=null;
+ try{const secret=Deno.env.get('SHOPIFY_ADMIN_CLIENT_SECRET');if(!secret||!shopifyConfigured())return json({error:'Shopify sync is not configured'},503);const raw=new Uint8Array(await req.arrayBuffer());if(raw.byteLength>1024*1024)return json({error:'Payload too large'},413);if(!await verifyShopifyHmac(raw,req.headers.get('X-Shopify-Hmac-Sha256')??'',secret))return json({error:'Invalid signature'},401);
+ const shop=req.headers.get('X-Shopify-Shop-Domain')??'',topic=req.headers.get('X-Shopify-Topic')??'';delivery=req.headers.get('X-Shopify-Webhook-Id')??'';if(shop!==SHOP||!(SHOPIFY_TOPICS as readonly string[]).includes(topic)||!/^[-a-zA-Z0-9]{10,100}$/.test(delivery))return json({error:'Invalid delivery'},400);
+ const body=JSON.parse(new TextDecoder().decode(raw));const orderId=orderIdFromWebhook(body,topic);if(!orderId)return json({error:'Invalid order'},400);
+ const url=Deno.env.get('SUPABASE_URL'),key=Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');if(!url||!key)return json({error:'Not configured'},503);db=createClient(url,key);
+ const payloadHash=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',raw))).map(x=>x.toString(16).padStart(2,'0')).join('');const record=await db.from('shopify_webhook_events').insert({delivery_id:delivery,shop,topic,payload_hash:payloadHash});
+ if(record.error){if(record.error.code!=='23505')throw record.error;const {data:e}=await db.from('shopify_webhook_events').select('state,payload_hash,received_at').eq('delivery_id',delivery).single();if(e?.payload_hash!==payloadHash)return json({error:'Delivery conflict'},409);if(e.state==='done')return json({ok:true,duplicate:true});if(e.state==='processing'&&Date.parse(e.received_at)>Date.now()-300000)return json({error:'Delivery processing; retry later'},503);const lease=await db.from('shopify_webhook_events').update({state:'processing',received_at:new Date().toISOString()}).eq('delivery_id',delivery).eq('received_at',e.received_at).select('delivery_id');if(lease.error||!lease.data?.length)return json({error:'Retry later'},503);}
+ const data=await shopifyAdmin(ORDER_QUERY,{id:orderId});const o=data?.order;if(!o||o.lineItems.pageInfo.hasNextPage)throw new Error('Order cannot be safely synchronized');const owner=await verifiedOwner(o.customAttributes??[],Deno.env.get('SHOPIFY_ORDER_LINK_SECRET')??'');
+ const state={financial:o.displayFinancialStatus,canceled:Boolean(o.cancelledAt),test:Boolean(o.test)};const lineItems=o.lineItems.nodes.map((l:{id:string;quantity:number;variant?:{id:string}})=>({id:l.id,quantity:l.quantity,variantId:l.variant?.id??''}));
+ const {data:existing}=await db.from('shopify_order_sync').select('id,provider_updated_at').eq('shop',shop).eq('shopify_order_id',o.id).maybeSingle();if(existing&&Date.parse(existing.provider_updated_at)>Date.parse(o.updatedAt)){await db.from('shopify_webhook_events').update({state:'done',finished_at:new Date().toISOString()}).eq('delivery_id',delivery);return json({ok:true,stale:true});}
+ const patch={shop,shopify_order_id:o.id,financial_status:o.displayFinancialStatus,fulfillment_status:o.displayFulfillmentStatus,canceled:state.canceled,refunded:['REFUNDED','PARTIALLY_REFUNDED'].includes(state.financial),test:state.test,owner_id:owner,line_items:lineItems,tracking:(o.fulfillments??[]).flatMap((f:{trackingInfo:unknown[]})=>f.trackingInfo),provider_updated_at:o.updatedAt,updated_at:new Date().toISOString()};
+ const allowed=(Deno.env.get('SHOPIFY_DIGITAL_VARIANT_IDS')??'').split(',').map(s=>s.trim()).filter(Boolean);
+ const {error:syncError}=await db.rpc('apply_shopify_order',{_order:patch,_allowed:allowed});if(syncError)throw syncError;
+ const done=await db.from('shopify_webhook_events').update({state:'done',finished_at:new Date().toISOString()}).eq('delivery_id',delivery);if(done.error)throw done.error;return json({ok:true});
+ }catch{if(db&&delivery)await db.from('shopify_webhook_events').update({state:'failed'}).eq('delivery_id',delivery);return json({error:'Order sync could not finish; retry delivery'},503);}
+});

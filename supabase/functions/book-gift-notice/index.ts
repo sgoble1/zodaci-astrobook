@@ -4,6 +4,7 @@ import { createClient } from 'npm:@supabase/supabase-js@2';
 import { z } from 'npm:zod@3';
 import { sendAppEmail } from '../_shared/app-email.ts';
 import { isPaidBook } from '../_shared/book-delivery-rules.ts';
+import { giftToken, hashGiftToken } from '../_shared/gift-claim-rules.ts';
 
 const json = (body: unknown, status = 200) => new Response(JSON.stringify(body), { status, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
 const EDITION: Record<string, string> = { digital: 'Digital', pocket: 'Pocket', classic: 'Classic', signature: 'Signature', linen: "Collector's Linen" };
@@ -27,10 +28,16 @@ Deno.serve(async req => {
     if (!order.gift || !order.recipient_email) return json({ error: 'This order has no recipient email.' }, 409);
     if (!isPaidBook(order) || order.payment_hold) return json({ error: 'The gift notice can be sent once payment is confirmed.' }, 409);
     if (order.recipient_notified_at) return json({ ok: true, alreadySent: true, sentAt: order.recipient_notified_at });
+    if (order.environment !== 'live') return json({ error: 'Gift notices are sent only for live paid gifts.' }, 409);
+    const signing = Deno.env.get('GIFT_CLAIM_SIGNING_SECRET');
+    if (!signing) return json({ error: 'Gift links are not configured yet.' }, 503);
+    const claimToken = await giftToken(order.id, signing);
+    const { error: claimError } = await db.from('book_gift_claims').upsert({ order_id: order.id, token_hash: await hashGiftToken(claimToken), expires_at: new Date(Date.now() + 90 * 864e5).toISOString() }, { onConflict: 'order_id', ignoreDuplicates: true });
+    if (claimError) throw claimError;
     const { data: profile } = await db.from('profiles').select('display_name').eq('id', user.id).maybeSingle();
     const r = await sendAppEmail('book-gift', order.recipient_email, {
       idempotencyKey: `book-gift-${order.id}`,
-      templateData: { recipientName: order.recipient_name, senderName: (profile?.display_name || '').slice(0, 80), edition: EDITION[order.edition] ?? '', digital: order.format === 'digital', message: order.gift_message },
+      templateData: { recipientName: order.recipient_name, senderName: (profile?.display_name || '').slice(0, 80), edition: EDITION[order.edition] ?? '', digital: order.format === 'digital', message: order.gift_message, claimUrl: `https://zodaci.com/gift/${claimToken}` },
     });
     if (!r.sent) return json({ error: r.reason === 'recipient_suppressed' ? 'That address has opted out of Zodaci emails, so the notice was not sent.' : 'The notice could not be sent. Please try again later.' }, r.reason === 'recipient_suppressed' ? 409 : 502);
     const sentAt = new Date().toISOString();

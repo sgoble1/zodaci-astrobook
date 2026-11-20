@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import { ContextInterviewModal } from '@/components/readings/ContextInterviewModal';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { useSession } from '@/hooks/useLibrary';
@@ -72,6 +73,7 @@ function PersonalBroadcast({ now }: { now: Date }) {
   if (birth === undefined) return <p role="status">Opening your chart…</p>;
   if (!birth || !chart) return <div className="space-y-4 border-y border-border py-6"><p className="text-muted-foreground">A saved birth chart is needed for your personal broadcast. Shared editions require the owner’s permission to open the whole chart.</p><Button asChild variant="signal"><StartLink>Open birth details</StartLink></Button></div>;
   return <div className="space-y-8">
+    <ContextInterviewModal />
     <div className="flex flex-wrap items-center justify-between gap-3"><p className="text-sm text-muted-foreground">{birth.name} · {birth.date} · {birth.time ?? 'Birth time unknown'} · {birth.placeLabel}</p><Button asChild variant="outline" size="sm"><Link to="/my-chart">Open chart</Link></Button></div>
     {!birth.time && <p role="note" className="border-l-2 border-primary pl-4 text-sm text-muted-foreground">Birth time unknown: no personal Moon, Ascendant or Midheaven contacts are included.</p>}
     <ComingSoon events={events90} now={now} />

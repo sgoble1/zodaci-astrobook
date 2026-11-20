@@ -1,4 +1,6 @@
 import { useMemo, useState } from 'react';
+import { ContextInterviewModal } from '@/components/readings/ContextInterviewModal';
+import { deterministicReadings } from '@/lib/deterministicReadings';
 import { Link } from 'react-router-dom';
 import { computeChart } from '@/lib/astro';
 import { toChartInput, useMyBirth } from '@/lib/myBirth';
@@ -35,6 +37,8 @@ export default function MyReadings() {
       <PageHead eyebrow={birth.name ? `Reading Shelf · ${birth.name}` : 'Reading Shelf'} title="My readings" script="Written from your chart, for you alone." art="written">
         <p>Each reading is written only from your calculated placements, with no guessed family details or life events. {risingLine(chart) ?? ''}</p>
       </PageHead>
+      <ContextInterviewModal />
+      <section className="space-y-4 border-b border-border pb-6"><h2 className="font-display text-2xl">Planet chapters</h2><p className="text-sm text-muted-foreground">Your calculated signs, houses and closest contacts, read together. These chapters do not use AI credits.</p>{deterministicReadings(chart).map(r=><details key={r.key} className="border-t border-border pt-3"><summary className="cursor-pointer font-label text-lg">{r.title}</summary><p className="mt-3 max-w-3xl whitespace-pre-wrap text-sm leading-relaxed">{r.text}</p></details>)}</section>
       <div className="space-y-3">
         <nav aria-label="Reading sections" className="flex flex-wrap gap-2">
           {[['#topics', `In-depth topics · ${TOPIC_READINGS.length}`], ['#core-themes', `Core themes · ${CORE_THEMES.length}`], ['#quick', `Quick readings · ${readings.length}`]].map(([href, label]) => <a key={href} href={href} className={PILL + ' text-foreground hover:bg-muted'}>{label}</a>)}

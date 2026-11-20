@@ -5,14 +5,17 @@ import { ShoppingBag, Minus, Plus, Trash2, ExternalLink, Loader2 } from 'lucide-
 import { keyOf, useCartStore } from '@/stores/cartStore';
 import { describeAttributes } from '@/lib/shopifyCart';
 import { formatMoney } from '@/lib/shopify';
+import { linkShopifyCheckout } from '@/lib/shopifyOrderLink';
+import { toast } from 'sonner';
 
 export function CartDrawer() {
   const [open, setOpen] = useState(false);
+  const [checking,setChecking]=useState(false);
   const { items, isLoading, isSyncing, updateQuantity, removeItem, getCheckoutUrl, syncCart, lastError } = useCartStore();
   const count = items.reduce((s, i) => s + i.quantity, 0);
   const total = items.reduce((s, i) => s + parseFloat(i.price.amount) * i.quantity, 0);
   useEffect(() => { if (open) syncCart(); }, [open, syncCart]);
-  const checkout = () => { const url = getCheckoutUrl(); if (url) { setOpen(false); window.location.assign(url); } };
+  const checkout = async () => { const url=getCheckoutUrl(),cartId=useCartStore.getState().cartId;if(!url||!cartId)return;setChecking(true);try{await linkShopifyCheckout(cartId);setOpen(false);window.location.assign(url);}catch(e){toast.error(e instanceof Error?e.message:'Checkout could not open. Try again.');}finally{setChecking(false);} };
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
@@ -44,7 +47,7 @@ export function CartDrawer() {
             </ul>
             <div className="space-y-4 border-t pt-4">
               <div className="flex justify-between text-lg"><span>Total</span><span className="font-semibold">{formatMoney({ amount: String(total), currencyCode: items[0].price.currencyCode })}</span></div>
-              <Button onClick={checkout} className="w-full" size="lg" disabled={isLoading || isSyncing}>{isLoading || isSyncing ? <Loader2 className="h-4 w-4 animate-spin" /> : <><ExternalLink className="mr-2 h-4 w-4" />Checkout</>}</Button>
+              <Button onClick={()=>void checkout()} className="w-full" size="lg" disabled={isLoading || isSyncing || checking}>{isLoading || isSyncing || checking ? <Loader2 className="h-4 w-4 animate-spin" /> : <><ExternalLink className="mr-2 h-4 w-4" />Checkout</>}</Button>
             </div>
           </>}
         </div>

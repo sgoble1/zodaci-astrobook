@@ -1,0 +1,4 @@
+import { supabase } from '@/integrations/supabase/client';
+import { storefrontApiRequest } from './shopify';
+/** Sign the actual account, never a browser-supplied email or recipient id. */
+export async function linkShopifyCheckout(cartId:string){const {data:{session}}=await supabase.auth.getSession();const attributes=session? (await supabase.functions.invoke('shopify-order-link',{body:{}})).data?.attributes : [{key:'_zodaci_owner_id',value:''},{key:'_zodaci_owner_signature',value:''}];if(!attributes)throw new Error('Your order could not be linked to your account. Try checkout again.');const result=await storefrontApiRequest(`mutation($cartId:ID!,$attributes:[AttributeInput!]!){cartAttributesUpdate(cartId:$cartId,attributes:$attributes){userErrors{message}}}`,{cartId,attributes});if(result.data?.cartAttributesUpdate?.userErrors?.length)throw new Error('Your order could not be linked. Try again.');}

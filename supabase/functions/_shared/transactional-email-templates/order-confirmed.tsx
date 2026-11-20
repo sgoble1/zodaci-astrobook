@@ -1,0 +1,5 @@
+import * as React from 'npm:react@18.3.1';
+import type { TemplateEntry } from './registry.ts';
+import { Cta,Layout,P } from './layout.tsx';
+const Email=({orderId='',edition='AstroBook',digital=false}:{orderId?:string;edition?:string;digital?:boolean})=><Layout preview="Your AstroBook payment is confirmed" title="Your AstroBook order is confirmed"><P>Payment for your {edition} has been confirmed.</P><P>{digital?'Your digital edition is available when its final file has finished preparing.':'Your reviewed edition is queued for print preparation. You can check its progress and shipping details in your orders.'}</P><P>Order reference: {orderId}</P><Cta href="https://zodaci.com/orders">Open my orders</Cta></Layout>;
+export const template={component:Email,subject:'Your AstroBook order is confirmed',displayName:'AstroBook order confirmation',previewData:{orderId:'sample-order',edition:'Classic',digital:false}} satisfies TemplateEntry;

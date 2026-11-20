@@ -1,0 +1,16 @@
+import { BookmarkPlus, Pause, Play, RotateCcw, SkipForward, Trash2 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { tapeCounter, PLAYBACK_SPEEDS, type AudioBookmark } from '@/lib/audioPlayback';
+
+export type CassetteControls = { playing: boolean; buffering: boolean; error: string; elapsed: number; duration: number; speed: number; bookmarks: AudioBookmark[]; toggle: () => void; seek: (n: number) => void; setSpeed: (n: number) => void; retry: () => void; bookmark: () => void; removeBookmark: (n: number) => void; playNext: () => void; queue: string[] };
+/** One face for the persistent audio controller, never a second audio element. */
+export function CassettePlayer({ title, controls: c }: { title: string; controls: CassetteControls }) {
+  return <section className="cassette-player space-y-5 rounded-md border border-border p-4 sm:p-6" aria-label="Cassette podcast player">
+    <div className="flex flex-wrap items-center justify-between gap-3"><h2 className="min-w-0 break-words font-display text-xl">{title}</h2><output className="font-mono text-lg tabular-nums" aria-label="Tape counter">{tapeCounter(c.elapsed)} / {tapeCounter(c.duration)}</output></div>
+    <div className="cassette-window" data-playing={c.playing && !c.buffering} aria-hidden="true"><div className="cassette-reel"/><div className="cassette-tape"/><div className="cassette-reel"/></div>
+    <label className="block space-y-2 text-sm"><span>Position</span><input type="range" aria-label="Seek episode" min={0} max={c.duration || 1} step={0.1} value={c.elapsed} disabled={!c.duration} onChange={e => c.seek(Number(e.target.value))} className="w-full accent-primary"/></label>
+    <div className="flex flex-wrap items-center gap-2"><Button size="icon" variant="outline" aria-label={c.playing ? 'Pause episode' : 'Play episode'} onClick={c.toggle}>{c.playing ? <Pause/> : <Play/>}</Button><Button size="icon" variant="outline" aria-label="Rewind 15 seconds" onClick={() => c.seek(c.elapsed - 15)}><RotateCcw/></Button><Button size="icon" variant="outline" aria-label="Next episode" disabled={!c.queue.length} onClick={c.playNext}><SkipForward/></Button><Button size="icon" variant="outline" aria-label="Bookmark this chapter" disabled={!c.duration} onClick={c.bookmark}><BookmarkPlus/></Button><div className="ml-auto flex gap-1" role="group" aria-label="Playback speed">{PLAYBACK_SPEEDS.map(n => <Button key={n} size="sm" variant={c.speed === n ? 'default' : 'outline'} aria-pressed={c.speed === n} onClick={() => c.setSpeed(n)}>{n}×</Button>)}</div></div>
+    {c.buffering && <p role="status" className="text-sm text-muted-foreground">Loading audio…</p>}{c.error && <div role="alert" className="flex flex-wrap items-center gap-3 text-sm text-destructive"><p>{c.error}</p><Button variant="outline" size="sm" onClick={c.retry}>Retry playback</Button></div>}
+    {c.bookmarks.length > 0 && <nav aria-label="Chapter bookmarks"><ul className="divide-y divide-border">{c.bookmarks.map(b => <li key={b.seconds} className="flex items-center gap-2 py-2"><Button size="sm" variant="ghost" onClick={() => c.seek(b.seconds)}>{b.label}</Button><Button className="ml-auto" size="icon" variant="ghost" aria-label={`Remove ${b.label}`} onClick={() => c.removeBookmark(b.seconds)}><Trash2/></Button></li>)}</ul></nav>}
+  </section>;
+}

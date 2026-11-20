@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
+import { ShopifySyncPanel } from './ShopifySyncPanel';
 import { ExternalLink, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { PrintPartnerMatrix } from '@/components/common/PrintPartnerMatrix';
@@ -82,6 +83,7 @@ export function ShopAdmin() {
       </section>
 
       <PrintPartnerMatrix />
+      <ShopifySyncPanel />
     </div>
   );
 }

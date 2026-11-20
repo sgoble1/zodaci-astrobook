@@ -652,6 +652,27 @@
       "when": 1795199603439,
       "tag": "0092_secure_grant_tier_and_signup_bonus",
       "breakpoints": true
+    },
+    {
+      "idx": 93,
+      "version": "7",
+      "when": 1795215662288,
+      "tag": "0093_gift_claims_and_shopify_order_sync",
+      "breakpoints": true
+    },
+    {
+      "idx": 94,
+      "version": "7",
+      "when": 1795215907173,
+      "tag": "0094_validate_claimed_birth_and_live_payment",
+      "breakpoints": true
+    },
+    {
+      "idx": 95,
+      "version": "7",
+      "when": 1795216276478,
+      "tag": "0095_atomic_shopify_order_reconciliation",
+      "breakpoints": true
     }
   ]
 }

@@ -21,7 +21,7 @@ export function PublicHeader({ sections }: { sections?: string[] }) {
   const { pathname } = useLocation();
   const account: [string, string] = session ? ['/dashboard', 'My Zodaci'] : ['/auth', 'Sign in'];
   const active = (to: string) => pathname === to || pathname.startsWith(`${to}/`);
-  const learnActive = ['/learn', '/academy', '/reading-room', '/forecast'].some(active);
+  const learnActive = ['/learn', '/academy', '/reading-room', '/forecast', '/ephemeris'].some(active);
   return (
     <header className="sticky top-0 z-40 border-b-2 border-[hsl(var(--brass)/0.6)] bg-background/95 shadow-[0_2px_0_hsl(var(--brass)/0.3)] backdrop-blur-xl">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-5 sm:px-10 lg:h-20">
@@ -35,6 +35,7 @@ export function PublicHeader({ sections }: { sections?: string[] }) {
               <DropdownMenuContent align="start" className="w-72 border-[hsl(var(--brass)/0.5)] bg-background p-2">
                 <DropdownMenuItem asChild><Link to="/learn" className="flex items-center gap-3 py-2"><SpotArt kind="explore" className="h-9 w-9" orbit={false} /><span><span className="block font-label">All of Learn</span><span className="block text-xs text-muted-foreground">Everything in one place</span></span></Link></DropdownMenuItem>
                 <DropdownMenuSeparator />
+                <DropdownMenuItem asChild><Link to="/ephemeris" className="py-2 font-label">Ephemeris · daily positions</Link></DropdownMenuItem>
                 {LEARN_SECTIONS.map(s => <DropdownMenuItem key={s.id} asChild><Link to={s.id === 'forecasts' ? '/forecast' : `/learn#${s.id}`} className="flex items-center gap-3 py-2"><SpotArt kind={s.art} className="h-9 w-9" orbit={false} /><span><span className="block font-label">{s.label}</span><span className="block text-xs text-muted-foreground">{s.description}</span></span></Link></DropdownMenuItem>)}
               </DropdownMenuContent>
             </DropdownMenu>
@@ -48,6 +49,7 @@ export function PublicHeader({ sections }: { sections?: string[] }) {
             <SheetContent side="right" className="w-[85vw] max-w-sm overflow-y-auto bg-background">
               <SheetHeader><SheetTitle className="text-left">Menu</SheetTitle></SheetHeader>
               <nav aria-label="Mobile navigation" className="mt-6 flex flex-col">
+                <Link to="/ephemeris" onClick={() => setOpen(false)} className="border-b border-border py-3 text-lg">Ephemeris</Link>
                 {sections?.map(s => <a key={s} href={`#${s.toLowerCase()}`} onClick={() => setOpen(false)} className="border-b border-border py-3 text-lg">{s}</a>)}
                 {sections && <p className="mb-1 mt-6 font-label text-xs tracking-[0.16em] text-primary">Explore</p>}
                 {PUBLIC_NAV.map(([to, label]) => <div key={to} className="border-b border-border">

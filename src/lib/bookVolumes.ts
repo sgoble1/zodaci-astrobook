@@ -1,4 +1,5 @@
 import { fmtLon, SIGNS, type ChartResult } from '@/lib/astro';
+import { deterministicPlanet } from '@/lib/deterministicReadings';
 import { aspectText, arabicParts, fixedStarContacts, houseAnalysis, ordinal, placementText } from '@/lib/resultsEngine';
 import { perceive, narrative } from '@/lib/perception';
 import { HOUSE_ARENAS, SIGN_EXPRESSIONS } from '@/content/interpretationLibrary';
@@ -88,7 +89,7 @@ function planetsChapter(c: ChartResult, timeKnown: boolean) {
     const hits = c.aspects.filter(a => a.a === b.name || a.b === b.name).sort((x, y) => x.orb - y.orb).slice(0, 4);
     return [
       `## ${b.name} in ${b.sign}${house ? ` · ${ordinal(b.house!)} house` : ''}${b.retro ? ' · retrograde' : ''}`,
-      `${fmtLon(b.lon).text}. ${placementText(b, timeKnown)}`,
+      deterministicPlanet(c, b.key),
       e ? `${b.sign} ${e.core}. Through ${b.name}, its gift is ${e.gift}; its growing edge is ${e.shadow}.` : '',
       house ? `The ${ordinal(b.house!)} house asks: ${house.question} Here that question is answered through ${house.themes}.` : '',
       hits.length ? `Its closest contacts: ${hits.map(a => `${a.a} ${a.type.toLowerCase()} ${a.b} (${a.orb.toFixed(1)}°)`).join('; ')}.` : `${b.name} makes no major aspect within orb, so it tends to act on its own terms.`,

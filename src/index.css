@@ -79,6 +79,14 @@
 }
 .dark { }
 
+.cassette-player { background: hsl(var(--card)); box-shadow: var(--book-deboss-shadow); }
+.cassette-window { display:flex; align-items:center; justify-content:space-around; gap:1rem; height:9rem; padding:1rem; border:2px solid hsl(var(--brass)); border-radius:4px; background:hsl(var(--midnight)); overflow:hidden; }
+.cassette-reel { flex:none; width:6rem; height:6rem; border:12px solid hsl(var(--brass)); outline:2px solid hsl(var(--paper)); border-radius:50%; background:repeating-conic-gradient(hsl(var(--paper)) 0deg 12deg, hsl(var(--midnight)) 12deg 60deg); animation:cassette-turn 12s linear infinite; animation-play-state:paused; }
+.cassette-tape { flex:1; height:4px; max-width:8rem; background:hsl(var(--brass)); }
+.cassette-window[data-playing="true"] .cassette-reel { animation-play-state:running; }
+@keyframes cassette-turn { to { transform:rotate(360deg); } }
+@media (prefers-reduced-motion:reduce) { .cassette-reel { animation:none; } }
+
 .brand-site .brand-wordmark { font-size: 5rem; background: none; color: hsl(var(--foreground)); }
 .brand-site h1, .brand-site h2, .brand-site h3 { letter-spacing: 0; }
 .brand-site h2 { font-size: 2.75rem; }

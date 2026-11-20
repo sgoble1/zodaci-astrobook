@@ -7,6 +7,7 @@ import { LuluError, applyJobUpdate, applyComicJobUpdate, lulu, luluConfigured, l
 import { handleComic } from '../_shared/lulu-comic.ts';
 import { CANCELLABLE, FAILED_STATUSES, POD_PACKAGES, PRODUCTION_DELAY_MINUTES, TRIM_PT, decimalToCents, foilText, interiorPageCount, isLinen, isPrintEdition, luluAddress, pageLimitError, type PrintEdition } from '../_shared/lulu-rules.ts';
 import { buildCoverWrap, buildInterior } from '../_shared/lulu-files.ts';
+import { validateDropShip } from '../_shared/print-preflight-rules.ts';
 
 const json = (b: unknown, status = 200) => new Response(JSON.stringify(b), { status, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
 const Address = z.object({ name: z.string().max(80).optional(), line1: z.string().min(1).max(80), line2: z.string().max(80).optional(), city: z.string().min(1).max(60), state: z.string().min(2).max(3), postal_code: z.string().min(3).max(12), country: z.literal('US').default('US'), phone: z.string().max(25).optional() });
@@ -164,6 +165,8 @@ Deno.serve(async req => {
       try {
         const files = await prepareFiles(db, order, edition, rowId);
         const [interiorUrl, coverUrl] = await Promise.all([signed(db, files.interiorPath, WEEK), signed(db, files.coverPath, WEEK)]);
+        const preflight = validateDropShip({ status: order.status, environment: order.environment, payment_total_cents: order.payment_total_cents, payment_hold: order.payment_hold, edition, pages: files.pages, address: order.shipping_address }, interiorUrl, coverUrl, env === 'production');
+        if (!preflight.ok) throw new LuluError(409, preflight.errors.join(' '));
         const { data: profile } = await db.from('profiles').select('display_name').eq('id', order.user_id).maybeSingle();
         const job = await lulu('/print-jobs/', { method: 'POST', body: {
           external_id: `zodaci-${order.id}`,

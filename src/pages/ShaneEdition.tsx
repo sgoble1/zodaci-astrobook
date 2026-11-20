@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
+import { curateZac } from '@/content/zac/volumes';
 import { Link, useParams } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, Search } from 'lucide-react';
 import { markdownSections, NavigatedProse } from '@/components/readings/NavigatedProse';
@@ -174,12 +175,13 @@ function EditionHome({ area, entries, owns, full }: { area: EditionKey; entries:
   const list = useMemo(() => (entries ?? []).filter(e => (!cat || catsFor(e).includes(cat)) && (e.title + ' ' + e.label + ' ' + e.sections.join(' ') + ' ' + (e.excerpt ?? '')).toLowerCase().includes(q.toLowerCase())), [entries, q, cat]);
   const total = (entries ?? []).reduce((a, e) => a + e.words, 0);
   const groups = useMemo(() => {
+    if (area === 'zac' && view === 'parts') return curateZac(list).map(v => [`Vol ${v.id} · ${v.title}`, v.entries] as [string, MbEntry[]]);
     const m = new Map<string, MbEntry[]>();
     list.forEach(e => { const keys = view === 'parts' ? [e.part] : (catsFor(e).length ? catsFor(e) : ['Other']); keys.forEach(k => m.set(k, [...(m.get(k) ?? []), e])); });
     const out = [...m.entries()];
     if (view === 'topics') out.sort((a, b) => { const o = (k: string) => { const i = CATEGORIES.findIndex(c => c[0] === k); return i < 0 ? 99 : i; }; return o(a[0]) - o(b[0]); });
     return out;
-  }, [list, view]);
+  }, [list, view, area]);
   const sun = chart?.bodies.find(b => b.key === 'sun');
   const moon = chart?.bodies.find(b => b.key === 'moon');
   const rising = chart?.asc != null ? fmtLon(chart.asc) : null;

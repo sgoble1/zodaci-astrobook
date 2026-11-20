@@ -1,0 +1,7 @@
+import { fmtLon } from '@/lib/astro';
+import { filterEphemeris, type EphemerisDay } from '@/lib/ephemeris';
+export function EphemerisTable({ rows, planet, retroOnly }: { rows: EphemerisDay[]; planet: string; retroOnly: boolean }) {
+  const visible = filterEphemeris(rows, planet, retroOnly);
+  if (!visible.length) return <p className="border-y border-border py-6 text-muted-foreground">No retrograde positions match these filters. Clear the retrograde filter or choose another month.</p>;
+  return <div className="max-h-[40rem] overflow-auto rounded border border-border"><table className="w-full text-left text-sm"><caption className="sr-only">Daily tropical geocentric positions at 00:00 UTC</caption><thead className="sticky top-0 bg-card"><tr>{['Date · UTC','Planet','Longitude','Motion'].map(s => <th key={s} scope="col" className="px-3 py-3 font-label">{s}</th>)}</tr></thead><tbody>{visible.map(r => <tr key={`${r.date}-${r.body.key}`} className="border-t border-border"><th scope="row" className="whitespace-nowrap px-3 py-2 font-normal tabular-nums">{r.date}</th><td className="px-3 py-2">{r.body.name}</td><td className="px-3 py-2 tabular-nums">{fmtLon(r.body.lon).text}</td><td className="px-3 py-2">{r.body.retro ? 'Retrograde' : 'Direct'}</td></tr>)}</tbody></table></div>;
+}

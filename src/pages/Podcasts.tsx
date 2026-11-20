@@ -1,4 +1,5 @@
 import { episodeTitle } from '@/lib/episodeTitle';
+import { CassettePlayer } from '@/components/audio/CassettePlayer';
 import { confirmAction } from '@/components/common/ConfirmHost';
 import { PodcastMaker } from '@/components/podcast/PodcastMaker';
 import { useEffect, useRef, useState } from 'react';
@@ -38,7 +39,8 @@ export default function Podcasts() {
   const PEOPLE = peopleFor(partner);
   const session = useSession();
   const isAdmin = useIsAdmin(session);
-  const { current, queue, setQueue, speed, setSpeed, positions, play, playNext, stop, setCatalog } = usePlayer();
+  const player = usePlayer();
+  const { current, queue, setQueue, speed, setSpeed, positions, play, playNext, stop, setCatalog } = player;
   const setCurrent = (v: null) => { if (v === null) stop(); };
   const [q, setQ] = useState('');
   const [library, setLibrary] = useState<'shared' | 'private'>('private');
@@ -69,7 +71,7 @@ export default function Podcasts() {
       </header>
 
       {current?.url && (
-        <div className="parchment deckle p-5">
+        <><CassettePlayer title={episodeTitle(current.title)} controls={player}/><div className="hidden">
           <div className="font-label text-[10px] tracking-[0.14em] text-primary">Now playing · controls in the mini player</div>
           <div className="font-display text-xl mt-1">{episodeTitle(current.title)}</div>
           <div className="flex flex-wrap items-center gap-2 mt-3 text-xs">
@@ -79,7 +81,7 @@ export default function Podcasts() {
             ))}
             {queue.length > 0 && <button onClick={playNext} className="ml-auto flex items-center gap-1 px-2 py-1 rounded border border-border hover:bg-muted"><SkipForward className="w-3.5 h-3.5" />Next in queue</button>}
           </div>
-        </div>
+        </div></>
       )}
 
       {queue.length > 0 && (

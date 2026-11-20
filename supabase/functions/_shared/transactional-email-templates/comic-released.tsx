@@ -1,0 +1,5 @@
+import * as React from 'npm:react@18.3.1';
+import type { TemplateEntry } from './registry.ts';
+import { Cta,Layout,P } from './layout.tsx';
+const Email=({issueNumber=1,title='Your AstroComic'}:{issueNumber?:number;title?:string})=><Layout preview={`AstroComic issue ${issueNumber} is ready`} title={`Your issue ${issueNumber} is ready`}><P>{title} is now available in your private issue archive.</P><P>Sign in to read your comic. Any printed copy follows its own shipping status in your account.</P><Cta href="https://zodaci.com/my-comic">Open my issue</Cta></Layout>;
+export const template={component:Email,subject:(d:Record<string,unknown>)=>`Your AstroComic issue ${d.issueNumber??1} is ready`,displayName:'AstroComic release notice',previewData:{issueNumber:1,title:'The Midnight Signal'}} satisfies TemplateEntry;

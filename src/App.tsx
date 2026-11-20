@@ -34,6 +34,8 @@ const MasterbookContents = lazy(() => import('./pages/MasterbookContents').then(
 const MasterbookContentsEntry = lazy(() => import('./pages/MasterbookContents').then(m => ({ default: m.MasterbookContentsEntry })));
 const CreatePage = lazy(() => import('./pages/CreatePage'));
 const MoonCalendar = lazy(() => import('./pages/MoonCalendar'));
+const Ephemeris = lazy(() => import('./pages/Ephemeris'));
+const GiftClaim = lazy(() => import('./pages/GiftClaim'));
 const CustomPageView = lazy(() => import('./pages/CustomPageView'));
 const Home = lazy(() => import('./pages/Home'));
 const BirthChart = lazy(() => import('./pages/BirthChart'));
@@ -284,6 +286,8 @@ export default function App() {
             <Route path="/learn" element={<Learn />} />
             <Route path="/forecast" element={<Forecast />} />
             <Route path="/accuracy" element={<AccuracyCheck />} />
+            <Route path="/ephemeris" element={<Ephemeris />} />
+            <Route path="/gift/:token" element={<GiftClaim />} />
             <Route path="/learn/:slug" element={<PublicArticle />} />
             <Route path="/blog" element={<Navigate to={{ pathname: '/learn', hash: '#journal' }} replace />} />
             <Route path="/blog/learn/:slug" element={<LegacyArticleRedirect />} />

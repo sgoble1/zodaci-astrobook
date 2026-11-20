@@ -21,7 +21,7 @@ export function ContextQuestions() {
   const set = async (r: Row, patch: Partial<Row>) => { await supabase.from('context_flags').update(patch).eq('id', r.id); void load(); };
   if (!rows) return null;
   const q = questionsForVisit(rows, count)[0];
-  const answered = rows.filter(r => r.status === 'answered');
+  const answered = rows.filter(r => r.status === 'answered' && r.topic !== 'current-question');
   const later = rows.filter(r => r.status === 'later');
   return (
     <section aria-labelledby="ctx-q" className="obs-paper space-y-4 p-5 sm:p-6">

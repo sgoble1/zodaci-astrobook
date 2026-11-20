@@ -236,6 +236,53 @@ export type Database = {
         }
         Relationships: []
       }
+      book_gift_claims: {
+        Row: {
+          claimed_at: string | null
+          created_at: string
+          expires_at: string
+          id: string
+          order_id: string
+          recipient_birth: Json | null
+          recipient_id: string | null
+          revoked_at: string | null
+          shipping_address: Json | null
+          token_hash: string
+        }
+        Insert: {
+          claimed_at?: string | null
+          created_at?: string
+          expires_at: string
+          id?: string
+          order_id: string
+          recipient_birth?: Json | null
+          recipient_id?: string | null
+          revoked_at?: string | null
+          shipping_address?: Json | null
+          token_hash: string
+        }
+        Update: {
+          claimed_at?: string | null
+          created_at?: string
+          expires_at?: string
+          id?: string
+          order_id?: string
+          recipient_birth?: Json | null
+          recipient_id?: string | null
+          revoked_at?: string | null
+          shipping_address?: Json | null
+          token_hash?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "book_gift_claims_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: true
+            referencedRelation: "book_orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       book_order_events: {
         Row: {
           actor: string
@@ -2760,6 +2807,119 @@ export type Database = {
         }
         Relationships: []
       }
+      shopify_digital_access: {
+        Row: {
+          created_at: string
+          id: string
+          line_id: string
+          order_sync_id: string
+          owner_id: string
+          revoked_at: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          line_id: string
+          order_sync_id: string
+          owner_id: string
+          revoked_at?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          line_id?: string
+          order_sync_id?: string
+          owner_id?: string
+          revoked_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "shopify_digital_access_order_sync_id_fkey"
+            columns: ["order_sync_id"]
+            isOneToOne: false
+            referencedRelation: "shopify_order_sync"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      shopify_order_sync: {
+        Row: {
+          canceled: boolean
+          financial_status: string
+          fulfillment_status: string
+          id: string
+          line_items: Json
+          owner_id: string | null
+          provider_updated_at: string
+          refunded: boolean
+          shop: string
+          shopify_order_id: string
+          test: boolean
+          tracking: Json
+          updated_at: string
+        }
+        Insert: {
+          canceled?: boolean
+          financial_status?: string
+          fulfillment_status?: string
+          id?: string
+          line_items?: Json
+          owner_id?: string | null
+          provider_updated_at?: string
+          refunded?: boolean
+          shop: string
+          shopify_order_id: string
+          test?: boolean
+          tracking?: Json
+          updated_at?: string
+        }
+        Update: {
+          canceled?: boolean
+          financial_status?: string
+          fulfillment_status?: string
+          id?: string
+          line_items?: Json
+          owner_id?: string | null
+          provider_updated_at?: string
+          refunded?: boolean
+          shop?: string
+          shopify_order_id?: string
+          test?: boolean
+          tracking?: Json
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      shopify_webhook_events: {
+        Row: {
+          delivery_id: string
+          finished_at: string | null
+          payload_hash: string
+          received_at: string
+          shop: string
+          state: string
+          topic: string
+        }
+        Insert: {
+          delivery_id: string
+          finished_at?: string | null
+          payload_hash: string
+          received_at?: string
+          shop: string
+          state?: string
+          topic: string
+        }
+        Update: {
+          delivery_id?: string
+          finished_at?: string | null
+          payload_hash?: string
+          received_at?: string
+          shop?: string
+          state?: string
+          topic?: string
+        }
+        Relationships: []
+      }
       social_messages: {
         Row: {
           created_at: string
@@ -3306,6 +3466,10 @@ export type Database = {
           upgrade_clickers: number
         }[]
       }
+      apply_shopify_order: {
+        Args: { _allowed: string[]; _order: Json }
+        Returns: string
+      }
       can_open_chapter: {
         Args: { _area: string; _chapter: string }
         Returns: boolean
@@ -3315,6 +3479,16 @@ export type Database = {
       can_read_zac_edition: { Args: never; Returns: boolean }
       can_view_investors: { Args: never; Returns: boolean }
       claim_admin: { Args: never; Returns: boolean }
+      claim_book_gift: {
+        Args: { _birth: Json; _shipping: Json; _token_hash: string }
+        Returns: {
+          edition: string
+          format: string
+          order_id: string
+          recipient_birth: Json
+          shipping_address: Json
+        }[]
+      }
       claim_referral: { Args: { _code: string }; Returns: string }
       claim_signup_bonus: { Args: never; Returns: number }
       claim_topic_reading_job: {

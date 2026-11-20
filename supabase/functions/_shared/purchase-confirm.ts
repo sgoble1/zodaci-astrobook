@@ -5,6 +5,7 @@ import type { StripeEnv } from "./stripe.ts";
 import { verifiedBookAmount } from './book-payment-rules.ts';
 import { isPaidBook } from './book-delivery-rules.ts';
 import { finalizeBookPdf } from './book-delivery.ts';
+import { sendAppEmail } from './app-email.ts';
 
 /** Mirrors COMIC_PLANS in src/lib/comic.ts. */
 export const COMIC_CENTS: Record<string, number> = { monthly: 1499, yearly: 14999, single: 1899 };
@@ -44,5 +45,11 @@ export async function bookPaid(db: SupabaseClient<any, any, any>, session: any, 
   if (result.error) throw result.error;
   const {data:order,error}=await db.from('book_orders').select('*').eq('id',orderId).eq('user_id',userId).eq('checkout_session_id',session.id).eq('environment',env).single();
   if(error) throw error;
-  if(order && isPaidBook(order)) await finalizeBookPdf(db,order);
+  if(order && isPaidBook(order)) {
+    await finalizeBookPdf(db,order);
+    if (env === 'live' && !order.payment_hold) {
+      const { data: recipient } = await db.auth.admin.getUserById(userId);
+      if (recipient.user?.email && recipient.user.email_confirmed_at) await sendAppEmail('order-confirmed', recipient.user.email, { idempotencyKey: `order-confirmed-${order.id}`, templateData: { orderId: order.id, edition: order.edition, digital: order.format === 'digital' } });
+    }
+  }
 }

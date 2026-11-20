@@ -1,0 +1,2 @@
+/** Gift bearer links never enter analytics, social metadata or diagnostic URLs. */
+export function redactGiftRoute(value:string) { return value.replace(/\/gift\/[^/?#]+(?:[?#][^\s]*)?/g,'/gift/[claim]'); }

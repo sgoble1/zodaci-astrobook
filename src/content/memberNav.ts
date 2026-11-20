@@ -175,6 +175,7 @@ export const MEMBER_DOMAINS: MemberDomain[] = [
         { to: '/themes', label: 'Core themes explained', description: 'The twelve themes, in plain words', icon: Sparkles },
       ] },
       { title: 'Reference & help', items: [
+        { to: '/ephemeris', label: 'Ephemeris', description: 'Daily UTC planetary positions, 1800–2100', icon: Orbit },
         { to: '/instructions', label: 'Instructions & Help', description: 'Where everything lives', icon: CircleHelp },
         { to: '/faq', label: 'FAQ', description: 'Plans, privacy, books and accuracy', icon: Info },
         { to: '/verify', label: 'Verify the Sources', description: 'Check positions and meanings yourself', icon: ShieldCheck },
@@ -457,6 +458,7 @@ const P = (domain: Placement['domain'], level: Placement['level'], note?: string
  * so new pages must be placed before they ship.
  */
 export const ROUTE_INVENTORY: Record<string, Placement> = {
+  '/ephemeris': P('learn', 'secondary', 'public daily UTC explorer'), '/gift/:token': P('public', 'utility', 'verified recipient claim link; noindex'),
   '/solar-return': P('explore', 'secondary'), '/bazi': P('explore', 'secondary'), '/chart-dynamics': P('chart', 'secondary'),
   '/index': P('public', 'utility', 'redirects to /welcome'), '/welcome': P('public', 'primary'), '/coming-soon': P('public', 'utility', 'coming-soon waitlist preview'), '/april': P('public', 'utility', 'April’s shared report; opens for her account and people she shared her edition with'), '/shared-with-me': P('account', 'utility'),
   '/about': P('learn', 'secondary'), '/characters': P('learn', 'secondary', 'character selection'), '/lp/:slug': P('public', 'utility', 'campaign pages'), '/share/signs': P('public', 'utility', 'shared planet signs'), '/forecast': P('learn', 'secondary'), '/accuracy': P('learn', 'tertiary', 'public accuracy check, from How we calculate and Verify the Sources'), '/shop': P('public', 'utility', 'redirects to /store'), '/learn': P('learn', 'primary'), '/learn/:slug': P('learn', 'tertiary', 'Learn article'), '/blog': P('learn', 'utility', 'redirects to /learn#journal'), '/blog/learn/:slug': P('learn', 'tertiary', 'from the Journal'),

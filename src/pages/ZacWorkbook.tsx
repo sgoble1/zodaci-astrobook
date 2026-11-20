@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { ZAC_VOLUMES } from '@/content/zac/volumes';
 import { Link } from 'react-router-dom';
 import { Check, Loader2 } from 'lucide-react';
 import { computeChart, fmtLon } from '@/lib/astro';
@@ -164,6 +165,7 @@ export default function ZacWorkbook() {
         </section>
       </div>
 
+      <section className="space-y-5 border-t border-border pt-6" aria-labelledby="volume-reflections"><h2 id="volume-reflections" className="font-display text-3xl">Six-volume companion reflections</h2><p className="text-sm text-muted-foreground">Study prompts beside the original chapters, not corrections or claims about your life. Answers stay in your own workbook.</p>{ZAC_VOLUMES.map(v=><label key={v.id} className="block space-y-2"><span className="font-label text-lg">Vol {v.id} · {v.title}</span><span className="block text-sm">{v.prompt}</span><textarea aria-label={`Volume ${v.id} reflection`} className="w-full rounded border border-input bg-background p-3" rows={3} readOnly={!canWrite} value={entries[`curated-volume-${v.id}`]?.answer??''} onChange={e=>edit(`curated-volume-${v.id}`,v.prompt,`volume-${v.id}`,{answer:e.target.value})}/></label>)}</section>
       <section aria-labelledby="months-h" className="space-y-4">
         <h2 id="months-h" className="text-3xl">The year ahead, month by month</h2>
         <p className="max-w-2xl text-sm text-muted-foreground">From Volume VI, §15. {book.monthsNote}</p>

@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 
-const PUBLIC_PATHS = ['/welcome', '/about', '/astrobook', '/astrocomic', '/academy', '/learn', '/forecast', '/accuracy', '/compatibility', '/book-preview', '/pricing', '/blog', '/faq', '/privacy', '/terms', '/demo', '/themes', '/community', '/community/guidelines'];
+const PUBLIC_PATHS = ['/welcome', '/about', '/astrobook', '/astrocomic', '/academy', '/learn', '/forecast', '/accuracy', '/ephemeris', '/compatibility', '/book-preview', '/pricing', '/blog', '/faq', '/privacy', '/terms', '/demo', '/themes', '/community', '/community/guidelines'];
 export function isIndexablePage(path: string) {
   return PUBLIC_PATHS.includes(path) || /^\/(themes|academy|blog|lp)\/[^/]+(?:\/[^/]+)?\/?$/.test(path);
 }
@@ -26,7 +26,7 @@ export function usePageMeta(title: string, description: string) {
     set('meta[property="og:type"]', 'property', 'og:type', 'website');
     set('meta[name="twitter:card"]', 'name', 'twitter:card', 'summary_large_image');
     const isPublic = isIndexablePage(pathname);
-    set('meta[property="og:url"]', 'property', 'og:url', `https://zodaci.com${pathname}`);
+    set('meta[property="og:url"]', 'property', 'og:url', `https://zodaci.com${pathname.startsWith('/gift/') ? '/astrobook' : pathname}`);
     // Preserve the private subdomain's stricter search exclusion.
     if (!/^april\./i.test(window.location.hostname)) {
       set('meta[name="robots"]', 'name', 'robots', isPublic ? 'index, follow' : 'noindex, follow');

@@ -6,9 +6,10 @@ describe('public search boundaries', () => {
     expect(isIndexablePage('/lp/free-birth-chart')).toBe(true);
     expect(isIndexablePage('/community/guidelines')).toBe(true);
     expect(isIndexablePage('/forecast')).toBe(true);
+    expect(isIndexablePage('/ephemeris')).toBe(true);
   });
   it('excludes member discussions and account pages', () => {
-    for (const path of ['/community/a-discussion', '/auth', '/brand-launch', '/shane', '/april', '/shared', '/my-readings']) {
+    for (const path of ['/community/a-discussion', '/auth', '/brand-launch', '/shane', '/april', '/shared', '/my-readings', '/gift/private-token']) {
       expect(isIndexablePage(path)).toBe(false);
     }
   });
