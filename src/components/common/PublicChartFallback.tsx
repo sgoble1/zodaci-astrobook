@@ -24,6 +24,7 @@ const MyTopicReading = lazy(() => import('@/pages/MyTopicReading'));
 const CHART_FOCUS: Record<string, ChartFocus> = { '/planets': 'planets', '/houses': 'houses', '/aspects': 'aspects', '/chart-elements': 'elements', '/chart-calculator': 'calculator' };
 const ShaneEdition = lazy(() => import('@/pages/ShaneEdition'));
 const BaguaReading = lazy(() => import('@/pages/BaguaReading'));
+const CalculationWorkbench = lazy(() => import('@/pages/CalculationWorkbench'));
 
 const TIMING = { '/transits': 'transits', '/retrogrades': 'retrogrades', '/timeline': 'timeline', '/profection': 'profection' } as const;
 const TOPIC_ROUTES: Record<string, string> = { '/numerology': 'numerology', '/purpose': 'purpose', '/family-home': 'family-home', '/love': 'love', '/career': 'career', '/health': 'health' };
@@ -72,7 +73,7 @@ function FallbackRoutes() {
   if (pathname === '/feng-shui/flying-stars') return <MemberFengShui birth={birth} focus="stars" />;
   if (pathname === '/feng-shui' || pathname.startsWith('/feng-shui/') || pathname === '/bagua' || pathname === '/masterbook/bagua-wheel') return <MemberFengShui birth={birth} />;
   if (pathname === '/other-systems') return <MemberSystemsDashboard birth={birth} />;
-  if (pathname === '/chinese') return <MemberSystem birth={birth} slug="chinese" />;
+  if (pathname === '/chinese') return <CalculationWorkbench mode="eastern" />;
   const sys = pathname.match(/^\/other-systems\/([\w-]+)$/)?.[1];
   if (sys) return <MemberSystem birth={birth} slug={sys} />;
   if (pathname === '/star-map') return <MemberStarMap birth={birth} />;

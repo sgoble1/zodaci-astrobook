@@ -38,21 +38,19 @@ export function AstroBookPublic() {
   const order = (id = 'classic') => `/auth?next=${encodeURIComponent(`/books?version=${id}`)}`;
   return (
     <article className="space-y-20">
-      <section className="obs-panel space-y-8 p-5 sm:p-8">
+      <section className="space-y-8">
         <div className="space-y-5">
           <p className="text-xs font-medium tracking-[0.12em] text-accent">YOUR CHART, IN PRINT</p>
           <h1 className="hero-headline">AstroBook</h1>
           <p className="font-script text-3xl text-primary">Your stars, your story.</p>
           <p className="text-lg text-muted-foreground">An AstroBook gives your calculated chart room to become a thoughtful, personal reading. Planets are read together through their signs, degrees, rulers and measured connections. The chapters explain the reasoning, then leave space for your own reflections. Unknown birth times are handled without invented houses or angles.</p>
           <p className="text-sm text-muted-foreground">{BOOK_VERSIONS.filter(v => v.id === 'digital' || v.id === 'pocket' || v.id === 'linen').map(v => `${v.name} ${money(v.price)}`).join(' · ')} · free US shipping on printed versions</p>
-          <div className="flex flex-wrap items-center gap-4"><Button asChild size="lg" variant="primary"><Link to={order()}>Order your AstroBook</Link></Button><Link to="/book-preview" className="text-accent">Read a sample book →</Link><Link to="/demo" className="text-accent">Try the interactive demo →</Link></div>
+          <div className="flex flex-wrap items-center gap-4"><Button asChild size="lg" variant="primary"><Link to={order()}>Order your AstroBook</Link></Button><Link to="#teaser" className="text-accent">Open the book below →</Link><Link to="/demo" className="text-accent">Try the interactive demo →</Link></div>
         </div>
+        <div id="teaser" className="scroll-mt-24 min-w-0"><MemberBookTeaser fallback={<OpenAstroBook layout="side" />} /></div>
       </section>
       <section id="full-edition" aria-labelledby="fe-h" className="scroll-mt-24 space-y-8">
         <div className="max-w-3xl space-y-4"><h2 id="fe-h" className="font-display text-3xl sm:text-4xl">One book. Open it here.</h2><p className="text-muted-foreground leading-relaxed">The 28-page opening follows the same chart-specific writing approach as our private founder editions. It spans six volumes, with a calculation record, engraved plate, reflections and a Reader’s Compass. Cover, title and dedication are separate from the numbered pages. Your complete manuscript is reviewed before payment.</p><p className="text-sm text-muted-foreground">The public book belongs to {SAMPLE_EDITION.owner}, a fictional reader with a calculated chart. Founder books and their birth details stay account-only.</p></div>
-        <div id="teaser" className="scroll-mt-24 min-w-0">
-          <MemberBookTeaser fallback={<OpenAstroBook layout="side" />} />
-        </div>
         <div className="flex flex-wrap gap-4"><Button asChild size="lg"><Link to={order()}>Choose my AstroBook</Link></Button><Link to="#inside" className="self-center text-accent underline underline-offset-4">Explore the six volumes</Link></div>
       </section>
       <PersonalizationStory />

@@ -50,6 +50,7 @@ export const MEMBER_DOMAINS: MemberDomain[] = [
         { to: '/results', label: 'My Results', description: 'Six-tab analysis of your chart patterns', icon: ListChecks },
         { to: '/findings', label: 'Key Findings', description: 'Patterns the chart engine found for you', icon: Sparkles },
         { to: '/chart-elements', label: 'Elements & Modes', description: 'Your fire, earth, air and water balance', icon: Atom },
+        { to: '/chart-dynamics', label: 'Shapes & planetary motion', description: 'Jones patterns, node methods and daily speeds', icon: Orbit },
         { to: '/chart-calculator', label: 'Chart Calculator', description: 'Calculate any date, time and place', icon: Calculator },
         { to: '/start', label: 'Birth details', description: 'Check or change your date, time and place', icon: Settings2 },
         { to: '/our-charts', label: 'Our Two Charts', description: 'April and Shane side by side', icon: Users, audience: 'shared' },
@@ -136,6 +137,7 @@ export const MEMBER_DOMAINS: MemberDomain[] = [
         { to: '/retrogrades', label: 'Retrograde Guide', description: 'Recent review, active sky, upcoming cycles and natal patterns', icon: Repeat },
         { to: '/moon-calendar', label: 'Moon Calendar', description: 'Coming Moons in your own houses', icon: Repeat },
         { to: '/profection', label: 'This year · Profection', description: 'This year’s focus house', icon: Sun },
+        { to: '/solar-return', label: 'Solar Return', description: 'Exact return moment, relocated houses and bi-wheel', icon: Sun },
         { to: '/timeline', label: 'Lifetime · Timeline Hall', description: 'Your life phases at a glance', icon: CalendarRange },
         { to: topic('timing'), label: topicTitle('timing'), description: 'Turning points written for you', icon: Sparkles },
       ] },
@@ -147,6 +149,7 @@ export const MEMBER_DOMAINS: MemberDomain[] = [
       { title: 'World Traditions', more: { to: '/other-systems', label: `All ${SYSTEM_READINGS.length} traditions` }, items: [
         { to: '/other-systems', label: 'World Traditions Pavilion', description: 'Every tradition from your birth details, side by side', icon: Globe2 },
         { to: '/chinese', label: 'Chinese · Ba Zi', description: 'Four Pillars and your animal', icon: Sparkles },
+        { to: '/bazi', label: 'Four Pillars & Lo Shu', description: 'Calculated pillars, five elements and birth-date grid', icon: Hash },
         { to: '/other-systems/vedic', label: 'Vedic · Jyotish', description: 'Sidereal placements', icon: Sun },
         { to: '/other-systems/mayan-tzolkin', label: 'Maya · Tzolk’in', description: 'Your day sign and tone', icon: Orbit },
         { to: '/numerology', label: 'Numerology · Pinnacles', description: 'Life path and number cycles', icon: Hash },
@@ -454,6 +457,7 @@ const P = (domain: Placement['domain'], level: Placement['level'], note?: string
  * so new pages must be placed before they ship.
  */
 export const ROUTE_INVENTORY: Record<string, Placement> = {
+  '/solar-return': P('explore', 'secondary'), '/bazi': P('explore', 'secondary'), '/chart-dynamics': P('chart', 'secondary'),
   '/index': P('public', 'utility', 'redirects to /welcome'), '/welcome': P('public', 'primary'), '/coming-soon': P('public', 'utility', 'coming-soon waitlist preview'), '/april': P('public', 'utility', 'April’s shared report; opens for her account and people she shared her edition with'), '/shared-with-me': P('account', 'utility'),
   '/about': P('learn', 'secondary'), '/characters': P('learn', 'secondary', 'character selection'), '/lp/:slug': P('public', 'utility', 'campaign pages'), '/share/signs': P('public', 'utility', 'shared planet signs'), '/forecast': P('learn', 'secondary'), '/accuracy': P('learn', 'tertiary', 'public accuracy check, from How we calculate and Verify the Sources'), '/shop': P('public', 'utility', 'redirects to /store'), '/learn': P('learn', 'primary'), '/learn/:slug': P('learn', 'tertiary', 'Learn article'), '/blog': P('learn', 'utility', 'redirects to /learn#journal'), '/blog/learn/:slug': P('learn', 'tertiary', 'from the Journal'),
   '/community': P('explore', 'secondary'), '/community/guidelines': P('explore', 'tertiary', 'from Community'), '/community/:id': P('explore', 'tertiary', 'from Community'),

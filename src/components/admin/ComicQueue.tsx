@@ -13,7 +13,8 @@ import { useLulu } from '@/components/admin/LuluPrint';
 import { LuluComicActions } from '@/components/admin/LuluComicActions';
 import { confirmAction } from '@/components/common/ConfirmHost';
 import { computeChart, type HouseSystem } from '@/lib/astro';
-import { buildComicIssue, COMIC_PLANS, comicDueFor, manifestCsv, monthKey, monthLabel, shipBy, type ComicIssue, type ComicPlan } from '@/lib/comic';
+import { COMIC_PLANS, comicDueFor, manifestCsv, monthKey, monthLabel, shipBy, type ComicIssue, type ComicPlan } from '@/lib/comic';
+import { buildComicPreview } from '@/lib/comicNarrative';
 import { downloadText } from '@/lib/bookFulfillment';
 import { trackingUrl } from '@/lib/tracking';
 import type { Tables } from '@/integrations/supabase/types';
@@ -75,10 +76,11 @@ export function ComicQueue() {
     const dreamRows = await supabase.rpc('admin_comic_dream_dates', { _user_ids: toDraft.map(r => r.s.user_id) });
     const datesOf = new Map<string, string[]>();
     for (const d of dreamRows.data ?? []) datesOf.set(d.user_id, [...(datesOf.get(d.user_id) ?? []), d.dream_date]);
-    const made = toDraft.map(r => {
-      const chart = computeChart({ date: r.s.birth_date!, time: r.s.birth_time || null, lat: r.s.lat!, lon: r.s.lon!, tz: r.s.tz!, placeLabel: r.s.place_label ?? '', placeSource: 'geocoded', houseSystem: (r.s.house_system as HouseSystem) || 'placidus' });
-      const script = buildComicIssue(chart, { reader: r.s.display_name || r.s.shipping_address?.name || 'Reader', month, issueNumber: r.number, guide: guideFor(characterOf.get(r.s.user_id)), dreamDates: datesOf.get(r.s.user_id) ?? [] });
-      return { user_id: r.s.user_id, subscription_id: r.s.subscription_id, issue_month: key, issue_number: r.number, status: 'draft', title: script.title.slice(0, 200), script: script as never };
+    const made = toDraft.flatMap(r => {
+      if (!r.s.birth_date || r.s.lat == null || r.s.lon == null || !r.s.tz) return [];
+      const chart = computeChart({ date: r.s.birth_date, time: r.s.birth_time || null, lat: r.s.lat, lon: r.s.lon, tz: r.s.tz, placeLabel: r.s.place_label ?? '', placeSource: 'geocoded', houseSystem: (r.s.house_system as HouseSystem) || 'placidus' });
+      const script = buildComicPreview(chart, { reader: r.s.display_name || r.s.shipping_address?.name || 'Reader', month, issueNumber: r.number, guide: guideFor(characterOf.get(r.s.user_id)), dreamDates: datesOf.get(r.s.user_id) ?? [] });
+      return [{ user_id: r.s.user_id, subscription_id: r.s.subscription_id, issue_month: key, issue_number: r.number, status: 'draft', title: script.title.slice(0, 200), script: script as never }];
     });
     const { error } = await supabase.from('comic_issues').upsert(made, { onConflict: 'subscription_id,issue_month', ignoreDuplicates: true });
     setBusy('');

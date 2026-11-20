@@ -65,12 +65,9 @@ export function personalBookLeaves({ name, birthLine, chart, coverSrc, coverChoi
 export function sampleComicLeaves(): BookLeaf[] {
   const issue = buildComicPreview(sampleReaderChart(), { reader: LEAD_COVER.name, month: new Date(Date.UTC(2026, 11, 1)), issueNumber: 1 });
   const art = comicPreviewArt(issue);
-  // Public example keeps its own fictional reader and garden artwork, never a private chart or private birth line.
+  // Public cover stays fictional; every panel now uses the same atomic story scene resolver as member issues.
   art['1-0'] = SAMPLE_ISSUE.cover;
-  issue.pages.slice(1).forEach((p, at) => p.panels.forEach((panel, i) => {
-    if (!panel.artSlot?.startsWith('cast:')) art[`${p.n}-${i}`] = SAMPLE_ISSUE.pages[at % SAMPLE_ISSUE.pages.length].art;
-  }));
-  issue.pages[0] = { ...issue.pages[0], title: SAMPLE_ISSUE.title, panels: [{ ...issue.pages[0].panels[0], caption: 'Rosalind Vance · Fictional sample' }] };
+  issue.pages[0] = { ...issue.pages[0], panels: [{ ...issue.pages[0].panels[0], caption: `${SAMPLE_READER.name} · Fictional sample` }] };
   return comicIssueLeaves(issue, art);
 }
 

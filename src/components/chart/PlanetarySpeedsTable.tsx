@@ -1,0 +1,9 @@
+import { useMemo, useState } from 'react';
+import { planetarySpeeds } from '@/lib/planetaryDynamics';
+import { Input } from '@/components/ui/input';
+export function PlanetarySpeedsTable() {
+  const [date, setDate] = useState(() => new Date().toISOString().slice(0, 10));
+  const valid = /^\d{4}-\d{2}-\d{2}$/.test(date) && Number.isFinite(Date.parse(date));
+  const rows = useMemo(() => valid ? planetarySpeeds(new Date(`${date}T00:00:00Z`)) : [], [date, valid]);
+  return <section className="space-y-4"><h2 className="font-display text-3xl">Daily planetary motion</h2><label className="flex flex-wrap items-center gap-3 text-sm">Date · 00:00 UTC<Input type="date" min="1800-01-01" max="2100-12-31" value={date} onChange={e => setDate(e.target.value)} className="w-48" /></label>{!valid && <p role="alert" className="text-sm text-destructive">Choose a valid date.</p>}<div className="overflow-x-auto"><table className="w-full text-left text-sm"><thead><tr className="border-b border-border"><th className="py-3 pr-3">Planet</th><th className="py-3 pr-3">° / day</th><th className="py-3 pr-3">% of average</th><th className="py-3">Motion</th></tr></thead><tbody>{rows.map(r => <tr key={r.planet} className="border-b border-border"><th className="py-3 pr-3 font-normal">{r.planet}</th><td className="py-3 pr-3 tabular-nums">{r.speed.toFixed(4)}</td><td className="py-3 pr-3 tabular-nums">{r.percent.toFixed(1)}%</td><td className="py-3">{r.state}</td></tr>)}</tbody></table></div><p className="text-xs text-muted-foreground">Daily displacement is measured across ±12 hours. Average is mean absolute speed sampled 24 times in the selected year. Stationary means within 5% of that baseline; turning direction follows the next day’s acceleration, not a claimed exact station time.</p></section>;
+}

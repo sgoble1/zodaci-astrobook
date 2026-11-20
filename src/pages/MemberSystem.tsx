@@ -11,9 +11,12 @@ import { useOnDemandReading } from '@/hooks/useOnDemandReading';
 import { FounderSourcePanel } from '@/components/readings/FounderSourcePanel';
 import { Button } from '@/components/ui/button';
 import { usePageMeta } from '@/hooks/usePageMeta';
+import { BaZiGrid } from '@/components/eastern/BaZiGrid';
+import { LoShuMatrix } from '@/components/eastern/LoShuMatrix';
 
 /** One Other Systems page calculated and written for the signed-in member. */
 export function MemberSystem({ birth, slug }: { birth: MyBirth; slug: string }) {
+  const chart = useMemo(() => computeChart(toChartInput(birth)), [birth]);
   const facts = useMemo(() => { const c = computeChart(toChartInput(birth)); return systemFacts(slug, birth.date, c.bodies, c.bazi); }, [birth, slug]);
   const { row, writing, error, locked, retry } = useOnDemandReading(`sys-${slug}`);
   usePageMeta(facts ? `Your ${facts.title} · Zodaci` : 'Other Systems · Zodaci', facts ? facts.summary : 'Other astrological traditions calculated from your birth details.');
@@ -27,6 +30,7 @@ export function MemberSystem({ birth, slug }: { birth: MyBirth; slug: string }) 
   return (
     <article className="mx-auto max-w-3xl space-y-6">
       <header className="space-y-2"><h1 className="font-display text-4xl">{facts.title}</h1><p className="text-xl">{facts.summary}</p><p className="text-sm text-muted-foreground">{facts.method}</p></header>
+      {slug === 'chinese' && <><BaZiGrid chart={chart} /><LoShuMatrix date={birth.date} /></>}
       <div className="overflow-x-auto rounded-lg border border-border"><table className="w-full text-sm"><tbody>{facts.rows.map(([k, v]) => <tr key={k} className="border-b border-border last:border-0"><th className="p-3 text-left font-normal text-muted-foreground">{k}</th><td className="p-3">{v}</td></tr>)}</tbody></table></div>
       {row === undefined ? <div className="h-24 animate-pulse rounded bg-muted" /> : row ? <div className="reading-prose"><ReactMarkdown remarkPlugins={[remarkGfm]}>{row.content}</ReactMarkdown></div>
         : error ? <div role="alert" className="space-y-3 rounded-lg border border-destructive/40 p-4 text-sm"><p className="text-destructive">{error}</p><Button size="sm" variant="outline" onClick={retry}>Try again</Button></div>

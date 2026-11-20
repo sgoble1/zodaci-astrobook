@@ -19,9 +19,8 @@ import { comicIssueTitle } from '@/lib/shopPresentation';
 
 
 const PAGE_MAP: [string, string][] = [
-  ['1', 'Cover — your name, month and constellation'], ['2', 'Your Sky This Month'], ['3', 'Letter from the Stars'], ['4–7', 'Main Story Arc — the transit that matters most to your chart'],
-  ['8–9', 'Retrograde Watch'], ['10–11', 'Lunar Calendar'], ['12–15', 'House Focus — where the Sun lights up your chart'], ['16–17', 'The Reading Room'],
-  ['18–19', 'Reflection Prompts — 6 to 8 questions for you'], ['20–21', 'Your Constellation'], ['22', 'Next Month Preview'], ['23', 'About Zodaci'], ['24', 'Back Cover'],
+  ['1', 'Atomic Zodiac cover'], ['2', 'An unfinished message · opening splash'], ['3–12', 'Ten operators, ten environmental choices'], ['13–16', 'Cooperation, crossed routes and repairs'],
+  ['17–18', 'An uneven line and a route worth trying'], ['19', 'The hand behind the signal'], ['20–21', 'The final test and morning at the station'], ['22–23', 'Calculation Ledger · placements, exact contacts and uncertainty'], ['24', 'Back cover'],
 ];
 
 /** Public AstroComic product page: plans, a turnable digest preview, the cast, the art style, print spec and FAQ. */
@@ -53,7 +52,7 @@ export default function AstroComic() {
           <p className="font-label text-xs tracking-[0.16em] text-primary">AstroComic by Zodaci</p>
           <h1 className="mt-3 hero-headline">AstroComic</h1>
           <p className="mt-3 font-script text-3xl text-primary">Your sky becomes a story.</p>
-          <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted-foreground">A printed 24-page digest every month. The planets become characters, your Sun, Moon and Rising drive the story, and that month’s real transits decide what happens.</p>
+          <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted-foreground">A 24-page digest built around your chart. Background operators change the lamps, relays and routes; the protagonist has to decide how to respond. The monthly sky informs the fictional setup, never a prediction of your life.</p>
           <div role="radiogroup" aria-label="Choose a plan" className="comic-product-plans mt-8 grid gap-3">
             {(Object.keys(COMIC_PLANS) as ComicPlan[]).map(k => { const p = COMIC_PLANS[k]; const on = plan === k; return (
               <button key={k} type="button" role="radio" aria-checked={on} onClick={() => { setPlan(k); setCheckout(false); }} className={`rounded-lg border p-4 text-left transition-colors duration-500 ${on ? 'border-primary bg-primary/10' : 'border-border hover:border-foreground/40'}`}>
@@ -83,7 +82,7 @@ export default function AstroComic() {
       </section>
 
       <section aria-labelledby="issue1-h">
-        <h2 id="issue1-h" className="font-display text-3xl">Read the sample issue: {SAMPLE_ISSUE.title}</h2>
+        <h2 id="issue1-h" className="font-display text-3xl">Read the sample issue: The Midnight Signal</h2>
         <p className="mt-2 mb-8 max-w-2xl text-muted-foreground">The digest above contains all 24 pages for {SAMPLE_READER.name}, our fictional sample reader. Its scenes are a creative interpretation, not biography. Your private preview follows your saved chart; its calculation ledger keeps the underlying facts separate from the story.</p>
         <div className="mt-8 flex flex-wrap gap-3"><Button asChild size="lg" variant="outline"><Link to="/astrocomic/print-issue-1">Sizes &amp; page contents<ArrowRight /></Link></Button></div>
       </section>

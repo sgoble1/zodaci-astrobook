@@ -49,6 +49,7 @@ const FengShui = lazy(() => import('./pages/FengShui'));
 const Compendium = lazy(() => import('./pages/Compendium'));
 const StarMap = lazy(() => import('./pages/StarMap'));
 const Profection = lazy(() => import('./pages/Profection'));
+const CalculationWorkbench = lazy(() => import('./pages/CalculationWorkbench'));
 const Numerology = lazy(() => import('./pages/Numerology'));
 const Transits = lazy(() => import('./pages/Transits'));
 const Forecast = lazy(() => import('./pages/Forecast'));
@@ -374,6 +375,9 @@ export default function App() {
             <Route path="/compendium" element={<Compendium />} />
             <Route path="/star-map" element={<StarMap />} />
             <Route path="/profection" element={<Profection />} />
+            <Route path="/solar-return" element={<CalculationWorkbench mode="solar" />} />
+            <Route path="/bazi" element={<CalculationWorkbench mode="eastern" />} />
+            <Route path="/chart-dynamics" element={<CalculationWorkbench mode="dynamics" />} />
             <Route path="/numerology" element={<Numerology />} />
             <Route path="/transits" element={<Transits />} />
             <Route path="/chinese" element={<Chinese />} />

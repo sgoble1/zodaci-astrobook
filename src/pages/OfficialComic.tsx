@@ -1,4 +1,4 @@
-import { useMemo, useState, type ReactNode } from 'react';
+import { useCallback, useState, type ReactNode } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -6,7 +6,9 @@ import { ComicDigest } from '@/components/comic/ComicDigest';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { computeChart } from '@/lib/astro';
 import { monthLabel } from '@/lib/comic';
-import { buildComicPreview } from '@/lib/comicNarrative';
+import { buildFounderComic } from '@/lib/comicNarrative';
+import { usePreparedPreview } from '@/hooks/usePreparedPreview';
+import { PreviewFeedback } from '@/components/books/PreviewFeedback';
 import { isOfficialEdition, officialChartInput, ownerLabel, useOfficialEditions } from '@/lib/officialEditions';
 import { StartLink } from '@/components/common/StartLink';
 
@@ -23,13 +25,12 @@ export default function OfficialComic() {
   const row = rows?.find(r => r.edition === edition);
   usePageMeta(row ? `${row.is_own ? 'Your' : `${row.display_name}’s`} Official AstroComic · Zodaci` : 'Official AstroComic · Zodaci', 'An AstroComic issue drawn from one chart.');
   const [month, setMonth] = useState(() => { const now = monthStart(new Date()); return now.getTime() < FIRST_OFFICIAL ? new Date(FIRST_OFFICIAL) : now; });
-  const issue = useMemo(() => {
-    if (!row?.birth) return null;
-    try {
-      const chart = computeChart(officialChartInput(row.birth));
-      return buildComicPreview(chart, { reader: row.display_name, month, issueNumber: officialIssueNumber(month) });
-    } catch { return undefined; }
-  }, [row, month]);
+  const build = useCallback(() => {
+    if (!row?.birth || !isOfficialEdition(edition)) return null;
+    const chart = computeChart(officialChartInput(row.birth));
+    return buildFounderComic(chart, edition, { reader: row.display_name, month, issueNumber: officialIssueNumber(month) });
+  }, [row, month, edition]);
+  const prepared = usePreparedPreview(build);
   if (!isOfficialEdition(edition)) return <Missing text="That AstroComic doesn’t exist." />;
   if (error) return <div role="alert" className="flex flex-wrap items-center gap-3 text-destructive">{error}<Button size="sm" variant="outline" onClick={retry}>Try again</Button></div>;
   if (!rows) return <p role="status" className="text-muted-foreground">Opening the AstroComic…</p>;
@@ -39,7 +40,9 @@ export default function OfficialComic() {
       {row.is_own && <Button asChild><StartLink>Add birth details</StartLink></Button>}
     </Missing>
   );
-  if (issue === undefined) return <Missing text="This chart couldn’t be calculated from the saved birth details." />;
+  if (prepared.status === 'loading') return <PreviewFeedback kind="comic" loadingMessage="Drawing the authorized edition’s story…" />;
+  if (prepared.status === 'error') return <PreviewFeedback kind="comic" error onRetry={prepared.retry} />;
+  const issue = prepared.value;
   if (!issue) return null;
 
   return (
@@ -48,7 +51,7 @@ export default function OfficialComic() {
         <div>
           <div className="font-label text-xs tracking-[0.16em] text-primary">Official AstroComic · {ownerLabel(row)}</div>
           <h1 className="text-4xl sm:text-5xl">{issue.title}</h1>
-          <p className="mt-2 max-w-2xl text-muted-foreground">Issue {issue.issueNumber} · {issue.monthLabel}. Sun in {issue.signs.sun}{issue.signs.moon ? `, Moon in ${issue.signs.moon}` : ''}{issue.signs.rising ? `, ${issue.signs.rising} rising` : ''}. Calculated from {row.birth_source.toLowerCase()}.</p>
+          <p className="mt-2 max-w-2xl text-muted-foreground">Issue {issue.issueNumber} · {issue.monthLabel}. A fictional stand-in responds to the signal operators; chart measurements appear only in the calculation ledger on pages 22–23.</p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
           <div className="flex items-center rounded-md border border-border" role="group" aria-label="Issue month">

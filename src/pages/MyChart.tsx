@@ -18,6 +18,7 @@ import { Button } from '@/components/ui/button';
 import { HouseRulers } from '@/components/chart/HouseRulers';
 import { viewingSharedEdition } from '@/hooks/useAprilSpace';
 import { StartLink } from '@/components/common/StartLink';
+import type { NodeMode } from '@/lib/lunarNodes';
 
 const BODY: Record<string, string> = { sun: 'your basic identity and sense of purpose', moon: 'your feelings, instincts and need for safety', mercury: 'how you think, learn and talk', venus: 'how you love and what you value', mars: 'how you act and go after what you want', jupiter: 'where confidence and opportunity grow', saturn: 'where effort, limits and maturity build', uranus: 'where you need freedom', neptune: 'where imagination and sensitivity live', pluto: 'where deep change happens', chiron: 'an old sore spot that can become a gift for helping others', northNode: 'qualities you are learning to grow into', southNode: 'familiar talents to use without getting stuck' };
 const HOUSE_AREA = ['', 'self, body and first impressions', 'money, possessions and self-worth', 'thinking, siblings and your neighbourhood', 'home, family life and inner foundations', 'creativity, romance, play and children', 'daily routine, work habits and health', 'partners and one-to-one relationships', 'shared resources, intimacy and deep change', 'beliefs, study and travel', 'career, reputation and public life', 'friends, groups and hopes', 'rest, solitude and the hidden inner life'];
@@ -29,10 +30,11 @@ export default function MyChart() {
   const birth = useMyBirth();
   const shared = viewingSharedEdition();
   const [hs, setHs] = useState<HouseSystem | null>(null);
+  const [nodeMode, setNodeMode] = useState<NodeMode>('mean');
   const [params] = useSearchParams();
   const [sel, setSel] = useState<BodyPos | null>(null);
   const deviceOnly = params.get('device') === '1';
-  const chart = useMemo(() => birth ? computeChart({ ...toChartInput(birth), houseSystem: hs ?? birth.houseSystem }) : null, [birth, hs]);
+  const chart = useMemo(() => birth ? computeChart({ ...toChartInput(birth), houseSystem: hs ?? birth.houseSystem, nodeMode }) : null, [birth, hs, nodeMode]);
   if (birth === undefined) return <p role="status">Loading your chart…</p>;
   if (!birth || !chart) return (
     <article className="mx-auto max-w-lg space-y-4 py-10 text-center">
@@ -43,7 +45,8 @@ export default function MyChart() {
   );
   const big3 = [chart.bodies.find(b => b.key === 'sun'), chart.bodies.find(b => b.key === 'moon')].filter(Boolean);
   const rising = chart.asc != null ? fmtLon(chart.asc) : null;
-  const sunB = chart.bodies.find(b => b.key === 'sun')!; const moonB = chart.bodies.find(b => b.key === 'moon');
+  const sunB = chart.bodies.find(b => b.key === 'sun'); const moonB = chart.bodies.find(b => b.key === 'moon');
+  if (!sunB) return <p role="alert">The Sun could not be calculated. Review your birth details.</p>;
   const named = chartTitle({ sun: sunB.sign, moon: moonB?.sign, rising: rising?.sign, dominant: dominantElement(balance(chart).el) });
   return (
     <article className="space-y-10">
@@ -67,6 +70,7 @@ export default function MyChart() {
           {birth.time && <label className="flex items-center gap-2 text-sm">House system
             <select aria-label="House system" className="rounded border border-border bg-background px-2 py-1" value={hs ?? birth.houseSystem} onChange={e => setHs(e.target.value as HouseSystem)}>{HOUSE_SYSTEMS.map(h => <option key={h.id} value={h.id}>{h.label}</option>)}</select></label>}
         </div>
+        <div className="mt-4 flex flex-wrap items-center gap-3" role="radiogroup" aria-label="Lunar node method">{(['mean', 'true'] as const).map(value => <Button key={value} size="sm" role="radio" aria-checked={nodeMode === value} variant={nodeMode === value ? 'default' : 'outline'} onClick={() => setNodeMode(value)}>{value === 'mean' ? 'Mean Node' : 'True Node'}</Button>)}<Button asChild size="sm" variant="outline"><Link to="/chart-dynamics">Shapes & daily speeds</Link></Button></div>
         {!birth.time && <p className="mt-3 rounded border border-border bg-muted/40 p-3 text-sm">Without a birth time, your Rising sign and houses can't be known, so they're hidden. Planet signs are still accurate (the Moon may be off by a sign if it changed signs that day).</p>}
       </header>
       <div className="flex justify-end"><ChartLookToggle /></div>

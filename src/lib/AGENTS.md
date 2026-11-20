@@ -4,7 +4,7 @@
 - Relationship math lives in synastry.ts and kua.ts, never in pages.
 - Plan names, prices, checkout IDs and price→tier mapping live only in plans.ts (server functions mirror its ID lists); one place to change pricing.
 - AstroBook stage order/labels live in bookFulfillment.ts; DB guards and supabase/functions/_shared/book-delivery-rules.ts mirror PAID_STAGES so client and server agree.
-- AstroComic scheduling (comicDueFor/nextIssueMonth) and issue scripts live in comic.ts; the admin queue drafts deterministically, without AI spend.
+- comic.ts schedules issues; comicNarrative drafts 24-page stories with ledger on 22–23, no AI; saved scripts stay unchanged.
 - AstroComic print geometry, art pixel sizes, prompts and preflight live in comicPrint.ts; comicPdf.ts composes proof/print PDFs from the same layout so artwork is always drawn at its printed size.
 - Admin tabs are registered in adminTabs.ts (grouped, ?tab= persisted).
 - Internal return links use internalDestination to preserve context without off-site redirects.
@@ -40,3 +40,4 @@
 - Preview readers schedule chart/page preparation after a paint via usePreparedPreview; identity-fenced results and cancellation prevent stale pages, and birth fetch failures expose retry separately from genuinely missing data.
 
 - Retrograde Guide uses lib/retrogrades daily UTC ephemeris windows for recent/active/upcoming cycles and same-planet double-Rx matches; /retrogood redirects to /retrogrades, which is a member page with section-level paid gates. Shared editions use only authorized birth facts; interpretations never claim observed biography or rank a reader by dignity.
+- Visual math uses civil birthdays, exact-UTC returns (untimed angles null), mean-default nodes and explicit speed/Jones/BaZi/Lo Shu conventions.

@@ -1,4 +1,6 @@
 import shaneCover from '@/assets/products/shane-atomic-comic-cover.jpg';
+import aprilCover from '@/assets/products/atomic-relay-cover.png.asset.json';
+import zacCover from '@/assets/products/atomic-bridge-cover.png.asset.json';
 import type { ComicIssue } from '@/lib/comic';
 import cover from '@/assets/products/researcher-orbit-cover.jpg';
 import s1 from '@/assets/comic-story/signal-1.jpg';
@@ -26,5 +28,8 @@ export const COMIC_SCENES: Record<string, string> = {
 };
 /** Select founder-specific artwork only after an authorized issue has been composed. Public samples never use it. */
 export function comicCoverArtwork(issue: ComicIssue): string | undefined {
-  return /^(shane|julian mercer)\b/i.test(issue.reader.trim()) && issue.signs.sun === 'Aries' && issue.signs.moon === 'Taurus' && issue.signs.rising === 'Leo' ? shaneCover : undefined;
+  if (issue.edition === 'april') return aprilCover.url;
+  if (issue.edition === 'zac') return zacCover.url;
+  if (issue.edition === 'shane') return shaneCover;
+  return undefined;
 }

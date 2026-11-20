@@ -5,6 +5,7 @@
 import { chironLon } from './chiron';
 import * as Astronomy from 'astronomy-engine';
 import type { ConfidenceLevel } from '@/content/confidence';
+import { lunarNode, type NodeMode } from './lunarNodes';
 
 export const SIGNS = ['Aries', 'Taurus', 'Gemini', 'Cancer', 'Leo', 'Virgo', 'Libra', 'Scorpio', 'Sagittarius', 'Capricorn', 'Aquarius', 'Pisces'] as const;
 export const SIGN_GLYPH = ['♈', '♉', '♊', '♋', '♌', '♍', '♎', '♏', '♐', '♑', '♒', '♓'];
@@ -18,6 +19,7 @@ export interface ChartInput {
   placeSource: 'geocoded' | 'manual';
   sex?: 'male' | 'female' | 'unspecified';
   houseSystem?: HouseSystem;
+  nodeMode?: NodeMode;
 }
 export type HouseSystem = 'porphyry' | 'placidus' | 'whole' | 'equal';
 export const HOUSE_SYSTEMS: { id: HouseSystem; label: string; note: string }[] = [
@@ -93,12 +95,6 @@ function meanLilith(d: Date) {
   return norm(83.3532465 + 4069.0137287 * T - 0.01032 * T * T + 180);
 }
 
-/** Mean lunar node (Meeus 47.7). */
-function meanNode(d: Date) {
-  const T = (d.getTime() / 86400000 + 2440587.5 - 2451545) / 36525;
-  return norm(125.0445479 - 1934.1362891 * T + 0.0020754 * T * T);
-}
-
 function angles(d: Date, lat: number, lon: number) {
   const t = Astronomy.MakeTime(d);
   const gast = Astronomy.SiderealTime(t);             // hours
@@ -129,9 +125,9 @@ function placidus(asc: number, mc: number, ramc: number, eps: number, lat: numbe
     return lonOfRa(ra);
   };
   const c11 = cusp(1 / 3, true), c12 = cusp(2 / 3, true), c2 = cusp(2 / 3, false), c3 = cusp(1 / 3, false);
-  if ([c11, c12, c2, c3].some(c => c == null)) return null; // undefined near the polar circles
-  const c = [asc, c2!, c3!, norm(mc + 180)];
-  return [...c, norm(c11! + 180), norm(c12! + 180), norm(asc + 180), norm(c2! + 180), norm(c3! + 180), mc, c11!, c12!];
+  if (c11 == null || c12 == null || c2 == null || c3 == null) return null;
+  const c = [asc, c2, c3, norm(mc + 180)];
+  return [...c, norm(c11 + 180), norm(c12 + 180), norm(asc + 180), norm(c2 + 180), norm(c3 + 180), mc, c11, c12];
 }
 
 export function cuspsFor(system: HouseSystem, a: { asc: number; mc: number; ramc: number; eps: number }, lat: number): number[] {
@@ -202,10 +198,12 @@ function bazi(input: ChartInput, instant: Date, sunLon: number, flags: Flag[]): 
   return out;
 }
 
-export function computeChart(input: ChartInput): ChartResult {
+export function computeChart(input: ChartInput, exactUtc?: Date): ChartResult {
   const flags: Flag[] = [];
   const timeKnown = !!input.time;
-  const { utc, offset } = localToUtc(input.date, input.time ?? '12:00', input.tz);
+  const converted = localToUtc(input.date, input.time ?? '12:00', input.tz);
+  const utc = exactUtc ?? converted.utc;
+  const offset = exactUtc ? tzOffsetMin(exactUtc, input.tz) : converted.offset;
   if (!timeKnown) flags.push({ level: 'ambiguous', topic: 'Birth time', note: 'No time given — noon used. Moon may be off by ±6.5°, Ascendant, Midheaven, houses and Hour pillar are not computed.' });
   if (input.placeSource === 'manual') flags.push({ level: 'approximate', topic: 'Place', note: 'Coordinates and time zone entered manually — verify the zone applied the correct historical daylight-saving rule.' });
   const [yr] = input.date.split('-').map(Number);
@@ -237,10 +235,12 @@ export function computeChart(input: ChartInput): ChartResult {
     if ((inSign < 0.5 || inSign > 29.5) && (key !== 'moon' || timeKnown)) { confidence = 'approximate'; note = 'Within 0.5° of a sign cusp — double-check against a second ephemeris.'; }
     return { key, name, glyph, lon, sign: f.sign, signGlyph: f.signGlyph, deg: f.deg, min: f.min, house: cusps ? houseOf(lon, cusps) : null, retro, confidence, note };
   });
-  const nn = meanNode(utc);
-  [['northNode', 'North Node (mean)', '☊', nn], ['southNode', 'South Node (mean)', '☋', norm(nn + 180)]].forEach(([key, name, glyph, lon]) => {
+  const nodeMode = input.nodeMode ?? 'mean';
+  const nn = lunarNode(utc, nodeMode);
+  const nodeRetro = norm(lunarNode(new Date(utc.getTime() + 43200000), nodeMode) - lunarNode(new Date(utc.getTime() - 43200000), nodeMode) + 180) - 180 < 0;
+  [['northNode', `North Node (${nodeMode})`, '☊', nn], ['southNode', `South Node (${nodeMode})`, '☋', norm(nn + 180)]].forEach(([key, name, glyph, lon]) => {
     const f = fmtLon(lon as number);
-    bodies.push({ key: key as string, name: name as string, glyph: glyph as string, lon: lon as number, sign: f.sign, signGlyph: f.signGlyph, deg: f.deg, min: f.min, house: cusps ? houseOf(lon as number, cusps) : null, retro: true, confidence: 'derived', note: 'Mean node; the true node can differ by up to ~1.5°.' });
+    bodies.push({ key: key as string, name: name as string, glyph: glyph as string, lon: lon as number, sign: f.sign, signGlyph: f.signGlyph, deg: f.deg, min: f.min, house: cusps ? houseOf(lon as number, cusps) : null, retro: nodeRetro, confidence: 'derived', note: nodeMode === 'mean' ? 'Mean node: smoothed lunar orbit regression.' : 'True node: instantaneous osculating lunar orbit from astronomy-engine; differs from the smoothed mean node.' });
   });
   const point = (key: string, name: string, glyph: string, lon: number, note: string) => {
     const f = fmtLon(lon);
@@ -261,7 +261,7 @@ export function computeChart(input: ChartInput): ChartResult {
   }
 
   const pts = [...bodies.filter(b => !['southNode', 'lilith', 'fortune', 'vertex'].includes(b.key)).map(b => ({ name: b.name, lon: b.lon, key: b.key })),
-    ...(asc != null ? [{ name: 'Ascendant', lon: asc, key: 'asc' }, { name: 'Midheaven', lon: mc!, key: 'mc' }] : [])];
+    ...(asc != null && mc != null ? [{ name: 'Ascendant', lon: asc, key: 'asc' }, { name: 'Midheaven', lon: mc, key: 'mc' }] : [])];
   const aspects: AspectHit[] = [];
   for (let i = 0; i < pts.length; i++) for (let j = i + 1; j < pts.length; j++) {
     if ((pts[i].key === 'asc' && pts[j].key === 'mc')) continue;

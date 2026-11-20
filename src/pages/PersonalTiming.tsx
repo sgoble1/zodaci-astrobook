@@ -8,6 +8,8 @@ import { Button } from '@/components/ui/button';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { SIGN_RULER } from '@/lib/signRulers';
 import { CycleWall } from '@/components/timeline/CycleWall';
+import { ProfectionWheel } from '@/components/chart/ProfectionWheel';
+import { birthdayAge, annualProfection } from '@/lib/profections';
 
 type Focus = 'transits' | 'retrogrades' | 'timeline' | 'profection';
 const SLOW: [string, Astronomy.Body][] = [['Jupiter', Astronomy.Body.Jupiter], ['Saturn', Astronomy.Body.Saturn], ['Uranus', Astronomy.Body.Uranus], ['Neptune', Astronomy.Body.Neptune], ['Pluto', Astronomy.Body.Pluto]];
@@ -78,9 +80,9 @@ export default function PersonalTiming({ birth, focus }: { birth: MyBirth; focus
     if (ura != null) { scan(Astronomy.Body.Uranus, ura, 180, 38, 44, 'Uranus opposition', 'The classic “mid-life awakening”: a push to live more authentically.'); scan(Astronomy.Body.Uranus, ura, 90, 19, 23, 'Uranus square', 'A restless urge to break away and find your own path.'); }
     miles.sort((a, b) => a.date.getTime() - b.date.getTime());
     // Profection
-    const age = Math.floor((now.getTime() - born.getTime()) / (365.25 * day));
+    const age = birthdayAge(birth.date, now);
     const profHouse = (age % 12) + 1;
-    const profSign = chart.asc != null ? SIGNS[(Math.floor(chart.asc / 30) + age) % 12] : null;
+    const profSign = annualProfection(chart, Math.min(100, age))?.sign ?? null;
     return { chart, current, windows, retro, miles, age, profHouse, profSign, house, now };
   }, [birth]);
   const { current, windows, retro, miles, age, profHouse, profSign, house, now, chart } = data;
@@ -119,6 +121,7 @@ export default function PersonalTiming({ birth, focus }: { birth: MyBirth; focus
       <section key="p" className="space-y-3">
         <h2 className="font-display text-2xl">This year’s focus</h2>
         <p className="text-sm text-muted-foreground">Annual profection is an old timing method: each birthday moves your focus one house forward around the chart.</p>
+        <ProfectionWheel chart={chart} />
         <p className="rounded-lg border border-border bg-card p-4 text-sm">At age {age}, this is your <strong>{ord(profHouse)}-house year</strong>{profSign ? <> ({profSign}). The ruler of {profSign} is your “lord of the year” — watch its transits closely.</> : '. Add a birth time to see the sign and ruler.'}</p>
         {lord && <p className="text-sm">Your lord of the year is <Link to={`/planets/${lord.key}`} className="underline">{lord.name}</Link>, born in {lord.sign}{lord.house ? ` in your ${ord(lord.house)} house` : ''}. {lordTransits.length ? `Exact hits to it this year: ${lordTransits.map(w => `${w.t} ${w.x.n} (${fmtD(w.start)})`).join('; ')}.` : 'No slow planet makes an exact hit to it in the next 12 months.'}</p>}
       </section>

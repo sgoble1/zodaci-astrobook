@@ -7,6 +7,9 @@ PublicHeader shares its desktop/phone list; AstroComic was reachable through pro
 
 Prime directive: no page, route or feature is removed. Only placement changes.
 
+## Nov 20 — Master Phase 3 tools
+Add Solar Return under member Timing; Four Pillars/Lo Shu under World Traditions; Shapes & motion under Mapping Center. Shared memberNav drives desktop, phone, search and Instructions. All three are account pages in memberRoutes; signed-out requests retain auth redirects. Existing /profection and /chinese retain founder source content while adding saved-chart calculators; no competing canonical route or private/public policy changes.
+
 ## Nov 20 — Retrograde consolidation audit
 Member registry currently duplicates natal RetroGOOD under Chart and future Retrogrades under Explore/Timing. NAV_GROUPS repeats the split; Results links to the natal page, while Instructions/search/desktop/phone menus inherit the registry. `/retrogrades` currently falls through to PersonalTiming for regular members and requires Pro, while `/retrogood` is free with paid sections. Consolidate under Explore/Timing with natal overview free and existing deep sections gated; keep the old URL as a utility redirect. April's protected source chapter stays available without substituting the viewer's chart. No public/member or admin visibility boundaries change.
 

@@ -1,12 +1,24 @@
 import { SourceChapters } from '@/components/common/SourceChapters';
 import { PILLARS, ELEMENT_BALANCE, LIFE_LESSON, LUCK_PILLARS, CHINESE_SOURCE } from '@/content/chinese';
 import { SourceRefPanel } from '@/components/common/SourceRefPanel';
+import { useCallback } from 'react';
+import { useMyBirthState, toChartInput } from '@/lib/myBirth';
+import { computeChart } from '@/lib/astro';
+import { usePreparedPreview } from '@/hooks/usePreparedPreview';
+import { BaZiGrid } from '@/components/eastern/BaZiGrid';
+import { LoShuMatrix } from '@/components/eastern/LoShuMatrix';
+import { PreviewFeedback } from '@/components/books/PreviewFeedback';
 
 const MAX = Math.max(...ELEMENT_BALANCE.map(e => e.count));
 
 export default function Chinese() {
+  const { birth, error, retry } = useMyBirthState();
+  const build = useCallback(() => birth ? computeChart(toChartInput(birth)) : null, [birth]);
+  const prepared = usePreparedPreview(birth === undefined ? null : build);
   return (
     <article className="space-y-14">
+      {error ? <PreviewFeedback error onRetry={retry} /> : prepared.status === 'error' ? <PreviewFeedback error onRetry={prepared.retry} /> : prepared.status === 'loading' ? <PreviewFeedback loadingMessage="Calculating your Four Pillars…" /> : prepared.value ? <><BaZiGrid chart={prepared.value} /><LoShuMatrix date={prepared.value.input.date} /></> : <p>Save your birth details to open your calculated pillars.</p>}
+      <details className="border-t border-border pt-6"><summary className="cursor-pointer font-label text-xl">Edition source interpretation</summary>
       <header>
         <h1 className="font-display mt-2">Four Pillars of Destiny.</h1>
         <div className="gold-rule my-5 max-w-xs" />
@@ -80,6 +92,7 @@ export default function Chinese() {
 
       <SourceRefPanel source={CHINESE_SOURCE} />
       <SourceChapters match={/chinese|ba ?zi|four pillars|metal horse|day master|zodiac animal/i} />
+      </details>
     </article>
   );
 }

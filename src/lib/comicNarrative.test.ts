@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { computeChart } from '@/lib/astro';
-import { buildComicPreview, previewName } from '@/lib/comicNarrative';
+import { buildComicPreview, buildFounderComic, previewName } from '@/lib/comicNarrative';
+import { comicCoverArtwork } from '@/content/comicSceneArt';
 import { buildComicIssue, CAST } from '@/lib/comic';
 import { upcomingEvents } from '@/lib/transitOverlay';
 import { comicIssueLeaves, sampleComicLeaves } from '@/content/sampleBookLeaves';
@@ -12,6 +13,32 @@ const chart = computeChart({ date: '1993-03-25', time: '13:55', lat: 42.96395, l
 const options = { reader: 'Shane', month: new Date(Date.UTC(2026, 11, 1)), issueNumber: 1 };
 const issue = buildComicPreview(chart, options);
 describe('complete chart-driven comic preview', () => {
+  it('isolates mathematical record to ledger pages 22–23, including scene metadata and all dialogue', () => {
+    const pages = issue.pages.filter(p => p.section === 'Calculation Ledger');
+    expect(pages.map(p => p.n)).toEqual([22, 23]);
+    const narrative = issue.pages.filter(p => p.n !== 22 && p.n !== 23).flatMap(p => [p.title, ...(p.body ?? []), ...p.panels.flatMap(x => [x.scene, x.caption ?? '', ...(x.balloons ?? []).map(b => b.text)])]).join(' ');
+    expect(narrative).not.toMatch(/\d+°|\borb\b|\bhouse\s*\d|\bretrograde\b|\btransit\b|\b(?:Aries|Taurus|Gemini|Cancer|Leo|Virgo|Libra|Scorpio|Sagittarius|Capricorn|Aquarius|Pisces)\b/i);
+    expect(pages.flatMap(p => p.body ?? []).join(' ')).toMatch(/orb.*°/);
+  });
+  it('uses distinct explicitly authorized founder covers; matching names never unlock founder art', () => {
+    const editions = ['april', 'shane', 'zac'] as const;
+    const covers = editions.map(edition => comicCoverArtwork(buildFounderComic(chart, edition, { ...options, reader: edition === 'shane' ? 'Shane' : edition })));
+    expect(covers.every(Boolean)).toBe(true);
+    expect(new Set(covers).size).toBe(3);
+    expect(comicCoverArtwork(issue)).toBeUndefined();
+    for (const edition of editions) {
+      const own = buildFounderComic(chart, edition, { ...options, reader: edition });
+      expect(own.pages).toHaveLength(24);
+      expect(own.factors).toEqual(issue.factors);
+    }
+  });
+  it.each([0, 3, 6, 9, 11])('operators manipulate machinery in each sampled month %i', monthIndex => {
+    const own = buildComicPreview(chart, { ...options, month: new Date(Date.UTC(2026, monthIndex, 1)) });
+    expect(own.influence?.scene).toMatch(/lamp|relay|receiver|conduit|hatch|channel/);
+    expect(own.pages[18].panels[0].scene).toBe(own.influence?.scene);
+    const heroLines = own.pages.flatMap(p => p.panels).flatMap(p => p.balloons ?? []).filter(b => b.who === own.reader);
+    for (const line of heroLines) expect(line.text).not.toMatch(/\b(?:square|trine|house|transit|retrograde|period|Aries|Capricorn)\b|\d{4}-\d{2}/i);
+  });
   it('retains the full story and lettering through splash, portrait and four-panel beats', () => {
     expect(issue.pages[1].panels).toHaveLength(1);
     expect(issue.pages[1].panels[0].shape).toBe('bleed');

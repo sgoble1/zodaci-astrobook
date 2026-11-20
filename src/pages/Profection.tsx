@@ -3,10 +3,19 @@ import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { PROFECTION_35, PRENATAL_ECLIPSE, PROFECTION_BEATS, type ProfectionBeat } from '@/content/compendium';
 import { SourceRefPanel } from '@/components/common/SourceRefPanel';
+import { useCallback } from 'react';
+import { useMyBirthState, toChartInput } from '@/lib/myBirth';
+import { computeChart } from '@/lib/astro';
+import { usePreparedPreview } from '@/hooks/usePreparedPreview';
+import { ProfectionWheel } from '@/components/chart/ProfectionWheel';
+import { PreviewFeedback } from '@/components/books/PreviewFeedback';
 
 type Focus = { kind: 'beat'; data: ProfectionBeat } | { kind: 'eclipse' };
 
 export default function Profection() {
+  const { birth, error, retry } = useMyBirthState();
+  const build = useCallback(() => birth ? computeChart(toChartInput(birth)) : null, [birth]);
+  const prepared = usePreparedPreview(birth === undefined ? null : build);
   const [focus, setFocus] = useState<Focus>({ kind: 'beat', data: PROFECTION_BEATS[0] });
   const { hash } = useLocation();
 
@@ -20,8 +29,10 @@ export default function Profection() {
 
   return (
     <div className="space-y-10">
+      <section className="space-y-5"><h1 className="font-display text-4xl">Annual Profections</h1>{error ? <PreviewFeedback error onRetry={retry} /> : prepared.status === 'error' ? <PreviewFeedback error onRetry={prepared.retry} /> : prepared.status === 'loading' ? <PreviewFeedback loadingMessage="Calculating your profection wheel…" /> : prepared.value ? <ProfectionWheel chart={prepared.value} /> : <p>Add your saved birth details to open your profection wheel.</p>}</section>
+      <details className="border-t border-border pt-6"><summary className="cursor-pointer font-label text-xl">Edition source timeline</summary>
       <header>
-        <h1 className="font-display mt-2">The Twelfth-House year.</h1>
+        <h2 className="font-display mt-2">The Twelfth-House year.</h2>
         <div className="gold-rule my-5 max-w-xs" />
         <p className="max-w-2xl text-lg text-foreground/85 leading-relaxed">
           An interactive walk through the {PROFECTION_35.window} profection year and the prenatal solar eclipse that seeded it. Click any beat on the timeline to reveal its detail.
@@ -127,6 +138,7 @@ export default function Profection() {
         </div>
       </section>
       <SourceChapters match={/profection|solar return|progress|solar arc/i} ids={['v2-04', 'v2-05', 'v2-06', 'v2-18']} title="Profections, progressions, returns and the year ahead" />
+      </details>
     </div>
   );
 }

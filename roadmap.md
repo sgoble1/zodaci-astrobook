@@ -719,3 +719,13 @@ Verification: 156 suites / 1,281 tests pass; preview build OK. Desktop/393px che
 - [x] Verify shared comic presentation and storyline regressions: 1,294 tests pass; personal book page turns, comic pages 18–19 cast beat and PDF download verified; desktop/mobile checks show no sideways overflow or browser errors.
 
 Verification limits: the current signed-in account exposes no official Shane comic reader, so its authorized founder walkthrough and a populated paid archive were not exercised. Public samples remain fictional; no edition access rules were changed. Preview build OK.
+
+## Nov 20 — Uploaded Master Plan, Phases 1–3
+Execution details: docs/master-phases-1-3.md. Preserve existing canonical routes and fictional reader; never copy founder facts into public fixtures.
+- [x] Phase 1: ledger-only calculations, external cast controllers, shared 24-page digest and distinct authorized founder issues; new admin drafts use the same engine and saved scripts stay unchanged.
+- [x] Phase 2: one personalized hero reader with sample switch; richer measured About examples.
+- [x] Phase 3 visual tools: age 0–100 profection wheel, Four Pillars/Lo Shu, relocated solar return bi-wheel, Jones shapes, node options and planetary speeds.
+- [~] BaZi strength: visible-element/resource support count is live and clearly distinguished from full seasonal/hidden-stem strength assessment. Full assessment remains outstanding; no invented strength verdict.
+- [x] Verify regression suites, clean preview, signed-in flows and 393px/1280px layouts; record external-reference/access limits.
+
+Verification: 159 suites / 1,335 tests pass; preview build OK. Independent Swiss Ephemeris true-node references agree within 0.1°; existing 15-chart benchmarks, timed/untimed books/PDFs, transits, compatibility and ledger/privacy regressions pass. Signed-in saved-chart book/sample switching, book/comic turns, real solar-return relocation, BaZi/Lo Shu and true-node switching verified without browser errors or horizontal overflow. Profection remains correctly Pro-gated for the available free account: age/ruler math tested, paid slider browser walkthrough not exercised. Founder covers/scripts are tested with explicit edition identity, but available account has no authorized founder comic; founder-specific walkthrough and owner-approved authorial scripts remain unverified. Canonical fictional reader remains Rosalind Vance, not newly invented duplicate fixtures. Phase 4–6 work and print production unchanged.

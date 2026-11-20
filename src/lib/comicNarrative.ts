@@ -113,5 +113,16 @@ export function buildComicPreview(chart: ChartResult, opts: Parameters<typeof bu
     'Astronomy Engine positions; historical time-zone conversion. Measured positions do not prove symbolic interpretations. Astrological insights provided for entertainment and self-reflection purposes only.',
   ] });
   pages.push({ n: 24, section: 'Back Cover', title: `${hero} · ${base.monthLabel}`, panels: [{ shape: 'bleed', scene: 'Dawn at the observatory.', artSlot: 'terrace' }], body: ['Zodaci AstroComic · The Midnight Signal', 'An illustrative preview, not a print-ready buyer issue.'] });
-  return { ...base, reader: hero, title: 'The Midnight Signal', pages, factors };
+  pages[0].section = 'Cover';
+  return { ...base, reader: hero, title: 'The Midnight Signal', mainEvent: 'The Hand Behind the Signal', pages, factors };
+}
+
+/** Called only with an already authorized edition chart; public and member composers never set edition identity. */
+export function buildFounderComic(chart: ChartResult, edition: 'april' | 'shane' | 'zac', opts: Parameters<typeof buildComicIssue>[1]): NarrativeIssue {
+  const issue = buildComicPreview(chart, opts);
+  const titles = { april: 'The Relay Room', shane: 'The Midnight Signal', zac: 'The Far-Bank Receiver' };
+  issue.edition = edition;
+  issue.title = titles[edition];
+  issue.pages[0] = { ...issue.pages[0], title: issue.title, panels: [{ ...issue.pages[0].panels[0], caption: `${issue.reader} · Private edition · Issue ${issue.issueNumber}` }] };
+  return issue;
 }

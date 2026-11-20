@@ -9,8 +9,8 @@ import { Input } from '@/components/ui/input';
 import { Progress } from '@/components/ui/progress';
 import { supabase } from '@/integrations/supabase/client';
 import { useSession } from '@/hooks/useLibrary';
-import { useMyBirth, toChartInput } from '@/lib/myBirth';
-import { PersonalPreviewDrawer } from '@/components/books/PersonalPreviewDrawer';
+import { MemberBookTeaser } from '@/components/books/MemberBookTeaser';
+import { OpenAstroBook } from '@/components/books/OpenAstroBook';
 import { usePlan } from '@/hooks/usePlan';
 import { useCustomPages } from '@/hooks/useCustomPages';
 import { STARTER_CHAPTERS } from '@/lib/starterChapters';
@@ -32,7 +32,6 @@ type Order = { id: string; status: string; edition: string; format: string };
 /** Book hub: Masterbook progress, latest AstroBook order, media, and a searchable index of everything that's yours. */
 export default function MyLibrary() {
   const session = useSession();
-  const birth = useMyBirth();
   const { plan, loading: planLoading } = usePlan();
   const custom = useCustomPages();
   const [chapters, setChapters] = useState<number | null>(null);
@@ -62,6 +61,7 @@ export default function MyLibrary() {
   return (
     <article className="space-y-12">
       <header className="max-w-3xl space-y-2"><h1 className="font-display text-4xl">My Library</h1><p className="text-muted-foreground">Your Masterbook, printed AstroBook, audio and everything you have made — in one place.</p></header>
+      <section id="book-reader" className="min-w-0 scroll-mt-24"><MemberBookTeaser fallback={<OpenAstroBook />} /></section>
 
       <section aria-labelledby="book-status" className="grid gap-4 md:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
         <div className="rounded-2xl border border-border bg-card/60 p-6 backdrop-blur-md">
@@ -78,7 +78,7 @@ export default function MyLibrary() {
           <div className="flex items-start gap-4"><span className="grid h-12 w-12 shrink-0 place-items-center rounded-xl border border-border text-gold"><Printer className="h-6 w-6" aria-hidden="true" /></span>
             <div className="min-w-0 space-y-1"><h2 className="font-display text-2xl">AstroBook in print</h2>
               {order ? <p className="text-sm text-muted-foreground"><span className="capitalize">{order.edition}</span> · {order.format === 'digital' ? 'Digital PDF' : 'Printed book'} — {statusLabel(order.status)}</p> : <p className="text-sm text-muted-foreground">Five versions, from a digital PDF to a linen hardcover.</p>}</div></div>
-          <div className="mt-5 flex flex-wrap gap-2">{order ? <Button asChild><Link to={`/orders?order=${order.id}`}><Truck className="h-4 w-4" aria-hidden="true" />Track my order</Link></Button> : <Button asChild><Link to="/books">Design my book</Link></Button>}{birth ? <PersonalPreviewDrawer name={birth.name} input={toChartInput(birth)} /> : <Button asChild variant="outline"><Link to="/book-preview">Preview a sample</Link></Button>}</div>
+          <div className="mt-5 flex flex-wrap gap-2">{order ? <Button asChild><Link to={`/orders?order=${order.id}`}><Truck className="h-4 w-4" aria-hidden="true" />Track my order</Link></Button> : <Button asChild><Link to="/books">Design my book</Link></Button>}<Button asChild variant="outline"><a href="#book-reader">Return to the reader</a></Button></div>
         </div>
       </section>
 

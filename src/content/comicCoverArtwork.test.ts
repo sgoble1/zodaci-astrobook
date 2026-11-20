@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { buildComicPreview } from '@/lib/comicNarrative';
+import { buildComicPreview, buildFounderComic } from '@/lib/comicNarrative';
 import { comicPreviewArt } from './castArt';
 import { comicCoverArtwork, COMIC_SCENES } from './comicSceneArt';
 import { computeChart } from '@/lib/astro';
@@ -10,10 +10,11 @@ const shane = computeChart({ date: '1993-03-25', time: '13:55', lat: 42.9639, lo
 const issue = (chart = shane, reader = 'Shane') => buildComicPreview(chart, { reader, month: new Date(Date.UTC(2026, 10, 1)), issueNumber: 2 });
 describe('separate chart-specific comic cover', () => {
   it('uses the redesigned cover for Shane’s calculated Aries Sun, Taurus Moon and Leo rising issue', () => {
-    const comic = issue();
+    const comic = buildFounderComic(shane, 'shane', { reader: 'Shane', month: new Date(Date.UTC(2026, 10, 1)), issueNumber: 2 });
     expect(comic.signs).toMatchObject({ sun: 'Aries', moon: 'Taurus', rising: 'Leo' });
     expect(comicCoverArtwork(comic)).toContain('shane-atomic-comic-cover');
     expect(comicPreviewArt(comic)['1-0']).toBe(comicCoverArtwork(comic));
+    expect(comicCoverArtwork(issue())).toBeUndefined();
   });
   it('preserves the existing AstroBook artwork and keeps the comic cover separate', () => {
     expect(personalCoverArtwork('Shane', shane)).toBe(COMIC_SCENES.cover);
