@@ -1,5 +1,12 @@
 # Zodaci roadmap
 
+## Nov 20 — Master Plan Phases 4–6
+- [ ] Phase 4: shared cassette player/bookmarks, skippable owner-only context highlights, secure gift claim with recipient chart isolation, public 1800–2100 UTC ephemeris.
+- [ ] Phase 5: modular zero-token placement/aspect chapters, six curated Zac volumes preserving all private originals, disclosed seasonal/hidden-stem BaZi strength, authorized founder walkthroughs.
+- [ ] Phase 6: fixed app-email triggers, Lulu print preflight/payload validation, signed Shopify order/fulfillment sync and provider-verified access linkage.
+- [ ] Verification: calculation baseline/cascade, owner/privacy and replay tests, full regression suite, automatic TypeScript/build signals, signed-in workflows and 393px/1280px layouts.
+Dependencies discovered: notify.zodaci.com is active; existing email templates/helper and Lulu credentials/pipeline exist. Shopify is claimed but runtime Admin app client credentials are absent. Founder verification must use actual owner/shared access, never admin bypass. The text specification totals 280 blocks (120 signs + 120 houses + 40 aspects), not its 216 heading.
+
 ## Nov 20 — Preview feedback and quieter cards
 - [x] Add visible preparation, recoverable errors and retry to personalized AstroBook, AstroComic and drawer previews; distinguish missing birth details from loading failures.
 - [x] Replace noisy paper-card backgrounds with a clean archival surface, preserving book jackets and illustration styles.
