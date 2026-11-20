@@ -2,13 +2,12 @@ import { createClient } from "npm:@supabase/supabase-js@2";
 import { creditShortfall } from "../_shared/credits.ts";
 import { counselorContext } from "../_shared/member-profile.ts";
 import { hasFullAccess } from "../_shared/chat-guard.ts";
+import { dreamReadingMessages } from "../_shared/dream-reading-prompt.ts";
 
 // One optional symbolic reading of a member's own dream. The browser supplies the
 // ephemeris-calculated sky at the member's recorded local dream time.
 const cors = { "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type" };
 const json = (b: unknown, status = 200) => new Response(JSON.stringify(b), { status, headers: { ...cors, "Content-Type": "application/json" } });
-const clip = (v: unknown, n: number) => String(v ?? "").replace(/\s+/g, " ").trim().slice(0, n);
-const timeOnly = (v: unknown) => /^\d{2}:\d{2}/.test(String(v ?? "")) ? String(v).slice(0, 5) : "03:00";
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: cors });
@@ -32,23 +31,12 @@ Deno.serve(async (req) => {
     const short = await creditShortfall(admin, u.user.id, "dream");
     if (short) return json({ error: short }, 402);
 
-    const sky = (Array.isArray(body.sky) ? body.sky : []).slice(0, 12).map(s => clip(s, 200)).filter(Boolean);
-    const instructions = `You read one member's dream at Zodaci as symbolism, never as prediction or diagnosis.
-Use only the dream text, the calculated chart and the sky lines below. Never invent placements, people, events or biography, and never say what the dream "means will happen".
-Name the chart factor behind each point in brackets, e.g. [Moon in Cancer] or [Neptune that night]. If the sky lines are empty, say the night had no close contacts and read from the dream and natal chart only.
-Plain, warm, specific language. Three short paragraphs, then one reflection question. Under 220 words. If the dream suggests distress or danger, gently suggest talking with someone qualified.
-
-CHART:
-${profile.context}
-
-SKY THAT NIGHT (calculated for the recorded local dream time):
-${sky.length ? sky.map(s => `- ${s}`).join("\n") : "- no close contacts"}`;
-    const input = `Dream on ${entry.dream_date} at ${timeOnly(entry.dream_time)} local time${entry.recurring ? " (recurring)" : ""}${entry.feelings?.length ? `, motifs: ${entry.feelings.join(", ")}` : ""}:\n${clip(entry.body, 4000)}`;
+    const messages = dreamReadingMessages(profile.context, body.sky, entry);
 
     const r = await fetch("https://ai.gateway.lovable.dev/v1/responses", {
       method: "POST",
       headers: { "Content-Type": "application/json", "Lovable-API-Key": apiKey, "X-Lovable-AIG-SDK": "fetch" },
-      body: JSON.stringify({ model: "openai/gpt-6-astra", instructions, input: [{ role: "user", content: input }], store: false, max_output_tokens: 1500, reasoning: { effort: "low" } }),
+      body: JSON.stringify({ model: "openai/gpt-6-astra", ...messages, store: false, max_output_tokens: 1500, reasoning: { effort: "low" } }),
     });
     if (!r.ok) {
       if (r.status === 429) return json({ error: "Too many requests. Try again in a moment." }, 429);
