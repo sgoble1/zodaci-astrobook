@@ -1,6 +1,8 @@
 import { supabase } from '@/integrations/supabase/client';
+import { FunctionsHttpError } from '@supabase/supabase-js';
 import type { MyBirth } from './myBirth';
 export type GiftShipping={name:string;line1:string;line2:string;city:string;state:string;postal_code:string;country:'US'};
 export type GiftDetails={edition:string;format:string;name:string;message:string;claimed:boolean;birth:MyBirth|null;shipping:GiftShipping|null};
-export async function inspectGift(token:string):Promise<GiftDetails>{const r=await supabase.functions.invoke('gift-claim',{body:{action:'inspect',token}});if(r.error||!r.data?.ok)throw new Error(r.data?.error??'This gift could not open. Check the link and try again.');return r.data;}
-export async function claimGift(token:string,birth:MyBirth,shipping?:GiftShipping):Promise<MyBirth>{const r=await supabase.functions.invoke('gift-claim',{body:{action:'claim',token,birth,shipping}});if(r.error||!r.data?.ok||!r.data.gift)throw new Error(r.data?.error??'Your gift was not claimed. Check the details and try again.');return r.data.gift.recipient_birth;}
+async function giftError(error:unknown,fallback:string):Promise<Error>{if(error instanceof FunctionsHttpError){try{const body=await error.context.json();if(typeof body.error==='string')return new Error(body.error);}catch{/* Keep the safe fallback if no JSON error was returned. */}}return new Error(fallback);}
+export async function inspectGift(token:string):Promise<GiftDetails>{const r=await supabase.functions.invoke('gift-claim',{body:{action:'inspect',token}});if(r.error||!r.data?.ok)throw await giftError(r.error,r.data?.error??'This gift could not open. Check the link and try again.');return r.data;}
+export async function claimGift(token:string,birth:MyBirth,shipping?:GiftShipping):Promise<MyBirth>{const r=await supabase.functions.invoke('gift-claim',{body:{action:'claim',token,birth,shipping}});if(r.error||!r.data?.ok||!r.data.gift)throw await giftError(r.error,r.data?.error??'Your gift was not claimed. Check the details and try again.');return r.data.gift.recipient_birth;}

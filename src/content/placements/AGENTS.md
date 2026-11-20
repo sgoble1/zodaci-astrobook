@@ -1,0 +1,2 @@
+# Deterministic placement content
+- Blocks are original public prose keyed by measured planet/sign/house/aspect; founder archives are never imported, and untimed readers omit house blocks to preserve uncertainty.

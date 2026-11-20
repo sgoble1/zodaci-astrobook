@@ -1,0 +1,2 @@
+ALTER POLICY gift_claim_recipient_read ON public.book_gift_claims USING (recipient_id=auth.uid());
+COMMENT ON TABLE public.book_gift_claims IS 'Recipient-only supplemental gift chart and shipping review; server fulfillment only. Never overwrites a frozen print manuscript or account profile. Token hashes service-only.';

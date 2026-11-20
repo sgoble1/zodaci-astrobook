@@ -3,7 +3,7 @@ import { CassettePlayer } from '@/components/audio/CassettePlayer';
 import { confirmAction } from '@/components/common/ConfirmHost';
 import { PodcastMaker } from '@/components/podcast/PodcastMaker';
 import { useEffect, useRef, useState } from 'react';
-import { ListPlus, ListX, SkipForward, BookOpen } from 'lucide-react';
+import { ListPlus, ListX, BookOpen } from 'lucide-react';
 import { Headphones, Lock, Trash2, Download, Upload, Users } from 'lucide-react';
 import { useLibrary, useSession, useIsAdmin, type LibraryItem } from '@/hooks/useLibrary';
 import { AuthGate } from '@/components/common/AuthGate';
@@ -40,7 +40,7 @@ export default function Podcasts() {
   const session = useSession();
   const isAdmin = useIsAdmin(session);
   const player = usePlayer();
-  const { current, queue, setQueue, speed, setSpeed, positions, play, playNext, stop, setCatalog } = player;
+  const { current, queue, setQueue, positions, play, stop, setCatalog } = player;
   const setCurrent = (v: null) => { if (v === null) stop(); };
   const [q, setQ] = useState('');
   const [library, setLibrary] = useState<'shared' | 'private'>('private');
@@ -70,19 +70,7 @@ export default function Podcasts() {
         <p className="text-muted-foreground mt-3 max-w-2xl">Personal chart episodes, private to you or shared with invited workspace members.</p>
       </header>
 
-      {current?.url && (
-        <><CassettePlayer title={episodeTitle(current.title)} controls={player}/><div className="hidden">
-          <div className="font-label text-[10px] tracking-[0.14em] text-primary">Now playing · controls in the mini player</div>
-          <div className="font-display text-xl mt-1">{episodeTitle(current.title)}</div>
-          <div className="flex flex-wrap items-center gap-2 mt-3 text-xs">
-            <span className="font-label text-[10px] tracking-[0.14em] text-primary mr-1">Speed</span>
-            {[0.75, 1, 1.25, 1.5, 1.75, 2].map(r => (
-              <button key={r} onClick={() => setSpeed(r)} aria-pressed={speed === r} className={`min-h-9 min-w-11 px-2 py-1 rounded border ${speed === r ? 'border-accent bg-accent/15' : 'border-border hover:bg-muted'}`}>{r}×</button>
-            ))}
-            {queue.length > 0 && <button onClick={playNext} className="ml-auto flex items-center gap-1 px-2 py-1 rounded border border-border hover:bg-muted"><SkipForward className="w-3.5 h-3.5" />Next in queue</button>}
-          </div>
-        </div></>
-      )}
+      {current?.url && <CassettePlayer title={episodeTitle(current.title)} controls={player}/>}
 
       {queue.length > 0 && (
         <section className="parchment p-4">

@@ -32,6 +32,13 @@ Deno.serve(async req => {
     const signing = Deno.env.get('GIFT_CLAIM_SIGNING_SECRET');
     if (!signing) return json({ error: 'Gift links are not configured yet.' }, 503);
     const claimToken = await giftToken(order.id, signing);
+    const {data:existingClaim,error:existingError}=await db.from('book_gift_claims').select('revoked_at,claimed_at,expires_at').eq('order_id',order.id).maybeSingle();
+    if(existingError)throw existingError;
+    if(existingClaim?.revoked_at)return json({error:'This gift link has been revoked.'},409);
+    if(existingClaim&&!existingClaim.claimed_at&&Date.parse(existingClaim.expires_at)<=Date.now()){
+      const {error:renewError}=await db.from('book_gift_claims').update({expires_at:new Date(Date.now()+90*864e5).toISOString()}).eq('order_id',order.id).is('claimed_at',null).is('revoked_at',null);
+      if(renewError)throw renewError;
+    }
     const { error: claimError } = await db.from('book_gift_claims').upsert({ order_id: order.id, token_hash: await hashGiftToken(claimToken), expires_at: new Date(Date.now() + 90 * 864e5).toISOString() }, { onConflict: 'order_id', ignoreDuplicates: true });
     if (claimError) throw claimError;
     const { data: profile } = await db.from('profiles').select('display_name').eq('id', user.id).maybeSingle();

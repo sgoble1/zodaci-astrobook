@@ -1,11 +1,11 @@
-import { createClient } from 'npm:@supabase/supabase-js@2';
+import { createClient, type SupabaseClient } from 'npm:@supabase/supabase-js@2';
 import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors';
 import { digitalEligible,orderIdFromWebhook,SHOP,SHOPIFY_TOPICS,verifiedOwner,verifyShopifyHmac } from '../_shared/shopify-sync-rules.ts';
 import { ORDER_QUERY,shopifyAdmin,shopifyConfigured } from '../_shared/shopify-admin.ts';
 const json=(body:unknown,status=200)=>new Response(JSON.stringify(body),{status,headers:{...corsHeaders,'Content-Type':'application/json'}});
 Deno.serve(async req=>{
  if(req.method==='OPTIONS')return new Response('ok',{headers:corsHeaders});if(req.method!=='POST')return json({error:'Method not allowed'},405);
- let delivery='';let db:ReturnType<typeof createClient>|null=null;
+ let delivery='';let db:SupabaseClient|null=null;
  try{const secret=Deno.env.get('SHOPIFY_ADMIN_CLIENT_SECRET');if(!secret||!shopifyConfigured())return json({error:'Shopify sync is not configured'},503);const raw=new Uint8Array(await req.arrayBuffer());if(raw.byteLength>1024*1024)return json({error:'Payload too large'},413);if(!await verifyShopifyHmac(raw,req.headers.get('X-Shopify-Hmac-Sha256')??'',secret))return json({error:'Invalid signature'},401);
  const shop=req.headers.get('X-Shopify-Shop-Domain')??'',topic=req.headers.get('X-Shopify-Topic')??'';delivery=req.headers.get('X-Shopify-Webhook-Id')??'';if(shop!==SHOP||!(SHOPIFY_TOPICS as readonly string[]).includes(topic)||!/^[-a-zA-Z0-9]{10,100}$/.test(delivery))return json({error:'Invalid delivery'},400);
  const body=JSON.parse(new TextDecoder().decode(raw));const orderId=orderIdFromWebhook(body,topic);if(!orderId)return json({error:'Invalid order'},400);

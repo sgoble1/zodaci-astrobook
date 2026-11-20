@@ -1,11 +1,13 @@
 # Zodaci roadmap
 
 ## Nov 20 — Master Plan Phases 4–6
-- [ ] Phase 4: shared cassette player/bookmarks, skippable owner-only context highlights, secure gift claim with recipient chart isolation, public 1800–2100 UTC ephemeris.
-- [ ] Phase 5: modular zero-token placement/aspect chapters, six curated Zac volumes preserving all private originals, disclosed seasonal/hidden-stem BaZi strength, authorized founder walkthroughs.
-- [ ] Phase 6: fixed app-email triggers, Lulu print preflight/payload validation, signed Shopify order/fulfillment sync and provider-verified access linkage.
-- [ ] Verification: calculation baseline/cascade, owner/privacy and replay tests, full regression suite, automatic TypeScript/build signals, signed-in workflows and 393px/1280px layouts.
-Dependencies discovered: notify.zodaci.com is active; existing email templates/helper and Lulu credentials/pipeline exist. Shopify is claimed but runtime Admin app client credentials are absent. Founder verification must use actual owner/shared access, never admin bypass. The text specification totals 280 blocks (120 signs + 120 houses + 40 aspects), not its 216 heading.
+- [x] Phase 4 audio/context/ephemeris: cassette reels, counter, seek, speeds and account-keyed bookmarks; consent-based private focus with skip/remove and deterministic highlights; public 1800–2100 UTC ephemeris with reference lookups.
+- [~] Phase 4 gifts: live-paid, verified-recipient claim and isolated chart reader; shipping review stored separately. Paid claim walkthrough and recipient-proof print fulfillment are not complete: claimed changes never silently replace frozen paid PDFs.
+- [~] Phase 5: 280 zero-token blocks (120 sign + 120 house + 40 aspect), six Zac volumes and companion prompts; count-only protected audit confirms all 198 Zac chapters remain stored. Owner text review, independent BaZi weighted-model reference verdicts and authorized founder walkthroughs remain open.
+- [~] Phase 6: fixed order/gift/comic-release email triggers deployed to verified notify.zodaci.com; Lulu URL/address/live-payment guards and local PDF dimensions/fonts/image-PPI inspector implemented. Live email event delivery and supplier proof/PDF-X certification remain open; Lulu's guide does not require PDF/X-1a and this inspector cannot certify it.
+- [~] Shopify: signed raw-body webhook, replay protection, atomic monotonic reconciliation and owner-signed cart linkage deployed. App credentials saved, but registration returns 502; store-app installation/authorization and exact digital variants must be resolved before order/access sync is operational.
+- [x] Regression: 165 suites / 1,359 tests pass; automatic build OK. Public filters and 393px layout verified; signed-in focus saved/read back after reload/removed. Real public-fixture cassette playback verified (75.08s, seek 12s, 1.5×, bookmark and pause) in isolated controller, not a paid private library.
+Verification limits: full paid gift and subscriber-library walkthroughs require real provider-confirmed purchases; founder walkthroughs require edition-owner/shared access. Independent BaZi references and final supplier proof acceptance remain external prerequisites. Cascade checked bookVolumes/readings, podcast provider/page, context_flags consumers, route/nav/meta/analytics, order/payment/email functions and atomic Shopify reconciliation. No production purchase or email was fabricated for verification.
 
 ## Nov 20 — Preview feedback and quieter cards
 - [x] Add visible preparation, recoverable errors and retry to personalized AstroBook, AstroComic and drawer previews; distinguish missing birth details from loading failures.
