@@ -10,8 +10,7 @@ import { signCover } from '@/content/signCovers';
 import { computeChart } from '@/lib/astro';
 
 /**
- * The Official AstroBook section. Each founder sees only their own Masterbook and AstroComic; the admin sees every
- * edition. The list comes from my_official_editions() on the server, and every linked page checks access again.
+ * The server returns owned or explicitly shared editions only; admin status alone never grants access.
  */
 export default function OfficialAstroBook() {
   usePageMeta('Official AstroBook · Zodaci', 'Your official AstroBook edition: Masterbook, AstroComic and companion books.');
@@ -25,7 +24,7 @@ export default function OfficialAstroBook() {
           <h1 className="text-4xl sm:text-5xl">{viewingAll ? 'The Official AstroBooks' : 'Your Official AstroBook'}</h1>
           <p className="mt-3 max-w-2xl text-muted-foreground">
             {viewingAll
-              ? 'Every founding edition, as the admin sees them. Each owner sees only their own Masterbook and AstroComic.'
+              ? 'Your owned and explicitly shared founding editions. Each book opens only with its owner’s permission.'
               : 'Your Masterbook and your own AstroComic, read in full here and printable as an AstroBook. Only you, and the people you share it with, can open it.'}
           </p>
         </div>

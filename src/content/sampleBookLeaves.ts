@@ -5,7 +5,6 @@ import { SAMPLE_ISSUE } from '@/content/sampleComic';
 import { birthLineOf, comicInterior, toLeaves, type BookFace } from '@/lib/bookLeaves';
 import { bookPreview } from '@/lib/personalPreview';
 import { castFull, comicPreviewArt } from '@/content/castArt';
-import { buildComicIssue } from '@/lib/comic';
 import { personalCoverArtwork } from '@/content/personalCoverArtwork';
 import { buildComicPreview, previewName } from '@/lib/comicNarrative';
 import type { ComicIssue } from '@/lib/comic';
@@ -68,7 +67,9 @@ export function sampleComicLeaves(): BookLeaf[] {
   const art = comicPreviewArt(issue);
   // Public example keeps its own fictional reader and garden artwork, never a private chart or private birth line.
   art['1-0'] = SAMPLE_ISSUE.cover;
-  issue.pages.slice(1).forEach((p, at) => p.panels.forEach((_, i) => { art[`${p.n}-${i}`] = SAMPLE_ISSUE.pages[at % SAMPLE_ISSUE.pages.length].art; }));
+  issue.pages.slice(1).forEach((p, at) => p.panels.forEach((panel, i) => {
+    if (!panel.artSlot?.startsWith('cast:')) art[`${p.n}-${i}`] = SAMPLE_ISSUE.pages[at % SAMPLE_ISSUE.pages.length].art;
+  }));
   issue.pages[0] = { ...issue.pages[0], title: SAMPLE_ISSUE.title, panels: [{ ...issue.pages[0].panels[0], caption: 'Rosalind Vance · Fictional sample' }] };
   return comicIssueLeaves(issue, art);
 }

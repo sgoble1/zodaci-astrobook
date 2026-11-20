@@ -9,7 +9,6 @@ import { PLAN_NAME, REFUND_WINDOW_DAYS } from '@/lib/plans';
 import { VersionCompare } from '@/components/books/VersionCompare';
 import { CosmicTeaser } from '@/components/books/CosmicTeaser';
 import { MemberBookTeaser } from '@/components/books/MemberBookTeaser';
-import { ProductArtworkGallery } from '@/components/books/ProductArtworkGallery';
 import { PersonalizationStory } from '@/components/books/PersonalizationStory';
 import { WhyZodaciLine } from '@/components/brand/WhyZodaci';
 import { BOOK_PRODUCT_SAMPLES } from '@/content/productArtwork';
@@ -39,7 +38,7 @@ export function AstroBookPublic() {
   const order = (id = 'classic') => `/auth?next=${encodeURIComponent(`/books?version=${id}`)}`;
   return (
     <article className="space-y-20">
-      <section className="product-page-opening obs-panel">
+      <section className="obs-panel space-y-8 p-5 sm:p-8">
         <div className="space-y-5">
           <p className="text-xs font-medium tracking-[0.12em] text-accent">YOUR CHART, IN PRINT</p>
           <h1 className="hero-headline">AstroBook</h1>
@@ -48,7 +47,6 @@ export function AstroBookPublic() {
           <p className="text-sm text-muted-foreground">{BOOK_VERSIONS.filter(v => v.id === 'digital' || v.id === 'pocket' || v.id === 'linen').map(v => `${v.name} ${money(v.price)}`).join(' · ')} · free US shipping on printed versions</p>
           <div className="flex flex-wrap items-center gap-4"><Button asChild size="lg" variant="primary"><Link to={order()}>Order your AstroBook</Link></Button><Link to="/book-preview" className="text-accent">Read a sample book →</Link><Link to="/demo" className="text-accent">Try the interactive demo →</Link></div>
         </div>
-        <ProductArtworkGallery />
       </section>
       <section id="full-edition" aria-labelledby="fe-h" className="scroll-mt-24 space-y-8">
         <div className="max-w-3xl space-y-4"><h2 id="fe-h" className="font-display text-3xl sm:text-4xl">One book. Open it here.</h2><p className="text-muted-foreground leading-relaxed">The 28-page opening follows the same chart-specific writing approach as our private founder editions. It spans six volumes, with a calculation record, engraved plate, reflections and a Reader’s Compass. Cover, title and dedication are separate from the numbered pages. Your complete manuscript is reviewed before payment.</p><p className="text-sm text-muted-foreground">The public book belongs to {SAMPLE_EDITION.owner}, a fictional reader with a calculated chart. Founder books and their birth details stay account-only.</p></div>

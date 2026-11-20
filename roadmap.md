@@ -702,7 +702,15 @@ Full ordered list: docs/master-implementation-resource.md Part 30.
 Verification: 156 suites / 1,281 tests pass; preview build OK. Desktop/393px checks cover public product pages, About, authenticated book/customizer and Shane comic, Learn, Relationships, pricing, investors and waitlist. Waitlist delivery was preserved but a new confirmation email delivery was not tested. Existing Academy progress remains in Part 30, outside this presentation pass.
 
 ## Nov 20 — Unified Retrograde Guide
-- [ ] Consolidate navigation and member rendering at /retrogrades; preserve /retrogood as a redirect.
-- [ ] Add ephemeris-derived recent debrief, active stations and 12-month calendar with shadows, houses and double-Rx.
-- [ ] Retain natal dignity, patterns, tone, affirmations and transit tools without gamified labels.
-- [ ] Verify calculations, access, navigation and desktop/mobile member flow; run all tests.
+- [x] Consolidate navigation and member rendering at /retrogrades; preserve /retrogood as a redirect.
+- [x] Add ephemeris-derived recent debrief, active stations and 12-month calendar with shadows, houses and double-Rx.
+- [x] Retain natal dignity, patterns, tone, affirmations and transit tools without gamified labels.
+- [x] Verify calculations and navigation regressions; all 156 suites / 1,294 tests pass. Signed-in guide browser walkthrough remains unverified.
+
+## Nov 20 — Shared book and comic storytelling
+- [x] Keep one main AstroBook reader, personalized for signed-in readers and fictional for public visitors; preserve authorized founder chart inputs.
+- [x] Strengthen About’s side-by-side examples with measured compound placements and practical, human interpretations.
+- [x] Integrate a chart-relevant external-influence cast member into every generated comic issue and preview; keep astrology dates and terminology out of protagonist dialogue.
+- [x] Verify shared comic presentation and storyline regressions: 1,294 tests pass; personal book page turns, comic pages 18–19 cast beat and PDF download verified; desktop/mobile checks show no sideways overflow or browser errors.
+
+Verification limits: the current signed-in account exposes no official Shane comic reader, so its authorized founder walkthrough and a populated paid archive were not exercised. Public samples remain fictional; no edition access rules were changed. Preview build OK.

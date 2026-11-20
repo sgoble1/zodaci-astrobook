@@ -83,7 +83,8 @@ export function nextIssueMonth(sub: { plan: ComicPlan; status: string; created_a
 
 export type ComicPanel = { shape: 'wide' | 'square' | 'oval' | 'bleed' | 'tall'; scene: string; caption?: string; balloons?: { who: string; text: string }[]; artSlot?: string };
 export type ComicPage = { n: number; section: string; title: string; panels: ComicPanel[]; body?: string[] };
-export type ComicIssue = { guide?: ComicGuide; title: string; month: string; monthLabel: string; issueNumber: number; reader: string; signs: { sun: string; moon: string | null; rising: string | null }; mainEvent: string; pages: ComicPage[]; /** Which planet characters carry the story (CAST keys), so artwork can show the right ones. */ cast?: { lead: string; natal: string | null; retro: string | null } };
+export type ComicInfluence = { key: string; natalKey: string; aspect: string | null; date: string | null; retro: boolean; measured: string; scene: string; action: string; response: string };
+export type ComicIssue = { influence?: ComicInfluence; guide?: ComicGuide; title: string; month: string; monthLabel: string; issueNumber: number; reader: string; signs: { sun: string; moon: string | null; rising: string | null }; mainEvent: string; pages: ComicPage[]; /** Which planet characters carry the story (CAST keys), so artwork can show the right ones. */ cast?: { lead: string; natal: string | null; retro: string | null } };
 
 const THEME: Record<string, string> = { sun: 'who you are becoming', moon: 'what you need to feel safe', mercury: 'how you think and talk', venus: 'what and whom you love', mars: 'what you go after', jupiter: 'where you grow', saturn: 'what you are building', uranus: 'where you want freedom', neptune: 'what you dream', pluto: 'what you are ready to change', asc: 'how you meet the world', mc: 'your public path' };
 const HOUSE_FOCUS: [string, string][] = [
@@ -146,9 +147,9 @@ const story = (ev: TransitEvent | undefined, natal: ChartResult): { headline: st
     const sun = natal.bodies.find(b => b.key === 'sun')!;
     return { headline: `Sovereign walks the ${sun.sign} road`, transitKey: 'sun', natalKey: 'sun', aspect: 'Conjunction' };
   }
-  const tKey = CAST.find(c => ev.title.startsWith(c.planet))?.key ?? 'sun';
+  const tKey = ev.planet ?? CAST.find(c => ev.title.startsWith(c.planet))?.key ?? 'sun';
   const target = /natal (\w+)/.exec(ev.title)?.[1]?.toLowerCase() ?? 'sun';
-  const nKey = target === 'ascendant' ? 'asc' : target === 'midheaven' ? 'mc' : target;
+  const nKey = ev.natalKey ?? (target === 'ascendant' ? 'asc' : target === 'midheaven' ? 'mc' : target);
   const aspect = ev.title.includes('☍') ? 'Opposition' : ev.title.includes('□') ? 'Square' : ev.title.includes('△') ? 'Trine' : ev.title.includes('⚹') ? 'Sextile' : 'Conjunction';
   return { headline: ev.title.replace(/ [☌☍△□⚹] natal /, ' meets your '), transitKey: tKey, natalKey: nKey, aspect };
 };
@@ -178,6 +179,10 @@ export function buildComicIssue(natal: ChartResult, opts: { reader: string; mont
   const exact = events.filter(e => e.kind === 'exact').sort((a, b) => b.weight - a.weight);
   const main = story(exact[0], natal);
   const tc = castOf(main.transitKey) ?? CAST[0];
+  const contact = exact[0];
+  const action = !contact ? 'sets a fresh route marker beside the unfinished drawing' : contact.retro ? 'brings back an earlier message strip and marks the line everybody passed over' : main.aspect === 'Square' ? 'changes the relay setting, leaving two useful routes unable to connect' : main.aspect === 'Opposition' ? 'opens the far-bank receiver, revealing a message the near bank cannot hear' : main.aspect === 'Conjunction' ? 'places a second message on the same channel, asking the team to make room for both' : 'opens a spare relay channel that will help only if someone connects it';
+  const response = !contact ? 'One clear message first. We can build from there.' : contact.retro ? 'That line changes what we meant. Let’s read it again before we send anything.' : main.aspect === 'Square' ? 'I’m not throwing either plan away. We need a different joint.' : main.aspect === 'Opposition' ? 'Let me hear the other receiver before we decide what the message says.' : main.aspect === 'Conjunction' ? 'They both matter. Let’s work out how to carry them together.' : 'There’s a way through. I’ll connect it and see whether it holds.';
+  const influence: ComicInfluence = { key: tc.key, natalKey: main.natalKey, aspect: contact ? main.aspect : null, date: contact?.date.toISOString() ?? null, retro: Boolean(contact?.retro), measured: contact ? `${contact.title} · ${contact.date.toISOString()} · ${contact.detail}` : 'No exact major contact selected; Sun-led opening motif, not an invented transit.', scene: `${tc.name}, at the relay controls behind the workbench, ${action}.`, action, response };
   const nc = castOf(main.natalKey);
   const natalName = nc ? `your ${nc.name}` : main.natalKey === 'asc' ? 'the guardian of your Rising sign' : 'the keeper of your Midheaven';
   const [setup, turn] = ASPECT_STORY[main.aspect];
@@ -206,7 +211,7 @@ export function buildComicIssue(natal: ChartResult, opts: { reader: string; mont
   const arc: ComicPanel[][] = [
     [{ shape: 'bleed', scene: `${tc.name} sets out across a night city, ${tc.companion} at heel. ${tc.look}.`, caption: `${main.headline}.` }, { shape: 'square', scene: `${natalName} waits at a lit window.`, caption: setup }],
     [{ shape: 'wide', scene: `The two characters meet. ${main.aspect === 'Square' || main.aspect === 'Opposition' ? 'Tension in the frame: a diagonal split panel.' : 'A shared spotlight: one round panel.'}`, balloons: [{ who: tc.name, text: `I came about ${THEME[main.transitKey] ?? 'something important'}.` }, { who: nc?.name ?? 'Guardian', text: `Then you came to the right place — this is about ${THEME[main.natalKey] ?? 'what matters to you'}.` }] }],
-    [{ shape: 'tall', scene: `A memory panel in ink-wash: ${first} at a small crossroads from earlier this year — no specifics, just the feeling.`, caption: turn }, { shape: 'square', scene: `${tc.companion} nudges ${first} forward.` }],
+    [{ shape: 'tall', scene: influence.scene, caption: 'At the controls behind the workbench, a small adjustment changes the problem in front of them.', artSlot: `cast:${tc.key}` }, { shape: 'square', scene: `${first} tests the revised connection rather than assuming it will work.`, balloons: [{ who: first, text: response }] }],
     [{ shape: 'bleed', scene: `Dawn. ${tc.name} and ${natalName} walk the same road, the ${element} element glowing in the sky.`, caption: exact[0] ? `Watch for it around ${fmtDay(exact[0].date)} — and the days just before.` : 'Watch for it at mid-month.' }],
   ];
   arc.forEach((panels, i) => add({ section: 'Main Story', title: i === 0 ? main.headline : `${main.headline} (${i + 1})`, panels }));
@@ -244,7 +249,7 @@ export function buildComicIssue(natal: ChartResult, opts: { reader: string; mont
   add({ section: 'About Zodaci', title: 'Your chart, any time', panels: [{ shape: 'square', scene: 'QR code to zodaci.com/my-chart beside the Zodaci logo.' }], body: ['Scan to open your full calculated chart, readings and the Results page.', 'AstroComic is a creative reflection on your chart and this month’s sky — not prediction or advice.'] });
   add({ section: 'Back Cover', title: `Issue ${issueNumber} · ${label}`, panels: [{ shape: 'bleed', scene: 'The full cast in silhouette along a horizon of moon phases.' }], body: ['AstroComic by Zodaci'] });
 
-  return { title: `${first}’s Sky · ${label}`, month: monthKey(month), monthLabel: label, issueNumber, reader: first, signs, mainEvent: main.headline, pages, cast: { lead: tc.key, natal: nc?.key ?? null, retro: rx[0]?.key ?? null }, ...(guide ? { guide } : {}) };
+  return { influence, title: `${first}’s Sky · ${label}`, month: monthKey(month), monthLabel: label, issueNumber, reader: first, signs, mainEvent: main.headline, pages, cast: { lead: tc.key, natal: nc?.key ?? null, retro: rx[0]?.key ?? null }, ...(guide ? { guide } : {}) };
 }
 
 function ordinal(n: number) { return n === 1 ? '1st' : n === 2 ? '2nd' : n === 3 ? '3rd' : `${n}th`; }

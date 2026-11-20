@@ -1,11 +1,11 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { GIFT_MESSAGE_MAX, readDedicationDraft, saveDedicationDraft } from '@/lib/bookGift';
 import { Textarea } from '@/components/ui/textarea';
-import { supabase } from '@/integrations/supabase/client';
+import { useSession } from '@/hooks/useLibrary';
 import { computeChart } from '@/lib/astro';
 import { useMyBirth, toChartInput } from '@/lib/myBirth';
 import { OpenAstroBook } from '@/components/books/OpenAstroBook';
@@ -16,8 +16,8 @@ const PRINTED = BOOK_VERSIONS.filter(v => v.format === 'print');
 
 /** A 28-page calculated preview from the signed-in member's saved chart. No AI. */
 export function MemberBookTeaser({ fallback }: { fallback: React.ReactNode }) {
-  const [signedIn, setSignedIn] = useState<boolean | null>(null);
-  useEffect(() => { supabase.auth.getSession().then(({ data }) => setSignedIn(!!data.session)); }, []);
+  const session = useSession();
+  const signedIn = Boolean(session);
   const birth = useMyBirth();
   const [note, setNote] = useState(readDedicationDraft);
   const [ed, setEd] = useState<Edition>('classic');
@@ -25,7 +25,7 @@ export function MemberBookTeaser({ fallback }: { fallback: React.ReactNode }) {
     if (!birth) return false;
     try { computeChart(toChartInput(birth)); return true; } catch { return false; }
   }, [birth]);
-  if (signedIn === null || (signedIn && birth === undefined)) return <Skeleton className="h-64 w-full" />;
+  if (signedIn && birth === undefined) return <Skeleton className="h-64 w-full" />;
   if (!signedIn) return <>{fallback}</>;
   if (!birth || !ok) return <div className="space-y-3"><p className="text-muted-foreground">Add your birth details to open the 28-page preview of your own AstroBook here.</p><Button asChild><Link to="/start?next=/astrobook%23teaser">Add my birth details<ArrowRight /></Link></Button></div>;
   return <div className="space-y-8"><div className="space-y-3"><h2 className="font-display text-3xl">Your AstroBook, open to read.</h2><p className="max-w-2xl text-muted-foreground">28 numbered pages from your saved chart. Choose a format and try a dedication; both update this book.</p></div>

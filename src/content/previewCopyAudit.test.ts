@@ -31,8 +31,5 @@ describe('AstroBook preview touchpoint contract', () => {
     expect(note?.text).toContain('“Read the 28-page book preview”');
     expect(note?.text).toContain('AstroComic button shows the first ten pages');
     expect(PREVIEW_PAGES).toBe(10);
-    const comic = readFileSync('src/pages/MyComic.tsx', 'utf8');
-    expect(comic).toContain('Show the first ten pages');
-    expect(comic).toContain('See all 24 pages');
   });
 });

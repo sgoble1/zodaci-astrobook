@@ -10,17 +10,17 @@ import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { AuthGate } from '@/components/common/AuthGate';
 import { LoadError } from '@/components/common/LoadError';
-import { ComicPageView } from '@/components/comic/ComicPageView';
+import { ComicDigest } from '@/components/comic/ComicDigest';
 import { getStripeEnvironment } from '@/lib/stripe';
 import { useMyBirth, toChartInput } from '@/lib/myBirth';
 import { computeChart } from '@/lib/astro';
-import { buildComicIssue, COMIC_PLANS, monthKey, monthLabel, nextIssueMonth, shipBy, type ComicIssue, type ComicPlan } from '@/lib/comic';
+import { COMIC_PLANS, monthKey, monthLabel, nextIssueMonth, shipBy, type ComicIssue, type ComicPlan } from '@/lib/comic';
+import { buildComicPreview } from '@/lib/comicNarrative';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import type { Database } from '@/integrations/supabase/types';
 import { StartLink } from '@/components/common/StartLink';
 import { isFinalPurchaseSync, purchaseSyncMessage, syncPurchase, type PurchaseSync } from '@/lib/purchaseSync';
-import { comicPreviewArt } from '@/content/castArt';
-import { PREVIEW_PAGES } from '@/lib/personalPreview';
+import { comicIssueLeaves } from '@/content/sampleBookLeaves';
 import { PersonalPreviewDrawer } from '@/components/books/PersonalPreviewDrawer';
 
 type Sub = Database['public']['Tables']['comic_subscriptions']['Row'];
@@ -195,7 +195,7 @@ function Archive({ issues }: { issues: Issue[] }) {
             {a === 'loading' && <p role="status" className="flex items-center gap-2 text-sm text-muted-foreground"><Loader2 className="h-4 w-4 animate-spin" />Opening your issue…</p>}
             {a === 'failed' && <p role="alert" className="text-sm text-destructive">The illustrated pages could not be opened. <button type="button" className="underline" onClick={() => void fetchArt(i)}>Try again</button></p>}
             {ready && !illustrated && <p className="text-sm text-muted-foreground">The artwork for this issue is still being drawn — here is its page plan.</p>}
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">{script.pages.map(p => <ComicPageView key={p.n} page={p} compact art={ready?.panels} />)}</div>
+            <ComicDigest leaves={comicIssueLeaves(script, ready?.panels ?? {})} reader={script.reader} layout="side" />
           </div>}
         </li>
       ); })}</ul>
@@ -204,19 +204,16 @@ function Archive({ issues }: { issues: Issue[] }) {
 }
 
 function NextPreview({ birthName, chartInput, month, issueNumber }: { birthName: string; chartInput: ReturnType<typeof toChartInput>; month: Date | null; issueNumber: number }) {
-  const [all, setAll] = useState(false);
   const target = month ?? (() => { const n = new Date(); return new Date(Date.UTC(n.getUTCFullYear(), n.getUTCMonth() + 1, 1)); })();
   const guide = useMyCharacter();
   const [dreamDates, setDreamDates] = useState<string[]>([]);
   // Only dates of dreams the member marked "use in comic"; RLS keeps this to their own rows.
   useEffect(() => { let on = true; supabase.from('dream_entries').select('dream_date').eq('use_in_comic', true).order('dream_date', { ascending: false }).limit(5).then(({ data }) => { if (on) setDreamDates((data ?? []).map(d => d.dream_date)); }); return () => { on = false; }; }, []);
-  const issue = useMemo(() => buildComicIssue(computeChart(chartInput), { reader: birthName || 'Reader', month: target, issueNumber: issueNumber, guide, dreamDates }), [chartInput.date, chartInput.time, chartInput.lat, chartInput.lon, target.getTime(), guide?.name, issueNumber, dreamDates.join()]); // eslint-disable-line react-hooks/exhaustive-deps
-  // Shared sky/letter scenes and the planet characters each panel names; every position beside them is calculated.
-  const art = useMemo(() => comicPreviewArt(issue, 24), [issue]);
+  const issue = useMemo(() => buildComicPreview(computeChart(chartInput), { reader: birthName || 'Reader', month: target, issueNumber: issueNumber, guide, dreamDates }), [chartInput.date, chartInput.time, chartInput.lat, chartInput.lon, chartInput.tz, chartInput.houseSystem, birthName, target.getTime(), guide?.name, issueNumber, dreamDates.join()]); // eslint-disable-line react-hooks/exhaustive-deps
   return (
     <section aria-labelledby="next-h" className="space-y-4">
-      <div className="flex flex-wrap items-end justify-between gap-3"><div><h2 id="next-h" className="font-display text-2xl">Preview: {issue.monthLabel}</h2><p className="mt-1 text-sm text-muted-foreground">Planned from your chart and that month’s sky: {issue.mainEvent}.</p><p className="mt-1 text-sm text-muted-foreground">{guide ? <>Your stand-in this issue: <span className="text-foreground">{guide.name}</span>. </> : <>No stand-in chosen yet. </>}<Link to="/characters" className="text-primary underline underline-offset-4">{guide ? 'Change character' : 'Choose your character'}</Link></p></div><div className="flex flex-wrap gap-2"><PersonalPreviewDrawer name={birthName} input={chartInput} firstIssue={issueNumber} defaultTab="comic" trigger={<Button variant="outline" size="sm">Next three issues</Button>} /><Button variant="outline" size="sm" onClick={() => setAll(a => !a)}>{all ? 'Show the first ten pages' : 'See all 24 pages'}</Button></div></div>
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">{(all ? issue.pages : issue.pages.filter(p => p.n <= PREVIEW_PAGES)).map(p => <ComicPageView key={p.n} page={p} compact art={art} />)}</div>
+      <div className="flex flex-wrap items-end justify-between gap-3"><div><h2 id="next-h" className="font-display text-2xl">Preview: {issue.monthLabel}</h2><p className="mt-1 text-sm text-muted-foreground">A complete fictional story from your chart and that month’s calculated sky. Its measurement ledger follows the action.</p><p className="mt-1 text-sm text-muted-foreground">{guide ? <>Your stand-in this issue: <span className="text-foreground">{guide.name}</span>. </> : <>No stand-in chosen yet. </>}<Link to="/characters" className="text-primary underline underline-offset-4">{guide ? 'Change character' : 'Choose your character'}</Link></p></div><PersonalPreviewDrawer name={birthName} input={chartInput} firstIssue={issueNumber} defaultTab="comic" trigger={<Button variant="outline" size="sm">Next three issues</Button>} /></div>
+      <ComicDigest issue={issue} layout="side" />
     </section>
   );
 }

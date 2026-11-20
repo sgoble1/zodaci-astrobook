@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { computeChart } from '@/lib/astro';
 import { buildComicPreview, previewName } from '@/lib/comicNarrative';
+import { buildComicIssue, CAST } from '@/lib/comic';
+import { upcomingEvents } from '@/lib/transitOverlay';
 import { comicIssueLeaves, sampleComicLeaves } from '@/content/sampleBookLeaves';
 import { faceText } from '@/lib/bookLeaves';
 import { comicPreviewArt } from '@/content/castArt';
@@ -69,5 +71,35 @@ describe('complete chart-driven comic preview', () => {
     const faces = sampleComicLeaves().flatMap(l => [l.front, l.back]);
     expect(faces).toHaveLength(24);
     expect(JSON.stringify(faces)).not.toMatch(/Shane|Julian Mercer|Williamsville|1993-03-25/);
+  });
+  it.each([9, 10, 11])('embeds a measured background influence in issue month %i for both composers', monthIndex => {
+    const month = new Date(Date.UTC(2026, monthIndex, 1));
+    const opts = { ...options, month };
+    const generated = buildComicIssue(chart, opts);
+    const preview = buildComicPreview(chart, opts);
+    const expected = upcomingEvents(chart, month, new Date(Date.UTC(2026, monthIndex + 1, 0)).getUTCDate()).filter(e => e.kind === 'exact' && e.date.getUTCMonth() === monthIndex).sort((a, b) => b.weight - a.weight)[0];
+    expect(expected).toBeDefined();
+    expect(preview.influence?.date).toBe(expected.date.toISOString());
+    expect(preview.influence).toEqual(generated.influence);
+    expect(preview.influence?.key).toBe(expected.planet);
+    const operator = CAST.find(c => c.key === preview.influence?.key);
+    expect(operator).toBeDefined();
+    expect(generated.pages[5].panels[0].scene).toContain(operator?.name);
+    const beat = preview.pages[18];
+    expect(beat.panels[0].artSlot).toBe(`cast:${operator?.key}`);
+    expect(beat.panels[1].balloons?.[0]).toEqual({ who: 'Julian Mercer', text: preview.influence?.response });
+    expect(preview.factors.find(f => f.kind === 'transit')).toMatchObject({ page: 19, key: expected.planet });
+  });
+  it('keeps dates and astrology exposition out of protagonist dialogue in every preview', () => {
+    const balloons = issue.pages.flatMap(p => p.panels).flatMap(p => p.balloons ?? []).filter(b => b.who === issue.reader);
+    expect(balloons.length).toBeGreaterThan(5);
+    for (const b of balloons) expect(b.text).not.toMatch(/retrograde|\btransit\b|\bhouse\b|\bascendant\b|\b(?:January|February|March|April|May|June|July|August|September|October|November|December)\b|\d{4}-\d{2}/i);
+  });
+  it('retains relevant cast artwork in the public sample as well as founder leaves', () => {
+    const faces = sampleComicLeaves().flatMap(l => [l.front, l.back]);
+    const beat = faces[18];
+    if (beat.kind !== 'comic-page') throw new Error('Missing story beat');
+    expect(beat.sheet.panels[0].artSlot).toMatch(/^cast:/);
+    expect(beat.art?.['19-0']).toBeTruthy();
   });
 });
