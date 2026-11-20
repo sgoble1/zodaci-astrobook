@@ -37,5 +37,6 @@
 - SampleBook maxPages limits numbered interior faces before composition; its PDF reader navigates all resulting sheets, including cover/end matter, so a 25-page request cannot silently truncate the final numbered pages.
 - bookPlate composes coordinate-exact chart-relative SVG engravings for all rulers/signs/elements; date-only plates omit lunar positions and contacts. Artwork resolution uses the calculated Sun element on ties and never includes private biographies; PDF rasterizes these same engravings only for print.
 - Preview cycle dates use chart-keyed WeakMap caching, avoiding repeated lifetime searches on tone/name edits without retaining an account globally; dated stations reuse skyEvents daily windows.
+- Preview readers schedule chart/page preparation after a paint via usePreparedPreview; identity-fenced results and cancellation prevent stale pages, and birth fetch failures expose retry separately from genuinely missing data.
 
 - Retrograde Guide uses lib/retrogrades daily UTC ephemeris windows for recent/active/upcoming cycles and same-planet double-Rx matches; /retrogood redirects to /retrogrades, which is a member page with section-level paid gates. Shared editions use only authorized birth facts; interpretations never claim observed biography or rank a reader by dignity.

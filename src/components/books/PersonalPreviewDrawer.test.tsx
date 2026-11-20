@@ -20,6 +20,7 @@ vi.mock('@/components/ui/tabs', () => {
   const Frame = ({ children }: { children: ReactNode }) => <div>{children}</div>;
   return { Tabs: Frame, TabsContent: Frame, TabsList: Frame, TabsTrigger: Frame };
 });
+vi.mock('@/hooks/usePreparedPreview', () => ({ usePreparedPreview: (build: () => unknown) => ({ status: 'ready', value: build(), retry: () => {} }) }));
 vi.mock('./OpenBook', () => ({ OpenBook: (props: ComponentProps<typeof OpenBook>) => { captured.books.push(props); return <div>{props.label}</div>; } }));
 beforeEach(() => { captured.books.length = 0; });
 

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import type { ChartInput, ChartResult, HouseSystem } from '@/lib/astro';
 import { birthFingerprint } from '@/lib/birthFingerprint';
@@ -37,22 +37,28 @@ export async function saveMyBirth(b: MyBirth, chart: unknown) {
   return { saved: error ? ('device' as const) : ('account' as const), error, readingsKept: unchanged };
 }
 
-export function useMyBirth() {
+export function useMyBirthState() {
   const [birth, setBirth] = useState<MyBirth | null | undefined>(undefined);
+  const [error, setError] = useState(false);
+  const [attempt, setAttempt] = useState(0);
+  const retry = useCallback(() => { setBirth(undefined); setError(false); setAttempt(n => n + 1); }, []);
   useEffect(() => {
     let active = true; let revision = 0;
     const load = async () => {
       const version = ++revision;
-      const { data: u } = await supabase.auth.getUser();
+      const { data: u, error: authError } = await supabase.auth.getUser();
       if (!active || version !== revision) return;
+      if (authError && authError.name !== 'AuthSessionMissingError') throw authError;
       if (u.user) {
         // Viewing someone else's shared edition: show their chart (the database only returns editions this account may open).
         const viewing = viewingSharedEdition();
         if (viewing) {
           const { data: allowed, error: denied } = await supabase.rpc('can_open_edition', { _edition: viewing });
           if (!active || version !== revision) return;
-          if (denied || allowed !== true) { setBirth(null); return; }
-          const { data: eds } = await supabase.rpc('my_official_editions');
+          if (denied) throw denied;
+          if (allowed !== true) { setBirth(null); return; }
+          const { data: eds, error: editionError } = await supabase.rpc('my_official_editions');
+          if (editionError) throw editionError;
           const b = (eds ?? []).find((e: { edition: string }) => e.edition === viewing)?.birth as Record<string, unknown> | undefined;
           if (!active || version !== revision) return;
           if (b?.date && Number.isFinite(b.lat) && Number.isFinite(b.lon)) return setBirth({ name: EDITION_OWNER_NAME[viewing], date: String(b.date), time: (b.time as string) ?? null, placeLabel: String(b.place_label ?? ''), lat: Number(b.lat), lon: Number(b.lon), tz: String(b.tz), houseSystem: ((b.house_system as HouseSystem) ?? 'placidus'), sex: null });
@@ -60,10 +66,12 @@ export function useMyBirth() {
           return;
         }
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const { data } = await (supabase as any).from('profiles').select('*').eq('id', u.user.id).maybeSingle();
+        const { data, error: profileError } = await (supabase as any).from('profiles').select('*').eq('id', u.user.id).maybeSingle();
+        if (profileError) throw profileError;
         if (data?.birth_date && active && version === revision) return setBirth({ name: data.display_name, date: data.birth_date, time: data.birth_time, placeLabel: data.place_label, lat: data.lat, lon: data.lon, tz: data.tz, houseSystem: data.house_system, sex: data.sex || null });
         // Founders keep their chart in their own official edition; use it only for editions this account owns.
-        const { data: own } = await supabase.rpc('my_official_editions');
+        const { data: own, error: ownError } = await supabase.rpc('my_official_editions');
+        if (ownError) throw ownError;
         if (!active || version !== revision) return;
         const mine = (own ?? []).find((e: { is_own: boolean }) => e.is_own) as { edition: string; birth: Record<string, unknown> } | undefined;
         const ob = mine?.birth;
@@ -74,12 +82,18 @@ export function useMyBirth() {
       const raw = localStorage.getItem(LOCAL);
       try { if (active) setBirth(raw ? JSON.parse(raw) : null); } catch { if (active && version === revision) setBirth(null); }
     };
-    const safelyLoad = () => { void load().catch(() => { if (active) setBirth(null); }); };
+    const safelyLoad = () => {
+      const pending = load(); const version = revision;
+      void pending.then(() => { if (active && version === revision) setError(false); }).catch(() => { if (active && version === revision) { setBirth(null); setError(true); } });
+    };
     safelyLoad();
     const refresh = safelyLoad;
     window.addEventListener('astrobook-birth-saved', refresh);
-    const stop = onAccountChange(() => { revision++; if (active) setBirth(undefined); setTimeout(refresh, 0); });
+    const stop = onAccountChange(() => { revision++; if (active) { setBirth(undefined); setError(false); } setTimeout(refresh, 0); });
     return () => { active = false; window.removeEventListener('astrobook-birth-saved', refresh); stop(); };
-  }, []);
-  return birth;
+  }, [attempt]);
+  return { birth, error, retry };
 }
+
+/** Backwards-compatible birth-only view; readers opt into explicit fetch/retry feedback. */
+export function useMyBirth() { return useMyBirthState().birth; }

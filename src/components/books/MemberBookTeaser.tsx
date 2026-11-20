@@ -1,13 +1,12 @@
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Skeleton } from '@/components/ui/skeleton';
+import { PreviewFeedback } from '@/components/books/PreviewFeedback';
 import { GIFT_MESSAGE_MAX, readDedicationDraft, saveDedicationDraft } from '@/lib/bookGift';
 import { Textarea } from '@/components/ui/textarea';
 import { useSession } from '@/hooks/useLibrary';
-import { computeChart } from '@/lib/astro';
-import { useMyBirth, toChartInput } from '@/lib/myBirth';
+import { useMyBirthState } from '@/lib/myBirth';
 import { OpenAstroBook } from '@/components/books/OpenAstroBook';
 import { BOOK_VERSIONS, type Edition } from '@/lib/books';
 
@@ -18,16 +17,13 @@ const PRINTED = BOOK_VERSIONS.filter(v => v.format === 'print');
 export function MemberBookTeaser({ fallback }: { fallback: React.ReactNode }) {
   const session = useSession();
   const signedIn = Boolean(session);
-  const birth = useMyBirth();
+  const { birth, error, retry } = useMyBirthState();
   const [note, setNote] = useState(readDedicationDraft);
   const [ed, setEd] = useState<Edition>('classic');
-  const ok = useMemo(() => {
-    if (!birth) return false;
-    try { computeChart(toChartInput(birth)); return true; } catch { return false; }
-  }, [birth]);
-  if (signedIn && birth === undefined) return <Skeleton className="h-64 w-full" />;
+  if (error) return <PreviewFeedback error onRetry={retry} />;
+  if (birth === undefined) return <PreviewFeedback loadingMessage="Loading your saved birth details…" />;
   if (!signedIn) return <>{fallback}</>;
-  if (!birth || !ok) return <div className="space-y-3"><p className="text-muted-foreground">Add your birth details to open the 28-page preview of your own AstroBook here.</p><Button asChild><Link to="/start?next=/astrobook%23teaser">Add my birth details<ArrowRight /></Link></Button></div>;
+  if (!birth) return <div className="space-y-3"><p className="text-muted-foreground">Add your birth details to open the 28-page preview of your own AstroBook here.</p><Button asChild><Link to="/start?next=/astrobook%23teaser">Add my birth details<ArrowRight /></Link></Button></div>;
   return <div className="space-y-8"><div className="space-y-3"><h2 className="font-display text-3xl">Your AstroBook, open to read.</h2><p className="max-w-2xl text-muted-foreground">28 numbered pages from your saved chart. Choose a format and try a dedication; both update this book.</p></div>
     <div role="radiogroup" aria-label="Book size" className="flex flex-wrap gap-2">{PRINTED.map(x => <Button key={x.id} variant={x.id === ed ? 'default' : 'outline'} size="sm" type="button" role="radio" aria-checked={x.id === ed} onClick={() => setEd(x.id)}>{x.name}</Button>)}</div>
     <OpenAstroBook next="/astrobook#teaser" startMine previewBirth={birth} edition={ed} dedication={note.trim() || undefined} layout="side" />

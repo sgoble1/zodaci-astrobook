@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { BookOpen } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
@@ -12,6 +12,8 @@ import { buildComicPreview, previewName } from '@/lib/comicNarrative';
 import { personalBookLeaves } from '@/content/sampleBookLeaves';
 import type { BookPreviewOptions } from '@/content/sampleBookLeaves';
 import { versionOf } from '@/lib/books';
+import { usePreparedPreview } from '@/hooks/usePreparedPreview';
+import { PreviewFeedback } from '@/components/books/PreviewFeedback';
 
 const ISSUES_AHEAD = 1;
 const firstOfMonth = (offset: number) => { const n = new Date(); return new Date(Date.UTC(n.getUTCFullYear(), n.getUTCMonth() + offset, 1)); };
@@ -40,12 +42,20 @@ export function PersonalPreviewDrawer({ name, input, possessive = 'your', firstI
 }
 
 function PreviewBody({ name, input, firstIssue, defaultTab, bookOptions }: { name: string; input: ChartInput; firstIssue: number; defaultTab: 'book' | 'comic'; bookOptions?: BookPreviewOptions }) {
-  const chart = useMemo(() => computeChart(input), [input.date, input.time, input.lat, input.lon, input.tz, input.houseSystem]); // eslint-disable-line react-hooks/exhaustive-deps
   const birthLine = birthLineOf(input.date, input.time, input.placeLabel);
-  const leaves = useMemo(() => personalBookLeaves({ name: name || 'Reader', birthLine, chart, ...bookOptions }), [chart, name, birthLine, bookOptions]);
   const [issueAt, setIssueAt] = useState(0);
   const month = firstOfMonth(1 + issueAt);
-  const issue = useMemo(() => buildComicPreview(chart, { reader: name || 'Reader', month, issueNumber: firstIssue + issueAt }), [chart, name, month.getTime(), firstIssue, issueAt]); // eslint-disable-line react-hooks/exhaustive-deps
+  const build = useCallback(() => {
+    const chart = computeChart(input);
+    return {
+      leaves: personalBookLeaves({ name: name || 'Reader', birthLine, chart, ...bookOptions }),
+      issue: buildComicPreview(chart, { reader: name || 'Reader', month, issueNumber: firstIssue + issueAt }),
+    };
+  }, [input, name, birthLine, bookOptions, month.getTime(), firstIssue, issueAt]); // eslint-disable-line react-hooks/exhaustive-deps
+  const prepared = usePreparedPreview(build);
+  if (prepared.status === 'loading') return <PreviewFeedback kind={defaultTab === 'comic' ? 'comic' : 'book'} />;
+  if (prepared.status === 'error') return <PreviewFeedback kind={defaultTab === 'comic' ? 'comic' : 'book'} error onRetry={prepared.retry} details />;
+  const { leaves, issue } = prepared.value;
   return (
     <Tabs defaultValue={defaultTab} className="mt-6">
       <TabsList className="grid w-full grid-cols-2"><TabsTrigger value="book">AstroBook</TabsTrigger><TabsTrigger value="comic">AstroComic</TabsTrigger></TabsList>

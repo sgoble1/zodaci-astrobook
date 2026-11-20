@@ -1,5 +1,10 @@
 # Zodaci roadmap
 
+## Nov 20 — Preview feedback and quieter cards
+- [x] Add visible preparation, recoverable errors and retry to personalized AstroBook, AstroComic and drawer previews; distinguish missing birth details from loading failures.
+- [x] Replace noisy paper-card backgrounds with a clean archival surface, preserving book jackets and illustration styles.
+- [x] Verify loading/failure/retry and successful reader opening, regression tests, and desktop/mobile pricing. All 157 suites / 1,298 tests pass; automatic build OK. Signed-in profile failure displays an error, retry reads the actual saved chart and opens its book; personalized comic selection and 393px book/pricing layouts verified without browser errors. Drawer delivery and cancellation covered by regression tests.
+
 ## Nov 18 — Comic presentation follow-up
 - [x] Audit current planned product-page content: book six-volume overview, 28-page reader, live cover customizer, version comparison, ordering and FAQ; comic complete digest, cast, page map, print spec, plans and FAQ are present. Physical buyer artwork/printing and supplier acceptance remain external work, not preview completion.
 - [x] Remove the disconnected woman-image section; present issue contents as a full-width two-column list around the unified digest.

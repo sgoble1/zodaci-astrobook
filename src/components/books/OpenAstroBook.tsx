@@ -1,9 +1,11 @@
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { OpenBook } from '@/components/books/OpenBook';
 import { ComicDigest } from '@/components/comic/ComicDigest';
 import { useSession } from '@/hooks/useLibrary';
-import { useMyBirth } from '@/lib/myBirth';
+import { useMyBirthState } from '@/lib/myBirth';
+import { usePreparedPreview } from '@/hooks/usePreparedPreview';
+import { PreviewFeedback } from '@/components/books/PreviewFeedback';
 import { Button } from '@/components/ui/button';
 import { memberBookLeaves, memberComicLeaves, sampleBookLeaves, sampleComicLeaves, SAMPLE_READER } from '@/content/sampleBookLeaves';
 import { previewName } from '@/lib/comicNarrative';
@@ -28,7 +30,7 @@ export interface OpenAstroBookProps {
  */
 export function OpenAstroBook({ layout = 'side', next = '/astrobook#full-edition', startMine = false, edition, coverSrc, coverChoice, coverName, dedication, tone, previewBirth }: OpenAstroBookProps) {
   const session = useSession();
-  const birth = useMyBirth();
+  const { birth, error: birthError, retry: retryBirth } = useMyBirthState();
   const [mine, setMine] = useState(startMine);
   const controlled = previewBirth !== undefined;
   const own = session ? controlled ? previewBirth : mine && birth ? birth : null : null;
@@ -36,10 +38,13 @@ export function OpenAstroBook({ layout = 'side', next = '/astrobook#full-edition
   const design = choiceKey ? coverByKey(choiceKey) : undefined;
   const generatedCover = useCoverImage(!coverSrc && design ? { source: { kind: 'design', key: design.key }, crop: DEFAULT_CROP, name: coverName ?? own?.name ?? SAMPLE_READER.name, trimPt: versionOf(edition ?? 'classic')?.trimPt ?? [432, 648] } : null);
   const options = useMemo(() => edition !== undefined || coverSrc !== undefined || coverChoice !== undefined || coverName !== undefined || dedication !== undefined || tone !== undefined ? { edition, coverSrc: coverSrc || generatedCover || undefined, coverChoice, coverName, dedication, tone } : undefined, [edition, coverSrc, generatedCover, coverChoice, coverName, dedication, tone]);
-  const sample = useMemo(() => sampleBookLeaves(options), [options]);
-  const memberLeaves = useMemo(() => { try { return own ? memberBookLeaves(own, options) : null; } catch { return null; } }, [own, options]);
-  if (own && !memberLeaves) return <div role="alert" className="space-y-3"><p>Your saved birth details could not be calculated.</p><Button asChild variant="outline"><Link to="/start">Review birth details</Link></Button></div>;
-  const leaves = memberLeaves ?? sample;
+  const build = useCallback(() => own ? memberBookLeaves(own, options) : sampleBookLeaves(options), [own, options]);
+  const waitingBirth = !controlled && mine && birth === undefined;
+  const prepared = usePreparedPreview(waitingBirth ? null : build);
+  if (!controlled && mine && birthError) return <PreviewFeedback error onRetry={retryBirth} details />;
+  if (prepared.status === 'loading') return <PreviewFeedback loadingMessage={waitingBirth ? 'Loading your saved birth details…' : own ? undefined : 'Preparing the sample AstroBook…'} />;
+  if (prepared.status === 'error') return <PreviewFeedback error onRetry={prepared.retry} details={Boolean(own)} />;
+  const leaves = prepared.value;
   const switcher = controlled ? null : session && birth ? (
     <div role="radiogroup" aria-label="Which book to open" className="mt-4 flex flex-wrap justify-center gap-2">
       {[{ on: !mine, label: `${SAMPLE_READER.name.split(' ')[0]}’s sample`, set: false }, { on: mine, label: `Built from ${birth.name ? `${birth.name.split(' ')[0]}’s` : 'my'} chart`, set: true }].map(o => (
@@ -60,13 +65,15 @@ export function OpenAstroBook({ layout = 'side', next = '/astrobook#full-edition
 /** The sample AstroComic digest for the same fictional reader, opened and turned like a printed comic. */
 export function OpenComicDigest({ layout = 'stacked', next = '/astrocomic#preview' }: { layout?: 'side' | 'stacked'; next?: string }) {
   const session = useSession();
-  const birth = useMyBirth();
+  const { birth, error: birthError, retry: retryBirth } = useMyBirthState();
   const [mine, setMine] = useState(false);
   const own = session && mine && birth ? birth : null;
-  const sample = useMemo(() => sampleComicLeaves(), []);
-  const memberLeaves = useMemo(() => { try { return own ? memberComicLeaves(own) : null; } catch { return null; } }, [own]);
-  if (own && !memberLeaves) return <div role="alert"><p>Your comic could not be calculated from the saved birth details.</p><Button asChild variant="outline"><Link to="/start">Review birth details</Link></Button></div>;
-  const leaves = memberLeaves ?? sample;
+  const build = useCallback(() => own ? memberComicLeaves(own) : sampleComicLeaves(), [own]);
+  const prepared = usePreparedPreview(mine && birth === undefined ? null : build);
+  if (mine && birthError) return <PreviewFeedback kind="comic" error onRetry={retryBirth} details />;
+  if (prepared.status === 'loading') return <PreviewFeedback kind="comic" loadingMessage={own ? undefined : 'Preparing the sample AstroComic…'} />;
+  if (prepared.status === 'error') return <PreviewFeedback kind="comic" error onRetry={prepared.retry} details={Boolean(own)} />;
+  const leaves = prepared.value;
   const switcher = session && birth ? (
     <div role="radiogroup" aria-label="Which comic to open" className="mt-4 flex flex-wrap justify-center gap-2">
       {[{ on: !mine, label: `${SAMPLE_READER.name.split(' ')[0]}’s sample`, set: false }, { on: mine, label: `Built from ${birth.name ? `${birth.name.split(' ')[0]}’s` : 'my'} chart`, set: true }].map(o => (
