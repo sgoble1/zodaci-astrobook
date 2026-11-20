@@ -26,8 +26,8 @@ export const COMIC_SCENES: Record<string, string> = {
   // Legacy saved scripts retain their original pictures; new previews use named story beats.
   'signal-1': s1, 'signal-2': s2, 'signal-3': s3, 'signal-4': s4, 'repair-1': r1, 'repair-2': r2, 'repair-3': r3, 'repair-4': r4, 'resolution-1': f1, 'resolution-2': f2, 'resolution-3': f3, 'resolution-4': f4,
 };
-/** Select founder-specific artwork only after an authorized issue has been composed. Public samples never use it. */
-export function comicCoverArtwork(issue: ComicIssue): string | undefined {
+/** Select artwork by explicit authorized edition identity, for its shelf or composed issue. Public samples never use it. */
+export function comicCoverArtwork(issue: Pick<ComicIssue, 'edition'>): string | undefined {
   if (issue.edition === 'april') return aprilCover.url;
   if (issue.edition === 'zac') return zacCover.url;
   if (issue.edition === 'shane') return shaneCover;

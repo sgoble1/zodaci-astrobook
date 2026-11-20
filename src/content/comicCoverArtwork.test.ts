@@ -9,6 +9,13 @@ import { personalCoverArtwork } from './personalCoverArtwork';
 const shane = computeChart({ date: '1993-03-25', time: '13:55', lat: 42.9639, lon: -78.7378, tz: 'America/New_York', placeLabel: 'Williamsville, New York', placeSource: 'geocoded', houseSystem: 'placidus' });
 const issue = (chart = shane, reader = 'Shane') => buildComicPreview(chart, { reader, month: new Date(Date.UTC(2026, 10, 1)), issueNumber: 2 });
 describe('separate chart-specific comic cover', () => {
+  it('resolves distinct shelf covers from explicit founder edition identities without requiring birth data', () => {
+    const covers = ['shane', 'april', 'zac'].map(edition => comicCoverArtwork({ edition: edition as 'shane' | 'april' | 'zac' }));
+    expect(covers.every(Boolean)).toBe(true);
+    expect(new Set(covers).size).toBe(3);
+    expect(covers[0]).toContain('shane-atomic-comic-cover');
+    expect(comicCoverArtwork({})).toBeUndefined();
+  });
   it('uses the redesigned cover for Shane’s calculated Aries Sun, Taurus Moon and Leo rising issue', () => {
     const comic = buildFounderComic(shane, 'shane', { reader: 'Shane', month: new Date(Date.UTC(2026, 10, 1)), issueNumber: 2 });
     expect(comic.signs).toMatchObject({ sun: 'Aries', moon: 'Taurus', rising: 'Leo' });

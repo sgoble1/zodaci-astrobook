@@ -8,6 +8,7 @@ import { PersonalPreviewDrawer } from '@/components/books/PersonalPreviewDrawer'
 import { PRODUCT_ART } from '@/content/productArtwork';
 import { signCover } from '@/content/signCovers';
 import { computeChart } from '@/lib/astro';
+import { comicCoverArtwork } from '@/content/comicSceneArt';
 
 /**
  * The server returns owned or explicitly shared editions only; admin status alone never grants access.
@@ -47,6 +48,7 @@ export default function OfficialAstroBook() {
 function EditionShelf({ row }: { row: OfficialEditionRow }) {
   const book = OFFICIAL_BOOKS[row.edition];
   const comicTo = `/official-astrobook/comic/${row.edition}`;
+  const comicCover = comicCoverArtwork(row);
   // Cover art follows the authorized edition's own calculated Sun sign.
   const sun = (() => { try { return row.birth ? computeChart(officialChartInput(row.birth)).bodies.find(b => b.key === 'sun')?.sign : undefined; } catch { return undefined; } })();
   const cover = signCover(sun);
@@ -72,7 +74,7 @@ function EditionShelf({ row }: { row: OfficialEditionRow }) {
         </div>
         <div className="parchment flex flex-col gap-4 p-5 sm:flex-row">
           <Link to={comicTo} className="mx-auto block w-40 shrink-0 overflow-hidden rounded-sm border-2 border-foreground/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" aria-label={`Open ${row.is_own ? 'your' : `${row.display_name}’s`} Official AstroComic`}>
-            <img src={PRODUCT_ART.comic.src} alt={PRODUCT_ART.comic.alt} width={768} height={1145} loading="lazy" className="aspect-[11/17] w-full object-contain" /><span className="block p-2 text-center text-xs text-muted-foreground">Shared story illustration</span>
+            <img src={comicCover} alt={`${row.display_name}’s illustrated AstroComic cover`} width={768} height={1145} loading="lazy" className="aspect-[11/17] w-full object-contain" /><span className="block p-2 text-center text-xs text-muted-foreground">Illustrated edition cover</span>
           </Link>
           <div className="flex flex-1 flex-col gap-3">
             <div className="font-label text-xs tracking-[0.16em] text-primary">Official AstroComic</div>
