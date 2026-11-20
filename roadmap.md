@@ -1,8 +1,8 @@
 # Zodaci roadmap
 
 ## Nov 20 — Founder Moon correction and shelf covers
-- [ ] Correct only the remaining Moon reference in Shane’s protected sm-29 chapter to Taurus, 10th house; preserve the rest and read back the saved chapter.
-- [ ] Use each authorized founder edition’s existing illustrated comic cover on the official shelf; preserve AstroBook covers.
+- [x] Correct Shane’s protected sm-29 lunar premise and its dependent interpretations to Taurus, 10th house; retain thirty sections and separate cultural analogies from calculated facts. Existing backup preserved; authorized saved chapter read back exactly.
+- [x] Use each authorized founder edition’s existing illustrated comic cover on the official shelf; preserve AstroBook covers. Explicit edition resolver tested for three distinct covers; no name-based or viewer-chart substitution.
 
 ## Nov 20 — Master Plan Phases 4–6
 - [x] Phase 4 audio/context/ephemeris: cassette reels, counter, seek, speeds and account-keyed bookmarks; consent-based private focus with skip/remove and deterministic highlights; public 1800–2100 UTC ephemeris with reference lookups.

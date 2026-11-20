@@ -9,6 +9,11 @@ import { personalCoverArtwork } from './personalCoverArtwork';
 const shane = computeChart({ date: '1993-03-25', time: '13:55', lat: 42.9639, lon: -78.7378, tz: 'America/New_York', placeLabel: 'Williamsville, New York', placeSource: 'geocoded', houseSystem: 'placidus' });
 const issue = (chart = shane, reader = 'Shane') => buildComicPreview(chart, { reader, month: new Date(Date.UTC(2026, 10, 1)), issueNumber: 2 });
 describe('separate chart-specific comic cover', () => {
+  it('retains Shane’s verified Taurus Moon in the 10th house', () => {
+    const moon = shane.bodies.find(body => body.key === 'moon');
+    expect(moon?.sign).toBe('Taurus');
+    expect(moon?.house).toBe(10);
+  });
   it('resolves distinct shelf covers from explicit founder edition identities without requiring birth data', () => {
     const covers = ['shane', 'april', 'zac'].map(edition => comicCoverArtwork({ edition: edition as 'shane' | 'april' | 'zac' }));
     expect(covers.every(Boolean)).toBe(true);
