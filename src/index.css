@@ -1453,7 +1453,7 @@ li:hover > .zodiac-coin { transform: rotate(-10deg); }
 .b3d-spine::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, hsl(var(--midnight) / .6), hsl(var(--midnight) / .22) 30%, hsl(var(--spot-paper) / .12) 78%, hsl(var(--midnight) / .3)); }
 .b3d-spine .ob-spine-name { font-size: .8rem; }
 .b3d-spine .ob-spine-title { font-size: .66rem; }
-.ob-book[data-state="open"] { transform: rotateX(14deg); }
+.ob-book[data-state="open"] { transform: rotateX(5deg); }
 .ob-book[data-state="back"] { transform: translateX(25%) rotateX(9deg) rotateY(18deg); }
 .ob-book::before, .ob-book::after { content: ''; position: absolute; top: 2px; bottom: -2px; width: 50%; background: hsl(var(--spot-paper)); transition: opacity .9s ease; transform: translateZ(-1px); }
 .ob-book::before { left: 50%; border-radius: 0 3px 3px 0; box-shadow: 2px 1px 0 hsl(var(--spot-paper)), 3px 2px 0 hsl(var(--comic-navy) / .3), 5px 3px 0 hsl(var(--spot-paper)), 6px 4px 0 hsl(var(--comic-navy) / .35), 0 26px 40px -14px hsl(0 0% 0% / .6); }
@@ -1484,7 +1484,7 @@ li:hover > .zodiac-coin { transform: rotate(-10deg); }
 .ob-table-tight > div { font-size: 3.3cqw; }
 .ob-list { display: grid; gap: 1.6cqw; margin-top: 1cqw; border-top: .5cqw solid hsl(var(--comic-navy) / .7); padding-top: 2.4cqw; font-size: 3.9cqw; line-height: 1.25; }
 .ob-list li::before { content: '✦ '; color: hsl(var(--comic-mustard)); }
-.ob-body { flex: 1; min-height: 0; overflow: auto; font-size: 3.6cqw; line-height: 1.42; display: grid; align-content: start; gap: 1.8cqw; }
+.ob-body { flex: 1; min-height: 0; overflow: visible; font-size: calc(3.6cqw * var(--ob-fit, 1)); line-height: 1.42; display: grid; align-content: start; gap: calc(1.8cqw * var(--ob-fit, 1)); }
 .ob-jacket { position: absolute; inset: 0; color: hsl(var(--comic-navy)); background: hsl(var(--spot-paper)); }
 .ob-jacket > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .ob-jacket-title { position: absolute; inset: 0 0 auto; padding: 5cqw 7cqw; display: grid; gap: 1.5cqw; text-align: center; background: hsl(var(--spot-paper) / .97); }
@@ -1568,6 +1568,28 @@ li:hover > .zodiac-coin { transform: rotate(-10deg); }
 .ob-reader-reflection { margin-top: .75rem; border-left: 2px solid hsl(var(--book-foil)); padding: .5rem .75rem; font-size: .875rem; line-height: 1.6; font-style: italic; color: hsl(var(--muted-foreground)); }
 .ob-details { border-top: 1px solid hsl(var(--border)); padding-top: .75rem; }
 .ob-details .ob-reader { margin-top: .5rem; max-height: 22rem; overflow-y: auto; }
+/* Dense tables and long personalized headings fit on the paper, without an inner scrollbar. */
+.ob-pad, .ob-bookplate, .ob-back-copy { overflow-wrap: anywhere; }
+.ob-pad { gap: calc(2.2cqw * var(--ob-fit, 1)); }
+.ob-pad > :not(.ob-body):not(.ob-plate) { flex-shrink: 0; }
+.ob-eyebrow { font-size: calc(4.2cqw * var(--ob-fit, 1)); }
+.ob-h { font-size: calc(7.6cqw * var(--ob-fit, 1)); }
+.ob-h-lg { font-size: calc(10cqw * var(--ob-fit, 1)); }
+.ob-h-sm { font-size: calc(6.2cqw * var(--ob-fit, 1)); }
+.ob-script { font-size: calc(7cqw * var(--ob-fit, 1)); }
+.ob-small { font-size: calc(3.6cqw * var(--ob-fit, 1)); }
+.ob-placement { font-size: calc(3.8cqw * var(--ob-fit, 1)); }
+.ob-table { gap: calc(1.3cqw * var(--ob-fit, 1)); }
+.ob-table > div { font-size: calc(3.7cqw * var(--ob-fit, 1)); padding-bottom: calc(1.2cqw * var(--ob-fit, 1)); }
+.ob-table-tight > div { font-size: calc(3.3cqw * var(--ob-fit, 1)); }
+.ob-list { gap: calc(1.6cqw * var(--ob-fit, 1)); font-size: calc(3.9cqw * var(--ob-fit, 1)); }
+.ob-bookplate { gap: calc(2cqw * var(--ob-fit, 1)); overflow: visible; }
+@media (max-width: 639px) {
+  .ob-stage { --ob-w: 41cqw; padding-block: 2rem; }
+  .ob-book[data-state="closed"] { transform: translateX(-25%) rotateY(12deg); }
+  .ob-book[data-state="open"] { transform: none; }
+  .ob-book[data-state="back"] { transform: translateX(25%) rotateY(8deg); }
+}
 @media (prefers-reduced-motion: reduce) { .ob-book, .ob-leaf, .ob-book::before, .ob-book::after { transition: none; } }
 
 /* Investigations Bureau case folders and Museum of the Sky plates (semantic tokens only). */

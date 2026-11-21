@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState, type KeyboardEvent, type PointerEvent, type ReactNode } from 'react';
+import { useCallback, useLayoutEffect, useRef, useState, type KeyboardEvent, type PointerEvent, type ReactNode } from 'react';
 import { ChevronLeft, ChevronRight, Download } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { faceText, type BookFace } from '@/lib/bookLeaves';
@@ -65,8 +65,8 @@ export function OpenBook({ leaves, kind = 'book', label, layout = 'side', footer
               const z = turned ? -(i + 1) * gap : (n - i) * gap;
               return (
                 <div key={i} className="ob-leaf" data-visible={visible.includes(leaf.front) || visible.includes(leaf.back)} data-turned={turned} onClick={() => tap(turned)} style={{ transform: `rotateY(${turned ? -180 : 0}deg) translateZ(${z}px)` }}>
-                  <div className="ob-face ob-face-front" aria-hidden={!visible.includes(leaf.front)} {...(!visible.includes(leaf.front) ? { inert: '' } : {})}><Face f={leaf.front} kind={kind} /></div>
-                  <div className="ob-face ob-face-back" aria-hidden={!visible.includes(leaf.back)} {...(!visible.includes(leaf.back) ? { inert: '' } : {})}><Face f={leaf.back} kind={kind} /></div>
+                  <FittedFace className="ob-face ob-face-front" face={leaf.front} kind={kind} visible={visible.includes(leaf.front)} />
+                  <FittedFace className="ob-face ob-face-back" face={leaf.back} kind={kind} visible={visible.includes(leaf.back)} />
                 </div>
               );
             })}
@@ -101,6 +101,40 @@ function BookSpine({ title, name, src, stack }: { title: string; name?: string; 
 
 const Folio = ({ n }: { n?: number }) => n ? <span className="ob-folio">{n}</span> : null;
 const Orbit = () => <svg className="ob-orbit" viewBox="0 0 100 60" aria-hidden><ellipse cx="50" cy="30" rx="46" ry="12" /><ellipse cx="50" cy="30" rx="46" ry="12" transform="rotate(32 50 30)" /><ellipse cx="50" cy="30" rx="46" ry="12" transform="rotate(-32 50 30)" /><circle cx="50" cy="30" r="6" /></svg>;
+
+/** Fit the printed content, not a scrollable excerpt, after resize and font loading. */
+function FittedFace({ className, face, kind, visible }: { className: string; face: BookFace; kind: 'book' | 'comic'; visible: boolean }) {
+  const ref = useRef<HTMLDivElement>(null);
+  useLayoutEffect(() => {
+    const element = ref.current;
+    if (!element || !visible || kind !== 'book') return;
+    let frame = 0;
+    let active = true;
+    const fit = () => {
+      if (!active) return;
+      element.style.setProperty('--ob-fit', '1');
+      const content = element.querySelector<HTMLElement>('.ob-pad, .ob-bookplate, .ob-back-copy');
+      if (!content) return;
+      // Leave the folio and the paper margins intact. Layout reads deliberately
+      // follow each adjustment, so long headings and wrapped tables are remeasured.
+      for (let attempt = 0, scale = 1; attempt < 12; attempt++) {
+        const body = content.querySelector<HTMLElement>('.ob-body');
+        const overflow = Math.max(content.scrollHeight - content.clientHeight, body ? body.scrollHeight - body.clientHeight : 0);
+        if (overflow <= 1) break;
+        scale *= .92;
+        element.style.setProperty('--ob-fit', String(scale));
+      }
+    };
+    const schedule = () => { cancelAnimationFrame(frame); frame = requestAnimationFrame(fit); };
+    const observer = new ResizeObserver(schedule);
+    observer.observe(element);
+    fit();
+    void document.fonts.ready.then(schedule);
+    document.fonts.addEventListener('loadingdone', schedule);
+    return () => { active = false; cancelAnimationFrame(frame); observer.disconnect(); document.fonts.removeEventListener('loadingdone', schedule); };
+  }, [face, kind, visible]);
+  return <div ref={ref} className={className} aria-hidden={!visible} {...(!visible ? { inert: '' } : {})}><Face f={face} kind={kind} /></div>;
+}
 
 function Face({ f, kind }: { f: BookFace; kind: 'book' | 'comic' }) {
   switch (f.kind) {
