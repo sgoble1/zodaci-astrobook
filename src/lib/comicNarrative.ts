@@ -1,5 +1,6 @@
 import { fmtLon, type ChartResult } from '@/lib/astro';
 import { buildComicIssue, CAST, type ComicIssue, type ComicPage, type ComicPanel } from '@/lib/comic';
+import { refineFounderStory } from '@/lib/founderComicStory';
 
 /** Presentation alias only: never changes a saved profile, edition owner or birth fact. */
 export const previewName = (name: string) => /^shane\b/i.test(name.trim()) ? 'Julian Mercer' : name;
@@ -119,10 +120,5 @@ export function buildComicPreview(chart: ChartResult, opts: Parameters<typeof bu
 
 /** Called only with an already authorized edition chart; public and member composers never set edition identity. */
 export function buildFounderComic(chart: ChartResult, edition: 'april' | 'shane' | 'zac', opts: Parameters<typeof buildComicIssue>[1]): NarrativeIssue {
-  const issue = buildComicPreview(chart, opts);
-  const titles = { april: 'The Relay Room', shane: 'The Midnight Signal', zac: 'The Far-Bank Receiver' };
-  issue.edition = edition;
-  issue.title = titles[edition];
-  issue.pages[0] = { ...issue.pages[0], title: issue.title, panels: [{ ...issue.pages[0].panels[0], caption: `${issue.reader} · Private edition · Issue ${issue.issueNumber}` }] };
-  return issue;
+  return refineFounderStory(buildComicPreview(chart, opts), edition);
 }

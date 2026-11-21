@@ -45,7 +45,7 @@ export function ComicPageView({ page, compact = false, art }: { page: ComicPage;
             {page.panels.map((panel, i) => {
               const src = art?.[`${page.n}-${i}`];
               return (
-                <div key={i} className={`comic-panel comic-cell flex flex-col justify-between p-2 ${SHAPE[panel.shape]} ${panel.artSlot?.startsWith('cast:') ? 'comic-character-panel' : ''}`}>
+                <div key={i} data-motion={panel.motion} className={`comic-panel comic-cell flex flex-col justify-between p-2 ${SHAPE[panel.shape]} ${panel.artSlot?.startsWith('cast:') ? 'comic-character-panel' : ''}`}>
                   {src && <img src={src} alt={panel.scene} loading="lazy" width={1024} height={1024} className="absolute inset-0 h-full w-full object-cover" />}
                   {!src && (isQrPanel(panel) ? <QrMark /> : <p className="comic-direction leading-snug">{panel.scene}</p>)}
                   {panel.caption && <p className="comic-caption relative">{panel.caption}</p>}

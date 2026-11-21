@@ -1,5 +1,10 @@
 # Zodaci roadmap
 
+## Nov 21 — Founder comic story and motion refinement
+- [x] Give April, Shane and Zac distinct continuous fictional missions shaped by their authorized chart and selected issue contact; keep cast behind external circumstances and natural protagonist dialogue. Opening difficulty returns in the final test; saved buyer scripts and cover assets remain unchanged.
+- [x] Add slow chart-led panel motion, preserve 24 pages and ledger-only provenance on 22–23. All 166 suites / 1,376 tests pass; automatic build OK. Shared reader/face parity, verified Taurus Moon/10th house, input changes, unknown-time omissions and contact-motion selection tested. Isolated fictional-chart desktop/393px readers show all three motion types, no overflow/errors, and no animation with reduced motion.
+- [ ] Authorized founder chart walkthroughs: requesting account reaches the prelaunch access screen on all three routes. No gate, edition permissions, birth data or ownership changed; actual April/Zac/Shane route readback remains unverified for this account.
+
 ## Nov 20 — Founder Moon correction and shelf covers
 - [x] Correct Shane’s protected sm-29 lunar premise and its dependent interpretations to Taurus, 10th house; retain thirty sections and separate cultural analogies from calculated facts. Existing backup preserved; authorized saved chapter read back exactly.
 - [x] Use each authorized founder edition’s existing illustrated comic cover on the official shelf; preserve AstroBook covers. Explicit edition resolver tested for three distinct covers; no name-based or viewer-chart substitution.

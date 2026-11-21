@@ -1521,6 +1521,15 @@ li:hover > .zodiac-coin { transform: rotate(-10deg); }
 .comic-panel-grid[data-beat="sequence"] { grid-template-rows: 1fr 1.15fr .65fr; }
 .comic-cell { min-width: 0; min-height: 0; }
 .comic-character-panel > img { object-position: center 25%; }
+/* Slow instrument-light movement only: printed artwork and lettering remain fixed. */
+.comic-cell[data-motion]::after { content: ''; position: absolute; inset: 0; pointer-events: none; border: 1px solid hsl(var(--comic-mustard) / .5); background: hsl(var(--comic-mustard) / .07); opacity: 0; animation: comic-signal-light 36s ease-in-out infinite; }
+.comic-cell[data-motion="reconsider"]::after { animation-name: comic-reconsider-light; animation-duration: 48s; }
+.comic-cell[data-motion="crosscurrent"]::after { animation-name: comic-crosscurrent-light; animation-duration: 44s; }
+@keyframes comic-signal-light { 0%, 100% { opacity: .1; } 50% { opacity: .65; } }
+@keyframes comic-reconsider-light { 0%, 100% { opacity: .55; } 50% { opacity: .05; } }
+@keyframes comic-crosscurrent-light { 0%, 100% { opacity: .15; border-color: hsl(var(--comic-mustard) / .5); } 50% { opacity: .5; border-color: hsl(var(--comic-brick) / .6); } }
+@media (prefers-reduced-motion: reduce) { .comic-cell[data-motion]::after { animation: none; opacity: 0; } }
+@media print { .comic-cell[data-motion]::after { display: none; } }
 .comic-speaker { display: block; color: hsl(var(--comic-brick)); font-family: 'Bebas Neue', sans-serif; line-height: 1.1; }
 .comic-balloon-review { border-style: double; border-radius: 16% 24% 18% 22%; }
 .comic-panel-grid[data-beat="splash"] .comic-caption { max-width: 85%; }
