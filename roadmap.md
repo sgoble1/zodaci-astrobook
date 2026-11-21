@@ -747,3 +747,9 @@ Execution details: docs/master-phases-1-3.md. Preserve existing canonical routes
 - [x] Verify regression suites, clean preview, signed-in flows and 393px/1280px layouts; record external-reference/access limits.
 
 Verification: 159 suites / 1,335 tests pass; preview build OK. Independent Swiss Ephemeris true-node references agree within 0.1°; existing 15-chart benchmarks, timed/untimed books/PDFs, transits, compatibility and ledger/privacy regressions pass. Signed-in saved-chart book/sample switching, book/comic turns, real solar-return relocation, BaZi/Lo Shu and true-node switching verified without browser errors or horizontal overflow. Profection remains correctly Pro-gated for the available free account: age/ruler math tested, paid slider browser walkthrough not exercised. Founder covers/scripts are tested with explicit edition identity, but available account has no authorized founder comic; founder-specific walkthrough and owner-approved authorial scripts remain unverified. Canonical fictional reader remains Rosalind Vance, not newly invented duplicate fixtures. Phase 4–6 work and print production unchanged.
+
+## Nov 21 — Experience plan Phases 1–4 (see approved plan)
+- [ ] Phase 1 navigation: four public pillars, Observatory Decks, extended Cmd+K
+- [ ] Phase 2 synthesis: paradox matrix, BaZi cross-check, vignettes, three-layer cards
+- [ ] Phase 3 investors: thesis, live inspector, economics breakdown, measured asset register
+- [ ] Phase 4 graphics: medallions, background cast, tactile controls
