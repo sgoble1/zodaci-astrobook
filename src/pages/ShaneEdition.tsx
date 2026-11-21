@@ -1,4 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
+import { PaintedPlate } from '@/components/art/PaintedPlate';
+import { PAINTED } from '@/content/paintedArt';
 import { curateZac } from '@/content/zac/volumes';
 import { Link, useParams } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, Search } from 'lucide-react';
@@ -204,6 +206,7 @@ function EditionHome({ area, entries, owns, full }: { area: EditionKey; entries:
 
   return (
     <div className="space-y-14">
+      {(area === 'shane' || area === 'zac') && <PaintedPlate {...PAINTED.founders[area]} shape="panorama" priority />}
       {full === true && chart && <>
         <DashboardMosaic chart={chart} name={copy.name} hasTime={Boolean(birth?.time)} primary={{ to: `${copy.base}#${area}-contents`, label: 'Browse the volumes' }} secondary={{ to: '/my-chart', label: 'View chart' }} onAir={{ cta: { to: '#edition-broadcast', label: 'Tune in' } }} press={{ book: { to: '/official-astrobook', label: 'Official AstroBook' }, comic: { to: `/official-astrobook/comic/${area}`, label: 'Official AstroComic' } }} destinations={[
           { to: `${copy.base}#${area}-contents`, title: 'Edition library', text: '', cta: 'Open', icon: LibraryIcon },

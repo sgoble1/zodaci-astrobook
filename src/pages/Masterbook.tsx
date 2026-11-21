@@ -1,4 +1,6 @@
 import { LoadFailed } from '@/components/common/LoadFailed';
+import { PaintedPlate } from '@/components/art/PaintedPlate';
+import { PAINTED } from '@/content/paintedArt';
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Input } from '@/components/ui/input';
@@ -39,6 +41,7 @@ export default function Masterbook() {
 
   return (
     <div className="space-y-10">
+      <PaintedPlate {...PAINTED.founders.april} shape="panorama" priority />
       <header>
         <div className="font-label text-xs tracking-[0.16em] text-primary">The Masterbook · complete text</div>
         <h1 className="text-4xl sm:text-5xl mt-2">April’s Astrological Masterbook</h1>

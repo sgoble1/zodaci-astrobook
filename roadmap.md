@@ -754,3 +754,4 @@ Verification: 159 suites / 1,335 tests pass; preview build OK. Independent Swiss
 - [x] Phase 3 investors: thesis, live inspector, economics breakdown, measured asset register
 - [x] Investor scenario calculator: $100–$50k+ amounts, ownership share, conservative/base/growth outcomes (illustrative)
 - [x] Phase 4 graphics: medallions, background cast, tactile controls
+- [x] Painted graphics pass: home dome slide + station folios, AstroBook/AstroComic/Keepsakes heroes, Learn/Compendium/Ephemeris/BaZi/Relationships banners, spot-art stipple, April/Shane/Zac edition headers

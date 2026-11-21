@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
+import { PAINTED } from '@/content/paintedArt';
 import { Link, useLocation } from 'react-router-dom';
 import { ArrowRight, Clock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -7,7 +8,7 @@ import { SkyDiagrams } from '@/components/learn/SkyDiagrams';
 import { CommunityJournal } from '@/components/learn/CommunityJournal';
 import { ACADEMY, ALL_LESSONS } from '@/content/academy';
 import { PUBLIC_ARTICLES } from '@/content/publicArticles';
-import { READING_ROOM, READING_ROOM_HERO, ROOM_CATEGORIES } from '@/content/readingRoom';
+import { READING_ROOM, ROOM_CATEGORIES } from '@/content/readingRoom';
 import { LEARN_SECTIONS } from '@/content/learnSections';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { useJsonLd } from '@/hooks/useJsonLd';
@@ -43,7 +44,7 @@ export default function Learn() {
   return (
     <article className="space-y-12 sm:space-y-16 overflow-x-clip">
       <header className="learn-hero relative overflow-hidden rounded-sm border border-[hsl(var(--brass)/0.5)]">
-        <img src={READING_ROOM_HERO} alt="A lamp-lit 1950s home library with a telescope at the window and a zodiac wheel on the wall" width={1280} height={717} {...{ fetchpriority: 'high' }} className="h-[30rem] w-full object-cover sm:h-[28rem]" />
+        <img src={PAINTED.library.src} alt={PAINTED.library.alt} width={1280} height={717} {...{ fetchpriority: 'high' }} className="h-[30rem] w-full object-cover sm:h-[28rem]" />
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/55 to-transparent" />
         <div className="absolute bottom-0 max-w-2xl p-6 sm:p-10">
           <p className="font-label text-sm tracking-[0.2em] text-primary">Zodaci · Research Library</p>

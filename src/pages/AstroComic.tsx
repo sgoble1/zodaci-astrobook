@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react';
+import { PaintedPlate } from '@/components/art/PaintedPlate';
+import { PAINTED } from '@/content/paintedArt';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { ArrowRight, Check, Package, CalendarDays, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -47,6 +49,7 @@ export default function AstroComic() {
   return (
     <article className="space-y-20">
       <PaymentTestModeBanner />
+      <PaintedPlate {...PAINTED.astrocomic} shape="hero" priority />
       <section className="product-page-opening obs-panel">
         <div>
           <p className="font-label text-xs tracking-[0.16em] text-primary">AstroComic by Zodaci</p>

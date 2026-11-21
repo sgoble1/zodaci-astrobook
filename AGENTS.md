@@ -75,3 +75,4 @@
 - Current Chapter and Life Compass derive only from today's transits (src/lib/currentChapter.ts), never AI or biography, so the landing stays truthful without credits.
 - DashboardMosaic is the shared dashboard opening; retain CurrentChapterPanel beneath it, with founder TVs receiving their authorized edition chart directly to prevent viewer-chart substitution.
 - /forecast separates public skyToday/skyEvents bulletins from signed-in useMyBirth broadcasts; reuse CurrentChapterPanel and ForecastReel so chart privacy and deterministic timing stay consistent.
+- Painted page art is registered in content/paintedArt.ts and drawn only through components/art/PaintedPlate (hero/panorama/station shapes), so the image style and ratios stay consistent.

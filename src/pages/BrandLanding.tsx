@@ -1,4 +1,6 @@
 import { Link } from 'react-router-dom';
+import { PaintedPlate } from '@/components/art/PaintedPlate';
+import { PAINTED } from '@/content/paintedArt';
 import { CalculationTrust } from '@/components/common/CalculationTrust';
 import { ArrowRight, Check } from 'lucide-react';
 import { SpotArt, type SpotKind } from '@/components/art/SpotArt';
@@ -70,6 +72,13 @@ const DESTINATIONS: Destination[] = [
   { to: '/store', title: 'Gift Shop', text: 'Prints, books and keepsakes', cta: 'Visit the shop', icon: StorefrontIcon },
 ];
 
+const STATIONS = [
+  { key: 'products', to: '/astrobook', title: 'Products', text: 'AstroBooks, AstroComics and keepsakes' },
+  { key: 'calculators', to: '/start', title: 'Calculators & Tools', text: 'Chart, ephemeris, retrogrades, BaZi' },
+  { key: 'academy', to: '/learn', title: 'Learn & Academy', text: 'Lessons, Compendium and sources' },
+  { key: 'members', to: '/dashboard', title: 'Members', text: 'Your readings, audio and private rooms' },
+] as const;
+
 export default function BrandLanding() {
   usePageMeta('Zodaci — Astral Research Authority', 'Zodaci is a personal observatory: your birth chart calculated with astronomical precision, readings written for you, forecasts, and AstroBooks. Free to begin, private by default.');
   const fromBook = Math.min(...BOOK_VERSIONS.map(v => v.price));
@@ -115,6 +124,13 @@ export default function BrandLanding() {
         text="Posters, tees, mugs, totes, notebooks and stickers for all twelve signs, drawn in the same 1950s style as the observatory."
         cta={{ to: '/store', label: 'Visit the gift shop' }} secondary={{ to: '/store?collection=atomic', label: 'Atomic Zodiac Collection' }} />,
     },
+    {
+      id: 'observatory', label: 'Inside the observatory',
+      content: <ArtSlide art={{ ...PAINTED.dome, width: 1600, height: 900 }}
+        eyebrow="Zodaci Astral Research Authority" title={<>Charted by hand,<br />checked by math.</>} script="The whole observatory, open to you."
+        text="Books, comics, calculators, lessons and your private member rooms, all worked from the same calculated sky."
+        cta={{ to: '/start', label: 'Start your chart' }} secondary={{ to: '/about', label: 'How Zodaci works' }} />,
+    },
   ];
   return <div className="brand-site min-h-screen text-foreground">
     <a href="#brand-main" className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:bg-background focus:p-3">Skip to content</a>
@@ -127,6 +143,12 @@ export default function BrandLanding() {
       </div>
 
       <DestinationTiles label="Main destinations" items={DESTINATIONS} />
+
+      <section aria-label="Observatory stations" className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {STATIONS.map(st => <Link key={st.to} to={st.to} className="group block">
+          <PaintedPlate {...PAINTED.stations[st.key]} shape="station"><span className="block font-label text-lg text-foreground">{st.title}</span><span className="block text-sm text-muted-foreground">{st.text}</span></PaintedPlate>
+        </Link>)}
+      </section>
 
       <div className="mosaic-trio">
         <LessonsTile />

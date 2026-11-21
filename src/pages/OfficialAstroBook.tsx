@@ -1,4 +1,6 @@
 import { Link } from 'react-router-dom';
+import { PaintedPlate } from '@/components/art/PaintedPlate';
+import { PAINTED } from '@/content/paintedArt';
 import { BookOpen, Sparkles } from 'lucide-react';
 import { Book3D } from '@/components/books/Book3D';
 import { Button } from '@/components/ui/button';
@@ -19,6 +21,7 @@ export default function OfficialAstroBook() {
   const viewingAll = !!rows && rows.some(r => !r.is_own);
   return (
     <article className="space-y-12">
+      <PaintedPlate {...PAINTED.astrobook} shape="hero" priority />
       <header className="grid items-center gap-8 md:grid-cols-[1fr_18rem]">
         <div>
           <div className="font-label text-xs tracking-[0.16em] text-primary">Official AstroBook</div>

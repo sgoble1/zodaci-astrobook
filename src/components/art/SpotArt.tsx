@@ -105,7 +105,7 @@ export function SpotArt({ kind, label, className, shape = 'medallion', badge, de
   const medallion = shape !== 'plate';
   return (
     <span className={cn('spot-art', medallion ? 'spot-art-medallion' : 'spot-art-plate', className)}>
-      <span className="spot-art-disc">
+      <span className="spot-art-disc litho-stipple">
         <img src={SPOTS[k]} alt={decorative ? '' : ALT[k]} aria-hidden={decorative || undefined} width={512} height={512} loading="lazy" decoding="async" />
       </span>
       {medallion && orbit && <span className="spot-art-orbit" aria-hidden="true" />}

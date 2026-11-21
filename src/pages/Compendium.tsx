@@ -1,4 +1,6 @@
 import { PlanetOrb } from '@/components/chart/PlanetOrb';
+import { PaintedPlate } from '@/components/art/PaintedPlate';
+import { PAINTED } from '@/content/paintedArt';
 import { IllustrationGallery } from '@/components/common/IllustrationGallery';
 import { ZODIAC, PLACEMENTS, HOUSES } from '@/content/april';
 import {
@@ -14,6 +16,7 @@ import { SourceChapters } from '@/components/common/SourceChapters';
 export default function Compendium() {
   return (
     <div className="space-y-12">
+      <PaintedPlate {...PAINTED.library} shape="panorama" priority />
       <header>
         <div className="font-label text-xs tracking-[0.16em] text-primary">Companion Volumes · Reference</div>
         <h1 className="font-display mt-2">The Master Compendium.</h1>
