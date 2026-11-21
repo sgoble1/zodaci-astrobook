@@ -680,6 +680,13 @@
       "when": 1795217379586,
       "tag": "0096_gift_recipient_only_birth_access",
       "breakpoints": true
+    },
+    {
+      "idx": 97,
+      "version": "7",
+      "when": 1795221347058,
+      "tag": "0097_secure_selected_account_helpers",
+      "breakpoints": true
     }
   ]
 }

@@ -3,7 +3,7 @@ import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors';
 import { createClient } from 'npm:@supabase/supabase-js@2';
 import { z } from 'npm:zod@3';
 import { sendAppEmail } from '../_shared/app-email.ts';
-import { isPaidBook } from '../_shared/book-delivery-rules.ts';
+import { verifiedGiftPurchase } from './rules.ts';
 import { giftToken, hashGiftToken } from '../_shared/gift-claim-rules.ts';
 
 const json = (body: unknown, status = 200) => new Response(JSON.stringify(body), { status, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
@@ -26,7 +26,7 @@ Deno.serve(async req => {
     if (error) throw error;
     if (!order) return json({ error: 'Order unavailable.' }, 404);
     if (!order.gift || !order.recipient_email) return json({ error: 'This order has no recipient email.' }, 409);
-    if (!isPaidBook(order) || order.payment_hold) return json({ error: 'The gift notice can be sent once payment is confirmed.' }, 409);
+    if (!verifiedGiftPurchase(order)) return json({ error: 'The gift notice can be sent once live payment is verified.' }, 409);
     if (order.recipient_notified_at) return json({ ok: true, alreadySent: true, sentAt: order.recipient_notified_at });
     if (order.environment !== 'live') return json({ error: 'Gift notices are sent only for live paid gifts.' }, 409);
     const signing = Deno.env.get('GIFT_CLAIM_SIGNING_SECRET');
@@ -42,7 +42,9 @@ Deno.serve(async req => {
     const { error: claimError } = await db.from('book_gift_claims').upsert({ order_id: order.id, token_hash: await hashGiftToken(claimToken), expires_at: new Date(Date.now() + 90 * 864e5).toISOString() }, { onConflict: 'order_id', ignoreDuplicates: true });
     if (claimError) throw claimError;
     const { data: profile } = await db.from('profiles').select('display_name').eq('id', user.id).maybeSingle();
-    const r = await sendAppEmail('book-gift', order.recipient_email, {
+    const recipient = z.string().trim().email().max(254).safeParse(order.recipient_email);
+    if (!recipient.success) return json({ error: 'The recipient email is invalid.' }, 409);
+    const r = await sendAppEmail('book-gift', recipient.data, {
       idempotencyKey: `book-gift-${order.id}`,
       templateData: { recipientName: order.recipient_name, senderName: (profile?.display_name || '').slice(0, 80), edition: EDITION[order.edition] ?? '', digital: order.format === 'digital', message: order.gift_message, claimUrl: `https://zodaci.com/gift/${claimToken}` },
     });
