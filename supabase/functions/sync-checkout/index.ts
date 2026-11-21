@@ -4,11 +4,9 @@
 import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
 import { createClient } from "npm:@supabase/supabase-js@2";
 import { type StripeEnv, createStripeClient } from "../_shared/stripe.ts";
-import { MEMBERSHIP, subscriptionFields } from "../_shared/billing.ts";
 import { comicPaid, bookPaid } from "../_shared/purchase-confirm.ts";
 
 const json = (b: unknown, status = 200) => new Response(JSON.stringify(b), { status, headers: { ...corsHeaders, "Content-Type": "application/json" } });
-const LEGACY = new Set(['full_access_monthly', 'full_access_yearly', 'creator_monthly', 'creator_yearly']);
 
 // deno-lint-ignore no-explicit-any
 type Any = any;
@@ -71,19 +69,11 @@ Deno.serve(async (req) => {
     if (session.status !== 'complete' || session.payment_status === 'unpaid') return json({ status: 'pending' });
     const subId = typeof session.subscription === 'string' ? session.subscription : session.subscription?.id;
     if (!subId) return json({ status: 'pending' });
-    const subscription = await stripe.subscriptions.retrieve(subId);
-    if (subscription.metadata?.userId !== user.id) return json({ error: 'This checkout belongs to another account.' }, 403);
-    const f = subscriptionFields(subscription);
-    if (!MEMBERSHIP[f.price_id] && !LEGACY.has(f.price_id)) return json({ status: 'not_membership' });
-    const saved = await admin.from('billing_subscriptions').upsert({
-      user_id: user.id,
-      stripe_subscription_id: subscription.id,
-      stripe_customer_id: typeof subscription.customer === 'string' ? subscription.customer : subscription.customer.id,
-      environment: env,
-      ...f,
-    }, { onConflict: 'stripe_subscription_id' });
-    if (saved.error) throw saved.error;
-    return json({ status: ['active', 'trialing'].includes(f.status) ? 'active' : f.status });
+    // Read-only: only the signed payment webhook activates memberships. Report what it has recorded.
+    const { data: row, error: rowError } = await admin.from('billing_subscriptions').select('status').eq('stripe_subscription_id', subId).eq('user_id', user.id).eq('environment', env).maybeSingle();
+    if (rowError) throw rowError;
+    if (!row) return json({ status: 'pending' });
+    return json({ status: ['active', 'trialing'].includes(row.status) ? 'active' : row.status });
   } catch (e) {
     if (/amount does not match|Non-US/.test(String((e as Error)?.message))) { console.error('sync-checkout verification', e); return json({ status: 'review' }); }
     if ((e as { code?: string })?.code === 'resource_missing') return json({ error: 'That checkout could not be found.' }, 404);

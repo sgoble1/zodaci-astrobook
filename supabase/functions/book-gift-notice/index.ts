@@ -7,6 +7,8 @@ import { verifiedGiftPurchase } from './rules.ts';
 import { giftToken, hashGiftToken } from '../_shared/gift-claim-rules.ts';
 
 const json = (body: unknown, status = 200) => new Response(JSON.stringify(body), { status, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+// Gift notes go to an address the buyer chose, so strip links and cap length to keep them personal notes, not a delivery channel.
+const safeNote = (m: unknown) => typeof m === 'string' ? m.replace(/(https?:\/\/|www\.)\S+/gi, '').replace(/[<>]/g, '').replace(/\s+/g, ' ').trim().slice(0, 300) : '';
 const EDITION: Record<string, string> = { digital: 'Digital', pocket: 'Pocket', classic: 'Classic', signature: 'Signature', linen: "Collector's Linen" };
 
 Deno.serve(async req => {
@@ -28,6 +30,7 @@ Deno.serve(async req => {
     if (!order.gift || !order.recipient_email) return json({ error: 'This order has no recipient email.' }, 409);
     if (!verifiedGiftPurchase(order)) return json({ error: 'The gift notice can be sent once live payment is verified.' }, 409);
     if (order.recipient_notified_at) return json({ ok: true, alreadySent: true, sentAt: order.recipient_notified_at });
+    if (!user.email_confirmed_at) return json({ error: 'Please confirm your email before sending a gift notice.' }, 403);
     if (order.environment !== 'live') return json({ error: 'Gift notices are sent only for live paid gifts.' }, 409);
     const signing = Deno.env.get('GIFT_CLAIM_SIGNING_SECRET');
     if (!signing) return json({ error: 'Gift links are not configured yet.' }, 503);
@@ -46,7 +49,7 @@ Deno.serve(async req => {
     if (!recipient.success) return json({ error: 'The recipient email is invalid.' }, 409);
     const r = await sendAppEmail('book-gift', recipient.data, {
       idempotencyKey: `book-gift-${order.id}`,
-      templateData: { recipientName: order.recipient_name, senderName: (profile?.display_name || '').slice(0, 80), edition: EDITION[order.edition] ?? '', digital: order.format === 'digital', message: order.gift_message, claimUrl: `https://zodaci.com/gift/${claimToken}` },
+      templateData: { recipientName: order.recipient_name, senderName: (profile?.display_name || '').slice(0, 80), edition: EDITION[order.edition] ?? '', digital: order.format === 'digital', message: safeNote(order.gift_message), claimUrl: `https://zodaci.com/gift/${claimToken}` },
     });
     if (!r.sent) return json({ error: r.reason === 'recipient_suppressed' ? 'That address has opted out of Zodaci emails, so the notice was not sent.' : 'The notice could not be sent. Please try again later.' }, r.reason === 'recipient_suppressed' ? 409 : 502);
     const sentAt = new Date().toISOString();
