@@ -1,0 +1,1 @@
+- Painted page art lives in paintedArt.ts and renders only via components/art/PaintedPlate (hero/panorama/station) so style and ratios stay consistent.
