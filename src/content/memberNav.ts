@@ -58,7 +58,7 @@ export const MEMBER_DOMAINS: MemberDomain[] = [
     ],
   },
   {
-    id: 'readings', label: 'Readings', hub: '/my-readings', hubLabel: 'All my readings', icon: BookOpenText,
+    id: 'readings', label: 'Astral Bureaus', hub: '/my-readings', hubLabel: 'All my readings', icon: BookOpenText,
     description: 'Readings written only from your own placements.',
     tabs: ['/my-readings', '/consult', '/chat', '/counselors', '/workbook', '/observation-log', '/create'],
     prefixes: ['/my-readings', '/consult', '/dreams', '/workbook', '/counselors', '/chat', '/investigations', '/museum', '/topics', '/readings', '/reading', '/p', '/ask', '/sources', '/observation-log', '/observatory', '/content-center'],
@@ -100,7 +100,7 @@ export const MEMBER_DOMAINS: MemberDomain[] = [
     ],
   },
   {
-    id: 'book', label: 'Cosmic Archive', hub: '/my-astrobook', hubLabel: 'Open my library', icon: BookHeart,
+    id: 'book', label: 'The Reading Room', hub: '/my-astrobook', hubLabel: 'Open my library', icon: BookHeart,
     description: 'Your Masterbook, printed AstroBook, audio and keepsakes.',
     tabs: ['/my-astrobook', '/my-masterbook', '/books', '/orders', '/podcasts', '/my-comic'],
     prefixes: ['/shane', '/april', '/zac', '/astrobook', '/astrocomic', '/official-astrobook', '/masterbook', '/library', '/archive', '/keepsakes', '/shared-with-me', '/contents', '/read'],
@@ -115,10 +115,12 @@ export const MEMBER_DOMAINS: MemberDomain[] = [
         { to: '/my-astrobook', label: 'My Library', description: 'Everything that is yours, searchable', icon: Library },
         { to: '/reading-history', label: 'Reading history', description: 'Every chapter you opened, and where you stopped', icon: BookOpen },
         { to: '/archive', label: 'The Archive', description: 'Everything you made and kept, by date', icon: ScrollText, badge: 'New' },
-        { to: '/podcasts', label: 'Podcasts', description: 'Turn readings into audio episodes', icon: Headphones },
         { to: '/my-comic', label: 'My AstroComic', description: 'Your illustrated monthly issue', icon: Package },
         { to: '/store', label: 'Zodaci Shop', description: 'Posters, stickers and notebooks', icon: Package },
         { to: '/keepsakes', label: 'Keepsakes & gifts', description: 'Print a Birth-Sky Certificate or Star Scroll', icon: Gift, badge: 'New' },
+      ] },
+      { title: 'The Listening Post', items: [
+        { to: '/podcasts', label: 'Cassette deck & audio library', description: 'Narrated readings on the tape player', icon: Headphones },
       ] },
       { title: 'Editions', items: [
         { to: '/shane', label: 'Shane’s Full Masterbook', description: 'Your private founder edition', icon: Crown, audience: 'shane' },
@@ -127,12 +129,14 @@ export const MEMBER_DOMAINS: MemberDomain[] = [
     ],
   },
   {
-    id: 'explore', label: 'Navigation', hub: '/explore', hubLabel: 'Open Explore', icon: Telescope,
+    id: 'explore', label: 'Broadcast Deck', hub: '/explore', hubLabel: 'Open Explore', icon: Telescope,
     description: 'Timing, relationships, other traditions and community.',
     tabs: ['/explore', '/transits', '/timeline', '/retrogrades', '/profection', '/relationships', '/other-systems'],
     prefixes: ['/relationships', '/other-systems', '/shared', '/community', '/feng-shui', '/bagua-reading'],
     columns: [
       { title: 'Timing', items: [
+        { to: '/dashboard', label: 'Dashboard · Current Chapter', description: 'Today’s sky against your chart', icon: LayoutDashboard },
+        { to: '/forecast', label: 'Daily Sky & Personal Forecast', description: 'Public bulletin and your own broadcast', icon: PlayCircle },
         { to: '/transits', label: 'Today · Transits', description: 'What is moving through your chart now', icon: CalendarClock, badge: 'Popular' },
         { to: '/retrogrades', label: 'Retrograde Guide', description: 'Recent review, active sky, upcoming cycles and natal patterns', icon: Repeat },
         { to: '/moon-calendar', label: 'Moon Calendar', description: 'Coming Moons in your own houses', icon: Repeat },

@@ -14,7 +14,7 @@ const accountPaths = new Set(ACCOUNT_MENU.map(a => a.to));
 
 describe('member navigation architecture', () => {
   it('has exactly five domains at the top level, plus the account menu (7-item cap)', () => {
-    expect(MEMBER_DOMAINS.map(d => d.label)).toEqual(['Mapping Center', 'Readings', 'Cosmic Archive', 'Navigation', 'Research Library']);
+    expect(MEMBER_DOMAINS.map(d => d.label)).toEqual(['Mapping Center', 'Astral Bureaus', 'The Reading Room', 'Broadcast Deck', 'Research Library']);
     expect(MEMBER_DOMAINS.length + 1).toBeLessThanOrEqual(7);
   });
 
@@ -58,7 +58,7 @@ describe('member navigation architecture', () => {
   it('hides founder links from ordinary members and shows them to the right accounts', () => {
     const book = MEMBER_DOMAINS.find(d => d.id === 'book')!;
     const explore = MEMBER_DOMAINS.find(d => d.id === 'explore')!;
-    expect(visibleColumns(book, {}).map(c => c.title)).toEqual(['My AstroBook', 'Library']);
+    expect(visibleColumns(book, {}).map(c => c.title)).toEqual(['My AstroBook', 'Library', 'The Listening Post']);
     expect(visibleColumns(book, { shane: true }).flatMap(c => c.items).some(i => i.to === '/shane')).toBe(true);
     expect(visibleColumns(explore, {}).flatMap(c => c.items).some(i => i.to === '/shared')).toBe(false);
     expect(visibleColumns(explore, { shared: true }).flatMap(c => c.items).some(i => i.to === '/shared')).toBe(true);
@@ -96,7 +96,7 @@ describe('member navigation architecture', () => {
 
   it('builds breadcrumbs for detail pages only, three levels at most', () => {
     expect(breadcrumbsFor('/planets/venus')).toEqual([{ label: 'Mapping Center', to: '/my-chart' }, { label: 'Planets', to: '/planets' }, { label: 'Venus' }]);
-    expect(breadcrumbsFor('/my-readings/topic/core-emotions')?.map(c => c.label)).toEqual(['Readings', 'Core themes', 'Emotional World']);
+    expect(breadcrumbsFor('/my-readings/topic/core-emotions')?.map(c => c.label)).toEqual(['Astral Bureaus', 'Core themes', 'Emotional World']);
     expect(breadcrumbsFor('/relationships/r1/timeline', { relationship: () => 'Alex' })?.map(c => c.label)).toEqual(['Relationships', 'Alex', 'Timeline']);
     expect(breadcrumbsFor('/other-systems/celtic-tree-calendar')?.at(-1)?.label).toBe('Celtic Tree Calendar');
     expect(breadcrumbsFor('/my-chart')).toBeNull();

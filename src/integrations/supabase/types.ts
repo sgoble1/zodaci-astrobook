@@ -3592,6 +3592,15 @@ export type Database = {
         Returns: boolean
       }
       in_shared_space: { Args: { _space: string }; Returns: boolean }
+      investor_asset_counts: {
+        Args: never
+        Returns: {
+          area: string
+          chapters: number
+          checked_at: string
+          words: number
+        }[]
+      }
       investor_metrics: {
         Args: never
         Returns: {

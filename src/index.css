@@ -1702,3 +1702,15 @@ html[data-tab-hidden] *, html[data-tab-hidden] *::before, html[data-tab-hidden] 
 .about-editorial-intro { max-width: 38rem; }
 .about-editorial-opening .hero-headline { font-size: 3.5rem; }
 @media (max-width: 639px) { .about-editorial-opening { min-height: 36rem; padding: 2rem 1.25rem; } .about-editorial-opening .hero-headline { font-size: 2.75rem; } .about-editorial-sky { object-position: 65% center; } }
+
+/* Tactile consoles: paper ledger tabs, ledger paper, odometer digits, rotary dial */
+@layer components {
+  .ledger-tabs { @apply h-auto flex-wrap gap-1 rounded-none border-b border-border bg-transparent p-0; }
+  .ledger-tabs > [role="tab"] { @apply rounded-t-md rounded-b-none border border-b-0 border-border bg-muted/40 px-4 py-2 font-label tracking-[0.08em]; }
+  .ledger-tabs > [role="tab"][data-state="active"] { @apply -mb-px bg-card text-foreground shadow-none; }
+  .ledger-paper { background-image: repeating-linear-gradient(to bottom, transparent 0 1.35rem, hsl(var(--brass) / 0.18) 1.35rem calc(1.35rem + 1px)); }
+  .odometer { @apply inline-flex gap-px rounded-sm border border-[hsl(var(--brass)/0.7)] bg-background p-0.5 font-mono; }
+  .odometer > span { @apply grid h-7 w-5 place-items-center rounded-[2px] bg-card text-sm text-foreground; box-shadow: inset 0 -6px 6px -4px hsl(var(--background) / 0.9), inset 0 6px 6px -4px hsl(var(--background) / 0.9); }
+  .rotary-dial { @apply relative grid place-items-center rounded-full border-2 border-[hsl(var(--brass))] bg-card; box-shadow: inset 0 2px 0 hsl(var(--brass) / 0.3), 0 2px 0 hsl(var(--background)); }
+  .cast-operator { @apply pointer-events-none select-none opacity-[0.14]; filter: grayscale(0.4) sepia(0.4); }
+}

@@ -41,3 +41,5 @@
 
 - Retrograde Guide uses lib/retrogrades daily UTC ephemeris windows for recent/active/upcoming cycles and same-planet double-Rx matches; /retrogood redirects to /retrogrades, which is a member page with section-level paid gates. Shared editions use only authorized birth facts; interpretations never claim observed biography or rank a reader by dignity.
 - Visual math uses civil birthdays, exact-UTC returns (untimed angles null), mean-default nodes and explicit speed/Jones/BaZi/Lo Shu conventions.
+- investmentScenarios holds the illustrative investor stake math (ownership = amount / post-money, dilution then exit multiple); investor asset counts come only from the founder audit via investor_asset_counts(), never typed figures.
+- synthesis.ts (paradoxes, Western×BaZi cross-check, ledger) is deterministic; vignettes are possibility-framed and Moon/house content is dropped for untimed charts.

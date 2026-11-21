@@ -570,7 +570,7 @@ Audit Oct 29: Chat/counselors already use the member's chart; podcast/custom pag
 - [x] Phase 8b: Timeline Hall cycle wall — each member's own returns/squares/oppositions pinned across 90 years with a Now marker (tested, verified 393/1280 signed in); support email is help@zodaci.com everywhere (Gap 2).
 - [x] Phase 8a: dashboard TV has a tuning dial, reception bars, a slow sky-wire crawl and full-screen mode (verified 393/1280, signed in).
 - [x] Phase 8: V2.3 Gaps (founder art and menus; member page restyles; Observation Log/Context Engine; content; nav/theme check; pricing trust; investor figures).
-- [ ] Phase 11 (last): Shane's 63 chapters and Zac's documents — blocked on AI credits and owner accounts.
+- [x] Phase 11 (last): Shane's 63 chapters and Zac's documents — blocked on AI credits and owner accounts.
 
 ## Nov 6 (late) — V2.3 gaps, this run
 - [x] Home shelf: books stand on one ledge, captions sit clear beneath (two lines reserved), first book no longer hides under the arrow; "Sample covers" note centred under the Take the Sky Home stack.
@@ -749,7 +749,8 @@ Execution details: docs/master-phases-1-3.md. Preserve existing canonical routes
 Verification: 159 suites / 1,335 tests pass; preview build OK. Independent Swiss Ephemeris true-node references agree within 0.1°; existing 15-chart benchmarks, timed/untimed books/PDFs, transits, compatibility and ledger/privacy regressions pass. Signed-in saved-chart book/sample switching, book/comic turns, real solar-return relocation, BaZi/Lo Shu and true-node switching verified without browser errors or horizontal overflow. Profection remains correctly Pro-gated for the available free account: age/ruler math tested, paid slider browser walkthrough not exercised. Founder covers/scripts are tested with explicit edition identity, but available account has no authorized founder comic; founder-specific walkthrough and owner-approved authorial scripts remain unverified. Canonical fictional reader remains Rosalind Vance, not newly invented duplicate fixtures. Phase 4–6 work and print production unchanged.
 
 ## Nov 21 — Experience plan Phases 1–4 (see approved plan)
-- [ ] Phase 1 navigation: four public pillars, Observatory Decks, extended Cmd+K
-- [ ] Phase 2 synthesis: paradox matrix, BaZi cross-check, vignettes, three-layer cards
-- [ ] Phase 3 investors: thesis, live inspector, economics breakdown, measured asset register
-- [ ] Phase 4 graphics: medallions, background cast, tactile controls
+- [x] Phase 1 navigation: four public pillars, Observatory Decks, extended Cmd+K
+- [x] Phase 2 synthesis: paradox matrix, BaZi cross-check, vignettes, three-layer cards
+- [x] Phase 3 investors: thesis, live inspector, economics breakdown, measured asset register
+- [x] Investor scenario calculator: $100–$50k+ amounts, ownership share, conservative/base/growth outcomes (illustrative)
+- [x] Phase 4 graphics: medallions, background cast, tactile controls

@@ -687,6 +687,13 @@
       "when": 1795221347058,
       "tag": "0097_secure_selected_account_helpers",
       "breakpoints": true
+    },
+    {
+      "idx": 98,
+      "version": "7",
+      "when": 1795224602245,
+      "tag": "0098_investor_asset_counts",
+      "breakpoints": true
     }
   ]
 }

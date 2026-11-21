@@ -1,19 +1,43 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { ArrowRight, ArrowUpRight, ChevronDown, Menu } from 'lucide-react';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { SpotArt } from '@/components/art/SpotArt';
-import { LEARN_SECTIONS } from '@/content/learnSections';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
 import { ZodaciLogo } from './ZodaciLogo';
 import { useSession } from '@/hooks/useLibrary';
 
-/** The one public menu every signed-out page uses. */
-export const PUBLIC_NAV: [string, string][] = [
-  ['/start', 'Charts'], ['/astrobook', 'AstroBooks'], ['/astrocomic', 'AstroComic'], ['/compatibility', 'Relationships'],
-  ['/learn', 'Learn'], ['/store', 'Shop'], ['/about', 'About'], ['/pricing', 'Pricing'],
+/** The four public pillars every signed-out page uses. Items marked member open after sign-in. */
+export type PublicPillar = { label: string; to: string; items: { to: string; label: string; description: string }[] };
+export const PUBLIC_PILLARS: PublicPillar[] = [
+  { label: 'Products', to: '/astrobook', items: [
+    { to: '/astrobook', label: 'AstroBooks', description: 'Printed books written from your chart' },
+    { to: '/astrocomic', label: 'AstroComics', description: 'A monthly illustrated issue' },
+    { to: '/keepsakes', label: 'Gift keepsakes', description: 'Certificates and Star Scrolls' },
+    { to: '/store', label: 'Shop', description: 'Posters, stickers and notebooks' },
+  ] },
+  { label: 'Calculators & Tools', to: '/start', items: [
+    { to: '/start', label: 'Birth chart', description: 'Calculate your chart from date, time and place' },
+    { to: '/ephemeris', label: 'Ephemeris', description: 'Daily UTC positions, 1800–2100' },
+    { to: '/retrogrades', label: 'Retrograde Guide', description: 'Recent, active and upcoming cycles' },
+    { to: '/bazi', label: 'BaZi · Four Pillars', description: 'Pillars, five elements and Lo Shu' },
+    { to: '/compatibility', label: 'Relationships', description: 'Compare two charts' },
+  ] },
+  { label: 'Learn & Academy', to: '/learn', items: [
+    { to: '/learn', label: 'All of Learn', description: 'Lessons, guides and articles' },
+    { to: '/compendium', label: 'Compendium', description: 'Every placement, explained' },
+    { to: '/about', label: 'Philosophy', description: 'How Zodaci reads a chart' },
+    { to: '/sources', label: 'Source references', description: 'The books and tables behind the readings' },
+    { to: '/accuracy', label: 'How we calculate', description: 'Checked against Swiss Ephemeris' },
+  ] },
+  { label: 'Pricing', to: '/pricing', items: [
+    { to: '/pricing', label: 'Plans', description: 'Free, Pro and Cosmic, side by side' },
+    { to: '/books', label: 'Book editions', description: 'Every AstroBook version and price' },
+    { to: '/pricing#faq', label: 'Redeem a gift', description: 'Gift links arrive by email; questions answered here' },
+  ] },
 ];
+/** Flat list of every public header destination (kept for link checks). */
+export const PUBLIC_NAV: [string, string][] = PUBLIC_PILLARS.flatMap(p => p.items.map(i => [i.to, i.label] as [string, string]));
 
 export function PublicHeader({ sections }: { sections?: string[] }) {
   const [open, setOpen] = useState(false);
@@ -21,7 +45,6 @@ export function PublicHeader({ sections }: { sections?: string[] }) {
   const { pathname } = useLocation();
   const account: [string, string] = session ? ['/dashboard', 'My Zodaci'] : ['/auth', 'Sign in'];
   const active = (to: string) => pathname === to || pathname.startsWith(`${to}/`);
-  const learnActive = ['/learn', '/academy', '/reading-room', '/forecast', '/ephemeris'].some(active);
   return (
     <header className="sticky top-0 z-40 border-b-2 border-[hsl(var(--brass)/0.6)] bg-background/95 shadow-[0_2px_0_hsl(var(--brass)/0.3)] backdrop-blur-xl">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-5 sm:px-10 lg:h-20">
@@ -29,17 +52,17 @@ export function PublicHeader({ sections }: { sections?: string[] }) {
         <nav aria-label="Public pages" className="hidden items-center gap-0 xl:flex">
           {sections?.map(s => <Button key={s} asChild variant="ghost" size="sm"><a href={`#${s.toLowerCase()}`}>{s}</a></Button>)}
           {sections && <span aria-hidden="true" className="mx-1 h-5 w-px bg-border" />}
-          {PUBLIC_NAV.map(([to, label]) => to === '/learn' ? (
-            <DropdownMenu key={to}>
-              <DropdownMenuTrigger asChild><Button variant="ghost" size="sm" className={`gap-1 px-2.5 font-label text-sm ${learnActive ? 'text-primary' : ''}`}>{label}<ChevronDown aria-hidden className="h-3.5 w-3.5" /></Button></DropdownMenuTrigger>
-              <DropdownMenuContent align="start" className="w-72 border-[hsl(var(--brass)/0.5)] bg-background p-2">
-                <DropdownMenuItem asChild><Link to="/learn" className="flex items-center gap-3 py-2"><SpotArt kind="explore" className="h-9 w-9" orbit={false} /><span><span className="block font-label">All of Learn</span><span className="block text-xs text-muted-foreground">Everything in one place</span></span></Link></DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem asChild><Link to="/ephemeris" className="py-2 font-label">Ephemeris · daily positions</Link></DropdownMenuItem>
-                {LEARN_SECTIONS.map(s => <DropdownMenuItem key={s.id} asChild><Link to={s.id === 'forecasts' ? '/forecast' : `/learn#${s.id}`} className="flex items-center gap-3 py-2"><SpotArt kind={s.art} className="h-9 w-9" orbit={false} /><span><span className="block font-label">{s.label}</span><span className="block text-xs text-muted-foreground">{s.description}</span></span></Link></DropdownMenuItem>)}
-              </DropdownMenuContent>
-            </DropdownMenu>
-          ) : <Button key={to} asChild variant="ghost" size="sm" className={`px-2.5 font-label text-sm ${active(to) ? 'text-primary' : ''}`}><Link to={to} aria-current={active(to) ? 'page' : undefined}>{label}</Link></Button>)}
+          {PUBLIC_PILLARS.map(p => {
+            const on = p.items.some(i => active(i.to.split('#')[0]));
+            return (
+              <DropdownMenu key={p.label}>
+                <DropdownMenuTrigger asChild><Button variant="ghost" size="sm" className={`gap-1 px-3 font-label text-sm ${on ? 'text-primary' : ''}`}>{p.label}<ChevronDown aria-hidden className="h-3.5 w-3.5" /></Button></DropdownMenuTrigger>
+                <DropdownMenuContent align="start" className="w-72 border-[hsl(var(--brass)/0.5)] bg-background p-2">
+                  {p.items.map(i => <DropdownMenuItem key={i.to} asChild><Link to={i.to} className="flex flex-col items-start gap-0.5 py-2"><span className="block font-label">{i.label}</span><span className="block text-xs text-muted-foreground">{i.description}</span></Link></DropdownMenuItem>)}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            );
+          })}
         </nav>
         <div className="flex items-center gap-2">
           <Button asChild variant="outline" size="sm" className="hidden sm:inline-flex"><Link to={account[0]}>{account[1]}<ArrowUpRight /></Link></Button>
@@ -49,13 +72,11 @@ export function PublicHeader({ sections }: { sections?: string[] }) {
             <SheetContent side="right" className="w-[85vw] max-w-sm overflow-y-auto bg-background">
               <SheetHeader><SheetTitle className="text-left">Menu</SheetTitle></SheetHeader>
               <nav aria-label="Mobile navigation" className="mt-6 flex flex-col">
-                <Link to="/ephemeris" onClick={() => setOpen(false)} className="border-b border-border py-3 text-lg">Ephemeris</Link>
                 {sections?.map(s => <a key={s} href={`#${s.toLowerCase()}`} onClick={() => setOpen(false)} className="border-b border-border py-3 text-lg">{s}</a>)}
-                {sections && <p className="mb-1 mt-6 font-label text-xs tracking-[0.16em] text-primary">Explore</p>}
-                {PUBLIC_NAV.map(([to, label]) => <div key={to} className="border-b border-border">
-                  <Link to={to} onClick={() => setOpen(false)} className="block py-3 text-lg">{label}</Link>
-                  {to === '/learn' && <ul className="mb-3 grid gap-1 pl-3">{LEARN_SECTIONS.map(s => <li key={s.id}><Link to={s.id === 'forecasts' ? '/forecast' : `/learn#${s.id}`} onClick={() => setOpen(false)} className="flex items-center gap-2 py-1.5 text-muted-foreground"><SpotArt kind={s.art} className="h-6 w-6" orbit={false} />{s.label}</Link></li>)}</ul>}
-                </div>)}
+                {PUBLIC_PILLARS.map(p => <section key={p.label} aria-label={p.label} className="border-b border-border py-3">
+                  <p className="mb-1 font-label text-xs tracking-[0.16em] text-primary">{p.label}</p>
+                  <ul className="grid gap-0.5">{p.items.map(i => <li key={i.to}><Link to={i.to} onClick={() => setOpen(false)} className="block py-1.5 text-base">{i.label}</Link></li>)}</ul>
+                </section>)}
               </nav>
               <div className="mt-8 grid gap-3">
                 <Button asChild variant="signal"><Link to="/start" onClick={() => setOpen(false)}>Generate your chart<ArrowRight /></Link></Button>

@@ -14,6 +14,7 @@ import { BUILD_CREDIT_SNAPSHOT, creditCost, formatUsd, DOLLARS_PER_BUILD_CREDIT 
 import { FeatureRegisterBoard } from '@/components/common/FeatureRegisterBoard';
 import { FEATURES } from '@/lib/featureRegister';
 import { InvestorEconomics } from '@/components/common/InvestorEconomics';
+import { AssetRegister, InvestmentCalculator, LiveInspector, ZeroCostThesis } from '@/components/investors/InvestorShowcase';
 
 const low = BOOK_VERSIONS[0]; const high = BOOK_VERSIONS[BOOK_VERSIONS.length - 1];
 const PRODUCTS: [string, string, string][] = [
@@ -131,6 +132,7 @@ export default function Investors() {
       </section>
 
       <img src={launchArt} alt="A 1950s atomic-age zodiac disc above an observatory, with a red research rocket tracing a golden orbit toward Saturn." width={1536} height={768} loading="lazy" className="w-full rounded-lg border border-border" />
+      <ZeroCostThesis />
       <section aria-labelledby="inv-p" className="space-y-4"><h2 id="inv-p" className="text-3xl">What we sell</h2>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">{PRODUCTS.map(([k, t, d]) => <div key={t} className="vellum p-5"><ThemeArt kind={k as never} className="h-14 w-14" /><h3 className="mt-3 text-xl">{t}</h3><p className="mt-2 text-sm text-muted-foreground">{d}</p></div>)}</div>
       </section>
@@ -140,6 +142,8 @@ export default function Investors() {
       </section>
 
       <CalculationTrust />
+      <LiveInspector />
+      <AssetRegister />
 
       <section aria-labelledby="inv-f" className="space-y-4"><h2 id="inv-f" className="text-3xl">Every feature and where it stands</h2>
         <p className="max-w-3xl text-muted-foreground">Live, partly built, planned, and waiting on an outside step — the same list the build team works from.</p>
@@ -186,6 +190,7 @@ export default function Investors() {
       </section>
 
       <InvestorEconomics />
+      <InvestmentCalculator />
       <PrintPartnerMatrix />
 
       <section aria-labelledby="inv-n" className="grid gap-8 md:grid-cols-2">
