@@ -23,23 +23,21 @@ The four public pillars, member registry, founder trails and shared readers alre
 
 ## Phase 3 — States, forms and recovery
 - Audit data-driven pages for loading, empty, error, validation, partial and completed states. Differentiate “not created yet” from “could not load.”
-- Use shape-matched skeletons with stable dimensions and accessible loading announcements; never keep content hidden behind decorative transitions.
-- Give empty states one relevant next action: add birth details, create a reading, clear filters or return to the relevant library.
+- Use stable shape-matched skeletons and accessible loading announcements. Empty states offer one useful next action.
 - Add associated field labels, concise requirements, inline errors, invalid-field focus and disabled/busy submit states. Preserve unknown-time, historical timezone and consent behavior.
-- Prevent duplicate submissions; retain user input on failure. Translate expected errors into human explanations with retry or an appropriate sign-in/access recovery.
-- Keep source-answer denials distinct from generated answers; do not claim a save or payment succeeded before confirmation.
+- Prevent duplicate submissions; preserve failed input and offer human retry/access guidance. Never present source denials as answers or unconfirmed saves/payments as success.
 
 ## AstroBook addition — Full chapters in language people understand
 The current primary preview enforces 28 numbered pages and selects a single 60–135-word face for many topics. That is an excerpt contract, not a full-chapter reading experience. Expand the primary AstroBook reader rather than merely stretching its layout.
 
-- Build substantive multi-page chapters from the existing six-volume chart-derived content model, with an introduction, the reader’s actual placements and their interaction, a grounded practical interpretation, and relevant reflection prompts. Length follows meaningful content, not repeated filler.
+- Expand existing six-volume chart-derived chapters: introduction, measured interacting placements, practical interpretation and reflections. No repeated filler.
 - Start with ordinary-language headings and explanations: what someone may recognize, which measured chart factors support the interpretation, and what remains uncertain. Explain terms such as ruler, aspect, decan, profection, nodes and hidden stems when first introduced; keep technical measurements available in the ledger/glossary rather than leading the narrative.
 - Preserve Shane’s personable narrative and April’s precise directness across the three existing tones. Possibility-framed examples are not claims about the reader’s biography; saved personal observations remain opt-in and owner-only.
 - Separate chapter length from face capacity: chapters span multiple coherently paginated faces. Replace the rigid 28-page primary-experience contract with actual chapter/page counts and a dynamically generated contents list; explicitly limited excerpts remain labelled excerpts, not “the full book.”
 - Respect existing edition coverage and full-book target ranges: Digital 45–70, Pocket 50–75, Classic 75–120, Signature 90–150, Linen 100–180 pages. Do not pad text or promise a page count unsupported by generated content. World Systems remains excluded from Pocket.
 - Keep chart-relative plates facing the relevant narrative, current Atomic Zodiac jackets, custom uploads, names/dedications and consistent browser/PDF text. No added comic imagery inside the AstroBook.
 - Untimed charts receive meaningful element, planetary and aspect/cycle chapters without invented Ascendant or houses; Moon uncertainty remains explicit.
-- Use the same fuller model for public fictional samples, member personalized previews, customizer/drawers and authorized founder touchpoints. Never publish founder text/chart facts as a public sample or substitute the viewer’s chart for another edition.
+- Share the fuller model across fictional public samples, member readers, customizer/drawers and authorized founders; never expose founder content publicly or substitute viewer charts.
 - Keep existing founder masterbook source chapters intact. Test expanded chapter substance, concrete chart differences, edition exclusions, timed/untimed boundaries, tone consistency, dynamic TOC, pagination and PDF parity. Verify chapter navigation and complete pages on phone and desktop before marking this addition done.
 
 ## Phase 4 — Hierarchy, contrast and responsive structure
@@ -63,16 +61,14 @@ The current primary preview enforces 28 numbered pages and selects a single 60�
 - Reuse `usePageMeta` and route fallbacks for unique titles/descriptions, self-referencing public canonical/social URLs and private noindex boundaries. Check the static crawler fallback; no new placeholder share image or competing metadata library.
 
 ## Phase 7 — Comprehensive verification and release report
-- Run every existing Vitest suite and targeted regression tests after each coherent batch; add behavioral tests for changed dismissal, confirmation and navigation rules, not styling snapshots.
-- Use the automatic preview build/typecheck results; resolve current errors and finish with a clean build log and diff check.
-- Browser-test central flows with real authorized saved-chart state: navigation/search, form invalid→valid→pending→result, reading retry, book/comic turns and dismissal. Test forced network failure and slow loading where safe.
-- Validate desktop/phone screenshots, runtime errors, keyboard-only navigation, Escape/backdrop/focus restoration, reduced motion and accessibility checks.
-- Track every registered route in a coverage matrix with role, state, result and evidence. A redirect or blank screen is not a page pass; inaccessible founder/paid/admin states stay explicitly unverified until authorized.
-- No real order, email or print dispatch during checks. Report external dependencies separately; they do not prevent finishing presentation work.
-- Commit the completed work and provide a concise delivered/blocked summary. Publishing remains a separate action.
+- Run the full Vitest suite and focused behavioral regressions, then check automatic build/typecheck signals and the final diff.
+- Browser-test real authorized saved-chart journeys: navigation/search, form validation→submission→result, retry, complete reader turns and dismissal; include safe slow/offline cases.
+- Check phone/desktop screenshots, runtime errors, keyboard/focus restoration, reduced motion and accessibility.
+- Record each route’s role/state/evidence. Blank pages and redirects are not passes; name unavailable founder/paid/admin checks.
+- Do not place real orders, send email or dispatch printing. Report external limits, commit changes and summarize delivered/blocked work; publishing is separate.
 
 ## Technical approach
-Make focused, shared-first changes to the existing navigation registry, shells/wayfinding, Radix controls, form/state components, global tokens/motion and route metadata, then fix remaining page-specific exceptions. Keep chart math, backend permissions, payment confirmation and source content unchanged. Avoid broad CSS overrides that silently alter charts, books or devices.
+Improve existing shared navigation, shells, Radix controls, states, tokens/motion and metadata before page exceptions. Preserve chart math, permissions, payment confirmation and source archives; avoid blanket CSS overrides.
 
 ## Completion criteria
 All six requested areas have a route/state coverage record; no known critical usability defect is left without a named blocker. Tests and the automatic build pass. Mobile pages have no document-level horizontal overflow, complete reader pages remain reachable, ordinary overlays dismiss three ways, destructive actions require confirmation, and reduced motion disables decorative animation.
