@@ -3,7 +3,7 @@
 ## Direction and boundaries
 Keep the existing Astral Research Authority identity: painted observatory scenes, Atomic Zodiac book/comic artwork, current fonts, hand-cut panel corners and established hero slides. This is a usability overhaul, not a theme switch.
 
-Preserve every route, feature, saved item, entitlement, founder edition boundary and chart calculation. No speculative content generation, new charges or payment/access-rule changes. `roadmap.md` remains the sole work index; launch plans remain untouched.
+Preserve routes, saved items, entitlements, founder boundaries and chart math. Harden integrations without new charges or altered access/payment rules. `roadmap.md` is the sole index; launch plans remain untouched.
 
 ## Baseline findings
 Extend existing public pillars, member registry, founder trails and readers. Confirmed gaps: public breadcrumbs, small close/touch targets, 500ms drawers and stepped film effects. Initial phone checks were blank: diagnose startup before layout verification. Evidence: `docs/ux-overhaul-audit-2026-11-22.md`.
@@ -61,14 +61,20 @@ The current 28-page preview selects one 60–135-word face for many topics. Expa
 - Reuse `usePageMeta` and route fallbacks for unique titles/descriptions, self-referencing public canonical/social URLs and private noindex boundaries. Check the static crawler fallback; no new placeholder share image or competing metadata library.
 
 ## Phase 7 — Comprehensive verification and release report
-- Run the full Vitest suite and focused behavioral regressions, then check automatic build/typecheck signals and the final diff.
-- Browser-test real authorized saved-chart journeys: navigation/search, form validation→submission→result, retry, complete reader turns and dismissal; include safe slow/offline cases.
-- Check phone/desktop screenshots, runtime errors, keyboard/focus restoration, reduced motion and accessibility.
-- Record each route’s role/state/evidence. Blank pages and redirects are not passes; name unavailable founder/paid/admin checks.
-- Do not place real orders, send email or dispatch printing. Report external limits, commit changes and summarize delivered/blocked work; publishing is separate.
+- Run full tests, boundary/race regressions and automatic build/typecheck checks.
+- Verify authorized UI journeys, phone/desktop, accessibility, motion and network recovery. Record route/role/state evidence; blank pages/redirects never pass.
+- Test refresh, back/forward, skipped steps and invalid input across multi-step flows. Verify saved intermediate state and predictable recovery.
+- No real orders, email or printing without authorization. Name external/access limits; commit verified work. Publishing is separate.
+
+## Phase 8 — Integration and data reliability
+- Audit checkout, signed webhooks, notifications/email, storage uploads, AI and external APIs end-to-end: credentials present, handshake, payload/schema types, timeouts and visible success/failure.
+- Trace UI → queries/mutations → functions → providers; fix mismatched fields, silent catches, stale caches and missing bounded recovery. Never fabricate fallback chart/payment data.
+- Stress null/empty/long inputs, large lists, invalid numbers, expired sessions, rapid duplicate actions and out-of-order responses. Add guards, busy controls, identity fencing and server idempotency where needed.
+- Audit production paths for test constants/mock responses; preserve explicitly isolated fictional demos and test fixtures.
+- Detailed matrix and completion gates: `docs/integration-reliability-scope.md`.
 
 ## Technical approach
-Improve existing shared navigation, shells, Radix controls, states, tokens/motion and metadata before page exceptions. Preserve chart math, permissions, payment confirmation and source archives; avoid blanket CSS overrides.
+Improve shared UI first, then integration boundaries and page exceptions. Preserve chart math, authorization, verified payments and archives; no blanket overrides.
 
 ## Completion criteria
 All six requested areas have a route/state coverage record; no known critical usability defect is left without a named blocker. Tests and the automatic build pass. Mobile pages have no document-level horizontal overflow, complete reader pages remain reachable, ordinary overlays dismiss three ways, destructive actions require confirmation, and reduced motion disables decorative animation.

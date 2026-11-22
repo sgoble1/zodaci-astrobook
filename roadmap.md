@@ -9,6 +9,10 @@
 - [ ] Consistent hierarchy/spacing, AA contrast and 375px-to-desktop reflow.
 - [ ] Smooth analog pulses, responsive controls and complete reduced-motion support.
 - [ ] Copy/metadata/accessibility audit, full tests and authorized browser coverage.
+- [ ] Audit all integration handshakes and production mock/test values; validate payloads and success/failure feedback.
+- [ ] Trace UI/data/function/provider contracts and resolve configuration, timeout, silent-error and cache-recovery gaps.
+- [ ] Stress duplicate actions, invalid/large input, expired sessions and response races; verify guards/idempotency.
+- [ ] Trace multi-step flows through refresh/back/forward/skips and ensure predictable intermediate-state recovery (docs/integration-reliability-scope.md).
 
 ## Nov 21 — Founder comic story and motion refinement
 - [x] Give April, Shane and Zac distinct continuous fictional missions shaped by their authorized chart and selected issue contact; keep cast behind external circumstances and natural protagonist dialogue. Opening difficulty returns in the final test; saved buyer scripts and cover assets remain unchanged.
