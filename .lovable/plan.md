@@ -6,7 +6,7 @@ Keep the existing Astral Research Authority identity: painted observatory scenes
 Preserve every route, feature, saved item, entitlement, founder edition boundary and chart calculation. No speculative content generation, new charges or payment/access-rule changes. `roadmap.md` remains the sole work index; launch plans remain untouched.
 
 ## Baseline findings
-The four public pillars, member registry, founder trails and shared readers already exist. Improve their coverage instead of introducing competing systems. Confirmed gaps include public detail breadcrumbs, small close/touch controls, 500ms drawer opening and stepped film effects. Initial phone-sized checks remained blank; diagnose startup/loading before treating any layout as verified. Detailed evidence is in `docs/ux-overhaul-audit-2026-11-22.md`.
+Extend existing public pillars, member registry, founder trails and readers. Confirmed gaps: public breadcrumbs, small close/touch targets, 500ms drawers and stepped film effects. Initial phone checks were blank: diagnose startup before layout verification. Evidence: `docs/ux-overhaul-audit-2026-11-22.md`.
 
 ## Phase 1 — Complete coverage and wayfinding
 - Inventory all registered routes and navigation surfaces: public, Free, paid, founder and admin; label primary/secondary/detail/utility destinations and visibility rules.
@@ -28,7 +28,7 @@ The four public pillars, member registry, founder trails and shared readers alre
 - Prevent duplicate submissions; preserve failed input and offer human retry/access guidance. Never present source denials as answers or unconfirmed saves/payments as success.
 
 ## AstroBook addition — Full chapters in language people understand
-The current primary preview enforces 28 numbered pages and selects a single 60–135-word face for many topics. That is an excerpt contract, not a full-chapter reading experience. Expand the primary AstroBook reader rather than merely stretching its layout.
+The current 28-page preview selects one 60–135-word face for many topics. Expand the actual chapters, not just their layout.
 
 - Expand existing six-volume chart-derived chapters: introduction, measured interacting placements, practical interpretation and reflections. No repeated filler.
 - Start with ordinary-language headings and explanations: what someone may recognize, which measured chart factors support the interpretation, and what remains uncertain. Explain terms such as ruler, aspect, decan, profection, nodes and hidden stems when first introduced; keep technical measurements available in the ledger/glossary rather than leading the narrative.
