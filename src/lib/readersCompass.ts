@@ -18,7 +18,7 @@ export const GLOSSARY: { term: string; plain: string; match: RegExp }[] = [
   { term: 'Cusp', plain: 'The starting line of a house.', match: /\bcusps?\b/i },
   { term: 'Ruler', plain: 'The planet linked to a sign. A house is "ruled" by the planet of the sign on its cusp.', match: /\brul(er|ers|ership)\b/i },
   { term: 'North Node', plain: 'A calculated point showing the direction of growth your chart points toward.', match: /north node|\bnodes?\b/i },
-  { term: 'Chiron', plain: 'A small body linked to old hurts and the way you help others with them.', match: /\bchiron\b/i },
+  { term: 'Chiron', plain: 'A small body interpreted through sensitivity and patient practice; its position cannot establish a wound or personal history.', match: /\bchiron\b/i },
   { term: 'Profection', plain: 'An old timing method: each birthday moves your focus to the next house, one per year.', match: /profection/i },
   { term: 'Solar return', plain: 'The chart for the moment the Sun returns to its birth place each year, near your birthday.', match: /solar return/i },
   { term: 'Midpoint', plain: 'The halfway point between two planets, read as a place where they combine.', match: /midpoints?/i },

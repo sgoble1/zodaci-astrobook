@@ -399,7 +399,7 @@ body:has(#mobile-menu) [data-generation-notice] { display: none; }
 @keyframes cine-drift { from { transform: scale(1.04); } to { transform: scale(1.1) translateX(-1%); } }
 @keyframes cine-grain { 0%,100% { transform: translate(0,0); } 25% { transform: translate(-2%,1%); } 50% { transform: translate(1%,-2%); } 75% { transform: translate(2%,2%); } }
 .cine-projector { background: radial-gradient(ellipse 70% 60% at 15% 0%, hsl(var(--primary) / .22), transparent 70%); mix-blend-mode: screen; }
-.cine-grain { inset: -10%; opacity: .12; pointer-events: none; background-image: url("/textures/grain-gray.png"); animation: cine-grain 1.2s steps(4) infinite; }
+.cine-grain { inset: -10%; opacity: .12; pointer-events: none; background-image: url("/textures/grain-gray.png"); animation: cine-grain 24s ease-in-out infinite; }
 @media (prefers-reduced-motion: reduce) { .cine-grain { animation: none; } }
 
 /* Member navigation: mega-menu fade, and floating notices lifted above the phone tab bar. */
@@ -485,13 +485,13 @@ body {
 }
 @keyframes obs-tv-on { 0% { transform: scaleY(.01) scaleX(.6); filter: brightness(3); opacity: .2 } 40% { transform: scaleY(.04) scaleX(1); } 100% { transform: none; filter: none; opacity: 1 } }
 @keyframes obs-sweep { from { transform: rotate(0deg) } to { transform: rotate(360deg) } }
-@keyframes obs-signal { 0%,100% { opacity: .35 } 50% { opacity: 1 } }
+@keyframes obs-signal { 0%,100% { opacity: .75 } 50% { opacity: 1 } }
 @keyframes obs-deploy { from { opacity: 0; transform: translateY(10px); clip-path: inset(0 0 100% 0) } to { opacity: 1; transform: none; clip-path: inset(0) } }
 @keyframes obs-draw { to { stroke-dashoffset: 0 } }
 @keyframes obs-static { 0% { background-position: 0 0 } 100% { background-position: 100px 60px } }
 .obs-tv-on { animation: obs-tv-on 1.4s cubic-bezier(.2,.7,.2,1) both; transform-origin: center; }
 .obs-sweep { animation: obs-sweep 24s linear infinite; }
-.obs-light { animation: obs-signal 4s ease-in-out infinite; }
+.obs-light { animation: obs-signal 3s ease-in-out infinite; }
 .obs-deploy { animation: obs-deploy 1.2s cubic-bezier(.2,.7,.2,1) both; }
 .obs-draw { stroke-dasharray: 1200; stroke-dashoffset: 1200; animation: obs-draw 6s ease-out forwards; }
 @media (prefers-reduced-motion: reduce) {
@@ -600,7 +600,7 @@ body {
 .chart-projection-lamp { position: absolute; inset: -8%; z-index: 3; pointer-events: none; mix-blend-mode: soft-light;
   background: radial-gradient(ellipse 46% 42% at 50% 45%, hsl(var(--screen-lamp) / .9), hsl(var(--screen-lamp) / .35) 55%, transparent 75%);
   animation: chart-lamp 9.7s steps(1) infinite, chart-lamp-drift 38s ease-in-out infinite alternate; }
-@keyframes chart-lamp { 0% { opacity: .9 } 11% { opacity: .7 } 12% { opacity: .95 } 37% { opacity: .8 } 38% { opacity: .55 } 39% { opacity: .9 } 66% { opacity: .75 } 81% { opacity: 1 } 82% { opacity: .65 } 83% { opacity: .9 } }
+@keyframes chart-lamp { 0%, 100% { opacity: .75 } 50% { opacity: 1 } }
 @keyframes chart-lamp-drift { from { transform: translate(-1.5%, -1%) } to { transform: translate(1.5%, 1%) } }
 /* Screen case on the tripod, with brass end caps and a maker's plate. */
 .chart-projection-case { position: relative; z-index: 2; height: 15px; margin-inline: -7px; border-radius: 8px; display: flex; align-items: center; justify-content: center;
@@ -613,7 +613,7 @@ body {
 /* Film layer (shared by projector screens and retro TVs). */
 .film-fx { position: absolute; inset: 0; z-index: 4; pointer-events: none; overflow: hidden; }
 .film-flicker { position: absolute; inset: 0; background: hsl(var(--chart-ink) / .05); mix-blend-mode: screen; animation: film-flicker 7.3s steps(1) infinite; }
-@keyframes film-flicker { 0% { opacity: .25 } 9% { opacity: .6 } 10% { opacity: .1 } 23% { opacity: .45 } 24% { opacity: .2 } 41% { opacity: .7 } 42% { opacity: .15 } 58% { opacity: .35 } 77% { opacity: .55 } 78% { opacity: .05 } 90% { opacity: .4 } }
+@keyframes film-flicker { 0%, 100% { opacity: .75 } 50% { opacity: 1 } }
 /* Haze in the beam: two soft clouds of light drifting very slowly across each other. */
 .film-haze { position: absolute; inset: -30%; opacity: .5; mix-blend-mode: screen; pointer-events: none;
   background: radial-gradient(ellipse 30% 22% at 30% 40%, hsl(var(--chart-ink) / .07), transparent 70%), radial-gradient(ellipse 26% 30% at 70% 62%, hsl(var(--chart-ink) / .06), transparent 70%);
@@ -647,8 +647,9 @@ body {
 .film-fx-screen .film-haze { mix-blend-mode: soft-light; opacity: .8; background: radial-gradient(ellipse 30% 22% at 30% 40%, hsl(var(--screen-lamp) / .5), transparent 70%), radial-gradient(ellipse 26% 30% at 70% 62%, hsl(var(--screen-lamp) / .4), transparent 70%); }
 .film-fx-screen .film-scratches i { background: linear-gradient(180deg, transparent, hsl(var(--midnight) / .35) 18%, hsl(var(--midnight) / .12) 55%, hsl(var(--midnight) / .3) 80%, transparent); }
 .film-fx-screen .film-vignette { background: repeating-linear-gradient(0deg, transparent 0 3px, hsl(var(--midnight) / .018) 3px 4px); }
-/* Single-frame specks: dark and bright flecks that blink in for a moment, like dirt on the print. */
-.film-specks span { position: absolute; width: 3px; height: 2px; border-radius: 40%; background: hsl(var(--midnight) / .85); opacity: 0; animation: film-speck 6s steps(1) infinite; }
+/* Faint print specks breathe continuously rather than flashing for a single frame. */
+.film-specks { opacity: .18; }
+.film-specks span { position: absolute; width: 3px; height: 2px; border-radius: 40%; background: hsl(var(--midnight) / .85); opacity: .75; animation: film-speck 3s ease-in-out infinite; }
 .film-specks span:nth-child(odd) { background: hsl(var(--chart-ink) / .8); width: 2px; height: 2px; }
 .film-fx-screen .film-specks span:nth-child(odd) { background: hsl(var(--midnight) / .5); }
 .film-specks span:nth-child(1) { left: 12%; top: 31%; animation-delay: -1s; }
@@ -660,7 +661,7 @@ body {
 .film-specks span:nth-child(7) { left: 76%; top: 88%; animation-delay: -2s; animation-duration: 10.1s; }
 .film-specks span:nth-child(8) { left: 33%; top: 12%; animation-delay: -7s; animation-duration: 7.9s; width: 4px; }
 .film-specks span:nth-child(9) { left: 7%; top: 60%; animation-delay: -3.8s; animation-duration: 8.6s; }
-@keyframes film-speck { 0% { opacity: 0 } 50% { opacity: .9 } 52% { opacity: 0 } }
+@keyframes film-speck { 0%, 100% { opacity: .75 } 50% { opacity: 1 } }
 .film-hair { position: absolute; inset: 0; width: 100%; height: 100%; fill: none; stroke: hsl(var(--midnight) / .55); stroke-width: .35; vector-effect: non-scaling-stroke; opacity: 0; animation: film-hair 19s steps(1) infinite; }
 .film-fx-screen .film-hair { stroke: hsl(var(--midnight) / .3); }
 .film-hair path:nth-child(2) { stroke: hsl(var(--chart-ink) / .35); }
@@ -1257,6 +1258,19 @@ li:hover > .zodiac-coin { transform: rotate(-10deg); }
   .chart-projection-hero .chart-projection-lamp, .chart-monitor-scan, .chart-monitor-screen .chart-projection-ink { animation: none !important; }
 }
 @media print { .chart-hero-beam, .chart-hero-caption, .chart-monitor-controls, .chart-monitor-foot, .chart-monitor-scan { display: none; } }
+
+/* Shared lighting pulses: retain slow scene drift but remove discrete frame jumps. */
+.film-flicker, .chart-projection-lamp, .chart-projection-hero .chart-projection-lamp,
+.chart-hero-beam, .hero-projection::before, .hero-projection::after,
+.chart-projection-hero .chart-projection-screen::after {
+  animation: film-flicker 3s ease-in-out infinite;
+}
+.film-specks span:nth-child(n) { animation-duration: 3s; }
+.chart-projection-ink, .chart-projection-hero .chart-projection-ink, .chart-monitor-screen .chart-projection-ink { animation-timing-function: ease-in-out; }
+.film-scratches i, .film-hair { animation-timing-function: ease-in-out; }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition-duration: 0s !important; scroll-behavior: auto !important; }
+}
 
 /* ══ V2.3 (Nov 6): mosaic art tiles, real-product shelf, gift-shop department window ══ */
 .mosaic-trio { display: grid; gap: .9rem; grid-template-columns: minmax(0, 1fr); }

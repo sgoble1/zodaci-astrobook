@@ -1,6 +1,7 @@
 import { createClient } from "npm:@supabase/supabase-js@2";
 import { creditShortfall } from "../_shared/credits.ts";
 import { hasFullAccess } from "../_shared/chat-guard.ts";
+import { requestDeadline } from '../_shared/request-deadline.ts';
 
 // Turns a member's own photo into a 1950s observatory comic stand-in. The photo is used once and never stored;
 // only the drawn result is saved to the member's private library ({uid}/creation/), as a Cosmic Studio creation.
@@ -31,7 +32,7 @@ Deno.serve(async (req) => {
     const up = new FormData();
     up.append("model", "openai/gpt-image-2.5-sunburst"); up.append("prompt", PROMPT); up.append("image", photo, photo.name || "photo.png");
     up.append("size", "1024x1024"); up.append("stream", "false");
-    const r = await fetch("https://ai.gateway.lovable.dev/v1/images/edits", { method: "POST", headers: { "Lovable-API-Key": apiKey }, body: up });
+    const r = await fetch("https://ai.gateway.lovable.dev/v1/images/edits", { signal: requestDeadline(120_000, req.signal), method: "POST", headers: { "Lovable-API-Key": apiKey }, body: up });
     if (!r.ok) {
       const msg = r.status === 429 ? "Too many requests. Try again in a moment." : r.status === 402 ? "AI credits have run out." : r.status === 403 ? "This photo could not be drawn." : "The drawing could not be made right now.";
       return json({ error: msg }, [402, 403, 429].includes(r.status) ? r.status : 502);

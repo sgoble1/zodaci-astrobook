@@ -14,7 +14,7 @@ export function confirmAction(message: string, action = 'Confirm'): Promise<bool
 
 export function ConfirmHost() {
   const [req, setReq] = useState<Req | null>(null);
-  useEffect(() => { push = setReq; return () => { push = null; }; }, []);
+  useEffect(() => { push = next => setReq(previous => { previous?.resolve(false); return next; }); return () => { push = null; }; }, []);
   const close = (ok: boolean) => { req?.resolve(ok); setReq(null); };
   return (
     <AlertDialog open={!!req} onOpenChange={o => { if (!o) close(false); }}>

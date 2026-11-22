@@ -3,6 +3,7 @@ import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors';
 import { createClient } from 'npm:@supabase/supabase-js@2';
 import { z } from 'npm:zod@3';
 import { withMysticInk } from '../_shared/mystic-ink.ts';
+import { requestDeadline } from '../_shared/request-deadline.ts';
 
 const json = (body: unknown, status = 200) => new Response(JSON.stringify(body), { status, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
 const Body = z.object({ style: z.enum(['Celestial atlas', 'Botanical sky', 'Modern orbit']), stream: z.boolean().default(true) });
@@ -39,6 +40,7 @@ Deno.serve(async req => {
     // Mystic Ink master prompt first (style guide section 3), then the cover template and the verified placements.
     const prompt = withMysticInk(`Book cover artwork for a personal astrology book, cover treatment: ${parsed.data.style}. A large glowing constellation at the center inside an ornate gold frame, title area left empty in the top third. Symbolically depict only these verified personal placements: ${facts}. No chart wheel with invented positions, no numerical degrees, no people, no invented biography. Portrait composition, print-ready.`);
     const upstream = await fetch('https://ai.gateway.lovable.dev/v1/images/generations', {
+      signal: requestDeadline(120_000, req.signal),
       method: 'POST', headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
       body: JSON.stringify({ model: 'openai/gpt-image-2.5-sunburst', prompt, size: '1024x1536', quality: 'medium', ...(parsed.data.stream ? { stream: true, partial_images: 1 } : {}) }),
     });

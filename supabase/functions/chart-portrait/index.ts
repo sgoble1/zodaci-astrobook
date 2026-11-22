@@ -1,6 +1,7 @@
 import { createClient } from "npm:@supabase/supabase-js@2";
 import { creditShortfall } from "../_shared/credits.ts";
 import { hasFullAccess } from "../_shared/chat-guard.ts";
+import { requestDeadline } from '../_shared/request-deadline.ts';
 
 // Sky Portrait: a 1950s observatory poster drawn from the member's own saved chart (Sun, Moon, Rising signs and
 // the most-occupied element only). It never depicts the member as a person or claims anything about their life.
@@ -31,7 +32,7 @@ Deno.serve(async (req) => {
     if (short) return json({ error: short }, 402);
 
     const prompt = `A 1950s atomic-age educational observatory poster, square, screen-printed look with grain and halftone. Central motif: the ${sun} zodiac symbol drawn as a large brass instrument medallion, with a crescent Moon emblem for ${moon} ${rising ? `and a rising-horizon arc for ${rising}` : ""} around it, ${element ? `accents themed on the ${element} element,` : ""} constellation lines and orbit rings. Palette: archive cream, deep indigo, warm yellow, signal red, brass. Clean ink linework, mid-century geometry. No people, no faces, no text or letters, no logos, no fantasy, no crystals, no cyberpunk.`;
-    const r = await fetch("https://ai.gateway.lovable.dev/v1/images/generations", { method: "POST", headers: { "Lovable-API-Key": apiKey, "Content-Type": "application/json" }, body: JSON.stringify({ model: "openai/gpt-image-2.5-sunburst", prompt, size: "1024x1024", stream: false }) });
+    const r = await fetch("https://ai.gateway.lovable.dev/v1/images/generations", { signal: requestDeadline(120_000, req.signal), method: "POST", headers: { "Lovable-API-Key": apiKey, "Content-Type": "application/json" }, body: JSON.stringify({ model: "openai/gpt-image-2.5-sunburst", prompt, size: "1024x1024", stream: false }) });
     if (!r.ok) {
       const msg = r.status === 429 ? "Too many requests. Try again in a moment." : r.status === 402 ? "AI credits have run out." : "The portrait could not be drawn right now.";
       return json({ error: msg }, [402, 429].includes(r.status) ? r.status : 502);

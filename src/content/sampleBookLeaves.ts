@@ -3,7 +3,7 @@ import { toChartInput, type MyBirth } from '@/lib/myBirth';
 import { LEAD_COVER } from '@/content/coverSamples';
 import { SAMPLE_ISSUE } from '@/content/sampleComic';
 import { birthLineOf, comicInterior, toLeaves, type BookFace } from '@/lib/bookLeaves';
-import { bookPreview } from '@/lib/personalPreview';
+import { fullBookPreview } from '@/lib/fullBookPreview';
 import { castFull, comicPreviewArt } from '@/content/castArt';
 import { personalCoverArtwork } from '@/content/personalCoverArtwork';
 import { buildComicPreview, previewName } from '@/lib/comicNarrative';
@@ -34,7 +34,7 @@ const BOOK_BACK: Extract<BookFace, { kind: 'back' }> = { kind: 'back', lines: ['
 export function sampleBookLeaves(options?: BookPreviewOptions): BookLeaf[] {
   if (options) return personalBookLeaves({ name: LEAD_COVER.name, birthLine: LEAD_COVER.printed.born, chart: sampleReaderChart(), ...options });
   const art = resolveBookArtwork(sampleReaderChart());
-  const { faces } = bookPreview({ name: LEAD_COVER.name, birthLine: LEAD_COVER.printed.born, chart: sampleReaderChart(), editionLabel: 'Collector Preview', artFor: key => key === art.ruler ? art.plate : castFull(key) });
+  const { faces } = fullBookPreview({ name: LEAD_COVER.name, birthLine: LEAD_COVER.printed.born, chart: sampleReaderChart(), editionLabel: 'Collector Preview', artFor: key => key === art.ruler ? art.plate : castFull(key) });
   return toLeaves(
     { kind: 'cover', src: LEAD_COVER.src, alt: LEAD_COVER.alt },
     faces,
@@ -55,7 +55,7 @@ export function memberBookLeaves(birth: MyBirth, options?: string | BookPreviewO
 export function personalBookLeaves({ name, birthLine, chart, coverSrc, coverChoice, coverName, dedication, tone, edition = 'classic', editionLabel }: { name: string; birthLine: string; chart: ChartResult } & BookPreviewOptions): BookLeaf[] {
   const label = editionLabel ?? versionOf(edition)?.name ?? 'Classic Edition';
   const art = resolveBookArtwork(chart);
-  const { cover, faces } = bookPreview({ name: coverName === undefined ? previewName(name) : coverName.trim() || 'Your Name', birthLine, chart, edition, editionLabel: label, dedication, tone, artFor: () => art.plate });
+  const { cover, faces } = fullBookPreview({ name: coverName === undefined ? previewName(name) : coverName.trim() || 'Your Name', birthLine, chart, edition, editionLabel: label, dedication, tone, artFor: () => art.plate });
   const customized = coverChoice !== undefined || coverName !== undefined || edition !== 'classic';
   const front: BookFace = coverSrc && !customized ? { kind: 'cover', src: coverSrc, alt: `AstroBook cover printed with ${cover.name}` } : { kind: 'jacket', cover, art: coverSrc || personalCoverArtwork(name, chart), edition: label, choice: coverChoice, composed: !!coverSrc, finish: edition === 'linen' ? 'cloth' : edition === 'signature' ? 'leatherette' : 'paper' };
   return toLeaves(front, faces, { ...BOOK_BACK, art: coverSrc || art.back, choice: coverChoice });

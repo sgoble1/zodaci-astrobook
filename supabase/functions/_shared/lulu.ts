@@ -87,11 +87,12 @@ export async function applyJobUpdate(db: SupabaseClient, row: JobRow, job: any) 
   let current = order.status as string;
   for (const p of plan.patches) {
     const r = await db.from('book_orders').update({ ...p, updated_at: new Date().toISOString() }).eq('id', order.id).eq('status', current).select('id');
-    if (r.error || !r.data?.length) return { status, note: 'The order changed at the same time; refresh to see its stage.' };
+    if (r.error || !r.data?.length) throw new Error('The order changed during fulfillment; retry delivery');
     current = p.status;
   }
   if (plan.note) await db.from('lulu_print_jobs').update({ status_message: plan.note }).eq('id', row.id);
-  if (status === 'SHIPPED' && row.status !== 'SHIPPED') await notifyShipped(db, order.id, (order as any).user_id, t).catch(e => console.error('ship email', e));
+  // Every replay can recover a missed notice; the durable email key suppresses duplicates.
+  if (status === 'SHIPPED') await notifyShipped(db, order.id, (order as any).user_id, t);
   return { status, note: plan.note, orderStatus: current };
 }
 
@@ -101,7 +102,7 @@ async function notifyShipped(db: SupabaseClient, orderId: string, userId: string
   const to = data?.user?.email; if (!to) return;
   const { sendAppEmail } = await import('./app-email.ts');
   const r = await sendAppEmail('book-shipped', to, { idempotencyKey: `book-shipped-${orderId}`, templateData: { trackingUrl: t.tracking_url, trackingId: t.tracking_id, carrier: t.carrier_name, ordersUrl: 'https://zodaci.com/orders' } });
-  if (!r.sent) console.log(`shipped email for ${orderId} not sent: ${r.reason}`);
+  if (!r.sent) throw new Error('Shipping notification pending; retry delivery');
 }
 
 export async function applyComicJobUpdate(db: SupabaseClient, row: { id: string; issue_id: string; environment: LuluEnv; status: string }, job: any) {

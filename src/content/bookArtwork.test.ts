@@ -30,7 +30,7 @@ describe('complete atomic AstroBook artwork', () => {
     expect(art.sign).toBe('Taurus');
     expect(art.ruler).toBe('venus');
     const faces = sampleBookLeaves().flatMap(l => [l.front, l.back]);
-    expect(faces.find(f => f.kind === 'plate')).toMatchObject({ src: art.plate, page: 6 });
+    expect(faces.find(f => f.kind === 'plate')).toMatchObject({ src: art.plate });
     expect(faces.at(-1)).toMatchObject({ kind: 'back', art: art.back });
   });
 });

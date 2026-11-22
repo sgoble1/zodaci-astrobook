@@ -50,7 +50,7 @@ export function AstroBookPublic() {
         <div id="teaser" className="scroll-mt-24 min-w-0"><MemberBookTeaser fallback={<OpenAstroBook layout="side" />} /></div>
       </section>
       <section id="full-edition" aria-labelledby="fe-h" className="scroll-mt-24 space-y-8">
-        <div className="max-w-3xl space-y-4"><h2 id="fe-h" className="font-display text-3xl sm:text-4xl">One book. Open it here.</h2><p className="text-muted-foreground leading-relaxed">The 28-page opening follows the same chart-specific writing approach as our private founder editions. It spans six volumes, with a calculation record, engraved plate, reflections and a Reader’s Compass. Cover, title and dedication are separate from the numbered pages. Your complete manuscript is reviewed before payment.</p><p className="text-sm text-muted-foreground">The public book belongs to {SAMPLE_EDITION.owner}, a fictional reader with a calculated chart. Founder books and their birth details stay account-only.</p></div>
+        <div className="max-w-3xl space-y-4"><h2 id="fe-h" className="font-display text-3xl sm:text-4xl">One book. Open it here.</h2><p className="text-muted-foreground leading-relaxed">The full calculated chapters follow the same chart-specific writing approach as our private founder editions. It spans six volumes, with a calculation record, engraved plate, reflections and a Reader’s Compass. Cover, title and dedication are separate from the numbered pages. Your complete manuscript is reviewed before payment.</p><p className="text-sm text-muted-foreground">The public book belongs to {SAMPLE_EDITION.owner}, a fictional reader with a calculated chart. Founder books and their birth details stay account-only.</p></div>
         <div className="flex flex-wrap gap-4"><Button asChild size="lg"><Link to={order()}>Choose my AstroBook</Link></Button><Link to="#inside" className="self-center text-accent underline underline-offset-4">Explore the six volumes</Link></div>
       </section>
       <PersonalizationStory />
@@ -91,7 +91,7 @@ export function AstroBookPublic() {
         <div className="min-w-0"><OpenComicDigest layout="stacked" /></div>
       </section>
       <section aria-labelledby="quick-teaser-h" className="grid items-start gap-8 border-y border-border py-8 md:grid-cols-2">
-        <div className="space-y-3"><h2 id="quick-teaser-h" className="font-display text-2xl">Start with a few calculated facts.</h2><p className="text-muted-foreground">Your Sun sign, Chinese zodiac year and Life Path number, without opening an account. To read the 28-page preview of your own book, sign in and save your birth details.</p></div><CosmicTeaser />
+        <div className="space-y-3"><h2 id="quick-teaser-h" className="font-display text-2xl">Start with a few calculated facts.</h2><p className="text-muted-foreground">Your Sun sign, Chinese zodiac year and Life Path number, without opening an account. To read the chapters of your own book, sign in and save your birth details.</p></div><CosmicTeaser />
       </section>
       <section id="gift" className="border-y border-border py-10 text-center space-y-4">
         <Gift className="mx-auto h-8 w-8 text-accent" aria-hidden />

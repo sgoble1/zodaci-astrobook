@@ -99,7 +99,7 @@ export default function Demo() {
                 {tier === 'free' ? <Locked title="The rest of this chapter" onPreview={pro} /> : <p className="border-l-2 border-primary pl-4 italic">{page.reflection}</p>}
               </div>
             </article>}
-            <section className="space-y-4 border-t border-border pt-6"><h3 className="text-2xl">Rosalind’s 28-page AstroBook</h3>{gated('transits', 'The complete AstroBook preview', bookLeaves ? <Suspense fallback={<p role="status">Opening the book…</p>}><DemoBook leaves={bookLeaves} label="Rosalind Vance · 28-page AstroBook" layout="side" /></Suspense> : <p role="status">Preparing the book…</p>)}</section>
+            <section className="space-y-4 border-t border-border pt-6"><h3 className="text-2xl">Rosalind’s AstroBook chapters</h3>{gated('transits', 'The complete AstroBook preview', bookLeaves ? <Suspense fallback={<p role="status">Opening the book…</p>}><DemoBook leaves={bookLeaves} label="Rosalind Vance · AstroBook chapters" layout="side" /></Suspense> : <p role="status">Preparing the book…</p>)}</section>
             <section className="space-y-4 border-t border-border pt-6"><h3 className="flex items-center gap-2 text-2xl"><Headphones className="h-6 w-6" />Your emotional world, Rosalind</h3>
               {gated('audio', 'Sample podcast', <div className="space-y-4"><p className="text-sm text-muted-foreground">Pre-recorded sample · Cancer Moon in house 3, sextile Sun and Rising, square Venus and Jupiter.</p>
                 <audio key={audioAttempt} aria-label="Rosalind sample episode" controls preload="none" src={episode.url} onError={() => setAudioError(true)} className="w-full">Audio playback is not supported by this browser.</audio>

@@ -694,6 +694,13 @@
       "when": 1795224602245,
       "tag": "0098_investor_asset_counts",
       "breakpoints": true
+    },
+    {
+      "idx": 99,
+      "version": "7",
+      "when": 1795329411194,
+      "tag": "0099_app_email_delivery_leases",
+      "breakpoints": true
     }
   ]
 }

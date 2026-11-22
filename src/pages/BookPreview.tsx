@@ -7,13 +7,13 @@ import { BOOK_VERSIONS, EXTRA_SECTION_PRICE, money } from '@/lib/books';
 
 /** Public preview page: read a full sample AstroBook as a PDF before ordering. */
 export default function BookPreview() {
-  usePageMeta('AstroBook sample — read before you order | Zodaci', 'Open the 28-page AstroBook sample, inspect chart terms, read beside the pages and download the same book before ordering.');
+  usePageMeta('AstroBook sample — read before you order | Zodaci', 'Read the AstroBook’s full calculated chapters, inspect chart terms, read beside the pages and download the same book before ordering.');
   return (
     <article className="space-y-10">
       <header className="space-y-4 text-center">
         <p className="text-xs font-medium tracking-[0.12em] text-accent">READ BEFORE YOU ORDER</p>
         <h1 className="font-display text-4xl sm:text-5xl">See inside an AstroBook.</h1>
-        <p className="mx-auto max-w-2xl text-muted-foreground">Read 28 pages of chart facts, personal reflections and clearly stated methods. The public sample is fictional; sign in to open the same preview from your saved birth details. Your final manuscript and page count are reviewed before payment.</p>
+        <p className="mx-auto max-w-2xl text-muted-foreground">Read full chapters with chart facts, ordinary-language explanations, personal reflections and clearly stated methods. The public sample is fictional; sign in to open the same preview from your saved birth details. Your final manuscript and page count are reviewed before payment.</p>
       </header>
       <section aria-labelledby="turn-h" className="space-y-4">
         <h2 id="turn-h" className="font-display text-2xl text-center">Turn the pages</h2>

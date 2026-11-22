@@ -3,6 +3,7 @@ import { creditShortfall } from "../_shared/credits.ts";
 import { counselorContext } from "../_shared/member-profile.ts";
 import { hasFullAccess } from "../_shared/chat-guard.ts";
 import { dreamReadingMessages } from "../_shared/dream-reading-prompt.ts";
+import { requestDeadline } from '../_shared/request-deadline.ts';
 
 // One optional symbolic reading of a member's own dream. The browser supplies the
 // ephemeris-calculated sky at the member's recorded local dream time.
@@ -34,6 +35,7 @@ Deno.serve(async (req) => {
     const messages = dreamReadingMessages(profile.context, body.sky, entry);
 
     const r = await fetch("https://ai.gateway.lovable.dev/v1/responses", {
+      signal: requestDeadline(90_000, req.signal),
       method: "POST",
       headers: { "Content-Type": "application/json", "Lovable-API-Key": apiKey, "X-Lovable-AIG-SDK": "fetch" },
       body: JSON.stringify({ model: "openai/gpt-6-astra", ...messages, store: false, max_output_tokens: 1500, reasoning: { effort: "low" } }),

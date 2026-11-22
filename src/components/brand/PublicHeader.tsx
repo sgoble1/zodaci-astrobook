@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { ArrowRight, ArrowUpRight, ChevronDown, Menu } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
@@ -43,6 +43,7 @@ export function PublicHeader({ sections }: { sections?: string[] }) {
   const [open, setOpen] = useState(false);
   const session = useSession();
   const { pathname } = useLocation();
+  useEffect(() => { setOpen(false); }, [pathname]);
   const account: [string, string] = session ? ['/dashboard', 'My Zodaci'] : ['/auth', 'Sign in'];
   const active = (to: string) => pathname === to || pathname.startsWith(`${to}/`);
   return (
@@ -58,7 +59,7 @@ export function PublicHeader({ sections }: { sections?: string[] }) {
               <DropdownMenu key={p.label}>
                 <DropdownMenuTrigger asChild><Button variant="ghost" size="sm" className={`gap-1 px-3 font-label text-sm ${on ? 'text-primary' : ''}`}>{p.label}<ChevronDown aria-hidden className="h-3.5 w-3.5" /></Button></DropdownMenuTrigger>
                 <DropdownMenuContent align="start" className="w-72 border-[hsl(var(--brass)/0.5)] bg-background p-2">
-                  {p.items.map(i => <DropdownMenuItem key={i.to} asChild><Link to={i.to} className="flex flex-col items-start gap-0.5 py-2"><span className="block font-label">{i.label}</span><span className="block text-xs text-muted-foreground">{i.description}</span></Link></DropdownMenuItem>)}
+                  {p.items.map(i => <DropdownMenuItem key={i.to} asChild><Link to={i.to} aria-current={active(i.to.split('#')[0]) && !i.to.includes('#') ? 'page' : undefined} className={`flex min-h-11 flex-col items-start gap-0.5 py-2 ${active(i.to.split('#')[0]) && !i.to.includes('#') ? 'bg-accent text-accent-foreground' : ''}`}><span className="block font-label">{i.label}</span><span className="block text-xs text-muted-foreground">{i.description}</span></Link></DropdownMenuItem>)}
                 </DropdownMenuContent>
               </DropdownMenu>
             );
@@ -68,14 +69,14 @@ export function PublicHeader({ sections }: { sections?: string[] }) {
           <Button asChild variant="outline" size="sm" className="hidden sm:inline-flex"><Link to={account[0]}>{account[1]}<ArrowUpRight /></Link></Button>
           {!session && <Button asChild variant="signal" size="sm" className="hidden xl:inline-flex"><Link to="/start">Generate your chart<ArrowRight /></Link></Button>}
           <Sheet open={open} onOpenChange={setOpen}>
-            <SheetTrigger asChild><Button variant="ghost" size="icon" className="xl:hidden" aria-label="Open menu"><Menu /></Button></SheetTrigger>
+            <SheetTrigger asChild><Button variant="ghost" size="icon" className="min-h-11 min-w-11 xl:hidden" aria-label="Open menu"><Menu /></Button></SheetTrigger>
             <SheetContent side="right" className="w-[85vw] max-w-sm overflow-y-auto bg-background">
               <SheetHeader><SheetTitle className="text-left">Menu</SheetTitle></SheetHeader>
               <nav aria-label="Mobile navigation" className="mt-6 flex flex-col">
                 {sections?.map(s => <a key={s} href={`#${s.toLowerCase()}`} onClick={() => setOpen(false)} className="border-b border-border py-3 text-lg">{s}</a>)}
                 {PUBLIC_PILLARS.map(p => <section key={p.label} aria-label={p.label} className="border-b border-border py-3">
                   <p className="mb-1 font-label text-xs tracking-[0.16em] text-primary">{p.label}</p>
-                  <ul className="grid gap-0.5">{p.items.map(i => <li key={i.to}><Link to={i.to} onClick={() => setOpen(false)} className="block py-1.5 text-base">{i.label}</Link></li>)}</ul>
+                  <ul className="grid gap-0.5">{p.items.map(i => <li key={i.to}><Link to={i.to} aria-current={active(i.to.split('#')[0]) && !i.to.includes('#') ? 'page' : undefined} onClick={() => setOpen(false)} className={`flex min-h-11 items-center py-2 text-base ${active(i.to.split('#')[0]) && !i.to.includes('#') ? 'font-semibold text-primary underline underline-offset-4' : ''}`}>{i.label}</Link></li>)}</ul>
                 </section>)}
               </nav>
               <div className="mt-8 grid gap-3">

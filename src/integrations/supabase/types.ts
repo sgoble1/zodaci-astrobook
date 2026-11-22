@@ -92,6 +92,36 @@ export type Database = {
         }
         Relationships: []
       }
+      app_email_deliveries: {
+        Row: {
+          completed_at: string | null
+          delivery_key: string
+          last_code: string | null
+          lease_at: string | null
+          lease_token: string | null
+          status: string
+          template: string
+        }
+        Insert: {
+          completed_at?: string | null
+          delivery_key: string
+          last_code?: string | null
+          lease_at?: string | null
+          lease_token?: string | null
+          status: string
+          template: string
+        }
+        Update: {
+          completed_at?: string | null
+          delivery_key?: string
+          last_code?: string | null
+          lease_at?: string | null
+          lease_token?: string | null
+          status?: string
+          template?: string
+        }
+        Relationships: []
+      }
       audit_log: {
         Row: {
           action: string
@@ -3479,6 +3509,10 @@ export type Database = {
       can_read_zac_edition: { Args: never; Returns: boolean }
       can_view_investors: { Args: never; Returns: boolean }
       claim_admin: { Args: never; Returns: boolean }
+      claim_app_email: {
+        Args: { _key: string; _template: string }
+        Returns: string
+      }
       claim_book_gift: {
         Args: { _birth: Json; _shipping: Json; _token_hash: string }
         Returns: {

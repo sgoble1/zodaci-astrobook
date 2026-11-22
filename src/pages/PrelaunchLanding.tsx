@@ -12,7 +12,7 @@ import art from '@/assets/prelaunch/couple-observatory.jpg';
 
 const FEATURES = [
   { icon: Telescope, title: 'Your birth chart', body: 'Calculated degrees, rulers and aspects, with historical time zones and public Swiss Ephemeris benchmark checks.' },
-  { icon: BookOpen, title: 'The AstroBook', body: 'Six volumes of chart-specific writing, engraved plates and reflections. Explore a 28-page opening before choosing your edition.' },
+  { icon: BookOpen, title: 'The AstroBook', body: 'Six volumes of chart-specific writing, engraved plates and reflections. Read full calculated chapters in ordinary language before choosing your edition.' },
   { icon: Orbit, title: 'The AstroComic', body: 'A 24-page Atomic Zodiac story: your planets become the cast, and real transits shape their choices.' },
   { icon: Moon, title: 'Dream journal', body: 'Keep private observations beside the calculated sky that night. You choose whether readings may use them.' },
 ];
@@ -146,7 +146,7 @@ export default function PrelaunchLanding({ onUnlock, openAccess = false }: { onU
             <p className="mt-5 max-w-xl text-lg leading-relaxed">
               We are finishing Zodaci: a personal observatory built around your whole birth chart. Explore how planets, rulers and precise aspects fit together, read thoughtful chapters in your preferred tone, and keep your questions and observations private.
             </p>
-            <ul className="mt-4 space-y-2 text-sm text-muted-foreground" aria-label="What you can verify"><li>13 public Swiss Ephemeris benchmark moments, with coordinate differences you can inspect.</li><li>28-page book opening and a complete 24-page comic sample, available in the interactive demo.</li></ul>
+            <ul className="mt-4 space-y-2 text-sm text-muted-foreground" aria-label="What you can verify"><li>13 public Swiss Ephemeris benchmark moments, with coordinate differences you can inspect.</li><li>Full calculated book chapters and a complete 24-page comic sample, available in the interactive demo.</li></ul>
             <p className="mt-4 font-script text-2xl text-primary">Be the first to know when we open.</p>
 
             {state === 'done' ? (

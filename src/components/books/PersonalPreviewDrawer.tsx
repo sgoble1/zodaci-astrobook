@@ -29,11 +29,11 @@ export function PersonalPreviewDrawer({ name, input, possessive = 'your', firstI
   const [open, setOpen] = useState(false);
   return (
     <Sheet open={open} onOpenChange={setOpen}>
-      <SheetTrigger asChild>{trigger ?? <Button variant="outline"><BookOpen className="h-4 w-4" aria-hidden="true" />{defaultTab === 'comic' ? 'Read the AstroComic preview' : 'Read the 28-page book preview'}</Button>}</SheetTrigger>
+      <SheetTrigger asChild>{trigger ?? <Button variant="outline"><BookOpen className="h-4 w-4" aria-hidden="true" />{defaultTab === 'comic' ? 'Read the AstroComic preview' : 'Read the AstroBook chapters'}</Button>}</SheetTrigger>
       <SheetContent side="right" className="w-full overflow-y-auto sm:max-w-3xl">
         <SheetHeader>
-          <SheetTitle>28-page AstroBook preview and AstroComic</SheetTitle>
-          <SheetDescription>28 numbered pages of {possessive} AstroBook, plus its cover and end matter, and a separate AstroComic story. Calculated from {possessive} saved birth details{input.time ? '' : ' (no birth time, so houses and angles are left out)'}. Nothing here is saved.</SheetDescription>
+          <SheetTitle>AstroBook chapters and AstroComic</SheetTitle>
+          <SheetDescription>Full calculated chapters of {possessive} AstroBook, plus its cover and end matter, and a separate AstroComic story. Calculated from {possessive} saved birth details{input.time ? '' : ' (no birth time, so houses and angles are left out)'}. Nothing here is saved.</SheetDescription>
         </SheetHeader>
         {open && <PreviewBody name={name} input={input} firstIssue={firstIssue} defaultTab={defaultTab} bookOptions={bookOptions} />}
       </SheetContent>
@@ -60,8 +60,8 @@ function PreviewBody({ name, input, firstIssue, defaultTab, bookOptions }: { nam
     <Tabs defaultValue={defaultTab} className="mt-6">
       <TabsList className="grid w-full grid-cols-2"><TabsTrigger value="book">AstroBook</TabsTrigger><TabsTrigger value="comic">AstroComic</TabsTrigger></TabsList>
       <TabsContent value="book" className="mt-6">
-        <OpenBook key={name} leaves={leaves} layout="stacked" trimPt={versionOf(bookOptions?.edition ?? 'classic')?.trimPt} label={`${bookOptions?.coverName?.trim() || previewName(name) || 'Your'} AstroBook, 28-page preview`} spine={{ title: 'Zodaci AstroBook', name: bookOptions?.coverName ?? (previewName(name) || undefined) }}
-          footer={<p className="mt-2 text-center text-xs text-muted-foreground">The full book continues through all six volumes from the same placements.</p>} />
+        <OpenBook key={name} leaves={leaves} layout="stacked" trimPt={versionOf(bookOptions?.edition ?? 'classic')?.trimPt} label={`${bookOptions?.coverName?.trim() || previewName(name) || 'Your'} AstroBook chapters`} spine={{ title: 'Zodaci AstroBook', name: bookOptions?.coverName ?? (previewName(name) || undefined) }}
+          footer={<p className="mt-2 text-center text-xs text-muted-foreground">Complete calculated chapters; the final order manuscript is reviewed separately.</p>} />
       </TabsContent>
       <TabsContent value="comic" className="mt-6 space-y-4">
         <div role="radiogroup" aria-label="Which issue" className="flex flex-wrap gap-2">

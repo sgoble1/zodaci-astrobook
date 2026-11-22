@@ -3,6 +3,7 @@ import { describe, expect, it, vi, afterEach } from 'vitest';
 import { PDFDocument } from 'pdf-lib';
 import { computeChart } from '@/lib/astro';
 import { bookPreview } from '@/lib/personalPreview';
+import { fullBookPreview } from '@/lib/fullBookPreview';
 import { faceProse, toLeaves, type BookFace } from '@/lib/bookLeaves';
 import { previewPdf, printToken, type PreviewPdfOptions } from '@/lib/previewPdf';
 
@@ -16,7 +17,7 @@ afterEach(() => vi.unstubAllGlobals());
 
 describe('AstroBook PDF face parity', () => {
   it.each(modes)('exports every face with no overflow for $mode / $tone', async ({ mode, tone }) => {
-    const preview = bookPreview({ name: 'Test Reader', birthLine: 'Verified test birth facts', chart: charts[mode], tone, artFor: () => 'plate.png', dedication: 'For someone who keeps looking closely.' });
+    const preview = fullBookPreview({ name: 'Test Reader', birthLine: 'Verified test birth facts', chart: charts[mode], tone, artFor: () => 'plate.png', dedication: 'For someone who keeps looking closely.' });
     if (preview.jacket.kind !== 'jacket') throw new Error('Expected jacket');
     const faces = toLeaves({ ...preview.jacket, finish: 'cloth' }, preview.faces, { kind: 'back', lines: ['Zodaci AstroBook', 'End of preview'] }).flatMap(l => [l.front, l.back]);
     const reports: Parameters<NonNullable<PreviewPdfOptions['onPage']>>[0][] = [];
@@ -24,8 +25,8 @@ describe('AstroBook PDF face parity', () => {
     const pdf = await PDFDocument.load(await blob.arrayBuffer());
     expect(pdf.getPageCount()).toBe(faces.length);
     expect(reports.map(r => r.face)).toEqual(faces);
-    expect(reports.flatMap(r => 'page' in r.face && r.face.page ? [r.face.page] : [])).toEqual(Array.from({ length: 28 }, (_, i) => i + 1));
-    expect(reports.find(r => r.face.kind === 'plate')?.face).toMatchObject({ page: 6, caption: expect.stringContaining('Plate I') });
+    expect(reports.flatMap(r => 'page' in r.face && r.face.page ? [r.face.page] : [])).toEqual(Array.from({ length: preview.pageCount }, (_, i) => i + 1));
+    expect((reports.find(r => r.face.kind === 'plate')?.face as { page?: number })?.page % 2).toBe(0);
     for (const r of reports) {
       expect(r.minY, `face ${r.index}`).toBeGreaterThanOrEqual(30);
       const face = r.face;

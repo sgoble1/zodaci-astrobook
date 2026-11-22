@@ -113,13 +113,13 @@ export function prosePage(paragraphs: string[]): string[] {
   return out;
 }
 
-export interface BookPreviewInput { name: string; birthLine: string; chart: ChartResult; tone?: Tone; asOf?: Date; dedication?: string; edition?: string; editionLabel?: string; artFor: (planetKey: string) => string }
+export interface BookPreviewInput { name: string; birthLine: string; chart: ChartResult; tone?: Tone; asOf?: Date; dedication?: string; edition?: string; editionLabel?: string; proseMode?: 'excerpt' | 'complete'; artFor: (planetKey: string) => string }
 
 /**
  * A 28-page personal AstroBook preview, built from the same chapters the printed book uses
  * (buildVolumes). A plate always lands on a left page so it faces the chapter it illustrates.
  */
-export function bookPreview({ name, birthLine, chart: suppliedChart, tone = 'oracle', asOf = new Date(), dedication, edition = 'classic', editionLabel = 'Classic Edition', artFor }: BookPreviewInput): { cover: CoverFacts; faces: BookFace[]; jacket: BookFace } {
+export function bookPreview({ name, birthLine, chart: suppliedChart, tone = 'oracle', asOf = new Date(), dedication, edition = 'classic', editionLabel = 'Classic Edition', proseMode = 'excerpt', artFor }: BookPreviewInput): { cover: CoverFacts; faces: BookFace[]; jacket: BookFace } {
   const chart = timedChart(suppliedChart) ? suppliedChart : { ...suppliedChart, asc: null, mc: null, cusps: null, bodies: suppliedChart.bodies.map(b => ({ ...b, house: null })), aspects: suppliedChart.aspects.filter(a => !['Ascendant', 'Midheaven'].includes(a.a) && !['Ascendant', 'Midheaven'].includes(a.b)) };
   const timed = timedChart(chart);
   const cover = coverFacts(chart, name, birthLine);
@@ -241,6 +241,7 @@ export function bookPreview({ name, birthLine, chart: suppliedChart, tone = 'ora
   if (pages.length !== BOOK_PREVIEW_PAGES) throw new Error('AstroBook preview must contain exactly 28 interior pages.');
   const numbered: BookFace[] = pages.map((p, i) => {
     if (p.kind !== 'text') return { ...p, page: i + 1 };
+    if (proseMode === 'complete') return { ...p, page: i + 1 };
     try { return { ...p, body: prosePage(p.body), page: i + 1 }; }
     catch { throw new Error(`AstroBook page ${i + 1} (${p.title}, ${tone}) cannot meet the prose budget.`); }
   });

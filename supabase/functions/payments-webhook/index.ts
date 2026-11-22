@@ -119,13 +119,17 @@ Deno.serve(async (req) => {
     return new Response(JSON.stringify({ received: true, ignored: "invalid env" }), { status: 200, headers: { "Content-Type": "application/json" } });
   }
   const env: StripeEnv = rawEnv;
+  let verified = false;
   try {
     const event = await verifyWebhook(req, env);
+    verified = true;
     // Recovery record: stored before processing so a failed or interrupted event shows in Admin.
     const obj = event.data?.object ?? {};
     const prior = await db().from('payment_webhook_events').select('status,attempts').eq('event_id', event.id).maybeSingle();
+    if (prior.error) throw prior.error;
     if (prior.data?.status === 'processed') return new Response(JSON.stringify({ received: true, duplicate: true }), { status: 200, headers: { "Content-Type": "application/json" } });
-    await db().from('payment_webhook_events').upsert({ event_id: event.id, event_type: event.type, environment: env, object_id: String(obj.id ?? '').slice(0, 120), status: 'received', attempts: (prior.data?.attempts ?? 0) + 1, last_error: '' }, { onConflict: 'event_id' });
+    const recorded = await db().from('payment_webhook_events').upsert({ event_id: event.id, event_type: event.type, environment: env, object_id: String(obj.id ?? '').slice(0, 120), status: 'received', attempts: (prior.data?.attempts ?? 0) + 1, last_error: '' }, { onConflict: 'event_id' });
+    if (recorded.error) throw recorded.error;
     try {
     switch (event.type) {
       case 'checkout.session.completed':
@@ -154,10 +158,11 @@ Deno.serve(async (req) => {
       await db().from('payment_webhook_events').update({ status: 'failed', last_error: String((inner as Error)?.message ?? inner).slice(0, 500) }).eq('event_id', event.id);
       throw inner;
     }
-    await db().from('payment_webhook_events').update({ status: 'processed', processed_at: new Date().toISOString() }).eq('event_id', event.id);
+    const processed = await db().from('payment_webhook_events').update({ status: 'processed', processed_at: new Date().toISOString() }).eq('event_id', event.id);
+    if (processed.error) throw processed.error;
     return new Response(JSON.stringify({ received: true }), { status: 200, headers: { "Content-Type": "application/json" } });
   } catch (e) {
-    console.error("Webhook error:", e);
-    return new Response("Webhook error", { status: 400 });
+    console.error("Webhook error", verified ? 'processing_failed' : 'signature_invalid');
+    return new Response("Webhook error", { status: verified ? 503 : 400 });
   }
 });

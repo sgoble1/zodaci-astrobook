@@ -1,5 +1,6 @@
 import { encode } from "https://deno.land/std@0.168.0/encoding/hex.ts";
 import Stripe from "https://esm.sh/stripe@22.0.2";
+import { requestDeadline } from './request-deadline.ts';
 const getEnv = (key: string): string => {
   const value = Deno.env.get(key);
   if (!value) throw new Error(`${key} is not configured`);
@@ -27,6 +28,7 @@ export function createStripeClient(env: StripeEnv): Stripe {
       const gatewayUrl = stripeUrl.replace('https://api.stripe.com', GATEWAY_STRIPE_BASE);
       return fetch(gatewayUrl, {
         ...init,
+        signal: requestDeadline(25_000, init?.signal ?? (input instanceof Request ? input.signal : undefined)),
         headers: {
           ...Object.fromEntries(
             new Headers(init?.headers ?? (input instanceof Request ? input.headers : undefined)).entries(),
@@ -58,12 +60,14 @@ export async function verifyWebhook(req: Request, env: StripeEnv): Promise<{ id:
   if (!timestamp || v1Signatures.length === 0) throw new Error("Invalid signature format");
 
   const age = Math.abs(Date.now() / 1000 - Number(timestamp));
-  if (age > 300) throw new Error("Webhook timestamp too old");
+  if (!Number.isFinite(age) || age > 300) throw new Error("Webhook timestamp too old");
 
   const key = await crypto.subtle.importKey("raw", new TextEncoder().encode(secret), { name: "HMAC", hash: "SHA-256" }, false, ["sign"]);
   const signed = await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(`${timestamp}.${body}`));
   const expected = new TextDecoder().decode(encode(new Uint8Array(signed)));
   if (!v1Signatures.includes(expected)) throw new Error("Invalid webhook signature");
 
-  return JSON.parse(body);
+  const event = JSON.parse(body);
+  if (!event || typeof event.id !== 'string' || !/^evt_[A-Za-z0-9]+$/.test(event.id) || typeof event.type !== 'string' || !Number.isFinite(event.created) || !event.data || typeof event.data.object !== 'object' || event.data.object === null) throw new Error('Invalid webhook event');
+  return event;
 }

@@ -2,6 +2,7 @@
 
 ## Nov 22 — Comprehensive UX overhaul
 - [x] Refine the complete execution plan and record source-confirmed gaps separately from browser observations (approval plan; audit: docs/ux-overhaul-audit-2026-11-22.md).
+- [x] Completed first implementation batch: full calculated AstroBook chapters with dynamic contents and chapter jump controls, shared mobile close controls, navigation active links, smooth lighting pulses, duplicate-submit guards, shared-document recovery and notification leases/deadlines. 171 suites / 1,403 tests and two deadline tests pass; latest automatic build OK. Seventeen affected functions deployed. Details and continuation gaps: docs/overhaul-progress-2026-11-22.md.
 - [ ] Navigation coverage, active stations, detail breadcrumbs and stable core-view recovery.
 - [ ] Dismissible accessible overlays/readers and destructive-action confirmations.
 - [ ] Expand AstroBook previews into substantial chart-relative chapters with plain-language explanations; replace one-page summaries as the primary reading experience and verify browser/PDF parity.
@@ -13,6 +14,7 @@
 - [ ] Trace UI/data/function/provider contracts and resolve configuration, timeout, silent-error and cache-recovery gaps.
 - [ ] Stress duplicate actions, invalid/large input, expired sessions and response races; verify guards/idempotency.
 - [ ] Trace multi-step flows through refresh/back/forward/skips and ensure predictable intermediate-state recovery (docs/integration-reliability-scope.md).
+- Continuation paused because workspace credits ran out; unchecked items above remain open, not verified complete.
 
 ## Nov 21 — Founder comic story and motion refinement
 - [x] Give April, Shane and Zac distinct continuous fictional missions shaped by their authorized chart and selected issue contact; keep cast behind external circumstances and natural protagonist dialogue. Opening difficulty returns in the final test; saved buyer scripts and cover assets remain unchanged.

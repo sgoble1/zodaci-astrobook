@@ -30,7 +30,7 @@ describe('expanded AstroBook preview', () => {
   it('keeps public sample pages fictional and separate from Shane', () => {
     const faces = sampleBookLeaves().flatMap(l => [l.front, l.back]);
     expect(JSON.stringify(faces)).not.toContain('Shane');
-    expect(faces.flatMap(f => 'page' in f && f.page ? [f.page] : [])).toHaveLength(28);
+    expect(faces.flatMap(f => 'page' in f && f.page ? [f.page] : []).length).toBeGreaterThan(75);
   });
   it('does not invent houses or angles without a birth time', () => {
     const unknown = make(untimed);

@@ -1,10 +1,12 @@
-import { useCallback, useLayoutEffect, useRef, useState, type KeyboardEvent, type PointerEvent, type ReactNode } from 'react';
-import { ChevronLeft, ChevronRight, Download } from 'lucide-react';
+import { useCallback, useEffect, useLayoutEffect, useRef, useState, type KeyboardEvent, type PointerEvent, type ReactNode } from 'react';
+import { ChevronLeft, ChevronRight, Download, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { faceText, type BookFace } from '@/lib/bookLeaves';
 import type { BookLeaf } from '@/content/sampleBookLeaves';
 import { ComicPageView } from '@/components/comic/ComicPageView';
 import { CompassText } from '@/components/books/CompassText';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { createSingleFlight } from '@/lib/singleFlight';
 
 /**
  * An openable 3D book or comic digest. Leaves hinge on the spine and turn one at a time (buttons, arrow keys, a tap on
@@ -16,16 +18,20 @@ export function OpenBook({ leaves, kind = 'book', label, layout = 'side', footer
   const [at, setAt] = useState(0);
   const [exporting, setExporting] = useState(false);
   const [exportError, setExportError] = useState('');
+  const exportGate = useRef(createSingleFlight<void>());
+  useEffect(() => { setAt(0); setExportError(''); }, [leaves]);
   const go = useCallback((d: number) => setAt(a => Math.max(0, Math.min(n, a + d))), [n]);
   const swipe = useRef<number | null>(null);
   const swiped = useRef(false);
   const state = at === 0 ? 'closed' : at === n ? 'back' : 'open';
   // Leaf spacing sets the block's thickness, so the spine is as deep as the stacked pages.
-  const gap = kind === 'comic' ? 0.7 : 1;
+  const gap = kind === 'comic' ? 0.7 : Math.min(1, 28 / Math.max(1, n));
   const front = leaves[0]?.front;
   const cover = front?.kind === 'cover' ? front.src : front?.kind === 'jacket' ? front.art : front?.kind === 'comic-page' ? front.art['1-0'] : null;
-  const visible: BookFace[] = state === 'closed' ? [leaves[0].front] : state === 'back' ? [leaves[n - 1].back] : [leaves[at - 1].back, leaves[at].front];
-  const pageNos = visible.map(f => ('page' in f ? f.page : undefined)).filter((p): p is number => p != null);
+  const visible: BookFace[] = state === 'closed' ? [leaves[0]?.front] : state === 'back' ? [leaves[n - 1]?.back] : [leaves[at - 1]?.back, leaves[at]?.front];
+  const safeVisible = visible.filter(Boolean);
+  const chapters = leaves.flatMap(l => [l.front, l.back]).flatMap((f, i) => f?.kind === 'text' && !f.title.includes('· continued') ? [{ title: f.title, at: Math.ceil(i / 2), page: f.page }] : []);
+  const pageNos = safeVisible.map(f => ('page' in f ? f.page : undefined)).filter((p): p is number => p != null);
   const where = state === 'closed' ? 'Front cover' : state === 'back' ? 'Back cover' : pageNos.length ? `Pages ${pageNos.join('–')}` : at === 1 ? 'Inside the cover' : 'Endpapers';
   const onKey = (e: KeyboardEvent) => {
     if (e.target !== e.currentTarget) return;
@@ -36,14 +42,14 @@ export function OpenBook({ leaves, kind = 'book', label, layout = 'side', footer
   // A swipe turns one spread; the click that follows the same gesture is ignored so it does not turn a second time.
   const up = (e: PointerEvent) => { const s = swipe.current; swipe.current = null; if (s != null && Math.abs(e.clientX - s) > 40) { swiped.current = true; go(e.clientX < s ? 1 : -1); } };
   const tap = (turned: boolean) => { if (swiped.current) { swiped.current = false; return; } go(turned ? -1 : 1); };
-  const text = visible.map(faceText).filter(Boolean) as { heading: string; lines: string[] }[];
+  const text = safeVisible.map(faceText).filter(Boolean) as { heading: string; lines: string[] }[];
   const reader = (
     <div className="ob-reader" aria-live="polite">
       <p className="font-label text-xs tracking-[0.16em] text-primary">{where}</p>
       {text.map(t => <div key={t.heading} className="mt-3"><p className="font-semibold leading-snug"><CompassText text={t.heading} /></p>{t.lines.map((l, k) => <p key={k} className={l.startsWith('Reflection: ') ? 'ob-reader-reflection' : 'mt-1.5 text-sm leading-relaxed text-muted-foreground'}><CompassText text={l} /></p>)}</div>)}
     </div>
   );
-  const download = async () => {
+  const download = () => exportGate.current(async () => {
     setExporting(true); setExportError('');
     try {
       const { previewPdf } = await import('@/lib/previewPdf');
@@ -53,10 +59,12 @@ export function OpenBook({ leaves, kind = 'book', label, layout = 'side', footer
       setTimeout(() => URL.revokeObjectURL(url), 10000);
     } catch { setExportError('The preview could not be downloaded. Please try again.'); }
     finally { setExporting(false); }
-  };
+  });
+  if (!n) return <p role="status">No pages are available. Close this reader and try opening the book again.</p>;
   return (
     <div className={layout === 'side' ? 'ob-layout grid items-start gap-8 2xl:grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)]' : 'space-y-4'}>
       <div className="min-w-0">
+        {kind === 'book' && chapters.length > 0 && <div className="mb-4 flex min-w-0 items-center gap-3"><Select onValueChange={value => setAt(Math.min(n, Math.max(0, Number(value))))}><SelectTrigger aria-label="Jump to a chapter" className="min-h-11 min-w-0"><SelectValue placeholder="Choose a chapter" /></SelectTrigger><SelectContent>{chapters.map(c => <SelectItem key={`${c.at}:${c.title}`} value={String(c.at)}>{c.title}{c.page ? ` · ${c.page}` : ''}</SelectItem>)}</SelectContent></Select>{at > 0 && <Button size="icon" variant="outline" className="h-11 w-11 shrink-0" aria-label="Close book" onClick={() => setAt(0)}><X /></Button>}</div>}
         <div className="ob-stage" data-kind={kind} data-finish={front?.kind === 'jacket' ? front.finish : undefined} style={trimPt ? { ['--ob-ratio' as string]: trimPt[1] / trimPt[0] } : undefined} onPointerDown={down} onPointerUp={up} onPointerCancel={() => { swipe.current = null; }}>
           <div className="ob-book" data-state={state} role="region" aria-roledescription={kind === 'comic' ? 'comic digest' : 'book'} aria-label={`${label}. ${where}. Use the arrow keys to turn pages.`} tabIndex={0} onKeyDown={onKey}>
             {spine && <BookSpine title={spine.title} name={spine.name} src={cover} stack={n * gap} />}
@@ -74,9 +82,9 @@ export function OpenBook({ leaves, kind = 'book', label, layout = 'side', footer
         </div>
         <div className="mt-3 flex flex-wrap items-center justify-center gap-3"><Button variant="ghost" size="sm" disabled={exporting} onClick={() => void download()}><Download />{exporting ? 'Preparing PDF…' : 'Download preview'}</Button>{exportError && <p role="alert" className="text-sm text-destructive">{exportError}</p>}</div>
         <div className="flex flex-wrap items-center justify-center gap-3">
-          <Button variant="outline" size="sm" onClick={() => go(-1)} disabled={at === 0} aria-label="Previous pages"><ChevronLeft />{at === 1 ? 'Close' : 'Back'}</Button>
+          <Button variant="outline" size="sm" className="min-h-11" onClick={() => go(-1)} disabled={at === 0} aria-label="Previous pages"><ChevronLeft />{at === 1 ? 'Close' : 'Back'}</Button>
           <span className="min-w-[8rem] text-center font-label text-sm tracking-[0.12em] text-muted-foreground" aria-hidden>{where}</span>
-          <Button variant={at === 0 ? 'default' : 'outline'} size="sm" onClick={() => go(1)} disabled={at === n} aria-label={at === 0 ? `Open the ${kind === 'comic' ? 'comic' : 'book'}` : 'Next pages'}>{at === 0 ? 'Open' : 'Turn'}<ChevronRight /></Button>
+          <Button variant={at === 0 ? 'default' : 'outline'} size="sm" className="min-h-11" onClick={() => go(1)} disabled={at === n} aria-label={at === 0 ? `Open the ${kind === 'comic' ? 'comic' : 'book'}` : 'Next pages'}>{at === 0 ? 'Open' : 'Turn'}<ChevronRight /></Button>
         </div>
         {footer}
       </div>

@@ -19,7 +19,7 @@ import { AssetRegister, InvestmentCalculator, LiveInspector, ZeroCostThesis } fr
 const low = BOOK_VERSIONS[0]; const high = BOOK_VERSIONS[BOOK_VERSIONS.length - 1];
 const PRODUCTS: [string, string, string][] = [
   ['self', 'Memberships', `Free, Pro ${PLAN_PRICE.full.month} and Cosmic ${PLAN_PRICE.creator.month}. Readings, counselors, workbook, podcasts and a Masterbook written from each member’s own calculated chart.`],
-  ['sign', 'AstroBook', `A six-volume personal book in five editions, ${money(low.price)} to ${money(high.price)}, printed on demand. A shared chapter framework with a 28-page preview; content depth depends on the edition and completed readings.`],
+  ['sign', 'AstroBook', `A six-volume personal book in five editions, ${money(low.price)} to ${money(high.price)}, printed on demand. A shared chapter framework with full calculated chapter previews; content depth depends on the edition and completed readings.`],
   ['year', 'AstroComic', 'A monthly illustrated comic in the original Atomic Zodiac style (1950s golden-age comic), starring the member’s chart. Issue #1 is open for print pre-order.'],
   ['chart', 'Shop', 'Posters, sticker sheets and notebooks, sold and fulfilled through a live Shopify storefront.'],
 ];
@@ -43,7 +43,7 @@ const LIVE = [
   'Cosmic Studio: chart wallpapers, posters, journal pages and affirmation cards to download or save, plus one-time AI credit packs.',
   'Chart-matched shop picks: members see shop items chosen from their own Sun, Moon and Rising signs, and pick one of twelve drawn observatory characters to represent them across the site.',
   'Other Systems: Vedic, Chinese Ba Zi, numerology, Feng Shui and Flying Stars, Nine Star Ki, Tzolk’in and more — all from the same birth data.',
-  'Six-volume AstroBook builder with cover choice, print-ready PDFs and a page-turning preview. One live 28-page preview carries cover, dedication and format choices; signed-in members read their own calculated chart.',
+  'Six-volume AstroBook builder with cover choice, print-ready PDFs and a page-turning preview. One live full-chapter reader carries cover, dedication and format choices; signed-in members read their own calculated chart.',
   'Gift an AstroBook: written from the recipient’s own birth details, with a dedication page and gift notice (a full paid gift order is still being tested).',
   'Coming-soon page with a waitlist and a private access code, so the site can collect sign-ups while the build continues.',
   'AstroComic: a unified 24-page turnable story preview with varied panel layouts, chart-driven cast, side-reading and PDF export. Illustrative preview art is separate from final buyer print proofs.',
