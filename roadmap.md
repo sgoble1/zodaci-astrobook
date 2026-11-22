@@ -1,5 +1,15 @@
 # Zodaci roadmap
 
+## Nov 22 — Comprehensive UX overhaul
+- [x] Refine the complete execution plan and record source-confirmed gaps separately from browser observations (approval plan; audit: docs/ux-overhaul-audit-2026-11-22.md).
+- [ ] Navigation coverage, active stations, detail breadcrumbs and stable core-view recovery.
+- [ ] Dismissible accessible overlays/readers and destructive-action confirmations.
+- [ ] Expand AstroBook previews into substantial chart-relative chapters with plain-language explanations; replace one-page summaries as the primary reading experience and verify browser/PDF parity.
+- [ ] Shape-matched loading, actionable empty/error states and inline form recovery.
+- [ ] Consistent hierarchy/spacing, AA contrast and 375px-to-desktop reflow.
+- [ ] Smooth analog pulses, responsive controls and complete reduced-motion support.
+- [ ] Copy/metadata/accessibility audit, full tests and authorized browser coverage.
+
 ## Nov 21 — Founder comic story and motion refinement
 - [x] Give April, Shane and Zac distinct continuous fictional missions shaped by their authorized chart and selected issue contact; keep cast behind external circumstances and natural protagonist dialogue. Opening difficulty returns in the final test; saved buyer scripts and cover assets remain unchanged.
 - [x] Add slow chart-led panel motion, preserve 24 pages and ledger-only provenance on 22–23. All 166 suites / 1,376 tests pass; automatic build OK. Shared reader/face parity, verified Taurus Moon/10th house, input changes, unknown-time omissions and contact-motion selection tested. Isolated fictional-chart desktop/393px readers show all three motion types, no overflow/errors, and no animation with reduced motion.
