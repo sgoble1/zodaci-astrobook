@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 
 type Req = { message: string; action: string; resolve: (ok: boolean) => void };
@@ -14,8 +14,12 @@ export function confirmAction(message: string, action = 'Confirm'): Promise<bool
 
 export function ConfirmHost() {
   const [req, setReq] = useState<Req | null>(null);
-  useEffect(() => { push = next => setReq(previous => { previous?.resolve(false); return next; }); return () => { push = null; }; }, []);
-  const close = (ok: boolean) => { req?.resolve(ok); setReq(null); };
+  const current = useRef<Req | null>(null);
+  useEffect(() => {
+    push = next => { current.current?.resolve(false); current.current = next; setReq(next); };
+    return () => { push = null; current.current?.resolve(false); current.current = null; };
+  }, []);
+  const close = (ok: boolean) => { current.current?.resolve(ok); current.current = null; setReq(null); };
   return (
     <AlertDialog open={!!req} onOpenChange={o => { if (!o) close(false); }}>
       <AlertDialogContent>

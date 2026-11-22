@@ -130,7 +130,9 @@ export async function previewPdf(faces: BookFace[], options: PreviewPdfOptions =
     const drawBlock = (heading: string, paras: string[], top: number, bottom: number, reflection?: string, color = ink) => {
       let size = 12;
       const plan = () => {
-        const headingSize = Math.min(17, size * 1.42);
+        const running = face.kind === 'text' && (face.chapterPage ?? 1) > 1;
+        const chapter = face.kind === 'text' && Boolean(face.chapterId);
+        const headingSize = running ? size * .85 : chapter ? size * 1.15 : Math.min(17, size * 1.42);
         const head = wrapped(heading, font, headingSize, 348);
         const body = paras.map(p => wrapped(p, font, size, 348));
         const note = reflection ? wrapped(reflection, font, size * .92, 326) : [];
@@ -177,7 +179,7 @@ export async function previewPdf(faces: BookFace[], options: PreviewPdfOptions =
           page.drawRectangle({ x: 28, y: 40, width: 376, height: 568, color: paper, opacity: .95, borderColor: foil, borderWidth: 1 });
           if (face.barcode) page.drawRectangle({ x: 282, y: 56, width: 108, height: 72, color: paper, borderColor: ink, borderWidth: .4 });
         }
-        const eyebrow = 'eyebrow' in face ? face.eyebrow : '';
+        const eyebrow = face.kind === 'text' && (face.chapterPage ?? 1) > 1 ? '' : 'eyebrow' in face ? face.eyebrow : '';
         drawBlock(text.heading, [...(eyebrow ? [eyebrow] : []), ...text.lines], 594, face.kind === 'back' ? 145 : 42, text.reflection);
       }
     }

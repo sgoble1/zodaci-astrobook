@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useMemo, useState, type ReactNode } from 'react';
+import { lazy, Suspense, useCallback, useEffect, useMemo, useState, type ReactNode } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { ArrowRight, BookOpen, Headphones, Lock, RotateCcw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -12,7 +12,9 @@ import { useReadingTone } from '@/hooks/useReadingTone';
 import { TONES } from '@/lib/perception';
 import { fmtLon } from '@/lib/astro';
 import { CREDIT_ALLOWANCE, PLAN_NAME, type Tier } from '@/lib/plans';
-import { SAMPLE_READER, sampleReaderChart, type BookLeaf } from '@/content/sampleBookLeaves';
+import { SAMPLE_READER, sampleReaderChart, sampleBookLeaves } from '@/content/sampleBookLeaves';
+import { usePreparedPreview } from '@/hooks/usePreparedPreview';
+import { PreviewFeedback } from '@/components/books/PreviewFeedback';
 import { SAMPLE_EDITION } from '@/content/sampleEdition';
 import { DEMO_TABS, demoAllows, demoChapter, type DemoTab } from '@/content/demoSession';
 import { SpecificityExamples } from '@/components/books/SpecificityExamples';
@@ -24,7 +26,6 @@ const PlacementsTab = lazy(() => import('@/components/results/PlacementsTab').th
 const DemoTiming = lazy(() => import('@/components/demo/DemoTiming'));
 const DemoSynastry = lazy(() => import('@/components/demo/DemoSynastry'));
 const DemoBook = lazy(() => import('@/components/books/OpenBook').then(m => ({ default: m.OpenBook })));
-const demoLeaves = () => import('@/content/sampleBookLeaves');
 
 function Locked({ title, onPreview }: { title: string; onPreview: () => void }) {
   return <aside className="space-y-3 border-y border-border py-6" aria-label={`${title} locked`}>
@@ -47,10 +48,10 @@ export default function Demo() {
   const chart = useMemo(sampleReaderChart, []);
   const art = useMemo(() => resolveBookArtwork(chart), [chart]);
   const chapterArt = useMemo(() => renderBookPlate(bookPlateSpec(chart, ['sun', 'moon', 'venus', 'mercury'][chapter] ?? art.ruler, art.element)), [chart, chapter, art]);
-  const [bookLeaves, setBookLeaves] = useState<BookLeaf[] | null>(null);
   const page = SAMPLE_EDITION.pages[chapter] ?? SAMPLE_EDITION.pages[0];
   const effectiveTone = tier === 'free' ? 'oracle' : tone;
-  useEffect(() => { let active = true; if (tab === 'edition') demoLeaves().then(m => { if (active) setBookLeaves(m.sampleBookLeaves({ tone: effectiveTone })); }); return () => { active = false; }; }, [tab, effectiveTone]);
+  const buildBook = useCallback(() => sampleBookLeaves({ tone: effectiveTone }), [effectiveTone]);
+  const book = usePreparedPreview(tab === 'edition' && tier !== 'free' ? buildBook : null);
   const paragraphs = demoChapter(page, effectiveTone);
   const pro = () => setTier('full');
   const select = (id: string) => { const next = new URLSearchParams(params); next.set('tab', id); setParams(next, { replace: true }); };
@@ -99,7 +100,7 @@ export default function Demo() {
                 {tier === 'free' ? <Locked title="The rest of this chapter" onPreview={pro} /> : <p className="border-l-2 border-primary pl-4 italic">{page.reflection}</p>}
               </div>
             </article>}
-            <section className="space-y-4 border-t border-border pt-6"><h3 className="text-2xl">Rosalind’s AstroBook chapters</h3>{gated('transits', 'The complete AstroBook preview', bookLeaves ? <Suspense fallback={<p role="status">Opening the book…</p>}><DemoBook leaves={bookLeaves} label="Rosalind Vance · AstroBook chapters" layout="side" /></Suspense> : <p role="status">Preparing the book…</p>)}</section>
+            <section className="space-y-4 border-t border-border pt-6"><h3 className="text-2xl">Rosalind’s AstroBook chapters</h3>{gated('transits', 'The complete AstroBook preview', book.status === 'ready' ? <Suspense fallback={<PreviewFeedback loadingMessage="Opening the book…" />}><DemoBook leaves={book.value} label="Rosalind Vance · AstroBook chapters" layout="side" /></Suspense> : book.status === 'error' ? <PreviewFeedback error onRetry={book.retry} /> : <PreviewFeedback loadingMessage="Preparing the sample AstroBook…" />)}</section>
             <section className="space-y-4 border-t border-border pt-6"><h3 className="flex items-center gap-2 text-2xl"><Headphones className="h-6 w-6" />Your emotional world, Rosalind</h3>
               {gated('audio', 'Sample podcast', <div className="space-y-4"><p className="text-sm text-muted-foreground">Pre-recorded sample · Cancer Moon in house 3, sextile Sun and Rising, square Venus and Jupiter.</p>
                 <audio key={audioAttempt} aria-label="Rosalind sample episode" controls preload="none" src={episode.url} onError={() => setAudioError(true)} className="w-full">Audio playback is not supported by this browser.</audio>

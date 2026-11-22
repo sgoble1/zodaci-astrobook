@@ -210,7 +210,7 @@ Deno.serve(async req => {
         const keys = Object.keys(TOPICS);
         const L = lanes ?? 1; const myLane = lane ?? 0;
         const next = keys.slice(keys.indexOf(slug) + 1).find((k, i, arr) => !got.has(`topic-${k}`) && keys.indexOf(arr[i]) % L === myLane);
-        if (next) await fetch(`${url}/functions/v1/topic-readings`, { method: 'POST', headers: { Authorization: authHeader, apikey: apikeyHeader, 'Content-Type': 'application/json' }, body: JSON.stringify({ slug: next, chain: true, lane: myLane, lanes: L }) }).catch(e => console.error('chain', e));
+        if (next) await fetch(`${url}/functions/v1/topic-readings`, { signal: AbortSignal.timeout(25_000), method: 'POST', headers: { Authorization: authHeader, apikey: apikeyHeader, 'Content-Type': 'application/json' }, body: JSON.stringify({ slug: next, chain: true, lane: myLane, lanes: L }) }).catch(e => console.error('chain', e));
       }
     })();
     // deno-lint-ignore no-explicit-any

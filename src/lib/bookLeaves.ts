@@ -16,6 +16,8 @@ export type CoverFacts = { name: string; title: string; subtitle: string; signs:
 export interface TextFacePayload {
   eyebrow: string; title: string; placement: string; facts: [string, string][];
   body: string[]; reflection?: string; page?: number;
+  /** Full chapters retain their title for navigation; subsequent sheets use a compact running label. */
+  chapterId?: string; chapterPage?: number; chapterPages?: number;
 }
 export type TextFace = TextFacePayload & { kind: 'text' };
 
@@ -181,7 +183,7 @@ export function faceText(f: BookFace): { heading: string; lines: string[] } | nu
     case 'title': return { heading: f.name, lines: [f.subtitle, f.edition, f.note] };
     case 'facts': return { heading: f.heading, lines: [...f.rows.map(([k, v]) => `${k}: ${v}`), ...(f.note ? [f.note] : [])] };
     case 'plate': return { heading: f.caption, lines: [f.alt] };
-    case 'text': return { heading: `${f.title} · ${f.placement}`, lines: [...f.facts.map(([k, v]) => `${k}: ${v}`), ...f.body, ...(f.reflection ? [`Reflection: ${f.reflection}`] : [])] };
+    case 'text': return { heading: [f.title, f.placement].filter(Boolean).join(' · '), lines: [...f.facts.map(([k, v]) => `${k}: ${v}`), ...f.body, ...(f.reflection ? [`Reflection: ${f.reflection}`] : [])] };
     case 'comic': return { heading: `p. ${f.page} · ${f.title} · ${f.placement}`, lines: [f.caption, ...(f.dialogue ? [f.dialogue] : [])] };
     case 'comic-page': return { heading: `p. ${f.page} · ${f.sheet.title}`, lines: [...f.sheet.panels.flatMap(p => [...(p.caption ? [p.caption] : []), ...(p.balloons ?? []).map(b => `${b.who}: ${b.text}`)]), ...(f.sheet.body ?? [])] };
     case 'list': return { heading: f.heading, lines: [...f.items, ...(f.note ? [f.note] : [])] };

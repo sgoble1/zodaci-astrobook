@@ -1,11 +1,13 @@
 # Zodaci roadmap
 
 ## Nov 22 — Comprehensive UX overhaul
+- [x] Book refinement: at least five substantive pages per narrative chapter, fuller prose pages and compact running chapter labels instead of repeated large “continued” headings; browser all-spread checks and six-mode PDF tests pass.
+- [ ] Finish the saved overhaul: complete remaining source fixes and acceptance checks; retain explicit external/access blockers.
 - [x] Refine the complete execution plan and record source-confirmed gaps separately from browser observations (approval plan; audit: docs/ux-overhaul-audit-2026-11-22.md).
 - [x] Completed first implementation batch: full calculated AstroBook chapters with dynamic contents and chapter jump controls, shared mobile close controls, navigation active links, smooth lighting pulses, duplicate-submit guards, shared-document recovery and notification leases/deadlines. 171 suites / 1,403 tests and two deadline tests pass; latest automatic build OK. Seventeen affected functions deployed. Details and continuation gaps: docs/overhaul-progress-2026-11-22.md.
 - [ ] Navigation coverage, active stations, detail breadcrumbs and stable core-view recovery.
 - [ ] Dismissible accessible overlays/readers and destructive-action confirmations.
-- [ ] Expand AstroBook previews into substantial chart-relative chapters with plain-language explanations; replace one-page summaries as the primary reading experience and verify browser/PDF parity.
+- [x] Expand AstroBook previews into substantial chart-relative chapters with plain-language explanations; replace one-page summaries as the primary reading experience and verify browser/PDF parity.
 - [ ] Shape-matched loading, actionable empty/error states and inline form recovery.
 - [ ] Consistent hierarchy/spacing, AA contrast and 375px-to-desktop reflow.
 - [ ] Smooth analog pulses, responsive controls and complete reduced-motion support.
@@ -14,7 +16,7 @@
 - [ ] Trace UI/data/function/provider contracts and resolve configuration, timeout, silent-error and cache-recovery gaps.
 - [ ] Stress duplicate actions, invalid/large input, expired sessions and response races; verify guards/idempotency.
 - [ ] Trace multi-step flows through refresh/back/forward/skips and ensure predictable intermediate-state recovery (docs/integration-reliability-scope.md).
-- Continuation paused because workspace credits ran out; unchecked items above remain open, not verified complete.
+- Continuation implemented shared action/retry/confirmation safeguards, private-context recovery, direct AI stream/deadline fixes and verified notification-lease concurrency. 171 suites / 1,404 tests and seven edge tests pass; automatic build OK. Full-book browser/PDF checks pass. Remaining unchecked audit scope and prelaunch/provider access blockers: docs/overhaul-progress-2026-11-22.md.
 
 ## Nov 21 — Founder comic story and motion refinement
 - [x] Give April, Shane and Zac distinct continuous fictional missions shaped by their authorized chart and selected issue contact; keep cast behind external circumstances and natural protagonist dialogue. Opening difficulty returns in the final test; saved buyer scripts and cover assets remain unchanged.

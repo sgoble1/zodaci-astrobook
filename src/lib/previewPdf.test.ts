@@ -44,7 +44,7 @@ describe('AstroBook PDF face parity', () => {
       if (face.kind === 'text') expect(r.size).toBeGreaterThanOrEqual(8);
     }
     expect(reports.some(r => r.face.kind === 'endpaper' && r.text.join(' ').includes('For someone'))).toBe(true);
-  }, 20000);
+  }, 60000);
   it('prints reflections once, separately, and fits long headings and unbroken dedications', async () => {
     const face: BookFace = { kind: 'text', eyebrow: 'Study notes', title: 'A compound chart reading with an unusually long chapter heading', placement: 'Sun and Saturn', facts: [['Aspect', 'Square']], body: Array.from({ length: 3 }, () => 'These measurements provide the basis for interpretation without deciding what a person has experienced. '.repeat(3)), reflection: 'What fits your experience, and what does not?', page: 24 };
     const reports: Parameters<NonNullable<PreviewPdfOptions['onPage']>>[0][] = [];

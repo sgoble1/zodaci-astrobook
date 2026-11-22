@@ -1,9 +1,35 @@
-import { bookPreview, paginate, plainParagraphs, type BookPreviewInput } from './personalPreview';
+import { bookPreview, plainParagraphs, type BookPreviewInput } from './personalPreview';
 import { buildVolumes, hasWorldSystems } from './bookVolumes';
 import { deterministicPlanet } from './deterministicReadings';
 import { planetPreview, risingPreview, untimedPreview } from './previewNarrative';
 import { compassFor } from './readersCompass';
 import type { BookFace, TextFace } from './bookLeaves';
+import { chapterDepth, planetaryDepth } from './chapterDepth';
+import type { EditorialPlanet } from '@/content/placements/blocks';
+
+/** Balanced sentence-boundary pages; never add blank or repeated prose to meet the minimum. */
+export function paginateChapter(paragraphs: string[], capacity = 230): string[][] {
+  const sentences = paragraphs.flatMap((p, paragraph) => p.split(/(?<=[.!?])\s+(?=[A-Z“"])/).filter(Boolean).map(text => ({ text, paragraph, words: text.split(/\s+/).filter(Boolean).length })));
+  let remaining = sentences.reduce((n, s) => n + s.words, 0);
+  const count = Math.max(5, Math.ceil(remaining / capacity));
+  const pages: string[][] = [];
+  let cursor = 0;
+  for (let page = 0; page < count; page++) {
+    const target = remaining / (count - page);
+    const body: string[] = []; let words = 0; let paragraph = -1;
+    while (cursor < sentences.length) {
+      const sentence = sentences[cursor];
+      if (!sentence) break;
+      if (words && count - page > 1 && Math.abs(words - target) <= Math.abs(words + sentence.words - target)) break;
+      if (paragraph === sentence.paragraph) body[body.length - 1] += ` ${sentence.text}`;
+      else { body.push(sentence.text); paragraph = sentence.paragraph; }
+      words += sentence.words; cursor++;
+    }
+    remaining -= words;
+    if (body.length) pages.push(body);
+  }
+  return pages;
+}
 
 const VOLUME_NAMES: Record<string, string> = {
   I: 'Your starting point', II: 'The places life happens', III: 'How the different parts of you work together',
@@ -27,14 +53,15 @@ export function fullBookPreview(input: BookPreviewInput) {
   // Keep the measured opening and the physical verso plate/ruler pairing.
   const content: BookFace[] = excerpt.faces.filter(f => 'page' in f && f.page != null && f.page > 1 && f.page <= 7);
   const contents: { title: string; page: number }[] = [{ title: 'A letter and your calculation record', page: 2 }];
-  const append = (volume: string, title: string, paragraphs: string[], placement = '') => {
+  const append = (volume: string, title: string, paragraphs: string[], placement = '', planet?: EditorialPlanet) => {
     if (!paragraphs.length) return;
     contents.push({ title, page: content.length + 2 });
     const definitions = compassFor(paragraphs.join(' ')).slice(0, 4).map(g => `${g.term}: ${g.plain}`).join(' ');
     const introduction = tone === 'professional' ? 'Reference terms for this chapter: ' : tone === 'educational' ? 'Before reading the connections, here are the terms in ordinary language: ' : 'A few words to make this chapter easier to read: ';
-    const capacity = input.edition === 'digital' ? 190 : input.edition === 'pocket' ? 180 : 125;
-    const pages = paginate([...(definitions ? [introduction + definitions] : []), ...paragraphs], capacity);
-    pages.forEach((body, i) => content.push({ kind: 'text', eyebrow: `Volume ${volume} · ${VOLUME_NAMES[volume]}`, title: i ? `${title} · continued` : title, placement, facts: [], body }));
+    const deeper = planet ? planetaryDepth(chart, planet, tone) : chapterDepth(chart, volume, title, tone, paragraphs);
+    const pages = paginateChapter([...(definitions ? [introduction + definitions] : []), ...paragraphs, ...deeper]);
+    const chapterId = `chapter-${contents.length}`;
+    pages.forEach((body, i) => content.push({ kind: 'text', eyebrow: `Volume ${volume} · ${VOLUME_NAMES[volume]}`, title, placement: i ? '' : placement, facts: [], body, chapterId, chapterPage: i + 1, chapterPages: pages.length }));
   };
   const chapters = buildVolumes({ edition: input.edition ?? 'classic', chart, name: input.name, saved: [], today: input.asOf });
   let current = 'I';
@@ -52,7 +79,7 @@ export function fullBookPreview(input: BookPreviewInput) {
   append('II', timed ? 'Home, work, relationships and the links between them' : 'What your planetary relationships can tell you', timed ? groups.II : [...untimedPreview(chart, 'planets', tone).body, ...untimedPreview(chart, 'geometry', tone).body]);
   for (const key of Object.keys(PLANET_TITLES)) {
     const narrative = planetPreview(chart, key, tone);
-    append('III', PLANET_TITLES[key], [...narrative.body, ...plainParagraphs(deterministicPlanet(chart, key, tone)), ...(narrative.reflection ? [narrative.reflection] : [])], narrative.placement);
+    append('III', PLANET_TITLES[key], [...narrative.body, ...plainParagraphs(deterministicPlanet(chart, key, tone)), ...(narrative.reflection ? [narrative.reflection] : [])], narrative.placement, key as EditorialPlanet);
   }
   append('III', 'Cooperation, tension and the larger pattern', groups.III);
   append('IV', 'Growth without a verdict about your past', groups.IV);

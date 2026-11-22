@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { fullBookPreview } from './fullBookPreview';
+import { fullBookPreview, paginateChapter } from './fullBookPreview';
 import { sampleReaderChart } from '@/content/sampleBookLeaves';
 import { computeChart } from './astro';
 
@@ -9,11 +9,21 @@ describe('full calculated AstroBook chapters', () => {
     for (const timed of [true, false]) {
       const book = make(timed, tone);
       expect(book.pageCount).toBeGreaterThanOrEqual(75);
-      expect(book.pageCount).toBeLessThanOrEqual(120);
       const numbered = book.faces.flatMap(f => 'page' in f && f.page ? [f.page] : []);
       expect(numbered).toEqual(Array.from({ length: book.pageCount }, (_, i) => i + 1));
       const chapters = book.faces.filter(f => f.kind === 'text');
-      expect(chapters.filter(f => f.title.includes('· continued')).length).toBeGreaterThan(30);
+      const complete = chapters.filter(f => f.chapterId);
+      const ids = [...new Set(complete.map(f => f.chapterId))];
+      expect(ids.length).toBeGreaterThanOrEqual(16);
+      for (const id of ids) {
+        const pages = complete.filter(f => f.chapterId === id);
+        expect(pages.length, pages[0]?.title).toBeGreaterThanOrEqual(5);
+        expect(pages.map(f => f.chapterPage)).toEqual(Array.from({ length: pages.length }, (_, i) => i + 1));
+        expect(new Set(pages.map(f => f.chapterPages))).toEqual(new Set([pages.length]));
+        expect(pages.every(f => !f.title.includes('continued'))).toBe(true);
+        expect(new Set(pages.map(f => f.body.join(' '))).size).toBe(pages.length);
+        for (const face of pages) expect(face.body.join(' ').split(/\s+/).filter(Boolean).length).toBeGreaterThanOrEqual(140);
+      }
       const plate = book.faces.find(f => f.kind === 'plate');
       expect((plate?.page ?? 1) % 2).toBe(0);
       expect((book.faces.indexOf(plate as never) + 1) % 2).toBe(1);
@@ -24,11 +34,18 @@ describe('full calculated AstroBook chapters', () => {
       }
     }
   });
-  it.each([['digital', 45, 70], ['pocket', 50, 75], ['classic', 75, 120], ['signature', 90, 150], ['linen', 100, 180]] as const)('respects %s edition depth without padding', (edition, min, max) => {
+  it.each(['digital', 'pocket', 'classic', 'signature', 'linen'])('keeps %s chapter inclusion without truncating full study pages to print estimates', edition => {
     const book = make(true, 'oracle', edition);
-    expect(book.pageCount).toBeGreaterThanOrEqual(min);
-    expect(book.pageCount).toBeLessThanOrEqual(max);
+    const ids = [...new Set(book.faces.flatMap(f => f.kind === 'text' && f.chapterId ? [f.chapterId] : []))];
+    for (const id of ids) expect(book.faces.filter(f => f.kind === 'text' && f.chapterId === id).length).toBeGreaterThanOrEqual(5);
     expect(book.faces.some(f => f.kind === 'text' && f.eyebrow.startsWith('Volume V ·'))).toBe(edition !== 'pocket');
+  });
+  it('balances complete sentences across full pages without changing the prose', () => {
+    const paragraphs = Array.from({ length: 40 }, (_, i) => `Section ${i} considers the measured placement alongside the reader’s actual choices, without claiming an event or prescribing a response.`);
+    const pages = paginateChapter(paragraphs);
+    expect(pages.length).toBeGreaterThanOrEqual(5);
+    expect(pages.flat().join(' ')).toBe(paragraphs.join(' '));
+    expect(pages.every(p => p.join(' ').endsWith('.'))).toBe(true);
   });
   it('does not recover artificial houses or Moon contacts from a date-only chart', () => {
     const book = make(false);

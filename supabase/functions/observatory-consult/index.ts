@@ -1,3 +1,6 @@
+import { corsHeaders } from '../_shared/cors.ts';
+import { requestDeadline } from '../_shared/request-deadline.ts';
+import { plainResponseStream } from '../_shared/plain-response-stream.ts';
 import { createClient } from "npm:@supabase/supabase-js@2";
 import { creditShortfall } from "../_shared/credits.ts";
 import { counselorContext } from "../_shared/member-profile.ts";
@@ -7,11 +10,7 @@ import { hasFullAccess } from "../_shared/chat-guard.ts";
 // from the same chart), their Current Chapter, their Observation Log and the personal context they opted in.
 // Every claim is tagged with the source it came from; nothing is saved here.
 
-const cors = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-lovable-aig-run-id",
-  "Access-Control-Expose-Headers": "X-Lovable-AIG-Run-ID, X-Observatory-Sources",
-};
+const cors = corsHeaders;
 const json = (b: unknown, status = 200) => new Response(JSON.stringify(b), { status, headers: { ...cors, "Content-Type": "application/json" } });
 const clip = (v: unknown, n: number) => String(v ?? "").replace(/\s+/g, " ").trim().slice(0, n);
 
@@ -78,7 +77,7 @@ ${context.length ? context.map(c => `- ${c}`).join("\n") : "- none"}`;
     await admin.from("ai_usage").insert({ user_id: u.user.id, feature: "observatory" });
     const runId = req.headers.get("X-Lovable-AIG-Run-ID");
     const upstream = await fetch("https://ai.gateway.lovable.dev/v1/responses", {
-      method: "POST", signal: req.signal,
+      method: "POST", signal: requestDeadline(90_000, req.signal),
       headers: { "Content-Type": "application/json", "Lovable-API-Key": apiKey, "X-Lovable-AIG-SDK": "fetch", ...(runId ? { "X-Lovable-AIG-Run-ID": runId } : {}) },
       body: JSON.stringify({
         model: "openai/gpt-6-astra", instructions, input: [{ role: "user", content: question }],
@@ -87,37 +86,14 @@ ${context.length ? context.map(c => `- ${c}`).join("\n") : "- none"}`;
       }),
     });
     if (!upstream.ok || !upstream.body) {
-      const t = await upstream.text();
+      await upstream.body?.cancel();
       let msg = "The Observatory could not answer right now. Please try again.";
       if (upstream.status === 429) msg = "Too many questions at once. Wait a moment and ask again.";
       else if (upstream.status === 402) msg = "AI credits have run out. Add credits in Settings → Plans & credits.";
-      else { try { msg = JSON.parse(t)?.error?.message ?? msg; } catch { /* keep */ } }
+      else if (upstream.status === 403) msg = "AI access is currently unavailable. Please try again later.";
       return json({ error: msg }, upstream.status);
     }
-    const out = new ReadableStream({
-      async start(controller) {
-        const reader = upstream.body!.getReader(); const dec = new TextDecoder(); const enc = new TextEncoder();
-        let buf = "";
-        try {
-          while (true) {
-            const { done, value } = await reader.read(); if (done) break;
-            buf += dec.decode(value, { stream: true });
-            let i;
-            while ((i = buf.indexOf("\n")) >= 0) {
-              const line = buf.slice(0, i).trim(); buf = buf.slice(i + 1);
-              if (!line.startsWith("data:")) continue;
-              const data = line.slice(5).trim(); if (!data || data === "[DONE]") continue;
-              try {
-                const ev = JSON.parse(data);
-                if (ev.type === "response.output_text.delta" && ev.delta) controller.enqueue(enc.encode(ev.delta));
-                if (ev.type === "response.failed" || ev.type === "error") controller.enqueue(enc.encode("\n\n[The answer was interrupted.]"));
-              } catch { /* partial line */ }
-            }
-          }
-        } catch { /* aborted */ }
-        controller.close();
-      },
-    });
+    const out = plainResponseStream(upstream.body);
     const h = new Headers({ ...cors, "Content-Type": "text/plain; charset=utf-8", "X-Observatory-Sources": encodeURIComponent(JSON.stringify(sources)) });
     const rid = upstream.headers.get("X-Lovable-AIG-Run-ID"); if (rid) h.set("X-Lovable-AIG-Run-ID", rid);
     return new Response(out, { headers: h });

@@ -1,10 +1,13 @@
+import { corsHeaders } from '../_shared/cors.ts';
+import { requestDeadline } from '../_shared/request-deadline.ts';
+import { plainResponseStream } from '../_shared/plain-response-stream.ts';
 import { createClient } from "npm:@supabase/supabase-js@2";
 import { creditShortfall } from "../_shared/credits.ts";
 import { hasFullAccess } from "../_shared/chat-guard.ts";
 
 // Reads a member's own diary photo or PDF and streams back plain transcribed text for them to review and edit.
 // Nothing is stored here; the member decides whether to save it as personal context.
-const cors = { "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type" };
+const cors = corsHeaders;
 const json = (b: unknown, status = 200) => new Response(JSON.stringify(b), { status, headers: { ...cors, "Content-Type": "application/json" } });
 const TYPES = ["image/jpeg", "image/png", "image/webp", "application/pdf"];
 
@@ -30,7 +33,7 @@ Deno.serve(async (req) => {
       : { type: "input_image", image_url: `data:${b.mime};base64,${b.data}` };
     const instructions = "Transcribe the member's own handwritten or printed notes exactly as written, in plain text, keeping paragraph breaks. Do not summarise, interpret, correct or add anything. Mark unreadable words as [unclear]. If there is no readable text, reply only: No readable text found.";
     const up = await fetch("https://ai.gateway.lovable.dev/v1/responses", {
-      method: "POST", signal: req.signal,
+      method: "POST", signal: requestDeadline(90_000, req.signal),
       headers: { "Content-Type": "application/json", "Lovable-API-Key": apiKey, "X-Lovable-AIG-SDK": "fetch" },
       body: JSON.stringify({ model: "openai/gpt-6-astra", instructions, input: [{ role: "user", content: [{ type: "input_text", text: "Transcribe this." }, part] }], stream: true, store: false, max_output_tokens: 4000, reasoning: { effort: "low" } }),
     });
@@ -39,23 +42,7 @@ Deno.serve(async (req) => {
       return json({ error: msg }, up.status === 429 || up.status === 402 || up.status === 403 ? up.status : 502);
     }
     await admin.from("ai_usage").insert({ user_id: u.user.id, feature: "context-extract" });
-    const out = new ReadableStream({
-      async start(c) {
-        const r = up.body!.getReader(), dec = new TextDecoder(), enc = new TextEncoder(); let buf = "";
-        try {
-          while (true) {
-            const { done, value } = await r.read(); if (done) break;
-            buf += dec.decode(value, { stream: true }); let i;
-            while ((i = buf.indexOf("\n")) >= 0) {
-              const line = buf.slice(0, i).trim(); buf = buf.slice(i + 1);
-              if (!line.startsWith("data:")) continue;
-              try { const ev = JSON.parse(line.slice(5).trim()); if (ev.type === "response.output_text.delta" && ev.delta) c.enqueue(enc.encode(ev.delta)); } catch { /* partial */ }
-            }
-          }
-        } catch { /* aborted */ }
-        c.close();
-      },
-    });
+    const out = plainResponseStream(up.body);
     return new Response(out, { headers: { ...cors, "Content-Type": "text/plain; charset=utf-8" } });
   } catch (e) { console.error(e); return json({ error: "Something went wrong." }, 500); }
 });

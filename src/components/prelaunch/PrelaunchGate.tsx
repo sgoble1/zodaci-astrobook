@@ -38,7 +38,7 @@ export function PrelaunchGate({ children }: { children: ReactNode }) {
 
   const unlock = () => { setState('open'); navigate('/', { replace: true }); };
   const landing = (openAccess = false) => (
-    <Suspense fallback={<div role="status" aria-label="Loading waitlist" className="min-h-screen bg-background" />}>
+    <Suspense fallback={<div role="status" className="flex min-h-screen items-center justify-center bg-background p-6 text-foreground">Opening Zodaci…</div>}>
       <PrelaunchLanding onUnlock={unlock} openAccess={openAccess} />
     </Suspense>
   );
@@ -46,6 +46,6 @@ export function PrelaunchGate({ children }: { children: ReactNode }) {
   const view = gateView(pathname, state);
   if (view === 'site') return <>{children}</>;
   if (view === 'home') return <Navigate to="/" replace />;
-  if (view === 'checking') return <div role="status" aria-label="Checking site availability" className="min-h-screen bg-background" />;
+  if (view === 'checking') return <div role="status" className="flex min-h-screen items-center justify-center bg-background p-6 text-foreground">Opening Zodaci…</div>;
   return landing(pathname === '/access');
 }

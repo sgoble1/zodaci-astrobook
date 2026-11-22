@@ -30,12 +30,13 @@ export function OpenBook({ leaves, kind = 'book', label, layout = 'side', footer
   const cover = front?.kind === 'cover' ? front.src : front?.kind === 'jacket' ? front.art : front?.kind === 'comic-page' ? front.art['1-0'] : null;
   const visible: BookFace[] = state === 'closed' ? [leaves[0]?.front] : state === 'back' ? [leaves[n - 1]?.back] : [leaves[at - 1]?.back, leaves[at]?.front];
   const safeVisible = visible.filter(Boolean);
-  const chapters = leaves.flatMap(l => [l.front, l.back]).flatMap((f, i) => f?.kind === 'text' && !f.title.includes('· continued') ? [{ title: f.title, at: Math.ceil(i / 2), page: f.page }] : []);
+  const chapters = leaves.flatMap(l => [l.front, l.back]).flatMap((f, i) => f?.kind === 'text' && (f.chapterPage ?? 1) === 1 && !f.title.includes('· continued') ? [{ title: f.title, at: Math.ceil(i / 2), page: f.page }] : []);
   const pageNos = safeVisible.map(f => ('page' in f ? f.page : undefined)).filter((p): p is number => p != null);
   const where = state === 'closed' ? 'Front cover' : state === 'back' ? 'Back cover' : pageNos.length ? `Pages ${pageNos.join('–')}` : at === 1 ? 'Inside the cover' : 'Endpapers';
   const onKey = (e: KeyboardEvent) => {
     if (e.target !== e.currentTarget) return;
     if (e.key === 'ArrowRight') { e.preventDefault(); go(1); } else if (e.key === 'ArrowLeft') { e.preventDefault(); go(-1); }
+    else if (e.key === 'Escape') { e.preventDefault(); setAt(0); }
     else if (e.key === 'Home') setAt(0); else if (e.key === 'End') setAt(n);
   };
   const down = (e: PointerEvent) => { swipe.current = e.clientX; swiped.current = false; };
@@ -46,7 +47,7 @@ export function OpenBook({ leaves, kind = 'book', label, layout = 'side', footer
   const reader = (
     <div className="ob-reader" aria-live="polite">
       <p className="font-label text-xs tracking-[0.16em] text-primary">{where}</p>
-      {text.map(t => <div key={t.heading} className="mt-3"><p className="font-semibold leading-snug"><CompassText text={t.heading} /></p>{t.lines.map((l, k) => <p key={k} className={l.startsWith('Reflection: ') ? 'ob-reader-reflection' : 'mt-1.5 text-sm leading-relaxed text-muted-foreground'}><CompassText text={l} /></p>)}</div>)}
+      {text.map((t, i) => <div key={`${at}:${i}`} className="mt-3"><p className="font-semibold leading-snug"><CompassText text={t.heading} /></p>{t.lines.map((l, k) => <p key={k} className={l.startsWith('Reflection: ') ? 'ob-reader-reflection' : 'mt-1.5 text-sm leading-relaxed text-muted-foreground'}><CompassText text={l} /></p>)}</div>)}
     </div>
   );
   const download = () => exportGate.current(async () => {
@@ -180,9 +181,9 @@ function Face({ f, kind }: { f: BookFace; kind: 'book' | 'comic' }) {
       </div>
     );
     case 'text': return (
-      <div className="ob-pad">
-        <p className="font-label ob-eyebrow">{f.eyebrow}</p><p className="font-display ob-h"><CompassText text={f.title} /></p><p className="font-label ob-placement"><CompassText text={f.placement} /></p>
-        <dl className="ob-table ob-table-tight">{f.facts.map(([k, v]) => <div key={k}><dt><CompassText text={k} /></dt><dd><CompassText text={v} /></dd></div>)}</dl>
+      <div className="ob-pad" data-chapter-page={f.chapterPage}>
+        {f.chapterPage && f.chapterPage > 1 ? <p className="font-label ob-running-title"><CompassText text={f.title} /></p> : <><p className="font-label ob-eyebrow">{f.eyebrow}</p><p className="font-display ob-h"><CompassText text={f.title} /></p>{f.placement && <p className="font-label ob-placement"><CompassText text={f.placement} /></p>}</>}
+        {f.facts.length > 0 && <dl className="ob-table ob-table-tight">{f.facts.map(([k, v]) => <div key={k}><dt><CompassText text={k} /></dt><dd><CompassText text={v} /></dd></div>)}</dl>}
         <div className="ob-body">{f.body.map((p, i) => <p key={i}><CompassText text={p} /></p>)}{f.reflection && <aside className="ob-margin-note"><span className="font-label">Reflection</span><p><CompassText text={f.reflection} /></p></aside>}</div><Folio n={f.page} />
       </div>
     );

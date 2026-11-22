@@ -18,3 +18,4 @@
 - Gift notices require buyer ownership, reconciled server-written live checkout/payment evidence and per-order idempotency before email, so account access alone cannot send branded mail.
 - app-email claims service-only app_email_deliveries leases before sending; stable provider keys and stored completion suppress concurrent sends and recover missed gift/shipping notices. Stripe has a 25s deadline; image/text requests preserve caller cancellation with 120s/90s bounds.
 - chart-portrait draws a Sky Portrait only from the caller's saved profile chart signs (no people, no text), 3 credits, Pro/Cosmic, saved as a private library creation.
+- Direct Responses streams share plain-response-stream: failed, incomplete and truncated answers error instead of saving as complete; direct text calls have 90s deadlines, speech parts 90s and whole speech assemblies 240s, while SDK jobs retain their existing 180s bound.

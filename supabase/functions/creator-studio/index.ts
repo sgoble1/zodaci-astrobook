@@ -146,7 +146,7 @@ Deno.serve(async (req) => {
     const up = await admin.storage.from('library').upload(path, file, { contentType: 'audio/wav' });
     if (up.error) return json({ error: 'Could not save the audio.' }, 500);
     const ins = await admin.from('library_items').insert({ kind: 'podcast', title: topic, description: script.split(/(?<=[.!?])\s/).slice(0, 2).join(' '), category: 'My episodes', file_path: path, shared_with_space: false, workspace_id: workspaceId ?? null, file_name: name, mime_type: 'audio/wav', size_bytes: file.length, owner_id: user.id, sections: [{ title: 'Episode transcript', text: script }] }).select('id').single();
-    if (ins.error) return json({ error: 'Could not list the episode.' }, 500);
+    if (ins.error) { await admin.storage.from('library').remove([path]); return json({ error: 'Could not list the episode. Please try again.' }, 500); }
     await admin.from('ai_usage').insert({ user_id: user.id, feature: 'creator-podcast' });
     return json({ id: ins.data.id, seconds: Math.round(joined.length / 48000) });
   } catch (e) {

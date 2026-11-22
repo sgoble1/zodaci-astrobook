@@ -1499,6 +1499,9 @@ li:hover > .zodiac-coin { transform: rotate(-10deg); }
 .ob-list { display: grid; gap: 1.6cqw; margin-top: 1cqw; border-top: .5cqw solid hsl(var(--comic-navy) / .7); padding-top: 2.4cqw; font-size: 3.9cqw; line-height: 1.25; }
 .ob-list li::before { content: '✦ '; color: hsl(var(--comic-mustard)); }
 .ob-body { flex: 1; min-height: 0; overflow: visible; font-size: calc(3.6cqw * var(--ob-fit, 1)); line-height: 1.42; display: grid; align-content: start; gap: calc(1.8cqw * var(--ob-fit, 1)); }
+.ob-pad[data-chapter-page] .ob-h { font-size: calc(5.4cqw * var(--ob-fit, 1)); line-height: 1.12; }
+.ob-pad[data-chapter-page] .ob-eyebrow { font-size: calc(3cqw * var(--ob-fit, 1)); }
+.ob-running-title { font-size: calc(3.2cqw * var(--ob-fit, 1)); line-height: 1.25; color: hsl(var(--comic-brick)); border-bottom: .25cqw solid hsl(var(--comic-navy) / .3); padding-bottom: 1.5cqw; }
 .ob-jacket { position: absolute; inset: 0; color: hsl(var(--comic-navy)); background: hsl(var(--spot-paper)); }
 .ob-jacket > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .ob-jacket-title { position: absolute; inset: 0 0 auto; padding: 5cqw 7cqw; display: grid; gap: 1.5cqw; text-align: center; background: hsl(var(--spot-paper) / .97); }

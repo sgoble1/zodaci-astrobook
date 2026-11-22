@@ -1,3 +1,4 @@
+import { requestDeadline } from './request-deadline.ts';
 import { GATEWAY_URL } from './responses.ts';
 
 export const TTS_MODEL = 'google/gemini-3.1-flash-tts-preview';
@@ -20,9 +21,9 @@ ${total > 1 ? `Continuity: this is part ${part} of ${total} of one episode — k
 #### TRANSCRIPT
 ${text}`;
 
-export async function speak(apiKey: string, text: string, voice = 'Kore', part = 1, total = 1): Promise<Uint8Array> {
+export async function speak(apiKey: string, text: string, voice = 'Kore', part = 1, total = 1, signal?: AbortSignal): Promise<Uint8Array> {
   const res = await fetch(`${GATEWAY_URL}/audio/speech`, {
-    method: 'POST', headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
+    signal: requestDeadline(90_000, signal), method: 'POST', headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
     body: JSON.stringify({ model: TTS_MODEL, contents: [{ role: 'user', parts: [{ text: direction(text, part, total) }] }], generationConfig: { responseModalities: ['AUDIO'], speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: voice } } } }, stream_format: 'audio' }),
   });
   if (!res.ok) { const t = await res.text(); throw Object.assign(new Error(`speech ${res.status}: ${t.slice(0, 300)}`), { statusCode: res.status }); }
@@ -31,9 +32,10 @@ export async function speak(apiKey: string, text: string, voice = 'Kore', part =
 
 /** Speak every part and join them with a short breath of silence, so section seams don't sound clipped. */
 export async function speakAll(apiKey: string, parts: string[], voice = 'Kore', rate = 24000): Promise<Uint8Array> {
+  const signal = requestDeadline(240_000);
   const gap = new Uint8Array(Math.round(rate * 0.45) * 2);
   const pcm: Uint8Array[] = [];
-  for (let i = 0; i < parts.length; i++) { if (i) pcm.push(gap); pcm.push(await speak(apiKey, parts[i], voice, i + 1, parts.length)); }
+  for (let i = 0; i < parts.length; i++) { if (i) pcm.push(gap); pcm.push(await speak(apiKey, parts[i], voice, i + 1, parts.length, signal)); }
   const out = new Uint8Array(pcm.reduce((a, b) => a + b.length, 0)); let o = 0; for (const b of pcm) { out.set(b, o); o += b.length; }
   return out;
 }

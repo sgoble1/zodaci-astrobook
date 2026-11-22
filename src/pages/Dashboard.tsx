@@ -11,6 +11,8 @@ import { SharedChatFeed } from '@/components/shared/SharedChatFeed';
 import { viewingSharedEdition } from '@/hooks/useAprilSpace';
 import { SharedEditionDashboard } from '@/components/common/SharedEditionDashboard';
 import { EditionTV } from '@/components/observatory/EditionTV';
+import { BookmarkButton } from '@/components/common/BookmarkButton';
+import { toast } from 'sonner';
 
 function Inner() {
   const { items, remove, setNote } = useBookmarks();
@@ -24,9 +26,9 @@ function Inner() {
           <div key={b.id} className="parchment p-4 space-y-2">
             <div className="flex justify-between gap-3">
               <Link to={b.path} className="font-medium hover:underline">{b.title}</Link>
-              <button className="text-xs text-muted-foreground underline" onClick={() => remove(b.id)}>Remove</button>
+              <BookmarkButton path={b.path} label={b.title} icon />
             </div>
-            <textarea defaultValue={b.note} placeholder="Add a note…" onBlur={e => e.target.value !== b.note && setNote(b.id, e.target.value)}
+            <textarea aria-label={`Note on ${b.title}`} defaultValue={b.note} placeholder="Add a note…" onBlur={async e => { if (e.target.value === b.note) return; try { await setNote(b.id, e.target.value); toast.success('Bookmark note saved.'); } catch { toast.error('The note could not be saved. Your text is still here; try leaving the field again.'); } }}
               className="w-full text-sm bg-transparent border border-border rounded p-2" rows={2} />
             <div className="text-[11px] text-muted-foreground">Saved {new Date(b.created_at).toLocaleDateString()}</div>
           </div>
