@@ -4,7 +4,7 @@ import type Stripe from "https://esm.sh/stripe@22.0.2";
 import { type StripeEnv, createStripeClient } from "../_shared/stripe.ts";
 
 import { snapshotBookPdf } from '../_shared/book-delivery.ts';
-import { MEMBERSHIP, CREDIT_PACKS, isPreviewOrigin, matchesAdvertised } from '../_shared/billing.ts';
+import { MEMBERSHIP, CREDIT_PACKS, isPreviewOrigin, isApprovedReturnUrl, matchesAdvertised } from '../_shared/billing.ts';
 
 const ALLOWED = new Set(Object.keys(MEMBERSHIP));
 /** Mirrors BOOK_VERSIONS in src/lib/books.ts (price in cents, lookup key, format). */
@@ -62,7 +62,7 @@ Deno.serve(async (req) => {
     if (environment !== "sandbox" && environment !== "live") return json({ error: "Invalid environment" }, 400);
     if (typeof returnUrl !== "string" || !/^https?:\/\//.test(returnUrl)) return json({ error: "Invalid return URL" }, 400);
     const origin = req.headers.get('Origin');
-    if (!origin || new URL(returnUrl).origin !== origin) return json({ error: 'Return URL must match this site.' }, 400);
+    if (!origin || new URL(returnUrl).origin !== origin || !isApprovedReturnUrl(returnUrl)) return json({ error: 'Return URL must match this site.' }, 400);
     if (environment === 'live' && isPreviewOrigin(origin)) return json({ error: 'Live payments only open on the published site.' }, 400);
     const env = environment as StripeEnv;
 

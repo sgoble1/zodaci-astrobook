@@ -1,0 +1,5 @@
+DROP POLICY IF EXISTS "Admins manage edition access" ON public.edition_access;
+CREATE POLICY "Admins read edition access" ON public.edition_access FOR SELECT TO authenticated USING (public.has_role(auth.uid(), 'admin'));
+CREATE POLICY "Admins assign others edition access" ON public.edition_access FOR INSERT TO authenticated WITH CHECK (public.has_role(auth.uid(), 'admin') AND email = lower(email) AND email <> lower(coalesce(auth.jwt() ->> 'email', '')));
+CREATE POLICY "Admins update others edition access" ON public.edition_access FOR UPDATE TO authenticated USING (public.has_role(auth.uid(), 'admin')) WITH CHECK (public.has_role(auth.uid(), 'admin') AND email = lower(email) AND email <> lower(coalesce(auth.jwt() ->> 'email', '')));
+CREATE POLICY "Admins remove edition access" ON public.edition_access FOR DELETE TO authenticated USING (public.has_role(auth.uid(), 'admin'));

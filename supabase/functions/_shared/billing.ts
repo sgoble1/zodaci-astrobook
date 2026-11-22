@@ -31,6 +31,18 @@ export function subscriptionFields(subscription: any) {
 }
 
 /** Preview and local builds may only open test checkouts, so a preview can never take a real payment. */
+const SITE_HOSTS = new Set(['zodaci.com', 'www.zodaci.com', 'zodaciof.lovable.app']);
+/** Only Zodaci's own sites (and this project's preview) may receive checkout returns. */
+export function isApprovedReturnUrl(url: string) {
+  try {
+    const u = new URL(url);
+    if (u.username || u.password) return false;
+    const h = u.hostname;
+    if (u.protocol === 'https:' && (SITE_HOSTS.has(h) || h === 'id-preview--aee2e954-f4db-40c2-b757-ce2ed7d7a9d3.lovable.app' || h === 'aee2e954-f4db-40c2-b757-ce2ed7d7a9d3.lovableproject.com')) return true;
+    return u.protocol === 'http:' && (h === 'localhost' || h === '127.0.0.1');
+  } catch { return false; }
+}
+
 export function isPreviewOrigin(origin: string) {
   try { const h = new URL(origin).hostname; return h === 'localhost' || h === '127.0.0.1' || h.startsWith('id-preview--') || h.endsWith('.lovableproject.com'); } catch { return true; }
 }

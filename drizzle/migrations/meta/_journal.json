@@ -701,6 +701,13 @@
       "when": 1795329411194,
       "tag": "0099_app_email_delivery_leases",
       "breakpoints": true
+    },
+    {
+      "idx": 100,
+      "version": "7",
+      "when": 1795333997451,
+      "tag": "0100_edition_access_no_self_assign",
+      "breakpoints": true
     }
   ]
 }
