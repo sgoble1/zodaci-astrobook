@@ -61,17 +61,17 @@ The current 28-page preview selects one 60–135-word face for many topics. Expa
 - Reuse `usePageMeta` and route fallbacks for unique titles/descriptions, self-referencing public canonical/social URLs and private noindex boundaries. Check the static crawler fallback; no new placeholder share image or competing metadata library.
 
 ## Phase 7 — Comprehensive verification and release report
-- Run full tests, boundary/race regressions and automatic build/typecheck checks.
-- Verify authorized UI journeys, phone/desktop, accessibility, motion and network recovery. Record route/role/state evidence; blank pages/redirects never pass.
-- Test refresh, back/forward, skipped steps and invalid input across multi-step flows. Verify saved intermediate state and predictable recovery.
-- No real orders, email or printing without authorization. Name external/access limits; commit verified work. Publishing is separate.
+- Run full tests, race regressions and automatic build/typecheck checks.
+- Verify authorized journeys, phone/desktop, accessibility, motion and recovery; record route/role/state evidence, not blank-page passes.
+- Exercise refresh, back/forward, skips and invalid input; verify intermediate-state recovery.
+- No real orders/email/printing without authorization. Name blockers, commit work; publishing is separate.
 
 ## Phase 8 — Integration and data reliability
-- Audit checkout, signed webhooks, notifications/email, storage uploads, AI and external APIs end-to-end: credentials present, handshake, payload/schema types, timeouts and visible success/failure.
-- Trace UI → queries/mutations → functions → providers; fix mismatched fields, silent catches, stale caches and missing bounded recovery. Never fabricate fallback chart/payment data.
-- Stress null/empty/long inputs, large lists, invalid numbers, expired sessions, rapid duplicate actions and out-of-order responses. Add guards, busy controls, identity fencing and server idempotency where needed.
-- Audit production paths for test constants/mock responses; preserve explicitly isolated fictional demos and test fixtures.
-- Detailed matrix and completion gates: `docs/integration-reliability-scope.md`.
+- Audit checkout/webhooks, email, storage, AI/APIs: credentials, handshakes, typed payloads, timeout recovery and honest feedback.
+- Trace UI→data→functions→providers: fields/types, silent catches, cache invalidation and safe retries.
+- Stress duplicate actions, null/long/large input, invalid numbers, expired sessions and response races; add guards, busy states and idempotency.
+- Remove production mocks/test values; preserve isolated labelled demos/fixtures, never fake chart/payment fallbacks.
+- Full audit matrix: `docs/integration-reliability-scope.md`.
 
 ## Technical approach
 Improve shared UI first, then integration boundaries and page exceptions. Preserve chart math, authorization, verified payments and archives; no blanket overrides.
