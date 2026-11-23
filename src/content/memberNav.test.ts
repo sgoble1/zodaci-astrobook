@@ -13,6 +13,12 @@ const menuPaths = new Set(MEMBER_DOMAINS.flatMap(d => domainItems(d)).map(i => i
 const accountPaths = new Set(ACCOUNT_MENU.map(a => a.to));
 
 describe('member navigation architecture', () => {
+  it('temporarily hides non-book merchandise from member destinations', () => {
+    expect(memberDestinations({}).some(item => item.to === '/keepsakes')).toBe(false);
+    expect(ROUTE_INVENTORY['/keepsakes'].level).toBe('utility');
+    expect(menuPaths.has('/books')).toBe(true);
+    expect(menuPaths.has('/my-comic')).toBe(true);
+  });
   it('has exactly five domains at the top level, plus the account menu (7-item cap)', () => {
     expect(MEMBER_DOMAINS.map(d => d.label)).toEqual(['Mapping Center', 'Astral Bureaus', 'The Reading Room', 'Broadcast Deck', 'Research Library']);
     expect(MEMBER_DOMAINS.length + 1).toBeLessThanOrEqual(7);

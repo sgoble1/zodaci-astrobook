@@ -18,11 +18,10 @@ import { PLAN_NAME, PLAN_PRICE, CREDIT_ALLOWANCE } from '@/lib/plans';
 import { BOOK_VERSIONS, money } from '@/lib/books';
 import { PanelTitle, StatusLight } from '@/components/observatory/Observatory';
 import { HeroSlideshow, ChartMapSlide, LookUpSlide, PressSlide, ArtSlide } from '@/components/observatory/HeroSlides';
-import { MottoRail, ForecastPlate, type MottoLink, ExplorePoster, DestinationTiles, QuotePlate, ArchiveShelf, HowItWorks, ZodiacPlate, TransmissionsPlate, JoinPlate, LessonsTile, PrecisionTile, ShopWindowPlate, type Destination } from '@/components/observatory/Mosaic';
+import { MottoRail, ForecastPlate, type MottoLink, ExplorePoster, DestinationTiles, QuotePlate, ArchiveShelf, HowItWorks, ZodiacPlate, TransmissionsPlate, JoinPlate, LessonsTile, PrecisionTile, type Destination } from '@/components/observatory/Mosaic';
 import rooftop from '@/assets/home/rooftop-astronomers.jpg';
 import stargazer from '@/assets/home/stargazer-field-guide.jpg';
-import giftTower from '@/assets/home/gift-shop-tower.jpg';
-import { BookIcon, ChartWheelIcon, RingsIcon, StorefrontIcon, TelescopeIcon } from '@/components/icons/RetroIcons';
+import { BookIcon, ChartWheelIcon, RingsIcon, TelescopeIcon } from '@/components/icons/RetroIcons';
 import { ALL_READINGS } from '@/lib/topicReadings';
 import { PersonalizationStory } from '@/components/books/PersonalizationStory';
 import { ACADEMY } from '@/content/academy';
@@ -62,7 +61,7 @@ const MOTTO: MottoLink[] = [
   ['Understand', '/demo', 'A sample edition, inside out'],
   ['Connect', '/compatibility', 'Two charts, side by side'],
   ['Create', '/astrobook', 'AstroBooks & AstroComics'],
-  ['Collect', '/store', 'The observatory gift shop'],
+  ['Read', '/astrocomic', 'Your chart as an illustrated story'],
   ['Evolve', '/pricing', 'Go deeper with Pro'],
 ];
 
@@ -71,11 +70,11 @@ const DESTINATIONS: Destination[] = [
   { to: '/astrobook', title: 'AstroBooks', text: 'Your chart as a printed book', cta: 'View AstroBooks', icon: BookIcon },
   { to: '/compatibility', title: 'Relationships', text: 'Two charts, side by side', cta: 'Compare charts', icon: RingsIcon },
   { to: '/learn#forecasts', title: 'Forecasts', text: 'Today’s sky and the month ahead', cta: 'See the sky', icon: TelescopeIcon },
-  { to: '/store', title: 'Gift Shop', text: 'Prints, books and keepsakes', cta: 'Visit the shop', icon: StorefrontIcon },
+  { to: '/astrocomic', title: 'AstroComic', text: 'Your chart as an illustrated digest', cta: 'Read a sample', icon: BookIcon },
 ];
 
 const STATIONS = [
-  { key: 'products', to: '/astrobook', title: 'Products', text: 'AstroBooks, AstroComics and keepsakes' },
+  { key: 'products', to: '/astrobook', title: 'Books & Comics', text: 'Your chart in bound archival editions' },
   { key: 'calculators', to: '/start', title: 'Calculators & Tools', text: 'Chart, ephemeris, retrogrades, BaZi' },
   { key: 'academy', to: '/learn', title: 'Learn & Academy', text: 'Lessons, Compendium and sources' },
   { key: 'members', to: '/dashboard', title: 'Members', text: 'Your readings, audio and private rooms' },
@@ -124,13 +123,6 @@ export default function BrandLanding() {
         cta={{ to: '/learn', label: 'Start learning' }} secondary={{ to: '/forecast', label: 'Read today’s sky' }} />,
     },
     {
-      id: 'gift-shop', label: 'The Observatory Gift Shop',
-      content: <ArtSlide art={{ src: giftTower, alt: 'A 1950s poster of a radio tower and copper-domed observatory above a small town, radio waves rippling into a starry teal sky', width: 900, height: 1125 }}
-        eyebrow="The Observatory Gift Shop" title={<>Souvenirs from<br />your own sky.</>} script="Every sign, one atomic age."
-        text="Posters, tees, mugs, totes, notebooks and stickers for all twelve signs, drawn in the same 1950s style as the observatory."
-        cta={{ to: '/store', label: 'Visit the gift shop' }} secondary={{ to: '/store?collection=atomic', label: 'Atomic Zodiac Collection' }} />,
-    },
-    {
       id: 'observatory', label: 'Inside the observatory',
       content: <ArtSlide art={{ ...PAINTED.dome, width: 1600, height: 900 }}
         eyebrow="Zodaci Astral Research Authority" title={<>Charted by hand,<br />checked by math.</>} script="The whole observatory, open to you."
@@ -150,6 +142,9 @@ export default function BrandLanding() {
 
       <DestinationTiles label="Main destinations" items={DESTINATIONS} />
 
+      <section aria-labelledby="live-h" className="obs-panel p-5 sm:p-8"><PanelTitle eyebrow="Astral Mapping Center" live><span id="live-h">Live chart</span></PanelTitle><SampleChartDemo />
+        <div className="mt-6 flex flex-wrap items-center gap-3"><Sheet><SheetTrigger asChild><Button variant="outline">Read the sample AstroBook chapters</Button></SheetTrigger><SheetContent side="right" className="w-full overflow-y-auto sm:max-w-2xl"><SheetHeader><SheetTitle>Sample AstroBook chapters</SheetTitle><SheetDescription>A fictional reader’s full calculated chapters, with ordinary-language explanations, a glossary and reflections. Yours is written from your own chart.</SheetDescription></SheetHeader><div className="mt-6"><SampleBook cta={<Button asChild><Link to="/auth?next=/start">Start your own chart</Link></Button>} /></div></SheetContent></Sheet><Button asChild><Link to="/auth?next=/start">Start your own chart</Link></Button></div></section>
+
       <section aria-label="Observatory stations" className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {STATIONS.map(st => <Link key={st.to} to={st.to} className="group block">
           <PaintedPlate {...PAINTED.stations[st.key]} shape="station"><span className="block font-label text-lg text-foreground">{st.title}</span><span className="block text-sm text-muted-foreground">{st.text}</span></PaintedPlate>
@@ -158,7 +153,7 @@ export default function BrandLanding() {
 
       <div className="mosaic-trio">
         <LessonsTile />
-        <ShopWindowPlate />
+        <section className="voyager-publication-note space-y-4"><h2 className="text-2xl">Keep the whole reading.</h2><p className="text-sm leading-relaxed text-muted-foreground">AstroBook binds your chart facts, chapters and engraved plates into one edition. AstroComic gives the same calculated sky a fictional illustrated story.</p><div className="flex flex-wrap gap-3"><Button asChild><Link to="/astrobook">Open AstroBook</Link></Button><Button asChild variant="outline"><Link to="/astrocomic">Read AstroComic</Link></Button></div></section>
         <PrecisionTile />
       </div>
 
@@ -174,8 +169,7 @@ export default function BrandLanding() {
 
       <ZodiacPlate />
 
-      <section aria-labelledby="live-h" className="obs-panel p-5 sm:p-8"><PanelTitle eyebrow="Astral Mapping Center" live><span id="live-h">Live chart</span></PanelTitle><SampleChartDemo />
-        <div className="mt-6 flex flex-wrap items-center gap-3"><Sheet><SheetTrigger asChild><Button variant="outline">Read the sample AstroBook chapters</Button></SheetTrigger><SheetContent side="right" className="w-full overflow-y-auto sm:max-w-2xl"><SheetHeader><SheetTitle>Sample AstroBook chapters</SheetTitle><SheetDescription>A fictional reader’s full calculated chapters, with ordinary-language explanations, a glossary and reflections. Yours is written from your own chart.</SheetDescription></SheetHeader><div className="mt-6"><SampleBook cta={<Button asChild><Link to="/auth?next=/start">Start your own chart</Link></Button>} /></div></SheetContent></Sheet><Button asChild><Link to="/auth?next=/start">Start your own chart</Link></Button></div></section>
+
 
       <section aria-label="Zodaci at a glance" className="obs-panel"><dl className="grid grid-cols-2 gap-5 px-5 py-6 lg:grid-cols-4">{FACTS.map(([n, l]) => <div key={l}><dt className="sr-only">{l}</dt><dd className="font-display text-3xl text-primary">{n}</dd><dd aria-hidden className="text-sm text-muted-foreground">{l}</dd></div>)}</dl></section>
 
@@ -195,7 +189,7 @@ export default function BrandLanding() {
         <JoinPlate />
       </div>
 
-      <section id="contact" aria-labelledby="contact-h" className="obs-panel p-5 sm:p-8"><div className="grid gap-10 md:grid-cols-2"><div><StatusLight label="Desk open" /><h2 id="contact-h" className="mt-3 font-label text-2xl">Write to the observatory</h2><p className="mt-4 max-w-md leading-relaxed text-muted-foreground">Questions about your chart, an AstroBook order or the shop? Send a note to the Zodaci team.</p></div><ContactForm /></div></section>
+      <section id="contact" aria-labelledby="contact-h" className="obs-panel p-5 sm:p-8"><div className="grid gap-10 md:grid-cols-2"><div><StatusLight label="Desk open" /><h2 id="contact-h" className="mt-3 font-label text-2xl">Write to the observatory</h2><p className="mt-4 max-w-md leading-relaxed text-muted-foreground">Questions about your chart, an AstroBook or AstroComic order? Send a note to the Zodaci team.</p></div><ContactForm /></div></section>
     </main><GlobalFooter />
   </div>;
 }

@@ -82,7 +82,7 @@ export default function AstroComic() {
         </div>
         <div id="preview" className="product-art-gallery obs-paper scroll-mt-6 p-3 sm:p-4" aria-label="Sample AstroComic digest"><OpenComicDigest /></div>
       </section>
-      <PaintedPlate {...PAINTED.astrocomic} shape="panorama" />
+      <PaintedPlate {...PAINTED.astrocomic} shape="panorama" className="voyager-product-art" />
 
       <section aria-labelledby="issue1-h">
         <h2 id="issue1-h" className="font-display text-3xl">Read the sample issue: The Midnight Signal</h2>

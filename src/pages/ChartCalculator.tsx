@@ -64,11 +64,11 @@ export default function ChartCalculator() {
   };
 
   return (
-    <div className="space-y-10">
+    <div className="voyager-instrument space-y-10">
       <header>
-        <div className="font-label text-xs tracking-[0.16em] text-primary">Calculator · natal positions, aspects & Ba Zi</div>
+        <div className="font-label text-xs tracking-[0.16em] text-primary">Chart instrument · positions, aspects & Four Pillars</div>
         <h1 className="text-4xl sm:text-5xl mt-2">Birth Chart Calculator</h1>
-        <p className="text-muted-foreground mt-3 max-w-2xl">Enter a date, time and place. The app calculates planet positions, the Ascendant and Midheaven, the major aspects and the Chinese Four Pillars, and flags anything uncertain. It opens with April’s birth data so you can compare the results with the source documents.</p>
+        <p className="text-muted-foreground mt-3 max-w-2xl">Enter a date, time and place. The app calculates planet positions, the Ascendant and Midheaven, the major aspects and the Chinese Four Pillars, and flags anything uncertain. Compare the calculated positions, their source references and any uncertainty in the field log below.</p>
       </header>
 
       <form onSubmit={submit} className="parchment p-5 grid md:grid-cols-2 gap-4">

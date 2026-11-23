@@ -10,14 +10,13 @@ import { useSession } from '@/hooks/useLibrary';
 /** The four public pillars every signed-out page uses. Items marked member open after sign-in. */
 export type PublicPillar = { label: string; to: string; items: { to: string; label: string; description: string }[] };
 export const PUBLIC_PILLARS: PublicPillar[] = [
-  { label: 'Products', to: '/astrobook', items: [
+  { label: 'Books & Comics', to: '/astrobook', items: [
     { to: '/astrobook', label: 'AstroBooks', description: 'Printed books written from your chart' },
     { to: '/astrocomic', label: 'AstroComics', description: 'A monthly illustrated issue' },
-    { to: '/keepsakes', label: 'Gift keepsakes', description: 'Certificates and Star Scrolls' },
-    { to: '/store', label: 'Shop', description: 'Posters, stickers and notebooks' },
   ] },
-  { label: 'Calculators & Tools', to: '/start', items: [
+  { label: 'Charts & Tools', to: '/start', items: [
     { to: '/start', label: 'Birth chart', description: 'Calculate your chart from date, time and place' },
+    { to: '/demo', label: 'Explore chart results', description: 'Interactive sample wheel, placements and readings' },
     { to: '/ephemeris', label: 'Ephemeris', description: 'Daily UTC positions, 1800–2100' },
     { to: '/retrogrades', label: 'Retrograde Guide', description: 'Recent, active and upcoming cycles' },
     { to: '/bazi', label: 'BaZi · Four Pillars', description: 'Pillars, five elements and Lo Shu' },

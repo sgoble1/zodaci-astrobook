@@ -7,7 +7,7 @@
   --card-foreground: 150 8% 9%;
   --popover: 45 25% 97%;
   --popover-foreground: 150 8% 9%;
-  --primary: 150 8% 9%;
+  --primary: 174 40% 27%;
   --primary-foreground: 45 28% 96%;
   --secondary: 43 16% 88%;
   --secondary-foreground: 150 8% 9%;
@@ -22,7 +22,8 @@
   --input-background: 45 28% 97%;
   --switch-background: 43 12% 75%;
   --ring: 8 54% 39%;
-  --info: 207 45% 35%;
+  --info: 174 40% 27%;
+  --brass: 36 50% 39%;
   --ink: 150 8% 9%;
   --vellum: 45 25% 96%;
   --gold: 36 58% 31%;
@@ -36,6 +37,9 @@
   --shadow-print: 2px 2px 0 hsl(var(--foreground) / .2);
   --voyager-extrusion: 1px 1px 0 hsl(var(--background)), 3px 3px 0 hsl(var(--foreground)), 4px 4px 0 hsl(var(--foreground));
   --voyager-paper-texture: url('/textures/grain-warm.png');
+  --voyager-art-treatment: grayscale(1) sepia(.24) saturate(.65) contrast(.9) brightness(1.06);
+  --voyager-aperture: 36% 12% 30% 10% / 16% 32% 14% 28%;
+  --voyager-art-rule: 1px solid hsl(var(--brass) / .55);
 }
 body { background:hsl(var(--background)); }
 body::before { content:''; position:fixed; inset:0; z-index:-1; pointer-events:none; background-image:var(--voyager-paper-texture); opacity:.025; }
@@ -176,3 +180,54 @@ h1,h2,h3,h4 { font-weight:400; }
   .voyager-discovery-banner { aspect-ratio:4/3; }
 }
 @media(prefers-reduced-motion:reduce) { .atomic-box:hover { transform:none; } }
+
+/* Illustration-only presentation. Real catalog photography, custom covers, uploads,
+   chart coordinates, speech lettering and PDF source art are not recolored or cropped. */
+:is(.painted-plate,.poster-header,.voyager-illustration,.voyager-opening,.art-slide-art,.spot-art-disc) img,
+:is(.voyager-discovery-banner,.voyager-scene,.lookup-art,.chartmap-figure,.place-banner-scene,.retro-portrait) {
+  filter:var(--voyager-art-treatment);
+}
+.painted-plate { background:hsl(var(--background)); border-radius:0; overflow:visible; }
+.painted-plate > img { border-radius:var(--voyager-aperture); border:var(--voyager-art-rule); }
+.painted-plate figcaption { border:0; background:hsl(var(--background) / .96); }
+.poster-header > img,
+.voyager-illustration > img,
+.voyager-discovery-banner,
+.art-slide-art > img { border-radius:var(--voyager-aperture); border:var(--voyager-art-rule); }
+.voyager-illustration { min-width:0; }
+.voyager-illustration > img { width:100%; height:auto; }
+.spot-art-disc { border:var(--voyager-art-rule); border-radius:44% 35% 42% 38%; background:hsl(var(--background)); }
+.voyager-publication-note { padding:1.5rem 0; border-block:var(--voyager-art-rule); }
+.voyager-instrument { min-width:0; background:hsl(var(--background)); }
+.voyager-instrument > header { border-bottom:var(--voyager-art-rule); padding-bottom:1.5rem; }
+.voyager-instrument h1 { font-size:2.75rem; line-height:1.2; }
+.voyager-instrument :is(form,section) { min-width:0; }
+.voyager-instrument form { border-inline:0; border-radius:0; border-block:var(--voyager-art-rule); background:hsl(var(--card)); padding:1.5rem; box-shadow:none; }
+.voyager-instrument :is(.parchment,.vellum) { border-inline:0; border-radius:0; box-shadow:none; }
+.voyager-instrument section > .grid > article { background:transparent; border-inline:0; border-top:var(--voyager-art-rule); border-bottom:var(--voyager-art-rule); border-radius:0; }
+.voyager-instrument :is(input,select,button) { min-height:44px; }
+.voyager-instrument input[type='checkbox'] { min-height:initial; }
+.voyager-instrument table { font-variant-numeric:tabular-nums; }
+.voyager-instrument table th { border-bottom:var(--voyager-art-rule); }
+.voyager-instrument table tbody tr:nth-child(even) { background:hsl(var(--muted) / .35); }
+.voyager-instrument nav a { display:inline-flex; align-items:center; min-height:44px; }
+@media(max-width:639px) {
+  .voyager-instrument h1 { font-size:2rem; }
+  .voyager-instrument form { padding:1rem; }
+}
+.place-banner-art { border:var(--voyager-art-rule); border-radius:var(--voyager-aperture); }
+.place-banner-scene { filter:var(--voyager-art-treatment); }
+.explore-poster { border:var(--voyager-art-rule); outline:0; border-radius:var(--voyager-aperture); box-shadow:none; }
+.explore-poster img { filter:var(--voyager-art-treatment); }
+.explore-poster-title { color:hsl(var(--foreground)); text-shadow:1px 1px 0 hsl(var(--background)); }
+.theme-art,.box-art img { filter:var(--voyager-art-treatment); }
+
+/* Full-color publications override illustration treatments; no crop or pigment changes. */
+:is(.product-art-gallery,.voyager-product-art,.ob-stage,.comic-sheet,.shelf-real,.press-stack) img { filter:none; }
+.voyager-product-art > img { border-radius:var(--cut-card); border:var(--voyager-art-rule); }
+.btn-quiet { border-color:hsl(var(--primary)); background:hsl(var(--primary)); color:hsl(var(--primary-foreground)); }
+.btn-quiet:hover { background:hsl(var(--primary) / .9); }
+.voyager-public-header { border-bottom-color:hsl(var(--brass) / .55); }
+.voyager-instrument table th { color:hsl(var(--primary)); }
+.voyager-instrument input:focus-visible,.voyager-instrument select:focus-visible { outline:2px solid hsl(var(--primary)); outline-offset:2px; }
+.spot-art-disc { border-color:hsl(var(--brass)); }

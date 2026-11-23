@@ -28,7 +28,7 @@ export default function Profection() {
   }, [hash]);
 
   return (
-    <div className="space-y-10">
+    <div className="voyager-instrument space-y-10">
       <section className="space-y-5"><h1 className="font-display text-4xl">Annual Profections</h1>{error ? <PreviewFeedback error onRetry={retry} /> : prepared.status === 'error' ? <PreviewFeedback error onRetry={prepared.retry} /> : prepared.status === 'loading' ? <PreviewFeedback loadingMessage="Calculating your profection wheel…" /> : prepared.value ? <ProfectionWheel chart={prepared.value} /> : <p>Add your saved birth details to open your profection wheel.</p>}</section>
       <details className="border-t border-border pt-6"><summary className="cursor-pointer font-label text-xl">Edition source timeline</summary>
       <header>

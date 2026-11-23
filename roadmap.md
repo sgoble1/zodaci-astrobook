@@ -1,5 +1,15 @@
 # Zodaci roadmap
 
+## Nov 23 — Results, publications and archival imagery
+- [x] Focus welcome/public/member navigation on charts, results, tools and AstroBook/AstroComic; hide non-book merchandise without deleting catalog or orders.
+- [x] Give calculators an editorial instrument/field-log presentation without changing calculations.
+- [x] Apply consistent warm duotone, organic apertures and brass rules to site illustration plates; preserve readable chart geometry, complete book pages, personal uploads and truthful product photos.
+- [x] Keep AstroBook/AstroComic covers, sample spreads and all product artwork full color; duotone is for general illustration/backgrounds only.
+- [x] Add terracotta, brass and celestial teal interface accents.
+- [x] Verify publication filtering, navigation, tool interactions, reader presentation and desktop/mobile layouts.
+
+Verification: 172 suites / 1,415 tests pass; automatic build OK. Public pages at 1280/393px, mobile navigation, ephemeris filters, full-color mobile book opening and signed-in saved-chart tools verified without overflow or page errors. Loaded catalog shows only publication titles; catalog availability was intermittent during reloads. No live payment, email or print order was made; founder-only walkthroughs remain unverified.
+
 ## Nov 23 — Site-wide Voyager draft extension
 - [x] Extend the approved home-screen direction through public/member navigation, dashboards, tools, readers, product-page surroundings and account/admin views; preserve product artwork, chart geometry and access boundaries.
 - [x] Simplify visual hierarchy and verify representative desktop/phone flows, menus, dialogs and real signed-in states. All 171 suites / 1,404 tests pass; automatic build OK. Public/member checks at 1280/393px, signed-out menu/Escape and book opening, and invented review-chart save/readback pass; 375px member view has no horizontal overflow. Founder-authorized editions, real payments/email/printing remain unverified and were not changed. Details: docs/voyager-draft-verification.md.
