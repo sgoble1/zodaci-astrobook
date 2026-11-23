@@ -1,0 +1,72 @@
+.voyager-home {
+  --background: 45 28% 94%;
+  --foreground: 150 8% 9%;
+  --primary: 150 8% 9%;
+  --primary-foreground: 45 28% 94%;
+  --muted-foreground: 150 5% 32%;
+  --accent: 8 54% 39%;
+  --accent-foreground: 45 28% 97%;
+  --border: 150 8% 9%;
+  --input: 45 15% 75%;
+  --ring: 8 54% 39%;
+  --voyager-extrusion: 1px 1px 0 hsl(var(--background)), 3px 3px 0 hsl(var(--foreground)), 4px 4px 0 hsl(var(--foreground)), 5px 5px 0 hsl(var(--foreground));
+  background: hsl(var(--background));
+  color: hsl(var(--foreground));
+  min-height: 100vh;
+  isolation: isolate;
+}
+.voyager-home * { letter-spacing: 0; }
+.voyager-header { display:flex; align-items:center; justify-content:space-between; gap:1.5rem; padding:1.5rem 3rem; max-width:100rem; margin:auto; }
+.voyager-brand { display:flex; align-items:center; gap:.75rem; color:hsl(var(--foreground)); text-decoration:none; }
+.voyager-brand strong { display:block; font-family:'Alfa Slab One',serif; font-size:1.5rem; font-weight:400; }
+.voyager-brand span { display:block; font-family:'Bebas Neue',sans-serif; font-size:.8rem; }
+.voyager-nav { display:flex; align-items:center; gap:2rem; font-family:'Bebas Neue',sans-serif; font-size:1.1rem; }
+.voyager-nav a { display:flex; align-items:center; min-height:44px; text-decoration:none; }
+.voyager-nav a:hover { color:hsl(var(--accent)); }
+.voyager-hero { position:relative; min-height:740px; display:grid; align-items:center; padding:3rem 1.5rem 5rem; overflow:hidden; }
+.voyager-scene { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:-1; }
+.voyager-hero-copy { width:100%; max-width:38rem; margin:auto; text-align:center; position:relative; }
+.voyager-kicker { font-family:'Bebas Neue',sans-serif; font-size:1.1rem; margin-bottom:1.5rem; }
+.voyager-title { font-size:4.75rem; line-height:1.08; text-transform:uppercase; text-shadow:var(--voyager-extrusion); margin:0 0 1.6rem; }
+.voyager-subtitle { font-family:'Yellowtail',cursive; font-size:1.9rem; color:hsl(var(--accent)); margin-bottom:1rem; }
+.voyager-intro { font-size:1rem; line-height:1.8; max-width:29rem; margin:0 auto 1.5rem; }
+.voyager-actions { display:flex; flex-wrap:wrap; justify-content:center; gap:.7rem; }
+.voyager-actions .voyager-cta { min-height:48px; border-radius:2px; font-family:'Bebas Neue',sans-serif; font-size:1.15rem; padding-inline:1.3rem; }
+.voyager-footnote { margin-top:1.25rem; font-size:.75rem; color:hsl(var(--muted-foreground)); }
+.voyager-portal { display:grid; grid-template-rows:0fr; transition:grid-template-rows 1.2s ease; }
+.voyager-portal[data-open="true"] { grid-template-rows:1fr; }
+.voyager-portal-inner { overflow:hidden; }
+.voyager-portal-content { padding:1.5rem; background:hsl(var(--foreground)); color:hsl(var(--background)); margin-top:1.5rem; border-radius:35% 8% 25% 5% / 8% 15% 8% 12%; }
+.voyager-portal-content h2 { font-size:1.5rem; margin-bottom:.75rem; }
+.voyager-portal-content p { font-size:.9rem; line-height:1.7; }
+.voyager-portal-content a { display:inline-flex; align-items:center; min-height:44px; color:inherit; text-decoration:underline; text-underline-offset:4px; }
+.voyager-proof { display:flex; justify-content:center; flex-wrap:wrap; gap:1rem 3rem; border-block:1px solid hsl(var(--foreground) / .2); padding:1.25rem; font-family:'Bebas Neue',sans-serif; font-size:1.1rem; }
+.voyager-proof span { display:flex; align-items:center; gap:.6rem; }
+.voyager-band { max-width:82rem; margin:auto; padding:5rem 3rem; }
+.voyager-band-heading { display:flex; justify-content:space-between; align-items:end; gap:2rem; margin-bottom:2.5rem; }
+.voyager-band h2 { font-size:2.5rem; max-width:32rem; }
+.voyager-band-heading p { max-width:25rem; font-size:.95rem; line-height:1.8; color:hsl(var(--muted-foreground)); }
+.voyager-features { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:2rem; }
+.voyager-feature { border-top:1px solid hsl(var(--foreground) / .4); padding-top:1.5rem; }
+.voyager-feature h3 { font-family:'Bebas Neue',sans-serif; font-size:1.5rem; margin:1rem 0 .6rem; }
+.voyager-feature p { font-size:.85rem; line-height:1.8; color:hsl(var(--muted-foreground)); }
+.voyager-feature a { display:inline-flex; align-items:center; gap:.5rem; min-height:44px; margin-top:.75rem; font-size:.85rem; text-decoration:underline; text-underline-offset:4px; }
+.voyager-signup { display:grid; grid-template-columns:1fr 1fr; align-items:center; gap:4rem; border-top:1px solid hsl(var(--foreground) / .2); padding-top:4rem; }
+.voyager-signup img { width:100%; aspect-ratio:4/3; object-fit:cover; border-radius:46% 44% 38% 30% / 40% 35% 47% 35%; }
+.voyager-signup h2 { font-size:2.5rem; margin-bottom:1rem; }
+.voyager-signup p { line-height:1.8; }
+.voyager-footer { max-width:82rem; margin:auto; padding:1.5rem 3rem; border-top:1px solid hsl(var(--foreground) / .2); display:flex; flex-wrap:wrap; align-items:center; gap:1rem; font-size:.75rem; }
+.voyager-footer a { min-height:44px; display:inline-flex; align-items:center; }
+.voyager-home a:focus-visible { outline:2px solid hsl(var(--accent)); outline-offset:5px; }
+@media(min-width:1600px) { .voyager-hero { min-height:850px; } }
+@media(max-width:1023px) { .voyager-header { padding:1.25rem 1.5rem; } .voyager-nav { gap:1.2rem; } .voyager-hero { min-height:680px; } .voyager-title { font-size:4rem; } .voyager-scene { object-fit:fill; } .voyager-hero-copy { max-width:32rem; } .voyager-band { padding:3.5rem 1.5rem; } .voyager-features { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+@media(max-width:639px) { .voyager-header { padding:1rem; gap:.5rem; } .voyager-brand strong { font-size:1.25rem; } .voyager-brand span { font-size:.65rem; } .voyager-brand svg { width:32px; height:32px; } .voyager-nav a { display:none; } .voyager-nav { gap:0; } .voyager-hero { min-height:780px; align-items:start; padding:4.5rem 1.2rem 14rem; } .voyager-scene { object-fit:cover; object-position:center bottom; height:210px; inset:auto 0 0; } .voyager-title { font-size:3rem; } .voyager-subtitle { font-size:1.65rem; } .voyager-intro { font-size:.9rem; } .voyager-kicker { font-size:.9rem; margin-bottom:1.1rem; } .voyager-band-heading { display:block; } .voyager-band-heading p { margin-top:1rem; } .voyager-band h2,.voyager-signup h2 { font-size:2rem; } .voyager-features { gap:1.5rem; } .voyager-signup { grid-template-columns:1fr; gap:2rem; } .voyager-signup img { max-height:280px; } .voyager-footer { padding:1rem 1.5rem; } }
+@media(max-width:639px) {
+  .voyager-nav > a:last-child { display:flex; font-size:.85rem; padding-inline:.65rem; }
+  .voyager-nav > a:last-child svg { display:none; }
+  .voyager-hero { padding-top:2.75rem; min-height:750px; }
+  .voyager-title { font-size:2.5rem; }
+  .voyager-subtitle { font-size:1.45rem; }
+}
+@media(max-width:359px) { .voyager-title { font-size:2.25rem; } .voyager-actions { flex-direction:column; } .voyager-features { grid-template-columns:1fr; } .voyager-brand span { max-width:100px; } }
+@media(prefers-reduced-motion:reduce) { .voyager-portal { transition:none; } }

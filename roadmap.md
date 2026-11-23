@@ -1,5 +1,9 @@
 # Zodaci roadmap
 
+## Nov 23 — Voyager home-screen draft
+- [x] Redesign only the public waitlist home with reference-led engraved cosmic portals, extruded typography, clearer discovery/signup hierarchy and a naturally inclusive cast; preserve signup/access behavior and other pages.
+- [x] Verify 1280px, 393px and 320px layouts, loaded artwork, expandable field notes, form validation and team-access dismissal; ten access-rule tests pass and automatic build is clean. Actual email delivery was not exercised.
+
 ## Nov 22 — Comprehensive UX overhaul
 - [x] Book refinement: at least five substantive pages per narrative chapter, fuller prose pages and compact running chapter labels instead of repeated large “continued” headings; browser all-spread checks and six-mode PDF tests pass.
 - [ ] Finish the saved overhaul: complete remaining source fixes and acceptance checks; retain explicit external/access blockers.

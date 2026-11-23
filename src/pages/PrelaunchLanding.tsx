@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { BookOpen, KeyRound, Lock, Orbit, Telescope, Moon } from 'lucide-react';
+import { ArrowRight, BookOpen, KeyRound, Lock, Orbit, Telescope, Moon, ShieldCheck } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -9,11 +9,13 @@ import { ZodaciMark } from '@/components/brand/ZodaciMark';
 import { grantDeviceAccess } from '@/lib/prelaunch';
 import { functionErrorMessage } from '@/lib/functionError';
 import art from '@/assets/prelaunch/couple-observatory.jpg';
+import cosmos from '@/assets/voyager/home-cosmos.png.asset.json';
+import './VoyagerHome.css';
 
 const FEATURES = [
   { icon: Telescope, title: 'Your birth chart', body: 'Calculated degrees, rulers and aspects, with historical time zones and public Swiss Ephemeris benchmark checks.' },
   { icon: BookOpen, title: 'The AstroBook', body: 'Six volumes of chart-specific writing, engraved plates and reflections. Read full calculated chapters in ordinary language before choosing your edition.' },
-  { icon: Orbit, title: 'The AstroComic', body: 'A 24-page Atomic Zodiac story: your planets become the cast, and real transits shape their choices.' },
+  { icon: Orbit, title: 'The AstroComic', body: 'An illustrated 24-page story shaped by a calculated chart, with natural dialogue and a separate calculation ledger.' },
   { icon: Moon, title: 'Dream journal', body: 'Keep private observations beside the calculated sky that night. You choose whether readings may use them.' },
 ];
 
@@ -22,6 +24,7 @@ const EMAIL_RE = /^\S+@\S+\.\S+$/;
 /** Pre-launch landing: collects launch emails (double opt-in) and holds the hidden passcode entry. */
 export default function PrelaunchLanding({ onUnlock, openAccess = false }: { onUnlock: () => void; openAccess?: boolean }) {
   const [email, setEmail] = useState('');
+  const [portalOpen, setPortalOpen] = useState(false);
   const [consent, setConsent] = useState(false);
   const [website, setWebsite] = useState('');
   const [state, setState] = useState<'idle' | 'sending' | 'done' | 'error'>('idle');
@@ -122,33 +125,67 @@ export default function PrelaunchLanding({ onUnlock, openAccess = false }: { onU
   };
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-background text-foreground">
-      <div className="mx-auto flex min-h-screen max-w-7xl flex-col px-5 py-6 sm:px-10">
-        <header className="flex items-center gap-4">
-          <div className="flex items-center gap-3 text-primary">
-            <ZodaciMark className="h-11 w-11 sm:h-14 sm:w-14" />
-            <div className="leading-none">
-              <p className="font-display text-3xl uppercase text-foreground sm:text-4xl">Zodaci</p>
-              <p className="font-label text-sm tracking-wide text-primary">Astral Research Authority</p>
+    <div className="voyager-home">
+      <a href="#main" className="sr-only focus:not-sr-only">Skip to main content</a>
+      <header className="voyager-header">
+        <a href="/" className="voyager-brand" aria-label="Zodaci home">
+          <ZodaciMark className="h-10 w-10" />
+          <div><strong>ZODACI</strong><span>Astral Research Authority</span></div>
+        </a>
+        <nav className="voyager-nav" aria-label="Home navigation">
+          <a href="#discover">Discover Zodaci</a>
+          <a href="/demo">The sample observatory</a>
+          <Button asChild variant="outline" className="min-h-11 rounded-sm"><a href="#join">Join the waitlist <ArrowRight aria-hidden /></a></Button>
+        </nav>
+      </header>
+      <main id="main">
+        <section className="voyager-hero" aria-labelledby="voyager-title">
+          <img className="voyager-scene" src={cosmos.url} width={1672} height={941} alt="Engraved Saturn and celestial portals frame a Black woman studying the sky and an East Asian man at a telescope" />
+          <div className="voyager-hero-copy">
+            <p className="voyager-kicker">A personal observatory. Opening soon.</p>
+            <h1 id="voyager-title" className="voyager-title">Zodaci.<br />Your whole<br />sky.</h1>
+            <p className="voyager-subtitle">Map the stars. Understand yourself.</p>
+            <p className="voyager-intro">You are more than a Sun sign. See how your whole birth chart fits together, through thoughtful readings, illustrated books and tools you can actually explore.</p>
+            <div className="voyager-actions">
+              <Button asChild variant="primary" className="voyager-cta"><a href="#join">Keep me posted <ArrowRight aria-hidden /></a></Button>
+              <Button variant="outline" className="voyager-cta" onClick={() => setPortalOpen(v => !v)} aria-expanded={portalOpen} aria-controls="voyager-portal">{portalOpen ? 'Close the field notes' : 'Look a little closer'} <Orbit aria-hidden /></Button>
+            </div>
+            <p className="voyager-footnote">Built around calculated placements. Written in ordinary language.</p>
+            <div id="voyager-portal" className="voyager-portal" data-open={portalOpen} aria-hidden={!portalOpen}>
+              <div className="voyager-portal-inner"><div className="voyager-portal-content">
+                <h2>The detail is in the connections.</h2>
+                <p>Your Sun, Moon and planets are read together with their degrees, rulers and aspects. A known birth time adds houses and angles. Without one, those details are left out and the Moon is clearly marked provisional.</p>
+                <a href="/demo" tabIndex={portalOpen ? 0 : -1}>Step inside the interactive sample <ArrowRight className="ml-2 h-4 w-4" aria-hidden /></a>
+              </div></div>
             </div>
           </div>
-          <div className="ml-6 hidden h-px flex-1 bg-primary/70 md:block" aria-hidden />
-          <p className="hidden font-label text-base tracking-wide text-foreground lg:block">Same skies. Brighter answers.</p>
-        </header>
-
-        <main id="main" className="grid flex-1 items-center gap-8 py-8 lg:grid-cols-[1fr_1.05fr]">
-          <section className="relative z-10 order-2 lg:order-1">
-            <p className="font-label text-xl tracking-wide text-primary">A new chapter is coming</p>
-            <h1 className="mt-2 font-display text-4xl uppercase leading-[1.02] sm:text-6xl">
-              Same skies.<br />
-              <span className="text-primary">A brighter home.</span>
-            </h1>
-            <p className="mt-5 max-w-xl text-lg leading-relaxed">
-              We are finishing Zodaci: a personal observatory built around your whole birth chart. Explore how planets, rulers and precise aspects fit together, read thoughtful chapters in your preferred tone, and keep your questions and observations private.
-            </p>
-            <ul className="mt-4 space-y-2 text-sm text-muted-foreground" aria-label="What you can verify"><li>13 public Swiss Ephemeris benchmark moments, with coordinate differences you can inspect.</li><li>Full calculated book chapters and a complete 24-page comic sample, available in the interactive demo.</li></ul>
-            <p className="mt-4 font-script text-2xl text-primary">Be the first to know when we open.</p>
-
+        </section>
+        <div className="voyager-proof" aria-label="Our approach">
+          <span><Telescope className="h-4 w-4" aria-hidden /> Calculations you can inspect</span>
+          <span><BookOpen className="h-4 w-4" aria-hidden /> Whole-chart readings</span>
+          <span><ShieldCheck className="h-4 w-4" aria-hidden /> Personal observations stay private</span>
+        </div>
+        <section id="discover" className="voyager-band" aria-labelledby="discover-title">
+          <div className="voyager-band-heading">
+            <h2 id="discover-title">A little wonder.<br />A lot to discover.</h2>
+            <p>Start with a chart. Follow the connections that interest you. The deeper details are there when you want them.</p>
+          </div>
+          <div className="voyager-features">
+            {FEATURES.map((f, i) => (
+              <article key={f.title} className="voyager-feature">
+                <f.icon className="h-9 w-9" strokeWidth={1.2} aria-hidden />
+                <h3>{f.title}</h3><p>{f.body}</p>
+                <a href={i === 0 ? '/accuracy' : '/demo'}>{i === 0 ? 'See the calculation checks' : 'Explore the sample'} <ArrowRight className="h-4 w-4" aria-hidden /></a>
+              </article>
+            ))}
+          </div>
+        </section>
+        <section id="join" className="voyager-band voyager-signup" aria-labelledby="join-title">
+          <img src={art} alt="A mid-century couple watching Saturn above the Zodaci observatory" width={1536} height={1152} loading="lazy" />
+          <div>
+            <p className="voyager-kicker">A seat at the observatory</p>
+            <h2 id="join-title">See you under<br />the same sky.</h2>
+            <p>We are putting the finishing touches on Zodaci. Leave your email and we’ll let you know when the doors open.</p>
             {state === 'done' ? (
               <div role="status" className="mt-6 max-w-xl border-2 border-primary bg-foreground p-5 text-background">
                 <p className="font-label text-xl tracking-wide">You're on the list</p>
@@ -195,50 +232,15 @@ export default function PrelaunchLanding({ onUnlock, openAccess = false }: { onU
                 </p>
               </form>
             )}
-          </section>
-
-          <div className="relative order-1 -mx-5 sm:mx-0 lg:order-2">
-            <img
-              src={art}
-              alt="A man and a woman in 1950s clothes look up at Saturn and a rocket above a hilltop observatory"
-              width={1536}
-              height={1152}
-              className="w-full [mask-image:linear-gradient(to_bottom,black_0%,black_75%,transparent_100%)]"
-            />
           </div>
-        </main>
-
-        <section aria-labelledby="pl-depth-h" className="grid gap-6 border-t border-primary/50 py-8 md:grid-cols-2">
-          <div className="space-y-3"><h2 id="pl-depth-h" className="font-display text-2xl">The detail is in the connections.</h2><p className="text-muted-foreground leading-relaxed">A single sign cannot describe a whole chart. Zodaci reads signs, degrees and planetary relationships together. A known birth time adds houses and angles; without it, the reading stays with substantive planetary analysis and a provisional Moon.</p></div>
-          <div className="space-y-3"><h2 className="font-display text-2xl">Study it. Ask about it. Keep it.</h2><p className="text-muted-foreground leading-relaxed">Your chart can become a reading library, a voiced podcast, a workbook, an AstroBook or an AstroComic. Different traditions are clearly identified, and calculated facts stay separate from interpretation and anything you choose to share about your life.</p><a href="/demo" className="inline-flex min-h-11 items-center text-primary underline underline-offset-4">Explore the interactive sample</a></div>
         </section>
-
-        <section aria-label="What's coming" className="grid grid-cols-1 gap-6 border-t border-primary/50 py-8 sm:grid-cols-2 lg:grid-cols-4 lg:gap-0">
-          {FEATURES.map((f, i) => (
-            <div key={f.title} className={`text-center lg:px-6 ${i > 0 ? 'lg:border-l lg:border-primary/50' : ''}`}>
-              <f.icon className="mx-auto h-12 w-12 text-primary" strokeWidth={1.4} aria-hidden />
-              <h2 className="mt-3 font-label text-2xl tracking-wide">{f.title}</h2>
-              <p className="mx-auto mt-1 max-w-xs text-muted-foreground">{f.body}</p>
-            </div>
-          ))}
-        </section>
-
-        <footer className="flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-primary/50 pt-4 font-label text-sm tracking-wide">
-          <span>Zodaci ★ Astral Research Authority</span>
-          <a href="/privacy" className="underline-offset-4 hover:underline">Privacy Policy</a>
-          <a href="/terms" className="underline-offset-4 hover:underline">Terms of Service</a>
-          <span className="normal-case text-muted-foreground">Astrological insights provided for entertainment and self-reflection purposes only.</span>
-          <button
-            type="button"
-            onClick={() => setAccess(true)}
-            aria-label="Team access"
-            className="ml-auto rounded p-1 text-muted-foreground/60 hover:text-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
-          >
-            <KeyRound className="h-4 w-4" aria-hidden />
-          </button>
-        </footer>
-      </div>
-
+      </main>
+      <footer className="voyager-footer">
+        <span className="font-label text-base">Zodaci · Astral Research Authority</span>
+        <a href="/privacy">Privacy Policy</a><a href="/terms">Terms of Service</a>
+        <span>Astrological insights provided for entertainment and self-reflection purposes only.</span>
+        <Button type="button" variant="ghost" size="icon" className="ml-auto min-h-11 min-w-11" onClick={() => setAccess(true)} aria-label="Team access" title="Team access"><KeyRound aria-hidden /></Button>
+      </footer>
       <Dialog open={access} onOpenChange={setAccess}>
         <DialogContent>
           <DialogHeader>
