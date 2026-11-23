@@ -78,7 +78,7 @@ export function ReadingNavigator({ sections, contentRef, path, readingTitle, var
 
   // Place 'bar' inside the tall content column (small screens) and 'side' in the side column (large screens), so each can stick.
   if (variant === 'bar') return (
-      <div className="sticky top-[calc(4rem+env(safe-area-inset-top))] z-30 -mx-2 mb-6 lg:hidden">
+      <div className="voyager-reading-nav sticky top-[calc(4rem+env(safe-area-inset-top))] z-30 -mx-2 mb-6 lg:hidden">
         <div className="vellum bg-background/95 px-3 py-2 backdrop-blur-xl">
           <Button variant="ghost" type="button" onClick={() => setOpen(o => !o)} aria-expanded={open} aria-controls={mobileId} className="flex w-full items-center gap-2 px-0 text-left text-sm">
             <List aria-hidden className="h-4 w-4 shrink-0 text-gold" /><span className="min-w-0 flex-1 truncate">{activeTitle}</span><span className="tabular-nums text-xs text-muted-foreground">{progress}%</span><ChevronDown aria-hidden className={`h-4 w-4 transition-transform duration-300 ${open ? 'rotate-180' : ''}`} />
@@ -89,7 +89,7 @@ export function ReadingNavigator({ sections, contentRef, path, readingTitle, var
       </div>
   );
   return (
-      <nav aria-label="Sections in this reading" className="hidden h-full lg:block">
+      <nav aria-label="Sections in this reading" className="voyager-reading-nav hidden h-full lg:block">
         <div className="vellum sticky top-24 flex max-h-[calc(100dvh-7rem)] gap-3 overflow-y-auto p-4">
           <div className="relative w-0.5 shrink-0 rounded-full bg-muted" role="progressbar" aria-label="Reading progress" aria-valuenow={progress} aria-valuemin={0} aria-valuemax={100}>
             <div className="absolute inset-x-0 top-0 rounded-full bg-primary transition-[height] duration-300" style={{ height: `${progress}%` }} />

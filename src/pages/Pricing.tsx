@@ -87,8 +87,8 @@ export default function Pricing() {
   return (
     <article className="mx-auto max-w-5xl space-y-14">
       <PaymentTestModeBanner />
-      <header className="space-y-3 text-center">
-        <h1 className="hero-headline !text-[clamp(2.2rem,1.4rem+3.4vw,4.2rem)]">Simple, honest pricing.</h1>
+      <header className="voyager-pricing-opening space-y-3 text-center">
+        <h1 className="voyager-pricing-heading">Simple, honest pricing.</h1>
         <p className="font-script text-3xl text-primary">Start free. Go deeper when you want to.</p>
         <p className="mx-auto max-w-2xl text-lg text-muted-foreground">Start free with the essentials of your chart. Open the full encyclopedia when you want the depth. No surprises.</p>
         <p className="text-sm"><Link to="/demo" className="text-primary underline underline-offset-4">Try the interactive demo first</Link></p>

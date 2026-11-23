@@ -1,0 +1,178 @@
+/* Voyager interface roles are global so portaled dialogs and menus match the page.
+   Book/comic pigments and chart geometry/material tokens are deliberately untouched. */
+:root, .dark {
+  --background: 45 28% 94%;
+  --foreground: 150 8% 9%;
+  --card: 45 25% 96%;
+  --card-foreground: 150 8% 9%;
+  --popover: 45 25% 97%;
+  --popover-foreground: 150 8% 9%;
+  --primary: 150 8% 9%;
+  --primary-foreground: 45 28% 96%;
+  --secondary: 43 16% 88%;
+  --secondary-foreground: 150 8% 9%;
+  --muted: 43 15% 89%;
+  --muted-foreground: 150 5% 32%;
+  --accent: 8 54% 39%;
+  --accent-foreground: 45 28% 97%;
+  --destructive: 3 65% 37%;
+  --destructive-foreground: 45 28% 97%;
+  --border: 43 10% 74%;
+  --input: 43 10% 65%;
+  --input-background: 45 28% 97%;
+  --switch-background: 43 12% 75%;
+  --ring: 8 54% 39%;
+  --info: 207 45% 35%;
+  --ink: 150 8% 9%;
+  --vellum: 45 25% 96%;
+  --gold: 36 58% 31%;
+  --gold-bright: 36 58% 31%;
+  --starlight: 150 8% 15%;
+  --candle: 36 58% 31%;
+  --oxblood: 8 54% 39%;
+  --created: 8 54% 39%;
+  --shadow-ink: 0 8px 24px -16px hsl(var(--foreground) / .22);
+  --shadow-gold: 0 2px 0 hsl(var(--brass) / .2);
+  --shadow-print: 2px 2px 0 hsl(var(--foreground) / .2);
+  --voyager-extrusion: 1px 1px 0 hsl(var(--background)), 3px 3px 0 hsl(var(--foreground)), 4px 4px 0 hsl(var(--foreground));
+  --voyager-paper-texture: url('/textures/grain-warm.png');
+}
+body { background:hsl(var(--background)); }
+body::before { content:''; position:fixed; inset:0; z-index:-1; pointer-events:none; background-image:var(--voyager-paper-texture); opacity:.025; }
+body :is(h1,h2,h3,h4,.font-label,.font-smallcaps) { letter-spacing:0; }
+h1,h2,h3,h4 { font-weight:400; }
+::selection { background:hsl(var(--accent) / .18); color:hsl(var(--foreground)); }
+.public-experience > main { padding-top:2.5rem; padding-bottom:4rem; }
+.public-experience main > :is(article,section,div) > h1:first-child,
+.member-experience #main-content > div > div > h1:first-child,
+.voyager-page-title { text-shadow:var(--voyager-extrusion); line-height:1.15; }
+.voyager-public-header { border-bottom:1px solid hsl(var(--border)); background:hsl(var(--background) / .97); box-shadow:none; }
+.voyager-public-header [data-state='open'], .voyager-public-header [aria-current='page'] { color:hsl(var(--accent)); }
+.voyager-footer { background:hsl(var(--background)); }
+.voyager-global-footer { border-top:1px solid hsl(var(--border)); background:hsl(var(--card)); }
+.voyager-global-footer nav a { display:inline-flex; align-items:center; min-height:2.75rem; }
+.voyager-global-footer nav h2 { font-family:'Bebas Neue',sans-serif; font-size:1.2rem; }
+.voyager-global-footer .retro-heads-band { height:4rem; opacity:.7; filter:grayscale(.85); }
+.vellum,.parchment,.member-experience .vellum,.member-experience .parchment {
+  background:hsl(var(--card)); border:1px solid hsl(var(--border)); border-radius:var(--cut-card); box-shadow:none; backdrop-filter:none;
+}
+.vellum:hover,.parchment:hover,.deckle:hover,.member-experience .vellum:hover,.member-experience .parchment:hover { box-shadow:none; border-color:hsl(var(--foreground) / .35); }
+.obs-panel { background:hsl(var(--card)); color:hsl(var(--foreground)); border:1px solid hsl(var(--border)); border-radius:var(--cut-card); box-shadow:none; }
+.obs-paper { background:hsl(var(--card)); box-shadow:none; border-color:hsl(var(--border)); }
+.obs-panel > .obs-panel { background:transparent; box-shadow:none; }
+.atomic-box { background:hsl(var(--card)); border:1px solid hsl(var(--border)); outline:none; box-shadow:none; transition:border-color .25s ease,transform .25s ease; animation:none; }
+.atomic-box:hover,.atomic-box:focus-within { box-shadow:none; transform:translateY(-2px); border-color:hsl(var(--accent) / .65); }
+.atomic-box-art { width:4.5rem; height:4.5rem; }
+.atomic-box:hover .spot-art-medallion { animation-duration:24s; }
+.spot-art-medallion { animation-duration:24s; }
+.motto-link { color:hsl(var(--foreground)); }
+.motto-item:hover .motto-link,.motto-item:focus-visible .motto-link { color:hsl(var(--accent)); }
+.mosaic { gap:1.75rem; }
+.mosaic-top { grid-template-columns:minmax(0,1fr); grid-template-areas:'hero' 'left' 'right'; gap:1.5rem; }
+.mosaic-left .mosaic-rail ul { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:1rem; }
+.mosaic-left .mosaic-rail > div { display:none; }
+.mosaic-right { grid-template-columns:minmax(0,1fr) minmax(0,1fr); }
+.mosaic-poster { min-height:18rem; }
+.mosaic-dash-top { gap:1.5rem; }
+.mosaic-dash-top .mosaic-dash-poster { min-height:18rem; }
+.hero-slides { border:none; background:transparent; overflow:hidden; }
+.hero-slides-controls { background:hsl(var(--foreground)); border:none; padding:.3rem .5rem; gap:.3rem; border-radius:3px; }
+.hero-slides-btn,.hero-slides-dot { min-width:44px; min-height:44px; }
+.hero-slides-dot::after { border-color:hsl(var(--spot-paper)); }
+.hero-slides-dot-on::after { background:hsl(var(--spot-paper)); }
+.dest-tile { padding:1.25rem; }
+.mosaic .obs-panel:has(> .dest-tile) { border-inline:0; }
+.reading-prose { color:hsl(var(--foreground)); max-width:68ch; }
+.reading-prose h2 { font-size:1.8rem; }
+.reading-prose h3,.reading-prose em { color:hsl(var(--foreground)); }
+.reading-prose blockquote { font-family:'Libre Franklin',sans-serif; font-size:1rem; border-left:2px solid hsl(var(--accent)); background:hsl(var(--muted) / .6); }
+.voyager-reading-nav .vellum { background:hsl(var(--background) / .98); border-radius:3px; }
+.voyager-reading-nav a[aria-current='location'] { background:hsl(var(--accent) / .08); border-left:2px solid hsl(var(--accent)); color:hsl(var(--foreground)); }
+.voyager-reading-nav a,.voyager-reading-nav button { min-height:44px; }
+.voyager-reading-nav [aria-pressed='true'] { color:hsl(var(--accent)); }
+.poster-header { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); align-items:center; gap:2rem; border:0; border-bottom:1px solid hsl(var(--border)); border-radius:0; box-shadow:none; padding-bottom:2rem; }
+.poster-header > img { grid-column:2; grid-row:1; width:100%; aspect-ratio:4/3; height:auto; border-radius:48% 28% 42% 32% / 30% 48% 34% 45%; filter:grayscale(.45) sepia(.12); }
+.poster-header > .poster-header-copy { grid-column:1; grid-row:1; position:relative; padding:0; }
+.poster-header-copy h1 { font-size:3rem; line-height:1.15; text-shadow:var(--voyager-extrusion); }
+.poster-header-wash,.poster-header-grain { display:none; }
+.painted-plate { border:0; box-shadow:none; }
+.painted-plate figcaption { background:hsl(var(--background) / .95); border-top:1px solid hsl(var(--border)); }
+.painted-plate::after { background:none; }
+.painted-plate > img { filter:grayscale(.35) sepia(.1); }
+.voyager-founder-frame { background:transparent; }
+.voyager-founder-frame > aside { background:hsl(var(--card)); border-right:1px solid hsl(var(--border)); backdrop-filter:none; }
+.voyager-founder-frame > aside [aria-current='page'] { color:hsl(var(--accent)); background:hsl(var(--accent) / .08); }
+.voyager-founder-frame #main-content { background:hsl(var(--background)); }
+/* Explicit dark materials: preserve light text and warm controls on celestial scenes/devices.
+   Local properties also protect descendant utility classes after the interface turns light. */
+:is(.hero-night,.explore-poster,.obs-crt,.obs-console,.about-editorial-opening,.place-banner-art,.museum-microfilm,.voyager-dark-material) {
+  --background:150 8% 9%; --foreground:45 28% 94%;
+  --card:150 8% 13%; --card-foreground:45 28% 94%;
+  --primary:42 55% 65%; --primary-foreground:150 8% 9%;
+  --muted:150 6% 20%; --muted-foreground:42 16% 76%;
+  --secondary:150 6% 20%; --secondary-foreground:45 28% 94%;
+  --gold:42 55% 65%; --gold-bright:42 55% 65%; --starlight:45 28% 94%;
+  --border:42 15% 42%; --ring:42 55% 65%;
+  color:hsl(var(--foreground));
+}
+.hero-night { background-color:hsl(var(--background)); }
+.about-editorial-opening .hero-headline { text-shadow:none; }
+.voyager-opening { position:relative; isolation:isolate; display:grid; place-items:center; min-height:38rem; padding:3rem 1.5rem; overflow:hidden; background:hsl(var(--background)); }
+.voyager-opening-art { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:-1; }
+.voyager-opening-copy { width:100%; max-width:34rem; margin:auto; text-align:center; }
+.voyager-opening h1,.voyager-opening h2 { font-size:3.5rem; line-height:1.15; text-transform:uppercase; text-shadow:var(--voyager-extrusion); margin-bottom:1.25rem; }
+.voyager-opening-script { font:400 1.8rem/1.4 'Yellowtail',cursive; color:hsl(var(--accent)); margin-bottom:1rem; }
+.voyager-opening-text { max-width:27rem; margin:0 auto 1.5rem; line-height:1.8; font-size:.95rem; }
+.mosaic-dash-hero { container-type:inline-size; }
+@container(max-width:760px) {
+  .voyager-opening { min-height:45rem; padding-bottom:13rem; align-items:start; }
+  .voyager-opening-art { inset:auto 0 0; height:190px; object-fit:cover; }
+}
+.voyager-opening-actions { display:flex; flex-wrap:wrap; justify-content:center; gap:.75rem; }
+.voyager-opening-chart { display:flex; flex-wrap:wrap; justify-content:center; gap:.5rem 1rem; margin:1.2rem auto; font-family:'Bebas Neue',sans-serif; font-size:1rem; }
+.voyager-opening-kicker { font:400 1rem/1.4 'Bebas Neue',sans-serif; margin-bottom:1.5rem; }
+.voyager-discovery-banner { width:100%; aspect-ratio:21/9; object-fit:cover; border-radius:32% 8% 24% 10% / 16% 28% 12% 25%; }
+.voyager-welcome-section { border-block:1px solid hsl(var(--border)); padding-block:3rem; }
+.voyager-member-header { background:hsl(var(--background) / .97); }
+.voyager-member-header [aria-expanded='true'] { border-radius:3px; background:hsl(var(--muted)); }
+.voyager-member-header [data-mega-item][aria-current='page'] { border-color:hsl(var(--accent) / .35); background:hsl(var(--accent) / .08); }
+.demo-atomic { background:hsl(var(--background)); color:hsl(var(--foreground)); --card:45 25% 96%; --foreground:150 8% 9%; --muted-foreground:150 5% 32%; --primary:150 8% 9%; --primary-foreground:45 28% 96%; --accent:8 54% 39%; --border:43 10% 74%; }
+.demo-atomic [role='tablist'] { background:hsl(var(--background)); border-color:hsl(var(--border)); }
+.demo-atomic [role='tab'] { color:hsl(var(--foreground)); }
+.demo-atomic [role='tab'][data-state='active'] { background:hsl(var(--foreground)); color:hsl(var(--background)); }
+.product-page-opening { border:0; border-bottom:1px solid hsl(var(--border)); background:transparent; padding-block:2rem; }
+.product-page-opening .hero-headline,.voyager-pricing-heading { font-size:3rem !important; line-height:1.18; text-shadow:var(--voyager-extrusion); }
+.voyager-pricing-opening { padding-block:2rem; }
+.voyager-pricing-opening + .obs-panel { background:transparent; border-inline:0; box-shadow:none; }
+.field-dock { box-shadow:none; border-top:1px solid hsl(var(--border)); }
+.chart-look-toggle { background:hsl(var(--card)); border-color:hsl(var(--border)); }
+.chart-look-toggle button { min-height:44px; color:hsl(var(--foreground)); }
+.chart-look-toggle button[aria-pressed='true'] { background:hsl(var(--foreground)); color:hsl(var(--background)); }
+@media(max-width:639px) {
+  .product-page-opening .hero-headline,.voyager-pricing-heading { font-size:2.25rem !important; }
+  .product-page-opening .product-art-gallery { order:0; }
+}
+@media(min-width:1024px) {
+  .mosaic-top { grid-template-columns:minmax(0,1fr); grid-template-areas:'hero' 'left' 'right'; }
+  .mosaic-left .mosaic-rail ul { grid-template-columns:repeat(7,minmax(0,1fr)); }
+  .mosaic-right .forecast-plate { flex-direction:row; text-align:left; }
+  .mosaic-top > .mosaic-right { grid-template-columns:minmax(0,1fr) minmax(0,1fr); }
+}
+@media(max-width:767px) {
+  .poster-header { grid-template-columns:minmax(0,1fr); gap:1.5rem; }
+  .poster-header > img { grid-column:1; grid-row:1; max-height:230px; }
+  .poster-header > .poster-header-copy { grid-column:1; grid-row:2; }
+  .poster-header-copy h1 { font-size:2.25rem; }
+  .mosaic-left .mosaic-rail ul { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .mosaic-right,.mosaic-top > .mosaic-right { grid-template-columns:minmax(0,1fr); }
+  .hero-slides-controls { gap:0; max-width:100%; }
+  .hero-slides-controls { flex-wrap:wrap; }
+  .hero-slides-btn,.hero-slides-dot { min-width:44px; width:44px; min-height:44px; }
+  .voyager-opening { min-height:43rem; padding:2.5rem 1rem 13rem; align-items:start; }
+  .voyager-opening-art { inset:auto 0 0; height:190px; object-fit:cover; }
+  .voyager-opening h1,.voyager-opening h2 { font-size:2.5rem; }
+  .voyager-opening-script { font-size:1.5rem; }
+  .voyager-opening-chart { font-size:.9rem; }
+  .voyager-discovery-banner { aspect-ratio:4/3; }
+}
+@media(prefers-reduced-motion:reduce) { .atomic-box:hover { transform:none; } }

@@ -11,7 +11,7 @@ export const FOOTER_COLUMNS: { heading: string; links: [string, string][] }[] = 
 /** One footer for every public page: crawlable links, brand line and the reflection disclaimer. */
 export function GlobalFooter() {
   return (
-    <footer className="border-t-4 border-double border-[hsl(var(--brass)/0.6)]">
+    <footer className="voyager-global-footer">
       <div aria-hidden className="retro-heads-band" style={{ backgroundImage: `url(${heads})` }} />
       <div className="mx-auto grid max-w-7xl gap-10 px-5 py-12 sm:grid-cols-2 sm:px-10 lg:grid-cols-4">
         <div className="space-y-3">

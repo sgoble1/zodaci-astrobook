@@ -2,6 +2,10 @@
 
 Scope: the member app shell (signed-in, non-April), the signed-out shell, public layouts, account menu, search, Instructions and in-page navigation. April's private edition keeps its original menu (her archive's own structure, loaded only for approved accounts) and is audited only for leaks.
 
+## Nov 23 — Voyager presentation extension
+
+Source audit confirmed four public pillars in PublicHeader, five member domains/decks plus Account in MemberNav, founder-specific groups in AppShell, shared footer destinations, registry-driven search/Instructions, public/member breadcrumbs and member next steps. Public, free/paid member, and admin/founder visibility rules remain unchanged. This pass changes palette, active-state treatment, typography, shared control sizing and default page hierarchy only; no route or navigation registry entry is removed. The welcome carousel retains all prior slides, including the original Cartographer, faces and print-products presentations. Portaled menus/dialogs inherit the complete interface token palette; specialist chart/product surfaces retain explicit material colors.
+
 ## Nov 5 public product access
 PublicHeader shares its desktop/phone list; AstroComic was reachable through product panels but missing from that list. Restore direct AstroComic access beside AstroBooks. Keep Pricing reachable as a separate account-side control, preserving seven main public destinations and all existing routes. No private links added to signed-out navigation.
 

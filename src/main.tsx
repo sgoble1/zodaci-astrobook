@@ -5,6 +5,7 @@ import { ConfirmHost } from '@/components/common/ConfirmHost';
 import { recoverChunkLoad } from '@/lib/chunkRecovery';
 import { reportApplicationFailure } from '@/lib/workspaceFeed';
 import "./index.css";
+import "./styles/voyager.css";
 
 // Recover from stale module chunks (after redeploys or dep re-optimization) with one reload.
 window.addEventListener("vite:preloadError", (e) => {

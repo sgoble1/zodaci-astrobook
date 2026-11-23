@@ -49,7 +49,6 @@ export default function AstroComic() {
   return (
     <article className="space-y-20">
       <PaymentTestModeBanner />
-      <PaintedPlate {...PAINTED.astrocomic} shape="hero" priority />
       <section className="product-page-opening obs-panel">
         <div>
           <p className="font-label text-xs tracking-[0.16em] text-primary">AstroComic by Zodaci</p>
@@ -83,6 +82,7 @@ export default function AstroComic() {
         </div>
         <div id="preview" className="product-art-gallery obs-paper scroll-mt-6 p-3 sm:p-4" aria-label="Sample AstroComic digest"><OpenComicDigest /></div>
       </section>
+      <PaintedPlate {...PAINTED.astrocomic} shape="panorama" />
 
       <section aria-labelledby="issue1-h">
         <h2 id="issue1-h" className="font-display text-3xl">Read the sample issue: The Midnight Signal</h2>

@@ -1,5 +1,6 @@
 import { useEffect, useState, type ReactNode } from 'react';
 import { FilmFx, useInkFilter } from '@/components/observatory/FilmFx';
+import { Button } from '@/components/ui/button';
 
 export type ChartLook = 'projector' | 'paper';
 export type ChartDevice = 'projector' | 'monitor' | 'classic';
@@ -31,9 +32,9 @@ export function ChartLookToggle({ className }: { className?: string }) {
   return (
     <div className={`chart-look-toggle ${className ?? ''}`} role="group" aria-label="Chart presentation">
       {(['projector', 'paper'] as const).map(l => (
-        <button key={l} type="button" aria-pressed={look === l} onClick={() => setLook(l)}>
+        <Button key={l} variant="ghost" type="button" aria-pressed={look === l} onClick={() => setLook(l)}>
           {l === 'projector' ? 'Projector' : 'Ink on paper'}
-        </button>
+        </Button>
       ))}
     </div>
   );

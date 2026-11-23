@@ -8,7 +8,6 @@ import { Link, Navigate, NavLink, Outlet, useLocation } from 'react-router-dom';
 import { useReadMarks } from '@/hooks/useReadingProgress';
 import { supabase } from '@/integrations/supabase/client';
 import { motion, useReducedMotion } from 'framer-motion';
-import ParticleField from '@/components/fx/ParticleField';
 import ScrollProgress from '@/components/fx/ScrollProgress';
 import { FirstViewReveal } from '@/components/fx/FirstViewReveal';
 import { createContext, useContext, useEffect, useMemo, useRef, useState } from 'react';
@@ -266,7 +265,7 @@ export function AppShell() {
     if (location.pathname === '/') return <Navigate to="/welcome" replace />;
     if (!SIGNED_OUT_PATHS.includes(location.pathname)) return <Navigate to={`/auth?next=${encodeURIComponent(location.pathname + location.search)}`} replace />;
     return (
-      <div className="min-h-screen bg-background text-foreground">
+      <div className="public-experience min-h-screen bg-background text-foreground">
         <PublicHeader />
         <main id="main-content" className="mx-auto max-w-5xl px-4 py-10 sm:px-8"><PageErrorBoundary key={location.pathname}><Outlet /></PageErrorBoundary></main>
         <GlobalFooter />
@@ -298,7 +297,6 @@ function MemberShell({ children }: { children: ReactNode }) {
     <ClassicFrame>
       <a href="#main-content" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded focus:bg-primary focus:px-4 focus:py-2 focus:text-primary-foreground">Skip to content</a>
       <ScrollProgress /><FirstViewReveal />
-      <ParticleField />
       <MemberHeader />
       <main id="main-content" tabIndex={-1} className={`relative z-10 flex-1 outline-none ${tabs ? 'pb-[calc(4rem+env(safe-area-inset-bottom))] md:pb-0' : ''}`}>
         <div className="mx-auto max-w-5xl px-4 py-6 sm:px-8 sm:py-10 lg:py-12">
@@ -383,10 +381,9 @@ function AprilShell({ children, edition = 'april' }: { children: ReactNode; edit
     <EditionContext.Provider value={edition}>
     <FounderGroupsContext.Provider value={groups}>
     <PlayerProvider>
-    <div className="min-h-screen flex text-foreground relative" style={{ ['--founder-header-h' as string]: `${headerH}px` }}>
+    <div className="voyager-founder-frame min-h-screen flex text-foreground relative" style={{ ['--founder-header-h' as string]: `${headerH}px` }}>
       <a href="#main-content" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded focus:bg-primary focus:px-4 focus:py-2 focus:text-primary-foreground">Skip to content</a>
       <ScrollProgress /><FirstViewReveal />
-      <ParticleField />
       <aside ref={asideRef} data-keep-wording={edition !== 'april' || undefined} className="hidden lg:flex w-72 shrink-0 flex-col border-r-2 border-[hsl(var(--brass)/0.55)] bg-card/70 backdrop-blur-xl sticky top-0 h-screen z-10">
         <SidebarInner />
       </aside>

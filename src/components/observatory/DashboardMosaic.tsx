@@ -1,6 +1,7 @@
 import type { ChartResult } from '@/lib/astro';
 import { fmtLon } from '@/lib/astro';
-import { HeroSlideshow, ChartMapSlide, LookUpSlide, PressSlide, PLANET_MEANINGS, type HeroSlide, type PlanetLine } from '@/components/observatory/HeroSlides';
+import { HeroSlideshow, LookUpSlide, PressSlide, PLANET_MEANINGS, type HeroSlide, type PlanetLine } from '@/components/observatory/HeroSlides';
+import { VoyagerOpening } from './VoyagerOpening';
 import { DestinationTiles, ExplorePoster, type Destination } from '@/components/observatory/Mosaic';
 
 type Cta = { to: string; label: string };
@@ -40,11 +41,10 @@ export function DashboardMosaic({ chart, name, hasTime, primary, secondary, onAi
   destinations: Destination[];
   posterTo?: string;
 }) {
-  const sun = chart?.bodies.find(b => b.key === 'sun')?.sign;
   const who = possessive(name);
   const slides: HeroSlide[] = [{
     id: 'map', label: `${who} sky`,
-    content: <ChartMapSlide heading="h1" eager title={chart ? <>{who} sky,<br />mapped.</> : <>Meet<br />your sky.</>} script={chart ? 'Your current chapter, on air.' : 'Your cosmic blueprint awaits.'} lines={bigThreeLines(chart, hasTime)} cta={primary} secondary={secondary} planets={chart ? chartPlanetLines(chart) : PLANET_MEANINGS} highlight={sun} />,
+    content: <VoyagerOpening title={chart ? <>{who} sky,<br />mapped.</> : <>Meet<br />your sky.</>} script={chart ? 'Your current chapter, on air.' : 'A place to understand your chart.'} text={chart ? 'Return to your reading, explore your chart or see what today’s measured sky is touching.' : 'Add your birth details to see your calculated chart and begin your personal reading library.'} lines={bigThreeLines(chart, hasTime)} primary={primary} secondary={secondary} />,
   }];
   if (onAir && chart) slides.push({
     id: 'on-air', label: 'Today’s sky',

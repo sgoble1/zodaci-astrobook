@@ -1,4 +1,6 @@
 import { Link } from 'react-router-dom';
+import { VoyagerOpening } from '@/components/observatory/VoyagerOpening';
+import discovery from '@/assets/voyager/discovery-observatory.png.asset.json';
 import { PaintedPlate } from '@/components/art/PaintedPlate';
 import { PAINTED } from '@/content/paintedArt';
 import { CalculationTrust } from '@/components/common/CalculationTrust';
@@ -90,7 +92,7 @@ export default function BrandLanding() {
   const slides = [
     {
       id: 'map', label: 'Map the stars',
-      content: <ChartMapSlide heading="h1" title={<>Map the stars.<br />Understand yourself.</>} script="Your cosmic blueprint, mapped." lines={['Calculated from your exact birth moment', 'Read and written for you alone', 'Kept private in your own archive']} cta={{ to: '/start', label: 'Generate your birth chart' }} secondary={{ to: '/demo', label: 'See a sample edition' }} />,
+      content: <VoyagerOpening title={<>Zodaci.<br />Your whole sky.</>} script="Map the stars. Understand yourself." text="See how your whole birth chart fits together, through thoughtful readings, illustrated books and tools you can explore." primary={{ to: '/start', label: 'Generate your birth chart' }} secondary={{ to: '/demo', label: 'See a sample edition' }} />,
     },
     {
       id: 'look-up', label: 'Look up',
@@ -102,6 +104,10 @@ export default function BrandLanding() {
         text={<>An AstroBook is your birth chart written out as a book. Every chapter is worked out from the minute and place you were born, so no two copies say the same thing. AstroComic draws the same chart as an illustrated story.</>}
         points={['Your name and birth details on the cover', `Five editions, from a ${money(fromBook)} PDF to linen hardcover`, 'Printed to order and shipped free in the US']}
         book={{ to: '/astrobook', label: 'Browse AstroBooks' }} comic={{ to: '/astrocomic', label: 'Meet AstroComic' }} />,
+    },
+    {
+      id: 'cartographer', label: 'The Cartographer',
+      content: <ChartMapSlide heading="h2" title={<>Map the stars.<br />Understand yourself.</>} script="Your sky, mapped." lines={['Calculated from your birth moment', 'Read and written for you alone', 'Kept private in your own archive']} cta={{ to: '/start', label: 'Generate your birth chart' }} secondary={{ to: '/demo', label: 'See a sample edition' }} />,
     },
     {
       id: 'precision', label: 'Astronomy-grade precision',
@@ -132,7 +138,7 @@ export default function BrandLanding() {
         cta={{ to: '/start', label: 'Start your chart' }} secondary={{ to: '/about', label: 'How Zodaci works' }} />,
     },
   ];
-  return <div className="brand-site min-h-screen text-foreground">
+  return <div className="brand-site public-experience min-h-screen text-foreground">
     <a href="#brand-main" className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:bg-background focus:p-3">Skip to content</a>
     <PublicHeader />
     <main id="brand-main" className="mosaic mx-auto max-w-7xl px-3 py-4 sm:px-6 sm:py-6">
@@ -161,6 +167,7 @@ export default function BrandLanding() {
         <ArchiveShelf />
       </div>
 
+      <section className="voyager-welcome-section space-y-6" aria-labelledby="voyager-discovery"><div className="grid gap-6 md:grid-cols-2"><h2 id="voyager-discovery" className="text-3xl">A working observatory.<br />A place to return to.</h2><p className="text-muted-foreground leading-relaxed">Begin with the calculated chart. Follow a question into a reading, a lesson or an illustrated book. Your notes and conversations remain in your account.</p></div><img src={discovery.url} alt="Engraved researchers studying books and chart geometry beside a hilltop observatory" width={1916} height={821} loading="lazy" className="voyager-discovery-banner" /></section>
       <HowItWorks />
 
       <PersonalizationStory />

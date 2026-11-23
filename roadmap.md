@@ -1,8 +1,8 @@
 # Zodaci roadmap
 
 ## Nov 23 — Site-wide Voyager draft extension
-- [ ] Extend the approved home-screen direction through public/member navigation, dashboards, tools, readers, product-page surroundings and account/admin views; preserve product artwork, chart geometry and access boundaries.
-- [ ] Simplify visual hierarchy and verify representative desktop/phone flows, menus, dialogs and real signed-in states; record unavailable founder/provider checks explicitly.
+- [x] Extend the approved home-screen direction through public/member navigation, dashboards, tools, readers, product-page surroundings and account/admin views; preserve product artwork, chart geometry and access boundaries.
+- [x] Simplify visual hierarchy and verify representative desktop/phone flows, menus, dialogs and real signed-in states. All 171 suites / 1,404 tests pass; automatic build OK. Public/member checks at 1280/393px, signed-out menu/Escape and book opening, and invented review-chart save/readback pass; 375px member view has no horizontal overflow. Founder-authorized editions, real payments/email/printing remain unverified and were not changed. Details: docs/voyager-draft-verification.md.
 
 ## Nov 23 — Voyager home-screen draft
 - [x] Redesign only the public waitlist home with reference-led engraved cosmic portals, extruded typography, clearer discovery/signup hierarchy and a naturally inclusive cast; preserve signup/access behavior and other pages.

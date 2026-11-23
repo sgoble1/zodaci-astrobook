@@ -5,8 +5,8 @@ import { usePageMeta } from '@/hooks/usePageMeta';
 import { CalculationTrust } from '@/components/common/CalculationTrust';
 import { SpecificityExamples } from '@/components/books/SpecificityExamples';
 import { PRODUCT_ART } from '@/content/productArtwork';
-import chartMakers from '@/assets/pages/chart-makers.jpg';
-import rooftop from '@/assets/home/rooftop-astronomers.jpg';
+import discovery from '@/assets/voyager/discovery-observatory.png.asset.json';
+import { VoyagerOpening } from '@/components/observatory/VoyagerOpening';
 
 const PRACTICE = [
   ['Calculate the sky', 'Your date, place and local time become planetary positions. Historical time-zone rules matter. So do the house system and the distinction between measured and time-dependent points.'],
@@ -23,19 +23,11 @@ const TOOLS = [
 export default function About() {
   usePageMeta('About Zodaci — calculated charts, personal depth', 'Inside Zodaci: transparent astronomical calculations, multi-placement readings, private context, AstroBook and AstroComic. Explore the method and public accuracy checks.');
   return <article className="space-y-14 sm:space-y-20">
-    <header className="about-editorial-opening">
-      <img src={rooftop} alt="Mid-century observatory staff studying the sky with a brass telescope" width={1400} height={933} className="about-editorial-sky" />
-      <div className="about-editorial-intro space-y-5">
-        <h1 className="hero-headline">Zodaci</h1>
-        <p className="font-script text-3xl text-primary">The whole sky. A deeply personal reading.</p>
-        <p className="max-w-xl text-lg leading-relaxed">A personal observatory for people who want to understand their chart in depth. Precise calculations support the writing. Your experience gives it a human context.</p>
-        <div className="flex flex-wrap gap-3"><Button asChild size="lg"><Link to="/demo">Explore Zodaci<ArrowRight /></Link></Button><Button asChild size="lg" variant="outline"><Link to="/accuracy">Inspect the calculations</Link></Button></div>
-      </div>
-    </header>
+    <VoyagerOpening title={<>Zodaci.<br />The whole sky.</>} script="A deeply personal reading." text="A personal observatory for people who want to understand their chart in depth. Precise calculations support the writing. Your experience gives it a human context." primary={{ to: '/demo', label: 'Explore Zodaci' }} secondary={{ to: '/accuracy', label: 'Inspect the calculations' }} />
 
     <section aria-labelledby="reason-h" className="grid items-start gap-10 lg:grid-cols-2">
       <div className="space-y-5"><h2 id="reason-h" className="font-display text-3xl sm:text-4xl">A chart deserves more than a label.</h2><p className="text-lg leading-relaxed">The interesting part begins when the placements meet. A steady Sun can coexist with an impatient chart ruler. A close aspect may connect emotional needs with the way someone speaks. Each factor changes how the others are read.</p><p className="text-muted-foreground leading-relaxed">Zodaci grew from the work of assembling detailed personal editions. That work shaped our standard: a chapter should explain its chart reasoning and sound like a person speaking thoughtfully to another person. Warmth matters. So does knowing exactly what a sentence is based on.</p><p className="text-muted-foreground leading-relaxed">The result is a place to calculate, study, ask questions and keep your observations. You can stay with a single placement or follow it into a longer chapter, an audio reading or a printed book.</p></div>
-      <figure className="space-y-3"><img src={chartMakers} alt="Illustrated researchers comparing planet tables and an engraved chart" width={1400} height={700} loading="lazy" className="w-full" /><figcaption className="text-xs text-muted-foreground">Illustrative observatory artwork · the calculations themselves can be inspected below.</figcaption></figure>
+      <figure className="space-y-3"><img src={discovery.url} alt="Illustrated researchers comparing planet tables and an engraved chart" width={1916} height={821} loading="lazy" className="w-full" /><figcaption className="text-xs text-muted-foreground">Illustrative observatory artwork · the calculations themselves can be inspected below.</figcaption></figure>
     </section>
 
     <section aria-labelledby="practice-h" className="space-y-7 border-y border-border py-10"><h2 id="practice-h" className="font-display text-3xl">How a reading earns its detail.</h2><ol className="grid gap-8 lg:grid-cols-3">{PRACTICE.map(([title, text]) => <li key={title} className="space-y-3"><h3 className="font-label text-2xl text-primary">{title}</h3><p className="text-muted-foreground leading-relaxed">{text}</p></li>)}</ol></section>

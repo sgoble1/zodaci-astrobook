@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
-import { PAINTED } from '@/content/paintedArt';
+import discovery from '@/assets/voyager/discovery-observatory.png.asset.json';
+import { PosterHeader } from '@/components/observatory/PosterHeader';
 import { Link, useLocation } from 'react-router-dom';
 import { ArrowRight, Clock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -43,18 +44,11 @@ export default function Learn() {
 
   return (
     <article className="space-y-12 sm:space-y-16 overflow-x-clip">
-      <header className="learn-hero relative overflow-hidden rounded-sm border border-[hsl(var(--brass)/0.5)]">
-        <img src={PAINTED.library.src} alt={PAINTED.library.alt} width={1280} height={717} {...{ fetchpriority: 'high' }} className="h-[30rem] w-full object-cover sm:h-[28rem]" />
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/55 to-transparent" />
-        <div className="absolute bottom-0 max-w-2xl p-6 sm:p-10">
-          <p className="font-label text-sm tracking-[0.2em] text-primary">Zodaci · Research Library</p>
-          <h1 className="mt-2 font-display text-3xl uppercase leading-tight sm:text-5xl">Learn to read the sky.</h1>
-          <p className="mt-3 font-script text-2xl text-primary sm:text-3xl">One idea at a time.</p>
-          <p className="mt-3 text-muted-foreground">{showLessons ? `${ALL_LESSONS.length} lessons, ` : ''}{READING_ROOM.length} illustrated guides, {PUBLIC_ARTICLES.length} articles, today’s measured sky and essays from members.</p>
-        </div>
-      </header>
+      <PosterHeader img={discovery.url} alt="Engraved observatory researchers reading field guides and comparing a chart" eyebrow="Zodaci · Research Library" title={<>Learn to read<br />the sky.</>} script="One idea at a time.">
+        <p className="text-muted-foreground">{showLessons ? `${ALL_LESSONS.length} lessons, ` : ''}{READING_ROOM.length} illustrated guides, {PUBLIC_ARTICLES.length} articles, today’s measured sky and essays from members.</p>
+      </PosterHeader>
 
-      <nav aria-label="Learn sections" className="learn-subnav sticky top-16 z-30 mx-0 flex gap-2 overflow-x-auto rounded-full border border-[hsl(var(--brass)/0.5)] bg-background p-1.5 shadow-lg lg:top-20">
+      <nav aria-label="Learn sections" className="learn-subnav sticky top-16 z-30 mx-0 flex gap-2 overflow-x-auto rounded-sm border border-border bg-background p-1.5 lg:top-20">
         {sections.map(s => <a key={s.id} href={`#${s.id}`} aria-current={hash === `#${s.id}` ? 'true' : undefined} className={cn('flex shrink-0 items-center gap-2 rounded-sm px-3 py-2.5 min-h-11 font-label text-sm transition-colors duration-700 hover:bg-secondary', hash === `#${s.id}` && 'bg-primary text-primary-foreground')}><SpotArt kind={s.art} className="h-6 w-6" orbit={false} />{s.label}</a>)}
       </nav>
 

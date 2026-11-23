@@ -47,7 +47,7 @@ export function PublicHeader({ sections }: { sections?: string[] }) {
   const account: [string, string] = session ? ['/dashboard', 'My Zodaci'] : ['/auth', 'Sign in'];
   const active = (to: string) => pathname === to || pathname.startsWith(`${to}/`);
   return (
-    <header className="sticky top-0 z-40 border-b-2 border-[hsl(var(--brass)/0.6)] bg-background/95 shadow-[0_2px_0_hsl(var(--brass)/0.3)] backdrop-blur-xl">
+    <header className="voyager-public-header sticky top-0 z-40">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-5 sm:px-10 lg:h-20">
         <Link to="/welcome" aria-label="Zodaci home" className="shrink-0"><span className="xl:hidden 2xl:inline"><ZodaciLogo /></span><span className="hidden xl:inline 2xl:hidden"><ZodaciLogo compact /></span></Link>
         <nav aria-label="Public pages" className="hidden items-center gap-0 xl:flex">

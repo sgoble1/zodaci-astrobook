@@ -225,7 +225,7 @@ export function MemberHeader() {
   const newPageDomain = s.newPageId ? s.custom.find(c => c.id === s.newPageId) : undefined;
   return (
     <header ref={headerRef} onBlur={e => { if (open && !headerRef.current?.contains(e.relatedTarget as Node)) s.setOpenMenu(null); }}
-      className="sticky top-0 z-40 border-b border-border bg-background/85 pt-[env(safe-area-inset-top)] backdrop-blur-xl">
+      className="voyager-member-header sticky top-0 z-40 border-b border-border bg-background/85 pt-[env(safe-area-inset-top)] backdrop-blur-xl">
       <div className="mx-auto flex h-16 max-w-7xl items-center gap-2 px-3 sm:px-6">
         <NavLink to="/dashboard" className="mr-1 min-w-0 shrink-0 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" aria-label="Zodaci dashboard"><span className="lg:hidden"><ZodaciLogo compact /></span><span className="hidden lg:inline"><ZodaciLogo /></span></NavLink>
         <nav aria-label="Main menu" className="hidden min-w-0 items-center gap-0.5 md:flex">
